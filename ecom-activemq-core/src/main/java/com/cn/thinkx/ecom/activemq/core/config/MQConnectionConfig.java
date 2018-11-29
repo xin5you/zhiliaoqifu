@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jms.connection.SingleConnectionFactory;
 
 
-
 /**
  * activemq config
  * 
