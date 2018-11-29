@@ -75,6 +75,7 @@
 		<module>ecom-cms</module>
 		<module>ecom-cash</module>
 		<module>ecom-front</module>
-  	</modules>
+    <module>doc</module>
+  </modules>
 
 </project>
