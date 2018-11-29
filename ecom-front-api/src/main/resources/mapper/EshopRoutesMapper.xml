@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.eshoproutes.mapper.EshopRoutesMapper">
+	
+	<sql id="eshopRoutesColumns">
+		 ID,
+		 ROUTES_ID,
+		 ESHOP_ID,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="EshopRoutes" resultType="EshopRoutes">
+		select
+			<include refid="eshopRoutesColumns"/>
+		from TB_ECOM_ESHOP_ROUTES_REF
+		where 1=1
+		<if test="routesId !=null and routesId !='' ">
+		 	AND ROUTES_ID = #{routesId}
+		 </if>
+		 <if test="eshopId !=null and eshopId !='' ">
+		 	AND ESHOP_ID = #{eshopId}
+		 </if>
+	</select>
+	
+	<select id="getEshopRoutes" parameterType="EshopRoutes" resultType="EshopRoutes">
+		select
+			<include refid="eshopRoutesColumns"/>
+		from TB_ECOM_ESHOP_ROUTES_REF
+		where 1=1
+		<if test="routesId !=null and routesId !='' ">
+		 	AND ROUTES_ID = #{routesId}
+		 </if>
+		 <if test="eshopId !=null and eshopId !='' ">
+		 	AND ESHOP_ID = #{eshopId}
+		 </if>
+	</select>
+	
+</mapper>

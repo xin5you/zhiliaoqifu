@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body class="login_page">
+	    <div class="login_box">
+	        <form th:action="@{/doLogin}" th:method="post" id="login_form">
+	            <div class="top_b">电商管理平台</div>
+	            <div class="alert alert-info alert-login">
+	               	温馨提示：<span style="font-weight: bold;font-size: small;" id="errorcontent"></span>
+	            </div>
+	            <div class="cnt_b">
+	                <div class="formRow">
+	                    <div class="input-prepend">
+	                        <span class="add-on"><i class="icon-user"></i></span>
+	                        <input type="text" id="username" name="username" placeholder="账号" autocomplete="off"/>
+	                    </div>
+	                </div>
+	                <div class="formRow">
+	                    <div class="input-prepend">
+	                        <span class="add-on"><i class="icon-lock"></i></span>
+	                        <input type="password" id="password" class="text-login" name="password" placeholder="密码" autocomplete="off" />
+	                    </div>
+	                </div>
+	                <div class="formRow">
+	                    <div class="input-prepend">
+	                        <span class="add-on"><i class="icon-edit"></i></span>
+	                        <input name="authCode" id="authCode" maxlength="4" type="text" class="span1 text-login" placeholder="验证码" autocomplete="off" /> 
+							<img src="" id="authCodeImg" class="auth-code-img" alt="点击换一张" title="点击换一张" />
+	                    </div>
+	                </div>                
+	            </div>
+	            <div class="btm_b clearfix" style="text-align: center;">
+	                <button class="btn btn-primary btn-submit" type="button">登 录</button>
+	            </div>
+	        </form>
+	    </div>
+	    <script th:src="@{/ecom/js/login/login.js}"></script>
+	</body>
+</html>

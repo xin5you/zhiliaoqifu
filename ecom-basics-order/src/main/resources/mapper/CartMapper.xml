@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.CartMapper">
+
+	<sql id="cartColumns">
+		CART_ID,
+		PRODUCT_ID,
+		ECOM_CODE,
+		PRODUCT_TYPE,
+		PRODUCT_NUM,
+		WEIGHT,
+		SESSION_ID,
+		PRODUCT_PRICE,
+		PREFERENTIAL_PRICE,
+		MEMBER_ID,
+		IS_CHECK,
+		IS_CHANGE,
+		ACTIVITY_END_TIME,
+		ACTIVITY_ID,
+		ACTIVITY_DETAIL,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="cartFields">
+		#{cartId},
+		#{productId,jdbcType=VARCHAR},
+		#{ecomCode,jdbcType=VARCHAR},
+		#{productType,jdbcType=VARCHAR},
+		#{productNum,jdbcType=VARCHAR},
+		#{weight,jdbcType=VARCHAR},
+		#{sessionId,jdbcType=VARCHAR},
+		#{productPrice,jdbcType=VARCHAR},
+		#{preferentialPrice,jdbcType=VARCHAR},
+		#{memberId,jdbcType=VARCHAR},
+		#{isCheck,jdbcType=VARCHAR},
+		#{isChange,jdbcType=VARCHAR},
+		#{activityEndTime,jdbcType=VARCHAR},
+		#{activityId,jdbcType=VARCHAR},
+		#{activityDetail,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_CART
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Cart">
+		select
+			<include refid="cartColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where CART_ID = #{primaryKey}
+	</select>
+	
+	
+	
+	<select id="getCartProductByMemId" parameterType="Cart" resultType="Cart">
+		select
+			<include refid="cartColumns" />
+		from 
+			<include refid="tableName" />
+		where DATA_STAT = '0'
+			and IS_CHANGE = #{isChange}
+			and PRODUCT_ID = #{productId}
+			and MEMBER_ID = #{memberId}
+	</select>
+	
+	
+
+	<select id="getCartList" parameterType="Cart" resultType="Cart">
+		select
+			<include refid="cartColumns" />
+		from 
+			<include refid="tableName" />
+		where DATA_STAT = '0'
+		<if test="productId !=null and productId !='' ">
+			and PRODUCT_ID = #{productId}
+		</if>
+		<if test="ecomCode !=null and ecomCode !='' ">
+			and ECOM_CODE = #{ecomCode}
+		</if>
+		<if test="productType !=null and productType !='' ">
+			and PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="sessionId !=null and sessionId !='' ">
+			and SESSION_ID = #{sessionId}
+		</if>
+		<if test="memberId !=null and memberId !='' ">
+			and MEMBER_ID = #{memberId}
+		</if>
+		<if test="isCheck !=null and isCheck !='' ">
+			and IS_CHECK = #{isCheck}
+		</if>
+		<if test="isChange !=null and isChange !='' ">
+			and IS_CHANGE = #{isChange}
+		</if>
+		order by CREATE_TIME desc
+	</select>
+
+	<insert id="insert" parameterType="Cart">
+		<selectKey resultType="String" order="BEFORE" keyProperty="cartId">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getCardId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			<include refid="cartColumns" />
+		) VALUES (
+			<include refid="cartFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="Cart">
+		UPDATE 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="productId != null">PRODUCT_ID=#{productId,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="productType != null">PRODUCT_TYPE=#{productType,jdbcType=VARCHAR},</if>
+			<if test="productNum != null">PRODUCT_NUM=#{productNum,jdbcType=VARCHAR},</if>
+			<if test="weight != null">WEIGHT=#{weight,jdbcType=VARCHAR},</if>
+			<if test="sessionId != null">SESSION_ID=#{sessionId,jdbcType=VARCHAR},</if>
+			<if test="productPrice != null">PRODUCT_PRICE=#{productPrice,jdbcType=VARCHAR},</if>
+			<if test="preferentialPrice != null">PREFERENTIAL_PRICE=#{preferentialPrice,jdbcType=VARCHAR},</if>
+			<if test="memberId != null">MEMBER_ID=#{memberId,jdbcType=VARCHAR},</if>
+			<if test="isCheck != null">IS_CHECK=#{isCheck,jdbcType=VARCHAR},</if>
+			<if test="isChange != null">IS_CHANGE=#{isChange,jdbcType=VARCHAR},</if>
+			<if test="activityEndTime != null">ACTIVITY_END_TIME=#{activityEndTime,jdbcType=VARCHAR},</if>
+			<if test="activityId != null">ACTIVITY_ID=#{activityId,jdbcType=VARCHAR},</if>
+			<if test="activityDetail != null">ACTIVITY_DETAIL=#{activityDetail,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE CART_ID=#{cartId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE CART_ID=#{cartId}
+	</delete>
+	
+<!-- 	<select id="getCartEcomCode" resultType="Cat"> -->
+<!-- 		SELECT C.ECOM_CODE,SUM(C.PRODUCT_PRICE*C.PRODUCT_NUM) AS ORDER_AMT FROM TB_ECOM_CART C GROUP BY C.ECOM_CODE -->
+<!-- 	</select> -->
+
+
+	<select id="getCartListByCartIds" parameterType="java.util.List" resultType="Cart">
+		SELECT 
+		c.CART_ID,
+		c.PRODUCT_ID,
+		c.ECOM_CODE,
+		c.PRODUCT_TYPE,
+		c.PRODUCT_NUM,
+		c.PREFERENTIAL_PRICE,
+		c.MEMBER_ID,
+		c.IS_CHECK,
+		c.IS_CHANGE,
+		c.ACTIVITY_END_TIME,
+		c.ACTIVITY_ID,
+		c.ACTIVITY_DETAIL,
+		c.DATA_STAT,
+    	p.PIC_URL,
+    	p.GOODS_PRICE,
+    	g.GOODS_NAME
+    	From TB_ECOM_CART c , TB_ECOM_GOODS_PRODUCT p,TB_ECOM_GOODS g
+    	Where g.DATA_STAT='0'
+      And g.MARKET_ENABLE='1'
+      And g.GOODS_ID=p.GOODS_ID
+      And p.PRODUCT_ID=c.PRODUCT_ID 
+      	AND c.IS_CHANGE='0'
+    	AND c.CART_ID in
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<update id="addCartByCardId" parameterType="Cart">
+		UPDATE TB_ECOM_CART SET PRODUCT_NUM = PRODUCT_NUM+#{productNum},UPDATE_TIME=SYSDATE WHERE CART_ID=#{cartId}
+	</update>
+	
+	
+	<update id="updateCartByCardId" parameterType="Cart">
+		UPDATE TB_ECOM_CART SET PRODUCT_NUM = #{productNum},UPDATE_TIME=SYSDATE WHERE CART_ID=#{cartId}
+	</update>
+	
+	<select id="getListByMemberId"  parameterType="java.lang.String" resultType="Cart">
+		Select 
+   		c.CART_ID,
+		c.PRODUCT_ID,
+		c.ECOM_CODE,
+		c.PRODUCT_TYPE,
+		c.PRODUCT_NUM,
+		c.WEIGHT,
+		c.SESSION_ID,
+		c.PRODUCT_PRICE,
+		c.PREFERENTIAL_PRICE,
+		c.MEMBER_ID,
+		c.IS_CHECK,
+		c.IS_CHANGE,
+		c.ACTIVITY_END_TIME,
+		c.ACTIVITY_ID,
+		c.ACTIVITY_DETAIL,
+    g.goods_name,
+    t.goods_price,
+    t.is_store,
+    t.page_title,
+    t.PIC_URL
+ FROM TB_ECOM_CART c ,
+      TB_ECOM_GOODS_PRODUCT t,
+      TB_ECOM_GOODS g
+      WHERE  c.data_stat='0'
+       AND g.goods_id=t.goods_id
+       AND t.product_id=c.product_id
+       AND c.IS_CHANGE='0'
+       AND c.MEMBER_ID=#{memberId}
+	</select>
+	
+	<select id="getListByMemberIdAndChange"  parameterType="Cart" resultType="Cart">
+		Select 
+   		c.CART_ID,
+		c.PRODUCT_ID,
+		c.ECOM_CODE,
+		c.PRODUCT_TYPE,
+		c.PRODUCT_NUM,
+		c.WEIGHT,
+		c.SESSION_ID,
+		c.PRODUCT_PRICE,
+		c.PREFERENTIAL_PRICE,
+		c.MEMBER_ID,
+		c.IS_CHECK,
+		c.IS_CHANGE,
+		c.ACTIVITY_END_TIME,
+		c.ACTIVITY_ID,
+		c.ACTIVITY_DETAIL,
+    g.goods_name,
+    g.market_enable,
+    t.goods_price,
+    t.is_store,
+    t.page_title,
+    t.PIC_URL
+ FROM TB_ECOM_CART c ,
+      TB_ECOM_GOODS_PRODUCT t,
+      TB_ECOM_GOODS g
+      WHERE c.data_stat='0'
+        AND	 g.goods_id=t.goods_id
+       AND t.product_id=c.product_id
+       <if test="isCheck != null and isCheck!='' "> AND c.IS_CHECK=#{isCheck} </if>
+       <if test="isChange != null and isChange!='' "> AND c.IS_CHANGE=#{isChange} </if>
+       <if test="memberId != null and memberId!='' ">AND c.MEMBER_ID=#{memberId}</if>
+       <if test="cartId != null and cartId !='' ">AND c.CART_ID=#{cartId}</if>
+       order by c.update_time desc
+	</select>
+	
+	
+
+
+<select id="getListByCartIds"  resultType="Cart">
+		Select 
+   		c.CART_ID,
+		c.PRODUCT_ID,
+		c.ECOM_CODE,
+		c.PRODUCT_TYPE,
+		c.PRODUCT_NUM,
+		c.WEIGHT,
+		c.SESSION_ID,
+		c.PRODUCT_PRICE,
+		c.PREFERENTIAL_PRICE,
+		c.MEMBER_ID,
+		c.IS_CHECK,
+		c.IS_CHANGE,
+		c.ACTIVITY_END_TIME,
+		c.ACTIVITY_ID,
+		c.ACTIVITY_DETAIL,
+    g.goods_name,
+    g.market_enable,
+    t.goods_price,
+    t.is_store,
+    t.page_title,
+    t.PIC_URL
+ FROM TB_ECOM_CART c ,
+      TB_ECOM_GOODS_PRODUCT t,
+      TB_ECOM_GOODS g
+      WHERE c.data_stat='0'
+        AND	 g.goods_id=t.goods_id
+       AND t.product_id=c.product_id
+         AND c.CART_ID in
+		<foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+
+	
+	<update id="updateCartByMemberIdAndCheck" parameterType="java.lang.String">
+		UPDATE TB_ECOM_CART c SET 
+				IS_CHECK =#{isCheck},
+				UPDATE_TIME=SYSDATE
+				 WHERE 
+				   c.IS_CHANGE='0'
+      			  AND c.MEMBER_ID=#{memberId}
+	</update>
+	
+	<update id="updateCartByCartIdAndCheck"  parameterType="java.lang.String">
+		UPDATE TB_ECOM_CART c SET 
+				IS_CHECK =#{isCheck},
+				UPDATE_TIME=SYSDATE
+				 WHERE 
+      			   c.CART_ID=#{cartId}
+	</update>
+	
+	<delete id="deleteCartByCartId" parameterType="java.lang.String">
+		DELETE FROM TB_ECOM_CART WHERE CART_ID = #{cartId}
+	</delete>
+	
+	
+	<select id="getCartCountByMemberId" resultType="java.lang.Integer" parameterType="java.lang.String">
+		Select NVL(Sum(c.PRODUCT_NUM),0) As productNum From tb_ecom_cart c Where c.IS_CHANGE='0' And c.data_stat='0' And c.member_ID=#{memberId}
+	</select>
+</mapper>

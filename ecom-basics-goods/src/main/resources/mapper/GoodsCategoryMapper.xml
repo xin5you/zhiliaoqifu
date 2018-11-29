@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.GoodsCategoryMapper">
+	
+	<sql id="goodsCategoryColumns">
+		CAT_ID,
+		 CAT_NAME,
+		 PARENT_ID,
+		 CAT_PATH,
+		 CAT_SOLR,
+		 LIST_SHOW,
+		 CAT_IMAGE,
+		 OUTER_CAT_ID,
+		 ECOM_CODE,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 UPDATE_USER,
+		 CREATE_TIME,
+		 UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<insert id="insert"  parameterType="GoodsCategory">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="catId">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getGoodsCategoryId" />
+			</selectKey>
+			
+		INSERT INTO TB_ECOM_GOODS_CATEGORY
+		(
+				<include refid="goodsCategoryColumns" /> 
+		)VALUES (
+			   #{catId},
+			   #{catName,jdbcType=VARCHAR},
+			   #{parentId,jdbcType=VARCHAR},
+			   #{catPath,jdbcType=VARCHAR},
+			   #{catSolr,jdbcType=DOUBLE},
+			   '1',
+			   #{catImage,jdbcType=VARCHAR},
+			   #{outerCatId,jdbcType=VARCHAR},
+			   #{ecomCode,jdbcType=VARCHAR},
+			   '0',
+			   #{remarks,jdbcType=VARCHAR},
+			   #{createUser,jdbcType=VARCHAR},
+			   #{updateUser,jdbcType=VARCHAR},
+			   sysdate,
+			   sysdate,
+			   '0'
+		)
+	</insert>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		UPDATE TB_ECOM_GOODS_CATEGORY SET DATA_STAT='1' WHERE CAT_ID=#{primaryKey}
+	</update>
+	
+	<select id="getList" parameterType="GoodsCategory"  resultType="GoodsCategory">
+		SELECT 
+			<include refid="goodsCategoryColumns" />  
+		FROM TB_ECOM_GOODS_CATEGORY  
+		WHERE DATA_STAT = '0'
+		ORDER BY UPDATE_TIME DESC
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="GoodsCategory">
+		SELECT
+			<include refid="goodsCategoryColumns" /> 
+		FROM TB_ECOM_GOODS_CATEGORY
+		 WHERE CAT_ID=#{primaryKey}
+	</select>
+	
+	<update id="updateByPrimaryKey" parameterType="GoodsCategory">
+		UPDATE TB_ECOM_GOODS_CATEGORY
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="catName != null">CAT_NAME=#{catName,jdbcType=VARCHAR},</if>
+			<if test="parentId != null">PARENT_ID=#{parentId,jdbcType=VARCHAR},</if>
+			<if test="catPath != null">CAT_PATH=#{catPath,jdbcType=VARCHAR},</if>
+			<if test="catSolr != null">CAT_SOLR=#{catSolr,jdbcType=DOUBLE},</if>
+			<if test="listShow != null">LIST_SHOW=#{listShow,jdbcType=VARCHAR},</if>
+			<if test="catImage != null">CAT_IMAGE=#{catImage,jdbcType=VARCHAR},</if>
+			<if test="outerCatId != null">OUTER_CAT_ID=#{outerCatId,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1,
+		</trim>
+		where CAT_ID=#{catId}
+	</update>
+	
+	<select id="findGoodsCategoryByLevel"  resultType="GoodsCategory">
+		SELECT
+			<include refid="goodsCategoryColumns" /> 
+		FROM TB_ECOM_GOODS_CATEGORY
+		 WHERE DATA_STAT='0'
+		 <if test="catName  != null and catName !='' ">AND CAT_NAME=#{catName,jdbcType=VARCHAR}</if>
+		 <if test="catPath  != null and catPath !='' "  >AND CAT_PATH=#{catPath,jdbcType=VARCHAR}</if>
+		 <if test="ecomCode != null and ecomCode !='' ">AND ECOM_CODE=#{ecomCode,jdbcType=VARCHAR}</if>
+		 <if test="parentId  != null and parentId !=''  ">AND PARENT_ID=#{parentId,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<select id="findGoodsCategoryByOuterCatId" resultType="GoodsCategory">
+		SELECT
+			<include refid="goodsCategoryColumns" /> 
+		FROM TB_ECOM_GOODS_CATEGORY
+		 WHERE DATA_STAT='0'
+		 <if test="outerCatId  != null and outerCatId !='' ">AND OUTER_CAT_ID=#{outerCatId,jdbcType=VARCHAR}</if>
+		 <if test="catPath  != null and catPath !='' "  >AND CAT_PATH=#{catPath,jdbcType=VARCHAR}</if>
+		 <if test="ecomCode != null and ecomCode !='' ">AND ECOM_CODE=#{ecomCode,jdbcType=VARCHAR}</if>
+		 <if test="parentId  != null and parentId !=''  ">AND PARENT_ID=#{parentId,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<select id="getGoodsCategory" parameterType="GoodsCategory" resultType="GoodsCategory">
+		SELECT 
+		<include refid="goodsCategoryColumns" />
+	  FROM TB_ECOM_GOODS_CATEGORY C
+		 WHERE C.DATA_STAT = '0'
+		   AND C.CAT_PATH = #{catPath}
+		   AND C.PARENT_ID = #{parentId}
+		   AND C.ECOM_CODE = #{ecomCode}
+		   <if test="catName!=null and catName!='' ">
+		   AND C.CAT_NAME LIKE '%' || #{catName} || '%'
+		   </if>
+		   <if test="listShow!=null and listShow!='' ">
+   		   AND C.LIST_SHOW = #{listShow}
+   		   </if>
+   		   ORDER BY C.CAT_SOLR
+	</select>
+	
+	<select id="getSecondGoodsCateGory" parameterType="GoodsCategory" resultType="GoodsCategory">
+		SELECT C1.CAT_ID,
+			       C1.CAT_NAME,
+			       C1.PARENT_ID,
+			       C1.CAT_PATH,
+			       C1.CAT_SOLR,
+			       C1.LIST_SHOW,
+			       C1.CAT_IMAGE,
+			       C1.ECOM_CODE,
+			       C1.DATA_STAT,
+			       C1.REMARKS,
+			       C1.CREATE_USER,
+			       C1.UPDATE_USER,
+			       C1.CREATE_TIME,
+			       C1.UPDATE_TIME,
+			       C1.LOCK_VERSION, 
+			       C2.CAT_NAME AS PARENT_NAME
+		  FROM TB_ECOM_GOODS_CATEGORY C1, TB_ECOM_GOODS_CATEGORY C2
+		 WHERE C1.PARENT_ID = C2.CAT_ID
+		   AND C1.DATA_STAT = '0'
+		   AND C2.DATA_STAT = '0'
+		   AND C1.CAT_PATH = '2'
+		   AND C1.ECOM_CODE = #{ecomCode}
+		   <if test="catName!=null and catName!='' ">
+		   AND C1.CAT_NAME LIKE '%' || #{catName} || '%'
+		   </if>
+		   <if test="listShow!=null and listShow!='' ">
+   		   AND C1.LIST_SHOW = #{listShow}
+   		   </if>
+   		   <if test="parentName!=null and parentName!='' ">
+		   AND C2.CAT_NAME LIKE '%' || #{parentName} || '%'
+		   </if>
+	</select>
+	
+	<select id="getGoodsCategoryList" parameterType="GoodsCategory" resultType="GoodsCategory">
+		SELECT C1.CAT_ID,
+		   C1.ECOM_CODE,
+	       C1.CAT_NAME,
+	       C1.CAT_PATH,
+	       C1.CAT_IMAGE,
+	       C1.LIST_SHOW,
+	       C1.CAT_SOLR,
+	       C2.CAT_NAME AS PARENT_NAME,
+	       C1.OUTER_CAT_ID,
+	       C1.CREATE_TIME,
+	       C1.UPDATE_TIME
+	  FROM TB_ECOM_GOODS_CATEGORY C1
+	  LEFT JOIN TB_ECOM_GOODS_CATEGORY C2
+	    ON C1.PARENT_ID = C2.CAT_ID
+	 WHERE C1.DATA_STAT = '0'
+		   AND C1.ECOM_CODE = #{ecomCode}
+		   <if test="catName!=null and catName!='' ">
+		   AND C1.CAT_NAME LIKE '%' || #{catName} || '%'
+		   </if>
+		   <if test="listShow!=null and listShow!='' ">
+   		   AND C1.LIST_SHOW = #{listShow}
+   		   </if>
+   		   <if test="parentName!=null and parentName!='' ">
+		   AND C2.CAT_NAME LIKE '%' || #{parentName} || '%'
+		   </if>
+	</select>
+	
+	
+	
+</mapper>

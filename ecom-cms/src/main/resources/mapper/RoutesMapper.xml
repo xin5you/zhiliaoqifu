@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.routes.mapper.RoutesMapper">
+
+	<sql id="routesColumns">
+		ID,
+		ECOM_NAME,
+		ECOM_CODE,
+		ECOM_URL,
+		ECOM_TYPE,
+		ECOM_LOGO,
+		ORDER_URL,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		UPDATE_USER,
+		TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="Routes" resultType="Routes">
+		select
+			<include refid="routesColumns" />
+		from TB_ECOM_ROUTES
+		where 1=1
+		<if test="ecomName !=null and ecomName !='' ">
+			and ECOM_NAME LIKE '%' || #{ecomName} || '%'
+		</if>
+		and DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Routes">
+		select
+		<include refid="routesColumns" />
+		from TB_ECOM_ROUTES where ID=#{primaryKey}
+	</select>
+
+	<select id="selectByEcomName" parameterType="String" resultType="Routes">
+		select
+		<include refid="routesColumns" />
+		from TB_ECOM_ROUTES 
+		where ECOM_NAME=#{ecomName}
+	</select>
+	
+	<select id="selectByEcomCode" parameterType="String" resultType="Routes">
+		select
+		<include refid="routesColumns" />
+		from TB_ECOM_ROUTES 
+		where ECOM_CODE=#{ecomCode}
+	</select>
+
+	<insert id="insert" parameterType="Routes">
+		<selectKey resultType="String" order="BEFORE" keyProperty="id">
+			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getEcomId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_ROUTES(
+			ID,
+			ECOM_NAME,
+			ECOM_CODE,
+			ECOM_URL,
+			ECOM_TYPE,
+			ECOM_LOGO,
+			ORDER_URL,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER,
+			UPDATE_USER,
+			CREATE_TIME,
+			UPDATE_TIME,
+			LOCK_VERSION
+		)VALUES (
+		#{id},
+		#{ecomName,jdbcType=VARCHAR},
+		#{ecomCode,jdbcType=VARCHAR},
+		#{ecomUrl,jdbcType=VARCHAR},
+		#{ecomType,jdbcType=VARCHAR},
+		#{ecomLogo,jdbcType=VARCHAR},
+		#{orderUrl,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		SYSDATE,
+		SYSDATE,
+		'0'
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="Routes">
+		update TB_ECOM_ROUTES
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="ecomName != null">ECOM_NAME=#{ecomName,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="ecomUrl != null">ECOM_URL=#{ecomUrl,jdbcType=VARCHAR},</if>
+			<if test="ecomType != null">ECOM_TYPE=#{ecomType,jdbcType=VARCHAR},</if>
+			<if test="ecomLogo != null">ECOM_LOGO=#{ecomLogo,jdbcType=VARCHAR},</if>
+			<if test="orderUrl != null">ORDER_URL=#{orderUrl,jdbcType=VARCHAR},</if>
+			UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		update TB_ECOM_ROUTES set DATA_STAT='1' where ID=#{id}
+	</delete>
+	
+</mapper>

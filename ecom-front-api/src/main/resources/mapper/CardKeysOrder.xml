@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.card.mapper.CardKeysOrderMapper">
+	
+	<select id="getCardKeysOrderCount" parameterType="String" resultType="java.lang.Integer">
+		select count(1) from iswxpdb.tb_card_keys_order_inf o where o.user_id=#{userId}
+	</select>
+	
+</mapper>

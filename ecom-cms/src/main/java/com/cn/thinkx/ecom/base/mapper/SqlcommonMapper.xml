@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper">
+	
+	<!-- 电商管理模块  主键 -->
+	<sql id="getEcomId">
+     	select ecom_seq.nextval as id from dual
+	</sql>
+	
+	<sql id="getCommonId">
+		select to_char(sysdate, 'YYYYMMDDHHMISS') || to_char(SEQ_TB_WX_TRANS_LOG.nextval, 'fm00000000') as id from dual
+	</sql>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.GoodsSpecMapper">
+	
+	<sql id="GoodsSpecColumns">
+		 ID,
+   		 SPEC_ID,
+   		 SPEC_VALUE_ID,
+   		 GOODS_ID,
+   		 PRODUCT_ID,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 UPDATE_USER,
+		 CREATE_TIME,
+		 UPDATE_TIME ,
+		 LOCK_VERSION
+	</sql>
+	
+	<sql id="GoodsSpecFields">
+		#{id},
+		#{specId,jdbcType=VARCHAR},
+		#{specValueId,jdbcType=VARCHAR},
+		#{goodsId,jdbcType=VARCHAR},
+		#{productId,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_GOODS_SPEC
+	</sql>
+	
+	  <insert id="insert"  parameterType="GoodsSpec">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getGoodsSpecId" />
+			</selectKey>
+			
+		INSERT INTO 
+		<include refid="tableName" />   
+		(
+				<include refid="GoodsSpecColumns" /> 
+		)VALUES (
+			   <include refid="GoodsSpecFields" /> 
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="GoodsSpec">
+		update 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="specId != null">SPEC_ID=#{specId,jdbcType=VARCHAR},</if>
+			<if test="specValueId != null">SPEC_VALUE_ID=#{specValueId,jdbcType=VARCHAR},</if>
+			<if test="goodsId != null">GOODS_ID=#{goodsId,jdbcType=VARCHAR},</if>
+			<if test="productId != null">PRODUCT_ID=#{productId,jdbcType=VARCHAR},</if>
+			
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		update 
+		<include refid="tableName" />
+		 set DATA_STAT='1' where ID=#{id}
+	</update>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="GoodsSpec">
+		select
+			<include refid="GoodsSpecColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 where ID=#{primaryKey}
+	</select>
+	
+	<select id="getList" parameterType="GoodsSpec"  resultType="GoodsSpec">
+		select 
+			<include refid="GoodsSpecColumns" />  
+		from 
+		<include refid="tableName" />   
+		where DATA_STAT = '0'
+		order by UPDATE_TIME DESC
+	</select>
+	
+	
+	<select id="getGoodsSpecByGoodsId" parameterType="java.lang.String"  resultType="GoodsSpec">
+		     
+		     SELECT DISTINCT s.SPEC_ID,
+				s.SPEC_NAME,
+				sv.SPEC_VALUE_ID,
+				sv.SPEC_VALUE,
+				sv.SPEC_IMAGE ,
+				gs.GOODS_ID
+			FROM
+				TB_ECOM_SPECIFICATION s,
+				TB_ECOM_SPEC_VALUES sv,
+				TB_ECOM_GOODS_SPEC gs
+		WHERE s.SPEC_ID = sv.SPEC_ID  
+			AND gs.SPEC_VALUE_ID = sv.SPEC_VALUE_ID 
+			AND gs.GOODS_ID=#{goodsId}  
+			ORDER BY s.SPEC_ID
+	</select>
+	
+</mapper>

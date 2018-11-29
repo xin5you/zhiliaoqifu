@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper">
+
+	<!-- 商城API服务SPU码主键 -->
+	<sql id="getApiSpuId">
+     	select SEQ_TB_ECOM_API_SPU.nextval as id from dual
+	</sql>
+	
+	<!-- 商品规格表主键 -->
+	<sql id="getSpecificationId">
+     	select SEQ_TB_ECOM_SPECIFICATION.nextval as id from dual
+	</sql>
+	
+	<!-- 商品规格值表主键 -->
+	<sql id="getSpecValuesId">
+     	select SEQ_TB_ECOM_SPEC_VALUES.nextval as id from dual
+	</sql>
+	
+	<!-- 商品规格值参照表主键 -->
+	<sql id="getGoodsSpecId">
+     	select SEQ_TB_ECOM_API_SPU.nextval as id from dual
+	</sql>
+	
+	<!-- 商品主键 -->
+	<sql id="getGoodsId">
+		SELECT SEQ_TB_ECOM_GOODS.NEXTVAL AS ID FROM DUAL
+	</sql>
+	
+	<!-- 商品分类主键 -->
+	<sql id="getGoodsCategoryId">
+		SELECT SEQ_TB_ECOM_GOODS_CATEGORY.NEXTVAL AS ID FROM DUAL
+	</sql>
+
+	<!-- 货品主键 -->
+	<sql id="getGoodsProductId">
+		SELECT SEQ_TB_ECOM_GOODS_PRODUCT.NEXTVAL AS ID FROM DUAL
+	</sql>
+	
+	<!-- 电商楼层管理模块  主键 -->
+	<sql id="getFloorId">
+     	select SEQ_TB_ECOM_FLOOR.nextval as id from dual
+	</sql>
+	
+	<!-- 商城服务设置模块  主键 -->
+	<sql id="getEsettingId">
+     	select SEQ_TB_ECOM_SETTING.nextval as id from dual
+	</sql>
+	
+	<!-- 商城楼层商品关联模块  主键 -->
+	<sql id="getFloorGoodsId">
+     	select SEQ_TB_ECOM_FLOOR_GOODS.nextval as id from dual
+	</sql>
+	
+	<!-- 商城服务设置banner关联模块  主键 -->
+	<sql id="getSettingBannerId">
+     	select SEQ_TB_ECOM_SETTING_BANNER.nextval as id from dual
+	</sql>
+</mapper>

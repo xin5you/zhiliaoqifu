@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>商品管理</li>
+		                    <li>商品一级分类管理</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/ecom/category/listFirstCategory}" th:object="${category}" class="form-inline" method="post">
+					<input type="hidden" id="parentId" name="parentId" th:value="${category.parentId}" />
+					<input type="hidden" id="catPath" name="catPath" th:value="${category.catPath}" />
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">渠道商城名称</span> 
+								
+								<select id="ecomCode" name ="ecomCode">
+									<option th:each="ecomType,ecomTypeStat : ${ecomTypeList}" th:value="${ecomType.code}">
+										<span th:text="${ecomType.value}" />
+									</option>
+								</select>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">分类名称</span> 
+								<input id="catName" name="catName" type="text" class="input-medium" th:value="${category.catName}" maxlength="20"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">前端展示状态</span> 
+								
+								<select id="listShow" name ="listShow">
+								<option value="">--请选择--</option>
+									<option th:each="show,showStat : ${showList}" th:value="${show.code}">
+										<span th:text="${show.value}" />
+									</option>
+								</select>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+							</div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+				                <th>所属商城</th>
+								<th>分类名称</th>
+								<th>分类图片</th>
+				                <th>前端展示状态</th>
+				                <th>分类排序</th>
+				                <th>创建时间</th>
+				                <th>修改时间</th>
+				                <th>操作</th>
+							</tr>
+						</thead>
+				        <tbody>
+							<tr th:each="category,categoryStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${category.ecomType}"></span></td>
+								<td><span th:text="${category.catName}"></span></td>
+								<td><span th:text="${category.catImage}"></span></td>
+								<td><span th:text="${category.listShowType}"></span></td>
+								<td><span th:text="${category.catSolr}"></span></td>
+								<td><span th:text="${category.createTime}"></span></td>
+								<td><span th:text="${category.updateTime}"></span></td>
+								<td>
+								<a th:attr="catId=${category.catId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+			    </form>
+			</div>
+		</div>
+		
+		<div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="goodsInfo" class="form-horizontal form_validation_tip" enctype="multipart/form-data">
+				<div class="modal-header">
+					<button class="close btn-close" data-dismiss="modal">&times;</button>
+					<h3 id="modal_h">编辑商品分类</h3>
+				</div>
+				<div class="modal-body">
+				<input type="hidden" id="editCatId" name="editCatId"/>
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label">分类名称：</label>
+						<div class="controls">
+							<input type="text" class="span3" name="editCatName" id="editCatName" readonly="readonly" />
+							<span class="help-block"></span>
+						</div>	
+					</div>
+					<div class="control-group">
+						<label class="control-label">所属商城：</label>
+						<div class="controls">
+							<input type="text" class="span3" name="editEcomType" id="editEcomType" readonly="readonly"/>
+							<span class="help-block"></span>
+						</div>	
+					</div>
+					<div class="control-group">
+						<label class="control-label">分类排序：</label>
+						<div class="controls">
+							<input type="text" class="span3" name="editCatSolr" id="editCatSolr" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" />
+							<span class="help-block"></span>
+						</div>	
+					</div>
+					<div class="control-group">
+						<label class="control-label">前端展示状态：</label>
+						<div class="controls">
+							<select id="editListShow" name ="editListShow">
+								<option th:each="show,showStat : ${showList}" th:value="${show.code}">
+									<span th:text="${show.value}" />
+								</option>
+							</select>
+						</div>
+					</div>
+				</fieldset>
+				</div>
+				<div class="modal-footer" style="text-align: center;">
+		            <button class="btn btn-primary btn-submit" type="button">提 交 </button>
+		            <button class="btn btn-close" data-dismiss="modal" aria-hidden="true">关 闭</button>
+		        </div>
+			</form>
+		</div>
+		<script th:src="@{/ecom/js/category/listFirstCategory.js}"></script>
+		<script th:inline="javascript">
+			$("#ecomCode").val(/*[[${category.ecomCode}]]*/);
+			$("#listShow").val(/*[[${category.listShow}]]*/);
+		</script>
+	</body>
+</html>
+

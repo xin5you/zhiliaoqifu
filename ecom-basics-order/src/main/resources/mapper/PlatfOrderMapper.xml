@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.PlatfOrderMapper">
+
+	<resultMap type="PlatfOrder" id="PlatfOrderResultMap">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="PAY_STATUS" property="payStatus" />
+		<result column="ORDER_PRICE" property="orderPrice" />
+		<result column="ORDER_FREIGHT_AMT" property="orderFreightAmt" />
+		<result column="PAY_TYPE" property="payType" />
+		<result column="PAY_AMT" property="payAmt" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="DATA_STAT" property="dataStat" />
+		<result column="REMARKS" property="remarks" />
+		<result column="CREATE_USER" property="createUser" />
+		<result column="UPDATE_USER" property="updateUser" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="LOCK_VERSION" property="lockVersion" />
+		<collection property="platfShopOrder" ofType="PlatfShopOrder">
+			<result column="S_ORDER_ID" property="sOrderId" />
+			<result column="DMS_RELATED_KEY" property="dmsRelatedKey" />
+			<result column="SUB_ORDER_STATUS" property="subOrderStatus" />
+			<result column="ORDER_REMARK" property="orderRemark" />
+			<result column="PAY_AMT" property="payAmt" />
+			<result column="ECOM_CODE" property="ecomCode" />
+			<result column="CHNL_ORDER_PRICE" property="chnlOrderPrice" />
+			<result column="CHNL_ORDER_POSTAGE" property="chnlOrderPostage" />
+			<result column="SHIPPING_FREIGHT_PRICE" property="shippingFreightPrice" />
+			<collection property="orderProductItems" ofType="OrderProductItem">
+				<result column="O_ITEM_ID" property="oItemId" />
+				<result column="PRODUCT_ID" property="productId" />
+				<result column="PRODUCT_PRICE" property="productPrice" />
+				<result column="PRODUCT_NUM" property="productNum" />
+				<result column="PRODUCT_NAME" property="productName" />
+				<result column="GOODS_ID" property="goodsId" />
+				<result column="IS_STORE" property="isStore" />
+				<result column="ENABLE_STORE" property="enableStore" />
+				<result column="PIC_URL" property="picUrl" />
+			</collection>
+		</collection>
+	</resultMap>
+
+	<sql id="platfOrderColumns">
+		ORDER_ID,
+		MEMBER_ID,
+		DMS_RELATED_KEY,
+		PAY_STATUS,
+		ORDER_PRICE,
+		ORDER_FREIGHT_AMT,
+		PAY_TYPE,
+		PAY_AMT,
+		PAY_TIME,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+
+	<sql id="platfOrderFields">
+		#{orderId,jdbcType=VARCHAR},
+		#{memberId,jdbcType=VARCHAR},
+		#{dmsRelatedKey,jdbcType=VARCHAR},
+		#{payStatus,jdbcType=VARCHAR},
+		#{orderPrice,jdbcType=VARCHAR},
+		#{orderFreightAmt,jdbcType=VARCHAR},
+		#{payType,jdbcType=VARCHAR},
+		#{payAmt,jdbcType=VARCHAR},
+		to_date(#{payTime,jdbcType=VARCHAR},'YYYY/MM/DD HH24:mi:ss'),
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+
+	<sql id="tableName">
+		TB_ECOM_PLATF_ORDER
+	</sql>
+
+	<select id="selectByPrimaryKey" parameterType="String"
+		resultType="PlatfOrder">
+		select
+		<include refid="platfOrderColumns" />
+		from
+		<include refid="tableName" />
+		where ORDER_ID = #{primaryKey}
+	</select>
+
+	<select id="getPlatfOrderList" parameterType="PlatfOrder"
+		resultType="PlatfOrder">
+		select
+		PO.ORDER_ID,
+		PO.MEMBER_ID,
+		PO.DMS_RELATED_KEY,
+		PO.PAY_STATUS,
+		PO.ORDER_PRICE,
+		PO.ORDER_FREIGHT_AMT,
+		PO.PAY_TYPE,
+		PO.PAY_AMT,
+		TO_CHAR(PO.PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') PAY_TIME,
+		PO.DATA_STAT,
+		PO.REMARKS,
+		PO.CREATE_USER,
+		PO.UPDATE_USER,
+		TO_CHAR(PO.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		TO_CHAR(PO.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		PO.LOCK_VERSION,
+		P.MOBILE_PHONE_NO,
+		P.PERSONAL_NAME
+		from
+		<include refid="tableName" />
+		PO,TB_ECOM_MEMBER M,TB_PERSON_INF P
+		WHERE
+		PO.MEMBER_ID = M.MEMBER_ID
+		AND M.PERSON_ID = P.PERSONAL_ID
+		AND P.DATA_STAT = '0'
+		<if test="orderId !=null and orderId !='' ">
+			and PO.ORDER_ID = #{orderId}
+		</if>
+		<if test="personalName !=null and personalName !='' ">
+			and P.PERSONAL_NAME = #{personalName}
+		</if>
+		<if test="dmsRelatedKey !=null and dmsRelatedKey !='' ">
+			and PO.DMS_RELATED_KEY = #{dmsRelatedKey}
+		</if>
+		<if test="mobilePhoneNo !=null and mobilePhoneNo !='' ">
+			and P.MOBILE_PHONE_NO = #{mobilePhoneNo}
+		</if>
+		<if test="payStatus !=null and payStatus !='' ">
+			and PO.PAY_STATUS = #{payStatus}
+		</if>
+		<if test="payType !=null and payType !='' ">
+			and PO.PAY_TYPE = #{payType}
+		</if>
+		<if test="beginTime != null and beginTime != ''">
+			and PO.CREATE_TIME &gt;= to_date(#{beginTime}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		<if test="endTime != null  and endTime != ''">
+			and PO.CREATE_TIME &lt;= to_date(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		order by PO.CREATE_TIME desc
+	</select>
+
+	<select id="getPrimaryKey" resultType="String">
+		select
+		SEQ_TB_ECOM_PLATF_ORDER.nextval as id from dual
+	</select>
+
+	<insert id="insert" parameterType="PlatfOrder">
+		INSERT INTO
+		<include refid="tableName" />
+		(
+		<include refid="platfOrderColumns" />
+		) VALUES (
+		<include refid="platfOrderFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="PlatfOrder">
+		UPDATE
+		<include refid="tableName" />
+
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="memberId != null">MEMBER_ID=#{memberId,jdbcType=VARCHAR},</if>
+			<if test="dmsRelatedKey != null">DMS_RELATED_KEY=#{dmsRelatedKey,jdbcType=VARCHAR},</if>
+			<if test="payStatus != null">PAY_STATUS=#{payStatus,jdbcType=VARCHAR},</if>
+			<if test="orderPrice != null">ORDER_PRICE=#{orderPrice,jdbcType=VARCHAR},</if>
+			<if test="orderFreightAmt != null">ORDER_FREIGHT_AMT=#{orderFreightAmt,jdbcType=VARCHAR},</if>
+			<if test="payType != null">PAY_TYPE=#{payType,jdbcType=VARCHAR},</if>
+			<if test="payAmt != null">PAY_AMT=#{payAmt,jdbcType=VARCHAR},</if>
+			<if test="payTime != null">PAY_TIME=to_date(#{payTime,jdbcType=VARCHAR},'YYYY/MM/DD HH24:mi:ss'),</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE ORDER_ID=#{orderId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE
+		<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate
+		WHERE ORDER_ID=#{orderId}
+	</delete>
+
+	<select id="getPlatfOrderGoodsByMemberId" parameterType="PlatfOrder"
+		resultMap="PlatfOrderResultMap">
+		SELECT
+		PO.ORDER_ID,
+		PO.MEMBER_ID,
+	    PO.PAY_STATUS,
+	    PO.ORDER_PRICE,
+	    PO.ORDER_FREIGHT_AMT,
+	    PO.PAY_TYPE,
+	    PO.PAY_AMT,
+	    TO_CHAR(PO.PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') PAY_TIME,
+	    PO.DATA_STAT,
+	    PO.REMARKS,
+	    PO.CREATE_USER,
+	    PO.UPDATE_USER,
+	    TO_CHAR(PO.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+	    TO_CHAR(PO.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+	    PO.LOCK_VERSION,
+	    PSO.S_ORDER_ID,
+	    PSO.DMS_RELATED_KEY,
+	    PSO.SUB_ORDER_STATUS,
+	    PSO.ORDER_REMARK,
+	    PSO.PAY_AMT AS SPAYAMT,
+	    PSO.ECOM_CODE,
+	    PSO.CHNL_ORDER_PRICE,
+	    PSO.CHNL_ORDER_POSTAGE,
+	    PSO.SHIPPING_FREIGHT_PRICE,
+	    ITEM.O_ITEM_ID,
+	    ITEM.PRODUCT_ID,
+	    ITEM.PRODUCT_PRICE,
+	    ITEM.PRODUCT_NUM,
+	    ITEM.PRODUCT_NAME,
+	    GP.GOODS_ID,
+	    GP.IS_STORE,
+	    GP.ENABLE_STORE,
+	    GP.PIC_URL
+	    FROM
+	    TB_ECOM_PLATF_ORDER PO LEFT JOIN TB_ECOM_PLATF_SHOP_ORDER PSO
+	    ON PO.ORDER_ID =PSO.ORDER_ID LEFT JOIN TB_ECOM_ORDER_PRODUCT_ITEM  ITEM
+	    ON PSO.S_ORDER_ID = ITEM.S_ORDER_ID LEFT JOIN TB_ECOM_GOODS_PRODUCT GP
+	    ON ITEM.PRODUCT_ID = GP.PRODUCT_ID LEFT JOIN  TB_ECOM_GOODS G
+	    ON  GP.GOODS_ID = G.GOODS_ID
+	    WHERE  PO.DATA_STAT = '0' AND PSO.DATA_STAT = '0'  
+		<if test="memberId !=null and memberId !='' ">
+			and PO.MEMBER_ID = #{memberId}
+		</if>
+		<if test="payStatus !=null and payStatus !='' ">
+			and PO.PAY_STATUS = #{payStatus}
+		</if>
+		<if test="orderId !=null and orderId !='' ">
+			and PO.ORDER_ID = #{orderId}
+		</if>
+		<if test="sOrderId !=null and sOrderId !='' ">
+			and PSO.S_ORDER_ID = #{sOrderId}
+		</if>
+		<if test="ecomCode !=null and ecomCode !='' ">
+			and PSO.ECOM_CODE = #{ecomCode}
+		</if>
+		ORDER BY PO.UPDATE_TIME DESC,PO.PAY_TIME DESC
+	</select>
+	
+	<update id="updateOlatfOrder">
+		UPDATE TB_ECOM_PLATF_ORDER
+		   SET PAY_STATUS = '8',UPDATE_TIME = SYSDATE, LOCK_VERSION = LOCK_VERSION + 1
+		 WHERE PAY_STATUS = '0'
+		   AND CREATE_TIME &lt; SYSDATE - 1 / 48
+		   AND CREATE_TIME &gt;= SYSDATE - 1 / 24
+	</update>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.thinkx.ecom.basics.member.mapper.CityInfMapper">
+
+	<resultMap type="CityInf" id="CityInfResultMap">
+		<result column="ID" property="areaId" />
+		<result column="CITY_NAME" property="name" />
+		<result column="CITY_GRADE" property="areaClass" />
+		<result column="PARENT_ID" property="parentId" />
+	</resultMap>
+
+	<sql id="CityInfColumns">
+		m.ID,
+		m.CITY_NAME,
+		m.CITY_GRADE,
+		m.PARENT_ID
+	</sql>
+
+	<select id="findCityInfList" parameterType="CityInf" resultMap="CityInfResultMap">
+		SELECT
+		<include refid="CityInfColumns" />
+
+		FROM TB_CITY_INF m WHERE m.DATA_STAT='0'
+
+		<if test="parentId !=null and parentId !='' ">
+			AND m.PARENT_ID=#{parentId}
+		</if>
+	</select>
+
+</mapper>

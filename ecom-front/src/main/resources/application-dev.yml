@@ -1,0 +1,178 @@
+server:
+  port: 8989
+  contextPath: /ecom-front
+  session:
+    cookie:
+      name: JSESSIONID
+      path: /
+      domain: 
+spring:
+  datasource:
+    jndi-name: JDBC
+    name: mySpringBoot
+    url: jdbc:oracle:thin:@192.168.1.101:1521:dfkdb
+    username: isecmdb
+    password: isecmdb
+    driver-class-name: oracle.jdbc.OracleDriver
+    type: com.alibaba.druid.pool.DruidDataSource
+    minActive: 1
+    maxActive: 20
+    initialSize: 1
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  thymeleaf: 
+    prefix: classpath:/views/
+    #content-type: text/html
+    #suffix: .html
+    #mode: HTML5
+    #encoding: UTF-8
+    # set to false for hot refresh
+    cache: false
+  session:
+    store-type: redis
+  redis: 
+    timeout: 3000
+    cluster:
+       nodes: 192.168.1.101:7111,192.168.1.201:7112,192.168.1.202:7113,192.168.1.202:7114,192.168.1.101:7115,192.168.1.201:7116
+       connection-timeout: 1000
+       soTimeout: 3000
+       max-attempts: 5
+       password: 
+       max-redirects: 2
+    pool:
+       max-total: 1024
+       max-active: 8
+       max-idle: 8
+       max-wait: -1
+       min-idle: 0
+       block-when-exhausted: true
+       max-wait-millis: 3000
+       test-on-borrow: false
+       test-on-return: false
+       test-while-idle: true
+       minEvictableIdleTimeMillis: 60000
+       timeBetweenEvictionRunsMillis: 60000
+       numTestsPerEvictionRun: 1
+  mq:
+    brokerURL: failover:(tcp://192.168.1.101:51511,tcp://192.168.1.201:51512,tcp://192.168.1.202:51513)?randomize=false
+    username: admin
+    password: admin
+    pool:
+      max-connections: 50
+myBatis:
+  mapperLocations: classpath*:mapper/*.xml
+  configLocations: classpath:conf/mybatis-config.xml
+  #typeAliasesPackage: com.cn.thinx.ecom_cms.test.domain
+logging:
+  config: classpath:conf/logback-ecom.xml
+  
+#知了企服加解密key（商城主页和订单）
+HKB_AES_KEY: litj49jk4op589o4
+
+#电商商城入口链接
+ECOM_HOME: http://127.0.0.1:8989/ecom-front/homePage/listEshopHomePage
+#电商我的订单入口链接：
+ECOM_ORDER: http://127.0.0.1:8989/ecom-front/order/listOrderInf
+
+#海易通加解密key（商城主页和订单）
+HYT_AES_KEY: litj49jk4op589o4
+#商城入口链接（海镱通）
+HYT: http://www.yomale.com/mall/infomation?parameterHYT=6f4a4275636274496a6a56565532686c466c2b732b4831316c6170336d494533487a4f3639624f706b596b3761566b4d783931424f536f3876306363727a694b
+  
+#家乐宝加解密key（商城主页和订单）
+JLB_AES_KEY: 18dffhD3Mxwiobpo
+#商城入口链接（家乐宝）
+JLB: https://cs.jialebao.me/weichat/activity/ac150915/empty_jump.html?reward_type=h_k_b
+
+#嘉福加解密key（商城主页和订单）
+JF_KEY: c3979888f9e2aa24287d573414a209b1
+#嘉福京东对接参数
+ident: hkb
+e_eid: hkb_001
+jingdong_service: h5.scene.ds.master
+meituan_service: h5.scene.dianping
+dianping_service: h5.scene.dianping
+order_service: h5.scene.my.order
+#商城入口链接（嘉福京东）
+JF: http://test.jia-fu.cn/open/h5/launcher
+
+#网易严选相关配置-----start
+# http configuration
+http: 
+  timeout: 60000
+  defaultCharset: utf-8
+  connection: 
+    maxTotal: 200
+    defaultMaxPerRoute: 50
+yx: 
+  openApi: 
+    payedOrder: 
+      method: yanxuan.order.paid.create
+    getOrder:
+      method: yanxuan.order.paid.get
+    confirmOrder: 
+      method: yanxuan.order.received.confirm
+    cancelOrder: 
+      method: yanxuan.order.paid.cancel
+    getIds: 
+      method: yanxuan.item.id.batch.get
+    getItems: 
+      method: yanxuan.item.batch.get
+    getInventory: 
+      method: yanxuan.inventory.count.get
+    getCallBackMethods: 
+      method: yanxuan.callback.method.list
+    registerCallbackMethod: 
+      method: yanxuan.callback.method.register
+    getExpress: 
+      method: yanxuan.order.express.get
+    orderRefundApply:
+      method: yanxuan.order.refund.apply
+    orderRefundCancel:
+      method: yanxuan.order.refund.cancel
+    orderRefundOfferExpress: 
+      method: yanxuan.order.refund.offer.express
+    getOrderRefundDetail: 
+      method: yanxuan.order.refund.detail.get
+    getCategory: 
+      method: yanxuan.item.category.get
+    getSkuIdBatch: 
+      method: yanxuan.item.category.skuId.batch.get
+    getItemSku: 
+      method: yanxuan.item.sku.get
+    mockapi:
+      path: 
+        prefix: /mock/api/v1
+      callbackAuditCancelOrder: 
+        method: /callbackAuditCancelOrder
+      callbackCancelOrder: 
+        method: /callbackCancelOrder
+      callbackDeliveryOrder: 
+        method: /callbackDeliveryOrder
+      callbackTransfer: 
+        method: /callbackTransfer
+      callbackRefundAddress: 
+        method: /callbackRefundAddress
+      callbackRefundReject: 
+        method: /callbackRefundReject
+      callbackRefundExpressConfirm: 
+        method: /callbackRefundExpressConfirm
+      callbackRefundSystemCancel: 
+        method: /callbackRefundSystemCancel
+      callbackRefundResultDirectly:
+        method: /callbackRefundResultDirectly
+      callbackRefundResultWithExpress: 
+        method: /callbackRefundResultWithExpress
+#网易严选相关配置-----end
+CASH_URL: http://cas.tao-lue.com/ecom-cash/trans/order/unifiedOrder
+REDIRECT_URL: 
+NOTIFY_URL: http://192.168.1.112:8989/ecom-front/goods/orderPay/backResult
+ECOM_SING_KEY: YPEgSbuyRcoDV49yHzx4wS4ZeKHFVQA84Hv4IunjH10
+HKB_H5_URL: http://hkb.tao-lue.com
+BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/ecom/recharge/mobileRechargeBack
+OPEN_BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/hkb/recharge/mobileRechargeBack
+

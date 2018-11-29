@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.OrderRefundMapper">
+
+	<sql id="orderRefundColumns">
+		REFUND_ID,
+		RETURNS_ID,
+		S_ORDER_ID,
+		DMS_RELATED_KEY,
+		REFUND_AMT,
+		MEMBER_ID,
+		REFUND_STATUS,
+		REFUND_TIME,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="orderRefundFields">
+		#{refundId,jdbcType=VARCHAR},
+		#{returnsId,jdbcType=VARCHAR},
+		#{sOrderId,jdbcType=VARCHAR},
+		#{dmsRelatedKey,jdbcType=VARCHAR},
+		#{refundAmt,jdbcType=VARCHAR},
+		#{memberId,jdbcType=VARCHAR},
+		#{refundStatus,jdbcType=VARCHAR},
+		#{refundTime,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_ORDER_REFUND
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="OrderRefund">
+		select
+			<include refid="orderRefundColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where REFUND_ID = #{primaryKey}
+	</select>
+
+	<select id="getOrderRefundList" parameterType="OrderRefund" resultType="OrderRefund">
+		select
+			<include refid="orderRefundColumns" />
+		from 
+			<include refid="tableName" />
+		where DATA_STAT = '0'
+		<if test="returnsId !=null and returnsId !='' ">
+			and RETURNS_ID = #{returnsId}
+		</if>
+		<if test="sOrderId !=null and sOrderId !='' ">
+			and S_ORDER_ID = #{sOrderId}
+		</if>
+		<if test="refundAmt !=null and refundAmt !='' ">
+			and REFUND_AMT = #{refundAmt}
+		</if>
+		<if test="memberId !=null and memberId !='' ">
+			and MEMBER_ID = #{memberId}
+		</if>
+		<if test="refundStatus !=null and refundStatus !='' ">
+			and REFUND_STATUS = #{refundStatus}
+		</if>
+		<if test="refundTime !=null and refundTime !='' ">
+			and REFUND_TIME = #{refundTime}
+		</if>
+		order by UPDATE_TIME desc
+	</select>
+
+	<insert id="insert" parameterType="OrderRefund">
+		<selectKey resultType="String" order="BEFORE" keyProperty="refundId">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getOrderRefundId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			REFUND_ID,
+			RETURNS_ID,
+			S_ORDER_ID,
+			DMS_RELATED_KEY,
+			REFUND_AMT,
+			MEMBER_ID,
+			REFUND_STATUS,
+			REFUND_TIME,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER,
+			UPDATE_USER,
+			CREATE_TIME,
+			UPDATE_TIME,
+			LOCK_VERSION
+		) VALUES (
+			<include refid="orderRefundFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="OrderRefund">
+		UPDATE 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="returnsId != null">RETURNS_ID=#{returnsId,jdbcType=VARCHAR},</if>
+			<if test="sOrderId != null">S_ORDER_ID=#{sOrderId,jdbcType=VARCHAR},</if>
+			<if test="dmsRelatedKey != null and dmsRelatedKey != '' ">DMS_RELATED_KEY=#{dmsRelatedKey,jdbcType=VARCHAR},</if>
+			<if test="refundAmt != null">REFUND_AMT=#{refundAmt,jdbcType=VARCHAR},</if>
+			<if test="memberId != null">MEMBER_ID=#{memberId,jdbcType=VARCHAR},</if>
+			<if test="refundStatus != null">REFUND_STATUS=#{refundStatus,jdbcType=VARCHAR},</if>
+			<if test="refundTime != null">REFUND_TIME=to_date(#{refundTime,jdbcType=VARCHAR},'YYYY/MM/DD HH24:mi:ss'),</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE REFUND_ID=#{refundId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE REFUND_ID=#{refundId}
+	</delete>
+
+   <select id="getOrderRefundByReturnsId" parameterType="String" resultType="OrderRefund">
+		select
+			<include refid="orderRefundColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where RETURNS_ID=#{returnsId}
+	</select>
+</mapper>

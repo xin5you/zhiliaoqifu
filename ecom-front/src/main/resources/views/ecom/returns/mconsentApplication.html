@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/header::header" />
+<title>退货申请</title>
+<link th:href="@{/ecomfront/css/hkb_store.min.css}" rel="stylesheet"/>
+<link th:href="@{/ecomfront/css/main.css}" rel="stylesheet"/>
+<body>
+
+<div class="djs">
+    <div class="wen">
+        <p>商家同意退货申请</p>
+        <span></span>
+    </div>
+    <img th:src="@{/ecomfront/images/pics/success.png}" />
+</div>
+<div class="logistics_address logistics_address2">
+
+    <div class="take_address">
+
+<!--         <div class="address_name"> -->
+<!--             <div class=" left">退货时间：</div> -->
+<!--             <div class="contact_phone"> -->
+<!--                 <div>剩余2天23时59分</div> -->
+<!--                 <span>逾期未退货，申请将关闭</span> -->
+<!--             </div> -->
+<!--         </div> -->
+        <div class="address_name">
+            <div class=" left">收货地址：</div>
+            <div class="contact_phone">
+                <div><span th:text="${address.mobile}"></span></div>
+                <span><span th:text="${address.fullAddress}"></span></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin-top: 10px;">
+    <div class="input_form hkbstore_alignment_left input_form1">
+        <div style="width: 22%">物流公司：</div>
+        <div style="display:inline-block;width: 250px; margin-top: -5px">
+            <select class="select03" id="trackingCompany">
+                <option value="天天">天天快递</option>
+                <option value="顺丰">顺丰快递</option>
+                <option value="韵达">韵达快递</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="logistics_address logistics_address2">
+    <div class="take_address">
+
+        <div class="address_name ">
+
+            <div class=" left">物流单号：</div>
+            <input name="txt" placeholder="请输入物流单号" class="shxx" id="trackingNum" />
+        </div>
+
+    </div>
+</div>
+<!--网易严选订单列表-->
+<div class="order_details">
+    <div class=" order_detai3 details_list">
+        <div class="order_list order_list1">
+            <!--子订单编号-->
+            <div class="details_order_number details_order_number1">
+                <div class="order_number">
+                    <p>退款原因：</p>
+                    <p class="order_number_p"><span th:text="${rerurnsOrder.retType}"></span></p>
+                </div>
+                <div class="order_number">
+                    <p>退款金额：</p>
+                    <p class="order_number_p">￥<span th:text="${rerurnsOrder.resv1}"></span></p>
+                </div>
+                <div class="order_number">
+                    <p>申请时间：</p>
+                    <p class="order_number_p"> <span th:text="${rerurnsOrder.addTime}"></span></p>
+                </div>
+                <div class="order_number">
+                    <p>退款编号：</p>
+                    <p class="order_number_p" id="returnsId"><span th:text="${rerurnsOrder.returnsId}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!--底部按钮-->
+        <div class="order_btn">
+            <a href="javascript:void(0)" id="offerExpressCommit">提交退货信息</a>
+        </div>
+        <!--<div class="order_detail_btn">-->
+            <!--<a class="operation_btn goto_pay" href="rlogistics.html">提交退货信息</a>-->
+
+        <!--</div>-->
+
+
+
+<script th:src="@{/ecomfront/js/fastclick.min.min.js}" ></script>
+<script th:src="@{/ecomfront/js/hkb_store.min.js}"></script>
+<script th:src="@{/ecomfront/js/jquery-3.0.0.min.js}"></script>
+<script th:src="@{/ecomfront/js/M_select.js}"></script>
+<script th:src="@{/ecom/returns/mconsentApplication1.js}"></script>
+<script>
+    $(function(){
+        // 对所有下拉款进行初始化
+        // 单独对一个下拉框进行初始化
+        $(".select03").M_select({
+            "ico":"3",
+            "radius":"3px",
+            "Title":"请选择您的物流",
+            "inputName":"selected_value"
+        });
+    });
+</script>
+</body>
+</html>

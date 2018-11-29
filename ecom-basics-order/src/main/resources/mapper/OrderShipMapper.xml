@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.OrderShipMapper">
+
+	<sql id="orderShipColumns">
+		ID,
+		ORDER_ID,
+		SHIP_NAME,
+		SHIP_ADDR,
+		SHIP_ZIP_CODE,
+		SHIP_EMAIL,
+		SHIP_MOBILE,
+		SHIP_TELEPHONE,
+		SHIP_PROVINCE_ID,
+		SHIP_CITY_ID,
+		SHIP_REGION_ID,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+	    UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="orderShipFields">
+		#{id},
+		#{orderId,jdbcType=VARCHAR},
+		#{shipName,jdbcType=VARCHAR},
+		#{shipAddr,jdbcType=VARCHAR},
+		#{shipZipCode,jdbcType=VARCHAR},
+		#{shipEmail,jdbcType=VARCHAR},
+		#{shipMobile,jdbcType=VARCHAR},
+		#{shipTelephone,jdbcType=VARCHAR},
+		#{shipProvinceId,jdbcType=VARCHAR},
+		#{shipCityId,jdbcType=VARCHAR},
+		#{shipRegionId,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_ORDER_SHIP
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="OrderShip">
+		select
+			<include refid="orderShipColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where ID = #{primaryKey}
+	</select>
+	
+		
+	<select id="getOrderShipByOrderId" parameterType="String" resultType="OrderShip">
+		select
+		s.ID,
+		s.ORDER_ID,
+		s.SHIP_NAME,
+		s.SHIP_ADDR,
+		s.SHIP_ZIP_CODE,
+		s.SHIP_EMAIL,
+		s.SHIP_MOBILE,
+		s.SHIP_TELEPHONE,
+		s.SHIP_PROVINCE_ID, 
+		(SELECT c.CITY_NAME FROM TB_CITY_INF c WHERE c.ID = s.SHIP_PROVINCE_ID) as SHIP_PROVINCE_NAME,
+		s.SHIP_CITY_ID,
+		(SELECT c.CITY_NAME FROM TB_CITY_INF c WHERE c.ID = s.SHIP_CITY_ID) as SHIP_CITY_NAME,
+		s.SHIP_REGION_ID,
+		(SELECT c.CITY_NAME FROM TB_CITY_INF c WHERE c.ID = s.SHIP_REGION_ID) as SHIP_REGION_NAME,
+		s.DATA_STAT
+		from 
+		TB_ECOM_ORDER_SHIP s
+			WHERE s.ORDER_ID= #{orderId}
+	</select>
+
+	<select id="getOrderShipList" parameterType="OrderShip" resultType="OrderShip">
+		SELECT
+			OS.ID,
+			OS.ORDER_ID,
+			OS.SHIP_NAME,
+			OS.SHIP_ADDR,
+			OS.SHIP_ZIP_CODE,
+			OS.SHIP_EMAIL,
+			OS.SHIP_MOBILE,
+			OS.SHIP_TELEPHONE,
+			OS.SHIP_PROVINCE_ID,
+			(SELECT c.CITY_NAME FROM TB_CITY_INF c WHERE c.ID = OS.SHIP_PROVINCE_ID) as SHIP_PROVINCE_NAME,
+			OS.SHIP_CITY_ID,
+			(SELECT c.CITY_NAME FROM TB_CITY_INF c WHERE c.ID = OS.SHIP_CITY_ID) as SHIP_CITY_NAME,
+			OS.SHIP_REGION_ID,
+			(SELECT c.CITY_NAME FROM TB_CITY_INF c WHERE c.ID = OS.SHIP_REGION_ID) as SHIP_REGION_NAME,
+			OS.DATA_STAT,
+			OS.REMARKS,
+			OS.CREATE_USER,
+			OS.UPDATE_USER,
+			TO_CHAR(OS.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+			TO_CHAR(OS.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+      		OS.LOCK_VERSION,
+      		M.MEMBER_ID,
+      		P.PERSONAL_NAME,
+      		P.MOBILE_PHONE_NO
+    	FROM  TB_ECOM_ORDER_SHIP OS, TB_ECOM_PLATF_ORDER PO,TB_ECOM_MEMBER M,TB_PERSON_INF P
+      	WHERE OS.ORDER_ID = PO.ORDER_ID 
+      	AND PO.MEMBER_ID = M.MEMBER_ID 
+      	AND M.PERSON_ID = P.PERSONAL_ID
+       	AND OS.DATA_STAT = '0' AND PO.DATA_STAT = '0'
+		<if test="orderId !=null and orderId !='' ">
+			and OS.ORDER_ID = #{orderId}
+		</if>
+		<if test="shipName !=null and shipName !='' ">
+			and OS.SHIP_NAME = #{shipName}
+		</if>
+		<if test="shipAddr !=null and shipAddr !='' ">
+			and OS.SHIP_ADDR = #{shipAddr}
+		</if>
+		<if test="shipZipCode !=null and shipZipCode !='' ">
+			and OS.SHIP_ZIP_CODE = #{shipZipCode}
+		</if>
+		<if test="shipEmail !=null and shipEmail !='' ">
+			and OS.SHIP_EMAIL = #{shipEmail}
+		</if>
+		<if test="shipMobile !=null and shipMobile !='' ">
+			and OS.SHIP_MOBILE = #{shipMobile}
+		</if>
+		<if test="shipTelephone !=null and shipTelephone !='' ">
+			and OS.SHIP_TELEPHONE = #{shipTelephone}
+		</if>
+		<if test="mobilePhoneNo !=null and mobilePhoneNo !='' ">
+			and P.MOBILE_PHONE_NO = #{mobilePhoneNo}
+		</if>
+		<if test="personalName !=null and personalName !='' ">
+			and P.PERSONAL_NAME = #{personalName}
+		</if>
+		<if test="memberId !=null and memberId !='' ">
+			and M.MEMBER_ID = #{memberId}
+		</if>
+		order by OS.UPDATE_TIME desc
+	</select>
+
+	<insert id="insert" parameterType="OrderShip">
+		<selectKey resultType="String" order="BEFORE" keyProperty="id">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getOrderShipId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			<include refid="orderShipColumns" />
+		) VALUES (
+			<include refid="orderShipFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="OrderShip">
+		UPDATE 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="orderId != null">ORDER_ID=#{orderId,jdbcType=VARCHAR},</if>
+			<if test="shipName != null">SHIP_NAME=#{shipName,jdbcType=VARCHAR},</if>
+			<if test="shipaddr != null">SHIP_ADDR=#{shipaddr,jdbcType=VARCHAR},</if>
+			<if test="shipZipCode != null">SHIP_ZIP_CODE=#{shipZipCode,jdbcType=VARCHAR},</if>
+			<if test="shipEmail != null">SHIP_EMAIL=#{shipEmail,jdbcType=VARCHAR},</if>
+			<if test="shipMobile != null">SHIP_MOBILE=#{shipMobile,jdbcType=VARCHAR},</if>
+			<if test="shipTelephone != null">SHIP_TELEPHONE=#{shipTelephone,jdbcType=VARCHAR},</if>
+			<if test="shipProvinceId != null">SHIP_PROVINCE_ID=#{shipProvinceId,jdbcType=VARCHAR},</if>
+			<if test="shipCityId != null">SHIP_CITY_ID=#{shipCityId,jdbcType=VARCHAR},</if>
+			<if test="shipRegionId != null">SHIP_REGION_ID=#{shipRegionId,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE ID=#{Id}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE ID=#{id}
+	</delete>
+
+</mapper>

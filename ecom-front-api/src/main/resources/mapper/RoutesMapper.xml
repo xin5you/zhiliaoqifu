@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.routes.mapper.RoutesMapper">
+
+	<sql id="routesColumns">
+		ID,
+		ECOM_NAME,
+		ECOM_CODE,
+		ECOM_URL,
+		ECOM_TYPE,
+		ECOM_LOGO,
+		ORDER_URL,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		UPDATE_USER,
+		TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="Routes" resultType="Routes">
+		select
+			<include refid="routesColumns" />
+		from TB_ECOM_ROUTES
+		where 1=1
+		<if test="ecomName !=null and ecomName !='' ">
+			and ECOM_NAME = #{ecomName}
+		</if>
+		and DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Routes">
+		select
+		<include refid="routesColumns" />
+		from TB_ECOM_ROUTES where ID = #{primaryKey}
+	</select>
+
+	<select id="selectByEcomCode" parameterType="String" resultType="Routes">
+		select
+		<include refid="routesColumns" />
+		from TB_ECOM_ROUTES 
+		where ECOM_CODE = #{ecomCode}
+		and DATA_STAT = '0'
+	</select>
+
+	<select id="selectByRoutesHomePage" parameterType="String" resultType="Routes">
+		select c.ID,c.ECOM_CODE,c.ECOM_NAME,c.ECOM_URL,c.ECOM_LOGO
+		from TB_ECOM_ESHOP_INF a 
+			inner join TB_ECOM_ESHOP_ROUTES_REF b on a.ID = b.ESHOP_ID
+			inner join TB_ECOM_ROUTES c on b.ROUTES_ID = c.ID
+		where 1=1
+			and a.ID=#{id}
+	</select>
+	
+</mapper>

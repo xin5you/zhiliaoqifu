@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.EcomRefundAddressMapper">
+
+	<sql id="refundAddressColumns">
+		RET_ADDR_ID,
+		RETURNS_ID,
+		PROVINCE_NAME,
+		CITY_NAME,
+		DISTRICT_NAME,
+		ADDRESS,
+		FULL_ADDRESS,
+		ZIP_CODE,
+		NAME,
+		MOBILE,
+		TELEPHONE,
+		RETURNS_DESC,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+	    UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="refundAddressFields">
+		#{retAddrId},
+		#{returnsId,jdbcType=VARCHAR},
+		#{provinceName,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{districtName,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{fullAddress,jdbcType=VARCHAR},
+		#{zipCode,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{telephone,jdbcType=VARCHAR},
+		#{returnsDesc,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_RETURN_ADDRESS
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="EcomRefundAddress">
+		select
+			<include refid="refundAddressColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where RET_EXP_CON_ID = #{primaryKey}
+	</select>
+	
+	<insert id="insert" parameterType="EcomRefundAddress">
+		<selectKey resultType="String" order="BEFORE" keyProperty="retAddrId">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getReturnAddressId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			<include refid="refundAddressColumns" />
+		) VALUES (
+			<include refid="refundAddressFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="EcomRefundAddress">
+		UPDATE 
+		<include refid="tableName" />
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="returnsId != null">RETURNS_ID=#{returnsId,jdbcType=VARCHAR},</if>
+			<if test="provinceName != null">PROVINCE_NAME=#{provinceName,jdbcType=VARCHAR},</if>
+			<if test="cityName != null">CITY_NAME=#{cityName,jdbcType=VARCHAR},</if>
+			<if test="districtName != null">DISTRICT_NAME=#{districtName,jdbcType=VARCHAR},</if>
+			<if test="address != null">ADDRESS=#{address,jdbcType=VARCHAR},</if>
+			<if test="fullAddress != null">FULL_ADDRESS=#{fullAddress,jdbcType=VARCHAR},</if>
+			<if test="zipCode != null">ZIP_CODE=#{zipCode,jdbcType=VARCHAR},</if>
+			<if test="name != null">NAME=#{name,jdbcType=VARCHAR},</if>
+			<if test="mobile != null">MOBILE=#{mobile,jdbcType=VARCHAR},</if>
+			<if test="telephone != null">TELEPHONE=#{telephone,jdbcType=VARCHAR},</if>
+			<if test="returnsDesc != null">RETURNS_DESC=#{returnsDesc,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE RET_ADDR_ID=#{retAddrId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE RET_ADDR_ID=#{retAddrId}
+	</delete>
+
+	<select id="selectByReturnsId" parameterType="String" resultType="EcomRefundAddress">
+		select
+			<include refid="refundAddressColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where DATA_STAT = '0' and RETURNS_ID=#{returnsId}
+	</select>
+
+</mapper>

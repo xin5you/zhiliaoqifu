@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.eshop.mapper.EshopInfMapper">
+	
+	<sql id="eshopInfoColumns">
+		 ID,
+		 MCHNT_CODE,
+		 SHOP_CODE, 
+		 ESHOP_NAME,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="EshopInf" resultType="EshopInf">
+		select
+			<include refid="eshopInfoColumns"/>
+		from TB_ECOM_ESHOP_INF
+		where 1=1
+        <if test="eshopName !=null and eshopName !='' ">
+		 	and ESHOP_NAME LIKE '%' || #{eshopName} || '%'
+		</if>
+		and DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="EshopInf">
+		select
+			<include refid="eshopInfoColumns" />
+		from TB_ECOM_ESHOP_INF where ID = #{primaryKey}
+	</select>
+	
+	<select id="selectByEshopInf" parameterType="EshopInf" resultType="EshopInf">
+		select
+			<include refid="eshopInfoColumns" />
+		from TB_ECOM_ESHOP_INF 
+		where 1=1
+        <if test="mchntCode !=null and mchntCode !='' ">
+		 	AND MCHNT_CODE = #{mchntCode} 
+		</if>
+		<if test="shopCode !=null and shopCode !='' ">
+		 	AND SHOP_CODE = #{shopCode}
+		 </if>
+		 and DATA_STAT = '0'
+	</select>
+	
+</mapper>

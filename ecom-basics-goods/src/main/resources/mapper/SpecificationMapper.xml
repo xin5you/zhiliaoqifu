@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.SpecificationMapper">
+	
+	<sql id="SpecificationColumns">
+		 SPEC_ID,
+		 SPEC_NAME,
+		 SPEC_IMG,
+		 SPEC_ORDER,
+		 IS_DEL,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 UPDATE_USER,
+		 CREATE_TIME,
+		 UPDATE_TIME ,
+		 LOCK_VERSION
+	</sql>
+	
+	<sql id="SpecificationFields">
+		#{specId},
+		#{specName,jdbcType=VARCHAR},
+		#{specImg,jdbcType=VARCHAR},
+		#{specOrder,jdbcType=VARCHAR},
+		#{isDel,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_SPECIFICATION
+	</sql>
+	
+	  <insert id="insert"  parameterType="Specification">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="specId">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getSpecificationId" />
+			</selectKey>
+			
+		INSERT INTO 
+		<include refid="tableName" />   
+		(
+				<include refid="SpecificationColumns" /> 
+		)VALUES (
+			   <include refid="SpecificationFields" /> 
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="Specification">
+		update 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="specName != null">SPEC_NAME=#{specName,jdbcType=VARCHAR},</if>
+			<if test="specImg != null">SPEC_Img=#{specImg,jdbcType=VARCHAR},</if>
+			<if test="specOrder != null">SPEC_ORDER=#{specOrder,jdbcType=VARCHAR},</if>
+			<if test="isDel != null">IS_DEL=#{sDel,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where SPEC_ID=#{id}
+	</update>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		update 
+		<include refid="tableName" />
+		 set DATA_STAT='1' where SPEC_ID=#{id}
+	</update>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Specification">
+		select
+			<include refid="SpecificationColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 where spec_id=#{primaryKey}
+	</select>
+	
+	<select id="getList" parameterType="Specification"  resultType="Specification">
+		select 
+			<include refid="SpecificationColumns" />  
+		from 
+		<include refid="tableName" />   
+		where DATA_STAT = '0'
+		order by UPDATE_TIME DESC
+	</select>
+	
+	<select id="getSpecificationByName" parameterType="String" resultType="Specification">
+		select
+			<include refid="SpecificationColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 where SPEC_NAME=#{specName}
+	</select>
+	
+</mapper>

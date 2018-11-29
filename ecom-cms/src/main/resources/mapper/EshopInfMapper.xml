@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.eshop.mapper.EshopInfMapper">
+	
+	<sql id="eshopInfoColumns">
+		 ID,
+		 MCHNT_CODE,
+		 SHOP_CODE, 
+		 ESHOP_NAME,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="EshopInf" resultType="EshopInf">
+		select
+			<include refid="eshopInfoColumns"/>
+		from TB_ECOM_ESHOP_INF
+		where 1=1
+        <if test="eshopName !=null and eshopName !='' ">
+		 	and ESHOP_NAME LIKE '%' || #{eshopName} || '%'
+		</if>
+		and DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="EshopInf">
+		select
+			<include refid="eshopInfoColumns" />
+		from TB_ECOM_ESHOP_INF where ID=#{primaryKey}
+	</select>
+	
+	<select id="selectByComboBox" parameterType="EshopInf" resultType="EshopInf">
+		select a.mchnt_code,a.shop_code,a.eshop_name
+		from TB_MCHNT_ESHOP_INF a 
+		where a.DATA_STAT='0'
+	</select>
+	
+	<select id="selectByEshopName" parameterType="EshopInf" resultType="EshopInf">
+		select a.mchnt_code,a.shop_code,a.eshop_name
+		from TB_MCHNT_ESHOP_INF a 
+		where 1=1
+		<if test="eshopName !=null and eshopName !='' ">
+		 	and ESHOP_NAME= #{eshopName} 
+		 </if>
+		and a.DATA_STAT='0'
+	</select>
+	
+	<select id="selectByEshopInf" parameterType="EshopInf" resultType="EshopInf">
+		select
+			<include refid="eshopInfoColumns" />
+		from TB_ECOM_ESHOP_INF 
+		where 1=1
+        <if test="mchntCode !=null and mchntCode !='' ">
+		 	and MCHNT_CODE = #{mchntCode} 
+		</if>
+		<if test="shopCode !=null and shopCode !='' ">
+		 	and SHOP_CODE = #{shopCode}
+		 </if>
+		 <if test="eshopName !=null and eshopName !='' ">
+		 	and ESHOP_NAME= #{eshopName} 
+		 </if>
+		 and DATA_STAT = '0'
+	</select>
+	
+	<insert id="insert" parameterType="EshopInf">
+	   <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getEcomId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_ESHOP_INF(
+			ID,
+			MCHNT_CODE,
+			SHOP_CODE,
+			ESHOP_NAME,
+		 	DATA_STAT,
+		 	REMARKS,
+			CREATE_USER,
+			UPDATE_USER,
+			CREATE_TIME,
+			UPDATE_TIME,
+			LOCK_VERSION
+		)VALUES (
+			#{id},
+			#{mchntCode,jdbcType=VARCHAR},
+			#{shopCode,jdbcType=VARCHAR},
+			#{eshopName,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			sysdate,
+			sysdate,
+			'0'
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="EshopInf">
+		update TB_ECOM_ESHOP_INF
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="mchntCode != null">MCHNT_CODE=#{mchntCode,jdbcType=VARCHAR},</if>
+			<if test="shopCode != null">SHOP_CODE=#{shopCode,jdbcType=VARCHAR},</if>
+			<if test="eshopName != null">ESHOP_NAME=#{eshopName,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		update TB_ECOM_ESHOP_INF set DATA_STAT='1' where ID=#{id}
+	</delete>
+	
+</mapper>

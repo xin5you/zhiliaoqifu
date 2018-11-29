@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.cn.thinkx</groupId>
+    <artifactId>ecom-maindir</artifactId>
+    <version>1.0.0.RELEASE</version>
+  </parent>
+  
+  <groupId>com.cn.thinkx</groupId>
+  <artifactId>ecom-basics-order</artifactId>
+  <version>1.0.0.RELEASE</version>
+  <name>ecom-basics-order</name>
+  <url>http://maven.apache.org</url>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <dependencies>
+   <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-thymeleaf</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.mybatis.spring.boot</groupId>
+		<artifactId>mybatis-spring-boot-starter</artifactId>
+		<version>1.1.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.poi</groupId>
+		<artifactId>poi-ooxml</artifactId>
+		<version>3.5-FINAL</version>
+	</dependency>
+
+	<!-- 确保内嵌的servlet容器不能干扰war包将部署的servlet容器 -->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-tomcat</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>com.alibaba</groupId>
+		<artifactId>druid</artifactId>
+		<version>1.0.27</version>
+	</dependency>
+	<dependency>
+		<groupId>oracle</groupId>
+		<artifactId>ojdbc</artifactId>
+		<version>6</version>
+		<type>jar</type>
+	</dependency>
+	<dependency>
+		<groupId>com.github.jsqlparser</groupId>
+		<artifactId>jsqlparser</artifactId>
+		<version>0.9.2</version>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<dependency>  
+        <groupId>org.springframework.boot</groupId>  
+        <artifactId>spring-boot-starter-test</artifactId>  
+        <scope>test</scope>  
+    </dependency>
+  
+  	<!-- 引入所需jar -->
+	<dependency>
+		<groupId>com.cn.thinkx</groupId>
+		<artifactId>ecom-common</artifactId>
+		<version>1.0</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.cn.thinkx</groupId>
+		<artifactId>ecom-basics-goods</artifactId>
+		<version>1.0.0.RELEASE</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.cn.thinkx</groupId>
+		<artifactId>ecom-redis-core</artifactId>
+		<version>1.0.0.RELEASE</version>
+	</dependency>
+	
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

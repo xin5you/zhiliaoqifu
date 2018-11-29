@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.SellbackGoodslistMapper">
+
+	<sql id="sellbackGoodslistColumns">
+		ID,
+		S_ORDER_ID,
+		RETURNS_ID,
+		O_ITEM_ID,
+		SHIP_NUM,
+		RETURN_NUM,
+		STORAGE_NUM,
+		APPLY_RETURN_STATE,
+		GOODS_REMARK,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="sellbackGoodslistFields">
+		#{id},
+		#{sOrderId,jdbcType=VARCHAR},
+		#{returnsId,jdbcType=VARCHAR},
+		#{oItemId,jdbcType=VARCHAR},
+		#{shipNum,jdbcType=VARCHAR},
+		#{returnNum,jdbcType=VARCHAR},
+		#{storageNum,jdbcType=VARCHAR},
+		#{applyReturnState,jdbcType=VARCHAR},
+		#{goodsRemark,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_SELLBACK_GOODSLIST
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="SellbackGoodslist">
+		select
+			<include refid="sellbackGoodslistColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where ID = #{primaryKey}
+	</select>
+
+	<select id="getSellbackGoodslistList" parameterType="SellbackGoodslist" resultType="SellbackGoodslist">
+		select
+			<include refid="sellbackGoodslistColumns" />
+		from 
+			<include refid="tableName" />
+		where DATA_STAT = '0'
+		<if test="sOrderId !=null and sOrderId !='' ">
+			and S_ORDER_ID = #{sOrderId}
+		</if>
+		<if test="returnsId !=null and returnsId !='' ">
+			and RETURNS_ID = #{returnsId}
+		</if>
+		<if test="oItemId !=null and oItemId !='' ">
+			and O_ITEM_ID = #{oItemId}
+		</if>
+		<if test="shipNum !=null and shipNum !='' ">
+			and SHIP_NUM = #{shipNum}
+		</if>
+		<if test="storageNum !=null and storageNum !='' ">
+			and STORAGE_NUM = #{storageNum}
+		</if>
+		<if test="goodsRemark !=null and goodsRemark !='' ">
+			and GOODS_REMARK = #{goodsRemark}
+		</if>
+		order by UPDATE_TIME desc
+	</select>
+
+	<insert id="insert" parameterType="SellbackGoodslist">
+		<selectKey resultType="String" order="BEFORE" keyProperty="id">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getSellbackGoodslistId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			<include refid="sellbackGoodslistColumns" />
+		) VALUES (
+			<include refid="sellbackGoodslistFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="SellbackGoodslist">
+		UPDATE 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="sOrderId != null">S_ORDER_ID=#{sOrderId,jdbcType=VARCHAR},</if>
+			<if test="returnsId != null">RETURNS_ID=#{returnsId,jdbcType=VARCHAR},</if>
+			<if test="oItemId != null">O_ITEM_ID=#{oItemId,jdbcType=VARCHAR},</if>
+			<if test="shipNum != null">SHIP_NUM=#{shipNum,jdbcType=VARCHAR},</if>
+			<if test="returnNum != null">RETURN_NUM=#{returnNum,jdbcType=VARCHAR},</if>
+			<if test="storageNum != null">STORAGE_NUM=#{storageNum,jdbcType=VARCHAR},</if>
+			<if test="applyReturnState != null">APPLY_RETURN_STATE=#{applyReturnState,jdbcType=VARCHAR},</if>
+			<if test="goodsRemark != null">GOODS_REMARK=#{goodsRemark,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE ID=#{id}
+	</update>
+	
+	<update id="updateSellbackGoodslistByReturnsId" parameterType="SellbackGoodslist">
+		UPDATE 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="shipNum != null">SHIP_NUM=#{shipNum,jdbcType=VARCHAR},</if>
+			<if test="returnNum != null">RETURN_NUM=#{returnNum,jdbcType=VARCHAR},</if>
+			<if test="storageNum != null">STORAGE_NUM=#{storageNum,jdbcType=VARCHAR},</if>
+			<if test="applyReturnState != null">APPLY_RETURN_STATE=#{applyReturnState,jdbcType=VARCHAR},</if>
+			<if test="goodsRemark != null">GOODS_REMARK=#{goodsRemark,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE RETURNS_ID=#{returnsId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE ID=#{id}
+	</delete>
+
+	<select id="getSellbackGoodslistBy" parameterType="SellbackGoodslist" resultType="SellbackGoodslist">
+		select
+			<include refid="sellbackGoodslistColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where 1=1
+		<if test="sOrderId !=null and sOrderId !='' ">
+		and S_ORDER_ID = #{sOrderId}
+		</if>
+		<if test="returnsId !=null and returnsId !='' ">
+		and RETURNS_ID = #{returnsId}
+		</if>
+		<if test="oItemId !=null and oItemId !='' ">
+		and O_ITEM_ID = #{oItemId}
+		</if>
+	</select>
+
+</mapper>

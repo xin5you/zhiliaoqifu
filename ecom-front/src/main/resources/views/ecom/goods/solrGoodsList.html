@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<title>知了商城</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<script th:src="@{/ecom/goods/solrGoodsList.js}"></script>
+<body>
+<form id="searchForm" th:action="@{/ecom/solrGoods/listSolrGoods}" th:object="${goodsQueryParam}" class="form-inline" method="post">
+	<!--商城分类-->
+	<!--搜索栏-->
+	<div class="search_tab classification">
+		<div class="content">
+			<div class="search ">
+				<img class="search_icon"
+					th:src="@{/front/images/hkbstore/icons/search.png}" />
+					<input type = "hidden" name = "ecomCode" id ="ecomCode" th:value="*{ecomCode}"/>
+					<input type="text" name = "keyword" id ="keyword" th:value="*{keyword}" placeholder="输入商品名搜索" />
+			</div>
+		</div>
+		<input type="submit" th:value="搜索" />
+	</div>
+</form>
+	<!--商品列表tab-->
+
+	<!-- 固定tab-->
+	<div class="search_results_nav">
+		<div class="tab_box"></div>
+		<div class="search_nav_content">
+			<!-- 综合 -->
+			<div class="comprehensive search_results_tab price" id="comprehensive">
+				<span>综合</span>
+			</div>
+			<!-- 价格 -->
+			<div class="price shop" id="priceSort">
+<!-- 				<div class="search_results_tab arrow up_arrow">▲</div> -->
+<!-- 				<div class="search_results_tab arrow down_arrow">▼</div> -->
+				<span>价格</span>
+			</div>
+			<!-- 销量 -->
+			<div class="price volume" id="salesVolumeSort">
+<!-- 				<div class="search_results_tab arrow up_arrow">▲</div> -->
+<!-- 				<div class="search_results_tab arrow down_arrow">▼</div> -->
+				<span>销量</span>
+			</div>
+			<!-- 上新 -->
+<!-- 			<div class="new price">上新</div> -->
+		</div>
+	</div>
+
+	<!--知了企服商城首页-->
+<div class="recommend_more none_radius">
+
+    <div class="recommendation recommendation1">
+        <!--第一行-->
+        <div class="goods_list list1">
+           <a class="list_detail" th:href="@{/ecom/goods/detail(goodsId=${solrGoods.id})}" th:each="solrGoods,solrGoodsStat : ${solrGoodslist}">
+                <div class="pic">
+                    <img class="banner_pic" th:attr="data-imgurl=${solrGoods.picUrl}" />
+                </div>
+                <div class="goods_title"><span th:text="${solrGoods.goodsName}"></span></div>
+                <div class="price">¥<span th:text="${#numbers.formatDecimal(solrGoods.goodsPrice,0,2)}" ></span></div>
+            </a>
+		</div>
+    </div>
+</div>
+
+	<script>
+	/*<![CDATA[*/
+    //tab 切换
+
+//     jfProductDetails.clickTabChange(document.getElementById('orderTab'), 'choose_tab', 'tab');
+	
+
+//     showDown.hideThis();
+
+//     addClass.priceClass();
+    
+  //图片懒加载
+    window.onload=function() {
+	  
+        document.getElementsByTagName('body')[0].className = 'lazy_loading_img';
+
+        loadingImg.lazyLoading();
+
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

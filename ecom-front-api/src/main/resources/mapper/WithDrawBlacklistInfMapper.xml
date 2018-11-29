@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.black.mapper.WithDrawBlacklistInfMapper">
+	
+	<sql id="WithDrawBlacklistInfColumns">
+	   B.ID,
+       B.USER_ID,
+       B.USER_NAME,
+       B.USER_PHONE,
+       B.OPEN_ID,
+       B.DATA_STAT,
+       B.REMARKS,
+       B.CREATE_USER,
+       B.CREATE_TIME,
+       B.UPDATE_USER,
+       B.UPDATE_TIME,
+       B.LOCK_VERSION
+	</sql>
+	
+	<select id="getWithDrawBlacklistInfByUserId" parameterType="java.lang.String" resultType="WithDrawBlacklistInf">
+		
+		SELECT
+			<include refid="WithDrawBlacklistInfColumns"/>
+		  FROM TB_WITHDRAW_BLACKLIST_INF B
+		 WHERE B.DATA_STAT = '0'
+		   AND B.USER_ID = #{userId}
+		
+	</select>
+	
+</mapper>

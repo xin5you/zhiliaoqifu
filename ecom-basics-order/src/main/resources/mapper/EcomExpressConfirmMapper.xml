@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.EcomExpressConfirmMapper">
+
+	<sql id="expressConfirmColumns">
+		RET_EXP_CON_ID,
+		RETURNS_ID,
+		TRACKING_COMPANY,
+		TRACKING_NUM,
+		TRACKING_TIME,
+		RETURNS_STATE,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+	    UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="expressConfirmFields">
+		#{retExpConId},
+		#{returnsId,jdbcType=VARCHAR},
+		#{trackingCompany,jdbcType=VARCHAR},
+		#{trackingNum,jdbcType=VARCHAR},
+		#{trackingTime,jdbcType=VARCHAR},
+		#{returnsState,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_EXPRESS_CONFIRM
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="EcomExpressConfirm">
+		select
+			<include refid="expressConfirmColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where RET_EXP_CON_ID = #{primaryKey}
+	</select>
+	
+	<insert id="insert" parameterType="EcomExpressConfirm">
+		<selectKey resultType="String" order="BEFORE" keyProperty="retExpConId">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getExpressConfirmId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			<include refid="expressConfirmColumns" />
+		) VALUES (
+			<include refid="expressConfirmFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="EcomExpressConfirm">
+		UPDATE 
+		<include refid="tableName" />
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="returnsId != null">RETURNS_ID=#{returnsId,jdbcType=VARCHAR},</if>
+			<if test="trackingCompany != null">TRACKING_COMPANY=#{trackingCompany,jdbcType=VARCHAR},</if>
+			<if test="trackingNum != null">TRACKING_NUM=#{trackingNum,jdbcType=VARCHAR},</if>
+			<if test="trackingTime != null">TRACKING_TIME=to_date(#{trackingTime,jdbcType=VARCHAR},'YYYY/MM/DD HH24:mi:ss'),</if>
+			<if test="returnsState != null">RETURNS_STATE=#{returnsState,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE RET_EXP_CON_ID=#{retExpConId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE RET_EXP_CON_ID=#{retExpConId}
+	</delete>
+
+
+	<select id="selectByReturnsId" parameterType="String" resultType="EcomExpressConfirm">
+		select
+			<include refid="expressConfirmColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where DATA_STAT = '0' and RETURNS_ID=#{returnsId}
+	</select>
+</mapper>

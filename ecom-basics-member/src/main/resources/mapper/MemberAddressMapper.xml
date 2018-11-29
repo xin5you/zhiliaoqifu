@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.member.mapper.MemberAddressMapper">
+
+	<sql id="MemberAddressColumns">
+		M.ADDR_ID,
+		M.MEMBER_ID,
+		M.USER_NAME,
+		M.PROVINCE_ID,
+		M.CITY_ID,
+		M.REGION_ID,
+		M.TOWN_ID,
+		M.REGION,
+		M.CITY,
+		M.PROVINCE,
+		M.TOWN,
+		M.ADDR_DETAIL,
+		M.ADD_ZIP,
+		M.TEL,
+		M.MOBILE,
+		M.DEF_ADDR,
+		M.SHIP_ADDRESS_NAME,
+		M.DATA_STAT,
+		M.REMARKS,
+		M.CREATE_USER,
+		M.UPDATE_USER,
+		M.CREATE_TIME,
+		M.UPDATE_TIME,
+		M.LOCK_VERSION
+	</sql>
+
+	<select id="getList" parameterType="MemberAddress" resultType="MemberAddress">
+		SELECT
+		<include refid="MemberAddressColumns" />
+		FROM TB_ECOM_MEMBER_ADDRESS M
+		WHERE 1=1 AND M.DATA_STAT = '0'
+		<if test="memberId != null and memberId != '' ">
+			AND	M.MEMBER_ID = #{memberId}
+		</if>
+		ORDER BY M.DEF_ADDR,M.UPDATE_TIME DESC
+	</select>
+
+	<insert id="insert" parameterType="MemberAddress">
+		<selectKey resultType="String" order="BEFORE" keyProperty="addrId">
+			<include refid="com.cn.thinkx.ecom.basics.member.base.mapper.SqlCommonMapper.getEomMemberAddressId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_MEMBER_ADDRESS(
+		ADDR_ID,
+		MEMBER_ID,
+		USER_NAME,
+		PROVINCE_ID,
+		CITY_ID,
+		REGION_ID,
+		TOWN_ID,
+		REGION,
+		CITY,
+		PROVINCE,
+		TOWN,
+		ADDR_DETAIL,
+		ADD_ZIP,
+		TEL,
+		MOBILE,
+		DEF_ADDR,
+		SHIP_ADDRESS_NAME,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+		)VALUES(
+		#{addrId},
+		#{memberId,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR},
+		#{provinceId,jdbcType=VARCHAR},
+		#{cityId,jdbcType=VARCHAR},
+		#{regionId,jdbcType=VARCHAR},
+		#{townId,jdbcType=VARCHAR},
+		#{region,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR},
+		#{town,jdbcType=VARCHAR},
+		#{addrDetail,jdbcType=VARCHAR},
+		#{addZip,jdbcType=VARCHAR},
+		#{tel,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{defAddr,jdbcType=VARCHAR},
+		#{shipAddressName,jdbcType=VARCHAR},
+		#{dataStat,jdbcType=VARCHAR},
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="MemberAddress">
+		UPDATE TB_ECOM_MEMBER_ADDRESS
+		<set>
+			<if test="memberId != null">MEMBER_ID=#{memberId,jdbcType=VARCHAR},</if>
+			<if test="userName != null">USER_NAME=#{userName,jdbcType=VARCHAR},</if>
+			<if test="provinceId != null">PROVINCE_ID=#{provinceId,jdbcType=VARCHAR},</if>
+			<if test="cityId != null">CITY_ID=#{cityId,jdbcType=VARCHAR},</if>
+			<if test="regionId != null">REGION_ID=#{regionId,jdbcType=VARCHAR},</if>
+			<if test="townId != null">TOWN_ID=#{townId,jdbcType=VARCHAR},</if>	
+			<if test="region != null">REGION=#{region,jdbcType=VARCHAR},</if>
+			<if test="city != null">CITY=#{city,jdbcType=VARCHAR},</if>
+			<if test="province != null">PROVINCE=#{province,jdbcType=VARCHAR},</if>
+			<if test="town != null">TOWN=#{town,jdbcType=VARCHAR},</if>
+			<if test="addrDetail != null">ADDR_DETAIL=#{addrDetail,jdbcType=VARCHAR},</if>
+			<if test="addZip != null">ADD_ZIP=#{addZip,jdbcType=VARCHAR},</if>
+			<if test="tel != null">TEL=#{tel,jdbcType=VARCHAR},</if>
+			<if test="mobile != null">MOBILE=#{mobile,jdbcType=VARCHAR},</if>
+			<if test="defAddr != null">DEF_ADDR=#{defAddr,jdbcType=VARCHAR},</if>
+			<if test="shipAddressName != null">SHIP_ADDRESS_NAME=#{shipAddressName,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=sysdate,
+			LOCK_VERSION=LOCK_VERSION+1
+		</set>
+		WHERE ADDR_ID=#{addrId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		DELETE FROM TB_ECOM_MEMBER_ADDRESS WHERE ADDR_ID=#{primaryKey}
+	</delete>
+
+	<select id = "getMemberDefAddr" parameterType="String" resultType="MemberAddress">
+		SELECT
+		<include refid="MemberAddressColumns" />
+		FROM TB_ECOM_MEMBER_ADDRESS M
+		WHERE 1=1 AND M.DATA_STAT = '0' AND M.DEF_ADDR = '0' AND  M.MEMBER_ID = #{memberId}
+	</select>
+	
+	<select id = "selectByPrimaryKey" parameterType="String" resultType="MemberAddress">
+		SELECT
+		<include refid="MemberAddressColumns" />
+		FROM TB_ECOM_MEMBER_ADDRESS M
+		WHERE 1=1 AND M.DATA_STAT = '0' AND M.ADDR_ID=#{primaryKey}
+	</select>
+	
+	<select id = "getMemberAddressByMemberIdCount" parameterType="String" resultType = "Integer">
+		SELECT COUNT(*) as memberAddcount FROM TB_ECOM_MEMBER_ADDRESS M
+		WHERE 1=1 AND M.DATA_STAT = '0' AND	M.MEMBER_ID = #{memberId}
+	</select>
+	
+</mapper>

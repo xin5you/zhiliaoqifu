@@ -1,0 +1,118 @@
+<!-- header -->
+<header th:fragment="navbar">
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="brand" th:href="@{/main}"><i class="icon-home icon-white"></i>电商管理平台</a>
+				<ul class="nav user_menu pull-right">
+					<li class="divider-vertical hidden-phone hidden-tablet"></li>
+					<li class="dropdown">
+						<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span th:text="${session.sessionUser.loginName}" /><b class='caret'></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:void(0)" onclick="EcomCommon.logout();" th:text="退出登陆" /></li>
+							<li><a href="javascript:void(0)" id="updatePwdBtn" onclick="EcomCommon.loadUpdatePwdModal();" th:text="重置密码" /></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav" id="mobile-nav">
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-briefcase icon-white"></i>电商管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/banner/listBanner}" th:text="banner信息管理" /></li>
+							<li><a th:href="@{/eshop/listEshopInf}" th:text="商城信息管理 " /></li>
+							<li><a th:href="@{/routes/listRoutes}" th:text="电商入口管理" /></li>
+							<li><a th:href="@{/eSetting/listEsetting}" th:text="电商服务设置" /></li>
+							<li><a th:href="@{/floor/listFloors}" th:text="电商楼层管理" /></li>
+							<li><a th:href="@{/you163/api/getCallBackMethods}" th:text="严选回调注册" /></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-list icon-white"></i>订单管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/order/listOrderDetail}" th:text="交易流水明细" /></li>
+							<li><a th:href="@{/order/listOrderSummarizing}" th:text="交易流水汇总" /></li>
+							<li><a th:href="@{/platforder/platforder/getPlatfOrderList}" th:text="电商一级订单管理" /></li>
+							<li><a th:href="@{/platforder/platforder/getPlatfShopOrderLists}" th:text="电商二级订单管理" /></li>
+							<li><a th:href="@{/platforder/orderShip/getOrderShipList}" th:text="订单收货地址" /></li>
+							<li><a th:href="@{/platforder/orderProductItem/getOrderProductItemList}" th:text="订单货品明细" /></li>
+							<li><a th:href="@{/platforder/expressPlatf/getExpressPlatfList}" th:text="订单物流管理" /></li>
+							<li><a th:href="@{/ecom/refund/listRefundsOrder}" th:text="订单退款管理" /></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-list icon-white"></i>会员管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/member/memberInf/getMemberInfList}" th:text="会员信息" /></li>
+						</ul>
+					</li>
+					
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-list icon-white"></i>商品管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/ecom/goodsManage/listGoodsSpuInfo}" th:text="商品Spu管理" /></li>
+							<li><a th:href="@{/ecom/goodsManage/listGoodsInfo}" th:text="商品信息管理" /></li>
+							<li><a th:href="@{/ecom/inventory/listInventory}" th:text="商品库存管理" /></li>
+							<li><a th:href="@{/ecom/category/listCategory}" th:text="分类管理" /></li>
+							<li><a th:href="@{/ecom/category/listFirstCategory}" th:text="商品一级分类管理" /></li>
+							<li><a th:href="@{/ecom/category/listSecondCateGory}" th:text="商品二级分类管理" /></li>
+						</ul>
+					</li>
+					
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-wrench icon-white"></i>系统管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/system/user/listUser}" th:text="用户管理" /></li>
+							<li><a th:href="@{/system/role/listRole}" th:text="角色管理" /></li>
+							<li><a th:href="@{/system/resource/listResource}" th:text="资源管理" /></li>
+							<li><a th:href="@{/exception/getExceptionList}" th:text="电商异常管理" /></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="updatePWDModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<form class="form-horizontal">
+			<div class="modal-header">
+				<button class="close" data-dismiss="modal">&times;</button>
+				<h3>修改密码</h3>
+			</div>
+			<div class="modal-body">
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label">旧密码：</label>
+						<div class="controls">
+							<input type="password" class="span3" id="oldPasswrodPage" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">新密码：</label>
+						<div class="controls">
+							<input type="password" class="span3" id="newPasswordPage" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">二次确认密码：</label>
+						<div class="controls">
+							<input type="password" class="span3" id="newPassword2Page" />
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</form>
+		<div class="modal-footer" style="text-align: center;">
+			<button class="btn btn-primary btn-submit" id="userPWdSubmitBtn">提 交</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">关 闭</button>
+		</div>
+	</div>
+</header>

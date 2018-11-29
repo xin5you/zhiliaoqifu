@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>订单管理</li>
+		                    <li><a th:href="@{/platforder/expressPlatf/getExpressPlatfList}">订单物流管理</a></li>
+		                    <li>包裹货品信息</li>
+		                </ul>
+		            </div>
+	        	</nav>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+								<th></th>
+								<th>货品ID</th>
+								<th>商品名称</th>
+				                <th>SKUCODE</th>
+				                <th>货品售价(元)</th>
+				                <th>购买数量</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="expressPlatf,expressPlatfStat : ${expressPlatfProList}" th:inline="text">
+								<td><span th:text="${expressPlatfStat.count}"></span></td>
+								<td><span th:text="${expressPlatf.productId}"></span></td>
+								<td><span th:text="${expressPlatf.goodsName}"></span></td>
+								<td><span th:text="${expressPlatf.skuCode}"></span></td>
+								<td><span th:text="${expressPlatf.goodsPrice}"></span></td>
+				                <td><span th:text="${expressPlatf.saleCount}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+			</div>
+		</div>
+		
+	</body>
+</html>
+

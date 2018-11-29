@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.OrderProductItemMapper">
+
+	<sql id="orderProductItemColumns">
+		O_ITEM_ID,
+		S_ORDER_ID,
+		PRODUCT_ID,
+		CART_ID,
+		PRODUCT_PRICE,
+		PRODUCT_NUM,
+		PRODUCT_NAME,
+		GAINED_POINT,
+		ADDON,
+		CHANGE_PRODUCT_NAME,
+		CHANGE_PRODUCT_ID,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<sql id="orderProductItemFields">
+		#{oItemId},
+		#{sOrderId,jdbcType=VARCHAR},
+		#{productId,jdbcType=VARCHAR},
+		#{cartId,jdbcType=VARCHAR},
+		#{productPrice,jdbcType=VARCHAR},
+		#{productNum,jdbcType=VARCHAR},
+		#{productName,jdbcType=VARCHAR},
+		#{gainedPoint,jdbcType=VARCHAR},
+		#{addon,jdbcType=VARCHAR},
+		#{changeProductName,jdbcType=VARCHAR},
+		#{changeProductId,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_ORDER_PRODUCT_ITEM
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="OrderProductItem">
+		select
+			<include refid="orderProductItemColumns" /> 
+		from 
+			<include refid="tableName" /> 
+		where O_ITEM_ID = #{primaryKey}
+	</select>
+
+	<select id="getOrderProductItemList" parameterType="OrderProductItem" resultType="OrderProductItem">
+		select
+		item.O_ITEM_ID,
+		item.S_ORDER_ID,
+		item.PRODUCT_ID,
+		item.CART_ID,
+		item.PRODUCT_PRICE,
+		item.PRODUCT_NUM,
+		item.PRODUCT_NAME,
+		item.GAINED_POINT,
+		item.ADDON,
+		item.CHANGE_PRODUCT_NAME,
+		item.CHANGE_PRODUCT_ID,
+    	p.SKU_CODE,
+    	g.GOODS_NAME
+    	From 
+    		TB_ECOM_ORDER_PRODUCT_ITEM item left join TB_ECOM_GOODS_PRODUCT p
+        	on item.PRODUCT_ID=p.PRODUCT_ID left join TB_ECOM_GOODS g
+       		on  p.GOODS_ID=g.GOODS_ID
+    Where item.DATA_STAT = '0'
+		<if test="sOrderId !=null and sOrderId !=''">
+			and item.S_ORDER_ID = #{sOrderId}
+		</if>
+		<if test="productId !=null and productId !=''">
+			and item.PRODUCT_ID = #{productId}
+		</if>
+		<if test="cartId !=null and cartId !='' ">
+			and item.CART_ID = #{cartId}
+		</if>
+		<if test="productPrice !=null and productPrice !=''">
+			and item.PRODUCT_PRICE = #{productPrice}
+		</if>
+		<if test="productNum !=null and productNum !=''">
+			and item.PRODUCT_NUM = #{productNum}
+		</if>
+		<if test="productName !=null and productName !=''">
+			and item.PRODUCT_NAME = #{productName}
+		</if>
+		<if test="addon !=null and addon !=''">
+			and item.ADDON = #{addon}
+		</if>
+		<if test="changeProductName !=null and changeProductName !=''">
+			and item.CHANGE_PRODUCT_NAME = #{changeProductName}
+		</if>
+		<if test="changeProductId !=null and changeProductId !='' ">
+			and item.CHANGE_PRODUCT_ID = #{changeProductId}
+		</if>
+		<if test="skuCode !=null and skuCode !='' ">
+			and p.SKU_CODE = #{skuCode}
+		</if>
+		order by item.UPDATE_TIME desc
+	</select>
+
+	<insert id="insert" parameterType="OrderProductItem">
+		<selectKey resultType="String" order="BEFORE" keyProperty="oItemId">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getOrderProductItemId" />
+		</selectKey>
+		INSERT INTO
+			<include refid="tableName" />
+		(
+			<include refid="orderProductItemColumns" />
+		) VALUES (
+			<include refid="orderProductItemFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="OrderProductItem">
+		UPDATE 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="sOrderId != null">S_ORDER_ID=#{sOrderId,jdbcType=VARCHAR},</if>
+			<if test="productId != null">PRODUCT_ID=#{productId,jdbcType=VARCHAR},</if>
+			<if test="cartId != null">CART_ID=#{cartId,jdbcType=VARCHAR},</if>
+			<if test="productName != null">PRODUCT_NAME=#{productName,jdbcType=VARCHAR},</if>
+			<if test="productNum != null">PRODUCT_NUM=#{productNum,jdbcType=VARCHAR},</if>
+			<if test="productPrice != null">PRODUCT_PRICE=#{productPrice,jdbcType=VARCHAR},</if>
+			<if test="gainedPoint != null">GAINED_POINT=#{gainedPoint,jdbcType=VARCHAR},</if>
+			<if test="addon != null">ADDON=#{addon,jdbcType=VARCHAR},</if>
+			<if test="changeProductName != null">CHANGE_PRODUCT_NAME=#{changeProductName,jdbcType=VARCHAR},</if>
+			<if test="changeProductId != null">CHANGE_PRODUCT_ID=#{changeProductId,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		WHERE O_ITEM_ID=#{oItemId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE 
+			<include refid="tableName" />
+		set DATA_STAT = '1',UPDATE_TIME=sysdate 
+		WHERE O_ITEM_ID=#{oItemId}
+	</delete>
+	
+	
+	<select id="getOrderProductItemByOrderId" parameterType="string" resultType="OrderProductItem">
+		SELECT I.O_ITEM_ID,
+	       I.S_ORDER_ID,
+	       I.PRODUCT_ID,
+	       I.CART_ID,
+	       I.PRODUCT_PRICE,
+	       I.PRODUCT_NUM,
+	       I.PRODUCT_NAME,
+	       I.GAINED_POINT,
+	       I.ADDON,
+	       I.CHANGE_PRODUCT_NAME,
+	       I.CHANGE_PRODUCT_ID,
+	       I.DATA_STAT,
+	       I.REMARKS,
+	       I.CREATE_USER,
+	       I.UPDATE_USER,
+	       I.CREATE_TIME,
+	       I.UPDATE_TIME,
+	       I.LOCK_VERSION
+	  FROM TB_ECOM_ORDER_PRODUCT_ITEM I,
+	       TB_ECOM_PLATF_SHOP_ORDER   S,
+	       TB_ECOM_PLATF_ORDER        O
+	  WHERE I.S_ORDER_ID = S.S_ORDER_ID
+	   AND S.ORDER_ID = O.ORDER_ID
+	   AND I.DATA_STAT = '0'
+	   AND S.DATA_STAT = '0'
+	   AND I.DATA_STAT = '0'
+	   AND O.ORDER_ID = #{orderId}
+	</select>
+	
+	<select id="getOrderProductItemByItemId" parameterType="string" resultType="OrderProductItem">
+		SELECT ITEM.O_ITEM_ID,
+	       ITEM.PRODUCT_PRICE,
+	       ITEM.PRODUCT_NUM,
+	       ITEM.PRODUCT_NAME,
+	       GP.PIC_URL,
+	       GP.GOODS_ID
+	  FROM TB_ECOM_ORDER_PRODUCT_ITEM ITEM
+	 INNER JOIN TB_ECOM_GOODS_PRODUCT GP
+	    ON ITEM.PRODUCT_ID = GP.PRODUCT_ID
+	 INNER JOIN TB_ECOM_GOODS G
+	    ON GP.GOODS_ID = G.GOODS_ID
+	 WHERE ITEM.DATA_STAT = '0'
+	   AND GP.DATA_STAT = '0'
+	   AND G.DATA_STAT = '0'
+	   AND ITEM.O_ITEM_ID = #{itemId}
+	</select>
+	
+</mapper>

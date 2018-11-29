@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/header::header" />
+<title >我的订单</title>
+<!--通用媒体查询-->
+
+<script th:src="@{/ecom/platforder/listPlatforder.js}"></script>
+<body>
+<!--tab栏-->
+<div class="my_order">
+    <!-- 切换tab-->
+    <div class="shop_order_tab">
+        <div class="tab_contain jdshop_shadow" id="orderTab">
+            <div class="tab" id = "all">全部</div>
+           	<div class="tab" id = "takeDelivery">已付款</div>
+            <div class="tab" id = "noPayment">未付款</div>
+            <div class="tab" id = "accomplish">已完成</div>
+        </div>
+    </div>
+</div>
+<input type = "hidden" name = "payStatus" id = "payStatus" th:value="${payStatus}"/>
+<!--订单列表-->
+<div class="order_blank"></div>
+<div class="order_detail" th:each="platfOrder,platfOrderStat : ${platfOrderList}">
+	<!--注释-->
+    <a class="hkb_hint order_hint" th:if="${platfOrder.payStatus == '0'}">
+        <div class="annotation">
+            <img th:src="@{/front/images/hkbstore/icons/icon_notice.png}" alt=""/>
+            <span>
+            <p>订单提交后30分钟内完成支付，否则订单会被自动取消
+            </p>
+        </span>
+        </div>
+    </a>
+    <!--订单编号-->
+    <div class="order_number">
+        <div class="number_detail order_public">
+            <div class="left">订单编号：<span  th:text="${platfOrder.orderId}"></span></div>
+			<div class="right">
+                <div class="middle" th:attr="orderId=${platfOrder.orderId}">删除</div>
+                <div class="right_ok"><span th:text="${platfOrder.payStatusValue}"></span></div>
+            </div>
+        </div>
+        <div class="order_time order_public">
+               下单时间： <span  th:text="${platfOrder.createTime}"></span>
+        </div>
+    </div>
+    <!--网易严选订单列表-->
+    <div class="order_list" th:each="pso,psoStat : ${platfOrder.platfShopOrder}">
+        <div class="list_detail list1">
+            <div class="store_title">
+                <img class="store_logo" th:src="@{/front/images/hkbstore/pics/yanxuan_logo.png}"/>
+                <p class="store_name"><span th:text="${pso.ecomCode}"></span></p>
+                <img class="the_arrow" th:src="@{/front/images/hkbstore/icons/the_arrow.png}"/>
+            </div>
+            <a class="order_goods" th:each="items,itemsStat : ${pso.orderProductItems}" th:href="@{/goods/platfOrder/getPlatfOrderGoodsDetails(orderId=${platfOrder.orderId})}">
+                <div class="goods_pic">
+                    <img class="store_logo" th:src="${items.picUrl}"/>
+                </div>
+                <div class="goods_info">
+                    <div class="goods_name"><span th:text="${items.productName}"></span></div>
+                    <div class="goods_sku">
+                        <div class="sku_info"></div>
+                        <div class="number">x<span th:text="${items.productNum}"></span></div>
+                    </div>
+                    <div class="goods_price">¥<span th:text="${items.productPrice}"></span></div>
+                </div>
+            </a>
+            <div class="goods_total total">
+                <p>共<span th:text="${pso.orderProductItemsCount}"></span>件商品，小计：¥<span th:text="${pso.payAmt}"></span>（含运费¥<span th:text="${pso.shippingFreightPrice}"></span>）</p>
+            </div>
+        </div>
+    </div>
+    <!--总计-->
+    <div class="order_total total">
+        <p>共<span th:text="${platfOrder.platfShopOrderGoodsCount}"></span>件商品，合计¥<span th:text="${platfOrder.payAmt}"></span>（含运费¥<span th:text="${platfOrder.orderFreightAmt}"></span>）</p>
+        <a th:if="${platfOrder.payStatus == '0'}" class="total_pay" th:href="@{/goods/orderPay/payMyOrder(orderId=${platfOrder.orderId})}">去付款</a>
+    </div>
+</div>
+<script>
+//tab 切换
+jfProductDetails.clickTabChange(document.getElementById('orderTab'), 'choose_tab', 'tab');
+</script>
+</body>
+</html>

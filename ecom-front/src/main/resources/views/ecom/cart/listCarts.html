@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/CartHeader::CartHeader"/>
+<link th:href="@{http://www.marklbp.com/stylesheets/marklbp.min.css}" rel="stylesheet"/>
+<link th:href="@{/ecom/common/css/common.css}" rel="stylesheet"/>
+<link th:href="@{/ecom/cart/css/cart.css}" href="css/cart/index.css" rel="stylesheet"/>
+<title>购物车</title>
+<!--通用媒体查询-->
+<body>
+
+<div class="cart-container" id="cart_container"></div>
+<div th:include="main/hkbstore/foot::foot" />
+<div class="cart-edit-container cart-container" id="cart_edit_container">
+    <!-- 顶部导航 -->
+    <nav class="hkb_top_bar">
+        <div class="hkb_top_contain">
+            <div class="content">
+                <div class="left"></div>
+                <div class="center">
+             
+                </div>
+                <div class="right">
+                    <span ontouchstart="Marklbp.Modules.Cart.hideEdit()">完成</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+   	<form id="cartForm" th:action="@{/ecom/cart/cartAccounts}" class="form-inline" method="post">
+   	 	<input type="hidden" id="cartIds" name="cartId"  value=""/>
+		<input type="hidden" id="isChange" name="isChange" th:value="0" />
+   	 	<div id="cart_edit_container_content"></div>
+    </form>
+    <!-- 编辑 -->
+    <div class="operation_tab_text">
+        <div class="hkb_alignment_left">
+            <label class="checkbox-radio">
+                <input class="check-all" type="checkbox" />
+                <i></i>
+                <span>全选</span>
+            </label>
+        </div>
+        <span class="operation_btn remove" onclick="Marklbp.Modules.Cart.editRemove()">删除</span>
+    </div>
+</div>
+
+
+<script  type="text/javascript"  th:inline="javascript">
+/*<![CDATA[*/
+(function(global, context, factory, name){
+	if(!context.mock)context.mock = {};
+	var data = factory.call(context, context);
+	if(!context.mock[name]){
+		if(data instanceof Array){
+			context.mock[name] = [];
+		}else if('function' == typeof data){
+			context.mock[name] = function(){};
+		}else if('object' == typeof data){
+			context.mock[name] = {};
+		}else{
+			context.mock[name] = window[(typeof data).replace(/(\w)/, function(s, a){return a.toUpperCase()})]();
+		}
+	}
+	return context.extend(context.mock[name], data)
+})(window, Marklbp, function(){
+	//alert(JSON.stringify([[${cartList}]]));
+	return {
+		checkedAll:true, 
+		amount: [[${cartsPrice}]],
+		list: [[${cartList}]]
+	}
+}, 'cart')
+    /*]]>*/
+</script>
+<script type="text/javascript">
+    $(function(){
+      pushHistory(window.location.href, document.title);
+      $(window).on("popstate", function(e) {
+        this.location.reload();
+      })
+    });
+
+    function pushHistory(url, title){
+      var state = {
+          title: title,
+          url: url
+      };
+      window.history.pushState(state, state.title, state.url);
+    }
+   </script>
+<script th:src="@{/ecom/cart/js/template.js}" ></script>
+<script th:src="@{/ecom/cart/js/cart.js}" ></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.thinkx.ecom.basics.member.mapper.AccountFansMapper">
+
+	<sql id="AccountFansColumns">
+		id,
+		openid,
+		wxid,
+		subscribestatus,
+		subscribetime,
+		nickname,
+		gender,
+		language,
+		country,
+		province,
+		city,
+		headimgurl,
+		fans_status,
+		createtime,
+		status,
+		unionid,
+		groupid,
+		remark
+	</sql>
+
+	<select id="getByOpenId" parameterType="java.lang.String" resultType="AccountFans">
+		SELECT 
+		 <include refid="AccountFansColumns" />
+		 FROM TB_WX_CLIENT_FANS WHERE OPENID = #{openId}
+	</select>
+</mapper>

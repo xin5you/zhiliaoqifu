@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/header::header" />
+<title >物流信息</title>
+<!--通用媒体查询-->
+<body>
+
+<!--订单信息-->
+<div class="status_pie" th:each="expressPlat,expressPlatStat : ${expressPlatfList}">
+    <div class="status_pie_title">物流状态 ：<span class="status_pie_send" th:text="${expressPlat.packageStat}"></span></div>
+    <div class="status_pie_tickets" th:if="${expressPlat.expressNo != null}">物流单号 ：<span th:text="${expressPlat.expressNo}"></span></div>
+    <div class="status_pie_line">
+    </div>
+    <div class="status_pie_images">
+    	<span th:each="opitem,opitemStat : ${expressPlat.orderProductItem}">
+       	 <img  th:src="${opitem.picUrl}" />
+        </span>
+    </div>
+<!--物流信息-->
+<div class="status_split_main jdshop_shadow" th:each="odInfo,odInfoStat : ${expressPlat.orderDeliveryInfo}">
+	<span  th:each="c,cStat : ${odInfo.content}">
+	    <div class="status_split select" th:if="${cStat.count == 1}">
+	        <div class="status_split_title"><span th:text="${c.desc}"></span></div>
+	        <div class="status_split_time"><span th:text="${c.time}"></span></div>
+	        <div class="status_line"></div>
+	    </div>
+	    <div class="status_split" th:if="${cStat.count != 1}">
+	        <div class="status_split_title"><span th:text="${c.desc}"></span></div>
+	        <div class="status_split_time"><span th:text="${c.time}"></span></div>
+	        <div class="status_line"></div>
+	    </div>
+    </span>
+    <span th:if="${#lists.isEmpty(odInfo.content)}">
+    	<div class="status_split">
+	        <div class="status_split_title"><span th:text="暂无物流信息"></span></div>
+	        <div class="status_line"></div>
+	    </div>
+    </span>
+</div>
+</div>
+
+</body>
+</html>

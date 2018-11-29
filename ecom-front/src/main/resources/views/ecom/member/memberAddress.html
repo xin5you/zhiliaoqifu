@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>收货地址</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<script th:src="@{/ecom/member/memberAddress.js}"></script>
+<body>
+
+
+<!--知了企服商城首页-->
+
+
+<!--列表-->
+<div class="container_main">
+	<div class="delivery_address_list" th:each="memberAddre,memberAddreStat : ${memberAddreList}">
+        <div onclick="pageChange.sectionBack()">
+            <div class="address_top_plate">
+                <div class="add_address_left">
+                    <p><span th:text="${memberAddre.userName}"></span></p>
+                    <div th:if="${memberAddre.defAddr == '0'}" class="default_font">默认</div>
+                </div>
+                <div class="add_address_right">
+                    <p><span th:text="${memberAddre.mobile}"></span></p>
+                    <p><span th:text="${memberAddre.province}"></span><span th:text="${memberAddre.city}"></span><span th:text="${memberAddre.region}"></span><span th:text="${memberAddre.town}"></span><span th:text="${memberAddre.addrDetail}"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="operation_area hkbstore_alignment_center">
+            <a class="edit" th:href="@{/member/memberAddress/intoEditMemberAddress(addrId=${memberAddre.addrId})}">
+                <span><img th:src="@{/front/images/hkbstore/icons/delivery_address_1_edit.png}"/></span>
+                                          编辑
+            </a>
+            <div class="delete" th:attr="addrId=${memberAddre.addrId}">
+                <span><img th:src="@{/front/images/hkbstore/icons/delivery_address_2_del.png}"/></span>
+              	  删除
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部按钮-->
+
+<div class="bottom_button">
+    <div class="tab_box"></div>
+    <a class="button_contain">
+        添加新地址
+    </a>
+</div>
+
+</body>
+</html>

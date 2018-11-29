@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.system.mapper.UserMapper">
+
+	<sql id="UserColumns">
+		m.ID,
+		m.AGE,
+		m.CREATEDATETIME,
+		m.ISDEFAULT,
+		m.LOGINNAME,
+		m.NAME,
+		m.PASSWORD,
+		m.SEX,
+		m.STATE,
+		m.USERTYPE,
+		m.ORGANIZATION_ID,
+		m.LOCKVERSION
+	</sql>
+
+	<select id="selectByPrimaryKey" parameterType="String" resultType="User">
+		SELECT
+			<include refid="UserColumns" />
+		FROM TB_WEB_USER m
+		WHERE m.ID=#{primaryKey}
+	</select>
+
+	<select id="getUserByLoginName" parameterType="String" resultType="User">
+		SELECT
+			<include refid="UserColumns" />
+		FROM TB_WEB_USER m
+		WHERE m.LOGINNAME=#{loginName}
+	</select>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="User">
+		UPDATE TB_WEB_USER
+		<set>
+			AGE=#{age,jdbcType=VARCHAR},
+			ISDEFAULT=#{isdefault,jdbcType=VARCHAR},
+			LOGINNAME=#{loginName,jdbcType=VARCHAR},
+			NAME=#{name,jdbcType=VARCHAR},
+			PASSWORD=#{password,jdbcType=VARCHAR},
+			SEX=#{sex,jdbcType=VARCHAR},
+			STATE=#{state,jdbcType=VARCHAR},
+			USERTYPE=#{userType,jdbcType=VARCHAR},
+			ORGANIZATION_ID=#{organizationId,jdbcType=VARCHAR}
+		</set>
+		WHERE ID=#{id}
+	</update>
+	
+	<select id="getList" parameterType="User" resultType="User">
+		SELECT 
+	  		<include refid="UserColumns" />
+	  	FROM TB_WEB_USER m 
+        WHERE  m.STATE='0'
+        <if test="id !=null and id !='' ">
+		 	AND m.ID = #{id}
+		</if>
+        <if test="name !=null and name !='' ">
+			AND m.NAME LIKE '%' || #{name} || '%'
+		</if>
+		<if test="loginName !=null and loginName !='' ">
+		 	AND m.LOGINNAME LIKE '%' || #{loginName} || '%'
+		</if>
+	</select>
+	
+	<insert id="insert" parameterType="User">
+	   <selectKey resultType="Integer" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getSysUserId" />
+		</selectKey>
+		INSERT INTO TB_WEB_USER (
+			ID,
+			AGE,
+			ISDEFAULT,
+			LOGINNAME,
+			NAME,
+			PASSWORD,
+			SEX,
+			STATE,
+			USERTYPE,
+			ORGANIZATION_ID,
+			CREATEDATETIME,
+			LOCKVERSION
+		 )  VALUES ( 
+		 	#{id},
+		 	#{age,jdbcType=VARCHAR},
+		 	#{isdefault,jdbcType=VARCHAR},
+		 	#{loginName,jdbcType=VARCHAR},
+		 	#{name,jdbcType=VARCHAR},
+		 	#{password,jdbcType=VARCHAR},
+		 	#{sex,jdbcType=VARCHAR},
+		 	#{state,jdbcType=VARCHAR},
+		 	#{userType,jdbcType=VARCHAR},
+		 	#{organizationId,jdbcType=VARCHAR},
+		 	sysdate,
+		 	'0')  
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="User">
+		UPDATE TB_WEB_USER
+		<set>
+			ISDEFAULT=#{isdefault,jdbcType=VARCHAR},
+			LOGINNAME=#{loginName,jdbcType=VARCHAR},
+			NAME=#{name,jdbcType=VARCHAR},
+			PASSWORD=#{password,jdbcType=VARCHAR},
+			STATE=#{state,jdbcType=VARCHAR},
+			USERTYPE=#{userType,jdbcType=VARCHAR},
+		</set>
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="User" >
+		 DELETE TB_WEB_USER m WHERE  m.ID=#{id}
+	</delete>
+	
+	<insert id="addUserRole" parameterType="UserRole">
+		INSERT INTO TB_WEB_USER_ROLE(USER_ID,ROLE_ID) 
+		VALUES (
+			#{userId, jdbcType=VARCHAR},
+			#{roleId, jdbcType=VARCHAR}
+		)
+	</insert>
+		
+	<delete id="deleteUserRoleByUserId" parameterType="String">
+		DELETE FROM TB_WEB_USER_ROLE WHERE USER_ID=#{userId}
+	</delete>
+	
+</mapper>

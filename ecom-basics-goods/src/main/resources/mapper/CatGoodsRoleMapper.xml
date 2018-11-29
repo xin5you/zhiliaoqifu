@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.CatGoodsRoleMapper">
+	
+	<sql id="catGoodseRoleColumns">
+		 CAT_ID,
+		 GOODS_ID,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 UPDATE_USER,
+		 CREATE_TIME,
+		 UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<insert id="insert"  parameterType="CatGoodsRole">
+			
+		INSERT INTO TB_ECOM_CAT_GOODS_ROLE
+		(
+				<include refid="catGoodseRoleColumns" /> 
+		)VALUES (
+			   #{catId},
+			   #{goodsId},
+			   '0',
+			   #{remarks,jdbcType=VARCHAR},
+			   #{createUser,jdbcType=VARCHAR},
+			   #{updateUser,jdbcType=VARCHAR},
+			   sysdate,
+			   sysdate,
+			   '0'
+		)
+	</insert>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		UPDATE TB_ECOM_CAT_GOODS_ROLE SET DATA_STAT='1' WHERE CAT_ID=#{primaryKey}
+	</update>
+	
+	<select id="getCatGoodsByCarIdAndGoodsId"  resultType="CatGoodsRole">
+		SELECT 
+			<include refid="catGoodseRoleColumns" />  
+		FROM TB_ECOM_CAT_GOODS_ROLE  
+		WHERE DATA_STAT = '0'
+		AND CAT_ID  =  #{catId}
+		AND GOODS_ID =  #{goodsId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.banner.mapper.BannerMapper">
+	
+	<sql id="bannerColumns">
+		 ID,
+		 IMAGE_URL,
+		 BANNER_URL, 
+		 SPEC,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="Banner" resultType="Banner">
+		select 
+			<include refid="bannerColumns" />  
+		from TB_ECOM_BANNER 
+		where 1=1
+		<if test="remarks !=null and remarks !='' ">
+			and REMARKS LIKE '%' || #{remarks} || '%'
+		</if>
+		and DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Banner">
+		select
+			<include refid="bannerColumns" /> 
+		from TB_ECOM_BANNER where ID = #{primaryKey}
+	</select>
+	
+	<insert id="insert" parameterType="Banner">
+	   <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getEcomId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_BANNER(
+			ID,
+			IMAGE_URL,
+			BANNER_URL,
+			SPEC,
+		 	DATA_STAT,
+		 	REMARKS,
+			CREATE_USER,
+			UPDATE_USER,
+			CREATE_TIME,
+			UPDATE_TIME,
+			LOCK_VERSION
+		)VALUES (
+			#{id},
+			#{imageUrl,jdbcType=VARCHAR},
+			#{bannerUrl,jdbcType=VARCHAR},
+			#{spec,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			sysdate,
+			sysdate,
+			'0'
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="Banner">
+		update TB_ECOM_BANNER
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="imageUrl != null">IMAGE_URL=#{imageUrl,jdbcType=VARCHAR},</if>
+			<if test="bannerUrl != null">BANNER_URL=#{bannerUrl,jdbcType=VARCHAR},</if>
+			<if test="spec != null">SPEC=#{spec,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		update TB_ECOM_BANNER set DATA_STAT='1' where ID=#{id}
+	</delete>
+	
+</mapper>

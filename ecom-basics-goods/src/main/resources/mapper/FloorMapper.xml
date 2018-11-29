@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.FloorMapper">
+
+	<resultMap type="Floor" id="FloorGoodsResultMap">
+		<result column="FLOOR_ID" property="floorId" />
+		<result column="TITLE" property="title" />
+		<result column="PARENT_ID" property="parentId" />
+		<result column="TYPE" property="type" />
+		<result column="ECOM_CODE" property="ecomCode" />
+		<result column="STYLE" property="style" />
+		<result column="IS_DISPLAY" property="isDisplay" />
+		<result column="SORT" property="sort" />
+		<result column="checkDefault" property="checkDefault" />
+		<collection property="goods" column="{checkDefault=checkDefault,FLOOR_ID=FLOOR_ID}" select="getFloorGoodsByGoodsId" />
+	</resultMap>
+	
+	<resultMap type="Goods" id="GoodsResultMap">
+		<result column="GOODS_ID" property="goodsId" />
+		<result column="GOODS_NAME" property="goodsName" />
+		<result column="GOODS_TYPE" property="goodsType" />
+		<result column="PIC_URL" property="picUrl" />
+		<result column="GOODS_PRICE" property="goodsPrice" />
+	</resultMap>
+	
+	<sql id="FloorColumns">
+		FLOOR_ID,
+		TITLE,
+		PARENT_ID,
+		TYPE,
+		ECOM_CODE,
+		STYLE,
+		LOGO,
+		IS_DISPLAY,
+		SORT,
+		CAT_ID,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		UPDATE_USER,
+		TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="Floor" resultType="Floor">
+		SELECT
+			<include refid="FloorColumns" />
+		FROM TB_ECOM_FLOOR
+		WHERE 1=1 AND DATA_STAT = '0'
+		<if test="title !=null and title !='' ">
+			AND TITLE LIKE '%' || #{title} || '%'
+		</if>
+		<if test="ecomCode !=null and ecomCode !='' ">
+			AND ECOM_CODE = #{ecomCode}
+		</if>
+		<if test="isDisplay !=null and isDisplay !='' ">
+			AND IS_DISPLAY = #{isDisplay}
+		</if>
+		<if test="type !=null and type !='' ">
+			AND TYPE = #{type}
+		</if>
+		ORDER BY SORT ASC,UPDATE_TIME DESC 
+	</select>
+	
+	<insert id="insert" parameterType="Floor">
+	   <selectKey resultType="String" order="BEFORE" keyProperty="floorId">  
+			<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getFloorId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_FLOOR(
+			FLOOR_ID,
+			TITLE,
+			PARENT_ID,
+			TYPE,
+			ECOM_CODE,
+			STYLE,
+			LOGO,
+			IS_DISPLAY,
+			SORT,
+			CAT_ID,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			LOCK_VERSION
+		)VALUES (
+			#{floorId},
+			#{title,jdbcType=VARCHAR},
+			#{parentId,jdbcType=VARCHAR},
+			#{type,jdbcType=VARCHAR},
+			#{ecomCode,jdbcType=VARCHAR},
+			#{style,jdbcType=VARCHAR},
+			#{logo,jdbcType=VARCHAR},
+			#{isDisplay,jdbcType=VARCHAR},
+			#{sort,jdbcType=VARCHAR},
+			#{catId,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			sysdate,
+			#{updateUser,jdbcType=VARCHAR},
+			sysdate,
+			0
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="Floor">
+		update TB_ECOM_FLOOR
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="title != null">TITLE=#{title,jdbcType=VARCHAR},</if>
+			<if test="parentId != null">PARENT_ID=#{parentId,jdbcType=VARCHAR},</if>
+			<if test="type != null">TYPE=#{type,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="style != null">STYLE=#{style,jdbcType=VARCHAR},</if>
+			<if test="logo != null">LOGO=#{logo,jdbcType=VARCHAR},</if>
+			<if test="isDisplay != null">IS_DISPLAY=#{isDisplay,jdbcType=VARCHAR},</if>
+			<if test="sort != null">SORT=#{sort,jdbcType=VARCHAR},</if>
+			<if test="catId != null">CAT_ID=#{catId,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where FLOOR_ID=#{floorId}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE TB_ECOM_FLOOR set DATA_STAT='1' ,UPDATE_TIME = SYSDATE where FLOOR_ID=#{floorId}
+	</delete>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Floor">
+		select
+			<include refid="FloorColumns" />
+		from TB_ECOM_FLOOR where FLOOR_ID=#{primaryKey} AND DATA_STAT='0'
+	</select>
+	
+	<select id = "getFloorGoodsList" parameterType="Floor" resultMap = "FloorGoodsResultMap">
+		SELECT 
+			F.FLOOR_ID,
+			F.TITLE,
+			F.PARENT_ID,
+			F.TYPE,
+			F.ECOM_CODE,
+			F.STYLE,
+			F.IS_DISPLAY,
+			F.SORT,
+			${checkDefault} as checkDefault
+ 		FROM TB_ECOM_FLOOR F
+		WHERE F.DATA_STAT = '0' and F.IS_DISPLAY = '0'
+			<if test="ecomCode !=null and ecomCode !='' and ecomCode != '0'">
+				AND F.ECOM_CODE = #{ecomCode}
+			</if>
+			<if test="type !=null and type !='' ">
+				AND F.TYPE = #{type}
+			</if>
+			<if test="sort !=null and sort !='' ">
+				AND F.SORT = #{sort}
+			</if>
+			<if test="floorId !=null and floorId !='' ">
+				AND F.FLOOR_ID = #{floorId}
+			</if>
+ 		ORDER BY F.SORT ASC,F.UPDATE_TIME DESC
+	</select>
+	
+	<select id = "getFloorGoodsByGoodsId" parameterType="java.util.Map" resultMap = "GoodsResultMap">
+			select
+			t.GOODS_ID,
+			t.GOODS_NAME,
+			t.GOODS_TYPE,
+			t.PIC_URL,
+			t.GOODS_PRICE
+		FROM (SELECT
+			G.GOODS_ID,
+			G.GOODS_NAME,
+			G.GOODS_TYPE,
+			GP.PIC_URL,
+			GP.GOODS_PRICE
+		FROM TB_ECOM_FLOOR_GOODS FG
+    	INNER JOIN TB_ECOM_GOODS G ON FG.GOODS_ID = G.GOODS_ID 
+    	INNER JOIN TB_ECOM_GOODS_PRODUCT GP ON G.GOODS_ID = GP.GOODS_ID
+    	WHERE FG.DATA_STAT = '0' AND G.DEFAULT_SKU_CODE = GP.SKU_CODE
+			AND G.DATA_STAT = '0' 
+			AND GP.DATA_STAT = '0'
+			AND G.MARKET_ENABLE = '1' AND G.IS_DISABLED ='0'
+			AND FG.FLOOR_ID = #{FLOOR_ID}
+		ORDER BY FG.CREATE_TIME ASC,G.GOODS_ID DESC) t
+		WHERE 1=1
+		<if test = "checkDefault == '0'.toString() ">
+			AND ROWNUM <![CDATA[<=]]> 6
+		</if>
+	</select>
+	
+</mapper>
+
+
+
+

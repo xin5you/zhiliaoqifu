@@ -1,0 +1,530 @@
+.the_arrow{
+    margin-left: -70px;
+    margin-top: 30px;
+    font-size: 12px;
+}
+.store_name{
+    font-size: 18px;
+    margin-top: -20px;
+}
+.store_logo{
+    width: 50px !important;
+}
+.list1{
+    background: #fff;
+    padding: 0px 10px;
+    border-radius: 20px;
+}
+.right {
+    color: #ff8000;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.btu1{    font-size: 14px;
+    background: #fff;
+    border-radius: 5px;
+    width: 40px;
+    margin-right: 5px;
+    border: 1px solid #ddd;
+    }
+.btu2{
+    font-size: 14px;
+    background: #f18200;
+    color: #fff;
+    border: none;
+    width: 40px;
+    border-radius: 5px;
+}
+.order_public{
+    margin-top: -15px;
+    font-size: 10px;
+    color: #454545;
+    width: 60%;
+    height: 30px;
+}
+.order_sh{
+    float: right;
+    margin-top: 76px;
+    font-size: 16px;
+    margin-left: 70px;
+    color: #454545;
+}
+
+.wuliu{
+    width: 30%;
+    float: right;
+    margin-top: -31px;
+    font-size: 16px;
+    color: #4a4a4a;
+}
+.ps{
+    width: 40%;
+    padding-top: 10px;
+}
+.ps a{
+    float: right;
+    font-size: 16px;
+    color: #4a4a4a;
+}
+.sh{
+    float: right;
+    width: 30%;
+    font-size: 14px;
+    margin-top: -35px;
+    color: #4e4e4e;
+}
+.list12{
+    margin-top: 20px;
+}
+/*物流信息样式*/
+.class_tab_logis {
+    position: fixed;
+    width: 100%;
+    height: 42px;
+    background-color: #fff;
+    z-index: 999;
+    border-bottom: 1px solid #ddd;
+    top: 0px;
+    left: 0;
+}
+.status_pie_logis {
+    padding: 32px 20px 0px 12px !important;
+    margin-top: 10px;
+    background: #fff;
+    font-size: 14px;
+}
+.class_tab_logis .shop_order_tab:before {
+    position: absolute;
+    content: '';
+    width: 8px;
+    height: 8px;
+    top: 12px;
+    right: 10px;
+    /* border-top: 1px #ababab solid; */
+    /* border-right: 1px #ababab solid; */
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.class_tab_logis .shop_order_tab .tab_contain {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+    -moz-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    width: 92%;
+    overflow: auto;
+}
+.class_tab_logis .shop_order_tab .tab_contain .clicks.choose_tab {
+    position: relative;
+    color: #ff8000;
+}
+.class_tab_logis .shop_order_tab .tab_contain .clicks {
+    display: inline-block;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    -moz-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    height: 100%;
+    padding: 10px;
+    margin: 0 50px;
+    position: relative;
+}
+.class_tab_logis .shop_order_tab {
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+}
+.status_split_title1:after{
+    background: url("../../ecomfront/images/pics/wuliu.png") no-repeat;
+    content: '';
+    position: absolute;
+    left: -46px;
+    top: -5px;
+    width: 51px;
+    height: 51px;
+    z-index: 4;
+    -webkit-transform: scale(.5,.5);
+    -ms-transform: scale(.5,.5);
+    transform: scale(.5,.5);
+}
+/*申请售后样式*/
+.shxx{
+    height: 22px;
+    line-height: 22px;
+}
+.logistics_address_left{
+    width: 30% !important;
+}
+.address_name1{
+    padding: 10px 10px !important;
+}
+.details_list h2{
+    margin-left: 20px;
+}
+.list2{
+    background: #fff;
+    padding: 0px 20px;
+    margin: 4px 0px 10px 0px;
+}
+.list2 h3{
+    padding-top: 10px;
+}
+.order_detail2 {
+    margin-top: 10px !important;
+}
+.order_list1 {
+     padding: 0px 0px !important;
+    /*border-top: 1px solid #ddd;*/
+}
+.order_btn{
+    text-align: center;
+    margin-top: 30px;
+}
+.order_btn a{
+    background: #fba82e;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 30px;
+    border-radius:10px;
+}
+/*退款详情*/
+.djs{
+    background: #fba82e;
+    color: #fff;
+    height: 80px;
+}
+.djs .wen{
+    float: left;
+    width: 50%;
+}
+.djs .wen p{
+    font-size: 20px;
+
+    padding-top: 12px;
+    padding-left: 20px;
+}
+.djs .wen span{
+
+    padding-left: 20px;
+}
+.djs img{
+    float: right;
+    width: 60px;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+.sq{
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #ddd;
+    padding-left: 20px;
+}
+.kf{
+    background: #fff;
+    height: 110px;
+    padding: 0 20px;
+}
+.kf p{
+    padding-top: 10px;
+    line-height: 18px;
+    font-size: 12px;
+}
+.kf a{
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 5px;
+    margin: 0 5px;
+    padding: 5px 10px;
+}
+.but{
+    float: right;
+    padding-top: 15px;
+}
+.but3{
+    color: #fba82e;
+    border: 1px solid #fba82e;
+}
+/*商家同意退款样式*/
+.logistics_address2 {
+    background-color: #fff;
+    margin: 0px 0px !important;
+    padding: 10px 20px;
+
+}
+.logistics_address3 {
+    background-color: #fff;
+    margin: 10px 0px !important;
+    padding: 10px 20px;
+
+}
+.contact_phone3{
+    width: 65%;
+}
+.left3{
+    width: 35% !important;
+}
+.order_detai2 {
+    margin-top: 1px;
+}
+.order_detai3 {
+    margin-top: 10px;
+}
+.logistics_address1{
+    margin: 0px 0px !important;
+}
+/*商家已经确认退款*/
+.je{
+    float: right;
+    color: #fba82e !important;
+    font-size: 18px !important;
+}
+.status_split1 {
+    font-size: 12px;
+    position: relative;
+    line-height: 18px;
+    margin-bottom: 15px;
+    border-top: 1px #fba82e solid;
+    width: 20%;
+    float: left;
+    margin-top: 20px;
+    padding: 15px 0px;
+}
+.status_split1 .status_split_title:before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: -21px;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: #fba82e;
+    border-radius: 50%;
+}
+.status_split2 .status_split_title:before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: -24px;
+    display: block;
+    width: 20px !important;
+    height: 20px !important;
+    background: #fba82e;
+    border-radius: 50%;
+}
+.status_split_main1 {
+    padding: 10px 20px 10px 20px !important;
+}
+.status_split1.select .status_split_title:after {
+    content: '';
+    position: absolute;
+    left: -32px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    z-index: 4;
+    border: none !important;
+    border-radius: 50%;
+    -webkit-transform: scale(.5,.5);
+    -ms-transform: scale(.5,.5);
+    transform: scale(.5,.5);
+}
+
+/*弹窗表单*/
+#mack {
+    display: none;
+    position: fixed;
+    background: #000;
+    opacity: 0.8;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    top: 0;
+    left: 0; }
+
+#am-yz {
+    display: none;
+
+    width: 60%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -30%;
+    margin-left: -30%;
+    z-index: 100; }
+.am-ys {
+    display: none;
+    background:url("../../ecomfront/images/pics/baoqian.png") no-repeat;
+    width: 60%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -10%;
+    margin-left: -30%;
+    z-index: 100; }
+.am-yz .cont {
+    position: relative;
+    padding: 0 1rem; }
+.am-yz .cont .arr {
+    position: absolute;
+    bottom: 3.6rem;
+    left: 40%;
+    color: #ce3702; }
+.am-yz .cont .am-form {
+    margin-top: -3.5rem; }
+.am-yz .cont .am-form .am-form-group label {
+    color: #1063B0;
+    font-size: 1.4rem;
+    text-align: right; }
+.am-yz .cont .am-form .am-form-group .am-code a {
+    background: #1063B0; }
+.am-yz .cont .am-form .center {
+    text-align: center;
+margin-top: 10px;}
+.am-yz .cont .am-form .center button {
+    width: 60%;
+    font-size: 20px;
+    border: none;
+    background: #fba82e;
+    color: #fff;
+    border-radius: 23px;
+    padding: 5px 0px;
+}
+.am-yz .cont > p {
+    margin-top: 3rem;
+    font-size: 14px; }
+
+
+
+
+
+
+.pz{
+    padding: 10px 20px;
+    text-align: center;
+}
+.tupian{
+    text-align: center;
+    padding: 20px 10px;
+}
+.anniu{
+    text-align: center;
+}
+.anniu a{
+    background: #fba82e;
+    padding: 10px 50px;
+    color: #fff;
+    font-size: 28px;
+    border-radius: 10px;
+}
+
+
+
+/*下拉框*/
+.sel-box{
+    width: 100%;
+
+    overflow: hidden;
+}
+.sel-box.on{
+    border-color: #4a4a4a;
+}
+.sel-title-box{
+    position: relative;
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color:white;
+}
+
+.sel-title{
+    padding-left: 3px;
+    line-height: 2.2;
+}
+.sel-float-box{
+    position: absolute;
+    border:1px solid #ddd;
+
+    z-index: 2;
+    background-color:white;
+    margin-left: -1px;
+    overflow: hidden;
+    line-height: 1.8;
+    margin-top: 7px;
+}
+.sel-float-box.on{
+    border-color: #eee;
+}
+.sel-float-div{
+    padding-left: 3px;
+    cursor: default;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: white;
+    color:#666;
+}
+.sel-float-div:hover{
+    background-color:#4a4a4a;
+    color:white;
+}
+.sel-float-div-disabled{
+    padding-left: 12px;
+    line-height: 1.8;
+    color:#bbb;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.sel-hide{
+    display: none;
+
+}
+
+.input_form1 {
+
+    padding: 7px 20px !important;
+}
+
+.order_goods1 {
+    border-top: none !important;
+}
+.order_goods2 {
+    border-top: none !important;
+    padding: 8px 0 !important;
+}
+.details_order_number1 {
+    padding: 5px 20px !important;
+}
+.address_name1 span {
+      color: #4a4a4a !important;
+ }
+
+.order_number_p{
+    padding-left: 4px;
+}
+.goto_pay1 {
+    background: #fba82e;
+    color: #fff;
+    border: none !important;
+}

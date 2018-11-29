@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.eshoproutes.mapper.EshopRoutesMapper">
+	
+	<sql id="eshopRoutesColumns">
+		 ID,
+		 ROUTES_ID,
+		 ESHOP_ID,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="EshopRoutes" resultType="EshopRoutes">
+		select
+			<include refid="eshopRoutesColumns"/>
+		from TB_ECOM_ESHOP_ROUTES_REF
+		where 1=1
+		<if test="routesId !=null and routesId !='' ">
+		 	AND ROUTES_ID = #{routesId}
+		 </if>
+		 <if test="eshopId !=null and eshopId !='' ">
+		 	AND ESHOP_ID = #{eshopId}
+		 </if>
+		and DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="getEshopRoutes" parameterType="EshopRoutes" resultType="EshopRoutes">
+		select
+			<include refid="eshopRoutesColumns"/>
+		from TB_ECOM_ESHOP_ROUTES_REF
+		where 1=1
+		<if test="routesId !=null and routesId !='' ">
+		 	AND ROUTES_ID = #{routesId}
+		 </if>
+		 <if test="eshopId !=null and eshopId !='' ">
+		 	AND ESHOP_ID = #{eshopId}
+		 </if>
+	</select>
+	
+	<insert id="insert" parameterType="EshopRoutes">
+		<selectKey resultType="String" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getEcomId" />
+		</selectKey>
+		insert into TB_ECOM_ESHOP_ROUTES_REF(
+			ID,
+			ROUTES_ID,
+			ESHOP_ID,
+		 	DATA_STAT,
+		 	REMARKS,
+			CREATE_USER,
+			UPDATE_USER,
+			CREATE_TIME,
+			UPDATE_TIME,
+			LOCK_VERSION
+		) 
+		values (
+			#{id},
+			#{routesId, jdbcType=VARCHAR},
+			#{eshopId, jdbcType=VARCHAR},
+			'0',
+			#{remarks, jdbcType=VARCHAR},
+			#{createUser, jdbcType=VARCHAR},
+			#{updateUser, jdbcType=VARCHAR},
+			sysdate,
+			sysdate,
+			'0'
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="EshopRoutes">
+		update TB_ECOM_ESHOP_ROUTES_REF
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="routesId != null">ROUTES_ID=#{routesId,jdbcType=VARCHAR},</if>
+			<if test="eshopId != null">ESHOP_ID=#{eshopId,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		delete from TB_ECOM_ESHOP_ROUTES_REF where ID=#{id}
+	</delete>
+	
+</mapper>

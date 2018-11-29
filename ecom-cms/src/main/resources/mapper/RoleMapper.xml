@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.system.mapper.RoleMapper">
+	
+	<sql id="roleColumns">
+		 ID,
+		 NAME,
+		 DESCRIPTION, 
+		 ISDEFAULT,
+		 SEQ
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Role">
+		SELECT
+			<include refid="roleColumns" />
+		FROM TB_WEB_ROLE WHERE ID=#{primaryKey}
+	</select>
+	
+	<select id="selectByName" parameterType="String" resultType="Role">
+		SELECT
+			<include refid="roleColumns" />
+		FROM TB_WEB_ROLE WHERE NAME=#{name}
+	</select>
+	
+	<select id="getList" parameterType="Role" resultType="Role">
+		SELECT
+			<include refid="roleColumns"/>
+		FROM TB_WEB_ROLE ROLE
+	</select>
+	
+	<insert id="insert" parameterType="Role">
+	   <selectKey resultType="Integer" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getSysRoleId" />
+		</selectKey>
+		INSERT INTO TB_WEB_ROLE(
+			ID,
+			NAME,
+			DESCRIPTION,
+			ISDEFAULT,
+			SEQ
+		)VALUES (
+			#{id},
+			#{name,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{isdefault,jdbcType=VARCHAR},
+			#{seq,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		DELETE FROM TB_WEB_ROLE WHERE ID=#{id}
+	</delete>
+	
+	<update id="updateByPrimaryKey" parameterType="Role">
+		UPDATE TB_WEB_ROLE
+		<set>
+			NAME=#{name,jdbcType=VARCHAR},
+			DESCRIPTION=#{description,jdbcType=VARCHAR},
+			ISDEFAULT=#{isdefault,jdbcType=VARCHAR},
+			SEQ=#{seq,jdbcType=VARCHAR}
+		</set>
+		WHERE ID=#{id}
+	</update>
+	
+	<insert id="addRoleResource" parameterType="RoleResource">
+		INSERT INTO TB_WEB_ROLE_RESOURCE(ROLE_ID,RESOURCE_ID) 
+		VALUES (
+			#{roleId, jdbcType=VARCHAR},
+			#{resourceId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteRoleResourceByRoleId" parameterType="String">
+		DELETE FROM TB_WEB_ROLE_RESOURCE WHERE role_id=#{roleId}
+	</delete>
+	
+	<select id="getUserRoleByUserId" parameterType="String" resultType="Role">
+		SELECT
+			<include refid="roleColumns" />
+		FROM TB_WEB_ROLE WHERE id in (
+		SELECT ROLE_ID 
+		FROM TB_WEB_USER_ROLE
+		WHERE USER_ID=#{useId})
+	</select>
+	
+	<delete id="deleteUserRoleByRoleId" parameterType="String">
+		DELETE FROM TB_WEB_USER_ROLE WHERE role_id=#{roleId}
+	</delete>
+</mapper>

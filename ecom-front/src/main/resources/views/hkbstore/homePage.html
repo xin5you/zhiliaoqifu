@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>知了商城</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<body>
+
+<!--知了企服商城首页-->
+
+<!--搜索栏-->
+
+<!-- <div class="search_tab"> -->
+<!--     <a class="city_choice" href=""> -->
+<!-- 	<span class="city_choice"> -->
+<!--         <div class="city"> -->
+<!--         <img class="hkb_logo" th:src="@{/front/images/hkbstore/icons/hkb_logo.png}" /> -->
+<!--             <select> -->
+<!--                 <option selected="selected">上海</option> -->
+<!--                 <option>北京</option> -->
+<!--                 <option>天津</option> -->
+<!--                 <option>南京</option> -->
+<!--             </select> -->
+<!--         </div> -->
+<!-- 	</span> -->
+<!--     </a> -->
+<!--      <form id="searchForm" th:action="@{/ecom/solrGoods/listSolrGoods}" th:object="${goodsQueryParam}" class="form-inline" method="post"> -->
+<!--     <div class="content"> -->
+<!--         <div class="search "> -->
+<!--             <img class="search_icon" th:src="@{/front/images/hkbstore/icons/search.png}" /> -->
+<!--             <input type="search" placeholder="输入商品名搜索" name = "keyword" id ="keyword" /> -->
+<!--             <input type="submit" th:value="搜索" /> -->
+<!--         </div> -->
+<!--     </div> -->
+<!--      </form> -->
+<!-- </div> -->
+<!--banner栏-->
+
+
+<div class="jf_homepage_autoplay">
+    <div class="jf_autoplay_images jf_autoplay_init">
+        <a th:href="${settingBanner.bannerUrl}" th:each="settingBanner,settingBannerStat : ${settingBannerList}">
+            <div class="JD_banner_template">
+                <div class="banner_paster">
+                    <img  src="" th:attr="data-imgurl=${settingBanner.imageUrl}" />
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="jf_pagination"></div>
+</div>
+
+
+
+
+
+
+<!--商城列表-->
+<div class="homepage_all_mall">
+    <div class="all_mall">
+        <div class="mall_list list1">
+
+            <a class="mall_detail mall_jd"  th:href="${hkb_h5_url+'/phoneRecharge/toPhoneRecharge.html'}">
+                <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/pay_icon.png}" />
+                <p class="text">手机充值</p>
+            </a>
+            
+			<a class="mall_detail mall_jd" id="welfaremart"  th:if="${#lists.isEmpty(blackInf) and money>0}" >
+                <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/welfaremart_logo.png}" />
+                <p class="text">卡券集市</p>
+            </a>
+            <a class="mall_detail mall_jd" th:href="@{/ecom/ecomstore/ecomIndex?ecomCode=66661001}">
+                <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/yanxuan_logo.png}" />
+                <p class="text">网易严选</p>
+            </a>
+            <a class="mall_detail mall_jd"  th:href="${hkb_h5_url+'/eshop/mchntEshop/AccHKBEshop.html?channel=40006003'}">
+                <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/jd_logo.png}" />
+                <p class="text">京东商城</p>
+            </a>
+            <a class="mall_detail mall_jd"  th:href="${hkb_h5_url+'/eshop/mchntEshop/AccHKBEshop.html?channel=40006004'}">
+                <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/meituan_logo.png}" />
+                <p class="text">美团外卖</p>
+            </a>
+
+            <a class="mall_detail mall_jd"  th:href="${hkb_h5_url+'/eshop/mchntEshop/AccHKBEshop.html?channel=40006005'}">
+                <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/dianping_logo.png}" />
+                <p class="text">大众点评</p>
+            </a>
+
+<!--             <a class="mall_detail mall_jd" href="store_homepage.html"> -->
+<!--                 <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/service_icon.png}" /> -->
+<!--                 <p class="text">生活服务</p> -->
+<!--             </a> -->
+
+<!--             <a class="mall_detail mall_jd" href="store_homepage.html"> -->
+<!--                 <img class="jd_logo" th:src="@{/front/images/hkbstore/pics/more_icon.png}" /> -->
+<!--                 <p class="text">更多</p> -->
+<!--             </a> -->
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<!--推荐商品-->
+<span th:each="floor,floorStat : ${floorList}">
+
+<div class="homepage_recommendation" th:if="${not #lists.isEmpty(floor.goods)}">
+
+		<a class="title more_radius" th:href="@{/hkbstore/recommendMore/getRecommendMoreList(floorId=${floor.floorId},type=0)}">
+	        <p class="title_text"><span th:text="${floor.title}"></span></p>
+	    </a>
+
+        <!--标题-->
+<!--         <div class="title"> -->
+<!--             <span class="line"></span> -->
+<!--             <p class="title_text"><span th:text="${floor.title}"></span></p> -->
+<!--             <span class="line"></span> -->
+<!--         </div> -->
+
+        <!--圆点更多-->
+<!--         <a class="circle" th:href="@{/hkbstore/recommendMore/getRecommendMoreList(floorId=${floor.floorId},type=0)}"> -->
+<!--             <span></span> -->
+<!--             <span></span> -->
+<!--             <span></span> -->
+<!--         </a> -->
+
+        <!--第一行-->
+        <div class="goods_list list1">
+            <a class="list_detail" th:href="@{/ecom/goods/detail(goodsId=${goods.goodsId})}" th:each="goods,goodsStat : ${floor.goods}">
+                <div class="pic">
+                    <img class="banner_pic" src="" th:attr="data-imgurl=${goods.picUrl}"/>
+                </div>
+                <div class="goods_title"><span th:text="${goods.goodsName}"></span></div>
+                <div class="price">¥<span th:text="${goods.goodsPrice}"></span></div>
+            </a>
+        </div>
+
+
+</div>
+
+</span>
+
+<script th:src="@{/ecom/hkbstore/homePage.js}"></script>
+
+<!--底部导航-->
+
+<div th:include="main/hkbstore/foot::foot" />
+
+<script>
+	
+	//图片懒加载
+    window.onload=function() {
+
+        document.getElementsByTagName('body')[0].className = 'lazy_loading_img';
+
+        loadingImg.lazyLoading();
+
+    }
+	jfAutoPlay.jfCarouselInit();
+</script>
+</body>
+</html>

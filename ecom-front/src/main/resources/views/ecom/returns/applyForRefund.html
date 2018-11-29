@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/header::header" />
+<title>申请售后</title>
+<link th:href="@{/ecomfront/css/hkb_store.min.css}" rel="stylesheet"/>
+<link th:href="@{/ecomfront/css/main.css}" rel="stylesheet"/>
+<body>
+<div class="djs">
+    <div class="wen">
+        <p>退货申请</p>
+        <span>请填写退货原因</span>
+    </div>
+
+    <img th:src="@{/ecomfront/images/pics/chuli.png}" />
+
+</div>
+    <div class="logistics_address logistics_address1">
+        <div>
+            <div>
+                <div class="input_form hkbstore_alignment_left" style="padding: 7px 10px">
+                    <div class="left">退货原因：</div>
+                    <div style="display:inline-block;width: 250px; margin-top: -4px">
+
+                        <select class="select03" id="reason" name="reason">
+                            <option th:each="returnType,returnTypeStat : ${returnTypeList}" th:value="${returnType.code}"><span th:text="${returnType.value}"></span></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="take_address">
+                <div class="address_name1 address_name ">
+                    <div class=" left">退货说明：</div>
+                    <input id="reasonDesc" name="txt" placeholder="请输入详细信息" class="shxx" />
+                </div>
+            </div>
+
+        </div>
+</div>
+<!--商品信息-->
+<div class="order_details">
+    <div class=" order_detail details_list">
+        <div class="order_list order_list1">
+            <div class="list_detail list2">
+                <h3>退货商品</h3>
+                <div>
+                    <a class="order_goods order_goods1" th:href="@{/ecom/goods/detail(goodsId=${item.goodsId})}">
+                    <input type="hidden" id="itemId" name="itemId" th:value="${item.oItemId}" />
+                        <div class="goods_pic">
+                            <img class="store_logo" th:src="${item.picUrl}" />
+                        </div>
+                        <div class="goods_info">
+                            <div class="goods_name"><span th:text="${item.productName}"></span></div>
+                            <div class="goods_sku">
+                                <div class="sku_info"></div>
+                                <div class="number">x<span th:text="${item.productNum}"></span></div>
+                            </div>
+                            <div class="goods_price">¥<span th:text="${item.productPrice}"></span></div>
+                        </div>
+
+                    </a>
+                </div>
+
+            </div>
+        <!--子订单编号-->
+
+
+        </div>
+
+</div>
+</div>
+
+<!--底部按钮-->
+
+<div class="affirm_blank"></div>
+
+<div class="anniu">
+<!-- <input value="提交" /> -->
+    <a href="javascript:void(0)" id="refundCommit">提交</a>
+</div>
+<script th:src="@{/ecomfront/js/fastclick.min.min.js}" ></script>
+<script th:src="@{/ecomfront/js/hkb_store.min.js}"></script>
+<script th:src="@{/ecomfront/js/jquery-3.0.0.min.js}"></script>
+<script th:src="@{/ecomfront/js/M_select.js}"></script>
+<script th:src="@{/ecom/returns/applyForRefund.js}"></script>
+    <script>
+        $(function(){
+            // 对所有下拉款进行初始化
+            // 单独对一个下拉框进行初始化
+            $(".select03").M_select({
+                "ico":"3",
+                "radius":"10px",
+                "Title":"请填写您的退货原因",
+                "inputName":"selected_value"
+            });
+        });
+    </script>
+</body>
+</html>

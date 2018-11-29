@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.order.mapper.OrderInfMapper">
+	
+	<sql id="orderInfColumns">
+		 ID,
+		 CHANNEL,
+		 USER_ID, 
+		 ROUTER_ORDER_NO,
+		 MERCHANT_NO,
+		 SHOP_NO,
+		 COMMODITY_NAME,
+		 COMMODITY_NUM,
+		 TXN_AMOUNT,
+		 ORDER_TYPE,
+		 NOTIFY_URL,
+		 REDIRECT_URL,
+		 TXN_FLOW_NO,
+		 ORG_ID,
+		 RESV1,
+		 RESV2,
+		 RESV3,
+		 RESV4,
+		 RESV5,
+		 RESV6,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="OrderInf" resultType="OrderInf">
+		select
+			<include refid="orderInfColumns" />
+		from TB_ECOM_ORDER_INF
+		where 1=1
+		and DATA_STAT = '0'
+		order by CREATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="OrderInf">
+		select
+			<include refid="orderInfColumns" />
+		from TB_ECOM_ORDER_INF
+		where ID = #{primaryKey}
+	</select>
+	
+	<select id="selectByRouterOrderNo" parameterType="String" resultType="OrderInf">
+		select 
+			<include refid="orderInfColumns" />
+		from TB_ECOM_ORDER_INF
+		where ROUTER_ORDER_NO = #{routerOrderNo}
+	</select>
+	
+	<select id="selectByOrderUserId" parameterType="String" resultType="OrderInf">
+		select 
+			<include refid="orderInfColumns" />
+		from TB_ECOM_ORDER_INF
+		where USER_ID = #{userId} and CHANNEL in ('40006002','40006001')
+		order by CREATE_TIME desc
+	</select>
+	
+</mapper>

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>订单管理</li>
+		                    <li>电商一级订单管理</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/platforder/platforder/getPlatfOrderList}" th:object="${platfOrder}" class="form-inline" method="post">
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">一级订单编号</span> 
+								<input id="orderId" name="orderId" type="text" class="input-medium" th:value="*{orderId}"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">外部交易流水</span> 
+								<input id="dmsRelatedKey" name="dmsRelatedKey" type="text" class="input-large" th:value="*{dmsRelatedKey}" maxlength="40"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">会员昵称</span> 
+								<input id="personalName" name="personalName" type="text" class="input-medium" th:value="*{personalName}"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">会员手机号码</span> 
+								<input id="mobilePhoneNo" name="mobilePhoneNo" type="text" class="input-medium" th:value="*{mobilePhoneNo}" maxlength="11"/>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+								<button type="button" class="btn btn-primary btn-upload">导出表格</button>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+	           			   	   	<span class="add-on">订单状态</span>
+	           			   	   	<select id="payStatus" name="payStatus" class="input-135">
+	           			   	   		<option value=""><span th:text="请选择" /></option>
+									<option th:each="c,cStat : ${payStatusList}" th:value="${c.code}" ><span th:text="${c.value}" /></option>
+								</select>
+	                     	</div>
+	                     	<div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
+	                        	<span class="add-on">开始时间</span>
+	                            <input class="input-medium" id="beginTime" name="beginTime" readonly="readonly" type="text" th:value="*{beginTime}" />
+	                            <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+	                        </div> 
+	                        <div id="datetimepicker2" class="input-prepend input-append date date-time-picker">
+		                        <span class="add-on">结束时间</span>
+		                        <input class="input-medium" id="endTime" name="endTime" readonly="readonly" type="text" th:value="*{endTime}" />
+		                        <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+	                        </div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+								<th></th>
+								<th>一级订单编号</th>
+								<th>外部交易流水</th>
+								<th>会员ID</th>
+								<th>会员手机号</th>
+								<th>会员昵称</th>
+				                <th>订单金额(元)</th>
+				                <th>配送总费用(元)</th>
+				                <th>支付方式类型</th>
+				                <th>支付总额(元)</th>
+				                <th>订单状态</th>
+				                <th>下单时间</th>
+				                <th>支付时间</th>
+				                <th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="platfOrder,platfOrderStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${platfOrderStat.count}"></span></td>
+								<td><span th:text="${platfOrder.orderId}"></span></td>
+								<td><span th:text="${platfOrder.dmsRelatedKey}"></span></td>
+								<td><span th:text="${platfOrder.memberId}"></span></td>
+								<td><span th:text="${platfOrder.mobilePhoneNo}"></span></td>
+								<td><span th:text="${platfOrder.personalName}"></span></td>
+				                <td><span th:text="${platfOrder.orderPrice}"></span></td>
+				                <td><span th:text="${platfOrder.orderFreightAmt}"></span></td>
+								<td><span th:text="${platfOrder.payType}"></span></td>
+								<td><span th:text="${platfOrder.payAmt}"></span></td>
+								<td><span th:text="${platfOrder.payStatus}"></span></td>
+								<td><span th:text="${platfOrder.createTime}"></span></td>
+								<td><span th:text="${platfOrder.payTime}"></span></td>
+				                <td>
+									<span th:if="${platfOrder.dataStat == '0'}">
+										<a th:attr="orderId=${platfOrder.orderId}" title="二级订单管理" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+									</span>	     
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+			    </form>
+			</div>
+		</div>
+		<script th:src="@{/ecom/js/platforder/listPlatfOrder.js}"></script>
+		<script th:inline="javascript">
+			$("#payStatus").val(/*[[${platfOrder.payStatus}]]*/);
+		</script>
+	</body>
+</html>
+

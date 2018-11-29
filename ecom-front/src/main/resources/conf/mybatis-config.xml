@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="logImpl" value="SLF4J" />
+<!-- 		<setting name="logImpl" value="STDOUT_LOGGING" /> -->
+	</settings>
+	<typeAliases>
+		<typeAlias alias="Integer" type="java.lang.Integer" />
+        <typeAlias alias="Long" type="java.lang.Long" />
+        <typeAlias alias="HashMap" type="java.util.HashMap" />
+        <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
+        <typeAlias alias="ArrayList" type="java.util.ArrayList" />
+        <typeAlias alias="LinkedList" type="java.util.LinkedList" />
+        
+        <typeAlias alias="Banner"  type="com.cn.thinkx.ecom.front.api.banner.domain.Banner"/>
+        <typeAlias alias="EshopInf"  type="com.cn.thinkx.ecom.front.api.eshop.domain.EshopInf"/>
+        <typeAlias alias="Routes"  type="com.cn.thinkx.ecom.front.api.routes.domain.Routes"/>
+        <typeAlias alias="EshopRoutes"  type="com.cn.thinkx.ecom.front.api.homepage.domain.EshopRoutes"/>
+        <typeAlias alias="OrderInf"  type="com.cn.thinkx.ecom.front.api.order.domain.OrderInf"/>
+        <typeAlias alias="PhoneRechargeOrder"  type="com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder"/>
+        <typeAlias alias="WithDrawBlacklistInf"  type="com.cn.thinkx.ecom.front.api.black.domain.WithDrawBlacklistInf"/>
+        
+        <package name="com.cn.thinkx.ecom.basics.goods.domain"/>
+        <package name="com.cn.thinkx.ecom.basics.member.domain"/>
+        <package name="com.cn.thinkx.ecom.basics.order.domain"/>
+        <package name="com.cn.thinkx.ecom.activemq.core.vo"/>
+	</typeAliases>
+
+</configuration>

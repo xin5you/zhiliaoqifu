@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.ApiSpuMapper">
+	
+	<sql id="apiSpuColumns">
+		 ID,
+		 ECOM_CODE,
+		 SPU_CODE,
+		 SKU_SYNC_STAT,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 UPDATE_USER,
+		 CREATE_TIME,
+		 UPDATE_TIME ,
+		 LOCK_VERSION
+	</sql>
+	
+	<sql id="apiSpuFields">
+		#{id},
+		#{ecomCode,jdbcType=VARCHAR},
+		#{spuCode,jdbcType=VARCHAR},
+		'0',
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_API_SPU
+	</sql>
+	
+	  <insert id="insert"  parameterType="ApiSpu">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getApiSpuId" />
+			</selectKey>
+			
+		INSERT INTO 
+		<include refid="tableName" />   
+		(
+				<include refid="apiSpuColumns" /> 
+		)VALUES (
+			   <include refid="apiSpuFields" /> 
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="ApiSpu">
+		update 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="ecomCode != null and ecomCode != '' ">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="spuCode != null and spuCode != '' ">SPU_CODE=#{spuCode,jdbcType=VARCHAR},</if>
+			<if test="skuSyncStat != null and skuSyncStat != '' ">SKU_SYNC_STAT=#{skuSyncStat,jdbcType=VARCHAR},</if>
+			<if test="remarks != null and remarks != '' ">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null and dataStat != '' ">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null and updateUser != '' ">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		update 
+		<include refid="tableName" />
+		 set DATA_STAT='1' where ID=#{id}
+	</update>
+	
+	<select id="getApiSpuByEcomCodeAndSpu" resultType="ApiSpu">
+		select
+			<include refid="apiSpuColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 where ECOM_CODE=#{ecomCode}
+		 AND SPU_CODE=#{spuCode}
+	</select>
+	
+<!-- 		<select id="getApiSpuByEcomCodeAndSpu"  resultType="ApiSpu"> -->
+<!-- 		select -->
+<!-- 			<include refid="apiSpuColumns" />  -->
+<!-- 		from  -->
+<!-- 		<include refid="tableName" />  -->
+<!-- 		 where ID=#{primaryKey} -->
+<!-- 	</select> -->
+	
+	<select id="getList" parameterType="ApiSpu"  resultType="ApiSpu">
+		select 
+			<include refid="apiSpuColumns" />  
+		from 
+		<include refid="tableName" />   
+		where DATA_STAT = '0' 
+		<if test="ecomCode != null and ecomCode != '' ">
+			AND	 ECOM_CODE = #{ecomCode}
+		</if>
+		<if test="spuCode != null and spuCode != '' ">
+			AND	 SPU_CODE = #{spuCode}
+		</if>
+		<if test="skuSyncStat != null and skuSyncStat != '' ">
+			AND	 SKU_SYNC_STAT = #{skuSyncStat}
+		</if>
+		order by UPDATE_TIME ASC
+	</select>
+	
+	<select id="getApiSpuBySpuCode" parameterType="String" resultType="ApiSpu">
+		select
+			<include refid="apiSpuColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 where SPU_CODE=#{spuCode}
+	</select>
+	
+	<select id="getApiByIdItems" parameterType="java.util.List" resultType="ApiSpu">
+		SELECT A.ID,
+		       A.ECOM_CODE,
+		       A.SPU_CODE,
+		       A.SKU_SYNC_STAT,
+		       A.DATA_STAT,
+		       A.REMARKS,
+		       A.CREATE_USER,
+		       A.UPDATE_USER,
+		       A.CREATE_TIME,
+		       A.UPDATE_TIME,
+		       A.LOCK_VERSION
+		  FROM TB_ECOM_API_SPU A
+		 WHERE A.DATA_STAT = '0'
+		   AND A.ID IN 
+		   <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		   </foreach>
+	</select>
+	
+</mapper>

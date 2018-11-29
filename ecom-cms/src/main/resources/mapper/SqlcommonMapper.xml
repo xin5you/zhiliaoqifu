@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper">
+
+	<!-- 系统管理模块  用户表主键 -->
+	<sql id="getSysUserId">
+     	select web_user_seq.nextval as id from dual
+	</sql>
+
+	<!-- 系统管理模块 角色表主键 -->
+	<sql id="getSysRoleId">
+     	select web_role_seq.nextval as id from dual
+	</sql>
+	
+	<!-- 系统管理模块  资源表主键 -->
+	<sql id="getSysResourceId">
+     	select web_resource_seq.nextval as id from dual
+	</sql>
+	
+	<!-- 电商管理模块  主键 -->
+	<sql id="getEcomId">
+     	select ecom_seq.nextval as id from dual
+	</sql>
+	
+</mapper>

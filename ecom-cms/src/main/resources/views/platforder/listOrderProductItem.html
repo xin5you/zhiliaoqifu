@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>订单管理</li>
+		                    <li>订单货品明细</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/platforder/orderProductItem/getOrderProductItemList}" th:object="${platfOrder}" class="form-inline" method="post">
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">二级订单编号</span> 
+								<input id="sOrderId" name="sOrderId" type="text" class="input-medium" th:value="*{sOrderId}" maxlength="12"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">一级订单编号</span> 
+								<input id="orderId" name="orderId" type="text" class="input-medium" th:value="*{orderId}" maxlength="12"/>
+							</div>
+							<div class="input-prepend">
+	           			   	   	<span class="add-on">电商名称</span>
+	           			   	   	<select id="ecomCode" name="ecomCode" class="input-135">
+	           			   	   		<option value=""><span th:text="请选择" /></option>
+									<option th:each="c,cStat : ${ecomCodeTypeList}" th:value="${c.code}" ><span th:text="${c.value}" /><span th:text="${c.code}" /></option>
+								</select>
+	                     	</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+							</div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+								<th>二级订单编号</th>
+								<th>一级订单编号</th>
+								<th>电商名称</th>
+								<th>货品ID</th>
+<!-- 				                <th>商品ID</th> -->
+				                <th>商品名称</th>
+				                <th>货品售价</th>
+				                <th>购买数量</th>
+<!-- 				                <th>货品属性</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="platfOrderInf,platfOrderInfStat : ${pageInfo.list}" th:inline="text">
+							<tr th:each="platfShopOrder,platfShopOrderStat : ${platfOrderInf.platfShopOrder}" th:inline="text">
+							<tr th:each="orderProductItems,orderProductItemsStat : ${platfShopOrder.orderProductItems}" th:inline="text">
+								<td><span th:text="${platfShopOrder.sOrderId}"></span></td>
+								<td><span th:text="${platfOrderInf.orderId}"></span></td>
+				                <td><span th:text="${platfShopOrder.ecomCode}"></span></td>
+				                <td><span th:text="${orderProductItems.productId}"></span></td>
+								<td><span th:text="${orderProductItems.productName}"></span></td>
+								<td><span th:text="${orderProductItems.productPrice}"></span></td>
+								<td><span th:text="${orderProductItems.productNum}"></span></td>
+							</tr>
+							</tr>
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+				    </form>
+			</div>
+		</div>
+	<script th:src="@{/ecom/js/platforder/listOrderProductItem.js}"></script>
+	<script th:inline="javascript">
+		$("#ecomCode").val(/*[[${platfOrder.ecomCode}]]*/);
+	</script>
+	</body>
+</html>
+

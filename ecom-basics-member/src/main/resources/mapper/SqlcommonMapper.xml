@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.thinkx.ecom.basics.member.base.mapper.SqlCommonMapper">
+	
+	<!-- 电商会员信息模块  主键 -->
+	<sql id="getEomMemberId">
+     	select SEQ_TB_ECOM_MEMBER.nextval as id from dual
+	</sql>
+	
+	<!-- 电商会员收货地址管理模块  主键 -->
+	<sql id="getEomMemberAddressId">
+     	select SEQ_TB_ECOM_MEMBER_ADDRESS.nextval as id from dual
+	</sql>
+</mapper>

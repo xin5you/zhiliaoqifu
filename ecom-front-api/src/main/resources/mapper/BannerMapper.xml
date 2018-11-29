@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.front.api.banner.mapper.BannerMapper">
+	
+	<sql id="bannerColumns">
+		 ID,
+		 IMAGE_URL,
+		 BANNER_URL, 
+		 SPEC,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 UPDATE_USER,
+		 TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="Banner" resultType="Banner">
+		select 
+			<include refid="bannerColumns" />  
+		from TB_ECOM_BANNER 
+		where DATA_STAT = '0'
+		order by UPDATE_TIME desc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Banner">
+		select
+			<include refid="bannerColumns" /> 
+		from TB_ECOM_BANNER where ID=#{primaryKey}
+	</select>
+	
+	<select id="selectBannerUrl" parameterType="Banner" resultType="Banner">
+		select
+			<include refid="bannerColumns" /> 
+		from TB_ECOM_BANNER where 1=1
+		<if test="bannerUrl !=null and bannerUrl !='' ">
+			and BANNER_URL like '%' || #{bannerUrl} || '%'
+		</if>
+		<if test="id !=null and id !='' ">
+			and ID = #{id}
+		</if>
+		and DATA_STAT = '0'
+	</select>
+	
+	<select id="selectByBannerHomePage" parameterType="String" resultType="Banner">
+		select c.ID,c.IMAGE_URL,c.BANNER_URL
+        from TB_ECOM_ESHOP_INF a 
+        	inner join TB_ECOM_ESHOP_BANNER_REF b on a.ID = b.eshop_id 
+        	inner join TB_ECOM_BANNER c on b.banner_id = c.id
+        where 1=1
+			and a.ID = #{id}
+	</select>
+	
+</mapper>

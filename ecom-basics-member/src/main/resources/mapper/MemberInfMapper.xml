@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.member.mapper.MemberInfMapper">
+
+
+		<resultMap type="MemberInf" id="MemberInfResultMap">
+			<result column="MEMBER_ID" property="membeId"/>
+			<result column="USER_ID" property="userId"/>
+			<result column="PERSON_ID" property="personId"/>
+			<result column="OPEN_ID" property="openId"/>
+			<result column="LV_ID" property="lvId"/>
+			<result column="POINT" property="point"/>
+			<result column="DATA_STAT" property="dataStat"/>
+			<result column="REMARKS" property="remarks"/>
+			<result column="CREATE_USER" property="createUser"/>
+			<result column="UPDATE_USER" property="updateUser"/>
+			<result column="CREATE_TIME" property="createTime"/>
+			<result column="UPDATE_TIME" property="updateTime"/>
+			<result column="LOCK_VERSION" property="lockVersion"/>
+	</resultMap>
+
+		<resultMap type="UserInf" id="UserInfResultMap">
+			<result column="USER_ID" property="userId"/>
+			<result column="USER_NAME" property="userName"/>
+			<result column="USER_TYPE" property="userType"/>
+			<result column="USER_PASSWD" property="userPasswd"/>
+			<result column="PRODUCT_CODE" property="productCode"/>
+			<result column="DATA_STAT" property="dataStat"/>
+			
+			<result column="REMARKS" property="remarks"/>
+			<result column="CREATE_USER" property="createUser"/>
+			<result column="UPDATE_USER" property="updateUser"/>
+			<result column="CREATE_TIME" property="createTime"/>
+			<result column="UPDATE_TIME" property="updateTime"/>
+			<result column="LOCK_VERSION" property="lockVersion"/>
+	</resultMap>
+
+	<sql id="MemberInfColumns">
+		M.MEMBER_ID,
+		M.PERSON_ID,
+		M.USER_ID,
+		M.OPEN_ID,
+		M.LV_ID,
+		M.POINT,
+		M.DATA_STAT,
+		M.REMARKS,
+		M.CREATE_USER,
+		M.UPDATE_USER,
+		TO_CHAR(M.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		TO_CHAR(M.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		M.LOCK_VERSION
+	</sql>
+
+	<select id="getList" parameterType="MemberInf" resultType="MemberInf">
+		SELECT
+		<include refid="MemberInfColumns" />,P.PERSONAL_NAME,P.MOBILE_PHONE_NO
+		FROM TB_ECOM_MEMBER M,TB_PERSON_INF P
+		WHERE M.PERSON_ID = P.PERSONAL_ID
+		AND M.DATA_STAT = '0'
+		AND P.DATA_STAT = '0'
+		<if test="personalName != null and personalName != '' ">
+			AND	P.PERSONAL_NAME LIKE '%' || #{personalName} || '%'
+		</if>
+		
+		<if test="mobilePhoneNo != null and mobilePhoneNo != '' ">
+			AND	P.MOBILE_PHONE_NO =#{mobilePhoneNo}
+		</if>
+		ORDER BY M.UPDATE_TIME DESC 
+	</select>
+
+	<insert id="insert" parameterType="MemberInf">
+		<selectKey resultType="String" order="BEFORE" keyProperty="membeId">
+			<include
+				refid="com.cn.thinkx.ecom.basics.member.base.mapper.SqlCommonMapper.getEomMemberId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_MEMBER(
+		MEMBER_ID,
+		PERSON_ID,
+		USER_ID,
+		OPEN_ID,
+		LV_ID,
+		POINT,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+		)VALUES(
+		#{membeId},
+		#{personId,jdbcType=VARCHAR},
+		#{userId,jdbcType=VARCHAR},
+		#{openId,jdbcType=VARCHAR},
+		#{lvId,jdbcType=VARCHAR},
+		#{point,jdbcType=VARCHAR},
+		#{dataStat,jdbcType=VARCHAR},
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="MemberInf">
+		UPDATE TB_ECOM_MEMBER
+		<set>
+			PERSON_ID=#{personId,jdbcType=VARCHAR},
+			USER_ID=#{userId,jdbcType=VARCHAR},
+			OPEN_ID=#{openId,jdbcType=VARCHAR},
+			LV_ID=#{lvId,jdbcType=VARCHAR},
+			POINT=#{point,jdbcType=VARCHAR},
+			DATA_STAT=#{dataStat,jdbcType=VARCHAR},
+			REMARKS=#{remarks,jdbcType=VARCHAR},
+			UPDATE_USER=#{updateUser,jdbcType=VARCHAR},
+			UPDATE_TIME=sysdate,
+			LOCK_VERSION=LOCK_VERSION+1
+		</set>
+		WHERE MEMBER_ID=#{membeId}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		UPDATE TB_ECOM_MEMBER
+		set DATA_STAT = '1',UPDATE_TIME=sysdate WHERE MEMBER_ID=#{primaryKey}
+	</delete>
+
+	<select id = "selectByPrimaryKey" parameterType="String" resultType="MemberInf">
+		SELECT
+		<include refid="MemberInfColumns" />
+		FROM TB_ECOM_MEMBER M 
+		WHERE M.MEMBER_ID=#{primaryKey} AND M.DATA_STAT = '0'
+	</select>
+	
+	<select id = "getMemberInfByUserId" parameterType="MemberInf"  resultMap="MemberInfResultMap">
+		SELECT
+		<include refid="MemberInfColumns" />
+		FROM TB_ECOM_MEMBER M 
+		WHERE M.DATA_STAT = '0'
+		<if test="personId != null and personId != '' ">
+			AND	M.PERSON_ID =#{personId}
+		</if>
+		<if test="userId != null and userId != '' ">
+			AND	M.USER_ID =#{userId}
+		</if>
+		<if test="openId != null and openId != '' ">
+			AND	M.OPEN_ID =#{openId}
+		</if>
+	</select>
+	
+		
+	<select id="getUserInfByOpenId" parameterType="java.lang.String" resultMap="UserInfResultMap">
+				SELECT 
+				m.USER_ID,
+				m.USER_NAME,
+				m.USER_TYPE,
+				m.PRODUCT_CODE,	
+				m.DATA_STAT,			
+				m.REMARKS,
+				m.CREATE_USER, 
+				m.UPDATE_USER, 
+				m.CREATE_TIME, 
+				m.UPDATE_TIME, 
+				m.LOCK_VERSION,
+        		p.PERSONAL_ID,
+				c.EXTERNAL_ID FROM 
+			  TB_USER_INF m,
+        TB_PERSON_INF P,
+	  		  TB_CHANNEL_USER_INF c
+              WHERE p.User_id=m.user_id
+              And m.user_id=c.user_id
+              AND m.DATA_STAT='0'
+              AND c.CHANNEL_CODE='40001010'
+			  AND c.EXTERNAL_ID=#{openid}
+	</select>
+</mapper>

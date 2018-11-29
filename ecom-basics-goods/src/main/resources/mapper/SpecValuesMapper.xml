@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.SpecValuesMapper">
+	
+	<sql id="SpecValuesColumns">
+		 SPEC_VALUE_ID,
+		 SPEC_ID,
+		 SPEC_VALUE,
+		 SPEC_IMAGE,
+		 SPEC_ORDER,
+		 SPEC_TYPE,
+		 INHERENT_OR_ADD,
+		 DATA_STAT,
+		 REMARKS,
+		 CREATE_USER,
+		 UPDATE_USER,
+		 CREATE_TIME,
+		 UPDATE_TIME ,
+		 LOCK_VERSION
+	</sql>
+	
+	<sql id="SpecValuesFields">
+		#{specValueId},
+		#{specId,jdbcType=VARCHAR},
+		#{specValue,jdbcType=VARCHAR},
+		#{specImage,jdbcType=VARCHAR},
+		#{specOrder,jdbcType=VARCHAR},
+		#{specType,jdbcType=VARCHAR},
+		#{inherentOrAdd,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		sysdate,
+		sysdate,
+		'0'
+	</sql>
+	
+	<sql id="tableName">
+			TB_ECOM_SPEC_VALUES
+	</sql>
+	
+	  <insert id="insert"  parameterType="SpecValues">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="specValueId">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getSpecValuesId" />
+			</selectKey>
+			
+		INSERT INTO 
+		<include refid="tableName" />   
+		(
+				<include refid="SpecValuesColumns" /> 
+		)VALUES (
+			   <include refid="SpecValuesFields" /> 
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="SpecValues">
+		update 
+		<include refid="tableName" />
+		
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="specId != null">SPEC_ID=#{specId,jdbcType=VARCHAR},</if>
+			<if test="specValue != null">SPEC_VALUE=#{specValue,jdbcType=VARCHAR},</if>
+			<if test="specImage != null">SPEC_IMAGE=#{specImage,jdbcType=VARCHAR},</if>
+			<if test="specOrder != null">SPEC_ORDER=#{specOrder,jdbcType=VARCHAR},</if>
+			<if test="specType != null">SPEC_TYPE=#{specType,jdbcType=VARCHAR},</if>
+			<if test="inherentOrAdd != null">INHERENT_OR_ADD=#{inherentOrAdd,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where SPEC_VALUE_ID=#{id}
+	</update>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		update 
+		<include refid="tableName" />
+		 set DATA_STAT='1' where SPEC_VALUE_ID=#{id}
+	</update>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="SpecValues">
+		select
+			<include refid="SpecValuesColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 where SPEC_VALUE_ID=#{primaryKey}
+	</select>
+	
+	<select id="getList" parameterType="SpecValues"  resultType="SpecValues">
+		select 
+			<include refid="SpecValuesColumns" />  
+		from 
+		<include refid="tableName" />   
+		where DATA_STAT = '0'
+		order by UPDATE_TIME DESC
+	</select>
+	
+	<select id="getSpecValuesByRecord" parameterType="SpecValues" resultType="SpecValues">
+		select
+			<include refid="SpecValuesColumns" /> 
+		from 
+		<include refid="tableName" /> 
+		 WHERE SPEC_ID = #{specId}
+		 AND SPEC_VALUE = #{specValue}
+	</select>
+	
+		<select id="getGoodsSpecByGoodsId" parameterType="java.lang.String" resultType="SpecValues">
+		
+			SELECT 
+				sv.SPEC_VALUE_ID,
+		 		sv.SPEC_ID,
+		 		sv.SPEC_VALUE,
+		 		sv.SPEC_IMAGE,
+		 		sv.SPEC_ORDER,
+		 		sv.SPEC_TYPE,
+		 		sv.INHERENT_OR_ADD,
+				gss.PRODUCT_ID PRODUCT_ID
+			 FROM  
+			TB_ECOM_GOODS_SPEC   gss 
+			INNER JOIN  TB_ECOM_SPEC_VALUES   sv 
+			ON gss.SPEC_VALUE_ID = sv.SPEC_VALUE_ID 
+				WHERE  gss.GOODS_ID=#{goodsId}
+				ORDER BY gss.id DESC
+		</select>
+	
+</mapper>

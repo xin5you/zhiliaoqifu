@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.EsettingMapper">
+
+	<sql id="EsettingColumns">
+		ID,
+		ECOM_NAME,
+		ECOM_CODE,
+		ECOM_TYPE,
+		FULL_MONEY,
+		ECOM_FREIGHT,
+		SHOP_DESC,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		UPDATE_USER,
+		TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<select id="getList" parameterType="Esetting" resultType="Esetting">
+		SELECT
+			<include refid="EsettingColumns" />
+		FROM TB_ECOM_SETTING
+		WHERE 1=1 AND DATA_STAT = '0'
+		<if test="ecomName !=null and ecomName !='' ">
+			AND ECOM_NAME LIKE '%' || #{ecomName} || '%'
+		</if>
+		ORDER BY UPDATE_TIME DESC
+	</select>
+	
+	<insert id="insert" parameterType="Esetting">
+	   <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getEsettingId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_SETTING(
+			ID,
+			ECOM_NAME,
+			ECOM_CODE,
+			ECOM_TYPE,
+			FULL_MONEY,
+			ECOM_FREIGHT,
+			SHOP_DESC,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER,
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			LOCK_VERSION
+		)VALUES (
+			#{id},
+			#{ecomName,jdbcType=VARCHAR},
+			#{ecomCode,jdbcType=VARCHAR},
+			#{ecomType,jdbcType=VARCHAR},
+			#{fullMoney,jdbcType=VARCHAR},
+			#{ecomFreight,jdbcType=VARCHAR},
+			#{shopDesc,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			sysdate,
+			#{updateUser,jdbcType=VARCHAR},
+			sysdate,
+			'0'
+		)
+	</insert>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		DELETE FROM TB_ECOM_SETTING where ID=#{id}
+	</delete>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Esetting">
+		select
+			<include refid="EsettingColumns" />
+		from TB_ECOM_SETTING where ID=#{primaryKey}
+	</select>
+	
+	<select id="getSettingByEcomCode" parameterType="String" resultType="Esetting">
+		SELECT
+			<include refid="EsettingColumns" />
+		FROM TB_ECOM_SETTING WHERE ECOM_CODE=#{ecomCode} AND DATA_STAT = '0'
+	</select>
+	
+	<update id="updateByPrimaryKey" parameterType="Esetting">
+		update TB_ECOM_SETTING
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="ecomName != null">ECOM_NAME=#{ecomName,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="ecomType != null">ECOM_TYPE=#{ecomType,jdbcType=VARCHAR},</if>
+			<if test="fullMoney != null">FULL_MONEY=#{fullMoney,jdbcType=VARCHAR},</if>
+			<if test="ecomFreight != null">ECOM_FREIGHT=#{ecomFreight,jdbcType=VARCHAR},</if>
+			<if test="shopDesc != null">SHOP_DESC=#{shopDesc,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where ID=#{id}
+	</update>
+
+</mapper>
+

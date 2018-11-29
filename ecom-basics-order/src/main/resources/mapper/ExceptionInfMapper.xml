@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.ExceptionInfMapper">
+
+	<sql id="ExceptionInfColumns">
+		ID,
+		PRIMARY_KEY,
+		INPUT_PARAMETER,
+		EXCEPTION_TYPE,
+		EXCEPTION_DESC,
+		EXCEPTION_STATC,
+		PROCESS_TIMES,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		TO_CHAR(CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		TO_CHAR(UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<insert id="insert" parameterType="ExceptionInf">
+		<selectKey resultType="String" order="BEFORE" keyProperty="id">
+			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getExceptionInfId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_EXCEPTION_INF
+		(
+			ID,
+			PRIMARY_KEY,
+			INPUT_PARAMETER,
+			EXCEPTION_TYPE,
+			EXCEPTION_DESC,
+			EXCEPTION_STATC,
+			PROCESS_TIMES,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER,
+			UPDATE_USER,
+			CREATE_TIME,
+		    UPDATE_TIME,
+			LOCK_VERSION
+		) VALUES (
+			#{id},
+			#{primaryKey,jdbcType=VARCHAR},
+			#{inputParameter,jdbcType=VARCHAR},
+			#{exceptionType,jdbcType=VARCHAR},
+			#{exceptionDesc,jdbcType=VARCHAR},
+			#{exceptionStatc,jdbcType=VARCHAR},
+			#{processTimes,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			sysdate,
+			sysdate,
+			'0'
+		)
+	</insert>
+	
+	<select id="getList" parameterType="ExceptionInf" resultType="ExceptionInf">
+		select
+		<include refid="ExceptionInfColumns" /> 
+		from 
+			TB_ECOM_EXCEPTION_INF
+		WHERE 1=1  AND DATA_STAT = '0'
+		<if test="exceptionType !=null and exceptionType !='' ">
+			AND EXCEPTION_TYPE = #{exceptionType}
+		</if>
+		<if test="primaryKey !=null and primaryKey !='' ">
+			AND PRIMARY_KEY = #{primaryKey}
+		</if>
+	</select>
+
+</mapper>

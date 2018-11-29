@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>系统信息</li>
+		                    <li>用户管理</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/system/user/listUser}" th:object="${user}" class="form-inline" method="post">
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">编号</span> 
+								<input id="id" name="id" type="text" class="input-medium" th:value="*{id}" maxlength="19" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">登录名</span> 
+								<input id="loginName" name="loginName" type="text" class="input-medium" th:value="*{loginName}" maxlength="20"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">姓名</span> 
+								<input id="name" name="name" type="text" class="input-medium" th:value="*{name}" maxlength="20"/>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+								<button type="button" class="btn btn-primary btn-add">新增用户</button>
+							</div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+								<th></th>
+								<th>用户编号</th>
+								<th>登录名</th>
+				                <th>姓名</th>
+				                <th>创建时间</th>
+				                <th>是否默认</th>
+				                <th>状态</th>
+				                <th>操作</th>
+							</tr>
+						</thead>
+				        <tbody>
+							<tr th:each="user,userStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${userStat.count}"></span></td>
+								<td><span th:text="${user.id}"></span></td>
+								<td><span th:text="${user.loginName}"></span></td>
+				                <td><span th:text="${user.name}"></span></td>
+								<td><span th:if="${user.createDateTime != null}" th:text="${#dates.format(user.createDateTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+								<td><span th:if="${user.isdefault == '0'}">是</span><span th:if="${user.isdefault != '0'}">否</span></td>
+								<td><span th:if="${user.state == '0'}">正常</span><span th:if="${user.state != '0'}">停用</span></td>
+				                <td>
+									<span th:if="${user.isdefault != '0' and user.state != '1'}">
+										<a th:attr="userId=${user.id}" title="添加角色" class="btn-mini btn-grant-role" href="#"><i class="icon-plus"></i></a>
+										<a th:attr="userId=${user.id}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+										<a th:attr="userId=${user.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									</span>	     
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+			    </form>
+			</div>
+		</div>
+		<div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="modal-form" class="form-horizontal form_validation_tip" method="post">
+				<div class="modal-header">
+					<button class="close btn-close" data-dismiss="modal">&times;</button>
+					<h3 id="modal_h"></h3>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="user_id"/>
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>登录名：</label>
+							<div class="controls">
+								<input type="text" class="span3" name="loginName" id="login_name" maxlength="20"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>姓名：</label>
+							<div class="controls">
+								<input type="text" class="span3" name="uname" id="name_" maxlength="20"/>
+								<span class="help-block"></span>
+							</div>	
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>密码：</label>
+							<div class="controls">
+								<input type="password" class="span3" name="upassword" id="password_" maxlength="20"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modal-footer" style="text-align: center;">
+		            <button class="btn btn-primary btn-submit" type="submit">提 交 </button>
+		            <button class="btn btn-close" data-dismiss="modal" aria-hidden="true">关 闭</button>
+		        </div>
+			</form>
+		</div>
+		<script th:src="@{/ecom/js/system/user/listUser.js}"></script>
+	</body>
+</html>
+

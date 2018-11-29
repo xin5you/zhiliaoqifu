@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.order.mapper.OrderInfMapper">
+	
+	<sql id="orderInfColumns">
+		 o.ID,
+		 o.CHANNEL,
+		 o.USER_ID, 
+		 o.ROUTER_ORDER_NO,
+		 o.MERCHANT_NO,
+		 o.SHOP_NO,
+		 o.COMMODITY_NAME,
+		 o.COMMODITY_NUM,
+		 o.TXN_AMOUNT,
+		 o.ORDER_TYPE,
+		 o.NOTIFY_URL,
+		 o.REDIRECT_URL,
+		 o.TXN_FLOW_NO,
+		 o.ORG_ID,
+		 o.RESV1,
+		 o.RESV2,
+		 o.RESV3,
+		 o.RESV4,
+		 o.RESV5,
+		 o.RESV6,
+		 o.DATA_STAT,
+		 o.REMARKS,
+		 o.CREATE_USER,
+		 TO_CHAR(o.CREATE_TIME, 'YYYY-MM-DD HH24:MI:SS') CREATE_TIME,
+		 o.UPDATE_USER,
+		 TO_CHAR(o.UPDATE_TIME, 'YYYY-MM-DD HH24:MI:SS') UPDATE_TIME,
+		 o.LOCK_VERSION
+	</sql>
+	
+	<select id="listOrderDetail" parameterType="OrderInf" resultType="OrderInf">
+		select 
+			<include refid="orderInfColumns" />,p.PERSONAL_NAME
+		from TB_ECOM_ORDER_INF o left join tb_person_inf p
+			on o.USER_ID = p.USER_ID
+		where o.DATA_STAT = '0'
+		<if test="routerOrderNo !=null and routerOrderNo !='' ">
+			and o.ROUTER_ORDER_NO = #{routerOrderNo}
+		</if>
+		<if test="merchantNo !=null and merchantNo !='' ">
+			and o.MERCHANT_NO = #{merchantNo}
+		</if>
+		<if test="shopNo !=null and shopNo !='' ">
+			and o.SHOP_NO = #{shopNo}
+		</if>
+		<if test="userId != null  and userId != ''">
+			and o.USER_ID = #{userId}
+		</if>
+		<if test="personalName != null  and personalName != ''">
+			and p.PERSONAL_NAME LIKE '%' || #{personalName} || '%'
+		</if>
+		<if test="channel !=null and channel !='' ">
+			and o.CHANNEL = #{channel}
+		</if>
+		<if test="orderType !=null and orderType !='' ">
+			and o.ORDER_TYPE = #{orderType}
+		</if>
+		<if test="beginTime != null and beginTime != ''">
+			and o.CREATE_TIME &gt;= to_date(#{beginTime}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		<if test="endTime != null  and endTime != ''">
+			and o.CREATE_TIME &lt;= to_date(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		order by o.CREATE_TIME desc
+	</select>
+	
+	<select id="listOrderSummarizing" parameterType="OrderInf" resultType="OrderInf">
+		select 
+			o.MERCHANT_NO,
+			o.SHOP_NO,
+      		o.CHANNEL,
+      		NVL(sum(o.TXN_AMOUNT), 0) as sumMoney,
+      		NVL(count(o.ID), 0) as total
+		from TB_ECOM_ORDER_INF o
+		where o.DATA_STAT = '0'
+		<if test="channel !=null and channel !='' ">
+			and o.CHANNEL = #{channel}
+		</if>
+		<if test="merchantNo !=null and merchantNo !='' ">
+			and o.MERCHANT_NO = #{merchantNo}
+		</if>
+		<if test="shopNo !=null and shopNo !='' ">
+			and o.SHOP_NO = #{shopNo}
+		</if>
+		<if test="orderType !=null and orderType !='' ">
+			and o.ORDER_TYPE = #{orderType}
+		</if>
+		<if test="beginTime != null and beginTime != ''">
+			and o.CREATE_TIME &gt;= to_date(#{beginTime}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		<if test="endTime != null  and endTime != ''">
+			and o.CREATE_TIME &lt;= to_date(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		group by o.CHANNEL, o.MERCHANT_NO, o.SHOP_NO
+	</select>
+	
+	<select id="getPersonInf" parameterType="OrderInf" resultType="OrderInf">
+		select 
+			PERSONAL_NAME as personalName,
+			USER_ID as userId
+		from tb_person_inf
+		where 1=1
+		<if test="userId != null  and userId != ''">
+			and USER_ID = #{userId}
+		</if>
+		<if test="personalName != null  and personalName != ''">
+			and PERSONAL_NAME = #{personalName}
+		</if>
+	</select>
+	
+</mapper>

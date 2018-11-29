@@ -1,0 +1,142 @@
+server:
+  port: 12101
+  contextPath: /ecom-cms
+  session:
+    cookie:
+      name: JSESSIONID
+      path: /
+      domain: .tao-lue.com
+spring:
+  datasource:
+    jndi-name: JDBC
+    name: mySpringBoot
+    url: jdbc:oracle:thin:@192.168.1.101:1521:DFKDB
+    username: isecmdb
+    password: isecmdb
+    driver-class-name: oracle.jdbc.OracleDriver
+    type: com.alibaba.druid.pool.DruidDataSource
+    minActive: 1
+    maxActive: 20
+    initialSize: 1
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  thymeleaf: 
+    prefix: classpath:/views/
+    #content-type: text/html
+    #suffix: .html
+    #mode: HTML5
+    #encoding: UTF-8
+    # set to false for hot refresh
+    #cache: false
+  redis: 
+    timeout: 3000
+    cluster:
+       nodes: 192.168.1.101:7111,192.168.1.201:7112,192.168.1.202:7113
+       connection-timeout: 1000
+       soTimeout: 3000
+       max-attempts: 5
+       password: 
+       max-redirects: 2
+    pool:
+       max-total: 1024
+       max-active: 8
+       max-idle: 8
+       max-wait: -1
+       min-idle: 0
+       block-when-exhausted: true
+       max-wait-millis: 3000
+       test-on-borrow: false
+       test-on-return: false
+       test-while-idle: true
+       minEvictableIdleTimeMillis: 60000
+       timeBetweenEvictionRunsMillis: 60000
+       numTestsPerEvictionRun: 1
+myBatis:
+  mapperLocations: classpath*:mapper/*.xml
+  configLocations: classpath:conf/mybatis-config.xml
+logging:
+  config: classpath:conf/logback-ecom.xml
+#FTP服务器连接
+ftpClient: 
+  connect:
+    server: 192.168.1.102
+    port: 21
+    username: app_img
+    password: app_img
+    separator: /
+ECOM_IMG_SERVER: http://img.tao-lue.com
+ECOM_FILE_UPLAOD_PATH: /app/app_img/imgfile
+ECOM_FILE_UPLAOD_SEPARATOR: /
+#电商图片目录
+ECOM_FILE_NEW_PATH: /ecom/
+
+yx: 
+  openApi: 
+    payedOrder: 
+      method: yanxuan.order.paid.create
+    getOrder:
+      method: yanxuan.order.paid.get
+    confirmOrder: 
+      method: yanxuan.order.received.confirm
+    cancelOrder: 
+      method: yanxuan.order.paid.cancel
+    getIds: 
+      method: yanxuan.item.id.batch.get
+    getItems: 
+      method: yanxuan.item.batch.get
+    getInventory: 
+      method: yanxuan.inventory.count.get
+    getCallBackMethods: 
+      method: yanxuan.callback.method.list
+    registerCallbackMethod: 
+      method: yanxuan.callback.method.register
+    getExpress: 
+      method: yanxuan.order.express.get
+    orderRefundApply:
+      method: yanxuan.order.refund.apply
+    orderRefundCancel:
+      method: yanxuan.order.refund.cancel
+    orderRefundOfferExpress: 
+      method: yanxuan.order.refund.offer.express
+    getOrderRefundDetail: 
+      method: yanxuan.order.refund.detail.get
+    getCategory: 
+      method: yanxuan.item.category.get
+    getSkuIdBatch: 
+      method: yanxuan.item.category.skuId.batch.get
+    getItemSku: 
+      method: yanxuan.item.sku.get
+    mockapi:
+      path: 
+        prefix: /mock/api/v1
+      callbackAuditCancelOrder: 
+        method: /callbackAuditCancelOrder
+      callbackCancelOrder: 
+        method: /callbackCancelOrder
+      callbackDeliveryOrder: 
+        method: /callbackDeliveryOrder
+      callbackTransfer: 
+        method: /callbackTransfer
+      callbackRefundAddress: 
+        method: /callbackRefundAddress
+      callbackRefundReject: 
+        method: /callbackRefundReject
+      callbackRefundExpressConfirm: 
+        method: /callbackRefundExpressConfirm
+      callbackRefundSystemCancel: 
+        method: /callbackRefundSystemCancel
+      callbackRefundResultDirectly:
+        method: /callbackRefundResultDirectly
+      callbackRefundResultWithExpress: 
+        method: /callbackRefundResultWithExpress
+#网易严选相关配置-----end
+http: 
+  timeout: 60000
+  defaultCharset: utf-8
+  connection: 
+    maxTotal: 200
+    defaultMaxPerRoute: 50

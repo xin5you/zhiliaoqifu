@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.ExpressPlatfMapper">
+	
+	<resultMap type="ExpressPlatf" id="ExpressPlatfResultMap">
+		<result column="PACK_ID" property="packId"/>
+		<result column="S_ORDER_ID" property="sOrderId"/>
+		<result column="PACKAGE_NO" property="packageNo"/>
+		<result column="DELIVERY_TIME" property="deliveryTime"/>
+		<result column="PACKAGE_STAT" property="packageStat"/>
+		<result column="PACKAGE_STAT_DESC" property="packageStatDesc"/>
+		<result column="EXPRESS_COMPANY_ID" property="expressCompanyId"/>
+		<result column="EXPRESS_COMPANY_NAME" property="expressCompanyName"/>
+		<result column="IEXPRESS_NO" property="expressNo"/>
+		<result column="IS_SIGN" property="isSign"/>
+		<result column="SIGN_TIME" property="signTime"/>
+		<result column="ECOM_CODE" property="ecomCode"/>
+	</resultMap>
+	
+	<sql id="ExpressPlatfColumns">
+		PACK_ID,
+		S_ORDER_ID,
+		PACKAGE_NO,
+		DELIVERY_TIME,
+		PACKAGE_STAT,
+		PACKAGE_STAT_DESC,
+		EXPRESS_COMPANY_ID,
+		EXPRESS_COMPANY_NAME,
+		EXPRESS_NO,
+		IS_SIGN,
+		SIGN_TIME,
+		ECOM_CODE
+	</sql>
+
+	<sql id="ExpressPlatfFields">
+		#{packId},
+		#{sOrderId,jdbcType=VARCHAR},
+		#{packageNo,jdbcType=VARCHAR},
+		sysdate,
+		#{packageStat,jdbcType=VARCHAR},
+		#{packageStatDesc,jdbcType=VARCHAR},
+		#{expressCompanyId,jdbcType=VARCHAR},
+		#{expressCompanyName,jdbcType=VARCHAR},
+		#{expressNo,jdbcType=VARCHAR},
+		#{isSign,jdbcType=VARCHAR},
+		#{signTime,jdbcType=VARCHAR},
+		#{ecomCode,jdbcType=VARCHAR}
+	</sql>
+	
+	<insert id="insert" parameterType="ExpressPlatf">
+		<selectKey resultType="String" order="BEFORE" keyProperty="packId">
+			<include
+				refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getExpressPlatfId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_EXPRESS_PLATF(
+			<include refid="ExpressPlatfColumns" />
+		)VALUES(
+			<include refid="ExpressPlatfFields" />
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="ExpressPlatf">
+		UPDATE TB_ECOM_EXPRESS_PLATF
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="sOrderId != null">
+				S_ORDER_ID = #{sOrderId,jdbcType=VARCHAR},
+			</if>
+			<if test="packageNo != null">
+				PACKAGE_NO = #{packageNo,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryTime != null">
+				DELIVERY_TIME = TO_DATE(#{deliveryTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+			</if>
+			<if test="packageStat != null">
+				PACKAGE_STAT = #{packageStat,jdbcType=VARCHAR},
+			</if>
+			<if test="packageStatDesc != null">
+				PACKAGE_STAT_DESC = #{packageStatDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="expressCompanyId != null">
+				EXPRESS_COMPANY_ID = #{expressCompanyId,jdbcType=VARCHAR},
+			</if>
+			<if test="expressCompanyName != null">
+				EXPRESS_COMPANY_NAME = #{expressCompanyName,jdbcType=VARCHAR},
+			</if>
+			<if test="expressNo != null">
+				EXPRESS_NO = #{expressNo,jdbcType=VARCHAR},
+			</if>
+			<if test="isSign != null">
+				IS_SIGN = #{isSign,jdbcType=VARCHAR},
+			</if>
+			<if test="signTime != null">
+				SIGN_TIME = TO_DATE(#{signTime,jdbcType=VARCHAR},'YYYY-MM-DD HH24:MI:SS'),
+			</if>
+			<if test="ecomCode != null">
+				ECOM_CODE = #{ecomCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+		WHERE PACK_ID=#{packId}
+	</update>
+
+	<select id = "selectByPrimaryKey" parameterType="String" resultType="ExpressPlatf">
+		SELECT
+		<include refid="ExpressPlatfColumns" />
+		FROM TB_ECOM_EXPRESS_PLATF
+		WHERE PACK_ID=#{primaryKey}
+	</select>
+	
+	<select id = "getExpressPlatfList" parameterType="ExpressPlatf" resultType="ExpressPlatf">
+		SELECT 
+			PO.ORDER_ID,
+			PSO.S_ORDER_ID,
+			PSO.ECOM_CODE,
+			PSO.SUB_ORDER_STATUS,
+			M.MEMBER_ID,
+			P.PERSONAL_NAME,
+			P.MOBILE_PHONE_NO,
+			EP.PACK_ID,
+			EP.PACKAGE_NO,
+			EP.PACKAGE_STAT,
+			EP.EXPRESS_COMPANY_NAME,
+			EP.EXPRESS_NO,
+			TO_CHAR(EP.DELIVERY_TIME, 'YYYY-MM-DD HH24:MI:SS') DELIVERY_TIME,
+			TO_CHAR(EP.SIGN_TIME, 'YYYY-MM-DD HH24:MI:SS') SIGN_TIME
+		FROM 
+			TB_ECOM_EXPRESS_PLATF EP LEFT JOIN  TB_ECOM_PLATF_SHOP_ORDER PSO
+			ON  PSO.S_ORDER_ID = EP.S_ORDER_ID LEFT JOIN TB_ECOM_PLATF_ORDER PO
+			ON PO.ORDER_ID = PSO.ORDER_ID LEFT JOIN TB_ECOM_MEMBER M
+			ON  PSO.MEMBER_ID = M.MEMBER_ID LEFT JOIN TB_PERSON_INF P
+			ON M.PERSON_ID = P.PERSONAL_ID 
+		WHERE 1=1 
+		<if test="packageNo !=null and packageNo !='' ">
+			and EP.PACKAGE_NO = #{packageNo}
+		</if>
+		<if test="packageStat !=null and packageStat !='' ">
+			and EP.PACKAGE_STAT = #{packageStat}
+		</if>
+		<if test="expressNo !=null and expressNo !='' ">
+			and EP.EXPRESS_NO = #{expressNo}
+		</if>
+		<if test="memberId !=null and memberId !='' ">
+			and M.MEMBER_ID = #{memberId}
+		</if>
+		<if test="mobilePhoneNo !=null and mobilePhoneNo !='' ">
+			and P.MOBILE_PHONE_NO = #{mobilePhoneNo}
+		</if>
+		<if test="personalName !=null and personalName !='' ">
+			and P.PERSONAL_NAME LIKE '%' || #{personalName} || '%' 
+		</if>
+		<if test="sOrderId !=null and sOrderId !='' ">
+			and PSO.S_ORDER_ID = #{sOrderId}
+		</if>
+		<if test="ecomCode !=null and ecomCode !='' ">
+			and PSO.ECOM_CODE = #{ecomCode}
+		</if>
+		<if test="expressCompanyName !=null and expressCompanyName !='' ">
+			and EP.EXPRESS_COMPANY_NAME = #{expressCompanyName}
+		</if>
+		<if test="isSign !=null and isSign !='' ">
+			and EP.IS_SIGN = #{isSign}
+		</if>
+		ORDER BY PSO.S_ORDER_ID DESC
+	</select>
+	
+	 <select id = "selectByEcomAndPackageNo" resultType="ExpressPlatf">
+		SELECT
+		<include refid="ExpressPlatfColumns" />
+		FROM TB_ECOM_EXPRESS_PLATF
+		WHERE ECOM_CODE=#{ecomCode}
+		AND PACKAGE_NO=#{packageNo}
+	</select>
+
+	
+	<select id = "getOrderExpressPlatfBySOrderId" parameterType="String"  resultMap="ExpressPlatfResultMap">
+		 Select 
+          p.PACK_ID,
+          p.S_ORDER_ID, 
+          p.PACKAGE_NO, 
+          TO_CHAR(p.DELIVERY_TIME, 'YYYY-MM-DD HH24:MI:SS') DELIVERY_TIME,
+          p.PACKAGE_STAT,
+          p.PACKAGE_STAT_DESC,
+          p.EXPRESS_COMPANY_ID,
+          p.EXPRESS_COMPANY_NAME,
+          p.EXPRESS_NO,
+          p.IS_SIGN, 
+          TO_CHAR(p.SIGN_TIME, 'YYYY-MM-DD HH24:MI:SS') SIGN_TIME,
+          p.ECOM_CODE
+          FROM TB_ECOM_EXPRESS_PLATF p
+          WHERE p.S_ORDER_ID=#{sOrderId}
+	</select>
+	
+	<select id = "getExpressPlatfProductByPackId" parameterType="String" resultType="ExpressPlatf">
+		SELECT 
+			G.GOODS_NAME,
+			OEP.SKU_CODE,
+			OEP.SALE_COUNT,
+			GP.PRODUCT_ID,
+			GP.GOODS_ID,
+			GP.GOODS_PRICE,
+			GP.PIC_URL
+		FROM TB_ECOM_EXPRESS_PLATF EP,TB_ECOM_ORDER_EXPRESS_PLATF OEP,TB_ECOM_GOODS_PRODUCT GP,TB_ECOM_GOODS G
+		WHERE 1=1 
+			AND EP.PACK_ID = OEP.PACK_ID 
+			AND OEP.SKU_CODE = GP.SKU_CODE 
+			AND GP.GOODS_ID = G.GOODS_ID 
+			AND EP.PACK_ID = #{packId}
+	</select>
+	
+	<select id = "getExpressPlatfBySignTimeJob" resultType="ExpressPlatf">
+		SELECT 
+		  P.PACK_ID,
+          P.S_ORDER_ID, 
+          P.PACKAGE_NO,
+          P.PACKAGE_STAT,
+          P.ECOM_CODE
+		FROM TB_ECOM_EXPRESS_PLATF P  
+		LEFT JOIN  TB_ECOM_PLATF_SHOP_ORDER PSO ON PSO.S_ORDER_ID = P.S_ORDER_ID
+  		WHERE 1=1 AND PSO.SUB_ORDER_STATUS = '12'
+		AND P.PACKAGE_STAT = '10'
+		<![CDATA[ 
+		AND P.DELIVERY_TIME <= (SYSDATE-15)
+		]]>
+	</select>
+	
+	<select id="getDeliveryTimeByItemIdAndSorderId" parameterType="ExpressPlatf" resultType="ExpressPlatf">
+		SELECT 
+			EX.S_ORDER_ID,
+			OEX.O_ITEM_ID,
+			TO_CHAR(EX.DELIVERY_TIME, 'YYYY-MM-DD HH24:MI:SS') DELIVERY_TIME
+		FROM TB_ECOM_ORDER_EXPRESS_PLATF OEX,TB_ECOM_EXPRESS_PLATF EX
+       	WHERE 1=1 AND OEX.PACK_ID = EX.PACK_ID 
+       	AND EX.DELIVERY_TIME > (SYSDATE-45) 
+       	AND OEX.O_ITEM_ID = #{oItemId}
+       	AND EX.S_ORDER_ID = #{sOrderId}
+	</select>
+</mapper>

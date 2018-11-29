@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.SettingBannerMapper">
+	
+	<select id="getSettingBannerList" parameterType="SettingBanner" resultType="SettingBanner">
+		SELECT 
+			ESB.CREATE_TIME,
+			B.ID as bannerId,
+			B.IMAGE_URL,
+			B.BANNER_URL,
+			B.SPEC,
+			B.REMARKS as bannerRemarks
+		FROM TB_ECOM_SETTING_BANNER ESB LEFT JOIN TB_ECOM_BANNER B 
+	    ON ESB.BANNER_ID = B.ID LEFT JOIN TB_ECOM_SETTING S
+	    ON ESB.SETTING_ID = S.ID
+	    WHERE 1=1
+	    <if test="ecomCode !=null and ecomCode !='' ">
+			 AND S.ECOM_CODE  = #{ecomCode}
+		</if>
+		<if test="settingId !=null and settingId !='' ">
+			 AND ESB.SETTING_ID = #{settingId}
+		</if>
+		<if test="bannerRemarks !=null and bannerRemarks !='' ">
+			AND B.REMARKS LIKE '%' || #{bannerRemarks} || '%'
+		</if>
+		AND ESB.DATA_STAT = '0' AND B.DATA_STAT = '0'
+		ORDER BY ESB.UPDATE_TIME DESC
+	</select>
+	
+	<select id = "getNotSettingBannerList" parameterType="SettingBanner" resultType="SettingBanner">
+		SELECT 
+			B.ID as bannerId,
+			B.IMAGE_URL,
+			B.BANNER_URL,
+			B.SPEC,
+			B.REMARKS AS BANNERREMARKS
+		FROM TB_ECOM_BANNER B 
+		WHERE 1=1  AND B.DATA_STAT = '0'
+    	AND B.ID  NOT IN 
+	     (
+	     SELECT ESB.BANNER_ID FROM TB_ECOM_SETTING_BANNER  ESB 
+	     WHERE ESB.SETTING_ID = #{settingId}
+	     AND ESB.DATA_STAT =  '0' 
+	     )
+	     <if test="bannerRemarks !=null and bannerRemarks !='' ">
+			AND B.REMARKS LIKE '%' || #{bannerRemarks} || '%'
+		</if>
+		ORDER BY B.UPDATE_TIME DESC
+	</select>
+	
+	<insert id="insert" parameterType="SettingBanner">
+	   <selectKey resultType="String" order="BEFORE" keyProperty="id">  
+			<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getSettingBannerId" />
+		</selectKey>
+		INSERT INTO TB_ECOM_SETTING_BANNER(
+			 ID,
+			 SETTING_ID,
+			 BANNER_ID, 
+			 DATA_STAT,
+			 REMARKS,
+			 CREATE_USER,
+			 UPDATE_USER,
+			 CREATE_TIME,
+			 UPDATE_TIME,
+			 LOCK_VERSION
+		)VALUES (
+			#{id},
+			#{settingId,jdbcType=VARCHAR},
+			#{bannerId,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			sysdate,
+			sysdate,
+			'0'
+		)
+	</insert>
+	
+	<delete id="deleteBySettingIdAndBannerId" parameterType="SettingBanner">
+		DELETE from TB_ECOM_SETTING_BANNER ESB where ESB.SETTING_ID = #{settingId}
+		<if test="bannerId !=null and bannerId !='' ">
+			AND ESB.BANNER_ID = #{bannerId}
+		</if>
+	</delete>
+	
+</mapper>
