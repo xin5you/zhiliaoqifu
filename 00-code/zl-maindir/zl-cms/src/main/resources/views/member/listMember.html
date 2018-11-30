@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>系统信息</li>
+		                    <li>用户管理</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/member/memberInf/getMemberInfList}" th:object="${memberInf}" class="form-inline" method="post">
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">用户名</span> 
+								<input id="personalName" name="personalName" type="text" class="input-medium" th:value="*{personalName}" maxlength="20"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">手机号码</span> 
+								<input id="mobilePhoneNo" name="mobilePhoneNo" type="text" class="input-medium" th:value="*{mobilePhoneNo}" maxlength="11"/>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+							</div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+								<th></th>
+								<th>用户名</th>
+								<th>手机号码</th>
+				                <th>会员等级</th>
+				                <th>会员积分</th>
+				                <th>创建时间</th>
+<!-- 				                <th>操作</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="memberInf,memberInfStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${memberInfStat.count}"></span></td>
+								<td><span th:text="${memberInf.personalName}"></span></td>
+								<td><span th:text="${memberInf.mobilePhoneNo}"></span></td>
+				                <td><span th:text="${memberInf.lvId}"></span></td>
+				                <td><span th:text="${memberInf.point}"></span></td>
+								<td><span th:text="${memberInf.createTime}"></span></td>
+<!-- 				                <td> -->
+<!-- 									<span th:if="${user.isdefault != '0' and user.state != '1'}"> -->
+<!-- 										<a th:attr="userId=${user.id}" title="添加角色" class="btn-mini btn-grant-role" href="#"><i class="icon-plus"></i></a> -->
+<!-- 										<a th:attr="userId=${user.id}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a> -->
+<!-- 										<a th:attr="userId=${user.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a> -->
+<!-- 									</span>	      -->
+<!-- 								</td> -->
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+			    </form>
+			</div>
+		</div>
+		<script th:src="@{/ecom/js/member/listMember.js}"></script>
+	</body>
+</html>
+

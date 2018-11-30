@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/header::header" />
+	<!-- <title th:text="${eshopName}"></title> -->
+	<title th:if="${not #strings.isEmpty(eshopName)}" th:text="${eshopName}"></title>
+	<title th:unless="${not #strings.isEmpty(eshopName)}" >商城主页</title>
+<!--通用媒体查询-->
+<body>
+
+<!--banner-->
+<div class="jf_homepage_autoplay">
+    <div class="jf_autoplay_images jf_autoplay_init">
+    	<span th:if="${not #lists.isEmpty(bannerList)}" th:each="banner: ${bannerList}">
+	    	<a th:href="${banner.bannerUrl}">
+				<img th:src="${banner.imageUrl}" />
+			</a>
+		</span>
+    </div>
+    <div class="jf_pagination"></div>
+</div>
+
+<!--提示性-->
+<div class="mall_tips">
+	<img th:src="@{/images/mall_notice.png}" />
+	【温馨提示】商城购买的商品暂不支持退货哦~
+</div>
+
+<!--入口-->
+<!--入口-->
+<div>
+	<span th:if="${not #lists.isEmpty(routesList)}">
+	    <span th:each="routes,routesStat : ${routesList}" th:inline="text">
+	    	 <!--绿色模块-->
+	    	 <span th:if="${(routesStat.count%4) eq 1}">
+				<div class="entrance" th:name="${routes.id}">
+				 	<div class="green"></div>
+				    <div style="width:100%;"><img th:src="${routes.ecomLogo}" style="width: 100%" /></div>
+				    <a class="green_go"  th:href="${routes.ecomUrl}">
+				    	<span><img th:src="@{/images/entrance_green_icon.png}" /></span>
+				        <span th:text="${routes.ecomName}"></span>
+				         <span>
+				         	<span class="entrance_text">点击进入</span>
+				            <span class="entrance_button green"></span>
+				         </span>
+				    </a>
+	    		</div>
+	    	</span>
+			<!--蓝色模块-->
+		    <span th:if="${(routesStat.count%4) eq 2}">
+				<div class="entrance" th:name="${routes.id}">
+		        	<div class="blue"></div>
+		        	<div style="width:100%;" ><img th:src="${routes.ecomLogo}" style="width:100%;" /></div>
+		        	<a class="blue_go" th:href="${routes.ecomUrl}">
+		            	<span><img th:src="@{/images/entrance_blue_icon.png}" /></span>
+		            	<span th:text="${routes.ecomName}"></span>
+		            	<span>
+			                <span class="entrance_text">立即下单</span>
+			                <span class="entrance_button blue"></span>
+		            	</span>
+		        	</a>
+		    	</div>
+		    </span>
+			<!--橘色模块-->
+		     <span th:if="${(routesStat.count%4) eq 3}">
+				<div class="entrance" th:name="${routes.id}">
+		        	<div class="orange"></div>
+		        	<div style="width:100%;" ><img th:src="${routes.ecomLogo}" style="width:100%;" /></div>
+		        	<a class="orange_go" th:href="${routes.ecomUrl}">
+		            	<span><img th:src="@{/images/entrance_orange_icon.png}" /></span>
+		            	<span th:text="${routes.ecomName}"></span>
+			            <span>
+			                <span class="entrance_text">立即下单</span>
+			                <span class="entrance_button orange"></span>
+			            </span>
+		        	</a>
+		    	</div>
+		    </span>
+			<!--紫色模块-->
+		     <span th:if="${(routesStat.count%4) eq 0}">
+				<div class="entrance" th:name="${routes.id}">
+		        	<div class="purple"></div>
+		        	<div style="width:100%;" ><img th:src="${routes.ecomLogo}" style="width:100%;" /></div>
+		        	<a class="purple_go" th:href="${routes.ecomUrl}">
+		            	<span><img th:src="@{/images/entrance_purple_icon.png}" /></span>
+		            	<span th:text="${routes.ecomName}"></span>
+			            <span>
+			                <span class="entrance_text">点击进入</span>
+			                <span class="entrance_button purple"></span>
+			            </span>
+		        	</a>
+		    	</div>
+			</span>
+		</span>
+	</span>
+</div>
+
+<script>
+	addEventListener('load', function() {
+		jfAutoPlay.jfCarouselInit();
+	})
+</script>
+</body>
+</html>

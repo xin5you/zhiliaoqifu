@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.GoodsProductMapper">
+	<sql id="goodsProductColumns">
+		PRODUCT_ID,
+		GOODS_ID,
+		SPU_CODE,
+		SKU_CODE,
+		ECOM_CODE,
+		PRODUCT_ENABLE,
+		IS_STORE,
+		ENABLE_STORE,
+		GOODS_PRICE,
+		GOODS_COST,
+		MKT_PRICE,
+		PAGE_TITLE,
+		META_DESCRIPTION,
+		PIC_URL,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<insert id="insert"  parameterType="GoodsProduct">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="productId">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getGoodsProductId" />
+			</selectKey>
+			
+		INSERT INTO TB_ECOM_GOODS_PRODUCT
+		(
+				<include refid="goodsProductColumns" /> 
+		)VALUES (
+			   #{productId},
+			   #{goodsId,jdbcType=VARCHAR},
+			   #{spuCode,jdbcType=VARCHAR},
+			   #{skuCode,jdbcType=VARCHAR},
+			   #{ecomCode,jdbcType=VARCHAR},
+			   #{productEnable,jdbcType=VARCHAR},
+			   #{isStore,jdbcType=DOUBLE},
+			   #{enableStore,jdbcType=DOUBLE},
+			   #{goodsPrice,jdbcType=VARCHAR},
+			   #{goodsCost,jdbcType=VARCHAR},
+			   #{mktprice,jdbcType=VARCHAR},
+			   #{pageTitle,jdbcType=VARCHAR},
+			   #{metaDescription,jdbcType=VARCHAR},
+			   #{picurl,jdbcType=VARCHAR},
+			   '0',
+			   #{remarks,jdbcType=VARCHAR},
+			   #{createUser,jdbcType=VARCHAR},
+			   #{updateUser,jdbcType=VARCHAR},
+			   sysdate,
+			   sysdate,
+			   '0'
+		)
+	</insert>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		UPDATE TB_ECOM_GOODS_PRODUCT SET DATA_STAT='1' WHERE PRODUCT_ID=#{primaryKey}
+	</update>
+	
+	<select id="getList" parameterType="GoodsProduct"  resultType="GoodsProduct">
+		SELECT 
+			<include refid="goodsProductColumns" />  
+		FROM TB_ECOM_GOODS_PRODUCT  
+		WHERE DATA_STAT = '0'
+		ORDER BY UPDATE_TIME DESC
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="GoodsProduct">
+		SELECT
+			<include refid="goodsProductColumns" /> 
+		FROM TB_ECOM_GOODS_PRODUCT
+		 WHERE PRODUCT_ID=#{primaryKey}
+	</select>
+	
+	<select id="getGoodsProductBySkuCode" resultType="GoodsProduct">
+		SELECT
+			<include refid="goodsProductColumns" /> 
+		FROM TB_ECOM_GOODS_PRODUCT
+		 WHERE SPU_CODE = #{spuCode}
+		 AND SKU_CODE = #{skuCode}
+		 AND ECOM_CODE = #{ecomCode}
+	</select>
+	
+	
+	<update id="updateByPrimaryKey" parameterType="GoodsProduct">
+		UPDATE TB_ECOM_GOODS_PRODUCT
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="goodsId != null">GOODS_ID=#{goodsId,jdbcType=VARCHAR},</if>
+			<if test="spuCode != null">SPU_CODE=#{spuCode,jdbcType=VARCHAR},</if>
+			<if test="skuCode != null">SKU_CODE=#{skuCode,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="productEnable != null">PRODUCT_ENABLE=#{productEnable,jdbcType=VARCHAR},</if>
+			<if test="isStore != null">IS_STORE=#{isStore,jdbcType=VARCHAR},</if>
+			<if test="enableStore != null">ENABLE_STORE=#{enableStore,jdbcType=VARCHAR},</if>
+			<if test="goodsPrice != null">GOODS_PRICE=#{goodsPrice,jdbcType=VARCHAR},</if>
+			<if test="goodsCost != null">GOODS_COST=#{goodsCost,jdbcType=VARCHAR},</if>
+			<if test="mktprice != null">MKT_PRICE=#{mktprice,jdbcType=DOUBLE},</if>
+			<if test="pageTitle != null">PAGE_TITLE=#{pageTitle,jdbcType=VARCHAR},</if>
+			<if test="metaDescription != null">META_DESCRIPTION=#{metaDescription,jdbcType=VARCHAR},</if>
+			<if test="picurl != null">PIC_URL=#{picurl,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1,
+		</trim>
+		where PRODUCT_ID=#{productId}
+	</update>
+	
+	<update id = "updateBySkuCode" parameterType="GoodsProduct">
+		UPDATE TB_ECOM_GOODS_PRODUCT
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="isStore != null">IS_STORE=#{isStore,jdbcType=VARCHAR},</if>
+			<if test="enableStore != null">ENABLE_STORE=#{enableStore,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1
+		</trim>
+		where SKU_CODE = #{skuCode}
+	</update>
+	
+	
+	<select id="getProductlistByGoodsId" parameterType="String" resultType="GoodsProduct">
+		SELECT
+			<include refid="goodsProductColumns" />
+		FROM TB_ECOM_GOODS_PRODUCT
+		 WHERE GOODS_ID=#{goodsId}
+	</select>
+	
+	
+	<select id="getInventoryList" parameterType="GoodsProduct" resultType="GoodsProduct">
+		SELECT G.GOODS_NAME,
+	       G.MARKET_ENABLE,
+	       P.SKU_CODE,
+	       P.ECOM_CODE,
+	       P.PRODUCT_ENABLE,
+	       P.IS_STORE,
+	       P.PAGE_TITLE
+	  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+	 WHERE G.GOODS_ID = P.GOODS_ID
+	   AND G.DATA_STAT = '0'
+	   AND P.DATA_STAT = '0'
+	   AND P.ECOM_CODE = #{ecomCode}
+	   <if test="goodsName != null and goodsName != '' ">
+	   AND G.GOODS_NAME LIKE '%' || #{goodsName} || '%'
+	   </if>
+	   <if test="pageTitle != null and pageTitle != '' ">
+	   AND P.PAGE_TITLE LIKE '%' || #{pageTitle} || '%'
+	   </if>
+	   <if test="marketEnable !=null and marketEnable !='' ">
+	   AND G.MARKET_ENABLE = #{marketEnable}
+	   </if>
+
+	</select>
+	
+	<update id="updateGoodsProductIsStore" parameterType="GoodsProduct">
+		UPDATE TB_ECOM_GOODS_PRODUCT P
+	     SET P.IS_STORE     = P.IS_STORE - #{isStore},
+	         P.UPDATE_TIME  = SYSDATE,
+	         P.LOCK_VERSION = P.LOCK_VERSION + 1
+	    WHERE P.PRODUCT_ID = #{productId}
+	</update>
+	
+	<select id="getGoodsProductListByGoodsId" parameterType="String" resultType="GoodsProduct">
+		SELECT P.PRODUCT_ID,
+		       P.GOODS_ID,
+		       P.SPU_CODE,
+		       P.SKU_CODE,
+		       P.ECOM_CODE,
+		       P.PRODUCT_ENABLE,
+		       P.IS_STORE,
+		       P.ENABLE_STORE,
+		       P.GOODS_PRICE,
+		       P.GOODS_COST,
+		       P.MKT_PRICE,
+		       P.PAGE_TITLE,
+		       P.META_DESCRIPTION,
+		       P.PIC_URL,
+		       P.DATA_STAT,
+		       P.REMARKS,
+		       P.CREATE_USER,
+		       P.UPDATE_USER,
+		       P.CREATE_TIME,
+		       P.UPDATE_TIME,
+		       P.LOCK_VERSION,
+		       G.GOODS_NAME,
+		       G.MARKET_ENABLE
+		  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+		 WHERE G.GOODS_ID = P.GOODS_ID
+		   AND G.DATA_STAT = '0'
+		   AND P.DATA_STAT = '0'
+		   AND G.GOODS_ID = #{goodsId}
+   
+	</select>
+	
+	<select id="getGoodsProductByPrimaryKey" parameterType="String" resultType="GoodsProduct">
+		SELECT P.PRODUCT_ID,
+	       P.GOODS_ID,
+	       P.SPU_CODE,
+	       P.SKU_CODE,
+	       P.ECOM_CODE,
+	       P.PRODUCT_ENABLE,
+	       P.IS_STORE,
+	       P.ENABLE_STORE,
+	       P.GOODS_PRICE,
+	       P.GOODS_COST,
+	       P.MKT_PRICE,
+	       P.PAGE_TITLE,
+	       P.META_DESCRIPTION,
+	       P.PIC_URL,
+	       P.DATA_STAT,
+	       P.REMARKS,
+	       P.CREATE_USER,
+	       P.UPDATE_USER,
+	       P.CREATE_TIME,
+	       P.UPDATE_TIME,
+	       P.LOCK_VERSION,
+	       G.GOODS_NAME
+	  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+	 WHERE G.GOODS_ID = P.GOODS_ID
+	   AND G.DATA_STAT = '0'
+	   AND P.DATA_STAT = '0'
+	   AND P.PRODUCT_ID = #{primaryKey}
+	</select>
+	
+	
+</mapper>

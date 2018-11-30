@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/header::header" />
+<title>订单详情</title>
+<script th:src="@{/ecom/platforder/listPlatforderDetails.js}"></script>
+
+<body>
+<!--知了企服商城订单详情-->
+
+<!--子订单编号-->
+<span th:each="platfOrder,platfOrderStat : ${platfOrderList}">
+<span th:each="pso,psoStat : ${platfOrder.platfShopOrder}">
+<input type = "hidden" name = "orderId" id = "orderId" th:value="${platfOrder.orderId}"/>
+<div class="details_order_number">
+    <div class="order_number">
+        <p>订单编号：</p>
+        <p><span  th:text="${platfOrder.orderId}"></span></p>
+    </div>
+    <div class="order_number">
+        <p>子订单流水号：</p>
+        <p><span  th:text="${pso.sOrderId}"></span></p>
+    </div>
+    <div class="order_number">
+        <p>下单时间：</p>
+        <p><span  th:text="${platfOrder.createTime}"></span></p>
+    </div>
+    <div class="order_number" th:if="${platfOrder.payTime != null}">
+        <p>支付时间：</p>
+        <p><span  th:text="${platfOrder.payTime}"></span></p>
+    </div>
+</div>
+<!--物流地址-->
+<div class="logistics_address" th:if="${orderShip != null and platfOrder.payStatus =='2' and pso.subOrderStatus == '10' || pso.subOrderStatus == '11'|| pso.subOrderStatus == '12'|| pso.subOrderStatus == '13' || pso.subOrderStatus == '14'}" >
+    <a class="check_logistics" th:href="@{/ecom/order/getExpress(sOrderId=${pso.sOrderId})}">
+        <div class=" left">查看物流</div>
+        <img class="right" th:src="@{/front/images/hkbstore/icons/the_arrow.png}"/>
+    </a>
+    <div class="take_address">
+        <div class="address_name">
+            <div class=" left"><span  th:text="${orderShip.shipName}"></span></div>
+            <div class="contact_phone">
+                <div><span  th:text="${orderShip.shipMobile}"></span></div>
+                <span>
+                <span  th:text="${orderShip.shipProvinceName}"></span>
+                <span  th:text="${orderShip.shipCityName}"></span>
+                <span  th:text="${orderShip.shipRegionName}"></span>
+                <span  th:text="${orderShip.shipAddr}"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--商品信息-->
+<!--网易严选订单列表-->
+<div class="order_details">
+    <div class=" order_detail details_list">
+        <div class="order_list">
+            <div class="list_detail list1">
+            	<div class="store_title title_text">
+                    <div class="status_title">
+                        <img class="store_logo" th:src="@{/front/images/hkbstore/pics/yanxuan_logo.png}"/>
+                        <p class="store_name"><span th:text="${pso.ecomCode}"></span></p>
+                        <img class="the_arrow" th:src="@{/front/images/hkbstore/icons/the_arrow.png}"/>
+                    </div>
+                    <div class="status"><span th:text="${pso.subOrderStatusValue}"></span></div>
+                </div>
+                <span th:each="items,itemsStat : ${pso.orderProductItems}">
+                <a class="order_goods" th:href="@{/ecom/goods/detail(goodsId=${items.goodsId})}">
+                    <div class="goods_pic">
+                        <img class="store_logo" th:src="${items.picUrl}"/>
+                    </div>
+                    <div class="goods_info">
+                        <div class="goods_name"><span th:text="${items.productName}"></span></div>
+                        <div class="goods_sku">
+                            <div class="sku_info"></div>
+                            <div class="number">x<span th:text="${items.productNum}"></span></div>
+                        </div>
+                        <div class="goods_price">¥<span th:text="${items.productPrice}"></span></div>
+                    </div>
+                </a>
+                <div th:if="${pso.subOrderStatusValue == '已完成' and items.refundflag == '0'}" th:attr="oItemId=${items.oItemId}"  class="sale"><p>退换/售后</p></div>
+                </span>
+                <div class="details_total">
+                    <div class="detail">
+                        <p>商品总价</p>
+                        <p>¥<span th:text="${pso.orderProductPrice}"></span></p>
+                    </div>
+                    <div class="detail">
+                        <p>运费（快递）</p>
+                        <p>¥<span th:text="${pso.shippingFreightPrice}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="real_payment">
+            <p>实付款</p>
+            <p class="money">¥<span th:text="${pso.payAmt}"></span></p>
+        </div>
+    </div>
+</div>
+<!--底部按钮-->
+<span th:if="${platfOrder.payStatus =='2' and pso.subOrderStatus == '00' || pso.subOrderStatus == '10' || pso.subOrderStatus == '12'}">
+<div class="affirm_blank"></div>
+<div class="order_detail_btn">
+    <a class="cancle_order" th:if="${platfOrder.payStatus =='2' and pso.subOrderStatus == '00' || pso.subOrderStatus == '10'}" th:attr="sOrderId=${pso.sOrderId}">取消订单</a>
+    <a class="operation_btn goto_pay" th:if="${platfOrder.payStatus =='2' and pso.subOrderStatus == '12'}" th:attr="sOrderId=${pso.sOrderId}">确认收货</a>
+</div>
+</span>
+</span>
+</span>
+</body>
+</html>

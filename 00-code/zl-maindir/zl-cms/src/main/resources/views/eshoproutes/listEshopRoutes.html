@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="main/header::header" />
+<body>
+	<header th:include="main/navbar::navbar" />
+	<div id="contentwrapper">
+		<div class="main_content">
+			<nav>
+				<div id="jCrumbs" class="breadCrumb module">
+					<ul>
+		                    <li><a th:href="@{/main}"><i class="icon-home"></i></a></li>
+		                    <li>电商管理</li>
+		                    <li><a th:href="@{/eshop/listEshopInf}">商城信息管理</a></li>
+		                    <li>添加商城电商入口</li>
+		                </ul>
+				</div>
+			</nav>
+			<form id="searchForm" class="form-inline" th:method="post">
+				<input type="hidden" id="eshopId" name="eshopId" th:value="${eshopId}" />
+				<h3 class="heading" th:if="${not #strings.isEmpty(eshopName)}" th:text="${eshopName}"></h3>
+				<h3 class="heading" th:unless="${not #strings.isEmpty(eshopName)}" >商城电商入口信息</h3>
+				<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" style="table-layout: fixed; ">
+					<thead>
+						<tr>
+							<th><input type="checkbox" id="selectAll" title="全选" class="checkbox" /></th>
+							<th>电商名称</th>
+							<th>电商代码</th>
+				            <th>入口链接</th>
+				            <th>电商类别</th>
+				            <th>电商LOGO</th>
+				            <th>电商入口状态</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="entity,enStat : ${routesList}" th:inline="text">
+							<td>
+								<span th:if="${entity.checked eq '1' and entity.dataStat  eq '0'}">
+									<input type="checkbox" name="routesId" th:value="${entity.id}" class="checkbox" checked="checked"/>
+								</span>
+								<span th:if="${entity.checked != '1' and entity.dataStat != '1' }">
+									<input type="checkbox" name="routesId" th:value="${entity.id}" class="checkbox"/>
+								</span>
+							</td>
+							<td><span th:text="${entity.ecomName}"></span></td>
+							<td><span th:text="${entity.ecomCode}"></span></td>
+				            <td style="overflow: hidden; text-overflow:ellipsis;white-space: nowrap; "><span th:text="${entity.ecomUrl}"></span></td>
+				            <td><span th:text="${entity.ecomType}"></span></td>
+				            <td style="overflow: hidden; text-overflow:ellipsis;white-space: nowrap; "><span th:text="${entity.ecomLogo}"></span></td>
+							<td><span th:if="${entity.dataStat == '0'}">正常</span><span th:if="${entity.dataStat != '0'}">停用</span></td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="text-align: center;">
+					<button type="button" class="btn btn-primary btn-submit">提 交</button>
+					<button type="button" class="btn btn-back">返 回</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script th:src="@{/ecom/js/eshoproutes/listEshopRoutes.js}"></script>
+</body>
+</html>

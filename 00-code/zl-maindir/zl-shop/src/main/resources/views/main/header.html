@@ -1,0 +1,59 @@
+<head th:fragment="header">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1, maximum-scale=1" />
+	<!-- Bootstrap framework -->
+	<link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+	<link th:href="@{/bootstrap-modal/css/bootstrap-modal.css}" rel="stylesheet"/>
+	<link th:href="@{/gebo/img/splashy/splashy.css}" rel="stylesheet" />
+	<!-- breadcrumbs-->
+	<link th:href="@{/jBreadcrumbs/css/BreadCrumb.css}" rel="stylesheet"/>
+	<!-- tooltips-->
+	<link th:href="@{/qtip2/jquery.qtip.min.css}" rel="stylesheet"/>
+	<!-- datetime style  -->
+	<link th:href="@{/datetimesecondpicker/css/bootstrap-datetimepicker.min.css}" rel="stylesheet"/>
+	<!-- page layout style  -->
+	<link th:href="@{/front/css/page.css}" rel="stylesheet"/>
+	<link th:href="@{/front/css/style.css}" rel="stylesheet"/>
+	<link th:href="@{/front/css/blue.css}" rel="stylesheet"/>
+	
+	<link th:href="@{/sticky/sticky.css}" rel="stylesheet"/>
+	
+	<link th:href="@{/front/css/hkbBusinessMain.min.css}" rel="stylesheet" />
+	
+	<!-- jquery -->
+	<script th:src="@{/jquery/jquery-1.11.2.min.js}"></script>
+	<script th:src="@{/jquery/jquery-migrate.min.js}"></script>
+	<script th:src="@{/jquery/jquery.form.js}"></script>
+	<!-- bootstrap -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/bootstrap/js/bootstrap.plugins.min.js}"></script>
+	<script th:src="@{/bootstrap/js/bootstrap.teninedialog.js}"></script>
+	<script th:src="@{/bootstrap-modal/js/bootstrap-modal.js}"></script>
+	<script th:src="@{/bootstrap-modal/js/bootstrap-modalmanager.js}"></script>
+	<!-- jBreadcrumbs -->
+	<script th:src="@{/jBreadcrumbs/js/jquery.jBreadCrumb.1.1.min.js}"></script>
+	<!-- validation -->
+	<script th:src="@{/validation/jquery.validate.min.js}"></script>
+	<script th:src="@{/validation/additional-methods.js}"></script>
+	<script th:src="@{/validation/localization/messages_cn.js}"></script>
+	<!-- datetimesecondpicker -->
+	<script th:src="@{/datetimesecondpicker/js/bootstrap-datetimepicker.min.js}"></script>
+	<script th:src="@{/datetimesecondpicker/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+	<script th:src="@{/jquery/jquery.md5.js}"></script>
+	<!-- qtip -->
+	<script th:src="@{/qtip2/jquery.qtip.min.js}"></script>
+	
+	<script th:src="@{/datatables/jquery.dataTables.min.js}"></script>
+	<script th:src="@{/datatables/jquery.dataTables.bootstrap.min.js}"></script>
+
+	<script th:src="@{/front/js/hkbBusinessMain.min.js}"></script>
+	
+	<script th:src="@{/front/js/common.js}"></script>
+	<script th:src="@{/front/js/helper.js}"></script>
+	<script>
+		$(document).ready(function() {
+			setTimeout('$("html").removeClass("js")',1000);
+		});
+	</script>
+	
+</head>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>添加新地址</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<script th:src="@{/ecom/member/addMemberAddress.js}"></script>
+<body>
+
+<!--知了企服商城-->
+
+
+<!--列表-->
+<form id="searchForm" th:action="@{/member/memberAddress/addMemberAddress}" th:object="${memberAddre}" class="form-inline" method="post">
+<input type = "hidden" name = "addressId" id ="addressId"/>
+<div class="input_form hkbstore_alignment_left">
+    <p>姓名</p>
+    <p><input class="hkbstore_input" name="userName" id="userName" type="text" placeholder="请输入姓名"/></p>
+</div>
+
+<div class="input_form hkbstore_alignment_left">
+    <p>联系电话</p>
+    <p><input class="hkbstore_input" type="number" name="mobile" id="mobile" pattern="[0-9]*" placeholder="请输入联系电话"/></p>
+</div>
+
+
+<div class="input_form hkbstore_alignment_left">
+    <p>所在地区</p>
+    <p class="hkbstore_alignment_center">
+        <span id="address_show">请选择</span>
+        <span><img th:src="@{/front/images/hkbstore/icons/product_go.png}"/></span>
+    </p>
+</div>
+
+
+<div class="input_form hkbstore_alignment_left">
+    <p>详细地址</p>
+    <p><textarea class="hkbstore_textarea" name="addrDetail" id = "addrDetail" placeholder="请输入详细地址" rows="4"></textarea></p>
+</div>
+<!--选择地址-->
+<div class="address_dialog">
+<div class="jf_pop_up" id="product_address">
+
+    <div class="jf_pop_up_main">
+
+        <div class="pop_top">
+
+            <div class="pop_title">请选择地址</div>
+
+            <div class="pop_cancel"></div>
+
+<!--            <div class="pop_line"></div>-->
+
+
+        </div>
+
+        <div class="pop_main">
+
+            <div class="product_prompt_address">
+
+                <div id="jd_address_select">
+
+                    <div class="top_address jdshop_alignment_middle">
+
+                        <div>请选择</div>
+
+                        <div></div>
+
+                        <div></div>
+
+                        <div></div>
+
+                        <div></div>
+
+                    </div>
+
+                    <div class="address"></div>
+
+                    <div class="address"></div>
+
+                    <div class="address"></div>
+
+                    <div class="address"></div>
+
+                    <div class="address"></div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="jf_pop_up_bg">
+
+    </div>
+
+</div>
+
+
+
+</div>
+
+
+
+<!-- 底部按钮-->
+
+<div class="bottom_button">
+    <div class="tab_box"></div>
+    <a class="button_contain" href="#">
+        保存
+    </a>
+
+</div>
+</form>
+
+<!--预加载效果-->
+<div class="loading_page">
+    <div class="show_loading">
+        <main>
+            <div class="loader">
+                <div class="loader-inner line-scale">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </main>
+        <p>保存中</p>
+    </div>
+</div>
+<script>
+
+	//显示加载中
+	loadingChange.showLoading();
+	//隐藏加载中
+	window.onload=function(){
+		loadingChange.hideLoading();
+	}
+    productAddress = new jfShowPop({'ele': 'product_address'})
+
+
+
+
+    //点击穿透问题
+    //第一个参数为弹框id 第二个参数为带有滚动条元素的classname
+    jfProductDetails.clickThrough('product_address','address')
+
+
+
+</script>
+</body>
+</html>

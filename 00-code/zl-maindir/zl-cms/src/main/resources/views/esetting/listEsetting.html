@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>电商管理</li>
+		                    <li>电商服务设置</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/eSetting/listEsetting}" th:object="${esetting}" class="form-inline" method="post">
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">电商名称</span> 
+								<input id="ecomName" name="ecomName" type="text" class="input-medium" th:value="*{ecomName}" maxlength="20"/>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+								<button type="button" class="btn btn-primary btn-add">新 增</button>
+							</div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" style="table-layout: fixed; ">
+						<thead>
+							<tr>
+								<th></th>
+								<th>电商名称</th>
+								<th>电商代码</th>
+				                <th>电商类型</th>
+				                <th>包邮金额（元）</th>
+				                <th>运费（元）</th>
+				                <th>购物描述</th>
+				                <th>创建时间</th>
+				                <th>操作</th>
+							</tr>
+						</thead>
+				        <tbody>
+							<tr th:each="routes,routesStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${routesStat.count}"></span></td>
+								<td style="overflow: hidden; text-overflow:ellipsis;white-space: nowrap; "><span th:text="${routes.ecomName}"></span></td>
+								<td><span th:text="${routes.ecomCode}"></span></td>
+				                <td><span th:text="${routes.ecomType}"></span></td>
+				                <td><span th:text="${routes.fullMoney}"></span></td>
+				                <td><span th:text="${routes.ecomFreight}"></span></td>
+				                <td style="overflow: hidden; text-overflow:ellipsis;white-space: nowrap; "><span th:text="${routes.shopDesc}"></span></td>
+				                <td><span th:text="${routes.createTime}"></span></td>
+				                <td>
+				                	<span th:if="${routes.dataStat != '1' }">
+				                		<a th:attr="id=${routes.id}" title="添加Banner信息" class="btn-mini btn-add-banner" href="#"><i class="icon-plus"></i></a>
+										<a th:attr="id=${routes.id}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+										<a th:attr="id=${routes.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+										<a th:attr="id=${routes.id}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+			    </form>
+			</div>
+		</div>
+		<div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="routesInfo" class="form-horizontal form_validation_tip" enctype="multipart/form-data">
+				<div class="modal-header">
+					<button class="close btn-close" data-dismiss="modal">&times;</button>
+					<h3 id="modal_h"></h3>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="eserve_id" name="eserve_id"/>
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>电商名称：</label>
+							<div class="controls">
+								<input type="text" class="span3" id="ecom_name" name="ecom_name" maxlength="25"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">电商代码：</label>
+							<div class="controls">
+								<select id="ecom_Code" name="ecom_Code"  class="span3">
+									<option th:each="c,cStat : ${channelList}" th:value="${c.code}"><span th:text="${c.value}" /><span th:text="${c.code}" /></option>
+			                     </select>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">电商类别：</label>
+							<div class="controls">
+								<select id="ecom_Type" name="ecom_Type"  class="span3">
+									<option th:each="c,cStat : ${ecomType}" th:value="${c.code}"><span th:text="${c.value}" /></option>
+			                     </select>
+								<span class="help-block"></span>
+							</div>	
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>包邮金额（元）：</label>
+							<div class="controls">
+								<input type="text" class="span3" id="full_money" name="full_money" maxlength="11"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>运费（元）：</label>
+							<div class="controls">
+								<input type="text" class="span3" id="ecom_freight" name="ecom_freight" maxlength="11"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>购物描述：</label>
+							<div class="controls">
+								<textarea  rows="2" class="span3" id="shop_desc" name="shop_desc" maxlength="20"></textarea>
+<!-- 								<input type="text" class="span3" id="shop_desc" name="shop_desc" maxlength="20"/> -->
+								<span class="help-block"></span>
+							</div>
+						</div>
+					</fieldset>
+			</div>
+			<div class="modal-footer" style="text-align: center;">
+				<button class="btn btn-primary btn-submit" type="submit">提 交 </button>
+			    <button class="btn btn-close" data-dismiss="modal" aria-hidden="true">关 闭</button>
+			</div>
+			</form>
+		</div> 
+		<script th:src="@{/ecom/js/esetting/listEsetting.js}"></script>
+	</body>
+</html>
+

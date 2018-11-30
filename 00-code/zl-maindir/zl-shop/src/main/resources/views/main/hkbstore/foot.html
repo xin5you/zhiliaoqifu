@@ -1,0 +1,28 @@
+<div th:fragment="foot">
+<footer class="bottom_tabbar">
+    <div class="tab_box"></div>
+    <div class="bottom_tabbar_contain hkbstore_alignment_center ">
+        <a th:href="@{/ecom/hkbstore/index}" th:class="${footType==1}? 'current_page hkb_tab_on':'current_page'">
+            <div class="tabbar_icon">
+                <img th:src="@{/front/images/hkbstore/icons/icon_homepage_grey.png}" />
+                <img th:src="@{/front/images/hkbstore/icons/icon_homepage_orange.png}" />
+            </div>
+            <p>首页</p>
+        </a>
+        <a th:href="@{/ecom/cart/listCarts}"  th:class="${footType==3}? 'current_page hkb_tab_on':'current_page'">
+            <div class="tabbar_icon">
+                <img th:src="@{/front/images/hkbstore/icons/icon_shoppingcart_grey.png}" />
+                <img th:src="@{/front/images/hkbstore/icons/icon_shoppingcart_orange.png}" />
+            </div>
+            <p>购物车</p>
+        </a>
+        <a th:href="@{/ecom/member/toMyAccount}" th:class="${footType==4}? 'current_page hkb_tab_on':'current_page'">
+            <div class="tabbar_icon">
+                <img th:src="@{/front/images/hkbstore/icons/icon_mine_grey.png}" />
+                <img th:src="@{/front/images/hkbstore/icons/icon_mine_orange.png}" />
+            </div>
+            <p>我的</p>
+        </a>
+    </div>
+</footer>
+</div>

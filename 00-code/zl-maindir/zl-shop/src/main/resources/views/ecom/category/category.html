@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<title>分类</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<body>
+
+<input type="hidden" th:value="${defaultFirstCateGory}" id="defaultFirstCategoryId" name ="defaultFirstCategoryId" />
+	<!--商城分类-->
+	<!--搜索栏-->
+<!-- 	<div class="search_tab classification"> -->
+<!-- 		<div class="content"> -->
+<!-- 			<div class="search "> -->
+<!-- 				<img class="search_icon" -->
+<!-- 					th:src="@{/front/images/hkbstore/icons/search.png}" /> -->
+<!-- 				<form action=""> -->
+<!-- 					<input type="search" placeholder="输入商品名搜索" /> -->
+<!-- 				</form> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+	<!--分类导航-->
+	<div>
+		<div class="class_tab">
+			<!-- 切换tab-->
+			<div class="shop_order_tab">
+				<div class="tab_contain jdshop_shadow" id="orderTab">
+					<div class="tab clicks"
+						th:each="category,categoryStat : ${firstList}"
+						th:attr="categoryId=${category.catId}">
+						<span th:text="${category.catName}"></span>
+					</div>
+				</div>
+	<!-- 			<div class="more"> -->
+	<!-- 				<img class="icon_more" -->
+	<!-- 					th:src="@{/front/images/hkbstore/icons/the_arrow.png}" /> -->
+	<!-- 			</div> -->
+			</div>
+		</div>
+		<div class="contain_box"></div>
+	</div>
+	<!--商品列表tab-->
+
+	<!-- 固定tab-->
+<!-- 	<div class="search_results_nav"> -->
+<!-- 		<div class="tab_box"></div> -->
+<!-- 		<div class="search_nav_content"> -->
+			<!-- 综合 -->
+<!-- 			<div class="comprehensive search_results_tab price"> -->
+<!-- 				<span>综合</span> -->
+<!-- 			</div> -->
+			<!-- 价格 -->
+<!-- 			<div class="price shop"> -->
+<!-- 				<div class="search_results_tab arrow up_arrow">▲</div> -->
+<!-- 				<div class="search_results_tab arrow down_arrow">▼</div> -->
+<!-- 				<span>价格</span> -->
+<!-- 			</div> -->
+			<!-- 销量 -->
+<!-- 			<div class="price volume  "> -->
+<!-- 				<div class="search_results_tab arrow up_arrow">▲</div> -->
+<!-- 				<div class="search_results_tab arrow down_arrow">▼</div> -->
+<!-- 				<span>销量</span> -->
+<!-- 			</div> -->
+			<!-- 上新 -->
+<!-- 			<div class="new price">上新</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+
+	<!--商品列表-->
+
+	<div class="recommend_more goods_list_contain">
+<!-- 		<div class="contain_box"></div> -->
+		<div class="recommendation recommendation1">
+			<!--第一行-->
+			<div class="goods_list list1 none_top">
+
+			</div>
+		</div>
+	</div>
+
+
+	<!--底部导航-->
+	<div th:include="main/hkbstore/ecomFoot::ecomFoot" />
+
+	<script th:src="@{/front/js/category/category.js}"></script>
+
+	<!--下拉框-->
+	<div id="search_prompt">
+
+		<div class="jd_drop_down" id="brand_list">
+		</div>
+
+	</div>
+
+	<script>
+	/*<![CDATA[*/
+    //tab 切换
+
+    jfProductDetails.clickTabChange(document.getElementById('orderTab'), 'choose_tab', 'tab');
+	
+
+    showDown.hideThis();
+
+    addClass.priceClass();
+    
+  //图片懒加载
+    window.onload=function() {
+	  
+        document.getElementsByTagName('body')[0].className = 'lazy_loading_img';
+
+        loadingImg.lazyLoading();
+
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

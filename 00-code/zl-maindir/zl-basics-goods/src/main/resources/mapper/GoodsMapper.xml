@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.GoodsMapper">
+	<sql id="goodsColumns">
+		GOODS_ID,
+		GOODS_NAME,
+		SPU_CODE,
+		ECOM_CODE,
+		CAT_ID,
+		GOODS_TYPE,
+		UNIT,
+		WEIGHT,
+		DEFAULT_SKU_CODE,
+		MARKET_ENABLE,
+		BRIEF,
+		HAVE_PARAMS,
+		HAVE_SPEC,
+		IS_DISABLED,
+		PONUMBER,
+		GOODS_SORD,
+		GOODS_WEIGHT,
+		GRADE,
+		IS_HOT,
+		GOODS_IMG,
+		DATA_STAT,
+		REMARKS,
+		CREATE_USER,
+		UPDATE_USER,
+		CREATE_TIME,
+		UPDATE_TIME,
+		LOCK_VERSION
+	</sql>
+	
+	<insert id="insert"  parameterType="Goods">
+		   <selectKey resultType="String" order="BEFORE" keyProperty="goodsId">  
+				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getGoodsId" />
+			</selectKey>
+			
+		INSERT INTO TB_ECOM_GOODS
+		(
+				<include refid="goodsColumns" /> 
+		)VALUES (
+			   #{goodsId},
+			   #{goodsName,jdbcType=VARCHAR},
+			   #{spuCode,jdbcType=VARCHAR},
+			   #{ecomCode,jdbcType=VARCHAR},
+			   #{catId,jdbcType=VARCHAR},
+			   '0',
+			   #{unit,jdbcType=VARCHAR},
+			   #{weight,jdbcType=VARCHAR},
+			   #{defaultSkuCode,jdbcType=VARCHAR},
+			   '1',
+			   #{brief,jdbcType=VARCHAR},
+			   '0',
+			   #{haveSpec,jdbcType=VARCHAR},
+			   '0',
+			   #{ponumber,jdbcType=DOUBLE},
+			   #{goodsSord,jdbcType=DOUBLE},
+			   #{goodsWeight,jdbcType=VARCHAR},
+			   #{grade,jdbcType=VARCHAR},
+			   '0',
+			   #{goodsImg,jdbcType=VARCHAR},
+			   '0',
+			   #{remarks,jdbcType=VARCHAR},
+			   #{createUser,jdbcType=VARCHAR},
+			   #{updateUser,jdbcType=VARCHAR},
+			   sysdate,
+			   sysdate,
+			   '0'
+		)
+	</insert>
+	
+	<update id="deleteByPrimaryKey" parameterType="String">
+		UPDATE TB_ECOM_GOODS SET DATA_STAT='1' WHERE GOODS_ID=#{primaryKey}
+	</update>
+	
+	<select id="getList" parameterType="Goods"  resultType="Goods">
+		SELECT 
+			<include refid="goodsColumns" />  
+		FROM TB_ECOM_GOODS  
+		WHERE DATA_STAT = '0'
+		ORDER BY UPDATE_TIME DESC
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="Goods">
+		SELECT
+			<include refid="goodsColumns" /> 
+		FROM TB_ECOM_GOODS
+		 WHERE GOODS_ID=#{primaryKey}
+	</select>
+	
+		<update id="updateByPrimaryKey" parameterType="Goods">
+		UPDATE TB_ECOM_GOODS
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="goodsName != null">GOODS_NAME=#{goodsName,jdbcType=VARCHAR},</if>
+			<if test="spuCode != null">SPU_CODE=#{spuCode,jdbcType=VARCHAR},</if>
+			<if test="ecomCode != null">ECOM_CODE=#{ecomCode,jdbcType=VARCHAR},</if>
+			<if test="catId != null">CAT_ID=#{catId,jdbcType=VARCHAR},</if>
+			<if test="goodsType != null">GOODS_TYPE=#{goodsType,jdbcType=VARCHAR},</if>
+			<if test="unit != null">UNIT=#{unit,jdbcType=VARCHAR},</if>
+			<if test="weight != null">WEIGHT=#{weight,jdbcType=VARCHAR},</if>
+			<if test="defaultSkuCode != null">DEFAULT_SKU_CODE=#{defaultSkuCode,jdbcType=VARCHAR},</if>
+			<if test="marketEnable != null">MARKET_ENABLE=#{marketEnable,jdbcType=VARCHAR},</if>
+			<if test="brief != null">BRIEF=#{brief,jdbcType=VARCHAR},</if>
+			<if test="haveParams != null">HAVE_PARAMS=#{haveParams,jdbcType=VARCHAR},</if>
+			<if test="haveSpec != null">HAVE_SPEC=#{haveSpec,jdbcType=VARCHAR},</if>
+			<if test="isDisabled != null">IS_DISABLED=#{isDisabled,jdbcType=VARCHAR},</if>
+			<if test="ponumber != null">PONUMBER=#{ponumber,jdbcType=VARCHAR},</if>
+			<if test="goodsSord != null">GOODS_SORD=#{goodsSord,jdbcType=VARCHAR},</if>
+			<if test="goodsWeight != null">GOODS_WEIGHT=#{goodsWeight,jdbcType=VARCHAR},</if>
+			<if test="grade != null">GRADE=#{grade,jdbcType=VARCHAR},</if>
+			<if test="isHot != null">IS_HOT=#{isHot,jdbcType=VARCHAR},</if>
+			<if test="goodsImg != null">GOODS_IMG=#{goodsImg,jdbcType=VARCHAR},</if>
+			<if test="remarks != null">REMARKS=#{remarks,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null">DATA_STAT=#{dataStat,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null">UPDATE_USER=#{updateUser,jdbcType=VARCHAR},</if>
+			UPDATE_TIME=SYSDATE,
+			LOCK_VERSION=LOCK_VERSION+1,
+		</trim>
+		where GOODS_ID=#{goodsId}
+	</update>
+	
+		<select id="getGoodsByEcomCode"  resultType="Goods">
+		SELECT
+			<include refid="goodsColumns" /> 
+		FROM TB_ECOM_GOODS
+		 WHERE ECOM_CODE=#{ecomCode}
+		 	  AND SPU_CODE=#{spuCode}
+	</select>
+	
+	
+	<select id="getGoodsList"  parameterType="Goods"  resultType="Goods">
+			SELECT G.GOODS_ID,
+			   G.GOODS_NAME,
+		       G.SPU_CODE,
+		       P.SKU_CODE,
+		       P.PRODUCT_ID,
+		       G.ECOM_CODE,
+		       G.MARKET_ENABLE,
+		       P.PIC_URL,
+		       C.CAT_NAME,
+		       PC.CAT_NAME AS PARENT_CAT_NAME,
+		       P.GOODS_PRICE
+		  FROM TB_ECOM_GOODS G
+		 INNER JOIN TB_ECOM_GOODS_PRODUCT P
+		    ON P.GOODS_ID = G.GOODS_ID
+		  LEFT JOIN TB_ECOM_CAT_GOODS_ROLE R
+		    ON R.GOODS_ID = G.GOODS_ID
+		  LEFT JOIN TB_ECOM_GOODS_CATEGORY C
+		    ON R.CAT_ID = C.CAT_ID
+		   AND C.DATA_STAT = '0'
+		  LEFT JOIN TB_ECOM_GOODS_CATEGORY PC
+		    ON PC.CAT_ID = C.PARENT_ID
+		   AND PC.DATA_STAT = '0'
+		 WHERE G.DATA_STAT = '0'
+		   AND P.DATA_STAT = '0'
+		   <if test="ecomCode != null and ecomCode != '' ">
+			AND	 G.ECOM_CODE = #{ecomCode}
+		   </if>
+		   <if test="spuCode != null and spuCode != '' ">
+			AND	 G.SPU_CODE = #{spuCode}
+		   </if>
+		   <if test="goodsName != null and goodsName != '' ">
+			AND	 G.GOODS_NAME LIKE '%' || #{goodsName} || '%'
+		   </if>
+		   <if test="marketEnable != null and marketEnable != '' ">
+			AND	 G.MARKET_ENABLE = #{marketEnable}
+		   </if>
+		   <if test="skuCode != null and skuCode != '' ">
+			AND	 P.SKU_CODE = #{skuCode}
+		   </if>
+		   <if test="productId != null and productId != '' ">
+			AND	 P.PRODUCT_ID = #{productId}
+		   </if>
+	</select>
+	
+	<select id="getGoods"  parameterType="Goods"  resultType="Goods">
+			SELECT G.GOODS_ID,
+		       G.GOODS_NAME,
+		       G.SPU_CODE,
+		       G.ECOM_CODE,
+		       G.MARKET_ENABLE,
+		       P.PIC_URL,
+		       P.GOODS_PRICE
+		  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+		 WHERE G.DEFAULT_SKU_CODE = P.SKU_CODE
+		   AND G.DATA_STAT = '0'
+		   AND P.DATA_STAT = '0'
+		  <if test="goodsId != null and goodsId != '' "> AND G.GOODS_ID=#{goodsId}</if>
+	</select>
+	
+	<select id="getGoodsByCategory"  parameterType="Goods"  resultType="Goods">
+		SELECT G.GOODS_ID,
+	       G.GOODS_NAME,
+	       G.SPU_CODE,
+	       G.ECOM_CODE,
+	       G.CAT_ID,
+	       G.GOODS_TYPE,
+	       G.UNIT,
+	       G.WEIGHT,
+	       G.DEFAULT_SKU_CODE,
+	       G.MARKET_ENABLE,
+	       G.BRIEF,
+	       G.HAVE_PARAMS,
+	       G.HAVE_SPEC,
+	       G.IS_DISABLED,
+	       G.PONUMBER,
+	       G.GOODS_SORD,
+	       G.GOODS_WEIGHT,
+	       G.GRADE,
+	       G.IS_HOT,
+	       G.GOODS_IMG,
+	       G.DATA_STAT,
+	       G.REMARKS,
+	       G.CREATE_USER,
+	       G.UPDATE_USER,
+	       G.CREATE_TIME,
+	       G.UPDATE_TIME,
+	       G.LOCK_VERSION,
+	       P.GOODS_PRICE,
+	       P.PIC_URL
+	  FROM TB_ECOM_GOODS          G,
+	       TB_ECOM_CAT_GOODS_ROLE R,
+	       TB_ECOM_GOODS_CATEGORY C,
+	       TB_ECOM_GOODS_CATEGORY C2,
+	       TB_ECOM_GOODS_PRODUCT  P
+	 WHERE C2.CAT_ID = C.PARENT_ID
+	   AND C.CAT_ID = R.CAT_ID
+	   AND R.GOODS_ID = G.GOODS_ID
+	   AND G.DEFAULT_SKU_CODE = P.SKU_CODE
+	   AND G.DATA_STAT = '0'
+	   AND C.DATA_STAT = '0'
+	   AND R.DATA_STAT = '0'
+	   AND C2.DATA_STAT = '0'
+	   AND P.DATA_STAT = '0'
+	   AND G.MARKET_ENABLE = '1'
+       AND C2.CAT_ID = #{parentCatId}
+       AND G.ECOM_CODE = #{ecomCode}
+       <if test="catId != null and catId != '' ">
+       AND C.CAT_ID = #{catId}
+       </if>
+	</select>
+	
+	
+	<select id="selectGoodsByProductId" parameterType="String" resultType="Goods">
+	Select 
+   		g.GOODS_ID,
+		g.GOODS_NAME,
+		g.SPU_CODE,
+		g.ECOM_CODE,
+		g.CAT_ID,
+		g.GOODS_TYPE,
+		g.UNIT,
+		g.WEIGHT,
+		g.DEFAULT_SKU_CODE,
+		g.MARKET_ENABLE,
+		g.BRIEF,
+		g.HAVE_PARAMS,
+		g.HAVE_SPEC,
+		g.IS_DISABLED,
+		g.PONUMBER,
+		g.GOODS_SORD,
+		g.GOODS_WEIGHT,
+		g.GRADE,
+		g.IS_HOT,
+		g.GOODS_IMG,
+    	p.PRODUCT_ID,
+    	p.PAGE_TITLE,
+    	p.GOODS_PRICE
+    From tb_ecom_goods g ,tb_ecom_goods_product p 
+    	where g.goods_id=p.goods_id
+    	and p.PRODUCT_ID=#{productId}
+	</select>
+	
+	
+	<select id="selectGoodsAndDefProductByGoodId" parameterType="String" resultType="Goods">
+	Select 
+   		g.GOODS_ID,
+		g.GOODS_NAME,
+		g.SPU_CODE,
+		g.ECOM_CODE,
+		g.CAT_ID,
+		g.GOODS_TYPE,
+		g.UNIT,
+		g.WEIGHT,
+		g.DEFAULT_SKU_CODE,
+		g.MARKET_ENABLE,
+		g.BRIEF,
+		g.HAVE_PARAMS,
+		g.HAVE_SPEC,
+		g.IS_DISABLED,
+		g.PONUMBER,
+		g.GOODS_SORD,
+		g.GOODS_WEIGHT,
+		g.GRADE,
+		g.IS_HOT,
+		g.GOODS_IMG,
+    	p.PRODUCT_ID,
+    	p.PAGE_TITLE,
+    	p.GOODS_PRICE
+    From tb_ecom_goods g Left Join tb_ecom_goods_product p 
+    	On p.goods_id=g.goods_id And p.sku_code=g.DEFAULT_SKU_CODE
+    	where g.GOODS_ID=#{goodsId}
+	</select>
+	
+	<select id="getAllGoodsSolr"   resultType="Goods">
+	Select 
+       gs.GOODS_ID,
+       gs.GOODS_NAME,
+       gs.SPU_CODE, 
+       gs.ECOM_CODE, 
+       ts.ECOM_NAME,
+       gs.MARKET_ENABLE,
+       gs.IS_HOT,
+       gp.PAGE_TITLE,
+       gp.GOODS_PRICE,
+       gp.PIC_URL,
+       cgr.CAT_ID,
+       gc.PARENT_ID,
+       gc.CAT_NAME
+       From tb_ecom_goods gs
+       				 Inner Join tb_ecom_goods_product gp On gp.goods_id=gs.goods_id And gp.sku_code=gs.DEFAULT_SKU_CODE
+                     Inner Join tb_ecom_setting ts On ts.ecom_code=gs.ecom_code
+                     Left Join  tb_ecom_cat_goods_role cgr On  cgr.goods_id=gs.goods_id
+                     Left Join tb_ecom_goods_category gc On  gc.cat_id=cgr.cat_id
+       Where gs.data_stat='0'
+            AND gp.data_stat='0'
+            AND ts.data_stat='0'
+            AND gs.market_enable = '1'
+            AND gs.update_time  >SYSDATE - 1 
+      		ORDER BY gs.goods_id
+	</select>
+	
+	<select id="getGoodsSolrByGoodsId"  parameterType="String" resultType="Goods">
+	Select 
+       gs.GOODS_ID,
+       gs.GOODS_NAME,
+       gs.SPU_CODE, 
+       gs.ECOM_CODE, 
+       ts.ECOM_NAME,
+       gs.MARKET_ENABLE,
+       gs.IS_HOT,
+       gp.PAGE_TITLE,
+       gp.GOODS_PRICE,
+       gp.PIC_URL,
+       cgr.CAT_ID,
+       gc.PARENT_ID,
+       gc.CAT_NAME
+       From tb_ecom_goods gs
+       				 Inner Join tb_ecom_goods_product gp On gp.goods_id=gs.goods_id And gp.sku_code=gs.DEFAULT_SKU_CODE
+                     Inner Join tb_ecom_setting ts On ts.ecom_code=gs.ecom_code
+                     Left Join  tb_ecom_cat_goods_role cgr On  cgr.goods_id=gs.goods_id
+                     Left Join tb_ecom_goods_category gc On  gc.cat_id=cgr.cat_id
+       Where gs.data_stat='0'
+            AND gp.data_stat='0'
+            AND ts.data_stat='0'
+            <choose>
+            	<when test="goodsId != null and goodsId != '' ">
+					AND gs.goods_id =#{goodsId}
+				</when>
+				<otherwise>
+					AND gs.market_enable = '1'
+				</otherwise>
+            </choose>
+      		ORDER BY gs.goods_id
+	</select>
+	
+	<select id="getGoodsPayRateByGoodsId" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM TB_ECOM_ORDER_PRODUCT_ITEM ITEM 
+		LEFT JOIN TB_ECOM_PLATF_SHOP_ORDER PSO ON ITEM.S_ORDER_ID = PSO.S_ORDER_ID
+ 		WHERE 1=1 
+ 		AND ITEM.PRODUCT_ID IN 
+ 		（SELECT P.PRODUCT_ID FROM TB_ECOM_GOODS_PRODUCT P WHERE P.GOODS_ID = #{goodsId}） 
+ 		AND PSO.SUB_ORDER_STATUS = '14'
+	</select>
+</mapper>

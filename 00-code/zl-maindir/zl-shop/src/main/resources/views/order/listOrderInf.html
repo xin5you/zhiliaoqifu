@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/header::header" />
+	<title>订单列表</title>
+<!--通用媒体查询-->
+<body>
+<form id="myForm" method="post" th:action="@{/order/viewOrder}">
+	<input type="hidden"  id="mobile" name="mobile" th:value="${mobile}"/>
+	<input type="hidden"  id="openID" name="openID" th:value="${openID}"/>
+
+	<div class="order-details">
+		<!--1-->
+		<span th:if="${not #lists.isEmpty(orderList)}">
+			<span th:each="order,orderStat : ${orderList}" th:inline="text">
+				<div class="list1 listorder">
+					<input type="hidden"  id="id" name="id" th:value="${order.id}"/>
+					<div class="pic">
+						<img th:src="${order.ecomLogo}" />
+					</div>
+					<div class="price">
+						<div>
+							<span th:text="${order.commodityName}"></span>
+						</div>
+						<div>
+							<span th:text="${order.orderType}"></span>
+						</div>
+					</div>
+					<div class="time">
+						<div>
+							&#xFFE5;<span th:text="${order.txnAmount}"></span>
+						</div>
+						<div>
+							<span th:text="${order.createTime}"></span>
+						</div>
+					</div>
+				</div>
+			</span>
+		</span>
+	</div>
+</form>
+	<script>
+		addEventListener('load', function() {
+		})
+	</script>
+
+	<script th:src="@{/front/js/order/listOrderInf.js}"></script>
+</body>
+</html>

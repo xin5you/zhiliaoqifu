@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="main/header::header" />
+<body>
+	<header th:include="main/navbar::navbar" />
+		
+	<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>商城信息</li>
+		                    <li>严选自助注册</li>
+		                </ul>
+		            </div>
+	        	</nav>
+	
+			<div class="sidebar_inner_scroll"> 
+				<div class="formSep">
+					<p class="sepH_c"><span class="label label-default">已自助注册严选回调接口</span>（重复注册会替换已注册的接口）</p>
+					<form id="modal-form" class="form-horizontal form_validation_tip" method="post">
+					<div class="control-group">
+						<div class="col-sm-12 col-md-12">
+							<textarea name="auto_methods" id="auto_methods" cols="1" rows="4" class="form-control" 
+							style="width:95%;" th:text="${methods}" />
+						</div>
+					</div>
+					<div class="modal-footer" style="text-align: center;">
+						<button class="btn btn-primary btn-submit" type="submit">自助注册回调</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+		<script th:src="@{/ecom/js/you163/manage/regmethods.js}"></script>
+	</body>
+</html>
+

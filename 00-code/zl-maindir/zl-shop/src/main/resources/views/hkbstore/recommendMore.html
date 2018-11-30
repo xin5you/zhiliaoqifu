@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>网易严选</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<body>
+
+<!--知了企服商城首页-->
+<div class="recommend_more none_radius">
+
+    <div class="recommendation recommendation1" th:each="floor,floorStat : ${floorList}">
+
+        <!--标题-->
+        <div class="title">
+            <p class="title_text"><span th:text="${floor.title}"></span></p>
+        </div>
+
+
+        <!--第一行-->
+        <div class="goods_list list1">
+           <a class="list_detail" th:href="@{/ecom/goods/detail(goodsId=${goods.goodsId})}" th:each="goods,goodsStat : ${floor.goods}">
+                <div class="pic">
+                    <img class="banner_pic" src="" th:attr="data-imgurl=${goods.picUrl}" />
+                </div>
+                <div class="goods_title"><span th:text="${goods.goodsName}"></span></div>
+                <div class="price">¥<span th:text="${goods.goodsPrice}"></span></div>
+            </a>
+		</div>
+    </div>
+</div>
+
+<script>
+//图片懒加载
+window.onload=function() {
+
+    document.getElementsByTagName('body')[0].className = 'lazy_loading_img';
+
+    loadingImg.lazyLoading();
+
+}
+</script>
+</body>
+</html>

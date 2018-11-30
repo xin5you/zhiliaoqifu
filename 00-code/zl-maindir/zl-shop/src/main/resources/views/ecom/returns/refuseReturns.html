@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="main/hkbstore/header::header" />
+<title>申请售后</title>
+<link th:href="@{/ecomfront/css/hkb_store.min.css}" rel="stylesheet"/>
+<link th:href="@{/ecomfront/css/main.css}" rel="stylesheet"/>
+<body>
+
+<div class="djs">
+    <div class="wen">
+        <p>商家拒绝退货</p>
+        <span></span>
+    </div>
+
+    <img th:src="@{/ecomfront/images/pics/success.png}" />
+
+</div>
+<div class="logistics_address logistics_address1">
+    <div class="take_address">
+        <div class="address_name1 address_name ">
+            <div class=" left">退货说明：</div>
+            <input name="txt" placeholder="商品缺少" class="shxx" />
+        </div>
+
+    </div>
+</div>
+<!--网易严选订单列表-->
+<div class="order_details ">
+    <div class=" order_detail details_list order_detail2">
+
+        <div class="order_list order_list1">
+            <div class="list_detail list2">
+
+                <h3>退货商品</h3>
+                <div>
+                    <a class="order_goods order_goods2" th:href="@{/ecom/goods/detail(goodsId=${rerurnsOrder.goodsId})}">
+                        <div class="goods_pic">
+                            <img class="store_logo" th:src="${rerurnsOrder.picUrl}" />
+                        </div>
+                        <div class="goods_info">
+                            <div class="goods_name"><span th:text="${rerurnsOrder.productName}"></span></div>
+                            <div class="goods_sku">
+                                <div class="sku_info"></div>
+                                <div class="number">x<span th:text="${rerurnsOrder.productNum}"></span></div>
+                            </div>
+                            <div class="goods_price">¥<span th:text="${rerurnsOrder.productPrice}"></span></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--子订单编号-->
+<div class="details_order_number details_order_number1">
+
+    <div class="order_number">
+        <p>退款原因：</p>
+        <p><span th:text="${rerurnsOrder.retType}"></span></p>
+    </div>
+    <div class="order_number">
+        <p>退款金额：</p>
+        <p>￥<span th:text="${rerurnsOrder.resv1}"></span></p>
+    </div>
+    <div class="order_number">
+        <p>申请时间：</p>
+        <p> <span th:text="${rerurnsOrder.addTime}"></span></p>
+    </div>
+    <div class="order_number">
+        <p>申请编号：</p>
+		<p> <span th:text="${rerurnsOrder.returnsId}"></span></p>
+    </div>
+</div>
+<!--底部按钮-->
+<!--<div class="affirm_blank"></div>-->
+<!--<div class="order_detail_btn">-->
+    <!--<a class="cancle_order" href="">投诉商家</a>-->
+    <!--<a class="operation_btn goto_pay1" href="">客服咨询</a>-->
+<!--</div>-->
+
+
+<script th:src="@{/ecomfront/js/fastclick.min.min.js}" ></script>
+<script th:src="@{/ecomfront/js/hkb_store.min.js}"></script>
+<script>
+
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>我的</title>
+<head th:include="main/hkbstore/header::header" />
+</head>
+<body>
+
+
+<!--知了企服商城首页-->
+
+
+<!--我的列表-->
+<div class="hkb_mine">
+
+
+
+<!--我的信息-->
+    <div class="mine_personal">
+
+        <div class="personal_info">
+        	<img class="circle" th:src="${fansInfo.headimgurl}" />
+            <div class="info">
+                <p class="name"><span th:text="${fansInfo.nicknameStr}"></span></p>
+                <p class="phone"><span th:text="${personInf.mobilePhoneNo}"></span></p>
+            </div>
+        </div>
+
+<!--         <a class="password_reset list" th:href="@{http://hkb.tao-lue.com/customer/user/userSettings.html}"> -->
+<!--             <div class="left"> -->
+<!--                 <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_change_password.png}" /> -->
+<!--                 <p>密码重置</p> -->
+<!--             </div> -->
+<!--             <div class="right"> -->
+<!--                 <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" /> -->
+<!--             </div> -->
+<!--         </a> -->
+    </div>
+
+
+<!--列表-->
+    <div class="mine_list mine_personal">
+        <a class="list">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_welfare_money.png}" />
+                <p>知了企服余额</p>
+            </div>
+            <div class="right">
+                <p><span th:text="${userAccInfo.accBal}"></span></p>
+            </div>
+        </a>
+		<a class="list" th:if="${(#lists.isEmpty(blackInf) and money>0) or (#lists.isEmpty(blackInf) and count>0)}"  th:href="${hkb_h5_url+'/welfareMart/welfareCardBagList.html'}">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_my_card_bag.png}" />
+                <p>我的卡券</p>
+            </div>
+            <div class="right">
+                <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" />
+            </div>
+        </a>
+        <a class="list" th:if="${(#lists.isEmpty(blackInf) and money>0) or (#lists.isEmpty(blackInf) and count>0)}" th:href="${hkb_h5_url+'/welfareMart/toBankCardList.html'}">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_my_bank_card.png}" />
+                <p>我的银行卡</p>
+            </div>
+            <div class="right">
+                <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" />
+            </div>
+        </a>
+        
+    </div>
+    <div class="mine_list mine_personal">
+        <a class="list" th:href="@{/goods/platfOrder/getPlatfOrderGoodsByMemberId(payStatus='')}">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_my_order.png}" />
+                <p>商城订单</p>
+            </div>
+            <div class="right">
+                <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" />
+            </div>
+        </a>
+
+        <!-- <a class="list" th:href="@{http://hkb.tao-lue.com/customer/card/cardList.html}">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_my_card_bag.png}" />
+                <p>我的卡包</p>
+            </div>
+            <div class="right">
+                <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" />
+            </div>
+        </a> -->
+        <a class="list" th:href="@{/member/memberAddress/getMemberAddressListByMemberId}">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_address.png}" />
+                <p>收货地址</p>
+            </div>
+            <div class="right">
+                <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" />
+            </div>
+        </a>
+
+        <a class="list" th:href="${hkb_h5_url+'/help/helpCenter.html'}">
+            <div class="left">
+                <img class="list_icon" th:src="@{/front/images/hkbstore/icons/mine_help_guide.png}" />
+                <p>帮助指引</p>
+            </div>
+            <div class="right">
+                <img class="go" th:src="@{/front/images/hkbstore/icons/the_arrow.png}" />
+            </div>
+        </a>
+    </div>
+</div>
+
+<!--推荐商品-->
+<!-- <div class="homepage_recommendation"> -->
+
+<!--     <div class="recommendation recommendation1"> -->
+
+<!--         标题 -->
+<!--         <div class="title"> -->
+<!--             <span class="line"></span> -->
+<!--             <p class="title_text">精品推荐</p> -->
+<!--             <span class="line"></span> -->
+<!--         </div> -->
+
+<!--         圆点更多 -->
+<!--         <a class="circle" href="recommend_more.html"> -->
+<!--             <span></span> -->
+<!--             <span></span> -->
+<!--             <span></span> -->
+<!--         </a> -->
+
+
+<!--         第一行 -->
+<!--         <div class="goods_list list1"> -->
+
+<!--             <a class="list_detail left" href=""> -->
+<!--                 <div class="pic"> -->
+<!--                     <img class="banner_pic" th:src="@{/front/images/hkbstore/pics/homepage_goods1.png}" /> -->
+<!--                 </div> -->
+<!--                 <div class="goods_title">谷风一木软抽面巾纸</div> -->
+<!--                 <div class="price">¥16.90</div> -->
+<!--             </a> -->
+
+<!--             <a class="list_detail center" href=""> -->
+<!--                 <div class="pic"> -->
+<!--                     <img class="banner_pic" th:src="@{/front/images/hkbstore/pics/homepage_goods2.png}" /> -->
+<!--                 </div> -->
+<!--                 <div class="goods_title">车载空气净化器净化器</div> -->
+<!--                 <div class="price">¥399.90</div> -->
+<!--             </a> -->
+
+<!--             <a class="list_detail right" href=""> -->
+<!--                 <div class="pic"> -->
+<!--                     <img class="banner_pic" th:src="@{/front/images/hkbstore/pics/homepage_goods3.png}" /> -->
+<!--                 </div> -->
+<!--                 <div class="goods_title">网易智造X3蓝牙耳机</div> -->
+<!--                 <div class="price">¥199.90</div> -->
+<!--             </a> -->
+
+<!--         </div> -->
+
+
+<!--         第二行 -->
+<!--         <div class="goods_list list2"> -->
+
+<!--             <a class="list_detail left" href=""> -->
+<!--                 <div class="pic"> -->
+<!--                     <img class="banner_pic" th:src="@{/front/images/hkbstore/pics/homepage_goods1.png}" /> -->
+<!--                 </div> -->
+<!--                 <div class="goods_title">谷风一木软抽面巾纸</div> -->
+<!--                 <div class="price">¥16.90</div> -->
+<!--             </a> -->
+
+<!--             <a class="list_detail center" href=""> -->
+<!--                 <div class="pic"> -->
+<!--                     <img class="banner_pic" th:src="@{/front/images/hkbstore/pics/homepage_goods2.png}" /> -->
+<!--                 </div> -->
+<!--                 <div class="goods_title">车载空气净化器净化器</div> -->
+<!--                 <div class="price">¥399.90</div> -->
+<!--             </a> -->
+
+<!--             <a class="list_detail right" href=""> -->
+<!--                 <div class="pic"> -->
+<!--                     <img class="banner_pic" th:src="@{/front/images/hkbstore/pics/homepage_goods3.png}" /> -->
+<!--                 </div> -->
+<!--                 <div class="goods_title">网易智造X3蓝牙耳机</div> -->
+<!--                 <div class="price">¥199.90</div> -->
+<!--             </a> -->
+
+<!--         </div> -->
+<!--     </div> -->
+
+
+<!-- </div> -->
+
+
+
+
+<!--底部导航-->
+
+<div th:include="main/hkbstore/foot::foot" />
+
+
+
+
+
+<script>
+
+</script>
+</body>
+</html>

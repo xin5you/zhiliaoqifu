@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header"/>
+	
+	<body class="error_page">
+		<div class="error_box">
+			<h1>ERROR 404/500</h1>
+			<p>您所访问的页面已被移出网站或网络异常。</p>
+			<p>
+				点击<a th:href="@{/main}" style="color: red;">首 页</a>返回首页
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				在
+				<input type="text" readonly="true" value="5" id="time" style="width: 8px; color: red; border: 0px;"/>
+				秒后自动跳转到商城首页
+			</p>
+		</div>
+	</body>
+	<script type="text/javascript">
+		 $(document).ready(function() { 
+	     	function fun(count) { 
+	        	window.setTimeout(function(){ 
+	            	count--; 
+	                if(count > 0) { 
+	                	$('#time').val(count); 
+	                    fun(count); 
+	                } else { 
+	                	location.href = Helper.getRootPath() + "/ecom/hkbstore/index"; 
+	                } 
+				}, 1000); 
+			} 
+	        fun(5); 
+	     }); 
+	 </script>
+	
+</html>

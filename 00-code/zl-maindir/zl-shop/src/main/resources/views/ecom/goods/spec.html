@@ -1,0 +1,103 @@
+<!--弹出底部-->
+<div th:fragment="spec" >
+	<input type="hidden"  th:value="0"  id="isStore" />
+	 <div class="product_prompt_buy">
+	    <div class="hkb_pop_up_main">
+	        <div class="pop_main" id="main_sku">
+	            <div class="pop_content">
+	                <!-- 主图显示-->
+	                <div class="product_details_imf">
+	                    <div class="details_imf_cost">
+	                        <div class="product_img">
+	                        <img id="product_img_small" th:src="${goods.goodsImg}" />
+	                    </div>
+	                        <div class="price">
+	                            <div class="kaben-price"><span></span></div>
+	                            <div class="productAttr-tip"></div>
+	                        </div>
+	                    </div>
+	                    <div class="pop_cancel"></div>
+	                </div>
+	                 <div id="goods-spec" style="padding-top:102px;">
+	                    <div class="spec-item"  th:each="specNames,specStat : ${specMaps}" >
+		                    <div class="sku_title" th:text="${specStat.current.key}"> </div>
+		                    <div class="sku_contain">
+		                    	<span class="span_box"  th:each="sv,specValueStat : ${specStat.current.value}" >
+                        					<a  th:attr="specid=${sv.specId},specvid=${sv.specValueId}"
+												th:class="sku_box"
+												th:alt-title="${sv.specValue}" th:text="${sv.specValue}">
+											</a>
+		                        </span>
+		                    </div>
+	        			</div>
+	                </div>
+	            </div>
+	            <div class="sku_volume_purchased">
+	                <div>数量</div>
+	                <div class="volume_btn">
+	                    <span class="reduce" onclick="myFunctionSub()">－</span>
+	                    <input type="number" pattern="[0-9]*" class="volume_input" value="1"  readonly="true" />
+	                    <span class="add" onclick="myFunctionAdd()">＋</span>
+	                </div>
+	            </div>
+	        </div>
+				  <!--立即购买-->
+			    <div class="operation_tab"  >
+			    	<div class="hkb_alignment_left">
+			            <a   th:href="@{/ecom/cart/listCarts}" class="include_left">
+			                <img th:src="@{/front/images/hkbstore/hkb_shopping/icon_shopping_11.png}" />
+			                <span class="cartnum_boom" th:text="${cartNum}" id="cartnum_boom2"></span>
+			            </a>
+			       		<input type="button" class="hkb_price addtocart-btn yellow-btn" value="加入购物车"  name="addbutton" />	
+			   		</div>
+			    		<input type="button" class="operation_btn buynow-btn" value="立即购买"  name="buyNow" />
+				</div>
+	    </div>
+	</div> 
+<script  type="text/javascript"  th:inline="javascript">
+/*<![CDATA[*/
+           
+        var a = 1;//声明变量a，赋值为0;
+        function myFunctionAdd() {
+        	var isStore=$("#isStore").val();
+			
+            if (a<=isStore) { 
+                a++;//当a的值小于10时，执行a++;
+                if (a > isStore) {
+                	jfShowTips.toastShow({'text' : '库存不足'});
+                	return false;
+                }
+	            document.getElementsByClassName("volume_input")[0].value = a;//id值为"ttxx"的元素就等于a;
+	            $("#productNum").val(a);
+            } 
+        }
+        function myFunctionSub() {
+            if (a>1) {
+                a--;
+            }
+            document.getElementsByClassName("volume_input")[0].value = a;
+            $("#productNum").val(a);
+        }
+           
+	//弹出事件
+    $(document).ready(function(){
+        //点击关闭按钮，关闭底部弹出
+        $(".serve_explain").click(function(){
+            $(".product_prompt_buy").slideToggle("slow");
+        });
+
+        //点击关闭按钮，关闭底部弹出
+        $(".pop_cancel").click(function(){
+            $(".product_prompt_buy").slideToggle("slow");
+        });
+        
+
+        
+        //sku 选择
+        jfProductDetailsIntroduce.skuBoxChange();
+        
+        Eop.Spec.init(1);
+    });
+ /*]]>*/
+	</script>
+</div>

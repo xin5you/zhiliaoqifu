@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>商品详情</title>
+	<head th:include="main/hkbstore/header::header" />
+	<script th:src="@{/ecom/goods/goods.js}"></script>
+	<script th:src="@{/ecom/goods/spec.js}"></script>
+</head>
+<body>
+
+<!--知了企服商城首页-->
+<div class="introduce_use_all">
+<form action="addProduct"  id="goodsform" method="post">
+<input type="hidden" name="productId" id="productId"  th:value="${goods.productId}" />
+<input type="hidden" name="productNum" id="productNum"  value="1"/>
+<input type="hidden"  th:value="${goods.haveSpec}" name="havespec" />
+<input type="hidden" name="action" value="addProduct" />
+    <!--主图轮播-->
+      <div class="jf_homepage_autoplay ">
+        <div class="jf_autoplay_images ">
+           <a href="javascript:void(0);" th:each="imgstr,imgstrStat : ${goodsDetail.imgStr}">
+                <div class="JD_banner_template">
+                    <div class="banner_paster">
+                         <img src="" th:attr="data-imgurl=${imgstr}" />
+                    </div>
+                </div>
+            </a>
+<!--            <a href="javascript:void(0);"> -->
+<!--                 <div class="JD_banner_template"> -->
+<!--                     <div class="banner_paster"> -->
+<!--                          <img th:src="@{/front/images/hkbstore/hkb_shopping/icon_shopping_08.jpg}" /> -->
+<!--                     </div> -->
+
+<!--                 </div> -->
+<!--             </a> -->
+<!--             <a href="javascript:void(0);"> -->
+<!--                 <div class="JD_banner_template"> -->
+<!--                     <div class="banner_paster"> -->
+<!--                          <img th:src="@{/front/images/hkbstore/hkb_shopping/icon_shopping_09.jpg}" /> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </a> -->
+        </div>
+        <div class="jf_pagination"> </div>
+    </div>
+
+    <!--价格信息-->
+    <div class="product_description">
+	    <div class="product_advantage">
+	        <div>
+	            <span class="product_price_name" th:text="${goods.goodsName}"></span>
+	            <span class="product_price_all productAttr-tip" th:text="${goods.pageTitle}" ></span>
+	        </div>
+	          <span class="product_price"  >￥<span class="kaben-price" th:text="${goods.goodsPrice}"></span></span>
+	    </div>
+	</div>
+
+
+    <!--规格-->
+    <div th:if="${goods.haveSpec=='1'}"  class="product_serve">
+	    <div class="serve_explain">
+	        <span class="explain_name">规格数量选择</span>
+	        <a href="">
+	        	<img th:src="@{/front/images/hkbstore/hkb_shopping/icon_shopping_03.png}" />
+	        </a>
+	    </div>
+	</div>
+
+    <!-- 向下滑动 -->
+    <div class="product_images_nav">
+        <div class="slide_down">详情页</div>
+    </div>
+    
+    <div class="product_images_description" th:utext="${goodsDetail.goodsDetail}"></div>
+
+    <!--图文详情-->
+<!--     <div class="product_images_description"> -->
+<!--         <img th:src="@{/front/images/hkbstore/hkb_shopping/icon_shopping_08.jpg}" data-src="" class="loading_img" /> -->
+<!--     </div> -->
+
+    <!--规格参数-->
+    <div class="product_images_parameter">
+        <div class="parameter_title">规格参数</div>
+        <div class="parameter_table">
+            <table border="1" cellspacing="0" cellpadding="0" bordercolor="#ddd">
+                <tr th:each="attr,attrStat : ${goodsDetail.attrList}">
+                    <td><span th:text="${attr.attrName}"></span></td>
+                    <td><span th:text="${attr.attrValue}"></span></td>
+                </tr>
+            </table>
+            </div>
+    </div>
+    
+  
+	  <!--立即购买-->
+	 <div class="operation_box"></div>
+    <div class="operation_tab"  >
+    	<div class="hkb_alignment_left">
+            <a   th:href="@{/ecom/cart/listCarts}" class="include_left">
+                <img th:src="@{/front/images/hkbstore/hkb_shopping/icon_shopping_11.png}" />
+                  <span class="cartnum_boom" th:text="${cartNum}"  id="cartnum_boom1"></span>
+            </a>
+       		 <input type="button" class="hkb_price addtocart-btn yellow-btn" value="加入购物车"  id="addbuttonMain" name="addbutton"   />	
+   		</div>
+    		<input type="button" class="operation_btn buynow-btn" value="立即购买"  id="buyNowMain" name="buyNow" />
+	</div>
+    
+    <!--弹出规格spec.html-->
+	<div th:if="${goods.haveSpec=='1'}"  th:include="ecom/goods/spec::spec" />
+	
+	</form>
+</div>
+<!--预加载效果-->
+<div class="loading_page">
+    <div class="show_loading">
+        <main>
+            <div class="loader">
+                <div class="loader-inner line-scale">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </main>
+        <p><span id = "showMsg"></span></p>
+    </div>
+</div>
+<script  type="text/javascript"  th:inline="javascript">
+/*<![CDATA[*/
+	var Products=[[${productList}]];
+	
+    //轮播图
+    jfAutoPlay.jfCarouselInit();
+    $("#showMsg").val("正在加载");
+  //显示加载中
+	loadingChange.showLoading();
+  //图片懒加载
+    window.onload=function() {
+
+        document.getElementsByTagName('body')[0].className = 'lazy_loading_img';
+
+        loadingImg.lazyLoading();
+        loadingChange.hideLoading();
+
+    }
+    /*]]>*/
+</script>
+</body>
+</html>
