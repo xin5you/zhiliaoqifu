@@ -42,7 +42,7 @@ public class BaseEntity implements Serializable {
 	/**
 	 * 创建时间 格式:20181129163111000
 	 */
-	private String createTime;
+	private Long createTime;
 	
 	/**
 	 * 修改人
@@ -52,7 +52,7 @@ public class BaseEntity implements Serializable {
 	/**
 	 * 修改时间 格式:20181129163111000
 	 */
-	private String updateTime;
+	private Long updateTime;
 
 	/**
 	 * 乐观锁版本号
@@ -83,11 +83,11 @@ public class BaseEntity implements Serializable {
 		this.createUser = createUser;
 	}
 
-	public String getCreateTime() {
+	public Long getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Long createTime) {
 		this.createTime = createTime;
 	}
 
@@ -99,11 +99,11 @@ public class BaseEntity implements Serializable {
 		this.updateUser = updateUser;
 	}
 
-	public String getUpdateTime() {
+	public Long getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(String updateTime) {
+	public void setUpdateTime(Long updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -114,5 +114,5 @@ public class BaseEntity implements Serializable {
 	public void setLockVersion(Integer lockVersion) {
 		this.lockVersion = lockVersion;
 	}
-
+	
 }
