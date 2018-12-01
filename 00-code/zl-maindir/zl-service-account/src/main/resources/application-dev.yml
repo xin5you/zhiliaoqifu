@@ -4,7 +4,7 @@ server:
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
-  configLocations: classpath:conf/mybatis-config.xml
+  config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-account.xml
 

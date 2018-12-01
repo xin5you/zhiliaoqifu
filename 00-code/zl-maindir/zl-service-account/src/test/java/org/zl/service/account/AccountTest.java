@@ -1,15 +1,16 @@
 package org.zl.service.account;
 
 
+import java.util.List;
 import java.util.UUID;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.AccountApp;
 import com.ebeijia.zl.facade.user.vo.UserInf;
@@ -26,15 +27,19 @@ public class AccountTest {
     public void getUser(){
     	UserInf user=new UserInf();
     	user.setUserId(UUID.randomUUID().toString());
-    	user.setDataStat("0");
-    	user.setCreateUser("2");
+    	user.setDataStat("1");
+    	user.setCreateUser("123");
     	user.setCreateTime(System.currentTimeMillis());
     	user.setLockVersion(1);
+    	userInfService.saveOrUpdate(user);
     	
-    	
-//    	QueryWrapper<UserInf> query=new QueryWrapper(user);
-//    	UserInf result = userInfService.getOne(query);
-//    	System.out.println(result);
-    	userInfService.save(user);
+    	//条件查询 按顺序执行
+//    	QueryWrapper<UserInf> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("user_name", "3");
+//        queryWrapper.eq("data_stat", "1");
+//        UserInf result = userInfService.getOne(queryWrapper);
+//    		System.out.println(result);
+
+
     }
 }

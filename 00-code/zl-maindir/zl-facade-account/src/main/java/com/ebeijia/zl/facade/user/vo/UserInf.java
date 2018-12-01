@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import lombok.Data;
@@ -42,10 +43,10 @@ public class UserInf extends Model<UserInf> {
     private String userName;
  
     /**
-     * 100：企业员工账户
-            200：企业账户
-            300：供应商账户
-            400：分销商账户
+     * 		100：企业员工账户
+     *      200：企业账户
+     *      300：供应商账户
+     *      400：分销商账户
      */
     @TableField("user_type")
     private String userType;
@@ -54,7 +55,7 @@ public class UserInf extends Model<UserInf> {
      * 密码
      */
     @TableField("user_passwd")
-    private String userPasswd;
+    private  String userPasswd;
  
     /**
      * 产品号
@@ -101,6 +102,7 @@ public class UserInf extends Model<UserInf> {
     /**
      * 乐观锁版本
      */
+    @Version
     @TableField("lock_version")
     private Integer lockVersion;
 
