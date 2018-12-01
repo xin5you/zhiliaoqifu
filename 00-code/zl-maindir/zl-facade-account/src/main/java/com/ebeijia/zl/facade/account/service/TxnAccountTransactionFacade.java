@@ -1,4 +1,6 @@
-package com.cn.thinkx.ebj.facade.account.service;
+package com.ebeijia.zl.facade.account.service;
+
+import java.util.List;
 
 /**
  * 
@@ -50,7 +52,7 @@ public interface TxnAccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	void executeRecharge() throws Exception;
+	void executeRecharge(List list) throws Exception;
 	
 	/**
 	 * 

@@ -34,7 +34,7 @@ public interface UserFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	UserInf getUserInfByUserId(String userId);
+//	UserInf getUserInfByUserId(String userId);
 	
 	/**
 	 * 
@@ -54,7 +54,7 @@ public interface UserFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	UserInf getUserInfByExternalId(String externalId,String channel);
+//	UserInf getUserInfByExternalId(String externalId,String channel);
 	
 	
 	/**
@@ -63,7 +63,7 @@ public interface UserFacade {
 	 * @param channel 渠道标识
 	 * @return
 	 */
-	PersonInf getPersonInfByPhoneNo(String phoneNo,String channel);
+//	PersonInf getPersonInfByPhoneNo(String phoneNo,String channel);
 	
 	
 	/**
@@ -72,5 +72,5 @@ public interface UserFacade {
 	 * @param userName
 	 * @return
 	 */
-	UserInf getUserInfByPhoneNo(String phoneNo,String channel);
+//	UserInf getUserInfByPhoneNo(String phoneNo,String channel);
 }

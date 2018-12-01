@@ -1,6 +1,6 @@
-package com.cn.thinkx.ebj.facade.account.service;
+package com.ebeijia.zl.facade.account.service;
 
-import com.cn.thinkx.ebj.facade.account.req.BaseAccountReq;
+import com.ebeijia.zl.facade.account.req.BaseAccountReq;
 
 /**
  * 

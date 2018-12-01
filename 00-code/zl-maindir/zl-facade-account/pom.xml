@@ -7,20 +7,29 @@
     <artifactId>zl-maindir</artifactId>
     <version>1.0.0.RELEASE</version>
   </parent>
-  <groupId>com.ebeijia</groupId>
   <artifactId>zl-facade-account</artifactId>
-  <version>1.0.0.RELEASE</version>
   <name>zl-facade-account</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+      <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-common-utils</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
+		<dependency>
+		    <groupId>com.baomidou</groupId>
+		    <artifactId>mybatis-plus</artifactId>
+		     <version>${mybatis.plus.version}</version>
+		</dependency>
+		
+		 <dependency>
+		       <groupId>org.projectlombok</groupId>
+		       <artifactId>lombok</artifactId>
+		       <version>${lombok.version}</version>
+		   </dependency>
   </dependencies>
 </project>

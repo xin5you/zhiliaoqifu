@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ebeijia.zl.common.core.mapper.BaseDao;
 import com.ebeijia.zl.common.core.service.BaseService;
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 
 @Transactional
