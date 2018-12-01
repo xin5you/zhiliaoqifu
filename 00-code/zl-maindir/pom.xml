@@ -74,6 +74,7 @@
     <module>zl-common-core</module>
     <module>zl-common-utils</module>
     <module>zl-facade-account</module>
+    <module>zl-service-account</module>
   </modules>
 
     <build>
