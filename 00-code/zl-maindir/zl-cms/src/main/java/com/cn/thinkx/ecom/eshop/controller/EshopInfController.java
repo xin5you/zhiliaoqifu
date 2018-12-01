@@ -35,7 +35,7 @@ import com.github.pagehelper.PageInfo;
 @RequestMapping(value = "eshop")
 public class EshopInfController {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private final  Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private EshopInfService eshopInfService;
