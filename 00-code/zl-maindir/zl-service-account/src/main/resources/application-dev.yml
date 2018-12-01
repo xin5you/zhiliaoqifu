@@ -1,0 +1,17 @@
+server:
+  port: 10201
+  contextPath: /account
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  configLocations: classpath:conf/mybatis-config.xml
+logging:
+  config: classpath:conf/logback-account.xml
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.2.110:3306/zldb_test
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
