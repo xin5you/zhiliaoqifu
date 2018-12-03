@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * 账户交易日志
  *
  * @User zhuqi
- * @Date 2018-11-30
+ * @Date 2018-12-03
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -77,7 +77,7 @@ public class AccountLog extends Model<AccountLog> {
      * 交易渠道
      */
     @TableField("trans_chnl")
-    private BigDecimal transChnl;
+    private String transChnl;
  
     /**
      * 账务处理金额

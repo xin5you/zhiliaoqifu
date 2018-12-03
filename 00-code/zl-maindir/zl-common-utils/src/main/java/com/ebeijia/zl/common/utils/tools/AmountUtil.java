@@ -93,9 +93,7 @@ public abstract class AmountUtil {
 	 * @param b
 	 * @return a==b 返回true, a!=b 返回false
 	 */
-	public static boolean equal(double a, double b) {
-		BigDecimal v1 = BigDecimal.valueOf(a);
-		BigDecimal v2 = BigDecimal.valueOf(b);
+	public static boolean equal(BigDecimal v1, BigDecimal v2) {
 		if (v1.compareTo(v2) == 0) {
 			return true;
 		}
@@ -109,9 +107,8 @@ public abstract class AmountUtil {
 	 * @param b
 	 * @return a&gt;=b 返回true, a&lt;b 返回false
 	 */
-	public static boolean greaterThanOrEqualTo(double a, double b) {
-		BigDecimal v1 = BigDecimal.valueOf(a);
-		BigDecimal v2 = BigDecimal.valueOf(b);
+	public static boolean greaterThanOrEqualTo(BigDecimal v1, BigDecimal v2) {
+
 		if (v1.compareTo(v2) >= 0) {
 			return true;
 		}

@@ -2,4 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.service.user.mapper.UserInfMapper">
 
+
+
+	<select id="getUserInfByExternalId" parameterType="String" resultType="UserInf">
+		select
+			m.user_id,
+			m.user_name,
+			m.user_type,
+			m.product_code,
+			m.data_stat,
+			m.remarks,
+			m.create_user,
+			m.update_user,
+			m.create_time,
+			m.update_time,
+			m.lock_version,
+			c.external_id 
+		from
+			tb_user_inf m,
+			tb_channel_user_inf c
+		where m.user_id=c.user_id
+			and m.data_stat='0'
+			and c.data_stat='0'
+			and c.channel_code=#{channel}
+			and c.external_id=#{externalId}
+	</select>
+	
+	<select id="getUserInfByPhoneNo" parameterType="java.lang.String" resultType="userInf">
+		select
+			m.user_id,
+			m.user_name,
+			m.user_type,
+			m.product_code,
+			m.data_stat,
+			m.remarks,
+			m.create_user,
+			m.create_time,
+			m.lock_version
+		from
+			tb_user_inf m,
+			tb_person_inf p,
+			tb_channel_user_inf c
+		where m.data_stat='0'
+			and c.data_stat='0'
+			and p.data_stat='0'
+			and m.user_id=p.user_id
+			and m.user_id=c.user_id
+			and c.channel_code=#{channel}
+			and p.mobile_phone_no=#{phoneNo}
+	</select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.ebeijia.zl.common.utils.req;
 
+import java.util.Set;
+
 /**
  * 
 * 
@@ -35,11 +37,10 @@ public class BaseTxnReq implements java.io.Serializable {
 	 */
 	private String userId;
 	
-	
 	/**
 	 * 专用账户类型id
 	 */
-	private String bId;
+	private Set<String> bIds;
 	
 	
 	/**
@@ -50,6 +51,11 @@ public class BaseTxnReq implements java.io.Serializable {
 	 */
 	
 	private String userType;
+	
+	/**
+	 * 渠道請求訂單號
+	 */
+	private String dmsRelatedKey;
 
 
 	public String getTransId() {
@@ -80,15 +86,15 @@ public class BaseTxnReq implements java.io.Serializable {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	
 
-
-	public String getbId() {
-		return bId;
+	public Set<String> getbIds() {
+		return bIds;
 	}
 
 
-	public void setbId(String bId) {
-		this.bId = bId;
+	public void setbIds(Set<String> bIds) {
+		this.bIds = bIds;
 	}
 
 
@@ -101,4 +107,13 @@ public class BaseTxnReq implements java.io.Serializable {
 		this.userType = userType;
 	}
 
+
+	public String getDmsRelatedKey() {
+		return dmsRelatedKey;
+	}
+
+
+	public void setDmsRelatedKey(String dmsRelatedKey) {
+		this.dmsRelatedKey = dmsRelatedKey;
+	}
 }

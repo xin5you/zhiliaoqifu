@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * 用户账户信息
  *
  * @User zhuqi
- * @Date 2018-11-30
+ * @Date 2018-12-03
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -169,4 +169,6 @@ public class AccountInf extends Model<AccountInf> {
     protected Serializable pkVal() { 
         return this.accountNo;
     }
+    
+
 }

@@ -1,6 +1,6 @@
 package com.ebeijia.zl.facade.account.service;
 
-import com.ebeijia.zl.facade.account.req.BaseAccountReq;
+import com.ebeijia.zl.facade.account.req.OpenAccountReq;
 
 /**
  * 
@@ -38,7 +38,7 @@ public interface TxnAccountInfFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	String createAccount(BaseAccountReq req) throws Exception;
+	String createAccount(OpenAccountReq req) throws Exception;
 	
 
 	
@@ -60,6 +60,6 @@ public interface TxnAccountInfFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	String changeAccountStatus(BaseAccountReq req)throws Exception;
+	String changeAccountStatus(OpenAccountReq req)throws Exception;
 
 }

@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * itf接口平台流水表
  *
  * @User zhuqi
- * @Date 2018-11-30
+ * @Date 2018-12-03
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -99,20 +99,20 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     /**
      * 主账号
      */
-    @TableField("pri_acct_no")
-    private String priAcctNo;
+    @TableField("pri_b_id")
+    private String priBId;
  
     /**
      * 卡号
      */
-    @TableField("card_no")
-    private String cardNo;
+    @TableField("user_type")
+    private String userType;
  
     /**
      * 用户名
      */
-    @TableField("user_inf_user_name")
-    private String userInfUserName;
+    @TableField("user_id")
+    private String userId;
  
     /**
      * 产品号
@@ -159,14 +159,14 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     /**
      * 转入账户
      */
-    @TableField("tfr_in_acct_no")
-    private String tfrInAcctNo;
+    @TableField("tfr_in_user_id")
+    private String tfrInUserId;
  
     /**
      * 转出账户
      */
-    @TableField("tfr_out_acct_no")
-    private String tfrOutAcctNo;
+    @TableField("tfr_out_user_id")
+    private String tfrOutUserId;
  
     /**
      * 附加信息

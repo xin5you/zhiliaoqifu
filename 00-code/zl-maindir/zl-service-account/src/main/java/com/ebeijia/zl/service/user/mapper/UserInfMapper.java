@@ -1,6 +1,7 @@
 package com.ebeijia.zl.service.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.facade.user.vo.UserInf;
@@ -15,4 +16,29 @@ import com.ebeijia.zl.facade.user.vo.UserInf;
 @Mapper
 public interface UserInfMapper extends BaseMapper<UserInf> {
 
+	/**
+	 * 根据手机号查找用户信息 适用于用户注册
+	 * @param phoneNo 适用于用户注册
+	 * @param userName
+	 * @return
+	 */
+	UserInf getUserInfByPhoneNo(@Param("phoneNo") String phoneNo, @Param("channel") String channel);
+	
+	/**
+	 * 
+	* @Function: UserInfMapper.java
+	* @Description: 外部渠道号查询用户信息
+	*
+	* @param:externalId
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月3日 上午9:29:14 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月3日     zhuqi           v1.0.0
+	 */
+	UserInf getUserInfByExternalId (@Param("externalId") String externalId, @Param("channel") String channel);
 }

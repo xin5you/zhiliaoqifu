@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
  * 账户交易流水
  *
  * @User zhuqi
- * @Date 2018-11-30
+ * @Date 2018-12-03
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -36,12 +36,6 @@ public class TransLog extends Model<TransLog> {
      */
     @TableField("itf_primary_key")
     private String itfPrimaryKey;
- 
-    /**
-     * 清算日期
-     */
-    @TableField("settle_date")
-    private String settleDate;
  
     /**
      * 原交易流水号
@@ -68,10 +62,10 @@ public class TransLog extends Model<TransLog> {
     private String transId;
  
     /**
-     * 交易状态
+     * 交易渠道
      */
-    @TableField("trans_st")
-    private String transSt;
+    @TableField("trans_chnl")
+    private String transChnl;
  
     /**
      * 终端号
@@ -98,30 +92,22 @@ public class TransLog extends Model<TransLog> {
     private String mchntCode;
  
     /**
-     * 表示交易结果:
-            00:成功
-            其他失败
-     */
-    @TableField("resp_code")
-    private String respCode;
- 
-    /**
      * 主账号
      */
-    @TableField("pri_acct_no")
-    private String priAcctNo;
+    @TableField("pri_b_id")
+    private String priBId;
  
     /**
      * 卡号
      */
-    @TableField("card_no")
-    private String cardNo;
+    @TableField("user_type")
+    private String userType;
  
     /**
      * 用户名
      */
-    @TableField("user_inf_user_name")
-    private String userInfUserName;
+    @TableField("user_id")
+    private String userId;
  
     /**
      * 产品号
@@ -148,46 +134,27 @@ public class TransLog extends Model<TransLog> {
     private String transCurrCd;
  
     /**
-     * 卡性质
+     * A 账户加
+            D 账户减
+            O 开户操作
+            
      */
     @TableField("card_attr")
     private String cardAttr;
- 
-    /**
-     * 交易渠道
-     */
-    @TableField("trans_chnl")
-    private String transChnl;
- 
-    /**
-     * 手续费
-     */
-    @TableField("trans_fee")
-    private BigDecimal transFee;
- 
-    /**
-     * 手续费类型
-     */
-    @TableField("trans_fee_type")
-    private String transFeeType;
- 
-    /**
-     * 转入账户
-     */
-    @TableField("tfr_in_acct_no")
-    private String tfrInAcctNo;
- 
-    /**
-     * 转出账户
-     */
-    @TableField("tfr_out_acct_no")
-    private String tfrOutAcctNo;
  
     /**
      * 附加信息
      */
     @TableField("additional_info")
     private String additionalInfo;
+ 
+    /**
+     * 表示交易结果:
+            00:成功
+            其他失败
+     */
+    @TableField("resp_code")
+    private String respCode;
  
     /**
      * 数据状态
@@ -232,6 +199,11 @@ public class TransLog extends Model<TransLog> {
     @TableField("lock_version")
     private Integer lockVersion;
 
+    /****业务代码***/
+    /**
+     * 执行顺序
+     */
+    private Integer order;
 
     @Override
     protected Serializable pkVal() { 

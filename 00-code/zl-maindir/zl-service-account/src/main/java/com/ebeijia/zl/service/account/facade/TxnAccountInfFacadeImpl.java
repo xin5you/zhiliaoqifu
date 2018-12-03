@@ -1,7 +1,10 @@
 package com.ebeijia.zl.service.account.facade;
 
-import com.ebeijia.zl.facade.account.req.BaseAccountReq;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ebeijia.zl.facade.account.req.OpenAccountReq;
 import com.ebeijia.zl.facade.account.service.TxnAccountInfFacade;
+import com.ebeijia.zl.service.account.service.ITransLogService;
 
 
 /**
@@ -21,9 +24,11 @@ import com.ebeijia.zl.facade.account.service.TxnAccountInfFacade;
  */
 public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 
+	@Autowired
+	private ITransLogService transLogService;
 	
 	/**
-	 * 
+	* 
 	* @Function: TxnAccountInfServiceImpl.java
 	* @Description: 创建账户
 	*
@@ -38,7 +43,7 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	public String createAccount(BaseAccountReq req) throws Exception {
+	public String createAccount(OpenAccountReq req) throws Exception {
 		// TODO 判断用户是否存在
 		// TODO 判断企业是否存在
 		// TODO 企业员工绑定企业
@@ -47,7 +52,7 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 	}
 
 	
-	public String changeAccountStatus(BaseAccountReq req) throws Exception {
+	public String changeAccountStatus(OpenAccountReq req) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

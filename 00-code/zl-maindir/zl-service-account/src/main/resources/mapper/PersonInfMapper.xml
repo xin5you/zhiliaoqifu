@@ -2,4 +2,69 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.service.user.mapper.PersonInfMapper">
 
+
+	<select id="getPersonInfByExternalId" parameterType="String" resultType="PersonInf">
+		select
+			m.personal_id,
+			m.user_id,
+			m.personal_name,
+			m.personal_card_type,
+			m.personal_card_no,
+			m.sex,
+			m.birthday,
+			m.native_place,
+			m.mobile_phone_no,
+			m.email,
+			m.marriage_stat,
+			m.home_address,
+			m.company_address,
+			m.trans_habit,
+			m.remarks
+		from tb_person_inf m,
+			tb_user_inf t,
+			tb_channel_user_inf c
+		where m.user_id=t.user_id
+			and c.user_id=t.user_id
+			and m.data_stat = '0'
+			and c.data_stat = '0'
+			and t.data_stat = '0'
+			and c.external_id=#{externalId}
+			and c.channel_code=#{channel}
+	</select>
+	
+	
+	<select id="getPersonInfByPhoneNo" parameterType="java.lang.String" resultType="PersonInf">
+		select
+			m.personal_id,
+			m.user_id,
+			m.personal_name,
+			m.personal_card_type,
+			m.personal_card_no,
+			m.sex,
+			m.birthday,
+			m.native_place,
+			m.mobile_phone_no,
+			m.email,
+			m.marriage_stat,
+			m.home_address,
+			m.company_address,
+			m.trans_habit,
+			m.remarks,
+			m.create_user,
+			m.update_user,
+			m.create_time,
+			m.update_time,
+			m.lock_version
+		from tb_person_inf m,
+			tb_user_inf ui,
+			tb_channel_user_inf c
+		where ui.data_stat='0'
+			and c.data_stat='0'
+			and m.data_stat='0'
+			and m.user_id=ui.user_id
+			and ui.user_id=c.user_id
+			and c.channel_code=#{channel}
+			and m.mobile_phone_no=#{phoneNo}
+	</select>
+
 </mapper>

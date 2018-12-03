@@ -1,4 +1,4 @@
-package com.ebeijia.zl.service.account.service;
+package com.ebeijia.zl.service.account.biz;
 
 /**
  * 
