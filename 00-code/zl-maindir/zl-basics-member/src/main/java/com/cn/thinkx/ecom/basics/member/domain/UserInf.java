@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.basics.member.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 public class UserInf extends BaseEntity {
 	

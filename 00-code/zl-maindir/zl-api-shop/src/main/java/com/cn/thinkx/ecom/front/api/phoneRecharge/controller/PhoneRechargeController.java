@@ -1,33 +1,27 @@
 package com.cn.thinkx.ecom.front.api.phoneRecharge.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.bm001.api.constants.BMConstants;
 import com.cn.thinkx.ecom.bm001.api.service.BMOrderService;
-import com.cn.thinkx.ecom.common.constants.Constants.PhoneRechargeTransStat;
-import com.cn.thinkx.ecom.common.constants.Constants.RechargeState;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.constants.PhoneRechargeConstants;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.resp.PhoneRechargeResp;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.service.PhoneRechargeService;
 import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
 import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "ecom/recharge")
@@ -68,20 +62,20 @@ public class PhoneRechargeController {
 					prResp.setMsg(ExceptionEnum.SUCCESS_MSG);
 					OrderDetailInfo orderDetailInfo = (OrderDetailInfo) result.getObject();
 					rechargeOrde.setSupplierOrdeNo(orderDetailInfo.getBillId());
-					rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat4.getCode());
+					rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat4.getCode());
 				} else {
-					rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat3.getCode());
+					rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat3.getCode());
 				}
 			}
 			if (PHONE_RECHARGE_SWITCH.equals("1")) {
-				rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat3.getCode());
+				rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat3.getCode());
 			}
 			int i = phoneRechargeService.updatePhoneRechargeOrder(rechargeOrde);
 			if (i != 1) {
 				logger.error(" ## 修改订单表信息出错 ");
 			}
 			
-			if(PhoneRechargeTransStat.TransStat3.getCode().equals(rechargeOrde.getTransStat())){
+			if(Constants.PhoneRechargeTransStat.TransStat3.getCode().equals(rechargeOrde.getTransStat())){
 				phoneRechargeService.doPhoneRechargeRefund(rechargeOrde);
 			}
 		} catch (Exception e) {
@@ -113,11 +107,11 @@ public class PhoneRechargeController {
 		}
 		PhoneRechargeOrder rechargeOrde = new PhoneRechargeOrder();
 		rechargeOrde.setrId(outerTid);
-		if (RechargeState.RechargeState01.getCode().equals(rechargeStat)) {
-			rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat2.getCode());
+		if (Constants.RechargeState.RechargeState01.getCode().equals(rechargeStat)) {
+			rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat2.getCode());
 		}
-		if (RechargeState.RechargeState09.getCode().equals(rechargeStat)) {
-			rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat3.getCode());
+		if (Constants.RechargeState.RechargeState09.getCode().equals(rechargeStat)) {
+			rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat3.getCode());
 		}
 
 		try {
@@ -126,7 +120,7 @@ public class PhoneRechargeController {
 			if (i != 1) {
 				
 			}
-			if(PhoneRechargeTransStat.TransStat3.getCode().equals(rechargeOrde.getTransStat())){
+			if(Constants.PhoneRechargeTransStat.TransStat3.getCode().equals(rechargeOrde.getTransStat())){
 				PhoneRechargeOrder refundOrder = phoneRechargeService.getPhoneRechargeOrderByPrimaryKey(outerTid);
 				phoneRechargeService.doPhoneRechargeRefund(refundOrder);
 			}

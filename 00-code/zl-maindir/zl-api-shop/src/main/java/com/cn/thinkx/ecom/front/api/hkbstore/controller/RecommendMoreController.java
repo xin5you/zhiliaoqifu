@@ -1,9 +1,11 @@
 package com.cn.thinkx.ecom.front.api.hkbstore.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.cn.thinkx.ecom.basics.goods.domain.Floor;
+import com.cn.thinkx.ecom.basics.goods.domain.Goods;
+import com.cn.thinkx.ecom.front.api.banner.service.EcomBannerService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.basics.goods.domain.Floor;
-import com.cn.thinkx.ecom.basics.goods.domain.Goods;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.banner.service.EcomBannerService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("hkbstore/recommendMore")

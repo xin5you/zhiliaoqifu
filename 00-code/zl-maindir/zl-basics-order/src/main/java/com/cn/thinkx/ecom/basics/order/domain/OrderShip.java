@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 /**
  * 电商订单收货地址
@@ -8,7 +9,7 @@ import com.cn.thinkx.ecom.common.domain.BaseEntity;
  * @author xiaomei
  *
  */
-public class OrderShip extends BaseEntity{
+public class OrderShip extends BaseEntity {
 
 	private static final long serialVersionUID = -7655982014086839784L;
 	

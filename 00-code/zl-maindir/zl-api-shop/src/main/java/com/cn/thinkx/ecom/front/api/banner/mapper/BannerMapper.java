@@ -1,11 +1,10 @@
 package com.cn.thinkx.ecom.front.api.banner.mapper;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.front.api.banner.domain.Banner;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
-import com.cn.thinkx.ecom.front.api.banner.domain.Banner;
+import java.util.List;
 
 @Mapper
 public interface BannerMapper extends BaseDao<Banner> {

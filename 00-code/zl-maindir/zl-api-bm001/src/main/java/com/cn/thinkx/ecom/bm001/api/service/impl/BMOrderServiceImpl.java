@@ -1,21 +1,20 @@
 package com.cn.thinkx.ecom.bm001.api.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.bm001.api.req.PayBillReq;
 import com.cn.thinkx.ecom.bm001.api.service.BMOpenApiService;
 import com.cn.thinkx.ecom.bm001.api.service.BMOrderService;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.constants.Constants.RechargeState;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.qianmi.open.api.response.BmOrderCustomGetResponse;
 import com.qianmi.open.api.response.BmRechargeMobileGetItemInfoResponse;
 import com.qianmi.open.api.response.BmRechargeMobilePayBillResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("bmOrderService")
 public class BMOrderServiceImpl implements BMOrderService {
@@ -53,7 +52,7 @@ public class BMOrderServiceImpl implements BMOrderService {
 					logger.info("话费订单充值受理失败，返回参数[{}]",JSONObject.toJSONString(payBillResp));
 					return ResultsUtil.error(ExceptionEnum.ERROR_CODE, payBillResp.getMsg());
 				}
-				if (RechargeState.RechargeState09.getCode().equals(payBillResp.getOrderDetailInfo().getRechargeState())) {
+				if (Constants.RechargeState.RechargeState09.getCode().equals(payBillResp.getOrderDetailInfo().getRechargeState())) {
 					return ResultsUtil.error(ExceptionEnum.ERROR_CODE, payBillResp.getMsg());
 				}else{
 					return ResultsUtil.success(payBillResp.getOrderDetailInfo());
@@ -65,7 +64,7 @@ public class BMOrderServiceImpl implements BMOrderService {
 					if(!customOrderResp.isSuccess()){
 						return ResultsUtil.error(ExceptionEnum.ERROR_CODE, customOrderResp.getMsg());
 					}
-					if (RechargeState.RechargeState09.getCode().equals(customOrderResp.getOrderDetailInfo().getRechargeState())) {
+					if (Constants.RechargeState.RechargeState09.getCode().equals(customOrderResp.getOrderDetailInfo().getRechargeState())) {
 						return ResultsUtil.error(ExceptionEnum.ERROR_CODE, customOrderResp.getMsg());
 					} else {
 						return ResultsUtil.success(customOrderResp.getOrderDetailInfo());

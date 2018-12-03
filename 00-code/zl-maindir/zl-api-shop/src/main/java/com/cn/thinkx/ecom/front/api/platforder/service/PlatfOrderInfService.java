@@ -1,9 +1,9 @@
 package com.cn.thinkx.ecom.front.api.platforder.service;
 
-import java.util.List;
-
 import com.cn.thinkx.ecom.basics.order.domain.PlatfOrder;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+
+import java.util.List;
 
 public interface PlatfOrderInfService {
 

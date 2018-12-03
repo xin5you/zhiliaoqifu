@@ -1,16 +1,15 @@
 package com.cn.thinkx.ecom.basics.goods.service.impl;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.goods.domain.GoodsSpec;
+import com.cn.thinkx.ecom.basics.goods.mapper.GoodsSpecMapper;
+import com.cn.thinkx.ecom.basics.goods.service.GoodsSpecService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.goods.domain.GoodsSpec;
-import com.cn.thinkx.ecom.basics.goods.mapper.GoodsSpecMapper;
-import com.cn.thinkx.ecom.basics.goods.service.GoodsSpecService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import java.util.List;
 
 /**
  * 商品货品规格对照 serviceImpl

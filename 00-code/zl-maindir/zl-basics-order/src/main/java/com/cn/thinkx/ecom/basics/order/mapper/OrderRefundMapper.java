@@ -1,11 +1,10 @@
 package com.cn.thinkx.ecom.basics.order.mapper;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.order.domain.OrderRefund;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.cn.thinkx.ecom.basics.order.domain.OrderRefund;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import java.util.List;
 
 @Mapper
 public interface OrderRefundMapper extends BaseDao<OrderRefund> {

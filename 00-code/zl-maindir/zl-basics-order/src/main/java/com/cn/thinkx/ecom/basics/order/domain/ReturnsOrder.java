@@ -1,9 +1,10 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
 
 /**
  * 订单退换货申请表
@@ -279,6 +280,9 @@ public class ReturnsOrder extends BaseEntity {
 	public void setApplyReturnType(String applyReturnType) {
 		this.applyReturnType = applyReturnType;
 	}
+
+
+
 	@Override
 	public String toString() {
 		return "ReturnsOrder [returnsId=" + returnsId + ", sOrderId=" + sOrderId + ", memberId=" + memberId

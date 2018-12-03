@@ -1,14 +1,14 @@
 package com.cn.thinkx.ecom.front.api.channel.util;
 
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.cn.thinkx.ecom.common.util.StringUtil;
 
 public class EcomChannelSignUtil {
 	

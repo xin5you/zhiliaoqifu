@@ -1,16 +1,15 @@
 package com.cn.thinkx.ecom.front.api.phoneRecharge.util;
 
+import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
+import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
-import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 
 @Configuration
 public class PhoneRechargeSignUtli {

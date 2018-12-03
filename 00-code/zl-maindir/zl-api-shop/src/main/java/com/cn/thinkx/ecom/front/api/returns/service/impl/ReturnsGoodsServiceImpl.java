@@ -1,17 +1,6 @@
 package com.cn.thinkx.ecom.front.api.returns.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cn.thinkx.ecom.front.api.base.utils.JsonResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.basics.order.domain.EcomExpressConfirm;
-import com.cn.thinkx.ecom.basics.order.domain.EcomRefundAddress;
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsInf;
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsOrder;
 import com.cn.thinkx.ecom.basics.order.domain.SellbackGoodslist;
@@ -19,15 +8,14 @@ import com.cn.thinkx.ecom.basics.order.service.EcomExpressConfirmService;
 import com.cn.thinkx.ecom.basics.order.service.EcomRefundAddressService;
 import com.cn.thinkx.ecom.basics.order.service.ReturnsOrderService;
 import com.cn.thinkx.ecom.basics.order.service.SellbackGoodslistService;
-import com.cn.thinkx.ecom.common.constants.Constants.ApplyReturnState;
-import com.cn.thinkx.ecom.common.constants.Constants.GoodsEcomCodeType;
-import com.cn.thinkx.ecom.common.constants.Constants.ReturnsStatus;
-import com.cn.thinkx.ecom.common.constants.Constants.ReturnsType;
-import com.cn.thinkx.ecom.common.constants.Constants.returnType;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
 import com.cn.thinkx.ecom.front.api.returns.service.ReturnsGoodsService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("returnsGoodsService")
 public class ReturnsGoodsServiceImpl implements ReturnsGoodsService {
@@ -56,8 +44,8 @@ public class ReturnsGoodsServiceImpl implements ReturnsGoodsService {
 		try {
 			returnsOrder.setsOrderId(returns.getsOrderId());
 			returnsOrder.setMemberId(returns.getMemberId());
-			returnsOrder.setReturnsStatus(ReturnsStatus.RS0.getCode());
-			returnsOrder.setReturnsType(ReturnsType.RT1.getCode());
+			returnsOrder.setReturnsStatus(Constants.ReturnsStatus.RS0.getCode());
+			returnsOrder.setReturnsType(Constants.ReturnsType.RT1.getCode());
 			returnsOrder.setApplyReasonType(reason);
 			returnsOrder.setApplyReason(reasonDesc);
 			returnsOrder.setResv1(String.valueOf(Integer.valueOf(returns.getProductNum())*Integer.valueOf(returns.getProductPrice())));
@@ -75,7 +63,7 @@ public class ReturnsGoodsServiceImpl implements ReturnsGoodsService {
 			sellBack.setReturnsId(returnsOrder.getReturnsId());
 			sellBack.setoItemId(returns.getoItemId());
 			sellBack.setReturnNum(returns.getProductNum());
-			sellBack.setApplyReturnState(ApplyReturnState.ARS0.getCode());
+			sellBack.setApplyReturnState(Constants.ApplyReturnState.ARS0.getCode());
 			
 			int j = sellbackGoodslistService.insert(sellBack);
 			
@@ -93,7 +81,7 @@ public class ReturnsGoodsServiceImpl implements ReturnsGoodsService {
 			return returnsResult;
 		}
 		
-		if (GoodsEcomCodeType.ECOM01.getCode().equals(returns.getEcomCode())) {
+		if (Constants.GoodsEcomCodeType.ECOM01.getCode().equals(returns.getEcomCode())) {
 //			try {
 //				//售后申请人信息
 //				ApplyUserVO applyUser = new ApplyUserVO();

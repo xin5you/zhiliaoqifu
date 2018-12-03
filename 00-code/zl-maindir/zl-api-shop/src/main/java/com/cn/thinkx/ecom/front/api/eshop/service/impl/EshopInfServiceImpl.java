@@ -1,12 +1,11 @@
 package com.cn.thinkx.ecom.front.api.eshop.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
 import com.cn.thinkx.ecom.front.api.eshop.domain.EshopInf;
 import com.cn.thinkx.ecom.front.api.eshop.mapper.EshopInfMapper;
 import com.cn.thinkx.ecom.front.api.eshop.service.EshopInfService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("eshopInfService")
 public class EshopInfServiceImpl extends BaseServiceImpl<EshopInf> implements EshopInfService {

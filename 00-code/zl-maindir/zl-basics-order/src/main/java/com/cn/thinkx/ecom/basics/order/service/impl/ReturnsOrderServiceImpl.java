@@ -1,18 +1,17 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsInf;
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsOrder;
 import com.cn.thinkx.ecom.basics.order.mapper.ReturnsOrderMapper;
 import com.cn.thinkx.ecom.basics.order.service.ReturnsOrderService;
-import com.cn.thinkx.ecom.common.constants.Constants.ApplyReturnState;
-import com.cn.thinkx.ecom.common.constants.Constants.returnType;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service("returnsOrderService")
 public class ReturnsOrderServiceImpl extends BaseServiceImpl<ReturnsOrder> implements ReturnsOrderService {
@@ -54,10 +53,10 @@ public class ReturnsOrderServiceImpl extends BaseServiceImpl<ReturnsOrder> imple
 	public ReturnsOrder getReturnsOrderByItemId(ReturnsOrder returnsOrder) {
 		ReturnsOrder rOrder = returnsOrderMapper.getReturnsOrderByItemId(returnsOrder);
 		if(rOrder!=null){
-			rOrder.setRetType(returnType.findByCode(rOrder.getApplyReasonType()).getValue());
+			rOrder.setRetType(Constants.returnType.findByCode(rOrder.getApplyReasonType()).getValue());
 			rOrder.setProductPrice(NumberUtils.RMBCentToYuan(rOrder.getProductPrice()));
 			rOrder.setResv1(NumberUtils.RMBCentToYuan(rOrder.getResv1()));
-			rOrder.setApplyReturnType(ApplyReturnState.findByCode(rOrder.getApplyReturnState()).getValue());
+			rOrder.setApplyReturnType(Constants.ApplyReturnState.findByCode(rOrder.getApplyReturnState()).getValue());
 		}
 		return rOrder;
 	}

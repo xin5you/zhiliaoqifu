@@ -26,8 +26,8 @@
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common</artifactId>
-            <version>1.0</version>
+            <artifactId>zl-common-core</artifactId>
+            <version>1.0.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

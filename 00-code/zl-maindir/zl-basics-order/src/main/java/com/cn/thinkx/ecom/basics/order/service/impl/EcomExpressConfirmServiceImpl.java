@@ -1,12 +1,11 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.order.domain.EcomExpressConfirm;
 import com.cn.thinkx.ecom.basics.order.mapper.EcomExpressConfirmMapper;
 import com.cn.thinkx.ecom.basics.order.service.EcomExpressConfirmService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("ecomExpressConfirmService")
 public class EcomExpressConfirmServiceImpl extends BaseServiceImpl<EcomExpressConfirm>

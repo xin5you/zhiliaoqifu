@@ -1,19 +1,18 @@
 package com.cn.thinkx.ecom.front.api.member.service.impl;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
+import com.cn.thinkx.ecom.basics.member.service.MemberAddressService;
+import com.cn.thinkx.ecom.front.api.member.service.MemberAddressInfService;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
-import com.cn.thinkx.ecom.basics.member.service.MemberAddressService;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.member.service.MemberAddressInfService;
+import java.util.List;
 
 @Service
 public class MemberAddressServiceImpl implements MemberAddressInfService {

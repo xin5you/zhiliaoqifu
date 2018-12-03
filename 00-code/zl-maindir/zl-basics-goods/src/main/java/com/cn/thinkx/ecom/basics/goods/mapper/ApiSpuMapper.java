@@ -1,15 +1,14 @@
 package com.cn.thinkx.ecom.basics.goods.mapper;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.goods.domain.ApiSpu;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.cn.thinkx.ecom.basics.goods.domain.ApiSpu;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import java.util.List;
 
 @Mapper
-public interface ApiSpuMapper  extends BaseDao<ApiSpu>  {
+public interface ApiSpuMapper  extends BaseDao<ApiSpu> {
 	
 	ApiSpu getApiSpuBySpuCode(String spuCode);
 	/**

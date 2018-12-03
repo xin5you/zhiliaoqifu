@@ -1,20 +1,5 @@
 package com.cn.thinkx.ecom.front.api.platforder.controller;
 
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.basics.goods.domain.GoodsProduct;
 import com.cn.thinkx.ecom.basics.goods.service.GoodsProductService;
@@ -24,15 +9,6 @@ import com.cn.thinkx.ecom.basics.order.domain.OrderProductItem;
 import com.cn.thinkx.ecom.basics.order.domain.PlatfOrder;
 import com.cn.thinkx.ecom.basics.order.service.OrderProductItemService;
 import com.cn.thinkx.ecom.basics.order.service.PlatfOrderService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.constants.Constants.ChannelEcomType;
-import com.cn.thinkx.ecom.common.constants.Constants.PlatfOrderPayStat;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.DateUtil;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
-import com.cn.thinkx.ecom.common.util.SignUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.front.api.platforder.domain.OrderBack;
 import com.cn.thinkx.ecom.front.api.platforder.domain.OrderRedirect;
 import com.cn.thinkx.ecom.front.api.platforder.domain.OrderUnified;
@@ -40,6 +16,26 @@ import com.cn.thinkx.ecom.front.api.platforder.service.GoodsOrderService;
 import com.cn.thinkx.ecom.front.api.platforder.service.OrderPayService;
 import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
 import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.common.utils.tools.SignUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "goods/orderPay")
@@ -126,7 +122,7 @@ public class OrderPayController {
 			logger.error("查询会员信息出错",e);
 		}
 		OrderUnified order = new OrderUnified();
-		order.setChannel(ChannelEcomType.CEU06.getCode());
+		order.setChannel(Constants.ChannelEcomType.CEU06.getCode());
 		order.setUserId(memberInf.getUserId());
 		order.setOrderId(platf.getOrderId());
 		order.setInnerMerchantNo(innerMerchantNo);
@@ -235,7 +231,7 @@ public class OrderPayController {
 				return ResultsUtil.error(ExceptionEnum.ERROR_CODE, ExceptionEnum.ERROR_MSG);
 			}
 			order.setDmsRelatedKey(txnFlowNo);
-			order.setPayStatus(PlatfOrderPayStat.PayStat02.getCode());
+			order.setPayStatus(Constants.PlatfOrderPayStat.PayStat02.getCode());
 			order.setPayTime(DateUtil.getCurrentDateStr(DateUtil.FORMAT_YYYY_MM_DD_HH_MM_SS));
 			platfOrderService.updateByPrimaryKey(order); //修改订单支付状态
 			

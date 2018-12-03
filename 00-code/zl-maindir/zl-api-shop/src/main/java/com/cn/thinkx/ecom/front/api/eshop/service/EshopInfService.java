@@ -1,7 +1,7 @@
 package com.cn.thinkx.ecom.front.api.eshop.service;
 
-import com.cn.thinkx.ecom.common.service.BaseService;
 import com.cn.thinkx.ecom.front.api.eshop.domain.EshopInf;
+import com.ebeijia.zl.common.core.service.BaseService;
 
 public interface EshopInfService extends BaseService<EshopInf> {
 	

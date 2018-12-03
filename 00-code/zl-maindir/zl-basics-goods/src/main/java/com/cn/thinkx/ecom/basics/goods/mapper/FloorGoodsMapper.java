@@ -1,11 +1,11 @@
 package com.cn.thinkx.ecom.basics.goods.mapper;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.goods.domain.FloorGoods;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.cn.thinkx.ecom.basics.goods.domain.FloorGoods;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import java.util.List;
+
 
 @Mapper
 public interface FloorGoodsMapper extends BaseDao<FloorGoods> {

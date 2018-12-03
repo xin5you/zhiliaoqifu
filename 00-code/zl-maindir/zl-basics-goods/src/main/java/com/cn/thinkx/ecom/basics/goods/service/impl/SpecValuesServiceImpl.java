@@ -1,17 +1,15 @@
 package com.cn.thinkx.ecom.basics.goods.service.impl;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.goods.domain.SpecValues;
+import com.cn.thinkx.ecom.basics.goods.mapper.SpecValuesMapper;
+import com.cn.thinkx.ecom.basics.goods.service.SpecValuesService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.goods.domain.SpecValues;
-import com.cn.thinkx.ecom.basics.goods.domain.Specification;
-import com.cn.thinkx.ecom.basics.goods.mapper.SpecValuesMapper;
-import com.cn.thinkx.ecom.basics.goods.service.SpecValuesService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import java.util.List;
 
 @Service("specValuesService")
 public class SpecValuesServiceImpl extends BaseServiceImpl<SpecValues> implements SpecValuesService {

@@ -1,8 +1,12 @@
 package com.cn.thinkx.ecom.front.api.returns.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.cn.thinkx.ecom.basics.order.domain.*;
+import com.cn.thinkx.ecom.basics.order.service.*;
+import com.cn.thinkx.ecom.front.api.returns.service.ReturnsGoodsService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,25 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.basics.order.domain.EcomExpressConfirm;
-import com.cn.thinkx.ecom.basics.order.domain.EcomRefundAddress;
-import com.cn.thinkx.ecom.basics.order.domain.OrderProductItem;
-import com.cn.thinkx.ecom.basics.order.domain.OrderRefund;
-import com.cn.thinkx.ecom.basics.order.domain.ReturnsInf;
-import com.cn.thinkx.ecom.basics.order.domain.ReturnsOrder;
-import com.cn.thinkx.ecom.basics.order.service.EcomExpressConfirmService;
-import com.cn.thinkx.ecom.basics.order.service.EcomRefundAddressService;
-import com.cn.thinkx.ecom.basics.order.service.OrderProductItemService;
-import com.cn.thinkx.ecom.basics.order.service.OrderRefundService;
-import com.cn.thinkx.ecom.basics.order.service.ReturnsOrderService;
-import com.cn.thinkx.ecom.common.constants.Constants.ApplyReturnState;
-import com.cn.thinkx.ecom.common.constants.Constants.ConfirmReturnsStatus;
-import com.cn.thinkx.ecom.common.constants.Constants.ReturnsStatus;
-import com.cn.thinkx.ecom.common.constants.Constants.returnType;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
-import com.cn.thinkx.ecom.front.api.returns.service.ReturnsGoodsService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "ecom/returns")
@@ -68,36 +55,36 @@ public class ReturnsGoodsController {
 				mv = new ModelAndView("ecom/returns/applyForRefund");
 				OrderProductItem item = orderProductItemService.getOrderProductItemByItemId(itemId);
 				mv.addObject("item", item);
-				mv.addObject("returnTypeList", returnType.values());
+				mv.addObject("returnTypeList", Constants.returnType.values());
 			} else {
-				if (ReturnsStatus.RS0.getCode().equals(rerurnsOrder.getReturnsStatus())
-						&& ApplyReturnState.ARS0.getCode().equals(rerurnsOrder.getApplyReturnState())) {//申请中，未退货
+				if (Constants.ReturnsStatus.RS0.getCode().equals(rerurnsOrder.getReturnsStatus())
+						&& Constants.ApplyReturnState.ARS0.getCode().equals(rerurnsOrder.getApplyReturnState())) {//申请中，未退货
 					mv = new ModelAndView("redirect:/ecom/returns/waitApply");
 					mv.addObject("returnsId", rerurnsOrder.getReturnsId());
 				}
-				if (ReturnsStatus.RS2.getCode().equals(rerurnsOrder.getReturnsStatus())
-						&& ApplyReturnState.ARS1.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已同意，待发货
+				if (Constants.ReturnsStatus.RS2.getCode().equals(rerurnsOrder.getReturnsStatus())
+						&& Constants.ApplyReturnState.ARS1.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已同意，待发货
 					mv = new ModelAndView("redirect:/ecom/returns/mconsentApplication");
 					mv.addObject("returnsId", rerurnsOrder.getReturnsId());
 				}
-				if ((ReturnsStatus.RS2.getCode().equals(rerurnsOrder.getReturnsStatus()) 
-						&& ApplyReturnState.ARS2.getCode().equals(rerurnsOrder.getApplyReturnState())) 
-						|| (ReturnsStatus.RS2.getCode().equals(rerurnsOrder.getReturnsStatus()) 
-								&& ApplyReturnState.ARS3.getCode().equals(rerurnsOrder.getApplyReturnState()))) {//已同意，待收获、已同意，已收获
+				if ((Constants.ReturnsStatus.RS2.getCode().equals(rerurnsOrder.getReturnsStatus())
+						&& Constants.ApplyReturnState.ARS2.getCode().equals(rerurnsOrder.getApplyReturnState()))
+						|| (Constants.ReturnsStatus.RS2.getCode().equals(rerurnsOrder.getReturnsStatus())
+								&& Constants.ApplyReturnState.ARS3.getCode().equals(rerurnsOrder.getApplyReturnState()))) {//已同意，待收获、已同意，已收获
 					mv = new ModelAndView("redirect:/ecom/returns/waitForReceiving");
 					mv.addObject("returnsId", rerurnsOrder.getReturnsId());
 				}
-				if (ReturnsStatus.RS9.getCode().equals(rerurnsOrder.getReturnsStatus())
-						&& ApplyReturnState.ARS4.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已完成、已退款
+				if (Constants.ReturnsStatus.RS9.getCode().equals(rerurnsOrder.getReturnsStatus())
+						&& Constants.ApplyReturnState.ARS4.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已完成、已退款
 					mv = new ModelAndView("redirect:/ecom/returns/returnsSuccess");
 					mv.addObject("returnsId", rerurnsOrder.getReturnsId());
 				}
-				if (ReturnsStatus.RS4.getCode().equals(rerurnsOrder.getReturnsStatus())
-						&& ApplyReturnState.ARS5.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已取消、取消退货
+				if (Constants.ReturnsStatus.RS4.getCode().equals(rerurnsOrder.getReturnsStatus())
+						&& Constants.ApplyReturnState.ARS5.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已取消、取消退货
 					
 				}
-				if (ReturnsStatus.RS1.getCode().equals(rerurnsOrder.getReturnsStatus())
-						&& ApplyReturnState.ARS9.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已拒绝、拒绝退货
+				if (Constants.ReturnsStatus.RS1.getCode().equals(rerurnsOrder.getReturnsStatus())
+						&& Constants.ApplyReturnState.ARS9.getCode().equals(rerurnsOrder.getApplyReturnState())) {//已拒绝、拒绝退货
 					mv = new ModelAndView("redirect:/ecom/returns/refuseReturns");
 					mv.addObject("returnsId", rerurnsOrder.getReturnsId());
 				}				
@@ -198,7 +185,7 @@ public class ReturnsGoodsController {
 			confirm.setReturnsId(returnsOrder.getReturnsId());
 			confirm.setTrackingCompany(trackingCompany);
 			confirm.setTrackingNum(trackingNum);
-			confirm.setReturnsState(ConfirmReturnsStatus.RS10.getCode());
+			confirm.setReturnsState(Constants.ConfirmReturnsStatus.RS10.getCode());
 			
 			BaseResult<Object> result = returnsGoodsService.handleOfferExpress(returnsOrder, confirm);
 			

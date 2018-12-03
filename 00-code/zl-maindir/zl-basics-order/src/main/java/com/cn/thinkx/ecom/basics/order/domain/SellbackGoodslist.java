@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 /**
  * 退货商品表

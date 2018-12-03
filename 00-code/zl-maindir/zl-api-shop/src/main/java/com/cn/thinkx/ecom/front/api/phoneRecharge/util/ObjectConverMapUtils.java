@@ -1,10 +1,11 @@
 package com.cn.thinkx.ecom.front.api.phoneRecharge.util;
 
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cn.thinkx.ecom.common.util.StringUtil;
 
 /**
  * 转换成map对象工具

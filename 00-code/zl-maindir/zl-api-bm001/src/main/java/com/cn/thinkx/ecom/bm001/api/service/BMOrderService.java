@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.bm001.api.service;
 
-import com.cn.thinkx.ecom.common.domain.BaseResult;
+
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 
 public interface BMOrderService {
 
@@ -9,6 +10,6 @@ public interface BMOrderService {
 	 * @param request
 	 * @return
 	 */
-	BaseResult  handleHbkToBMPayBill(String mobileNo, String rechargeAmount, String orderId, String callBack, String accessToken);
+	BaseResult handleHbkToBMPayBill(String mobileNo, String rechargeAmount, String orderId, String callBack, String accessToken);
 	
 }

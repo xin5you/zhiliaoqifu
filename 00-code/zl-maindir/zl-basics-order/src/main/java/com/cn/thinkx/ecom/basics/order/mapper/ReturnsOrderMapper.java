@@ -1,12 +1,11 @@
 package com.cn.thinkx.ecom.basics.order.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
-
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsInf;
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsOrder;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface ReturnsOrderMapper extends BaseDao<ReturnsOrder> {

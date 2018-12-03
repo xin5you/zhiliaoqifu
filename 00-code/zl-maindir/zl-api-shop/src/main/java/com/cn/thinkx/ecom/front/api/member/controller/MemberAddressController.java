@@ -1,10 +1,12 @@
 package com.cn.thinkx.ecom.front.api.member.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
+import com.cn.thinkx.ecom.front.api.member.service.MemberAddressInfService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.member.service.MemberAddressInfService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "member/memberAddress")
@@ -63,7 +61,7 @@ public class MemberAddressController {
 	 */
 	@RequestMapping(value = "/addMemberAddress")
 	public BaseResult<Object> addMemberAddress(HttpServletRequest req, HttpServletResponse resp,
-			MemberAddress memberAddre) {
+											   MemberAddress memberAddre) {
 		String memberId = StringUtil.nullToString(req.getSession().getAttribute(Constants.FRONT_MEMBER_ID_KEY));
 		memberAddre.setMemberId(memberId);
 		String address = req.getParameter("address"); // 获取所在区域

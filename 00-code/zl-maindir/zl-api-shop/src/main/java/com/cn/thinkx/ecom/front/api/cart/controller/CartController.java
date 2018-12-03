@@ -1,13 +1,24 @@
 package com.cn.thinkx.ecom.front.api.cart.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.cn.thinkx.ecom.basics.goods.domain.Esetting;
+import com.cn.thinkx.ecom.basics.goods.domain.Goods;
+import com.cn.thinkx.ecom.basics.goods.domain.GoodsProduct;
+import com.cn.thinkx.ecom.basics.goods.service.EsettingService;
+import com.cn.thinkx.ecom.basics.goods.service.GoodsProductService;
+import com.cn.thinkx.ecom.basics.goods.service.GoodsService;
+import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
+import com.cn.thinkx.ecom.basics.order.domain.Cart;
+import com.cn.thinkx.ecom.basics.order.service.CartService;
+import com.cn.thinkx.ecom.front.api.cart.service.EcomCartService;
+import com.cn.thinkx.ecom.front.api.cart.service.PayOrderService;
+import com.cn.thinkx.ecom.front.api.member.service.MemberAddressInfService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +29,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.basics.goods.domain.Esetting;
-import com.cn.thinkx.ecom.basics.goods.domain.Goods;
-import com.cn.thinkx.ecom.basics.goods.domain.GoodsProduct;
-import com.cn.thinkx.ecom.basics.goods.service.EsettingService;
-import com.cn.thinkx.ecom.basics.goods.service.GoodsProductService;
-import com.cn.thinkx.ecom.basics.goods.service.GoodsService;
-import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
-import com.cn.thinkx.ecom.basics.order.domain.Cart;
-import com.cn.thinkx.ecom.basics.order.service.CartService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.common.util.StringUtils;
-import com.cn.thinkx.ecom.front.api.cart.service.EcomCartService;
-import com.cn.thinkx.ecom.front.api.cart.service.PayOrderService;
-import com.cn.thinkx.ecom.front.api.member.service.MemberAddressInfService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "ecom/cart")
@@ -240,7 +238,7 @@ public class CartController {
 				
 				Map<String, List<Cart>> cartsMap= carts.stream().filter(Cart -> {
 		    		//金额转换
-					Cart.setGoodsPrice(NumberUtils.RMBCentToYuan(Cart.getGoodsPrice())); 
+					Cart.setGoodsPrice(NumberUtils.RMBCentToYuan(Cart.getGoodsPrice()));
 		    		return true;
 				}).collect(Collectors.groupingBy(Cart::getEcomCode));
 				

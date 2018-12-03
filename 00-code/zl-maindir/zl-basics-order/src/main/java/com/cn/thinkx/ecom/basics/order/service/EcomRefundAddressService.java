@@ -1,7 +1,7 @@
 package com.cn.thinkx.ecom.basics.order.service;
 
 import com.cn.thinkx.ecom.basics.order.domain.EcomRefundAddress;
-import com.cn.thinkx.ecom.common.service.BaseService;
+import com.ebeijia.zl.common.core.service.BaseService;
 
 public interface EcomRefundAddressService extends BaseService<EcomRefundAddress> {
 

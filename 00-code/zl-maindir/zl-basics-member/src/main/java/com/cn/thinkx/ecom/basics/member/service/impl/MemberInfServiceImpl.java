@@ -1,13 +1,12 @@
 package com.cn.thinkx.ecom.basics.member.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
 import com.cn.thinkx.ecom.basics.member.domain.UserInf;
 import com.cn.thinkx.ecom.basics.member.mapper.MemberInfMapper;
 import com.cn.thinkx.ecom.basics.member.service.MemberInfService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("memberInfService")
 public class MemberInfServiceImpl extends BaseServiceImpl<MemberInf> implements MemberInfService {

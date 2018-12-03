@@ -1,11 +1,11 @@
 package com.cn.thinkx.ecom.basics.goods.service;
 
+import com.cn.thinkx.ecom.basics.goods.domain.FloorGoods;
+import com.ebeijia.zl.common.core.service.BaseService;
+
 import java.util.List;
 
-import com.cn.thinkx.ecom.basics.goods.domain.FloorGoods;
-import com.cn.thinkx.ecom.common.service.BaseService;
-
-public interface FloorGoodsService extends BaseService<FloorGoods>{
+public interface FloorGoodsService extends BaseService<FloorGoods> {
 
 
 	/**

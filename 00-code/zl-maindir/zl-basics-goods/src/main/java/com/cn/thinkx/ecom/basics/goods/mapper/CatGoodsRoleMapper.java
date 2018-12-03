@@ -1,10 +1,10 @@
 package com.cn.thinkx.ecom.basics.goods.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import com.cn.thinkx.ecom.basics.goods.domain.CatGoodsRole;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CatGoodsRoleMapper extends BaseDao<CatGoodsRole> {

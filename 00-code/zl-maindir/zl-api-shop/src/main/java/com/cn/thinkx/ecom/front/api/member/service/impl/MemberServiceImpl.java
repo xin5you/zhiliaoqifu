@@ -1,19 +1,18 @@
 package com.cn.thinkx.ecom.front.api.member.service.impl;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
+import com.cn.thinkx.ecom.basics.member.mapper.MemberInfMapper;
+import com.cn.thinkx.ecom.front.api.member.service.MemberService;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
-import com.cn.thinkx.ecom.basics.member.mapper.MemberInfMapper;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
-import com.cn.thinkx.ecom.front.api.member.service.MemberService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Service("memberService")
 public class MemberServiceImpl implements MemberService {

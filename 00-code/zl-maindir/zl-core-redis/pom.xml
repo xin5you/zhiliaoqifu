@@ -21,8 +21,8 @@
     <dependencies>
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common</artifactId>
-            <version>1.0</version>
+            <artifactId>zl-common-utils</artifactId>
+            <version>1.0.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

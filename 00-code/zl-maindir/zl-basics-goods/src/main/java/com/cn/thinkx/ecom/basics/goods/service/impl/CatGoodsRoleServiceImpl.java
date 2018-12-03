@@ -1,14 +1,13 @@
 package com.cn.thinkx.ecom.basics.goods.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.goods.domain.CatGoodsRole;
 import com.cn.thinkx.ecom.basics.goods.mapper.CatGoodsRoleMapper;
 import com.cn.thinkx.ecom.basics.goods.service.CatGoodsRoleService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("catGoodsRoleService")
 public class CatGoodsRoleServiceImpl extends BaseServiceImpl<CatGoodsRole> implements CatGoodsRoleService {

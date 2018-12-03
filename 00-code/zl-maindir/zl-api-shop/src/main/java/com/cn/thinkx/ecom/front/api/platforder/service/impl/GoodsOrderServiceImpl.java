@@ -1,37 +1,17 @@
 package com.cn.thinkx.ecom.front.api.platforder.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.order.domain.*;
+import com.cn.thinkx.ecom.basics.order.service.*;
 import com.cn.thinkx.ecom.front.api.base.utils.JsonResult;
+import com.cn.thinkx.ecom.front.api.platforder.service.GoodsOrderService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.cn.thinkx.ecom.basics.order.domain.ExpressPlatf;
-import com.cn.thinkx.ecom.basics.order.domain.OrderDeliveryDetailInfo;
-import com.cn.thinkx.ecom.basics.order.domain.OrderDeliveryInfo;
-import com.cn.thinkx.ecom.basics.order.domain.OrderProductItem;
-import com.cn.thinkx.ecom.basics.order.domain.PlatfOrder;
-import com.cn.thinkx.ecom.basics.order.domain.PlatfShopOrder;
-import com.cn.thinkx.ecom.basics.order.domain.ReturnsOrder;
-import com.cn.thinkx.ecom.basics.order.domain.SellbackGoodslist;
-import com.cn.thinkx.ecom.basics.order.service.ExpressPlatfService;
-import com.cn.thinkx.ecom.basics.order.service.OrderProductItemService;
-import com.cn.thinkx.ecom.basics.order.service.OrderRefundService;
-import com.cn.thinkx.ecom.basics.order.service.PlatfOrderService;
-import com.cn.thinkx.ecom.basics.order.service.PlatfShopOrderService;
-import com.cn.thinkx.ecom.basics.order.service.ReturnsOrderService;
-import com.cn.thinkx.ecom.basics.order.service.SellbackGoodslistService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.constants.Constants.GoodsEcomCodeType;
-import com.cn.thinkx.ecom.common.constants.Constants.PlatfOrderPayStat;
-import com.cn.thinkx.ecom.common.constants.ExceptionEnum.EcomOrderRefundNews;
-import com.cn.thinkx.ecom.common.util.DateUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.platforder.service.GoodsOrderService;
+import java.util.List;
 
 /**
  * 电商订单处理service
@@ -90,7 +70,7 @@ public class GoodsOrderServiceImpl implements GoodsOrderService {
 	public void createEcomGoodsOrder(PlatfOrder platfOrder) {
 
 		// 订单是否已经支付
-		if (PlatfOrderPayStat.PayStat02.getCode().equals(platfOrder.getPayStatus())) {
+		if (Constants.PlatfOrderPayStat.PayStat02.getCode().equals(platfOrder.getPayStatus())) {
 
 			// 查找所有的二级订单
 			List<PlatfShopOrder> shopOrderList = platfShopOrderService
@@ -100,7 +80,7 @@ public class GoodsOrderServiceImpl implements GoodsOrderService {
 
 				for (PlatfShopOrder platfShopOrder : shopOrderList) {
 
-					if (GoodsEcomCodeType.ECOM01.getCode().equals(platfShopOrder.getEcomCode())) {
+					if (Constants.GoodsEcomCodeType.ECOM01.getCode().equals(platfShopOrder.getEcomCode())) {
 						try {
 //							// 严选下单
 //							JsonResult jsonResult = yxOrderService.doCreateOrder(platfShopOrder);
@@ -131,7 +111,7 @@ public class GoodsOrderServiceImpl implements GoodsOrderService {
 		OrderDeliveryInfo deliveryInfo = null;
 
 		// 网易严选订单查询
-		if (platfShopOrder != null && GoodsEcomCodeType.ECOM01.getCode().equals(platfShopOrder.getEcomCode())) {
+		if (platfShopOrder != null && Constants.GoodsEcomCodeType.ECOM01.getCode().equals(platfShopOrder.getEcomCode())) {
 			deliveryInfo = new OrderDeliveryInfo();
 			deliveryInfo.setsOrderId(platfShopOrder.getsOrderId());
 			deliveryInfo.setCompany(expressPlatf.getExpressCompanyName()); // 物流公司名称

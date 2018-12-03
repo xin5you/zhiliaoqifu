@@ -1,8 +1,9 @@
 package com.cn.thinkx.ecom.basics.goods.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
 
-public class Esetting extends BaseEntity{
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
+public class Esetting extends BaseEntity {
 
 	private static final long serialVersionUID = -4262982014086839784L;
 	/**

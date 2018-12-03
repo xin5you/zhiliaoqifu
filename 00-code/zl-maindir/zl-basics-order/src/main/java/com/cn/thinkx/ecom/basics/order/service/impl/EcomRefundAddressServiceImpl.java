@@ -1,13 +1,12 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.order.domain.EcomRefundAddress;
 import com.cn.thinkx.ecom.basics.order.mapper.EcomRefundAddressMapper;
 import com.cn.thinkx.ecom.basics.order.service.EcomRefundAddressService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
-import com.cn.thinkx.ecom.common.util.StringUtil;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("ecomRefundAddressService")
 public class EcomRefundAddressServiceImpl extends BaseServiceImpl<EcomRefundAddress>

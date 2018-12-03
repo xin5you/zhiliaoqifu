@@ -1,15 +1,14 @@
 package com.cn.thinkx.ecom.front.api.banner.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.cn.thinkx.ecom.common.constants.Constants.ChannelEcomType;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
 import com.cn.thinkx.ecom.front.api.banner.domain.Banner;
 import com.cn.thinkx.ecom.front.api.banner.mapper.BannerMapper;
 import com.cn.thinkx.ecom.front.api.banner.service.BannerService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("bannerService")
 public class BannerServiceImpl extends BaseServiceImpl<Banner> implements BannerService {
@@ -23,11 +22,11 @@ public class BannerServiceImpl extends BaseServiceImpl<Banner> implements Banner
 		for (Banner b : list) {
 			String str = b.getBannerUrl();
 			if (str.indexOf("jia-fu") != -1)
-				b.setChannel(ChannelEcomType.CEU03.getCode());
+				b.setChannel(Constants.ChannelEcomType.CEU03.getCode());
 			else if (str.indexOf("jialebao") != -1)
-				b.setChannel(ChannelEcomType.CEU02.getCode());
+				b.setChannel(Constants.ChannelEcomType.CEU02.getCode());
 			else
-				b.setChannel(ChannelEcomType.CEU01.getCode());
+				b.setChannel(Constants.ChannelEcomType.CEU01.getCode());
 		}
 		return list;
 	}

@@ -1,14 +1,14 @@
 package com.cn.thinkx.ecom.basics.goods.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.goods.domain.GoodsCategory;
 import com.cn.thinkx.ecom.basics.goods.mapper.GoodsCategoryMapper;
 import com.cn.thinkx.ecom.basics.goods.service.GoodsCategoryService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service("goodsCategoryService")
 public class GoodsCategoryServiceImpl extends BaseServiceImpl<GoodsCategory> implements GoodsCategoryService {

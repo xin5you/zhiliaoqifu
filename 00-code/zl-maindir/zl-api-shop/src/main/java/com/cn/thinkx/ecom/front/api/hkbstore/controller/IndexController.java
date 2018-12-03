@@ -1,24 +1,5 @@
 package com.cn.thinkx.ecom.front.api.hkbstore.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.cn.thinkx.ecom.basics.goods.domain.Floor;
 import com.cn.thinkx.ecom.basics.goods.domain.Goods;
 import com.cn.thinkx.ecom.basics.goods.domain.SettingBanner;
@@ -26,15 +7,28 @@ import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
 import com.cn.thinkx.ecom.basics.member.domain.UserMerchantAcct;
 import com.cn.thinkx.ecom.basics.member.service.UserMerchantAcctService;
 import com.cn.thinkx.ecom.basics.order.service.CartService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.front.api.banner.service.EcomBannerService;
 import com.cn.thinkx.ecom.front.api.black.domain.WithDrawBlacklistInf;
 import com.cn.thinkx.ecom.front.api.black.service.WithDrawBlacklistInfService;
 import com.cn.thinkx.ecom.front.api.member.service.MemberService;
 import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
 import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ecom/hkbstore")

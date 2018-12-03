@@ -1,14 +1,13 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.order.domain.OrderShip;
 import com.cn.thinkx.ecom.basics.order.mapper.OrderShipMapper;
 import com.cn.thinkx.ecom.basics.order.service.OrderShipService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("orderShipService")
 public class OrderShipServiceImpl extends BaseServiceImpl<OrderShip> implements OrderShipService {

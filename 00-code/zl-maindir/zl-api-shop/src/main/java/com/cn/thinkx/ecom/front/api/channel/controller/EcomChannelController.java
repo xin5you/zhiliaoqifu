@@ -1,10 +1,13 @@
 package com.cn.thinkx.ecom.front.api.channel.controller;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSONObject;
+import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
+import com.cn.thinkx.ecom.basics.member.service.MemberInfService;
+import com.cn.thinkx.ecom.front.api.channel.model.ChannelIdent;
+import com.cn.thinkx.ecom.front.api.channel.volid.EcomChannelReqValid;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
-import com.cn.thinkx.ecom.basics.member.service.MemberInfService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.ResultsUtil;
-import com.cn.thinkx.ecom.front.api.channel.model.ChannelIdent;
-import com.cn.thinkx.ecom.front.api.channel.util.EcomChannelSignUtil;
-import com.cn.thinkx.ecom.front.api.channel.volid.EcomChannelReqValid;
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController

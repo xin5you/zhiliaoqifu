@@ -1,15 +1,14 @@
 package com.cn.thinkx.ecom.basics.order.mapper;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.order.domain.ExpressPlatf;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.cn.thinkx.ecom.basics.order.domain.ExpressPlatf;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import java.util.List;
 
 @Mapper
-public interface ExpressPlatfMapper extends BaseDao<ExpressPlatf>{
+public interface ExpressPlatfMapper extends BaseDao<ExpressPlatf> {
 
 	List<ExpressPlatf> getExpressPlatfList(ExpressPlatf ep);
 	

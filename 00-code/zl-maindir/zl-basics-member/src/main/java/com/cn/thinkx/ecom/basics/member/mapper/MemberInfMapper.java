@@ -1,10 +1,9 @@
 package com.cn.thinkx.ecom.basics.member.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
 import com.cn.thinkx.ecom.basics.member.domain.UserInf;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MemberInfMapper extends BaseDao<MemberInf> {

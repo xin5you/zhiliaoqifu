@@ -1,22 +1,16 @@
 package com.cn.thinkx.ecom.front.api.phoneRecharge.util;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
+import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
+import com.cn.thinkx.ecom.front.api.phoneRecharge.resp.PhoneRechargeNotifyResp;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import com.cn.thinkx.ecom.common.constants.Constants.PhoneRechargeTransStat;
-import com.cn.thinkx.ecom.common.constants.Constants.RechargeState;
-import com.cn.thinkx.ecom.common.util.DateUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.resp.PhoneRechargeNotifyResp;
+import java.util.concurrent.*;
 
 /**
  * 交易订单 异步通知
@@ -44,12 +38,12 @@ public class PhoneRechargeOrderNotifyHttpClient {
 		try{
 			StringBuffer paramData = new StringBuffer();
 			PhoneRechargeNotifyResp resp = new PhoneRechargeNotifyResp();
-			if(PhoneRechargeTransStat.TransStat2.getCode().equals(rechargeOrder.getTransStat())){
-				resp.setCode(RechargeState.RechargeState01.getCode());
-				resp.setMsg(RechargeState.RechargeState01.getValue());
+			if(Constants.PhoneRechargeTransStat.TransStat2.getCode().equals(rechargeOrder.getTransStat())){
+				resp.setCode(Constants.RechargeState.RechargeState01.getCode());
+				resp.setMsg(Constants.RechargeState.RechargeState01.getValue());
 			}else{
-				resp.setCode(RechargeState.RechargeState09.getCode());
-				resp.setMsg(RechargeState.RechargeState09.getValue());
+				resp.setCode(Constants.RechargeState.RechargeState09.getCode());
+				resp.setMsg(Constants.RechargeState.RechargeState09.getValue());
 			}
 			resp.setOrderId(rechargeOrder.getrId());
 			resp.setChannelOrderNo(rechargeOrder.getChannelOrderNo());

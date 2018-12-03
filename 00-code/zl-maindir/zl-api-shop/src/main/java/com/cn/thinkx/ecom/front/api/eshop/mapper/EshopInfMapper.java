@@ -1,9 +1,8 @@
 package com.cn.thinkx.ecom.front.api.eshop.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
 import com.cn.thinkx.ecom.front.api.eshop.domain.EshopInf;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface EshopInfMapper extends BaseDao<EshopInf> {

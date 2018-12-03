@@ -1,9 +1,9 @@
 package com.cn.thinkx.ecom.front.api.channel.volid;
 
-import com.cn.thinkx.ecom.common.domain.BaseResult;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.front.api.channel.model.ChannelIdent;
 import com.cn.thinkx.ecom.front.api.channel.util.EcomChannelSignUtil;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 /**
  * 渠道接入

@@ -1,9 +1,9 @@
 package com.cn.thinkx.ecom.basics.order.service;
 
-import java.util.List;
-
 import com.cn.thinkx.ecom.basics.order.domain.PlatfOrder;
-import com.cn.thinkx.ecom.common.service.BaseService;
+import com.ebeijia.zl.common.core.service.BaseService;
+
+import java.util.List;
 
 public interface PlatfOrderService extends BaseService<PlatfOrder> {
 

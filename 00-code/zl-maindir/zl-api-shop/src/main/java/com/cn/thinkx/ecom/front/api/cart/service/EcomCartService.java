@@ -1,7 +1,8 @@
 package com.cn.thinkx.ecom.front.api.cart.service;
 
+
 import com.cn.thinkx.ecom.basics.order.domain.Cart;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 
 /**
  * 商城购物车

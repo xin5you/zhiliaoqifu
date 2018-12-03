@@ -1,11 +1,9 @@
 package com.cn.thinkx.ecom.basics.goods.service;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.cn.thinkx.ecom.basics.goods.domain.GoodsCategory;
-import com.cn.thinkx.ecom.common.service.BaseService;
+import com.ebeijia.zl.common.core.service.BaseService;
+
+import java.util.List;
 
 public interface GoodsCategoryService extends BaseService<GoodsCategory> {
 

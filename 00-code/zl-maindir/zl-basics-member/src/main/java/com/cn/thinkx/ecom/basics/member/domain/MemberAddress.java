@@ -1,8 +1,9 @@
 package com.cn.thinkx.ecom.basics.member.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
 
-public class MemberAddress extends BaseEntity{
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
+public class MemberAddress extends BaseEntity {
 
 	private static final long serialVersionUID = -7655982014086839784L;
 	

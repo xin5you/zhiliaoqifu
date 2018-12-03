@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.front.api.black.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 public class WithDrawBlacklistInf extends BaseEntity {
 	

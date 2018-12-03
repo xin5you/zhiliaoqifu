@@ -1,9 +1,8 @@
 package com.cn.thinkx.ecom.basics.goods.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.cn.thinkx.ecom.basics.goods.domain.Esetting;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface EsettingMapper extends BaseDao<Esetting> {

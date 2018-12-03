@@ -1,16 +1,15 @@
 package com.cn.thinkx.ecom.basics.goods.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.goods.domain.Esetting;
 import com.cn.thinkx.ecom.basics.goods.domain.SettingBanner;
 import com.cn.thinkx.ecom.basics.goods.mapper.EsettingMapper;
 import com.cn.thinkx.ecom.basics.goods.mapper.SettingBannerMapper;
 import com.cn.thinkx.ecom.basics.goods.service.EsettingService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("esettingService")
 public class EsettingServiceImpl extends BaseServiceImpl<Esetting> implements EsettingService {

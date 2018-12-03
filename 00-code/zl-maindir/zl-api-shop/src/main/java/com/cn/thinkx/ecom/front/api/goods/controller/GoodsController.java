@@ -1,23 +1,5 @@
 package com.cn.thinkx.ecom.front.api.goods.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.basics.goods.domain.Goods;
 import com.cn.thinkx.ecom.basics.goods.domain.GoodsProduct;
 import com.cn.thinkx.ecom.basics.goods.domain.GoodsSpec;
@@ -27,11 +9,24 @@ import com.cn.thinkx.ecom.basics.goods.service.GoodsService;
 import com.cn.thinkx.ecom.basics.goods.service.GoodsSpecService;
 import com.cn.thinkx.ecom.basics.goods.service.SpecValuesService;
 import com.cn.thinkx.ecom.basics.order.service.CartService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.front.api.base.controller.EcomBaseController;
-import com.cn.thinkx.ecom.front.api.goods.domain.GoodsDetail;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController

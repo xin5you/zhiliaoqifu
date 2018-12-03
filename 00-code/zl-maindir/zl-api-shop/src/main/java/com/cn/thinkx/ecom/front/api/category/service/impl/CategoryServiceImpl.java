@@ -1,21 +1,17 @@
 package com.cn.thinkx.ecom.front.api.category.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.cn.thinkx.ecom.basics.goods.domain.Goods;
+import com.cn.thinkx.ecom.basics.goods.service.GoodsService;
+import com.cn.thinkx.ecom.front.api.category.service.CategoryService;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.goods.domain.ApiSpu;
-import com.cn.thinkx.ecom.basics.goods.domain.Goods;
-import com.cn.thinkx.ecom.basics.goods.service.GoodsService;
-import com.cn.thinkx.ecom.common.constants.Constants.GoodsEcomCodeType;
-import com.cn.thinkx.ecom.common.constants.Constants.GoodsSkuSyncType;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.category.service.CategoryService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl implements CategoryService {

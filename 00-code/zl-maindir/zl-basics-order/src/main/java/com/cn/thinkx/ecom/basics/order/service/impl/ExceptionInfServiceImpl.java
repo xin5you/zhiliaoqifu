@@ -1,15 +1,11 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.order.domain.ExceptionInf;
 import com.cn.thinkx.ecom.basics.order.mapper.ExceptionInfMapper;
 import com.cn.thinkx.ecom.basics.order.service.ExceptionInfService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
-import com.cn.thinkx.ecom.common.util.StringUtil;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("exceptionInfService")
 public class ExceptionInfServiceImpl extends BaseServiceImpl<ExceptionInf> implements ExceptionInfService {

@@ -1,14 +1,13 @@
 package com.cn.thinkx.ecom.basics.goods.mapper;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.goods.domain.SpecValues;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.cn.thinkx.ecom.basics.goods.domain.SpecValues;
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
+import java.util.List;
 
 @Mapper
-public interface SpecValuesMapper  extends BaseDao<SpecValues>  {
+public interface SpecValuesMapper  extends BaseDao<SpecValues> {
 	
 	/**
 	 * 查找规格值表

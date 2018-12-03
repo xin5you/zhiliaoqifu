@@ -1,9 +1,10 @@
 package com.cn.thinkx.ecom.basics.goods.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 public class GoodsCategory extends BaseEntity {
-	
+
 	private static final long serialVersionUID = -470396968386056299L;
 	
 	private String catId;

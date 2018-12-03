@@ -1,30 +1,21 @@
 package com.cn.thinkx.ecom.bm001.api.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.bm001.api.constants.BMConstants;
 import com.cn.thinkx.ecom.bm001.api.req.PayBillReq;
 import com.cn.thinkx.ecom.bm001.api.service.BMOpenApiService;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
 import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.qianmi.open.api.ApiException;
 import com.qianmi.open.api.DefaultOpenClient;
 import com.qianmi.open.api.OpenClient;
-import com.qianmi.open.api.request.BmOrderCustomGetRequest;
-import com.qianmi.open.api.request.BmRechargeMobileGetItemInfoRequest;
-import com.qianmi.open.api.request.BmRechargeMobileGetPhoneInfoRequest;
-import com.qianmi.open.api.request.BmRechargeMobilePayBillRequest;
-import com.qianmi.open.api.request.BmRechargeOrderInfoRequest;
-import com.qianmi.open.api.response.BmOrderCustomGetResponse;
-import com.qianmi.open.api.response.BmRechargeMobileGetItemInfoResponse;
-import com.qianmi.open.api.response.BmRechargeMobileGetPhoneInfoResponse;
-import com.qianmi.open.api.response.BmRechargeMobilePayBillResponse;
-import com.qianmi.open.api.response.BmRechargeOrderInfoResponse;
+import com.qianmi.open.api.request.*;
+import com.qianmi.open.api.response.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("bmOpenApiService")
 public class BMOpenApiServiceImpl implements BMOpenApiService {

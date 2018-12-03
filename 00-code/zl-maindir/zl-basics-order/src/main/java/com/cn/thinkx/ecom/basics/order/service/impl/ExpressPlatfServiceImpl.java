@@ -1,17 +1,16 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.order.domain.ExpressPlatf;
+import com.cn.thinkx.ecom.basics.order.mapper.ExpressPlatfMapper;
+import com.cn.thinkx.ecom.basics.order.service.ExpressPlatfService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.order.domain.ExpressPlatf;
-import com.cn.thinkx.ecom.basics.order.mapper.ExpressPlatfMapper;
-import com.cn.thinkx.ecom.basics.order.service.ExpressPlatfService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
-import com.cn.thinkx.ecom.common.util.StringUtil;
+import java.util.List;
 
 @Service("expressPlatfService")
 public class ExpressPlatfServiceImpl extends BaseServiceImpl<ExpressPlatf> implements ExpressPlatfService {

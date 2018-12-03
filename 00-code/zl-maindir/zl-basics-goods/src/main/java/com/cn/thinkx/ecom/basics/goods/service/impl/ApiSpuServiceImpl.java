@@ -1,17 +1,17 @@
 package com.cn.thinkx.ecom.basics.goods.service.impl;
 
-import java.util.List;
-
+import com.cn.thinkx.ecom.basics.goods.domain.ApiSpu;
+import com.cn.thinkx.ecom.basics.goods.mapper.ApiSpuMapper;
+import com.cn.thinkx.ecom.basics.goods.service.ApiSpuService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.basics.goods.domain.ApiSpu;
-import com.cn.thinkx.ecom.basics.goods.mapper.ApiSpuMapper;
-import com.cn.thinkx.ecom.basics.goods.service.ApiSpuService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
-import com.cn.thinkx.ecom.common.util.StringUtil;
+import java.util.List;
+
 
 @Service("apiSpuService")
 public class ApiSpuServiceImpl extends BaseServiceImpl<ApiSpu> implements ApiSpuService {

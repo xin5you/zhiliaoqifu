@@ -1,9 +1,9 @@
 package com.cn.thinkx.ecom.front.api.order.service;
 
-import java.util.List;
-
-import com.cn.thinkx.ecom.common.service.BaseService;
 import com.cn.thinkx.ecom.front.api.order.domain.OrderInf;
+import com.ebeijia.zl.common.core.service.BaseService;
+
+import java.util.List;
 
 public interface OrderInfService extends BaseService<OrderInf> {
 

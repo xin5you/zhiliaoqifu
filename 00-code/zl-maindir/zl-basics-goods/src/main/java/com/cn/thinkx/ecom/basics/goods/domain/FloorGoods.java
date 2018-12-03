@@ -1,8 +1,9 @@
 package com.cn.thinkx.ecom.basics.goods.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
 
-public class FloorGoods extends BaseEntity{
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
+public class FloorGoods extends BaseEntity {
 
 	private static final long serialVersionUID = 3028855457630002260L;
 	private String id;

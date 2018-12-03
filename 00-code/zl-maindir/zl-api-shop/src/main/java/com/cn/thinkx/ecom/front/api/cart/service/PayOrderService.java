@@ -1,8 +1,9 @@
 package com.cn.thinkx.ecom.front.api.cart.service;
 
-import javax.servlet.http.HttpServletRequest;
 
-import com.cn.thinkx.ecom.common.domain.BaseResult;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface PayOrderService {
 

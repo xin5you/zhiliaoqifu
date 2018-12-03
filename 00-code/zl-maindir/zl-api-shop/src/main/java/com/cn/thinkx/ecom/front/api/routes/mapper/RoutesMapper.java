@@ -1,11 +1,11 @@
 package com.cn.thinkx.ecom.front.api.routes.mapper;
 
-import java.util.List;
 
+import com.cn.thinkx.ecom.front.api.routes.domain.Routes;
+import com.ebeijia.zl.common.core.mapper.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.cn.thinkx.ecom.common.mapper.BaseDao;
-import com.cn.thinkx.ecom.front.api.routes.domain.Routes;
+import java.util.List;
 
 @Mapper
 public interface RoutesMapper extends BaseDao<Routes> {

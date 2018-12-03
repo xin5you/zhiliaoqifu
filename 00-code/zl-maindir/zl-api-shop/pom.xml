@@ -24,17 +24,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>oracle</groupId>
-            <artifactId>ojdbc</artifactId>
-            <version>6</version>
-            <type>jar</type>
-        </dependency>
+
+
         <!-- 单元测试 -->
         <dependency>
             <groupId>junit</groupId>
@@ -58,43 +49,48 @@
         <!-- 引入所需jar -->
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common</artifactId>
-            <version>1.0</version>
+            <artifactId>zl-common-core</artifactId>
+            <version>${ebj.zl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-basics-order</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-basics-goods</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-basics-member</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-api-bm001</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-core-redis</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
 
-    </dependencies>
+        <dependency><!--添加Swagger依赖 -->
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency><!--添加Swagger-UI依赖 -->
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
 
-    <repositories>
-        <repository>
-            <id>spring-snapshots</id>
-            <url>http://repo.spring.io/libs-snapshot</url>
-        </repository>
-    </repositories>
+
+    </dependencies>
 
     <build>
         <plugins>

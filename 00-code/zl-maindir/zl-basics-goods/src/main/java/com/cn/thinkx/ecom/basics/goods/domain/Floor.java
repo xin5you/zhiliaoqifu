@@ -1,8 +1,9 @@
 package com.cn.thinkx.ecom.basics.goods.domain;
 
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
 import java.util.List;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
 
 /**
  * 电商楼层

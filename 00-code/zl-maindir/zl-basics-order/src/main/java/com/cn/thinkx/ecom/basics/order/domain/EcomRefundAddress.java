@@ -1,13 +1,14 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 /**
  * 退货地址信息
  * 
  * @author kpplg
  */
-public class EcomRefundAddress extends BaseEntity{
+public class EcomRefundAddress extends BaseEntity {
 	
 	private static final long serialVersionUID = -1332193862052141701L;
 

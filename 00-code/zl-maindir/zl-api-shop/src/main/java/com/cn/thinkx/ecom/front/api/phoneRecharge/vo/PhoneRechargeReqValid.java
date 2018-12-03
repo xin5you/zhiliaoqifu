@@ -1,14 +1,13 @@
 package com.cn.thinkx.ecom.front.api.phoneRecharge.vo;
 
+import com.cn.thinkx.ecom.front.api.phoneRecharge.req.PhoneRechargeReq;
+import com.cn.thinkx.ecom.front.api.phoneRecharge.resp.PhoneRechargeResp;
+import com.cn.thinkx.ecom.front.api.phoneRecharge.util.PhoneRechargeSignUtli;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.req.PhoneRechargeReq;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.resp.PhoneRechargeResp;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.util.PhoneRechargeSignUtli;
 
 @Configuration
 public class PhoneRechargeReqValid {

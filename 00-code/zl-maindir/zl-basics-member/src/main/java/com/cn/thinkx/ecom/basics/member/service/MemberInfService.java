@@ -1,7 +1,8 @@
 package com.cn.thinkx.ecom.basics.member.service;
 
+
 import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
-import com.cn.thinkx.ecom.common.service.BaseService;
+import com.ebeijia.zl.common.core.service.BaseService;
 
 public interface MemberInfService extends BaseService<MemberInf> {
 

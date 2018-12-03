@@ -1,27 +1,6 @@
 package com.cn.thinkx.ecom.front.api.homepage.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONArray;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.util.AESUtil;
-import com.cn.thinkx.ecom.common.util.SignUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
 import com.cn.thinkx.ecom.front.api.banner.domain.Banner;
 import com.cn.thinkx.ecom.front.api.banner.service.BannerService;
 import com.cn.thinkx.ecom.front.api.eshop.domain.EshopInf;
@@ -30,6 +9,25 @@ import com.cn.thinkx.ecom.front.api.homepage.domain.JFExtandJson;
 import com.cn.thinkx.ecom.front.api.homepage.domain.JFHome;
 import com.cn.thinkx.ecom.front.api.routes.domain.Routes;
 import com.cn.thinkx.ecom.front.api.routes.service.RoutesService;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.tools.AESUtil;
+import com.ebeijia.zl.common.utils.tools.SignUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @RestController
 @RequestMapping(value = "homePage")

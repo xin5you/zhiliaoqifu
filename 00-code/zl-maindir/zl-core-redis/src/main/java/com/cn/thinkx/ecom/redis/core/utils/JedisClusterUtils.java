@@ -1,23 +1,14 @@
 package com.cn.thinkx.ecom.redis.core.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.ebeijia.zl.common.utils.tools.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-
-import com.cn.thinkx.ecom.common.util.StringUtils;
-
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.exceptions.JedisDataException;
+
+import java.util.*;
 
 /**
  * redis 工具类
@@ -35,10 +26,6 @@ public class JedisClusterUtils {
 	 * @return
 	 */
 	public  JedisCluster getResource(){
-		if(jedisCluster == null){
-			WebApplicationContext webContext = ContextLoader.getCurrentWebApplicationContext();
-			jedisCluster=(JedisCluster)webContext.getBean("jedisCluster");
-		}
 		return jedisCluster;
 	}
 

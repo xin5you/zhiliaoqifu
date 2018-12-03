@@ -1,27 +1,24 @@
 package com.cn.thinkx.ecom.front.api.base.utils;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.cn.thinkx.ecom.basics.order.service.PlatfOrderService;
+import com.cn.thinkx.ecom.basics.order.service.PlatfShopOrderService;
+import com.cn.thinkx.ecom.bm001.api.constants.BMConstants;
+import com.cn.thinkx.ecom.bm001.api.service.BMOpenApiService;
+import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
+import com.cn.thinkx.ecom.front.api.phoneRecharge.service.PhoneRechargeService;
+import com.cn.thinkx.ecom.front.api.platforder.service.GoodsOrderService;
+import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
+import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.qianmi.open.api.response.BmOrderCustomGetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.ecom.basics.order.service.PlatfOrderService;
-import com.cn.thinkx.ecom.basics.order.service.PlatfShopOrderService;
-import com.cn.thinkx.ecom.bm001.api.constants.BMConstants;
-import com.cn.thinkx.ecom.bm001.api.service.BMOpenApiService;
-import com.cn.thinkx.ecom.common.constants.Constants.PhoneRechargeChannelType;
-import com.cn.thinkx.ecom.common.constants.Constants.PhoneRechargeTransStat;
-import com.cn.thinkx.ecom.common.constants.Constants.RechargeState;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
-import com.cn.thinkx.ecom.front.api.phoneRecharge.service.PhoneRechargeService;
-import com.cn.thinkx.ecom.front.api.platforder.service.GoodsOrderService;
-import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
-import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
-import com.qianmi.open.api.response.BmOrderCustomGetResponse;
+import java.util.List;
 
 @Component
 public class ScheduledUtils {
@@ -100,7 +97,7 @@ public class ScheduledUtils {
 				PhoneRechargeOrder rechargeOrde = null;
 				String accessToken = null;
 				for (PhoneRechargeOrder pro : list) {
-					if (PhoneRechargeChannelType.PRC1001.getCode().equals(pro.getReqChannel())) {
+					if (Constants.PhoneRechargeChannelType.PRC1001.getCode().equals(pro.getReqChannel())) {
 						accessToken = jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, BMConstants.BM_ACCESS_TOKEN);
 					} else {
 						accessToken = pro.getResv1();
@@ -111,12 +108,12 @@ public class ScheduledUtils {
 					if(resp.isSuccess()){
 						rechargeOrde = new PhoneRechargeOrder();
 						rechargeOrde.setrId(resp.getOrderDetailInfo().getOuterTid());
-						if(RechargeState.RechargeState09.getCode().equals(resp.getOrderDetailInfo().getRechargeState())){
-							rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat3.getCode());
+						if(Constants.RechargeState.RechargeState09.getCode().equals(resp.getOrderDetailInfo().getRechargeState())){
+							rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat3.getCode());
 							phoneRechargeService.doPhoneRechargeOrder(rechargeOrde);
 						}
-						if(RechargeState.RechargeState01.getCode().equals(resp.getOrderDetailInfo().getRechargeState())){
-							rechargeOrde.setTransStat(PhoneRechargeTransStat.TransStat2.getCode());
+						if(Constants.RechargeState.RechargeState01.getCode().equals(resp.getOrderDetailInfo().getRechargeState())){
+							rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat2.getCode());
 							phoneRechargeService.doPhoneRechargeOrder(rechargeOrde);
 						}
 					}

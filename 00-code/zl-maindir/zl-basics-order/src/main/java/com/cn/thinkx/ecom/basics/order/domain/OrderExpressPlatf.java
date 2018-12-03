@@ -1,10 +1,11 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
 /*
  * 订单物流关联表
  */
-public class OrderExpressPlatf extends BaseEntity{
+public class OrderExpressPlatf extends BaseEntity {
 
 	private static final long serialVersionUID = -7655982014086839784L;
 	/*

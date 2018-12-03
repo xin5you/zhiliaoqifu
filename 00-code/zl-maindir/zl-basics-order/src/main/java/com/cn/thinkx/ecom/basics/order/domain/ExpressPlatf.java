@@ -1,12 +1,13 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
 import java.util.List;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
 /*
  * 订单包裹物流信息
  */
-public class ExpressPlatf extends BaseEntity{
+public class ExpressPlatf extends BaseEntity {
 	
 	private static final long serialVersionUID = -7655982014086839784L;
 	/*

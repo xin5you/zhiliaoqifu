@@ -1,14 +1,13 @@
 package com.cn.thinkx.ecom.basics.order.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.order.domain.PlatfOrder;
 import com.cn.thinkx.ecom.basics.order.mapper.PlatfOrderMapper;
 import com.cn.thinkx.ecom.basics.order.service.PlatfOrderService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("platfOrderService")
 public class PlatfOrderServiceImpl extends BaseServiceImpl<PlatfOrder> implements PlatfOrderService {

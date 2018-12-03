@@ -1,10 +1,11 @@
 package com.cn.thinkx.ecom.front.api.order.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.cn.thinkx.ecom.front.api.order.domain.OrderInf;
+import com.cn.thinkx.ecom.front.api.order.service.OrderInfService;
+import com.cn.thinkx.ecom.front.api.routes.domain.Routes;
+import com.cn.thinkx.ecom.front.api.routes.service.RoutesService;
+import com.ebeijia.zl.common.utils.tools.AESUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.common.util.AESUtil;
-import com.cn.thinkx.ecom.common.util.StringUtil;
-import com.cn.thinkx.ecom.front.api.order.domain.OrderInf;
-import com.cn.thinkx.ecom.front.api.order.service.OrderInfService;
-import com.cn.thinkx.ecom.front.api.routes.domain.Routes;
-import com.cn.thinkx.ecom.front.api.routes.service.RoutesService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "order")

@@ -1,13 +1,14 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+
 /**
  * 商城异常信息
  * 
  * @author kpplg
  *
  */
-public class ExceptionInf extends BaseEntity{
+public class ExceptionInf extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 	

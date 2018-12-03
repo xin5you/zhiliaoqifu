@@ -1,10 +1,10 @@
 package com.cn.thinkx.ecom.front.api.category.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.cn.thinkx.ecom.basics.goods.domain.Goods;
+import com.cn.thinkx.ecom.basics.goods.domain.GoodsCategory;
+import com.cn.thinkx.ecom.basics.goods.service.GoodsCategoryService;
+import com.cn.thinkx.ecom.front.api.category.service.CategoryService;
+import com.ebeijia.zl.common.utils.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.basics.goods.domain.Goods;
-import com.cn.thinkx.ecom.basics.goods.domain.GoodsCategory;
-import com.cn.thinkx.ecom.basics.goods.service.GoodsCategoryService;
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.front.api.category.service.CategoryService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "goods/category")

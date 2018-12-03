@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.basics.order.domain;
 
-import com.cn.thinkx.ecom.common.domain.BaseEntity;
+
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 /**
  * 退货包裹确认收货信息表
@@ -8,7 +9,7 @@ import com.cn.thinkx.ecom.common.domain.BaseEntity;
  * @author kpplg
  *
  */
-public class EcomExpressConfirm extends BaseEntity{
+public class EcomExpressConfirm extends BaseEntity {
 
 	private static final long serialVersionUID = -7734895837753984236L;
 	

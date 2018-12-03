@@ -3,7 +3,7 @@ package com.cn.thinkx.ecom.front.api.returns.service;
 import com.cn.thinkx.ecom.basics.order.domain.EcomExpressConfirm;
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsInf;
 import com.cn.thinkx.ecom.basics.order.domain.ReturnsOrder;
-import com.cn.thinkx.ecom.common.domain.BaseResult;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 
 public interface ReturnsGoodsService {
 

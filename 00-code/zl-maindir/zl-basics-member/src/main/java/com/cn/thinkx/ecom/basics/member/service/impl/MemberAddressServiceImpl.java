@@ -1,14 +1,13 @@
 package com.cn.thinkx.ecom.basics.member.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.cn.thinkx.ecom.basics.member.domain.MemberAddress;
 import com.cn.thinkx.ecom.basics.member.mapper.MemberAddressMapper;
 import com.cn.thinkx.ecom.basics.member.service.MemberAddressService;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("memberAddressService")
 public class MemberAddressServiceImpl extends BaseServiceImpl<MemberAddress> implements MemberAddressService {
