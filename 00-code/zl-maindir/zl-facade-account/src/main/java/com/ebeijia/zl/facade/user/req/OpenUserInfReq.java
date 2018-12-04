@@ -1,4 +1,4 @@
-package com.ebeijia.zl.facade.account.req;
+package com.ebeijia.zl.facade.user.req;
 
 import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 
@@ -6,7 +6,7 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 * 
 * 
 * @ClassName: OpenAccountReq.java
-* @Description: 账户开户请求
+* @Description: 账户用户信息请求
 *
 * @version: v1.0.0
 * @author: zhuqi
@@ -17,7 +17,7 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 *-------------------------------------*
 * 2018年12月3日     zhuqi           v1.0.0
  */
-public class OpenAccountReq extends BaseTxnReq {
+public class OpenUserInfReq extends BaseTxnReq {
 
 	/**
 	 * 用戶名稱
@@ -30,9 +30,13 @@ public class OpenAccountReq extends BaseTxnReq {
 	 */
 	private String mobilePhone;
 	
+	/**
+	 * 证件类型
+	 */
+	private String cardType;
 	
 	/**
-	 * 身份證號
+	 * 证件编号
 	 */
 	private String icardNo;
 	
@@ -65,6 +69,16 @@ public class OpenAccountReq extends BaseTxnReq {
 
 	public void setMobilePhone(String mobilePhone) {
 		this.mobilePhone = mobilePhone;
+	}
+
+
+	public String getCardType() {
+		return cardType;
+	}
+
+
+	public void setCardType(String cardType) {
+		this.cardType = cardType;
 	}
 
 

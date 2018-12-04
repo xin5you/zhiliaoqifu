@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.AccountStatusEnum;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
@@ -242,7 +243,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		entity.setLastTxnDate(DateUtil.COMPAT.getDateText(new Date()));
 		entity.setLastTxnTime(DateUtil.getCurrentTimeStr());
 		
-		entity.setDataStat("0");
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 		entity.setCreateTime(System.currentTimeMillis());
 		entity.setCreateUser("99999999");
 		entity.setUpdateTime(System.currentTimeMillis());

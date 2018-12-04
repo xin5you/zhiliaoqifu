@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ebeijia.zl.facade.account.req.OpenAccountReq;
 import com.ebeijia.zl.facade.account.service.TxnAccountInfFacade;
 import com.ebeijia.zl.service.account.service.ITransLogService;
+import com.ebeijia.zl.service.user.service.IUserInfService;
 
 
 /**
@@ -27,6 +28,10 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 	@Autowired
 	private ITransLogService transLogService;
 	
+	
+	@Autowired
+	private IUserInfService userInfService;
+	
 	/**
 	* 
 	* @Function: TxnAccountInfServiceImpl.java
@@ -44,10 +49,7 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
 	public String createAccount(OpenAccountReq req) throws Exception {
-		// TODO 判断用户是否存在
-		// TODO 判断企业是否存在
-		// TODO 企业员工绑定企业
-		// TODO 专项账户开户操作
+		
 		return null;
 	}
 

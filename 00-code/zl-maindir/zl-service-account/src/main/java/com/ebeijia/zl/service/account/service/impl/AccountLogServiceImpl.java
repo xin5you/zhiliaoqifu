@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.facade.account.vo.AccountInf;
 import com.ebeijia.zl.facade.account.vo.AccountLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
@@ -51,7 +52,8 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 		entity.setTxnTime(accountInf.getLastTxnTime());
 		entity.setAccTotalBal(accountInf.getAccBal()); //賬戶總金額
 		entity.setRemarks(transLog.getRemarks());
-		entity.setDataStat("0");
+		
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 		entity.setCreateTime(System.currentTimeMillis());
 		entity.setCreateUser("99999999");
 		entity.setUpdateTime(System.currentTimeMillis());

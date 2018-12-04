@@ -22,10 +22,11 @@
 			tb_user_inf m,
 			tb_channel_user_inf c
 		where m.user_id=c.user_id
+			and c.external_id=#{externalId}
+			and c.channel_code=#{channel}
 			and m.data_stat='0'
 			and c.data_stat='0'
-			and c.channel_code=#{channel}
-			and c.external_id=#{externalId}
+
 	</select>
 	
 	<select id="getUserInfByPhoneNo" parameterType="java.lang.String" resultType="userInf">
@@ -43,12 +44,13 @@
 			tb_user_inf m,
 			tb_person_inf p,
 			tb_channel_user_inf c
-		where m.data_stat='0'
+		where 
+				m.user_id=p.user_id
+			and m.user_id=c.user_id
+			and p.mobile_phone_no=#{phoneNo}
+			and c.channel_code=#{channel}
+			and m.data_stat='0'
 			and c.data_stat='0'
 			and p.data_stat='0'
-			and m.user_id=p.user_id
-			and m.user_id=c.user_id
-			and c.channel_code=#{channel}
-			and p.mobile_phone_no=#{phoneNo}
 	</select>
 </mapper>

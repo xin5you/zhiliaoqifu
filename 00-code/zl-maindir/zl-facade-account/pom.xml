@@ -32,14 +32,7 @@
 		       <artifactId>lombok</artifactId>
 		       <version>${lombok.version}</version>
 		   </dependency>
-		   
-
 	    
   </dependencies>
-  
-  
-  
-  <modules>
-  	<module>?</module>
-  </modules>
+
 </project>

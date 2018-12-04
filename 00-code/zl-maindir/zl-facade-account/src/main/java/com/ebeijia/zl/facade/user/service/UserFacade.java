@@ -1,5 +1,6 @@
 package com.ebeijia.zl.facade.user.service;
 
+import com.ebeijia.zl.facade.user.req.OpenUserInfReq;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 
@@ -19,6 +20,9 @@ import com.ebeijia.zl.facade.user.vo.UserInf;
 * 2018年11月30日     zhuqi           v1.0.0
  */
 public interface UserFacade {
+	
+
+	String registerUserInf(OpenUserInfReq req);
 
 	/**
 	 * 
@@ -37,7 +41,7 @@ public interface UserFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-//	UserInf getUserInfByUserId(String userId);
+	UserInf getUserInfByUserId(String userId);
 	
 	/**
 	 * 

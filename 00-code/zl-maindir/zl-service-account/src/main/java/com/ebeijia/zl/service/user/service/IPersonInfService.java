@@ -13,4 +13,10 @@ import com.ebeijia.zl.facade.user.vo.PersonInf;
  */
 public interface IPersonInfService extends IService<PersonInf> {
 
+	/**
+	 * 根据手机号查找用户
+	 * @param phoneNo
+	 * @return
+	 */
+	PersonInf getPersonInfByPhoneNo(String phoneNo);
 }
