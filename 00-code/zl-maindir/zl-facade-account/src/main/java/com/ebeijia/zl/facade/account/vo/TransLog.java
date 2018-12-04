@@ -203,6 +203,7 @@ public class TransLog extends Model<TransLog> {
     /**
      * 执行顺序
      */
+    @TableField(exist=false)
     private Integer order;
 
     @Override

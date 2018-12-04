@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -16,15 +19,18 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.AccountStatusEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountInf;
 import com.ebeijia.zl.facade.account.vo.TransLog;
+import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.account.mapper.AccountInfMapper;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
 import com.ebeijia.zl.service.account.utils.CodeEncryUtils;
+import com.ebeijia.zl.service.user.mapper.UserInfMapper;
 
 /**
  *
@@ -34,6 +40,7 @@ import com.ebeijia.zl.service.account.utils.CodeEncryUtils;
  * @Date 2018-11-30
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, AccountInf> implements IAccountInfService{
 
 	private  final Logger log = LoggerFactory.getLogger(AccountInfServiceImpl.class);
@@ -41,9 +48,43 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	@Autowired
 	private AccountInfMapper accountInfMapper;
 	
+	@Autowired
+	private UserInfMapper userInfMapper;
 	
 	@Autowired
 	private IAccountLogService accountLogService;
+	
+	/***
+	 * 
+	* @Description: 查找賬戶信息
+	*
+	* @param:userType 用戶类型
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月4日 下午12:34:27 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月4日     zhuqi           v1.0.0
+	 */
+	public AccountInf getAccountInfByUserType(String userType,String userId,String bId,String companyId){
+		if(UserType.TYPE100.getCode().equals(userType)){
+			return this.getAccountInfByUserId(userId, bId);
+		}else{
+			QueryWrapper<UserInf> queryWrapper = new QueryWrapper<UserInf>();
+			queryWrapper.eq("company_id", companyId);
+			queryWrapper.eq("user_type", userType);
+			queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
+			UserInf userInf= userInfMapper.selectOne(queryWrapper);
+			
+			if(userInf==null){
+				return null;
+			}
+			return  this.getAccountInfByUserId(userId, bId);
+		}
+	}
 	
 	/**
 	 * 查找用户的专项账户
@@ -52,7 +93,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		QueryWrapper<AccountInf> queryWrapper = new QueryWrapper<AccountInf>();
 		queryWrapper.eq("user_id", userId);
 		queryWrapper.eq("b_id", bId);
-		queryWrapper.eq("data_stat", "0");
+		queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
 		return accountInfMapper.selectOne(queryWrapper);
 	}
 	
@@ -80,7 +121,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 				
 				if (AccountCardAttrEnum.OPER.getValue().equals(transLog.getCardAttr())) {
 					//账户开户
-					this.oper(transLog);
+					this.open(transLog);
 					
 				} else if (AccountCardAttrEnum.ADD.getValue().equals(transLog.getCardAttr())) {
 					//账户加款
@@ -101,14 +142,14 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 //				}
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	/**
 	 * 
 	 *开户操作
 	 */
-	private boolean oper(TransLog transLog) {
+	private boolean open(TransLog transLog) {
 		log.info("==>oper transLog={}",JSONArray.toJSON(transLog));
 		AccountInf account=new AccountInf();
 		account.setAccountNo(IdUtil.getNextId());
@@ -117,6 +158,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		account.setBId(transLog.getPriBId()); //专项账户类型
 		account.setAccountStat("00");//00：正常 10：冻结 90：注销
 		account.setAccountType(transLog.getUserType());
+		account.setAccBal(new BigDecimal(0) ); //开户时余额为0
 		log.info("==>oper<==");
 		return this.save(account);
 	}

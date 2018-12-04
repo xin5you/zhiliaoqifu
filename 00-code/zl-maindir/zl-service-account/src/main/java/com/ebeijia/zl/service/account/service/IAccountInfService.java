@@ -16,6 +16,22 @@ import com.ebeijia.zl.facade.account.vo.TransLog;
  */
 public interface IAccountInfService extends IService<AccountInf> {
 	
+	/***
+	 * 
+	* @Description: 查找賬戶信息
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月4日 下午12:34:27 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月4日     zhuqi           v1.0.0
+	 */
+	AccountInf getAccountInfByUserType(String userType,String userId,String bId,String companyId);
 	
 	/**
 	 * 
@@ -52,7 +68,7 @@ public interface IAccountInfService extends IService<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	boolean execute(List<TransLog> voList) throws Exception;
+	boolean execute(List<TransLog> voList);
 	
 	
 }

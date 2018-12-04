@@ -2,8 +2,10 @@ package com.ebeijia.zl.facade.account.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.SqlParser;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -217,6 +219,13 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     @TableField("lock_version")
     private Integer lockVersion;
 
+    /**
+     *  业务数据
+     *  
+     *  专项账户类型
+     */
+    @TableField(exist=false)
+    private Set<String> bIds;
 
     @Override
     protected Serializable pkVal() { 

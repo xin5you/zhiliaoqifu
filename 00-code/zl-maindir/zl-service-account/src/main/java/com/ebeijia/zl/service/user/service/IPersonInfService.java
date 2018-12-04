@@ -12,7 +12,10 @@ import com.ebeijia.zl.facade.user.vo.PersonInf;
  * @Date 2018-11-30
  */
 public interface IPersonInfService extends IService<PersonInf> {
-
+	
+	
+	
+	boolean save(PersonInf entity);
 	/**
 	 * 根据手机号查找用户
 	 * @param phoneNo

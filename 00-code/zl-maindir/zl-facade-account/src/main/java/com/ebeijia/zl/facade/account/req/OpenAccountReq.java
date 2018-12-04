@@ -4,9 +4,7 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 
 /**
 * 
-* 
-* @ClassName: OpenAccountReq.java
-* @Description: 账户开户请求
+* @Description: 账户开户请求参数
 *
 * @version: v1.0.0
 * @author: zhuqi

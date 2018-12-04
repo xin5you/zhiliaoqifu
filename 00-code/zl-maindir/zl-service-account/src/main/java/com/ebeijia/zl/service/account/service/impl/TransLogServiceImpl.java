@@ -2,19 +2,25 @@ package com.ebeijia.zl.service.account.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
 import com.ebeijia.zl.service.account.mapper.TransLogMapper;
+import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
 
 /**
@@ -25,14 +31,18 @@ import com.ebeijia.zl.service.account.service.ITransLogService;
  * @Date 2018-11-30
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> implements ITransLogService{
 
-	private static final Logger log = LoggerFactory.getLogger(TransLogServiceImpl.class);
+	private  final Logger log = LoggerFactory.getLogger(TransLogServiceImpl.class);
+	
+	
+	@Autowired
+	private IAccountInfService accountInfService;
+	
 	/**
 	* 
-	* @Function: ITransLogService.java
 	* @Description: 创建账户交易流水
-	*
 	* @param:intfaceTransLog 接口層流水
 	*
 	* @version: v1.0.0
@@ -50,20 +60,17 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		/**
 		 * 创建交易流水记录
 		 */
-		List<TransLog> voList=this.createTransLog(intfaceTransLog);
-		this.execute(voList);
+		List<TransLog> voList=this.doTransLog(intfaceTransLog);
+		
+		boolean b=this.execute(voList);
 		
 		log.info("==>execute create transLog end...<==");
-		return false;
+		return b;
 	}
 	
 	/**
-	 * 
-	* @Function: TransLogServiceImpl.java
 	* @Description: 交易流水批量操作账户
-	*
 	* @param:voList 交易记录列表
-	*
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年12月3日 下午1:08:48 
@@ -73,29 +80,30 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	public void execute(List<TransLog> voList) {
-			
+	public boolean execute(List<TransLog> voList) {
+		
+		List<TransLog> sortList = new ArrayList<>();
 		if(voList !=null && voList.size()>1){
-	    	List<TransLog> sortList = new ArrayList<>();
+	    
 	    	
 	    	//交易流水顺序执行
 	    	voList.stream().sorted((e1, e2) -> {
 				return Integer.compare(e1.getOrder(), e2.getOrder());
 			}).forEach(e -> sortList.add(e));
-	    	
-	    	voList.clear(); //
-	    	voList=sortList; //重新赋值
-	    	sortList.clear(); //释放资源
 		}
 		
+		boolean f=	this.saveBatch(sortList); //批量保存交易流水
 		
+		for(TransLog transLog:sortList){
+			System.out.println(transLog.getTxnPrimaryKey());
+		}
+		if(f){
+			return accountInfService.execute(voList);
+		}
+		return f;
 	}
 	
 	/**
-	 * 
-	* @Function: TransLogServiceImpl.java
-	* @Description: 创建交易流水
-	*
 	* @param:intfaceTransLog 接口调用流水信息
 	*
 	* @version: v1.0.0
@@ -107,7 +115,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	private List createTransLog(IntfaceTransLog intfaceTransLog){
+	private List doTransLog(IntfaceTransLog intfaceTransLog){
 		
 		List<TransLog> voList=new ArrayList<TransLog>();
 		
@@ -134,6 +142,66 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 */
 		
 		TransLog transLog=new TransLog();
+		this.newTransLog(intfaceTransLog, transLog);
+
+	
+		if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
+			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
+			transLog.setUserId(intfaceTransLog.getTfrOutUserId());
+			transLog.setPriBId(intfaceTransLog.getPriBId());
+			transLog.setCardAttr(AccountCardAttrEnum.SUB.getValue());
+			addToVoList(voList,transLog,0);
+			
+			TransLog transLog2=new TransLog();
+			this.newTransLog(intfaceTransLog, transLog2);
+			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+			transLog2.setUserId(intfaceTransLog.getTfrInUserId());
+			transLog2.setPriBId(intfaceTransLog.getPriBId());
+			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+			addToVoList(voList,transLog2,1);
+			
+		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
+			//快捷支付 先充值到通卡账户，再从通卡账户扣除
+			transLog.setCardAttr(AccountCardAttrEnum.SUB.getValue());
+			addToVoList(voList,transLog,1);
+			//快捷消费 先充值，再消费
+			TransLog transLog2=new TransLog();
+			this.newTransLog(intfaceTransLog, transLog2);
+			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+			addToVoList(voList,transLog2,0);
+		}else if (TransCode.CW80.getCode().equals(intfaceTransLog.getTransId())){
+			
+			TransLog transLog2=null;
+			int order=0;
+			Set<String> bIds=intfaceTransLog.getBIds();
+			
+			for (String bId : bIds) {
+				transLog2=new TransLog();
+				this.newTransLog(intfaceTransLog, transLog2);
+				transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+				transLog2.setPriBId(bId);
+				addToVoList(voList,transLog2,order);
+				order++;
+			}
+			
+		}else{
+			addToVoList(voList,transLog,0);
+		}
+		return voList;
+	}
+	
+	
+	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){
+		transLog.setOrder(order);
+		createTransLog(transLog);//基本信息
+		voList.add(transLog);
+	}
+	
+	
+	
+	private void newTransLog(IntfaceTransLog intfaceTransLog,TransLog transLog){
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
 		transLog.setItfPrimaryKey(intfaceTransLog.getItfPrimaryKey()); //接口层流水
 		transLog.setInsCode(intfaceTransLog.getInsCode());
 		transLog.setMchntCode(intfaceTransLog.getMchntCode());
@@ -144,36 +212,13 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		transLog.setTransCurrCd(intfaceTransLog.getTransCurrCd());
 		transLog.setProductCode(intfaceTransLog.getProductCode());
 		transLog.setTransId(intfaceTransLog.getTransId());
-		
 		transLog.setUserId(intfaceTransLog.getUserId());
 		transLog.setUserType(intfaceTransLog.getUserType());
 		transLog.setPriBId(intfaceTransLog.getPriBId());
-
 		transLog.setCardAttr(AccountCardAttrEnum.OPER.getValue());
+	}
+	
 
-		if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
-			transLog.setCardAttr(AccountCardAttrEnum.ADD.getValue());
-			
-		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
-			transLog.setCardAttr(AccountCardAttrEnum.SUB.getValue());
-			transLog.setOrder(1);
-			
-			//快捷消费 先充值，再消费
-			TransLog transLog2=transLog;
-			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
-			addToVoList(voList,transLog2,0);
-		}
-		
-		addToVoList(voList,transLog,1);
-		return voList;
-	}
-	
-	
-	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){
-		transLog.setOrder(order);
-		createTransLog(transLog);//基本信息
-		voList.add(transLog);
-	}
 	
 	private void createTransLog(TransLog transLog){
 		transLog.setDataStat(DataStatEnum.TRUE_STATUS.getCode());

@@ -51,22 +51,6 @@ public class AccountApp extends SpringBootServletInitializer implements WebAppli
 //		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 //		
 //		sqlSessionFactoryBean.setDataSource(dataSource());
-//		// 分页插件
-//		PageHelper pageHelper = new PageHelper();
-//		Properties props = new Properties();
-//		props.setProperty("dialect", "oracle");
-//		props.setProperty("reasonable", "true");
-//		props.setProperty("supportMethodsArguments", "true");
-//		props.setProperty("returnPageInfo", "check");
-//		props.setProperty("params", "count=countSql");
-//		pageHelper.setProperties(props);
-//		// 添加插件
-//		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });
-
-//		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//		// sqlSessionFactoryBean.setTypeAliasesPackage(myBatis.getTypeAliasesPackage());
-//		sqlSessionFactoryBean.setMapperLocations(resolver.getResources(myBatis.getMapperLocations()));
-//		sqlSessionFactoryBean.setConfigLocation(resolver.getResource(myBatis.getConfigLocations()));
 //		return sqlSessionFactoryBean.getObject();
 //	}
 

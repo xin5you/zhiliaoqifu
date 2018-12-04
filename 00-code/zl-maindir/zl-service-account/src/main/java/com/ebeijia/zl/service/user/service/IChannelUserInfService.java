@@ -12,5 +12,7 @@ import com.ebeijia.zl.facade.user.vo.ChannelUserInf;
  * @Date 2018-11-30
  */
 public interface IChannelUserInfService extends IService<ChannelUserInf> {
+	
+	boolean save(ChannelUserInf entity);
 
 }

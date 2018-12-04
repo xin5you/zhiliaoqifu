@@ -3,7 +3,6 @@ package com.ebeijia.zl.facade.account.service;
 /**
 * 
 * 
-* @ClassName: TxnAccountSettFacade.java
 * @Description: 该类的功能描述
 *
 * @version: v1.0.0

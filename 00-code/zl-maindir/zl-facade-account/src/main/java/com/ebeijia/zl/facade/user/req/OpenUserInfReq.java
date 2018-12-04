@@ -3,9 +3,6 @@ package com.ebeijia.zl.facade.user.req;
 import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 
 /**
-* 
-* 
-* @ClassName: OpenAccountReq.java
 * @Description: 账户用户信息请求
 *
 * @version: v1.0.0

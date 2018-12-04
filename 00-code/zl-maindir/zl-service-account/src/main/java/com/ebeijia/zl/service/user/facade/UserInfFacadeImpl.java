@@ -1,19 +1,23 @@
 package com.ebeijia.zl.service.user.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ebeijia.zl.common.utils.IdUtil;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.user.req.OpenUserInfReq;
-import com.ebeijia.zl.facade.user.service.UserFacade;
+import com.ebeijia.zl.facade.user.service.UserInfFacade;
+import com.ebeijia.zl.facade.user.vo.ChannelUserInf;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
+import com.ebeijia.zl.service.user.service.IChannelUserInfService;
 import com.ebeijia.zl.service.user.service.IPersonInfService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
 
 /**
- * 
 * 
-* @ClassName: TxnUserInfServiceImpl.java
 * @Description: 用户信息服务
 *
 * @version: v1.0.0
@@ -25,7 +29,8 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 *-------------------------------------*
 * 2018年12月3日     zhuqi           v1.0.0
  */
-public class TxnUserInfServiceImpl implements UserFacade {
+@Service
+public class UserInfFacadeImpl implements UserInfFacade {
 	
 	
 	@Autowired
@@ -33,41 +38,22 @@ public class TxnUserInfServiceImpl implements UserFacade {
 	
 	@Autowired
 	private IPersonInfService personInfService;
+	
+	@Autowired
+	private IChannelUserInfService channelUserInfService;
 
-
-	public String registerUserInf(OpenUserInfReq req) {
-		
-		/**
-		 * 查询用户信息
-		 */
-//		UserInf userInf=userInfService.getUserInfByPhoneNo(req.getMobilePhone(), req.getTransChnl());
-		
-		/*** 判断用户 手机号是否已经注册 ***/
-		PersonInf personInf = personInfService.getPersonInfByPhoneNo(req.getMobilePhone());
-		
-		
-		UserInf user=null;
-		if (personInf == null) {
-			/** 用户信息主键 */
-			
-			user = new UserInf();
-			user.setUserId(IdUtil.getNextId());
-			user.setUserType(req.getUserType());
-			user.setCompanyId(req.getCompanyId());
-			userInfService.save(user);
-
-			/** 个人信息 **/
-			personInf = new PersonInf();
-			personInf.setUserId(user.getUserId());
-			personInf.setMobilePhoneNo(req.getMobilePhone());
-			personInf.setPersonalName(req.getUserName());
-			personInf.setPersonalCardType(req.getCardType());
-			personInf.setPersonalCardNo(req.getIcardNo());
-			personInfService.save(personInf);
+	
+	/**
+	 * 用户注册
+	 */
+	public BaseResult registerUserInf(OpenUserInfReq req) {
+		String userId=userInfService.registerUserInf(req.getUserType(), req.getUserName(), req.getCompanyId(), req.getMobilePhone(), req.getCardType(), req.getIcardNo(), req.getTransId(), req.getTransChnl());
+		if(StringUtil.isNotEmpty(userId)){
+			return ResultsUtil.success(userId);
 		}else{
-			user=userInfService.getUserInfByPhoneNo(req.getMobilePhone(), req.getTransChnl());
+			return ResultsUtil.error("99","用户注册失败");
 		}
-		return null;
+		
 	}
 
 	@Override

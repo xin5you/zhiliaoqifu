@@ -2,6 +2,9 @@ package com.ebeijia.zl.service.user.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,10 +21,23 @@ import com.ebeijia.zl.service.user.service.IPersonInfService;
  * @Date 2018-11-30
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class PersonInfServiceImpl extends ServiceImpl<PersonInfMapper, PersonInf> implements IPersonInfService{
 
 	@Autowired
 	private PersonInfMapper personInfMapper;
+	
+	@Override
+	public boolean save(PersonInf entity){
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setCreateUser("99999999");
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setUpdateUser("99999999");
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
+	
 	/**
 	 * 根据手机号查找用户
 	 * @param phoneNo

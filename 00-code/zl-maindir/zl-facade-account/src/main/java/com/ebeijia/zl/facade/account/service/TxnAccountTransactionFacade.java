@@ -3,11 +3,7 @@ package com.ebeijia.zl.facade.account.service;
 import java.util.List;
 
 /**
- * 
-* 
-* @ClassName: TxnAccountTransactionFacade.java
 * @Description: 账户交易
-*
 * @version: v1.0.0
 * @author: zhuqi
 * @date: 2018年11月30日 上午10:59:39 
@@ -21,7 +17,6 @@ public interface TxnAccountTransactionFacade {
 
 	/**
 	 * 
-	* @Function: TxnAccountTransactionFacade.java
 	* @Description: 账户充值
 	*
 	*
@@ -39,7 +34,6 @@ public interface TxnAccountTransactionFacade {
 	
 	/**
 	 * 
-	* @Function: TxnAccountTransactionFacade.java
 	* @Description: 账户批量充值
 	*
 	*
@@ -55,10 +49,7 @@ public interface TxnAccountTransactionFacade {
 	void executeRecharge(List list) throws Exception;
 	
 	/**
-	 * 
-	* @Function: TxnAccountTransactionFacade.java
 	* @Description: 消费接口
-	*
 	*
 	* @version: v1.0.0
 	* @author: zhuqi
@@ -88,16 +79,12 @@ public interface TxnAccountTransactionFacade {
 	 */
 	void executeQuickConsume() throws Exception;
 	
-	/**
+  /**
 	* 
-	* @Function: TxnAccountTransactionFacade.java
 	* @Description: 转账
-	*
-	*
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年11月30日 上午11:11:39 
-	*
 	* Modification History:
 	* Date         Author          Version
 	*-------------------------------------*

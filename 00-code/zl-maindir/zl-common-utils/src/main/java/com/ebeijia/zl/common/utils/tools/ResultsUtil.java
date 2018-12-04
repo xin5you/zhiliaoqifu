@@ -3,7 +3,7 @@ package com.ebeijia.zl.common.utils.tools;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 
 /**
- * controller返回处理工具类
+ * 
  * 
  * @author pucker
  *
