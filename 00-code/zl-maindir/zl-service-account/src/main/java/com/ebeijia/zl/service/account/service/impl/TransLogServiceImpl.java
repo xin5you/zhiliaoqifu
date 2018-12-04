@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
@@ -175,7 +176,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	}
 	
 	private void createTransLog(TransLog transLog){
-		transLog.setDataStat("0");
+		transLog.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 		transLog.setCreateTime(System.currentTimeMillis());
 		transLog.setCreateUser("99999999");
 		transLog.setUpdateTime(System.currentTimeMillis());
