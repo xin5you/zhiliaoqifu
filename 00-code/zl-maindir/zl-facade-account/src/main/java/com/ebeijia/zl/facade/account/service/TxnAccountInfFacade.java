@@ -3,6 +3,9 @@ package com.ebeijia.zl.facade.account.service;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.facade.account.req.OpenAccountReq;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /**
 * 
 * @Description: 账户开户接口
@@ -16,6 +19,7 @@ import com.ebeijia.zl.facade.account.req.OpenAccountReq;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
+@Api(value = "账户实现接口")
 public interface TxnAccountInfFacade {
 
 	
@@ -32,6 +36,7 @@ public interface TxnAccountInfFacade {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
+	@ApiOperation(value = "开户接口", notes = "")
 	BaseResult createAccount(OpenAccountReq req) throws Exception;
 	
 
@@ -52,6 +57,7 @@ public interface TxnAccountInfFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	*/
+	@ApiOperation(value = "开户接口", notes = "")
 	String changeAccountStatus(OpenAccountReq req)throws Exception;
 
 }

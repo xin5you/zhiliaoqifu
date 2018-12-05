@@ -9,7 +9,7 @@
   </parent>
   <artifactId>zl-service-account</artifactId>
   <name>zl-service-account</name>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -64,13 +64,37 @@
 		    <version>1.5.4</version>
 		</dependency>
 		
-		
-	
+		<dependency>
+		    <groupId>com.alibaba.spring.boot</groupId>
+		    <artifactId>dubbo-spring-boot-starter</artifactId>
+		    <version>1.0.1</version>
+		</dependency>
+        
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>3.4.10</version>
+        </dependency>
+        
+        <dependency>
+	        <groupId>com.101tec</groupId>
+	        <artifactId>zkclient</artifactId>
+	        <version>0.10</version>
+	    </dependency>
+	    
+
+		<dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>swagger-dubbo</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
 		 <dependency>  
 	        <groupId>org.springframework.boot</groupId>  
 	        <artifactId>spring-boot-starter-test</artifactId>  
 	        <scope>test</scope>  
 	    </dependency>
+	    
   </dependencies>
   
   	<repositories>

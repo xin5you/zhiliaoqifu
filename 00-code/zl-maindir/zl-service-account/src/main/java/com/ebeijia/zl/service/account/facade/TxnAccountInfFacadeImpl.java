@@ -30,6 +30,7 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 * 2018年11月30日     zhuqi           v1.0.0
  */
 
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
 @Service
 public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 	
@@ -78,8 +79,12 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),null);
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		
+		
+		
+		
 		intfaceTransLog.setBIds(req.getbIds());
 		transLogService.execute(intfaceTransLog); 
+		
 		return null;
 	}
 

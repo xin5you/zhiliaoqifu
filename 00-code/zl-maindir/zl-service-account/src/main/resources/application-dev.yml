@@ -1,6 +1,6 @@
 server:
   port: 10201
-  contextPath: /account
+  contextPath: /
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
@@ -15,3 +15,10 @@ spring:
     password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+
+  dubbo:
+    appname: provider-test
+    registry: zookeeper://127.0.0.1:2181
+    protocol: dubbo
+    port: 20880
+    

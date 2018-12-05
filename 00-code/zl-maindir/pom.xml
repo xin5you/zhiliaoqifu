@@ -27,14 +27,14 @@
                 <!-- Import dependency management from Spring Boot -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>1.5.7.RELEASE</version>
+                <version>1.5.10.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
-                <version>1.5.7.RELEASE</version>
+                <version>1.5.10.RELEASE</version>
             </dependency>
             <!--如果要把springboot工程打包成war执行，需要该jar -->
             <dependency>
