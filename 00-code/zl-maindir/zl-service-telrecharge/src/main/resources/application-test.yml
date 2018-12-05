@@ -1,0 +1,62 @@
+server:
+  port: 11201
+  contextPath: /oms
+  session:
+    cookie:
+      name: JSESSIONID
+      path: /
+      domain: .i-zhiliao.com
+spring:
+  mvc:
+    view: 
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      #view-name: '*'
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static/
+  datasource:
+    jndi-name: JDBC
+    name: mySpringBoot
+    url: jdbc:oracle:thin:@192.168.110.5:JXDB
+    username: ismngdb
+    password: ismngdb
+    driver-class-name: oracle.jdbc.OracleDriver
+    type: com.alibaba.druid.pool.DruidDataSource
+    minActive: 1
+    maxActive: 20
+    initialSize: 1
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    #validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  redis: 
+    timeout: 3000
+    cluster:
+       nodes: 192.168.110.2:7111,192.168.110.3:7112,192.168.110.4:7113
+       connection-timeout: 1000
+       soTimeout: 3000
+       max-attempts: 5
+       password: 
+       max-redirects: 2
+    pool:
+       max-total: 1024
+       max-active: 8
+       max-idle: 8
+       max-wait: -1
+       min-idle: 0
+       block-when-exhausted: true
+       max-wait-millis: 3000
+       test-on-borrow: false
+       test-on-return: false
+       test-while-idle: true
+       minEvictableIdleTimeMillis: 60000
+       timeBetweenEvictionRunsMillis: 60000
+       numTestsPerEvictionRun: 1
+myBatis:
+  mapperLocations: classpath*:mapper/*.xml
+  configLocations: classpath:conf/mybatis-config.xml
+logging:
+  config: classpath:conf/logback-telrecharge.xml
