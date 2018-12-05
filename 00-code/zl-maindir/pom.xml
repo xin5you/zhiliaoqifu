@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ebeijia</groupId>
@@ -12,14 +13,14 @@
 
 
     <properties>
-    	<ebj.zl.version>1.0.0.RELEASE</ebj.zl.version>
-    	<lombok.version>1.18.4</lombok.version>
-    	<mybatis.plus.version>3.0.6</mybatis.plus.version>
+        <ebj.zl.version>1.0.0.RELEASE</ebj.zl.version>
+        <lombok.version>1.18.4</lombok.version>
+        <mybatis.plus.version>3.0.6</mybatis.plus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-    
+
 
     <dependencyManagement>
         <dependencies>
@@ -71,11 +72,11 @@
         <module>zl-api-bm001</module>
         <module>zl-cms</module>
         <module>zl-shop</module>
-    <module>zl-common-core</module>
-    <module>zl-common-utils</module>
-    <module>zl-facade-account</module>
-    <module>zl-service-account</module>
-  </modules>
+        <module>zl-common-core</module>
+        <module>zl-common-utils</module>
+        <module>zl-facade-account</module>
+        <module>zl-service-account</module>
+    </modules>
 
     <build>
         <plugins>
