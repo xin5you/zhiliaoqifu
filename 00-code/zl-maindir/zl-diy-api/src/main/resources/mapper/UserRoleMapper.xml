@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.thinkx.diy.api.system.mapper.UserRoleMapper">
+
+  <sql id="UserRoleColunmns">
+    user_id, 
+    role_id
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="String" resultType="UserRole">
+    select 
+    	<include refid="UserRoleColunmns" />
+    from tb_web_user_role
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteUserRoleByUserId" parameterType="String">
+    update tb_web_user_role set data_stat='1' where user_id = #{userId}
+  </delete>
+  
+  <insert id="insert" parameterType="UserRole">
+    insert into tb_web_user_role (
+    	user_id, 
+    	role_id
+      ) values (
+      	#{userId,jdbcType=VARCHAR}, 
+      	#{roleId,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateUserRole" parameterType="UserRole">
+    update tb_web_user_role
+  	<set>
+  	 	role_id = #{roleId,jdbcType=VARCHAR}
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getUserRoleByUserId" parameterType="String" resultType="UserRole">
+	 select 
+	 	<include refid="UserRoleColunmns"/>
+	 from tb_web_user_role where user_id = #{id}
+  </select>
+  
+</mapper>

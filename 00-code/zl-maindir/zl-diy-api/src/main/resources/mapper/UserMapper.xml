@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.thinkx.diy.api.system.mapper.UserMapper">
+
+	<sql id="UserColumns">
+		a.id,
+		a.user_name,
+		a.password,
+		a.login_name,
+		a.phone_no,
+		a.login_type,
+		a.isdefault,
+		a.data_stat,
+		a.remarks,
+		a.create_user,
+		a.update_user,
+		a.create_time,
+		a.update_time,
+		a.lock_version,
+		a.organization_id,
+		a.supplier_id
+	</sql>
+	
+	<select id="getList" parameterType="User" resultType="User">
+		select 
+			<include refid="UserColumns" />,
+			e.role_name,e.seq 
+		from tb_web_user a, tb_web_user_role d, tb_web_role e 
+    	where a.id = d.user_id and d.role_id = e.id 
+		 and a.data_stat = '0' 
+		<if test="phoneNo !=null and phoneNo !='' ">
+		 	and a.phone_no = #{phoneNo}
+		</if>
+		<if test="seq !=null and seq !='' ">
+		 	and e.seq >=  #{seq}
+		</if>
+		order by e.seq asc
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="String" resultType="User">
+		select
+		<include refid="UserColumns" />
+		from tb_web_user a
+		where a.ID = #{primaryKey} and a.data_stat='0'
+	</select>
+	
+	<select id="getUserByUserName" parameterType="User" resultType="User">
+		 select 
+	  		<include refid="UserColumns" />
+		 from tb_web_user a
+		 where a.user_name = #{userName} and a.data_stat = '0'
+	</select>
+	
+	<select id="getUserByPhoneNo" parameterType="String" resultType="User">
+		select 
+			<include refid="UserColumns" />,
+		e.seq
+		from tb_web_user a, 
+		tb_web_user_role d,tb_web_role e
+    	where a.id = d.user_id and d.role_id = e.id
+		and a.phone_no = #{phoneNo} and a.data_stat = '0' and a.login_type='3' and e.login_type='3'
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="User">
+		update tb_web_user set data_stat='1' where id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="User">
+		insert into tb_web_user a (
+			a.id,
+			a.login_name,
+			a.password,
+			a.user_name,
+			a.phone_no,
+			a.isdefault,
+			a.data_stat,
+			a.remarks,
+			a.create_user,
+			a.update_user,
+			a.create_time,
+			a.update_time,
+			a.lock_version,
+			a.organization_id,
+			a.supplier_id
+		) values (
+			#{id,jdbcType=VARCHAR}
+			#{loginName,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{userName,jdbcType=VARCHAR},
+			#{phoneNo,jdbcType=VARCHAR},
+			'0',
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			#{create_time,jdbcType=VARCHAR},
+			#{update_time,jdbcType=VARCHAR},
+			0,
+			#{organization_id,jdbcType=VARCHAR},
+			#{supplier_id,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="User">
+		update tb_web_user a
+		<set>
+	    	a.LOGIN_NAME = #{loginName,jdbcType=VARCHAR},
+			a.PASSWORD = #{password,jdbcType=VARCHAR},
+			a.USER_NAME = #{userName,jdbcType=VARCHAR},
+			a.PHONE_NO = #{phoneNo,jdbcType=VARCHAR},
+			a.ISDEFAULT = #{isdefault,jdbcType=CHAR},
+			a.DATA_STAT = #{dataStat,jdbcType=CHAR},
+			a.REMARKS = #{remarks,jdbcType=VARCHAR},
+			a.UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+			a.UPDATE_TIME=#{update_time,jdbcType=VARCHAR},
+			a.LOCK_VERSION = a.LOCK_VERSION +1
+		</set>
+		where a.ID = #{id}
+	</update>
+	
+</mapper>

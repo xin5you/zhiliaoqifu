@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.thinkx.diy.api.system.mapper.RoleMapper">
+
+	<sql id="roleColumns">
+		 id,
+		 role_name,
+		 description, 
+		 login_type,
+		 seq,
+		 data_stat,
+		 remarks,
+		 create_user,
+		 update_user,
+		 create_time,
+		 update_time,
+		 lock_version
+	</sql>
+
+	<select id="getUserRoleByUserId" parameterType="String" resultType="Role">
+		select
+			<include refid="roleColumns" />
+		from tb_web_role where data_stat = '0' and id in (
+		select role_id from tb_web_user_role
+		where user_id=#{useId})
+	</select>
+	
+	<select id="getRoleNameByUserId" parameterType="String" resultType="String">
+		select a.role_name
+		from tb_web_role a, tb_web_user_role b
+		where a.id=b.role_id
+		and b.user_id=#{useId} and a.data_stat = '0'
+	</select>
+	
+	<select id="getRoleList" resultType="Role">
+		select
+			<include refid="roleColumns" />
+		from tb_web_role
+		where seq > '0' and data_stat = '0'
+		order by seq asc
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		update tb_web_role set data_stat='1' where id = #{id}
+	</delete>
+
+</mapper>
