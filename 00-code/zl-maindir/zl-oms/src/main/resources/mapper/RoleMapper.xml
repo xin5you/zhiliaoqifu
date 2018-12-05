@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.thinkx.oms.sys.mapper.RoleMapper">
+	
+	<resultMap type="Role" id="RoleResultMap">
+		<result column="id" property="id"/>
+		<result column="role_name" property="roleName"/>
+		<result column="description" property="description"/>
+		<result column="login_type" property="loginType"/>
+		<result column="seq" property="seq"/>
+		<result column="data_stat" property="dataStat"/>
+		<result column="remarks" property="remarks"/>
+		<result column="create_user" property="createUser"/>
+		<result column="update_user" property="updateUser"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="lock_version" property="lockVersion"/>
+	</resultMap>
+	
+	<sql id="roleColumns">
+		 id,
+		 role_name,
+		 description, 
+		 login_type,
+		 seq,
+		 data_stat,
+		 remarks,
+		 create_user,
+		 update_user,
+		 create_time,
+		 update_time,
+		 lock_version
+	</sql>
+	
+	<select id="getRoleById" parameterType="java.lang.String" resultMap="RoleResultMap">
+		select
+		<include refid="roleColumns" />
+		from tb_web_role where id = #{Id}
+	</select>
+	
+	
+	<insert id="insertRole" parameterType="Role">
+		insert into tb_web_role(
+			id,
+			role_name,
+			description,
+			login_type,
+			seq,
+		    data_stat,
+		    remarks,
+		    create_user,
+		    update_user,
+		    create_time,
+		    update_time,
+		    lock_version
+		) values (
+			#{id},
+			#{roleName,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR},
+			#{loginType,jdbcType=VARCHAR},
+			#{seq,jdbcType=VARCHAR},
+		 	'0',
+		 	#{remarks,jdbcType=VARCHAR},
+		 	#{createUser,jdbcType=VARCHAR},
+		 	#{updateUser,jdbcType=VARCHAR},
+		 	#{createTime,jdbcType=BIGINT},
+		 	#{updateTime,jdbcType=BIGINT},
+		 	'0'
+		)
+	</insert>
+	
+	<select id="getRoleList" parameterType="Role" resultMap="RoleResultMap">
+		select
+			<include refid="roleColumns"/>
+			from tb_web_role
+			where login_type = #{loginType}
+	</select>
+	
+	<delete id="deleteRoleById" parameterType="java.lang.String">
+		delete from tb_web_role where id=#{id}
+	</delete>
+	
+	<update id="updateRole" parameterType="Role">
+		update tb_web_role
+		<set>
+			role_name = #{roleName,jdbcType=VARCHAR},
+			description = #{description,jdbcType=VARCHAR},
+			login_type = #{loginType,jdbcType=VARCHAR},
+			seq = #{seq,jdbcType=VARCHAR},
+			update_user=#{updateUser,jdbcType=VARCHAR},
+			update_time=#{updateTime,jdbcType=BIGINT},
+			lock_version=lock_version + 1
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="getUserRoleByUserId" parameterType="java.lang.String" resultMap="RoleResultMap">
+		select
+		<include refid="roleColumns" />
+		from tb_web_role 
+		where id in (
+			select role_id from tb_web_user_role
+			where user_id=#{id}
+		)
+	</select>
+	
+	<delete id="deleteUserRoleByRoleId" parameterType="java.lang.String">
+		delete from tb_web_user_role where role_id=#{roleId}
+	</delete>
+	
+	<delete id="deleteRoleResourceByRoleId" parameterType="java.lang.String">
+		delete from tb_web_role_resource where role_id=#{roleId}
+	</delete>
+	
+		<!-- 增加角色资源 -->
+	<insert id="saveRoleResource" parameterType="RoleResource">
+		insert into tb_web_role_resource(role_id,resource_id) values (#{roleId}, #{resourceId})
+	</insert>
+</mapper>

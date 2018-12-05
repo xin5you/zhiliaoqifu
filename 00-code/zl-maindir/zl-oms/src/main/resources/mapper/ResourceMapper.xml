@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.thinkx.oms.sys.mapper.ResourceMapper">
+	
+	<resultMap type="Resource" id="ResourceltMap">
+		<result column="id" property="id"/>
+		<result column="description" property="description"/>
+		<result column="icon" property="icon"/>
+		<result column="resource_name" property="resourceName"/>
+		<result column="resource_type" property="resourceType"/>
+		<result column="login_type" property="loginType"/>
+		<result column="resource_key" property="resourceKey"/>
+		<result column="seq" property="seq"/>
+		<result column="url" property="url"/>
+		<result column="pid" property="pid"/>
+		<result column="data_stat" property="dataStat"/>
+		<result column="remarks" property="remarks"/>
+		<result column="create_user" property="createUser"/>
+		<result column="update_user" property="updateUser"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="lock_version" property="lockVersion"/>
+	</resultMap>
+
+	<sql id="ResourceColumns">
+		 id,
+		 description, 
+		 icon, 
+		 resource_name,
+		 resource_type,
+		 login_type,
+		 resource_key,
+		 seq,
+		 url,
+		 pid,
+		 data_stat,
+		 remarks,
+		 create_user,
+		 update_user,
+		 create_time,
+		 update_time,
+		 lock_version	
+	</sql>
+	
+	<select id="getResourceById" parameterType="String" resultMap="ResourceltMap">
+		select
+			<include refid="ResourceColumns" />
+		from tb_web_resource where id = #{resourceId}
+	</select>
+	
+	 <select id="getResourceByKey" parameterType="String" resultMap="ResourceltMap">
+		select
+			<include refid="ResourceColumns" />
+		from tb_web_resource 
+		where resource_key = #{resourceKey}
+		and login_type = #{loginType}
+	</select>
+	
+	<insert id="insertResource" parameterType="Resource">
+		insert into tb_web_resource(
+			 id,
+			 description, 
+			 icon, 
+			 resource_name, 
+			 resource_type, 
+			 login_type,
+			 resource_key,
+			 seq, 
+			 url,
+			 pid,
+		 	 data_stat,
+		 	 remarks,
+		 	 create_user,
+			 update_user,
+			 create_time,
+			 update_time,
+			 lock_version	
+		  ) values (
+		  	#{id},
+		  	#{description,jdbcType=VARCHAR},
+		  	#{icon,jdbcType=VARCHAR},
+		  	#{resourceName,jdbcType=VARCHAR},
+		  	#{resourceType,jdbcType=VARCHAR},
+		  	#{loginType,jdbcType=VARCHAR},
+		  	#{resourceKey,jdbcType=VARCHAR},
+		  	#{seq,jdbcType=VARCHAR},
+		  	#{url,jdbcType=VARCHAR},
+		  	#{pid,jdbcType=VARCHAR},
+		  	'0',
+		 	#{remarks,jdbcType=VARCHAR},
+		 	#{createUser,jdbcType=VARCHAR},
+		 	#{updateUser,jdbcType=VARCHAR},
+		 	#{createTime,jdbcType=BIGINT},
+		 	#{updateTime,jdbcType=BIGINT},
+		 	'0'
+		  )
+	</insert>
+	
+	 <update id="updateResource" parameterType="Resource">
+	 update tb_web_resource
+		<set>
+			description=#{description,jdbcType=VARCHAR},
+			icon=#{icon,jdbcType=VARCHAR},
+			resource_name=#{resourceName,jdbcType=VARCHAR},
+			resource_type=#{resourceType,jdbcType=VARCHAR},
+			login_type=#{loginType,jdbcType=VARCHAR},
+			resource_key=#{resourceKey,jdbcType=VARCHAR},
+			seq=#{seq,jdbcType=VARCHAR},
+			url=#{url,jdbcType=VARCHAR},
+			pid=#{pid,jdbcType=VARCHAR},
+			update_user=#{updateUser,jdbcType=VARCHAR},
+			update_time=#{updateTime,jdbcType=BIGINT},
+			lock_version=LOCK_VERSION + 1
+		</set>
+			where id = #{id}
+	 </update>
+	 
+	<delete id="deleteResource" parameterType="java.lang.String" >
+		 delete from tb_web_resource where id = #{id}
+	</delete>
+	
+	<delete id="deleteRoleResourceByResId" parameterType="java.lang.String" >
+		 delete from tb_web_role_resource where resource_id = #{id}
+	</delete>
+	
+	<select id="getResourceList" resultType="Resource" resultMap="ResourceltMap">
+		select 
+			<include refid="ResourceColumns" /> 
+		from tb_web_resource 
+		where find_in_set(id, getResourceChild('0'))
+			and login_type = #{loginType}
+		<if test="resourceType !=null and resourceType !='' ">
+			and resource_type = #{resourceType}
+		</if>
+	</select>
+	
+	<!-- 根据rId获取该用户的权限-->
+	<select id="getRoleResourceByRoleId" parameterType="String" resultMap="ResourceltMap">
+		select 
+		<include refid="ResourceColumns" />
+		from tb_web_resource 
+		where data_stat ='0' and id in(
+			select resource_id 
+			from tb_web_role_resource 
+			where role_id = #{roleId}
+		)
+	</select>
+	
+	<!-- 根据用户Id获取该用户的权限-->
+	<select id="getUserResourceByUserId" parameterType="String" resultMap="ResourceltMap">
+		select 
+		<include refid="ResourceColumns" />
+		from tb_web_resource 
+		where  data_stat='0' and id in(
+			select resource_id from
+			tb_web_role_resource 
+			where role_id in(
+				select role_id from tb_web_user_role
+				where user_id = #{userId}
+			)
+		)
+	</select>
+
+</mapper>
