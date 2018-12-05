@@ -13,6 +13,19 @@ public class BaseResult<T> implements Serializable {
 	private String msg;
 	/** 返回对象 */
 	private T object;
+	
+	
+	
+
+	public BaseResult(String code,String msg,T object) {
+		this.code=code;
+		this.msg=msg;
+		this.object=object;
+	}
+	
+	public BaseResult() {
+		
+	}
 
 	public String getCode() {
 		return code;

@@ -44,7 +44,6 @@ public class BaseTxnReq implements java.io.Serializable {
 	 */
 	private Set<String> bIds;
 	
-	
 	/**
 	 * 100：企业员工账户
 	 * 200：企业账户
@@ -55,7 +54,7 @@ public class BaseTxnReq implements java.io.Serializable {
 	private String userType;
 	
 	/**
-	 * 渠道請求訂單號
+	 * 渠道请求订单号 全渠道唯一
 	 */
 	private String dmsRelatedKey;
 

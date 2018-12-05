@@ -2,6 +2,9 @@ package com.ebeijia.zl.facade.account.service;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.facade.account.req.AccountTransactionReq;
+
 /**
 * @Description: 账户交易
 * @version: v1.0.0
@@ -13,12 +16,11 @@ import java.util.List;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
-public interface TxnAccountTransactionFacade {
+public interface AccountTransactionFacade {
 
 	/**
-	 * 
-	* @Description: 账户充值
-	*
+	* 
+	* @Description: 账户充值(针对单一类型)
 	*
 	* @version: v1.0.0
 	* @author: zhuqi
@@ -29,7 +31,7 @@ public interface TxnAccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	void executeRecharge() throws Exception;
+	BaseResult executeRechargeByOneBId(AccountTransactionReq req) throws Exception;
 	
 	
 	/**
@@ -46,7 +48,7 @@ public interface TxnAccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	void executeRecharge(List list) throws Exception;
+	BaseResult executeRecharge(List<AccountTransactionReq> list) throws Exception;
 	
 	/**
 	* @Description: 消费接口
@@ -60,24 +62,8 @@ public interface TxnAccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	void executeConsume() throws Exception;
-	
-	/**
-	 * 
-	* @Function: TxnAccountTransactionFacade.java
-	* @Description: 快捷消费
-	*  用户快捷消费时，先从第三方扣款，回调通知平台
-	*  平台发起调用快捷支付接口，先充值到通卡账户，再用通卡消费
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年11月30日 上午11:04:58 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年11月30日     zhuqi           v1.0.0
-	 */
-	void executeQuickConsume() throws Exception;
+	BaseResult executeConsume(AccountTransactionReq req) throws Exception;
+
 	
   /**
 	* 
@@ -90,5 +76,5 @@ public interface TxnAccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	void executeTransfer();
+	BaseResult executeTransfer();
 }

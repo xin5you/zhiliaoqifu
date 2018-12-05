@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.facade.account.req.OpenAccountReq;
-import com.ebeijia.zl.facade.account.service.TxnAccountInfFacade;
+import com.ebeijia.zl.facade.account.req.AccountOpenReq;
+import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
@@ -32,9 +32,9 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 
 @com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
 @Service
-public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
+public class AccountManageFacadeImpl implements AccountManageFacade {
 	
-	private final  Logger log = LoggerFactory.getLogger(TxnAccountInfFacadeImpl.class);
+	private final  Logger log = LoggerFactory.getLogger(AccountManageFacadeImpl.class);
 
 	@Autowired
 	private ITransLogService transLogService;
@@ -61,7 +61,7 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	public BaseResult createAccount(OpenAccountReq req) throws Exception {
+	public BaseResult createAccount(AccountOpenReq req) throws Exception {
 		
 		log.info("==> 账户开户 mehtod=createAccount and OpenAccountReq={}",JSONArray.toJSON(req));
 		
@@ -81,17 +81,11 @@ public class TxnAccountInfFacadeImpl implements TxnAccountInfFacade {
 		
 		
 		
-		
+		//执行开户操作
 		intfaceTransLog.setBIds(req.getbIds());
-		transLogService.execute(intfaceTransLog); 
+		boolean eflag=transLogService.execute(intfaceTransLog); 
 		
-		return null;
+		intfaceTransLogService.updateById(intfaceTransLog,eflag);
+		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
-
-	
-	public String changeAccountStatus(OpenAccountReq req) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

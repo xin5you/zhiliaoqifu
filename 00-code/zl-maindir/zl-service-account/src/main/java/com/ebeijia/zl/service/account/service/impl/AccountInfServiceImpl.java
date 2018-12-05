@@ -151,16 +151,22 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 */
 	private boolean open(TransLog transLog) {
 		log.info("==>oper transLog={}",JSONArray.toJSON(transLog));
-		AccountInf account=new AccountInf();
-		account.setAccountNo(IdUtil.getNextId());
-		account.setUserId(transLog.getUserId());
-		account.setAccountType(transLog.getUserType());
-		account.setBId(transLog.getPriBId()); //专项账户类型
-		account.setAccountStat("00");//00：正常 10：冻结 90：注销
-		account.setAccountType(transLog.getUserType());
-		account.setAccBal(new BigDecimal(0) ); //开户时余额为0
-		log.info("==>oper<==");
-		return this.save(account);
+		AccountInf account=this.getAccountInfByUserId(transLog.getUserId(), transLog.getPriBId());
+		if(account !=null){
+			
+			return true;
+		}else{
+			account=new AccountInf();
+			account.setAccountNo(IdUtil.getNextId());
+			account.setUserId(transLog.getUserId());
+			account.setAccountType(transLog.getUserType());
+			account.setBId(transLog.getPriBId()); //专项账户类型
+			account.setAccountStat("00");//00：正常 10：冻结 90：注销
+			account.setAccountType(transLog.getUserType());
+			account.setAccBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户时余额为0
+			log.info("==>oper<==");
+			return this.save(account);
+		}
 	}
 	
 	/**
@@ -228,7 +234,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
 			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
 		}
-		account.setAccBal(AmountUtil.add(account.getAccBal(), transAmt));
+		account.setAccBal(AmountUtil.add(account.getAccBal(), transAmt.setScale(4,BigDecimal.ROUND_HALF_DOWN)));
 	}
 
 	/**
@@ -248,7 +254,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
 		}
 		
-		account.setAccBal(AmountUtil.sub(account.getAccBal(), transAmt));
+		account.setAccBal(AmountUtil.sub(account.getAccBal(), transAmt.setScale(4,BigDecimal.ROUND_HALF_UP)));
 	}
 	
 	/**

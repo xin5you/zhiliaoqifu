@@ -14,7 +14,7 @@ package com.ebeijia.zl.facade.account.service;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
-public interface TxnAccountSettFacade {
+public interface AccountSettFacade {
 
 	/**
 	 * 
