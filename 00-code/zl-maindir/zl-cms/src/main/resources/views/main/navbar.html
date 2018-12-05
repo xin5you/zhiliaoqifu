@@ -15,56 +15,14 @@
 					</li>
 				</ul>
 				<ul class="nav" id="mobile-nav">
-					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-							<i class="icon-briefcase icon-white"></i>电商管理<b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a th:href="@{/banner/listBanner}" th:text="banner信息管理" /></li>
-							<li><a th:href="@{/eshop/listEshopInf}" th:text="商城信息管理 " /></li>
-							<li><a th:href="@{/routes/listRoutes}" th:text="电商入口管理" /></li>
-							<li><a th:href="@{/eSetting/listEsetting}" th:text="电商服务设置" /></li>
-							<li><a th:href="@{/floor/listFloors}" th:text="电商楼层管理" /></li>
-							<!-- <li><a th:href="@{/you163/api/getCallBackMethods}" th:text="严选回调注册" /></li> -->
-						</ul>
-					</li>
-					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-							<i class="icon-list icon-white"></i>订单管理<b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a th:href="@{/order/listOrderDetail}" th:text="交易流水明细" /></li>
-							<li><a th:href="@{/order/listOrderSummarizing}" th:text="交易流水汇总" /></li>
-							<li><a th:href="@{/platforder/platforder/getPlatfOrderList}" th:text="电商一级订单管理" /></li>
-							<li><a th:href="@{/platforder/platforder/getPlatfShopOrderLists}" th:text="电商二级订单管理" /></li>
-							<li><a th:href="@{/platforder/orderShip/getOrderShipList}" th:text="订单收货地址" /></li>
-							<li><a th:href="@{/platforder/orderProductItem/getOrderProductItemList}" th:text="订单货品明细" /></li>
-							<li><a th:href="@{/platforder/expressPlatf/getExpressPlatfList}" th:text="订单物流管理" /></li>
-							<li><a th:href="@{/ecom/refund/listRefundsOrder}" th:text="订单退款管理" /></li>
-						</ul>
-					</li>
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="icon-list icon-white"></i>会员管理<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
 							<li><a th:href="@{/member/memberInf/getMemberInfList}" th:text="会员信息" /></li>
 						</ul>
-					</li>
-					
-					<li class="dropdown">
-						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-							<i class="icon-list icon-white"></i>商品管理<b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a th:href="@{/ecom/goodsManage/listGoodsSpuInfo}" th:text="商品Spu管理" /></li>
-							<li><a th:href="@{/ecom/goodsManage/listGoodsInfo}" th:text="商品信息管理" /></li>
-							<li><a th:href="@{/ecom/inventory/listInventory}" th:text="商品库存管理" /></li>
-							<li><a th:href="@{/ecom/category/listCategory}" th:text="分类管理" /></li>
-							<li><a th:href="@{/ecom/category/listFirstCategory}" th:text="商品一级分类管理" /></li>
-							<li><a th:href="@{/ecom/category/listSecondCateGory}" th:text="商品二级分类管理" /></li>
-						</ul>
-					</li>
+					</li> -->
 					
 					<li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -74,7 +32,6 @@
 							<li><a th:href="@{/system/user/listUser}" th:text="用户管理" /></li>
 							<li><a th:href="@{/system/role/listRole}" th:text="角色管理" /></li>
 							<li><a th:href="@{/system/resource/listResource}" th:text="资源管理" /></li>
-							<!-- <li><a th:href="@{/exception/getExceptionList}" th:text="电商异常管理" /></li> -->
 						</ul>
 					</li>
 				</ul>

@@ -40,9 +40,6 @@ var listResource = {
 				name_ : {
 					required : "请输入资源名称"
 				},
-				resourceType_ : {
-					required : "请输入资源类型"
-				},
 				url_ : {
 					required : "请输入资源路径"
 				}
@@ -141,8 +138,7 @@ var listResource = {
 			type : 'POST',
 			url : Helper.getRootPath() + '/system/resource/addResource',
 			data : {
-				"name" : $("#name_").val(),
-				"resourceType" : $("#resourceType_").val(),
+				"resourceName" : $("#name_").val(),
 				"url" : $("#url_").val(),
 				"description" : $("#description_").val()
 			},
@@ -170,8 +166,7 @@ var listResource = {
 			url : Helper.getRootPath() + '/system/resource/editResource',
 			data : {
 				"id" : $("#id_").val(),
-				"name" : $("#name_").val(),
-				"resourceType" : $("#resourceType_").val(),
+				"resourceName" : $("#name_").val(),
 				"url" : $("#url_").val(),
 				"description" : $("#description_").val()
 			},
@@ -247,8 +242,7 @@ var listResource = {
 			},
 			success : function(data) {
 				$('#id_').val(data.id);
-				$('#name_').val(data.name);
-				$('#resourceType_').val(data.resourceType);
+				$('#name_').val(data.resourceName);
 				$('#url_').val(data.url);
 				$('#description_').val(data.description);
 			},
@@ -259,7 +253,6 @@ var listResource = {
 
 		$("#modal").on("hidden.bs.modal", function(e) {
 			$("#name_").removeAttr('readonly');
-			$("#resourceType_").removeAttr('readonly');
 			$("#url_").removeAttr('readonly');
 			$("#description_").removeAttr('readonly');
 			$(".btn-submit").removeAttr('disabled');

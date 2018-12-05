@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.system.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ import com.cn.thinkx.ecom.system.domain.Role;
 import com.cn.thinkx.ecom.system.domain.User;
 import com.cn.thinkx.ecom.system.service.RoleService;
 import com.cn.thinkx.ecom.system.service.UserService;
+import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
 import com.github.pagehelper.PageInfo;
 
 @RestController
@@ -87,6 +89,7 @@ public class UserController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
+			user.setLoginType(LoginType.LoginType2.getCode());
 			PageInfo<User> pageList = userService.getUserPage(startNum, pageSize, user);
 			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
@@ -108,6 +111,7 @@ public class UserController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
+			user.setLoginType(LoginType.LoginType2.getCode());
 			PageInfo<User> pageList = userService.getUserPage(startNum, pageSize, user);
 			mv.addObject("user", user);
 			mv.addObject("pageInfo", pageList);
@@ -147,13 +151,15 @@ public class UserController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			u.setOrganizationId("1");
+			u.setId(UUID.randomUUID().toString());
 			u.setPassword(MD5Utils.MD5(u.getPassword()));
 			u.setIsdefault("1");
-			u.setState("0");
-			u.setCreateUser("" + user.getId());
-			u.setUpdateUser("" + user.getId());
-			User us = userService.getUserByLoginName(u.getLoginName());
+			u.setLoginType(LoginType.LoginType2.getCode());
+			u.setCreateUser(user.getId().toString());
+			u.setUpdateUser(user.getId().toString());
+			u.setCreateTime(System.currentTimeMillis());
+			u.setUpdateTime(System.currentTimeMillis());
+			User us = userService.getUserByName(null, u.getLoginName(), LoginType.LoginType2.getCode());
 			if(us == null){
 				if (userService.insert(u) > 0)
 					return ResultsUtil.success();
@@ -183,19 +189,23 @@ public class UserController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			User u = userService.selectByPrimaryKey(users.getId()+"");
+			User u = userService.selectByPrimaryKey(users.getId().toString());
 			if(u.getLoginName().equals(users.getLoginName())){
 				u.setLoginName(users.getLoginName());
-				u.setName(users.getName());
+				u.setUserName(users.getUserName());
 				u.setPassword(MD5Utils.MD5(users.getPassword()));
-				u.setUpdateUser("" + user.getId());
+				u.setUpdateUser(user.getId().toString());
+				u.setUpdateTime(System.currentTimeMillis());
+				u.setLoginType(LoginType.LoginType2.getCode());
 			}else{
-				User us = userService.getUserByLoginName(users.getLoginName());
+				User us = userService.getUserByName(null, users.getLoginName(), LoginType.LoginType2.getCode());
 				if(us == null){
 					u.setLoginName(users.getLoginName());
-					u.setName(users.getName());
+					u.setUserName(users.getUserName());//后面改成userName
 					u.setPassword(MD5Utils.MD5(MD5Utils.MD5(users.getPassword())));
-					u.setUpdateUser("" + user.getId());
+					u.setUpdateUser(user.getId().toString());
+					u.setUpdateTime(System.currentTimeMillis());
+					u.setLoginType(LoginType.LoginType2.getCode());
 				}else{
 					return ResultsUtil.error(ExceptionEnum.userNews.UN05.getCode(), ExceptionEnum.userNews.UN05.getMsg());
 				}
@@ -248,8 +258,10 @@ public class UserController {
 	public ModelAndView listUserRole(HttpServletRequest req, @PathVariable("type") String userId) {
 		ModelAndView mv = new ModelAndView("system/user/listUserRole");
 		try {
+			Role role = new Role();
+			role.setLoginType(LoginType.LoginType2.getCode());
 			List<Role> RoleList = roleService.getUserRoleByUserId(userId); // 当前用户的角色
-			List<Role> allRoleList = roleService.getList();// 所有的角色列表
+			List<Role> allRoleList = roleService.getList(role);// 所有的角色列表
 			for (Role r : allRoleList) {
 				for (Role s : RoleList) {
 					if (r.getId().equals(s.getId()))

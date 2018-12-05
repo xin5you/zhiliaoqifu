@@ -24,7 +24,7 @@ public interface UserMapper extends BaseDao<User> {
 	 * @param loginname
 	 * @return
 	 */
-	User getUserByLoginName(String loginName);
+	User getUserByName(User user);
 
 	/**
 	 * 增加用户角色

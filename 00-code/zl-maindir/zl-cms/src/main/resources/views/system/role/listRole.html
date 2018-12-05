@@ -27,17 +27,15 @@
 						<tr>
 							<th></th>
 							<th>角色名称</th>
-							<th>排序号</th>
-							<th>是否默认</th>
+							<th>备注</th>
 							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="role,roleStat : ${pageInfo.list}" th:inline="text">
 							<td><span th:text="${roleStat.count}"></span></td>
-							<td><span th:text="${role.name}"></span></td>
-							<td><span th:text="${role.seq}"></span></td>
-							<td><span th:if="${role.isdefault == '0'}">是</span><span th:if="${role.isdefault != '0'}">否</span></td>
+							<td><span th:text="${role.roleName}"></span></td>
+							<td><span th:text="${role.description}"></span></td>
 							<td>
 								<a th:attr="roleId=${role.id}" title="授权" class="btn-mini btn-grant-resource" href="#"><i class="icon-plus"></i></a>&nbsp;
 								<a th:attr="roleId=${role.id}" title="编辑" class="btn-mini btn-edit-role" href="#"><i class="icon-edit"></i></a>

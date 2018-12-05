@@ -35,13 +35,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	@Override
 	public int deleteUser(String userId) {
 		User user = userMapper.selectByPrimaryKey(userId);
-		user.setState("1");
+		user.setDataStat("1");
 		return userMapper.updateByPrimaryKey(user);
 	}
 
 	@Override
-	public User getUserByLoginName(String loginName) {
-		return userMapper.getUserByLoginName(loginName);
+	public User getUserByName(String userName, String loginName, String loginType) {
+		User user = new User();
+		user.setUserName(userName);
+		user.setLoginName(loginName);
+		user.setLoginType(loginType);
+		return userMapper.getUserByName(user);
 	}
 
 	@Override

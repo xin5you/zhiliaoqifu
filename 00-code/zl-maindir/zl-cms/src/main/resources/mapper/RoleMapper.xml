@@ -4,87 +4,108 @@
 <mapper namespace="com.cn.thinkx.ecom.system.mapper.RoleMapper">
 	
 	<sql id="roleColumns">
-		 ID,
-		 NAME,
-		 DESCRIPTION, 
-		 ISDEFAULT,
-		 SEQ
+		id,
+		 role_name,
+		 description, 
+		 login_type,
+		 seq,
+		 data_stat,
+		 remarks,
+		 create_user,
+		 update_user,
+		 create_time,
+		 update_time,
+		 lock_version
 	</sql>
 	
 	<select id="selectByPrimaryKey" parameterType="String" resultType="Role">
-		SELECT
+		select
 			<include refid="roleColumns" />
-		FROM TB_WEB_ROLE WHERE ID=#{primaryKey}
+		from tb_web_role where id=#{primaryKey}
 	</select>
 	
 	<select id="selectByName" parameterType="String" resultType="Role">
-		SELECT
+		select
 			<include refid="roleColumns" />
-		FROM TB_WEB_ROLE WHERE NAME=#{name}
+		from tb_web_role where role_name=#{roleName} and login_type='2'
 	</select>
 	
 	<select id="getList" parameterType="Role" resultType="Role">
-		SELECT
+		select
 			<include refid="roleColumns"/>
-		FROM TB_WEB_ROLE ROLE
+		from tb_web_role where login_type='2'
 	</select>
 	
 	<insert id="insert" parameterType="Role">
-	   <selectKey resultType="Integer" order="BEFORE" keyProperty="id">  
-			<include refid="com.cn.thinkx.ecom.base.mapper.SqlCommonMapper.getSysRoleId" />
-		</selectKey>
-		INSERT INTO TB_WEB_ROLE(
-			ID,
-			NAME,
-			DESCRIPTION,
-			ISDEFAULT,
-			SEQ
-		)VALUES (
+		insert into tb_web_role(
+			id,
+		    role_name,
+		 	description, 
+		 	login_type,
+		 	seq,
+			data_stat,
+		 	remarks,
+			create_user,
+		 	update_user,
+		 	create_time,
+		 	update_time,
+		 	lock_version
+		) values (
 			#{id},
-			#{name,jdbcType=VARCHAR},
+			#{roleName,jdbcType=VARCHAR},
 			#{description,jdbcType=VARCHAR},
-			#{isdefault,jdbcType=VARCHAR},
-			#{seq,jdbcType=VARCHAR}
+			#{loginType,jdbcType=VARCHAR},
+			#{seq,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+		 	#{createUser,jdbcType=VARCHAR},
+		 	#{updateUser,jdbcType=VARCHAR},
+		 	#{createTime,jdbcType=BIGINT},
+		 	#{updateTime,jdbcType=BIGINT},
+		 	0
 		)
 	</insert>
 	
 	<delete id="deleteByPrimaryKey" parameterType="String">
-		DELETE FROM TB_WEB_ROLE WHERE ID=#{id}
+		delete from tb_web_role where id=#{id}
 	</delete>
 	
 	<update id="updateByPrimaryKey" parameterType="Role">
-		UPDATE TB_WEB_ROLE
+		update tb_web_role
 		<set>
-			NAME=#{name,jdbcType=VARCHAR},
-			DESCRIPTION=#{description,jdbcType=VARCHAR},
-			ISDEFAULT=#{isdefault,jdbcType=VARCHAR},
-			SEQ=#{seq,jdbcType=VARCHAR}
+			role_name=#{roleName,jdbcType=VARCHAR},
+			description=#{description,jdbcType=VARCHAR},
+			login_type=#{loginType,jdbcType=VARCHAR},
+			seq=#{seq,jdbcType=VARCHAR},
+			update_user=#{updateUser,jdbcType=VARCHAR},
+			update_time=#{updateTime,jdbcType=BIGINT},
+			lock_version=lock_version+1
 		</set>
-		WHERE ID=#{id}
+		where id=#{id}
 	</update>
 	
 	<insert id="addRoleResource" parameterType="RoleResource">
-		INSERT INTO TB_WEB_ROLE_RESOURCE(ROLE_ID,RESOURCE_ID) 
-		VALUES (
+		insert into tb_web_role_resource(role_id,resource_id) 
+		values (
 			#{roleId, jdbcType=VARCHAR},
 			#{resourceId, jdbcType=VARCHAR}
 		)
 	</insert>
 	
 	<delete id="deleteRoleResourceByRoleId" parameterType="String">
-		DELETE FROM TB_WEB_ROLE_RESOURCE WHERE role_id=#{roleId}
+		delete from tb_web_role_resource wherE role_id=#{roleId}
 	</delete>
 	
 	<select id="getUserRoleByUserId" parameterType="String" resultType="Role">
-		SELECT
+		select
 			<include refid="roleColumns" />
-		FROM TB_WEB_ROLE WHERE id in (
-		SELECT ROLE_ID 
-		FROM TB_WEB_USER_ROLE
-		WHERE USER_ID=#{useId})
+		from tb_web_role where id in (
+		select role_id 
+		from tb_web_user_role
+		where user_id=#{useId})
 	</select>
 	
 	<delete id="deleteUserRoleByRoleId" parameterType="String">
-		DELETE FROM TB_WEB_USER_ROLE WHERE role_id=#{roleId}
+		delete from tb_web_user_role where role_id=#{roleId}
 	</delete>
 </mapper>

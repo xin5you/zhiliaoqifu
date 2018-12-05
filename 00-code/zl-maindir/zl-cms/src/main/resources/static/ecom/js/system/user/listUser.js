@@ -131,7 +131,7 @@ var listUser = {
             url: Helper.getRootPath() + '/system/user/addUser',
             data: {
         		"loginName" : $("#login_name").val(),
-        		"name": $("#name_").val(),
+        		"userName": $("#name_").val(),
         		"password": $("#password_").val()
             },
             cache:false,
@@ -162,7 +162,7 @@ var listUser = {
             data: {
             	"id" : $("#user_id").val(),
         		"loginName" : $("#login_name").val(),
-        		"name": $("#name_").val(),
+        		"userName": $("#name_").val(),
         		"password": $("#password_").val()
             },
             cache:false,
@@ -237,7 +237,7 @@ var listUser = {
             success : function (data) {
             	$('#user_id').val(data.id);
             	$('#login_name').val(data.loginName);
-            	$('#name_').val(data.name);
+            	$('#name_').val(data.userName);
             	$('#password_').val(data.password);
             },
             error : function(){

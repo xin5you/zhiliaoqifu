@@ -38,7 +38,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 		List<Resource> list = resourceMapper.getList(entity);
 		if (list != null && list.size() > 0) {
 			for (Resource s : list)
-				s.setState(Constants.PrmStat.findByCode(s.getState()).getValue());
+				s.setDataStat(Constants.PrmStat.findByCode(s.getDataStat()).getValue());
 		}
 		PageInfo<Resource> page = new PageInfo<Resource>(list);
 		return page;

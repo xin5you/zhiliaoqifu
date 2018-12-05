@@ -1,6 +1,7 @@
 package com.cn.thinkx.ecom.system.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ import com.cn.thinkx.ecom.system.domain.Role;
 import com.cn.thinkx.ecom.system.domain.User;
 import com.cn.thinkx.ecom.system.service.ResourceService;
 import com.cn.thinkx.ecom.system.service.RoleService;
+import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
 import com.github.pagehelper.PageInfo;
 
 @RestController
@@ -53,6 +55,7 @@ public class RoleController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
+			role.setLoginType(LoginType.LoginType2.getCode());
 			PageInfo<Role> pageList = roleService.getRolePage(startNum, pageSize, role);
 			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
@@ -74,6 +77,7 @@ public class RoleController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
+			role.setLoginType(LoginType.LoginType2.getCode());
 			PageInfo<Role> pageList = roleService.getRolePage(startNum, pageSize, role);
 			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
@@ -112,13 +116,16 @@ public class RoleController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			Role r = roleService.selectByName(role.getName());
+			Role r = roleService.selectByName(role.getRoleName());
 			if (r != null) {
 				return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
 			} else {
-				role.setIsdefault("0");
-				role.setCreateUser("" + user.getId());
-				role.setUpdateUser("" + user.getId());
+				role.setId(UUID.randomUUID().toString());
+				role.setLoginType(LoginType.LoginType2.getCode());
+				role.setCreateUser(user.getId());
+				role.setUpdateUser(user.getId());
+				role.setCreateTime(System.currentTimeMillis());
+				role.setUpdateTime(System.currentTimeMillis());
 				if (roleService.insert(role) > 0) {
 					return ResultsUtil.success();
 				} else {
@@ -147,17 +154,18 @@ public class RoleController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			Role r = roleService.selectByName(role.getName());
-			Role oldRole = roleService.selectByPrimaryKey(role.getId() + "");
+			Role r = roleService.selectByName(role.getRoleName());
+			Role oldRole = roleService.selectByPrimaryKey(role.getId().toString());
 
-			if (oldRole.getName().equals(role.getName())) {
-				role.setUpdateUser("" + user.getId());
+			if (oldRole.getRoleName().equals(role.getRoleName())) {
+				role.setUpdateUser(user.getId());
 			} else {
 				if (r != null)
 					return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
 				else
-					role.setUpdateUser("" + user.getId());
+					role.setUpdateUser(user.getId());
 			}
+			role.setLoginType(LoginType.LoginType2.getCode());
 			if (roleService.updateByPrimaryKey(role) > 0)
 				return ResultsUtil.success();
 			else

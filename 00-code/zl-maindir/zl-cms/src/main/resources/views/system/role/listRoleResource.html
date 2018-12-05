@@ -38,10 +38,10 @@
 									<input type="checkbox" name="resourceId" th:value="${entity.id}" class="checkbox"/>
 								</span>
 							</td>
-							<td><span th:text="${entity.name}"></span></td>
+							<td><span th:text="${entity.resourceName}"></span></td>
 							<td><span th:text="${entity.url}"></span></td>
-							<td><span th:text="${entity.createDateTime}"></span></td>
-							<td><span th:if="${entity.state == '0'}">正常</span><span th:if="${entity.state != '0'}">停用</span></td>
+							<td><span th:text="${entity.createTime}"></span></td>
+							<td><span th:if="${entity.dataStat == '0'}">正常</span><span th:if="${entity.dataStat != '0'}">停用</span></td>
 						</tr>
 					</tbody>
 				</table>

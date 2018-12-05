@@ -27,6 +27,7 @@ import com.cn.thinkx.ecom.system.domain.User;
 import com.cn.thinkx.ecom.system.service.ResourceService;
 import com.cn.thinkx.ecom.system.service.RoleService;
 import com.cn.thinkx.ecom.system.service.UserService;
+import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
 
 @RestController
 public class LoginController {
@@ -65,7 +66,7 @@ public class LoginController {
 			if (!authCode.equalsIgnoreCase(sysAuthCode))
 				return ResultsUtil.error(ExceptionEnum.loginNews.LN02.getCode(), ExceptionEnum.loginNews.LN02.getMsg());
 
-			User currUser = userService.getUserByLoginName(userName);
+			User currUser = userService.getUserByName(null, userName, LoginType.LoginType2.getCode());
 			if (currUser == null || 1 > 2)
 				return ResultsUtil.error(ExceptionEnum.loginNews.LN03.getCode(), ExceptionEnum.loginNews.LN03.getMsg());
 

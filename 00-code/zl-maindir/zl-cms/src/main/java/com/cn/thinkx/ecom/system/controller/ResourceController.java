@@ -1,7 +1,10 @@
 package com.cn.thinkx.ecom.system.controller;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +22,9 @@ import com.cn.thinkx.ecom.common.exception.BizHandlerException;
 import com.cn.thinkx.ecom.common.util.NumberUtils;
 import com.cn.thinkx.ecom.common.util.ResultsUtil;
 import com.cn.thinkx.ecom.system.domain.Resource;
+import com.cn.thinkx.ecom.system.domain.User;
 import com.cn.thinkx.ecom.system.service.ResourceService;
+import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
 import com.github.pagehelper.PageInfo;
 
 @RestController
@@ -101,11 +106,19 @@ public class ResourceController {
 	@PostMapping(value = "/addResource")
 	public BaseResult<Object> addResource(HttpServletRequest req, Resource resource) {
 		try {
+			HttpSession session = req.getSession();
+			User user = (User) session.getAttribute(Constants.SESSION_USER);
 			String u = resource.getUrl().substring(resource.getUrl().indexOf("/") + 1);
 			String r = u.replaceAll("/", "_");
-			String urlUpper = r.toUpperCase();
-			resource.setKey(urlUpper);
-			resource.setState(Constants.PrmStat.PS0.getCode());
+			resource.setId(UUID.randomUUID().toString());
+			resource.setResourceKey(r.toUpperCase());
+			resource.setResourceType("0");
+			resource.setDataStat(Constants.PrmStat.PS0.getCode());
+			resource.setLoginType(LoginType.LoginType2.getCode());
+			resource.setCreateUser(user.getId().toString());
+			resource.setUpdateUser(user.getId().toString());
+			resource.setCreateTime(System.currentTimeMillis());
+			resource.setUpdateTime(System.currentTimeMillis());
 			if (resourceService.insert(resource) > 0)
 				return ResultsUtil.success();
 			else
@@ -128,14 +141,17 @@ public class ResourceController {
 	@PostMapping(value = "/editResource")
 	public BaseResult<Object> editResource(HttpServletRequest req, Resource res) {
 		try {
+			HttpSession session = req.getSession();
+			User user = (User) session.getAttribute(Constants.SESSION_USER);
 			Resource resource = resourceService.selectByPrimaryKey(res.getId());
-			resource.setName(res.getName());
-			resource.setResourceType(res.getResourceType());
+			resource.setResourceName(res.getResourceName());
 			resource.setDescription(res.getDescription());
 			resource.setUrl(res.getUrl());
 			String u = res.getUrl().substring(res.getUrl().indexOf("/") + 1);
 			String r = u.replaceAll("/", "_");
-			resource.setKey(r.toUpperCase());
+			resource.setResourceKey(r.toUpperCase());
+			resource.setUpdateUser(user.getId().toString());
+			resource.setUpdateTime(System.currentTimeMillis());
 			if (resourceService.updateByPrimaryKey(resource) > 0)
 				return ResultsUtil.success();
 			else

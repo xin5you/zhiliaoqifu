@@ -39,7 +39,7 @@ public interface UserService extends BaseService<User> {
 	 * @param loginName
 	 * @return User
 	 */
-	User getUserByLoginName(String loginName);
+	User getUserByName(String userName, String loginName, String loginType);
 
 	/**
 	 * 新增用户角色信息

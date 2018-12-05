@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
 import com.cn.thinkx.ecom.member.service.MemberService;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.github.pagehelper.PageInfo;
 
 @RestController
@@ -30,13 +30,13 @@ public class MemberController {
 		ModelAndView mv = new ModelAndView("member/listMember");
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		PageInfo<MemberInf> pageInfo = null;
 		try {
-			pageInfo = memberService.getMemberListPage(startNum, pageSize, memberInf);
+			PageInfo<MemberInf> pageInfo = memberService.getMemberListPage(startNum, pageSize, memberInf);
+			mv.addObject("pageInfo", pageInfo);
 		} catch (Exception e) {
 			logger.error("## 会员信息查询出错", e);
 		}
-		mv.addObject("pageInfo", pageInfo);
+		
 		return mv;
 	}
 }

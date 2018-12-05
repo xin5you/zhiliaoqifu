@@ -1,8 +1,5 @@
 package com.cn.thinkx.ecom;
 
-import java.util.Properties;
-
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,6 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.github.pagehelper.PageHelper;
 
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
@@ -61,7 +57,7 @@ public class CmsApp extends SpringBootServletInitializer implements WebApplicati
 		
 		sqlSessionFactoryBean.setDataSource(dataSource());
 		// 分页插件
-		PageHelper pageHelper = new PageHelper();
+		/*PageHelper pageHelper = new PageHelper();
 		Properties props = new Properties();
 		props.setProperty("dialect", "oracle");
 		props.setProperty("reasonable", "true");
@@ -70,7 +66,7 @@ public class CmsApp extends SpringBootServletInitializer implements WebApplicati
 		props.setProperty("params", "count=countSql");
 		pageHelper.setProperties(props);
 		// 添加插件
-		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });
+		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });*/
 
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		// sqlSessionFactoryBean.setTypeAliasesPackage(myBatis.getTypeAliasesPackage());

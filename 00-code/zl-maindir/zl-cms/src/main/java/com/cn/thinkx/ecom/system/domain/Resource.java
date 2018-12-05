@@ -6,59 +6,19 @@ public class Resource extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 主键ID
-	 */
 	private String id;
-	/**
-	 * 创建时间
-	 */
-	private String createDateTime; 
-	/**
-	 * 名称
-	 */
-	private String name; 
-	/**
-	 * 菜单路径
-	 */
-	private String url; 
-	/**
-	 * 描述
-	 */
-	private String description; 
-	/**
-	 * 图标
-	 */
-	private String icon;  
-	/**
-	 * 排序号
-	 */
-	private String seq; 
-	/**
-	 * 资源类型, 0菜单 1功能
-	 */
-	private String resourceType; 
-	/**
-	 * 状态 0启用 1停用
-	 */
-	private String state;  
-	/**
-	 * 父级
-	 */
-	private String pid; 
-	
-	private String key;
+	private String description; // 描述
+	private String icon; // 图标
+	private String resourceName; // 名称
+	private String resourceType;// 资源类型, 0菜单 1功能
+	private String loginType;
+	private String url; // 菜单路径
+	private Integer seq; // 排序号
+	private String pid; // 父级
+	private String resourceKey;
 	
 	//标识（1：会显示该条数据，代表角色可以选择此Resource信息。0：则相反）
 	private String checked;
-
-	public String getChecked() {
-		return checked;
-	}
-
-	public void setChecked(String checked) {
-		this.checked = checked;
-	}
 
 	public String getId() {
 		return id;
@@ -66,30 +26,6 @@ public class Resource extends BaseEntity {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getCreateDateTime() {
-		return createDateTime;
-	}
-
-	public void setCreateDateTime(String createDateTime) {
-		this.createDateTime = createDateTime;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	public String getDescription() {
@@ -108,12 +44,12 @@ public class Resource extends BaseEntity {
 		this.icon = icon;
 	}
 
-	public String getSeq() {
-		return seq;
+	public String getResourceName() {
+		return resourceName;
 	}
 
-	public void setSeq(String seq) {
-		this.seq = seq;
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
 	}
 
 	public String getResourceType() {
@@ -124,12 +60,28 @@ public class Resource extends BaseEntity {
 		this.resourceType = resourceType;
 	}
 
-	public String getState() {
-		return state;
+	public String getLoginType() {
+		return loginType;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setLoginType(String loginType) {
+		this.loginType = loginType;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Integer getSeq() {
+		return seq;
+	}
+
+	public void setSeq(Integer seq) {
+		this.seq = seq;
 	}
 
 	public String getPid() {
@@ -140,12 +92,20 @@ public class Resource extends BaseEntity {
 		this.pid = pid;
 	}
 
-	public String getKey() {
-		return key;
+	public String getResourceKey() {
+		return resourceKey;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setResourceKey(String resourceKey) {
+		this.resourceKey = resourceKey;
+	}
+
+	public String getChecked() {
+		return checked;
+	}
+
+	public void setChecked(String checked) {
+		this.checked = checked;
 	}
 
 }

@@ -27,7 +27,7 @@
 							</div>
 							<div class="input-prepend">
 								<span class="add-on">姓名</span> 
-								<input id="name" name="name" type="text" class="input-medium" th:value="*{name}" maxlength="20"/>
+								<input id="userName" name="userName" type="text" class="input-medium" th:value="*{userName}" maxlength="20"/>
 							</div>
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
@@ -54,12 +54,12 @@
 								<td><span th:text="${userStat.count}"></span></td>
 								<td><span th:text="${user.id}"></span></td>
 								<td><span th:text="${user.loginName}"></span></td>
-				                <td><span th:text="${user.name}"></span></td>
-								<td><span th:if="${user.createDateTime != null}" th:text="${#dates.format(user.createDateTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+				                <td><span th:text="${user.userName}"></span></td>
+								<td><span th:if="${user.createTime != null}" th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 								<td><span th:if="${user.isdefault == '0'}">是</span><span th:if="${user.isdefault != '0'}">否</span></td>
-								<td><span th:if="${user.state == '0'}">正常</span><span th:if="${user.state != '0'}">停用</span></td>
+								<td><span th:if="${user.dataStat == '0'}">正常</span><span th:if="${user.dataStat != '0'}">停用</span></td>
 				                <td>
-									<span th:if="${user.isdefault != '0' and user.state != '1'}">
+									<span th:if="${user.isdefault != '0' and user.dataStat != '1'}">
 										<a th:attr="userId=${user.id}" title="添加角色" class="btn-mini btn-grant-role" href="#"><i class="icon-plus"></i></a>
 										<a th:attr="userId=${user.id}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 										<a th:attr="userId=${user.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>

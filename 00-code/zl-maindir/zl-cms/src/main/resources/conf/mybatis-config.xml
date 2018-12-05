@@ -21,17 +21,7 @@
         <typeAlias alias="Resource" type="com.cn.thinkx.ecom.system.domain.Resource"/>
         <typeAlias alias="Role" type="com.cn.thinkx.ecom.system.domain.Role"/>
         
-        <typeAlias alias="Banner"  type="com.cn.thinkx.ecom.banner.domain.Banner"/>
-        <typeAlias alias="EshopBanner"  type="com.cn.thinkx.ecom.eshopbanner.domain.EshopBanner"/>
-        <typeAlias alias="EshopInf"  type="com.cn.thinkx.ecom.eshop.domain.EshopInf"/>
-        <typeAlias alias="Routes"  type="com.cn.thinkx.ecom.routes.domain.Routes"/>
-        <typeAlias alias="EshopRoutes"  type="com.cn.thinkx.ecom.eshoproutes.domain.EshopRoutes"/>
-        <typeAlias alias="OrderInf"  type="com.cn.thinkx.ecom.order.domain.OrderInf"/>
-        <typeAlias alias="OrderDetailUpload"  type="com.cn.thinkx.ecom.order.domain.OrderDetailUpload"/>
-        
 		<package name="com.cn.thinkx.ecom.basics.member.domain"/>
-		<package name="com.cn.thinkx.ecom.basics.goods.domain"/>
-		<package name="com.cn.thinkx.ecom.basics.order.domain"/>
 	</typeAliases>
 
 </configuration>

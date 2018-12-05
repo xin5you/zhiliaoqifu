@@ -43,9 +43,7 @@ var listRole = {
             	roleName: { required: true},
             },
             messages: {
-            	roleName: {
-                    required: "请输入角色名称"
-                }
+            	roleName: { required: "请输入角色名称"}
             },
             invalidHandler: function(form, validator) {
             },
@@ -121,7 +119,7 @@ var listRole = {
             type: 'POST',
             url: Helper.getRootPath() + '/system/role/addRole',
             data: {
-        		"name" : $("#roleName_").val(),
+        		"roleName" : $("#roleName_").val(),
         		"seq": $("#seq_").val(),
         		"description": $("#description_").val()
             },
@@ -152,7 +150,7 @@ var listRole = {
             url: Helper.getRootPath() + '/system/role/updateRole',
             data: {
             	"id" : $("#roleId").val(),
-        		"name" : $("#roleName_").val(),
+        		"roleName" : $("#roleName_").val(),
         		"seq": $("#seq_").val(),
         		"description": $("#description_").val()
             },
@@ -229,7 +227,7 @@ var listRole = {
             },
             success : function (data) {
             	$('#roleId').val(data.id);
-            	$('#roleName_').val(data.name);
+            	$('#roleName_').val(data.roleName);
             	$('#seq_').val(data.seq);
             	$('#description_').val(data.description);
             },
