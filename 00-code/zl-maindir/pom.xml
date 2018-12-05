@@ -18,6 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <spring.version>4.3.0.RELEASE</spring.version>
     </properties>
     
 
@@ -61,20 +62,27 @@
     </repositories>
 
     <modules>
-        <module>zl-common</module>
+        <!-- <module>zl-common</module> -->
         <module>zl-core-activemq</module>
         <module>zl-basics-goods</module>
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
         <module>zl-core-redis</module>
-        <module>zl-api-shop</module>
         <module>zl-api-bm001</module>
         <module>zl-cms</module>
-        <module>zl-shop</module>
+<!--         <module>zl-shop</module> -->
     <module>zl-common-core</module>
     <module>zl-common-utils</module>
-    <module>zl-facade-account</module>
-    <module>zl-service-account</module>
+<!--     <module>zl-facade-account</module>
+    <module>zl-service-account</module> -->
+    <module>zl-base-core</module>
+    <module>zl-diy</module>
+    <module>zl-diy-api</module>
+    <module>zl-oms</module>
+    <module>zl-pms-base</module>
+    <module>zl-facade-telrecharge</module>
+    <module>zl-service-telrecharge</module>
+<!--             <module>zl-api-shop</module> -->
   </modules>
 
     <build>

@@ -1,8 +1,5 @@
 package com.cn.thinkx.oms;
 
-import java.util.Properties;
-
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.WebStatFilter;
-import com.github.pagehelper.PageHelper;
 
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
@@ -40,7 +36,7 @@ public class OmsApp extends SpringBootServletInitializer implements WebApplicati
 	private MyBatisProps myBatis;
 	@Autowired
 	private Environment env;
-	
+
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(OmsApp.class);
 	}
@@ -62,9 +58,9 @@ public class OmsApp extends SpringBootServletInitializer implements WebApplicati
 	@ConditionalOnMissingBean
 	public SqlSessionFactory sqlSessionFactoryBean() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-		
+
 		sqlSessionFactoryBean.setDataSource(dataSource());
-		
+
 		// 分页插件
 		/*PageHelper pageHelper = new PageHelper();
 		Properties props = new Properties();
@@ -76,21 +72,21 @@ public class OmsApp extends SpringBootServletInitializer implements WebApplicati
 		pageHelper.setProperties(props);
 		// 添加插件
 		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });
-*/
+		 */
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		// sqlSessionFactoryBean.setTypeAliasesPackage(myBatis.getTypeAliasesPackage());
 		sqlSessionFactoryBean.setMapperLocations(resolver.getResources(myBatis.getMapperLocations()));
 		sqlSessionFactoryBean.setConfigLocation(resolver.getResource(myBatis.getConfigLocations()));
 		return sqlSessionFactoryBean.getObject();
 	}
-	
+
 	// 事务管理
 	@Bean
 	@ConditionalOnMissingBean
 	public PlatformTransactionManager transactionManager() {
-			return new DataSourceTransactionManager(dataSource());
+		return new DataSourceTransactionManager(dataSource());
 	}
-	
+
 	// 显示声明CommonsMultipartResolver为mutipartResolver
 	@Bean(name = "multipartResolver")
 	public MultipartResolver multipartResolver() {
@@ -101,14 +97,14 @@ public class OmsApp extends SpringBootServletInitializer implements WebApplicati
 		resolver.setMaxUploadSize(50 * 1024 * 1024);// 上传文件大小 50M 50*1024*1024
 		return resolver;
 	}
-	
+
 	@Bean
-    public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new WebStatFilter());
-        filterRegistrationBean.addUrlPatterns("/*");
-        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
-        return filterRegistrationBean;
-    }
-	
+	public FilterRegistrationBean filterRegistrationBean() {
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+		filterRegistrationBean.setFilter(new WebStatFilter());
+		filterRegistrationBean.addUrlPatterns("/*");
+		filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+		return filterRegistrationBean;
+	}
+
 }

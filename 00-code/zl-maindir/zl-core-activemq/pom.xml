@@ -45,10 +45,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common</artifactId>
-            <version>1.0</version>
-        </dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-common-core</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-common-utils</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
 
     </dependencies>
 

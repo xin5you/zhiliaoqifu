@@ -28,5 +28,12 @@ public class WechatMQJmsTemplate {
 		jmsTemplate.setDefaultDestinationName("wecard.wechat.mcht.collection.bill.template.msg.v1");
 		return jmsTemplate;
 	}
+	
+	@Bean(name="rechargeMobileJmsTemplate")
+	public JmsTemplate getRechargeMobileJmsTemplate(){
+		JmsTemplate jmsTemplate=new JmsTemplate(connectionFactory);
+		jmsTemplate.setDefaultDestinationName("hkb.api.jms.template.recharge.mobile.v1");
+		return jmsTemplate;
+	}
 
 }

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.cn.thinkx.ecom.activemq.core.service.RechargeMobileProducerService;
@@ -33,7 +32,8 @@ import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telChannelOrderInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

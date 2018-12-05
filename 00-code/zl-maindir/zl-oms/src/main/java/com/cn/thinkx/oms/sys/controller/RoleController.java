@@ -25,7 +25,7 @@ import com.cn.thinkx.oms.sys.model.ZTreeResource;
 import com.cn.thinkx.oms.sys.service.ResourceService;
 import com.cn.thinkx.oms.sys.service.RoleService;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
+import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.github.pagehelper.PageInfo;
 

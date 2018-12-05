@@ -13,7 +13,8 @@ import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telProviderOrderInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelProviderOrderInfImpl implements TelProviderOrderInfFacade {
 
 	@Autowired

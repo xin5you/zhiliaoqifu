@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.common.constants.Constants;
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
 import com.cn.thinkx.ecom.system.domain.Resource;
 import com.cn.thinkx.ecom.system.mapper.ResourceMapper;
 import com.cn.thinkx.ecom.system.service.ResourceService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
+import com.ebeijia.zl.common.utils.constants.Constants;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 

@@ -9,6 +9,7 @@ import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelAreaInf;
  * @author zhuqiuyou
  *
  */
+
 public interface TelChannelAreaInfFacade {
 
 	TelChannelAreaInf getTelChannelAreaInfById(String area_id) throws Exception;
