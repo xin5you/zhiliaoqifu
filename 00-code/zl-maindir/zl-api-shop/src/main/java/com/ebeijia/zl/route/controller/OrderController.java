@@ -1,12 +1,14 @@
 package com.ebeijia.zl.route.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * 用户定义订单相关接口
+ *
  */
+@Api("用户定义订单相关接口")
 @RestController
 @RequestMapping("/order")
 public class OrderController {

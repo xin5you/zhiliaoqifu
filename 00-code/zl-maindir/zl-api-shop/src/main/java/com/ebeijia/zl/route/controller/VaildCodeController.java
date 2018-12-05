@@ -5,14 +5,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @User J
- * @Date 2018/12/05
+ *
  */
-@Api("定义Banner输出的相关接口")
-@RequestMapping("/banner")
+@Api("用于定义生产验证码相关的接口")
 @RestController
-public class BannerController {
+@RequestMapping("/vaild")
+public class VaildCodeController {
 
+    //根据手机号获取验证码，返回发送状态
+    public void phoneVaildCode(String phoneNum){
+
+    }
 
 
 }
