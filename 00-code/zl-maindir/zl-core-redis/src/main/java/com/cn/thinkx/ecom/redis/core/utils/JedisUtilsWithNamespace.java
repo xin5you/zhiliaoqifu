@@ -9,8 +9,9 @@ import java.util.Set;
 
 @Service
 public class JedisUtilsWithNamespace{
+
     @Autowired
-    JedisClusterUtils jedis;
+    private JedisClusterUtils jedis;
 
     private String namespace;
 
@@ -172,5 +173,11 @@ public class JedisUtilsWithNamespace{
         return jedis.sismember(key, member);
     }
 
+    public JedisClusterUtils getJedis() {
+        return jedis;
+    }
 
+    public void setJedis(JedisClusterUtils jedis) {
+        this.jedis = jedis;
+    }
 }

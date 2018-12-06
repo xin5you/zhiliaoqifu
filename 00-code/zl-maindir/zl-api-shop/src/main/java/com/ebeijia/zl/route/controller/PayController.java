@@ -25,5 +25,6 @@ public class PayController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public void listAccountDetail(){}
 
+    //检查订单余额
 
 }

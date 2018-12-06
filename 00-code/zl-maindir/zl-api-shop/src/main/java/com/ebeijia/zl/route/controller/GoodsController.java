@@ -1,7 +1,9 @@
 package com.ebeijia.zl.route.controller;
 
+import com.cn.thinkx.ecom.basics.goods.service.GoodsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,17 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/goods")
 public class GoodsController {
+    @Autowired
+    GoodsService goodsService;
 
     @ApiOperation("商品列表，分页")
     @RequestMapping("/list/{orderby}")
-    public void listGoods(@PathVariable String orderby,int start,int limit){
+    public void listGoods(@PathVariable(required = false) String orderby,int start,int limit){
 
     }
 
 
     @ApiOperation("按类型的商品列表")
     @RequestMapping("/list/cat{catid}/{orderby}")
-    public void listGoods(@PathVariable int catid, @PathVariable String orderby,int start,int limit){}
+    public void listGoods(@PathVariable int catid, @PathVariable(required = false) String orderby,int start,int limit){}
 
     @ApiOperation("商品详情")
     @RequestMapping("/get/detail/{goods}")

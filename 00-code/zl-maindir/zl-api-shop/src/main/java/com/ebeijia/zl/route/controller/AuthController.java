@@ -1,7 +1,7 @@
 package com.ebeijia.zl.route.controller;
 
 
-import com.ebeijia.zl.shop.auth.service.IAuthService;
+import com.ebeijia.zl.shop.service.auth.IAuthService;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.Token;
 import io.swagger.annotations.Api;
