@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.oms.specialAccount.mapper.CompanyBillingTypeInfMapper">
+		
+	<resultMap type="com.cn.thinkx.oms.specialAccount.model.CompanyBillingTypeInf" id="CompanyBillingTypeInfResultMap">
+		<result column="ID" property="id"/>
+		<result column="B_ID" property="bId"/>
+		<result column="COMPANY_ID" property="cId"/>
+		<result column="REMARKS" property="remarks"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+		<result column="LOCK_VERSION" property="lockVersion"/>
+	</resultMap>
+	
+	<sql id="CompanyBillingTypeInfColumns">
+		cb.ID,
+		cb.B_ID,
+		cb.COMPANY_ID,
+		cb.REMARKS,
+		cb.CREATE_USER, 
+		cb.UPDATE_USER, 
+		cb.CREATE_TIME, 
+		cb.UPDATE_TIME, 
+		cb.LOCK_VERSION
+	</sql>
+	
+	<insert id="insertCompanyBillingTypeInf" parameterType="com.cn.thinkx.oms.specialAccount.model.CompanyBillingTypeInf">
+		INSERT INTO TB_COMPANY_BILLING_TYPE (
+			ID,
+			B_ID,
+			COMPANY_ID,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER, 
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			LOCK_VERSION
+			)	VALUES	( 
+			    #{id,jdbcType=VARCHAR},
+		 		#{bId,jdbcType=VARCHAR},
+		 		#{cId,jdbcType=VARCHAR},
+		 		'0',
+		 		#{remarks,jdbcType=VARCHAR},
+		 		#{createUser,jdbcType=VARCHAR},
+		 		#{createTime,jdbcType=BIGINT},
+		 		#{updateUser,jdbcType=VARCHAR},
+		 		#{updateTime,jdbcType=BIGINT},
+		 		0
+		 	) 
+	</insert>
+	
+	
+	<select id="getCompanyBillingTypeInfList" parameterType="java.lang.String" resultMap="CompanyBillingTypeInfResultMap">
+		SELECT 
+		   <include refid="CompanyBillingTypeInfColumns" />
+		    from TB_COMPANY_BILLING_TYPE cb
+		         WHERE DATA_STAT  = '0'
+			 	 AND COMPANY_ID = #{cId,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateCompanyBillingTypeInf" parameterType="com.cn.thinkx.oms.specialAccount.model.CompanyBillingTypeInf">
+			update TB_COMPANY_BILLING_TYPE
+			set DATA_STAT  = '0',
+			UPDATE_TIME=sysdate,
+			UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		    WHERE COMPANY_ID = #{cId,jdbcType=VARCHAR} and B_ID = #{bId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteCompanyBillingTypeInfByCId" parameterType="com.cn.thinkx.oms.specialAccount.model.CompanyBillingTypeInf">
+			UPDATE TB_COMPANY_BILLING_TYPE
+			set DATA_STAT  = '1',
+			UPDATE_TIME=sysdate,
+			UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		    WHERE COMPANY_ID = #{cId,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteCompanyBillingTypeInfByBId" parameterType="com.cn.thinkx.oms.specialAccount.model.CompanyBillingTypeInf">
+			update TB_COMPANY_BILLING_TYPE
+			set DATA_STAT  = '1',
+			UPDATE_TIME=sysdate,
+			UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		    WHERE B_ID = #{bId,jdbcType=VARCHAR}
+	</update>
+</mapper>

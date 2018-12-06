@@ -13,7 +13,8 @@ import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telChannelItemListFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelChannelItemListServiceImpl implements TelChannelItemListFacade {
 
 	@Autowired

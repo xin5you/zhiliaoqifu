@@ -2,7 +2,7 @@ package com.cn.thinkx.ecom.common.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.servlet.http.HttpServletResponse;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 public class UploadUtil {

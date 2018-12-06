@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.common.service.impl.BaseServiceImpl;
 import com.cn.thinkx.ecom.system.domain.Role;
 import com.cn.thinkx.ecom.system.domain.RoleResource;
 import com.cn.thinkx.ecom.system.mapper.RoleMapper;
 import com.cn.thinkx.ecom.system.service.RoleService;
+import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 

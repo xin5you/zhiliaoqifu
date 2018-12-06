@@ -31,7 +31,8 @@ import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telChannelOrderInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
