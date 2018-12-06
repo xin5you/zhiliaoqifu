@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @User J
+ * @User
  * @Date 2018/12/05
  */
 @Api("用于定义认证接口")
@@ -22,14 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    IAuthService IAuthService;
+    IAuthService authService;
 
     //这里只有手机和验证码的登录
     @ApiOperation("常规登录")
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public JsonResult login(@ApiParam("手机号") String phone, @ApiParam("验证码") String pwd) {
-        //前端测试用
-        return new JsonResult().put("token",new Token("testToken","TT233"));
+    public JsonResult<Token> login(@ApiParam("手机号") String phone, @ApiParam("验证码") String pwd) {
+        return new JsonResult<>(authService.phoneLogin(phone,pwd));
     }
 
 

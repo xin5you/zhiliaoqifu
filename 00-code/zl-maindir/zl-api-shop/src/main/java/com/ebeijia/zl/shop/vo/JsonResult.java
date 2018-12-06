@@ -1,35 +1,39 @@
 package com.ebeijia.zl.shop.vo;
 
-import org.springframework.util.Assert;
-
-import java.util.LinkedHashMap;
-
-public class JsonResult extends LinkedHashMap<String, Object> {
+public class JsonResult<T> {
 
     private static final long serialVersionUID = -62401379125965102L;
 
     /*
      * 响应状态码，默认ResponseCode.SUCCESS
      */
-    public static final String CODE = "code";
+    private int code = 200;
 
     /*
      * 响应详情说明
      */
-    public static final String MESSAGE = "msg";
+    private String message = "";
 
     /*
      * 响应详情数据
      */
-    public static final String RESULT = "result";
+    private T result;
 
     /*
      * 默认构造器
      */
     public JsonResult() {
         setCode(200);
+        setMessage("ok");
     }
 
+
+    public JsonResult(T t){
+        this.result = t;
+        if (t == null){
+            setCode(404);
+        }
+    }
     /*
      * 状态码构造器
      */
@@ -49,32 +53,27 @@ public class JsonResult extends LinkedHashMap<String, Object> {
     }
 
     public void setCode(int responseCode) {
-        Assert.notNull(responseCode, "responseCode can not be null");
-        put(CODE, responseCode);
+        code = responseCode;
     }
 
-    public String getCode() {
-        return get(CODE).toString();
+    public int getCode() {
+       return code;
     }
 
     public void setMessage(String message) {
-        put(MESSAGE, message);
+        this.message = message;
     }
 
     public String getMessage() {
-        return (String) get(MESSAGE);
+        return message;
     }
 
-    public void setResult(Object result) {
-        put(RESULT, result);
+    public void setResult(T result) {
+        this.result = result;
     }
 
-    public Object getResult() {
-        return (Object) get(RESULT);
+    public T getResult() {
+        return this.result;
     }
 
-    @Override
-    public JsonResult put(String key, Object value) {
-        return this;
-    }
 }
