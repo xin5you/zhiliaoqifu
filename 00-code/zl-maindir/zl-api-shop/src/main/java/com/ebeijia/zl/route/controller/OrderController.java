@@ -1,6 +1,7 @@
 package com.ebeijia.zl.route.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,17 +17,21 @@ public class OrderController {
     //                     取消  -A类退款       -B类退款 -退货-退货申请
 
 
-    //订单创建
+    //
+    @ApiOperation("订单创建")
     public void createOrder(){
 
     }
 
-    //订单状态变更
+    @ApiOperation("订单支付")
     public void orderNextState(){
 
     }
-    //订单状态
+
+    @ApiOperation("订单状态修改")
     public void orderReplaceState(){
 
     }
+
+
 }
