@@ -83,7 +83,6 @@
     <module>zl-pms-base</module>
     <module>zl-facade-telrecharge</module>
     <module>zl-service-telrecharge</module>
-    <module>zl-manager</module>
     </modules>
 
     <build>
