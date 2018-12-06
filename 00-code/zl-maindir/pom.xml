@@ -70,10 +70,8 @@
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
         <module>zl-core-redis</module>
-        <module>zl-api-shop</module>
         <module>zl-api-bm001</module>
         <module>zl-cms</module>
-        <module>zl-shop</module>
         <module>zl-common-core</module>
         <module>zl-common-utils</module>
         <module>zl-facade-account</module>
