@@ -8,7 +8,6 @@
 		<version>1.0.0.RELEASE</version>
 	</parent>
 
-     <groupId>com.cn.thinkx.common</groupId>
 	 <artifactId>zl-base-core</artifactId>
 	 <packaging>jar</packaging>
 	 <name>zl-base-cores</name>
