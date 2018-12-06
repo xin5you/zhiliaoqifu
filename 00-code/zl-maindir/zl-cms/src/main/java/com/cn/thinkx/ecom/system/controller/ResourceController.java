@@ -123,9 +123,6 @@ public class ResourceController {
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.resourceNews.RN01.getCode(), ExceptionEnum.resourceNews.RN01.getMsg());
-		} catch (BizHandlerException e) {
-			logger.error("## 新增资源出错", e.getMessage());
-			return ResultsUtil.error(e.getCode(), e.getMessage());
 		} catch (Exception e) {
 			logger.error("## 新增资源出错", e);
 			return ResultsUtil.error(ExceptionEnum.ERROR_CODE, ExceptionEnum.ERROR_MSG);
@@ -156,9 +153,6 @@ public class ResourceController {
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.resourceNews.RN02.getCode(), ExceptionEnum.resourceNews.RN02.getMsg());
-		} catch (BizHandlerException e) {
-			logger.error("## 编辑资源出错", e);
-			return ResultsUtil.error(e.getCode(), e.getMessage());
 		} catch (Exception e) {
 			logger.error("## 编辑资源出错", e);
 			return ResultsUtil.error(ExceptionEnum.ERROR_CODE, ExceptionEnum.ERROR_MSG);
@@ -178,9 +172,6 @@ public class ResourceController {
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.resourceNews.RN03.getCode(), ExceptionEnum.resourceNews.RN03.getMsg());
-		} catch (BizHandlerException e) {
-			logger.error("## 删除资源出错", e);
-			return ResultsUtil.error(e.getCode(), e.getMessage());
 		} catch (Exception e) {
 			logger.error("## 删除资源出错", e);
 			return ResultsUtil.error(ExceptionEnum.ERROR_CODE, ExceptionEnum.ERROR_MSG);
