@@ -1,6 +1,7 @@
-import com.ebeijia.ShopApp;
-import com.ebeijia.zhiliao.shop.goods.domain.TbEcomGoods;
-import com.ebeijia.zhiliao.shop.goods.service.ITbEcomGoodsService;
+import com.ebeijia.zl.shop.ShopApp;
+import com.ebeijia.zl.shop.core.goods.domain.TbEcomGoods;
+import com.ebeijia.zl.shop.core.goods.service.ITbEcomGoodsService;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,6 @@ public class SqlTest {
     public void sqlQuery(){
         System.out.println(goodsService.count());
         TbEcomGoods goods = new TbEcomGoods();
-        goods.setGoodsId(UUID.randomUUID().toString());
-        goods.setEcomCode(UUID.randomUUID().toString());
         goodsService.save(goods);
     }
 }
