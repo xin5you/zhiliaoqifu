@@ -18,6 +18,7 @@ public class AuthController {
 
     //这里只有手机和验证码的登录
     @ApiOperation("常规登录")
+    @RequestMapping("/login")
     public String login(@ApiParam("手机号") String phone,@ApiParam("验证码") String pwd) {
         return null;
     }

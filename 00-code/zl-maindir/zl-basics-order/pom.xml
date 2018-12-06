@@ -2,11 +2,12 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-	  <groupId>com.ebeijia</groupId>
-	  <artifactId>zl-maindir</artifactId>
-    <version>1.0.0.RELEASE</version>
-  </parent>
+	<parent>
+		<groupId>com.ebeijia</groupId>
+		<artifactId>zl-shop-parent</artifactId>
+		<version>1.0.0.RELEASE</version>
+		<relativePath>../zl-shop-parent</relativePath>
+	</parent>
 
   <artifactId>zl-basics-order</artifactId>
   <version>1.0.0.RELEASE</version>

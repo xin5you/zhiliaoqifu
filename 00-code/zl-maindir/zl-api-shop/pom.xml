@@ -15,8 +15,9 @@
 
     <parent>
         <groupId>com.ebeijia</groupId>
-        <artifactId>zl-maindir</artifactId>
+        <artifactId>zl-shop-parent</artifactId>
         <version>1.0.0.RELEASE</version>
+        <relativePath>../zl-shop-parent</relativePath>
     </parent>
 
     <dependencies>
