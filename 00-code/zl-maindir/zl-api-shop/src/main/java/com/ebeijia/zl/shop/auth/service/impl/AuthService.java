@@ -21,7 +21,7 @@ public class AuthService implements IAuthService {
         token.put("userid","TT233");
         token.put("token","testToken");
         //将获取到的token存入redis缓存;
-        jedis.set(Self.name+token.get("userid"),token.get("token"),3600*24);
+        jedis.set(Self.name+token.get("token"),token.get("userid"),3600*24);
         //前端测试用
         return new Token(token.get("token"));
     }
