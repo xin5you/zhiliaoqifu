@@ -1,6 +1,7 @@
+#debug: true
 server:
   port: 9999
-  contextPath: /oms
+  contextPath: /
   session:
     cookie:
       name: JSESSIONID
@@ -61,6 +62,20 @@ spring:
     password: admin
     pool:
       max-connections: 50
+#  dubbo:
+#    reference:
+#      check: false
+#    registry:
+#      address: zookeeper://192.168.2.110:12801?backup=192.168.2.110:12802,192.168.2.110:12803
+#      port: 12880
+#    application:
+#      name: dubbo_oms_consumer
+#    protocol:
+#      name: dubbo
+  dubbo:
+    appname: zl-oms
+    registry: zookeeper://192.168.2.110:12801?backup=192.168.2.110:12802,192.168.2.110:12803
+    protocol: dubbo
 myBatis:
   mapperLocations: classpath*:mapper/*.xml
   configLocations: classpath:conf/mybatis-config.xml

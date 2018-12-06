@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.cn.thinkx.oms.sys.model.User;
 import com.cn.thinkx.oms.sys.service.UserService;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.constants.Constants.RandomCodeType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
@@ -64,7 +65,7 @@ public class MyUsernamePasswordAuthenticationFilter extends
           
         //验证用户账号与密码是否对应  
         username = username.trim();  
-        User user = userService.getUserByName(null, username, loginType);
+        User user = userService.getUserByName(null, username, LoginType.LoginType1.getCode());
             
         if(user == null) {       	 
          	session.setAttribute("showCheckCode" ,"1" );  

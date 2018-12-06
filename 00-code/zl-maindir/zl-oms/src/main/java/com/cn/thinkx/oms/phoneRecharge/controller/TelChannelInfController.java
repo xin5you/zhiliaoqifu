@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.model.TelChannelProductCheck;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.oms.sys.model.User;
@@ -38,16 +39,16 @@ public class TelChannelInfController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
+	@Reference(check=false)
 	private TelChannelInfFacade telChannelInfFacade;
 
-	@Autowired
+	@Reference(check=false)
 	private TelChannelProductInfFacade telChannelProductInfFacade;
 
 	@Autowired
 	private TelChannelInfService telChannelInfService;
 	
-	@Autowired
+	@Reference(check=false)
 	private TelChannelItemListFacade telChannelItemListFacade;
 
 	/**

@@ -25,11 +25,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @ComponentScan("com.cn.thinkx")
 @SpringBootApplication
+@EnableDubboConfiguration
 public class OmsApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	@Autowired
