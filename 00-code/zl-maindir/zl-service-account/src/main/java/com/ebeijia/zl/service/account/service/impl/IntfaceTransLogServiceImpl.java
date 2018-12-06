@@ -85,6 +85,8 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 			String pri_b_id,//专项类型
 			String user_type,//用户类型
 			String trans_chnl,//交易渠道
+			String userChnl,
+			String userChnlId,
 			String org_itf_primary_key
 			){
 		IntfaceTransLog itfTransLog=new IntfaceTransLog();
@@ -97,6 +99,8 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 		itfTransLog.setPriBId(pri_b_id);
 		itfTransLog.setUserType(user_type);
 		itfTransLog.setTransChnl(trans_chnl);
+		itfTransLog.setUserChnl(userChnl);
+		itfTransLog.setUserChnlId(userChnlId);
 		itfTransLog.setTransSt("0");
 		createSystemDataLog(itfTransLog);
 		return itfTransLog;

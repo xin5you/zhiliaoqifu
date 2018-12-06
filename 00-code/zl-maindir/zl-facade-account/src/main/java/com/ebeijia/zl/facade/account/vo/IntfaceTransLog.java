@@ -110,10 +110,24 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private String userType;
  
     /**
-     * 用户名
+     * 平台唯一用户标识
      */
     @TableField("user_id")
     private String userId;
+    
+    
+    /**
+     * 用户渠道
+     */
+    @TableField("user_chnl")
+    private String userChnl;
+    
+    
+    /**
+     * 用户渠道id
+     */
+    @TableField("user_chnl_id")
+    private String userChnlId;
  
     /**
      * 产品号

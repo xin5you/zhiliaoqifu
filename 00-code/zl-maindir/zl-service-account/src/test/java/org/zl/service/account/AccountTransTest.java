@@ -16,7 +16,7 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
-import com.ebeijia.zl.facade.account.req.AccountOpenReq;
+import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransactionReq;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
@@ -36,11 +36,11 @@ public class AccountTransTest {
     	req.setTransId(TransCode.MB20.getCode());
     	req.setTransChnl("40001001");
     	req.setUserType(UserType.TYPE300.getCode());
-    	req.setToCompanyId("100000000000000000000000");
-    	req.setTransAmt(new BigDecimal(10000));
-    	req.setUploadAmt(new BigDecimal(10000));
-    	req.setDmsRelatedKey(IdUtil.getNextId());
-    	req.setTfrInBId(SpecAccountTypeEnum.A0.getbId());
+//    	req.setToCompanyId("100000000000000000000000");
+//    	req.setTransAmt(new BigDecimal(10000));
+//    	req.setUploadAmt(new BigDecimal(10000));
+//    	req.setDmsRelatedKey(IdUtil.getNextId());
+//    	req.setTfrInBId(SpecAccountTypeEnum.A0.getbId());
     	
     	accountTransactionFacade.executeRechargeByOneBId(req);
    }

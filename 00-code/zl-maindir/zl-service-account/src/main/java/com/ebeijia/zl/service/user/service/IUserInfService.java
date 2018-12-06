@@ -25,7 +25,8 @@ public interface IUserInfService extends IService<UserInf> {
 	* @param:cardNo  证件号
 	* @param:transId 交易类型
 	* @param:transChnl 交易渠道
-
+	* @param:userChnl 用户渠道
+	* @param:userChnlId 用户渠道Id
 	* 
 	* @return userId
 	* @version: v1.0.0
@@ -37,7 +38,7 @@ public interface IUserInfService extends IService<UserInf> {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	public String registerUserInf(String userType,String userName,String companyId,String mobilePhone,String cardType,String cardNo,String transId,String transChnl);
+	public String registerUserInf(String userType,String userName,String companyId,String mobilePhone,String cardType,String cardNo,String transId,String transChnl,String userChnl,String userChnlId);
 	
 	boolean save(UserInf entity);
 	

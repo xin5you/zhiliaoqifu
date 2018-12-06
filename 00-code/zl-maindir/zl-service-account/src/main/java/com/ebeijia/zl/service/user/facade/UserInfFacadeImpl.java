@@ -3,13 +3,11 @@ package com.ebeijia.zl.service.user.facade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.facade.user.req.OpenUserInfReq;
+import com.ebeijia.zl.facade.user.req.OpenUserInfReqVo;
 import com.ebeijia.zl.facade.user.service.UserInfFacade;
-import com.ebeijia.zl.facade.user.vo.ChannelUserInf;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.user.service.IChannelUserInfService;
@@ -46,8 +44,17 @@ public class UserInfFacadeImpl implements UserInfFacade {
 	/**
 	 * 用户注册
 	 */
-	public BaseResult registerUserInf(OpenUserInfReq req) {
-		String userId=userInfService.registerUserInf(req.getUserType(), req.getUserName(), req.getCompanyId(), req.getMobilePhone(), req.getCardType(), req.getIcardNo(), req.getTransId(), req.getTransChnl());
+	public BaseResult registerUserInf(OpenUserInfReqVo req) {
+		String userId=userInfService.registerUserInf(
+				req.getUserType(), req.getUserName(),
+				req.getCompanyId(), 
+				req.getMobilePhone(),
+				req.getCardType(), 
+				req.getIcardNo(), 
+				req.getTransId(),
+				req.getTransChnl(),
+				req.getUserChnl(),
+				req.getUserChnlId());
 		if(StringUtil.isNotEmpty(userId)){
 			return ResultsUtil.success(userId);
 		}else{

@@ -10,7 +10,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.user.vo.ChannelUserInf;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
@@ -43,8 +45,6 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	
 	/**
 	* 
-	* @Description: 用户注册
-	*
 	* @param:userType 用户注册类型
 	* @param:userName 用户名
 	* @param:companyId 所属企业
@@ -53,7 +53,8 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	* @param:cardNo  证件号
 	* @param:transId 交易类型
 	* @param:transChnl 交易渠道
-
+	* @param:userChnl 用户渠道
+	* @param:userChnlId 用户渠道Id
 	* 
 	* @return userId
 	* @version: v1.0.0
@@ -65,7 +66,7 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	public String registerUserInf(String userType,String userName,String companyId,String mobilePhone,String cardType,String cardNo,String transId,String transChnl){
+	public String registerUserInf(String userType,String userName,String companyId,String mobilePhone,String cardType,String cardNo,String transId,String transChnl,String userChnl,String userChnlId){
 		
 		//企业账户所属用户信息注册
 		if(!UserType.TYPE100.getCode().equals(userType)){
@@ -101,8 +102,7 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			
 		}else{
 			//手机号是否在当前渠道注册
-			user=this.getUserInfByPhoneNo(mobilePhone, transChnl);
-			
+			user=this.getUserInfByPhoneNo(mobilePhone, userChnl);
 			if(user !=null){
 				userRegFlag=true;
 			}
@@ -112,8 +112,12 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 		if(!userRegFlag){
 			ChannelUserInf channelUserInf = new ChannelUserInf();
 			channelUserInf.setUserId(personInf.getUserId());
-			channelUserInf.setExternalId(IdUtil.getNextId());
-			channelUserInf.setChannelCode(transChnl);
+		    if(StringUtil.isEmpty(userChnlId)){
+				channelUserInf.setExternalId(IdUtil.getNextId());
+			}else{
+				channelUserInf.setExternalId(userChnlId);
+			}
+			channelUserInf.setChannelCode(userChnl);
 			channelUserInfService.save(channelUserInf);
 		}
 		return personInf.getUserId();
@@ -136,6 +140,7 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	 */
 	public String registerUserInfForCompany(String companyName,String userType,String companyId){
 		UserInf user =this.getUserInfByUserName(companyId);
+		
 		if(user ==null){
 			user=new UserInf();
 			user.setUserId(IdUtil.getNextId());
@@ -143,6 +148,12 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			user.setUserName(companyId);//公司名称
 			user.setCompanyId(companyId);
 			this.save(user);
+			
+			ChannelUserInf channelUserInf = new ChannelUserInf();
+			channelUserInf.setUserId(user.getUserId());
+			channelUserInf.setExternalId(companyId);
+			channelUserInf.setChannelCode(UserChnlCode.USERCHNL1001.getCode());
+			channelUserInfService.save(channelUserInf);
 		}
 		return user.getUserId();
 	}

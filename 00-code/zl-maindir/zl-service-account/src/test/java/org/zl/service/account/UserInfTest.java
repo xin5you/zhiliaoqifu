@@ -8,9 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ebeijia.zl.AccountApp;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
-import com.ebeijia.zl.facade.user.req.OpenUserInfReq;
+import com.ebeijia.zl.facade.user.req.OpenUserInfReqVo;
 import com.ebeijia.zl.facade.user.service.UserInfFacade;
 
 @RunWith(SpringRunner.class)
@@ -23,7 +25,7 @@ public class UserInfTest {
     @Test
     public void getUserRegister(){
     	
-    	OpenUserInfReq req=new OpenUserInfReq();
+    	OpenUserInfReqVo req=new OpenUserInfReqVo();
     	
     	req.setTransId(TransCode.CW80.getCode());
     	req.setTransChnl("40001001");
@@ -31,6 +33,8 @@ public class UserInfTest {
     	req.setUserName("zhuqi");
     	req.setUserType(UserType.TYPE100.getCode());
     	req.setCompanyId("100000000000000000000000");
+    	req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+    	req.setUserChnlId(IdUtil.getNextId());
     	
     	
 //    	req.setCardType(UserType.TYPE100.getCode());

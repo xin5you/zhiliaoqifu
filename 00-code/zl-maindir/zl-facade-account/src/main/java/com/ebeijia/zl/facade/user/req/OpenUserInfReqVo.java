@@ -14,7 +14,7 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 *-------------------------------------*
 * 2018年12月3日     zhuqi           v1.0.0
  */
-public class OpenUserInfReq extends BaseTxnReq {
+public class OpenUserInfReqVo extends BaseTxnReq {
 
 	/**
 	 * 用戶名稱
@@ -43,10 +43,7 @@ public class OpenUserInfReq extends BaseTxnReq {
 	 */
 	private String companyId;
 	
-	/**
-	 * 外部渠道號
-	 */
-	private String externalId;
+
 
 
 	public String getUserName() {
@@ -98,14 +95,5 @@ public class OpenUserInfReq extends BaseTxnReq {
 		this.companyId = companyId;
 	}
 
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
-	}
 
 }

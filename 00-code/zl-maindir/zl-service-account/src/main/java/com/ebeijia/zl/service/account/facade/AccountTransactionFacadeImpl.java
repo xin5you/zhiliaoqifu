@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.facade.account.req.AccountTransactionReq;
+import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
@@ -87,9 +91,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年12月5日     zhuqi           v1.0.0
 	 */
-	public BaseResult executeRechargeByOneBId(AccountTransactionReq req) throws Exception {
+	public BaseResult executeRechargeByOneBId(AccountRechargeReqVo req) throws Exception {
 		
-		log.info("==>  账户充值 mehtod=AccountTransactionReq and AccountTransactionReq={}",JSONArray.toJSON(req));
+		log.info("==>  账户充值 mehtod=executeRechargeByOneBId and AccountRechargeReqVo={}",JSONArray.toJSON(req));
 		
 		/**
 		 * 订单交易检验
@@ -99,19 +103,22 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
+
 		
 		/**
 		 * 商户充值
 		 */
 		if (TransCode.MB20.getCode().equals(req.getTransId())){
 			
-			UserInf toUserInf= userInfService.getUserInfByUserName(req.getToCompanyId());
+			UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
 			
 			if(toUserInf==null){
-				return ResultsUtil.error("99", "用户或企业未开户");
+				return ResultsUtil.error("99",String.format("当前企业{%s}所属渠渠道{%s}未开户", req.getTransChnl(),req.getUserChnl()));
 			}
+
 			/****实例化接口流水****/
-			intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(), req.getTfrInBId(), req.getUserType(), req.getTransChnl(),null);
+			intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(),req.getPriBId(),
+																  req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getTransChnl(),null);
 			intfaceTransLogService.addBizItfTransLog(
 					intfaceTransLog, 
 					req.getTransAmt(),
@@ -121,22 +128,28 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 					null, 
 					null,
 					null,
-					null,
-					null,
+					req.getUserChnl(),
+					req.getUserChnlId(),
 					null);
 			
 		}else if(TransCode.MB50.getCode().equals(req.getTransId())){
 			//企业员工充值
 			PersonInf personInf=personInfService.getPersonInfByPhoneNo(req.getMobilePhone());
 		
-			UserInf user= userInfService.getUserInfByUserName(req.getFromCompanyId());
+			UserInf fromUser= userInfService.getUserInfByUserName(req.getFromCompanyId());
 			
-			if(personInf==null || user==null){
+			if(personInf==null || fromUser==null){
 				return ResultsUtil.error("99", "用户或企业未开户");
 			}
 			
 			/****实例化接口流水****/
-			intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), personInf.getUserId(), req.getTransId(), null, req.getUserType(), req.getTransChnl(),null);
+			intfaceTransLog=intfaceTransLogService.newItfTransLog(
+					req.getDmsRelatedKey(),
+					personInf.getUserId(), 
+					req.getTransId(), 
+					null, 
+					req.getUserType(), 
+					req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
 			intfaceTransLogService.addBizItfTransLog(
 													intfaceTransLog, 
 													req.getTransAmt(),
@@ -144,10 +157,10 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 													null,
 													null, 
 													null, 
-													req.getTfrInUserId(),
-													req.getTfrInBId(),
-													req.getTfrOutUserId(),
-													req.getTfrOutBId(),
+													personInf.getUserId(),
+													req.getPriBId(),
+													fromUser.getUserId(),
+													SpecAccountTypeEnum.A0.getCode(),
 													null);
 		}
 		
@@ -181,9 +194,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	public BaseResult executeConsume(AccountTransactionReq req) throws Exception{
+	public BaseResult executeConsume(AccountConsumeReqVo req) throws Exception{
 		
-		log.info("==>  账户消費 mehtod=AccountTransactionReq and AccountTransactionReq={}",JSONArray.toJSON(req));
+		log.info("==>  账户消費 mehtod=executeConsume and AccountConsumeReqVo={}",JSONArray.toJSON(req));
 		
 		/**
 		 * 订单交易检验
@@ -194,8 +207,19 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			return ResultsUtil.error("99", "重复交易");
 		}
 		
+		/**获取用户数据*/
+		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
+		
 		/****实例化接口流水****/
-		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), req.getUserId(), req.getTransId(), null, req.getUserType(), req.getTransChnl(),null);
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(
+				req.getDmsRelatedKey(),
+				toUserInf.getUserId(),
+				req.getTransId(),
+				null, 
+				req.getUserType(), 
+				req.getTransChnl(),
+				req.getUserChnl(),
+				req.getUserChnlId(),null);
 		intfaceTransLogService.addBizItfTransLog(
 												intfaceTransLog, 
 												req.getTransAmt(),
@@ -208,8 +232,11 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												null,
 												null,
 												null);
+		
+		//保存消费类型信息 重要数据存储 重要 重要
+		intfaceTransLog.setRemarks(JSONObject.toJSONString(req.getTransList())); 
+		
 		/****保存接口易流水****/
-		intfaceTransLog.setRemarks(JSONObject.toJSONString(req.getTransList())); //保存消费类型信息
 		intfaceTransLogService.save(intfaceTransLog);
 		
 		//执行操作
@@ -233,7 +260,86 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	public BaseResult executeTransfer() {
+	public BaseResult executeTransfer(AccountTransferReqVo req) throws Exception{
+		log.info("==>  账户转账 mehtod=executeTransfer and AccountTransferReqVo={}",JSONArray.toJSON(req));
+		
+		/**
+		 * 订单交易检验
+		 */
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
+		if(intfaceTransLog!=null){
+			//TODO 重复交易返回
+			return ResultsUtil.error("99", "重复交易");
+		}
+		
+		UserInf fromUserInf= null;
+		UserInf toUserInf=null; 
+		
+		//企业账户转账 通过企业Id转账到企业
+		if (TransCode.MB40.getCode().equals(req.getTransId())){
+			fromUserInf= userInfService.getUserInfByUserName(req.getTfrOutUserId());
+			toUserInf =userInfService.getUserInfByUserName(req.getTfrInUserId());
+
+		}else{
+			//TODO 员工转账开发
+		}
+		
+		if(fromUserInf==null ){
+			return ResultsUtil.error("99", "账户信息不存在{%s}"+req.getTfrOutUserId());
+		}
+		if(toUserInf==null ){
+			return ResultsUtil.error("99", "账户信息不存在{%s}"+req.getTfrInUserId());
+		}
+		
+		/****实例化接口流水****/
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(
+				req.getDmsRelatedKey(),
+				req.getUserId(), req.getTransId(), 
+				null, req.getUserType(),
+				req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
+		intfaceTransLogService.addBizItfTransLog(
+												intfaceTransLog, 
+												req.getTransAmt(),
+												req.getUploadAmt(), 
+												null,
+												null, 
+												null, 
+												toUserInf.getUserId(),
+												req.getTfrInBId(),
+												fromUserInf.getUserId(),
+												req.getTfrOutBId(),
+												null);
+		
+	//保存转账类型信息 重要数据存储 重要 重要
+	intfaceTransLog.setRemarks(req.getTfrOutUserId()+","+req.getTfrOutBId()+"-->"+req.getTfrInUserId()+","+req.getTfrInBId());
+	
+	intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
+	
+	//执行操作
+	boolean eflag=transLogService.execute(intfaceTransLog); 
+	
+	//修改当前接口请求交易状态
+	intfaceTransLogService.updateById(intfaceTransLog,eflag);
+	
+	return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
+	}
+
+
+	@Override
+	public BaseResult executeRefund(AccountRefundReqVo req) throws Exception {
+		
+		log.info("==>  账户转账 mehtod=executeRefund and AccountRefundReqVo={}",JSONArray.toJSON(req));
+		
+		/**
+		 * 订单交易检验
+		 */
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
+		if(intfaceTransLog!=null){
+			//TODO 重复交易返回
+			return ResultsUtil.error("99", "重复交易");
+		}
+		
+		intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(null, req.getTransChnl());
 		return null;
 	}
 	

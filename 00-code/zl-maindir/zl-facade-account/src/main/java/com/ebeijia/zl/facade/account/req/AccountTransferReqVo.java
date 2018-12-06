@@ -8,7 +8,7 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 /**
  * 
 * 
-* @Description: 充值请求参数
+* @Description: 转账交易请求参数
 *
 * @version: v1.0.0
 * @author: zhuqi
@@ -19,26 +19,11 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 *-------------------------------------*
 * 2018年12月5日     zhuqi           v1.0.0
  */
-public class AccountTransactionReq extends BaseTxnReq{
+public class AccountTransferReqVo extends BaseTxnReq{
 	
 
 	private static final long serialVersionUID = 6157195921555421701L;
 
-
-	/**
-	 * 手机号
-	 */
-	private String mobilePhone;
-	
-	/**
-	 * 所属企業
-	 */
-	private String fromCompanyId;
-	
-	/**
-	 * 目标企业
-	 */
-	private String toCompanyId;
 
     /**
      * 实际交易金额
@@ -73,35 +58,7 @@ public class AccountTransactionReq extends BaseTxnReq{
      */
     private String tfrOutBId;
     
-    /**
-     * 专项账户交易列表
-     */
-    private List<AccountTxnVo> transList;
     
-
-	public String getMobilePhone() {
-		return mobilePhone;
-	}
-
-	public void setMobilePhone(String mobilePhone) {
-		this.mobilePhone = mobilePhone;
-	}
-
-	public String getFromCompanyId() {
-		return fromCompanyId;
-	}
-
-	public void setFromCompanyId(String fromCompanyId) {
-		this.fromCompanyId = fromCompanyId;
-	}
-
-	public String getToCompanyId() {
-		return toCompanyId;
-	}
-
-	public void setToCompanyId(String toCompanyId) {
-		this.toCompanyId = toCompanyId;
-	}
 
 	public BigDecimal getTransAmt() {
 		return transAmt;
@@ -150,13 +107,4 @@ public class AccountTransactionReq extends BaseTxnReq{
 	public void setTfrOutBId(String tfrOutBId) {
 		this.tfrOutBId = tfrOutBId;
 	}
-
-	public List<AccountTxnVo> getTransList() {
-		return transList;
-	}
-
-	public void setTransList(List<AccountTxnVo> transList) {
-		this.transList = transList;
-	}
-    
 }

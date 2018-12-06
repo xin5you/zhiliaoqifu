@@ -14,7 +14,7 @@ import com.ebeijia.zl.AccountApp;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
-import com.ebeijia.zl.facade.account.req.AccountOpenReq;
+import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 
 @RunWith(SpringRunner.class)
@@ -27,7 +27,7 @@ public class AccountTest {
 
     @Test
    public void createAccount() throws Exception{
-    	AccountOpenReq req=new AccountOpenReq();
+    	AccountOpenReqVo req=new AccountOpenReqVo();
     	
     	req.setTransId(TransCode.MB80.getCode());
     	req.setTransChnl("40001001");

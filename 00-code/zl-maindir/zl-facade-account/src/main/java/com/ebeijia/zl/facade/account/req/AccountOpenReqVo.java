@@ -1,7 +1,5 @@
 package com.ebeijia.zl.facade.account.req;
 
-import java.math.BigDecimal;
-
 import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 
 /**
@@ -17,10 +15,9 @@ import com.ebeijia.zl.common.utils.req.BaseTxnReq;
 *-------------------------------------*
 * 2018年12月3日     zhuqi           v1.0.0
  */
-public class AccountOpenReq extends BaseTxnReq {
+public class AccountOpenReqVo extends BaseTxnReq {
 
 	private static final long serialVersionUID = -9160098953485698847L;
-
 
 	/**
 	 * 用戶名稱
@@ -45,10 +42,8 @@ public class AccountOpenReq extends BaseTxnReq {
 	 */
 	private String companyId;
 	
-	/**
-	 * 外部渠道號
-	 */
-	private String externalId;
+
+	
 
 
 	public String getUserName() {
@@ -90,21 +85,4 @@ public class AccountOpenReq extends BaseTxnReq {
 		this.companyId = companyId;
 	}
 
-
-	public String getExternalId() {
-		return externalId;
-	}
-
-
-	public void setExternalId(String externalId) {
-		this.externalId = externalId;
-	}
-	
-	
-	public static void main(String[] args) {
-//        BigDecimal decimal = new BigDecimal(0);
-//        System.out.println(decimal);
-        BigDecimal setScale = new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN);
-        System.out.println(setScale);
-	}
 }

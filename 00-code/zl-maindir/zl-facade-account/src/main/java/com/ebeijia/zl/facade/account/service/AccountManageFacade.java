@@ -1,7 +1,7 @@
 package com.ebeijia.zl.facade.account.service;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.facade.account.req.AccountOpenReq;
+import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +37,7 @@ public interface AccountManageFacade {
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
 	@ApiOperation(value = "开户接口", notes = "")
-	BaseResult createAccount(AccountOpenReq req) throws Exception;
+	BaseResult createAccount(AccountOpenReqVo req) throws Exception;
 	
 
 

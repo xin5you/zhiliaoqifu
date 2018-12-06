@@ -55,7 +55,9 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 			String trans_id,//交易类型
 			String pri_b_id,//专项类型
 			String user_type,//用户类型
-			String trans_chnl,//交易渠道
+			String trans_chnl,//交易渠道,
+			String userChnl,
+			String userChnlId,
 			String org_itf_primary_key
 			);
 	
