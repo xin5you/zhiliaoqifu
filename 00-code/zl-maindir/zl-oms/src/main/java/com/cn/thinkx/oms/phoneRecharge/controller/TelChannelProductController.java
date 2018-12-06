@@ -18,11 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.ChannelProductService;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelProductInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -60,9 +60,9 @@ public class TelChannelProductController {
 			logger.error("## 分销商产品信息列表查询异常", e);
 		}
 		mv.addObject("telCPInf", product);
-		mv.addObject("areaFlagList", BaseConstants.ChannelProductAreaFlag.values());
-		mv.addObject("productTypeList", BaseConstants.ChannelProductProType.values());
-		mv.addObject("operIdList", BaseConstants.OperatorType.values());
+		mv.addObject("areaFlagList", TelRechargeConstants.ChannelProductAreaFlag.values());
+		mv.addObject("productTypeList", TelRechargeConstants.ChannelProductProType.values());
+		mv.addObject("operIdList", TelRechargeConstants.OperatorType.values());
 		mv.addObject("operStatus", operStatus);
 		return mv;
 	}
@@ -77,9 +77,9 @@ public class TelChannelProductController {
 	@RequestMapping(value = "/intoAddTelChannelProduct")
 	public ModelAndView intoAddTelChannelProduct(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telChannelProduct/addTelChannelProduct");
-		mv.addObject("productTypeList", BaseConstants.ChannelProductProType.values());
-		mv.addObject("areaFlagList", BaseConstants.ChannelProductAreaFlag.values());
-		mv.addObject("operIdList", BaseConstants.OperatorType.values());
+		mv.addObject("productTypeList", TelRechargeConstants.ChannelProductProType.values());
+		mv.addObject("areaFlagList", TelRechargeConstants.ChannelProductAreaFlag.values());
+		mv.addObject("operIdList", TelRechargeConstants.OperatorType.values());
 		return mv;
 	}
 
@@ -130,9 +130,9 @@ public class TelChannelProductController {
 		} catch (Exception e) {
 			logger.error("## 通过id查找分销商产品信息异常", e);
 		}
-		mv.addObject("areaFlagList", BaseConstants.ChannelProductAreaFlag.values());
-		mv.addObject("productTypeList", BaseConstants.ChannelProductProType.values());
-		mv.addObject("operIdList", BaseConstants.OperatorType.values());
+		mv.addObject("areaFlagList", TelRechargeConstants.ChannelProductAreaFlag.values());
+		mv.addObject("productTypeList", TelRechargeConstants.ChannelProductProType.values());
+		mv.addObject("operIdList", TelRechargeConstants.OperatorType.values());
 		return mv;
 	}
 
@@ -196,9 +196,9 @@ public class TelChannelProductController {
 		} catch (Exception e) {
 			logger.error("## 查询分销商产品信息详情异常", e);
 		}
-		mv.addObject("areaFlagList", BaseConstants.ChannelProductAreaFlag.values());
-		mv.addObject("productTypeList", BaseConstants.ChannelProductProType.values());
-		mv.addObject("operIdList", BaseConstants.OperatorType.values());
+		mv.addObject("areaFlagList", TelRechargeConstants.ChannelProductAreaFlag.values());
+		mv.addObject("productTypeList", TelRechargeConstants.ChannelProductProType.values());
+		mv.addObject("operIdList", TelRechargeConstants.OperatorType.values());
 		return mv;
 	}
 

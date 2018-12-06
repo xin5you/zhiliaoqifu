@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.service.impl;
+package com.ebeijia.zl.web.api.model.withdraw.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,38 +13,28 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.common.activemq.service.WechatMQProducerService;
-import com.cn.thinkx.common.redis.util.RedisDictProperties;
-import com.cn.thinkx.pms.base.utils.BankUtil;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.BaseConstants.ChannelCode;
-import com.cn.thinkx.pms.base.utils.BaseConstants.TransFeeType;
-import com.cn.thinkx.pms.base.utils.BaseConstants.orderStat;
-import com.cn.thinkx.pms.base.utils.BaseConstants.orderType;
-import com.cn.thinkx.pms.base.utils.DateUtil;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
-import com.cn.thinkx.pms.base.utils.StringUtil;
-import com.cn.thinkx.wecard.api.module.pub.model.ChannelUserInf;
-import com.cn.thinkx.wecard.api.module.pub.service.ChannelUserInfService;
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeys;
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysOrderInf;
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysProduct;
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysTransLog;
-import com.cn.thinkx.wecard.api.module.welfaremart.service.CardKeysOrderInfService;
-import com.cn.thinkx.wecard.api.module.welfaremart.service.CardKeysProductService;
-import com.cn.thinkx.wecard.api.module.welfaremart.service.CardKeysService;
-import com.cn.thinkx.wecard.api.module.welfaremart.service.CardKeysTransLogService;
-import com.cn.thinkx.wecard.api.module.withdraw.domain.WithdrawOrder;
-import com.cn.thinkx.wecard.api.module.withdraw.domain.WithdrawOrderDetail;
-import com.cn.thinkx.wecard.api.module.withdraw.mapper.WithdrawOrderDetailMapper;
-import com.cn.thinkx.wecard.api.module.withdraw.service.WithdrawOrderDetailService;
-import com.cn.thinkx.wecard.api.module.withdraw.service.WithdrawOrderService;
-import com.cn.thinkx.wecard.api.module.withdraw.suning.utils.Constants.RespCode;
-import com.cn.thinkx.wecard.api.module.withdraw.suning.utils.Constants.orderNotifyStat;
-import com.cn.thinkx.wecard.api.module.withdraw.suning.utils.Constants.withdrawStat;
-import com.cn.thinkx.wecard.api.module.withdraw.suning.vo.Content;
-import com.cn.thinkx.wecard.api.module.withdraw.suning.vo.TransferOrders;
-import com.cn.thinkx.wechat.base.wxapi.util.WXTemplateUtil;
+import com.cn.thinkx.ecom.activemq.core.service.WechatMQProducerService;
+import com.cn.thinkx.ecom.activemq.core.util.WXTemplateUtil;
+import com.ebeijia.zl.common.utils.constants.Constants.ChannelCode;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeys;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysOrderInf;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysProduct;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysTransLog;
+import com.ebeijia.zl.web.api.model.welfaremart.service.CardKeysOrderInfService;
+import com.ebeijia.zl.web.api.model.welfaremart.service.CardKeysProductService;
+import com.ebeijia.zl.web.api.model.welfaremart.service.CardKeysService;
+import com.ebeijia.zl.web.api.model.welfaremart.service.CardKeysTransLogService;
+import com.ebeijia.zl.web.api.model.withdraw.domain.WithdrawOrder;
+import com.ebeijia.zl.web.api.model.withdraw.domain.WithdrawOrderDetail;
+import com.ebeijia.zl.web.api.model.withdraw.mapper.WithdrawOrderDetailMapper;
+import com.ebeijia.zl.web.api.model.withdraw.service.WithdrawOrderDetailService;
+import com.ebeijia.zl.web.api.model.withdraw.service.WithdrawOrderService;
+import com.ebeijia.zl.web.api.model.withdraw.suning.utils.Constants.RespCode;
+import com.ebeijia.zl.web.api.model.withdraw.suning.vo.Content;
+import com.ebeijia.zl.web.api.model.withdraw.suning.vo.TransferOrders;
 
 @Service("withdrawOrderDetailService")
 public class WithdrawOrderDetailServiceImpl implements WithdrawOrderDetailService {

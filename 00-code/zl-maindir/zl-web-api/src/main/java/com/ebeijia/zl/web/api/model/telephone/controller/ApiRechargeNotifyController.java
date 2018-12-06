@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.telephone.controller;
+package com.ebeijia.zl.web.api.model.telephone.controller;
 
 import java.util.Date;
 
@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.common.redis.util.RedisDictProperties;
-import com.cn.thinkx.pms.base.http.HttpClientUtil;
-import com.cn.thinkx.pms.base.utils.DateUtil;
-import com.cn.thinkx.pms.base.utils.MD5SignUtils;
-import com.cn.thinkx.wecard.api.module.telephone.vo.HKbCallBackResult;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
@@ -29,6 +24,10 @@ import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
+import com.ebeijia.zl.common.utils.http.HttpClientUtil;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
+import com.ebeijia.zl.web.api.model.telephone.vo.HKbCallBackResult;
 
 @RestController
 @RequestMapping("/api/recharge/notify")
@@ -119,7 +118,7 @@ public class ApiRechargeNotifyController {
 					if(telProviderOrderInf.getOperateTime() !=null){
 						respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(telProviderOrderInf.getOperateTime()));
 					}
-					respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(telChannelOrderInf.getCreateTime())); //操作时间
+					respVo.setOrderTime(String.valueOf(telChannelOrderInf.getCreateTime())); //操作时间
 					respVo.setFacePrice(telChannelOrderInf.getRechargeValue().toString());
 					respVo.setItemNum(telChannelOrderInf.getItemNum());
 					respVo.setOuterTid(telChannelOrderInf.getOuterTid());

@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.service;
+package com.ebeijia.zl.web.api.model.welfaremart.service;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +16,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -70,7 +69,7 @@ public class TelProviderInfController {
 	public ModelAndView intoAddTelProviderInf(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telProviderInf/addTelProviderInf");
 		TelProviderInf telProviderInf = new TelProviderInf();
-		telProviderInf.setDefaultRoute(BaseConstants.providerDefaultRoute.DefaultRoute0.getCode());
+		telProviderInf.setDefaultRoute(TelRechargeConstants.providerDefaultRoute.DefaultRoute0.getCode());
 		try {
 			List<TelProviderInf> list = telProviderInfFacade.getTelProviderInfList(telProviderInf);
 			if(list.size() == 0){
@@ -81,7 +80,7 @@ public class TelProviderInfController {
 		} catch (Exception e) {
 			logger.error("## 进入添加供应商信息异常", e);
 		}
-		mv.addObject("defaultRouteList", BaseConstants.providerDefaultRoute.values());
+		mv.addObject("defaultRouteList", TelRechargeConstants.providerDefaultRoute.values());
 		return mv;
 	}
 
@@ -131,7 +130,7 @@ public class TelProviderInfController {
 		} catch (Exception e) {
 			logger.error("## 通过id查找供应商信息异常", e);
 		}
-		mv.addObject("defaultRouteList", BaseConstants.providerDefaultRoute.values());
+		mv.addObject("defaultRouteList", TelRechargeConstants.providerDefaultRoute.values());
 		return mv;
 	}
 
@@ -196,7 +195,7 @@ public class TelProviderInfController {
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);
 		}
-		mv.addObject("defaultRouteList", BaseConstants.providerDefaultRoute.values());
+		mv.addObject("defaultRouteList", TelRechargeConstants.providerDefaultRoute.values());
 		return mv;
 	}
 

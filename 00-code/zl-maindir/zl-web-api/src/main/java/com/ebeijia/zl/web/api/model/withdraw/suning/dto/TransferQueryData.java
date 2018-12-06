@@ -8,7 +8,7 @@
  * <author>      <time>      <version>    <desc>
  * 修改人姓名             修改时间            版本号                  描述
  */
-package com.cn.thinkx.wecard.api.module.withdraw.suning.dto;
+package com.ebeijia.zl.web.api.model.withdraw.suning.dto;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -19,7 +19,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cn.thinkx.wecard.api.module.withdraw.suning.utils.HttpClientQueryUtil;
+import com.ebeijia.zl.web.api.model.withdraw.suning.utils.HttpClientQueryUtil;
 import com.suning.epps.codec.Digest;
 import com.suning.epps.codec.RSAUtil;
 

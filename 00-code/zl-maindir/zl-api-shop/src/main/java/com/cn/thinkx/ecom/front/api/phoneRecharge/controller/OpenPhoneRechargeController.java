@@ -1,5 +1,17 @@
 package com.cn.thinkx.ecom.front.api.phoneRecharge.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.req.PhoneRechargeGetReq;
@@ -11,14 +23,8 @@ import com.cn.thinkx.ecom.front.api.phoneRecharge.vo.PhoneRechargeGetReqValid;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.vo.PhoneRechargeReqValid;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "hkb/recharge")
@@ -83,10 +89,10 @@ public class OpenPhoneRechargeController {
 		PhoneRechargeOrder rechargeOrde = new PhoneRechargeOrder();
 		rechargeOrde.setrId(outerTid);
 		if (Constants.RechargeState.RechargeState01.getCode().equals(rechargeStat)) {
-			rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat2.getCode());
+			rechargeOrde.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat2.getCode());
 		}
 		if (Constants.RechargeState.RechargeState09.getCode().equals(rechargeStat)) {
-			rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat3.getCode());
+			rechargeOrde.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat3.getCode());
 		}
 
 		try {

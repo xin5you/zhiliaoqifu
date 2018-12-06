@@ -13,10 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelOrderInfFacade;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -59,9 +59,9 @@ public class TelChannelOrderInfController {
 			logger.error("## 分销商订单查询异常", e);
 		}
 		mv.addObject("telChannelOrderInf", orderInf);
-		mv.addObject("rechargeTypeList", BaseConstants.ShopType.values());
-		mv.addObject("channelOrderStatList", BaseConstants.ChannelOrderStat.values());
-		mv.addObject("channelOrderNotifyStatList", BaseConstants.ChannelOrderNotifyStat.values());
+		mv.addObject("rechargeTypeList", TelRechargeConstants.ShopType.values());
+		mv.addObject("channelOrderStatList", TelRechargeConstants.ChannelOrderStat.values());
+		mv.addObject("channelOrderNotifyStatList", TelRechargeConstants.ChannelOrderNotifyStat.values());
 		mv.addObject("operStatus", operStatus);
 		return mv;
 	}

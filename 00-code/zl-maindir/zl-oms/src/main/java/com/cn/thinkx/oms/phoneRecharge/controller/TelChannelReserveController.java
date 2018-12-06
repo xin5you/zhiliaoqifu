@@ -8,18 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.pms.base.utils.BaseConstants.ChannelReserveType;
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelReserveDetail;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelReserveDetailFacade;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelReserveType;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 

@@ -1,6 +1,110 @@
-package com.cn.thinkx.wecard.facade.telrecharge.enums;
+package com.ebeijia.zl.common.utils.enums;
 
 public class TelRechargeConstants {
+	
+	
+	public static final String RESPONSE_SUCCESS_CODE = "00";
+	
+	public static final String PHONE_RECHARGE_REQ_KEY = "PHONE_RECHARGE_REQ_KEY";
+	public static final String PHONE_RECHARGE_REQ_REDIRECT_URL = "PHONE_RECHARGE_REQ_REDIRECT_URL";
+	public static final String PHONE_RECHARGE_REQ_NOTIFY_URL = "PHONE_RECHARGE_REQ_NOTIFY_URL";
+	public static final String PHONE_RECHARGE_REQ_URL = "PHONE_RECHARGE_REQ_URL";
+	public static final String GET_PHONE_INFO_URL = "GET_PHONE_INFO_URL";
+	public static final String PHONE_RECHARGE_ALL_GOODS = "PHONE_RECHARGE_ALL_GOODS";
+	public static final String PHONE_RECHARGE_YD_GOODS = "PHONE_RECHARGE_YD_GOODS";
+	public static final String PHONE_RECHARGE_LT_GOODS = "PHONE_RECHARGE_LT_GOODS";
+	public static final String PHONE_RECHARGE_DX_GOODS = "PHONE_RECHARGE_DX_GOODS";
+	
+	
+	/** 话费充值-立方 （front）请求地址 */
+	public static final String PHONE_RECHARGE_FRONT_REQUEST_URL = "PHONE_RECHARGE_FRONT_REQUEST_URL";
+	/** 汇卡宝手机充值（流量）  - 异步回调地址*/
+	public static final String FLOW_RECHARGE_NOTIFY_URL = "FLOW_RECHARGE_NOTIFY_URL";
+	/** 汇卡宝手机充值  - 重定向地址*/
+	public static final String PHONE_RECHARGE_REDIRECT_URL = "PHONE_RECHARGE_REDIRECT_URL";
+	/** 话费充值-立方   - access_token*/
+	public static final String BM_ACCESS_TOKEN = "BM_ACCESS_TOKEN";
+	
+	
+	/** 鼎驰 - 请求链接*/
+	public static final String DINGCHI_HTTP_URL = "DINGCHI_HTTP_URL";
+	/** 鼎驰 - 购买地址Url*/
+	public static final String DINGCHI_BUY_URL = "DINGCHI_BUY_URL";
+	/** 鼎驰 - 订单查询地址Url*/
+	public static final String DINGCHI_QUERY_URL = "DINGCHI_QUERY_URL";
+	/** 鼎驰 - 余额查询地址Url*/
+	public static final String DINGCHI_QUERYBAL_URL = "DINGCHI_QUERYBAL_URL";
+
+	/***
+	 * 话费充值，默认的路由 redis 存储KEY
+	 */
+	public static final String TELE_PROVIDER_IS_DEFAULT="TELE_PROVIDER_IS_DEFAULT";
+
+	/**
+	 * 话费充值供应商
+	 * 
+	 * @author xiaomei
+	 *
+	 */
+	public enum phoneRechargeSupplier {
+		PRS1("S1001", "力方"),
+		PRS2("S1002", " 鼎驰");
+		
+		private String code;
+		private String value;
+		
+		phoneRechargeSupplier(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+		
+		public String getCode() {
+			return code;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+		
+		public static phoneRechargeSupplier findByCode(String code) {
+			for (phoneRechargeSupplier t : phoneRechargeSupplier.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+	
+	public enum IsUsableType{
+		IsUsableType1("0","是"), 
+		IsUsableType2("1","否");
+
+		private String code;
+		private String value;
+
+		IsUsableType(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public static IsUsableType findByCode(String code) {
+			for (IsUsableType t : IsUsableType.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
 
 	
 	public enum OperatorType {
@@ -429,6 +533,120 @@ public class TelRechargeConstants {
 			for (ChannelProductProType t : ChannelProductProType.values()) {
 				if (t.code.equalsIgnoreCase(code)) {
 					return t.getValue();
+				}
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * 手机充值交易状态
+	 * 
+	 * @author xiaomei
+	 *
+	 */
+	public enum phoneRechargeOrderType {
+		TransStat0("0", "未付款"),
+		TransStat1("1", "充值中"),
+		TransStat2("2", "充值成功"),
+		TransStat3("3", "充值失败"),
+		TransStat4("4", "受理成功"),
+		TransStat5("5", "退款成功"),
+		TransStat6("6", "退款失败");
+		
+		private String code;
+		private String value;
+		
+		phoneRechargeOrderType(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+		
+		public String getCode() {
+			return code;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+		
+		public static phoneRechargeOrderType findByCode(String code) {
+			for (phoneRechargeOrderType t : phoneRechargeOrderType.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * 话费充值渠道类型
+	 * 
+	 * @author xiaomei
+	 *
+	 */
+	public enum phoneRechargeReqChnl {
+		PRRC1("P1001", "福利余额"),
+		PRRC2("P1002", "卡密充值"),
+		PRRC3("P1003", "API接口充值");
+		
+		private String code;
+		private String value;
+		
+		phoneRechargeReqChnl(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+		
+		public String getCode() {
+			return code;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+		
+		public static phoneRechargeReqChnl findByCode(String code) {
+			for (phoneRechargeReqChnl t : phoneRechargeReqChnl.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * 退款接口 标志
+	 * @author xiaomei
+	 *
+	 */
+	public enum refundFalg{
+		refundFalg1("1", "系统退款"), 
+		refundFalg2("2", "用户端退款");
+
+		private String code;
+		private String value;
+
+		refundFalg(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public static refundFalg findByCode(String code) {
+			for (refundFalg t : refundFalg.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
 				}
 			}
 			return null;

@@ -179,17 +179,6 @@
 	    </dependency>
 	    <dependency>
 			<groupId>com.ebeijia</groupId>
-			<artifactId>zl-pms-base</artifactId>
-			<version>${ebj.zl.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jaxb-impl</artifactId>
-					<groupId>com.sun.xml.bind</groupId>
-				</exclusion>
-			</exclusions>
-	    </dependency>
-	    <dependency>
-			<groupId>com.ebeijia</groupId>
 			<artifactId>zl-core-redis</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>

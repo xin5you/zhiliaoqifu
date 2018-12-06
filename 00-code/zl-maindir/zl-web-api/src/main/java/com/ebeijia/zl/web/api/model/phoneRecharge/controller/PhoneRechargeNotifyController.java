@@ -11,13 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ebeijia.zl.web.api.model.phoneRecharge.service.PhoneRechargeService;
+
 
 
 @Controller
 @RequestMapping("/phoneRechargeNotify")
 public class PhoneRechargeNotifyController {
 	
-	private Logger logger = LoggerFactory.getLogger(PhoneRechargeNotifyController.class);
 	
 	@Autowired
 	@Qualifier("phoneRechargeService")

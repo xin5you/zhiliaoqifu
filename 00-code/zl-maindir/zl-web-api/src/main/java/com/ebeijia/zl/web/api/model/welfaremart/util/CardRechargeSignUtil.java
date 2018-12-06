@@ -1,11 +1,11 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.util;
+package com.ebeijia.zl.web.api.model.welfaremart.util;
 
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 public class CardRechargeSignUtil {
 

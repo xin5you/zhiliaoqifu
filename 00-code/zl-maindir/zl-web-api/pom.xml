@@ -33,6 +33,18 @@
             <artifactId>zl-common-core</artifactId>
             <version>${ebj.zl.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-redis</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-activemq</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
 		
 		<dependency>
             <groupId>com.ebeijia</groupId>
@@ -78,7 +90,16 @@
             <version>2.0.1</version>
         </dependency>
         
-        
+        		<dependency>
+			<groupId>com.cn.thinkx</groupId>
+			<artifactId>epps-codec</artifactId>
+			<version>0.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.cn.thinkx</groupId>
+			<artifactId>pwdencrypt</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 
 		 <dependency>  

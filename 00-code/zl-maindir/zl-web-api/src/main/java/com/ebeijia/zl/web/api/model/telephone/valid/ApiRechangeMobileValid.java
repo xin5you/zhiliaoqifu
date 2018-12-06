@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.telephone.valid;
+package com.ebeijia.zl.web.api.model.telephone.valid;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.common.redis.core.JedisClusterUtils;
-import com.cn.thinkx.pms.base.utils.DateUtil;
-import com.cn.thinkx.pms.base.utils.MD5SignUtils;
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 public class ApiRechangeMobileValid {
 

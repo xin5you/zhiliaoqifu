@@ -1,12 +1,12 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.service;
+package com.ebeijia.zl.web.api.model.welfaremart.service;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeys;
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysOrderInf;
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysTransLog;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeys;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysOrderInf;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysTransLog;
 
 public interface CardKeysOrderInfService {
 	

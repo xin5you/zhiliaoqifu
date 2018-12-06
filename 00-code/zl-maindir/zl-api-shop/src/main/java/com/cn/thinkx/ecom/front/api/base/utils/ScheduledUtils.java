@@ -1,5 +1,13 @@
 package com.cn.thinkx.ecom.front.api.base.utils;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.basics.order.service.PlatfOrderService;
 import com.cn.thinkx.ecom.basics.order.service.PlatfShopOrderService;
@@ -11,14 +19,8 @@ import com.cn.thinkx.ecom.front.api.platforder.service.GoodsOrderService;
 import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
 import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
 import com.qianmi.open.api.response.BmOrderCustomGetResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ScheduledUtils {
@@ -109,11 +111,11 @@ public class ScheduledUtils {
 						rechargeOrde = new PhoneRechargeOrder();
 						rechargeOrde.setrId(resp.getOrderDetailInfo().getOuterTid());
 						if(Constants.RechargeState.RechargeState09.getCode().equals(resp.getOrderDetailInfo().getRechargeState())){
-							rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat3.getCode());
+							rechargeOrde.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat3.getCode());
 							phoneRechargeService.doPhoneRechargeOrder(rechargeOrde);
 						}
 						if(Constants.RechargeState.RechargeState01.getCode().equals(resp.getOrderDetailInfo().getRechargeState())){
-							rechargeOrde.setTransStat(Constants.PhoneRechargeTransStat.TransStat2.getCode());
+							rechargeOrde.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat2.getCode());
 							phoneRechargeService.doPhoneRechargeOrder(rechargeOrde);
 						}
 					}

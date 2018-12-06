@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.util;
+package com.ebeijia.zl.web.api.model.withdraw.util;
 
 public class MessageUtil {
 

@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.vo;
+package com.ebeijia.zl.web.api.model.welfaremart.vo;
 
 public class PhoneRechargeNotifyReq {
 	private String code;

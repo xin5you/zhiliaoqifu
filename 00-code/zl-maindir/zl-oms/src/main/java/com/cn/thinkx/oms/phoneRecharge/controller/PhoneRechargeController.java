@@ -21,7 +21,7 @@ import com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrder;
 import com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrderUpload;
 import com.cn.thinkx.oms.phoneRecharge.service.PhoneRechargeService;
 import com.cn.thinkx.oms.utils.ExcelUtil;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.common.utils.tools.UploadUtil;
@@ -54,10 +54,10 @@ public class PhoneRechargeController {
 		pageList = phoneRechargeService.getPhoneRechargeListPage(startNum, pageSize, pro);
 		mv.addObject("phoneRechargeOrder", pro);
 		mv.addObject("pageInfo", pageList);
-		mv.addObject("supplierList", BaseConstants.phoneRechargeSupplier.values());
-		mv.addObject("transStatList", BaseConstants.phoneRechargeTransStat.values());
-		mv.addObject("orderTypeList", BaseConstants.phoneRechargeOrderType.values());
-		mv.addObject("reqChannelList", BaseConstants.phoneRechargeReqChnl.values());
+		mv.addObject("supplierList", TelRechargeConstants.phoneRechargeOrderType.values());
+		mv.addObject("transStatList", TelRechargeConstants.phoneRechargeOrderType.values());
+		mv.addObject("orderTypeList", TelRechargeConstants.ChannelProductProType.values());
+		mv.addObject("reqChannelList", TelRechargeConstants.phoneRechargeOrderType.values());
 		return mv;
 	}
 

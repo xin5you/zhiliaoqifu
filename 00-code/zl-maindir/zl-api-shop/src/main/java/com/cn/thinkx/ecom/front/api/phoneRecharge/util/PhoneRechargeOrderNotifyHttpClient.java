@@ -3,6 +3,7 @@ package com.cn.thinkx.ecom.front.api.phoneRecharge.util;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.domain.PhoneRechargeOrder;
 import com.cn.thinkx.ecom.front.api.phoneRecharge.resp.PhoneRechargeNotifyResp;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class PhoneRechargeOrderNotifyHttpClient {
 		try{
 			StringBuffer paramData = new StringBuffer();
 			PhoneRechargeNotifyResp resp = new PhoneRechargeNotifyResp();
-			if(Constants.PhoneRechargeTransStat.TransStat2.getCode().equals(rechargeOrder.getTransStat())){
+			if(TelRechargeConstants.phoneRechargeOrderType.TransStat2.getCode().equals(rechargeOrder.getTransStat())){
 				resp.setCode(Constants.RechargeState.RechargeState01.getCode());
 				resp.setMsg(Constants.RechargeState.RechargeState01.getValue());
 			}else{

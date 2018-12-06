@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>zl-core-activemq</artifactId>
-    <version>1.0.0.RELEASE</version>
     <name>zl-core-activemq</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -46,8 +45,8 @@
 
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common</artifactId>
-            <version>1.0</version>
+            <artifactId>zl-common-utils</artifactId>
+            <version>${ebj.zl.version}</version>
         </dependency>
 
     </dependencies>

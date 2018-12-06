@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.suning.utils;
+package com.ebeijia.zl.web.api.model.withdraw.suning.utils;
 
 
 public class Constants {

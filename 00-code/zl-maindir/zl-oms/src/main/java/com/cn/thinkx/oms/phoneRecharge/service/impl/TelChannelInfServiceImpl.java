@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -16,7 +15,6 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.pms.base.utils.MD5SignUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelItemList;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
@@ -32,6 +30,7 @@ import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 @Service("telChannelInfService")

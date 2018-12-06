@@ -1,8 +1,8 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.service;
+package com.ebeijia.zl.web.api.model.welfaremart.service;
 
 import java.util.List;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeys;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeys;
 
 public interface CardKeysService {
 	

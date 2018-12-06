@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.suning.utils;
+package com.ebeijia.zl.web.api.model.withdraw.suning.utils;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -14,8 +14,7 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cn.thinkx.common.redis.util.RedisPropertiesUtils;
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.suning.epps.codec.Digest;
 import com.suning.epps.codec.RSAUtil;
 

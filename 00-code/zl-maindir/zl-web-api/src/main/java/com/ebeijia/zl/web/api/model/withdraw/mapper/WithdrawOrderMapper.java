@@ -1,10 +1,10 @@
-package com.cn.thinkx.wecard.api.module.withdraw.mapper;
+package com.ebeijia.zl.web.api.model.withdraw.mapper;
 
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.cn.thinkx.wecard.api.module.withdraw.domain.WithdrawOrder;
+import com.ebeijia.zl.web.api.model.withdraw.domain.WithdrawOrder;
 
 public interface WithdrawOrderMapper {
 	

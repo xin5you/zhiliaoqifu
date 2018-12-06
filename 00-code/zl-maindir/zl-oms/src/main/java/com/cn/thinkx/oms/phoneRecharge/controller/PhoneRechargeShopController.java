@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.DataValidationConstraint.OperatorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,12 @@ import com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeShop;
 import com.cn.thinkx.oms.phoneRecharge.service.PhoneRechargeShopService;
 import com.cn.thinkx.oms.phoneRecharge.vo.ShopUnit;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.BaseConstants.IsUsableType;
-import com.cn.thinkx.pms.base.utils.BaseConstants.OperatorType;
-import com.cn.thinkx.pms.base.utils.BaseConstants.ShopType;
-import com.cn.thinkx.pms.base.utils.BaseConstants.ShopUnitType;
-import com.cn.thinkx.pms.base.utils.BaseConstants.phoneRechargeSupplier;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.IsUsableType;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ShopType;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ShopUnitType;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -75,8 +74,8 @@ public class PhoneRechargeShopController {
 			logger.error(" ## 查询手机充值商品信息列表出错", e);
 		}
 		
-		mv.addObject("OperatorTypeList", OperatorType.values());
-		mv.addObject("SupplierList", phoneRechargeSupplier.values());
+		mv.addObject("OperatorTypeList", TelRechargeConstants.OperatorType.values());
+		mv.addObject("SupplierList", TelRechargeConstants.phoneRechargeSupplier.values());
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
 		mv.addObject("pps", pps);
@@ -89,8 +88,8 @@ public class PhoneRechargeShopController {
 	public ModelAndView intoAddPhoneRechargeShop(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/phoneRechargeShop/addPhoneRechargeShop");
 
-		mv.addObject("OperatorTypeList", OperatorType.values());
-		mv.addObject("SupplierList", phoneRechargeSupplier.values());
+		mv.addObject("OperatorTypeList", TelRechargeConstants.OperatorType.values());
+		mv.addObject("SupplierList",  TelRechargeConstants.phoneRechargeSupplier.values());
 		mv.addObject("ShopTypeList", ShopType.values());
 		return mv;
 	}
@@ -126,11 +125,11 @@ public class PhoneRechargeShopController {
 		try {
 			PhoneRechargeShop prs = phoneRechargeShopService.getPhoneRechargeShopById(goodsID);
 			prs.setShopPrice(NumberUtils.RMBCentToYuan(prs.getShopPrice()));
-			prs.setSupplierType(phoneRechargeSupplier.findByCode(prs.getSupplier()).getValue());
-			prs.setOperType(OperatorType.findByCode(prs.getOper()));
+			prs.setSupplierType( TelRechargeConstants.phoneRechargeSupplier.findByCode(prs.getSupplier()).getValue());
+			prs.setOperType( TelRechargeConstants.OperatorType.findByCode(prs.getOper()));
 			mv.addObject("prs", prs);
-			mv.addObject("ShopTypeList", ShopType.values());
-			mv.addObject("IsUsableTypeList", IsUsableType.values());
+			mv.addObject("ShopTypeList",  TelRechargeConstants.ShopType.values());
+			mv.addObject("IsUsableTypeList",  TelRechargeConstants.IsUsableType.values());
 			List<ShopUnit> list = getShopUnit(prs.getShopType());
 			mv.addObject("ShopUnitTypeList", list);
 		} catch (Exception e) {
@@ -168,8 +167,8 @@ public class PhoneRechargeShopController {
 		try {
 			PhoneRechargeShop prs = phoneRechargeShopService.getPhoneRechargeShopById(goodsID);
 			prs.setShopPrice(NumberUtils.RMBCentToYuan(prs.getShopPrice()));
-			prs.setSupplierType(phoneRechargeSupplier.findByCode(prs.getSupplier()).getValue());
-			prs.setOperType(OperatorType.findByCode(prs.getOper()));
+			prs.setSupplierType(TelRechargeConstants.phoneRechargeSupplier.findByCode(prs.getSupplier()).getValue());
+			prs.setOperType(TelRechargeConstants.OperatorType.findByCode(prs.getOper()));
 			mv.addObject("prs", prs);
 			mv.addObject("ShopTypeList", ShopType.values());
 			mv.addObject("IsUsableTypeList", IsUsableType.values());
@@ -252,25 +251,25 @@ public class PhoneRechargeShopController {
 	
 	private void setRedis(){
 		PhoneRechargeShop allShop = new PhoneRechargeShop();
-		allShop.setSupplier(phoneRechargeSupplier.PRS1.getCode());
+		allShop.setSupplier(TelRechargeConstants.phoneRechargeSupplier.PRS1.getCode());
 		List<PhoneRechargeShop> allShopList = phoneRechargeShopService.getShopFaceByPhoneRechargeShop(allShop);
-		jedisCluster.set(BaseConstants.PHONE_RECHARGE_ALL_GOODS, JSONObject.toJSONString(allShopList));
+		jedisCluster.set(TelRechargeConstants.PHONE_RECHARGE_ALL_GOODS, JSONObject.toJSONString(allShopList));
 		
 		PhoneRechargeShop YDShop = new PhoneRechargeShop();
-		YDShop.setSupplier(phoneRechargeSupplier.PRS1.getCode());
+		YDShop.setSupplier(TelRechargeConstants.phoneRechargeSupplier.PRS1.getCode());
 		List<PhoneRechargeShop> YDShopList = phoneRechargeShopService.getYDShopFaceByPhoneRechargeShop(YDShop);
-		jedisCluster.set(BaseConstants.PHONE_RECHARGE_YD_GOODS, JSONObject.toJSONString(YDShopList));
+		jedisCluster.set(TelRechargeConstants.PHONE_RECHARGE_YD_GOODS, JSONObject.toJSONString(YDShopList));
 		
 		
 		PhoneRechargeShop TLShop = new PhoneRechargeShop();
-		TLShop.setSupplier(phoneRechargeSupplier.PRS1.getCode());
+		TLShop.setSupplier(TelRechargeConstants.phoneRechargeSupplier.PRS1.getCode());
 		List<PhoneRechargeShop> TLShopList = phoneRechargeShopService.getLTShopFaceByPhoneRechargeShop(TLShop);
-		jedisCluster.set(BaseConstants.PHONE_RECHARGE_LT_GOODS, JSONObject.toJSONString(TLShopList));
+		jedisCluster.set(TelRechargeConstants.PHONE_RECHARGE_LT_GOODS, JSONObject.toJSONString(TLShopList));
 		
 		PhoneRechargeShop DXShop = new PhoneRechargeShop();
-		DXShop.setSupplier(phoneRechargeSupplier.PRS1.getCode());
+		DXShop.setSupplier(TelRechargeConstants.phoneRechargeSupplier.PRS1.getCode());
 		List<PhoneRechargeShop> DXShopList = phoneRechargeShopService.getDXShopFaceByPhoneRechargeShop(DXShop);
-		jedisCluster.set(BaseConstants.PHONE_RECHARGE_DX_GOODS, JSONObject.toJSONString(DXShopList));
+		jedisCluster.set(TelRechargeConstants.PHONE_RECHARGE_DX_GOODS, JSONObject.toJSONString(DXShopList));
 		
 	}
 	

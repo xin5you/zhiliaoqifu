@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.controller;
+package com.ebeijia.zl.web.api.model.welfaremart.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.service.WelfareMartService;
+import com.ebeijia.zl.web.api.model.welfaremart.service.WelfareMartService;
 
 @Controller
 @RequestMapping("/welfareNotify")

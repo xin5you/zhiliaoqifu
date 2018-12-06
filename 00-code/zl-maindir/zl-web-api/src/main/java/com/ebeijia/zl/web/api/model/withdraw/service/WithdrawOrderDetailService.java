@@ -1,7 +1,7 @@
-package com.cn.thinkx.wecard.api.module.withdraw.service;
+package com.ebeijia.zl.web.api.model.withdraw.service;
 
-import com.cn.thinkx.wecard.api.module.withdraw.domain.WithdrawOrderDetail;
-import com.cn.thinkx.wecard.api.module.withdraw.suning.vo.Content;
+import com.ebeijia.zl.web.api.model.withdraw.domain.WithdrawOrderDetail;
+import com.ebeijia.zl.web.api.model.withdraw.suning.vo.Content;
 
 public interface WithdrawOrderDetailService {
 	

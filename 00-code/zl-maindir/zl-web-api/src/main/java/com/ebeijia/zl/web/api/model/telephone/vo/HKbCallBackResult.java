@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.telephone.vo;
+package com.ebeijia.zl.web.api.model.telephone.vo;
 
 /**
  * 汇卡宝手机充值回调

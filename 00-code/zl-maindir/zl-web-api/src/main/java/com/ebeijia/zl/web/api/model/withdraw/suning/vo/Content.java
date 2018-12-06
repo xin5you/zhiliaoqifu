@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.suning.vo;
+package com.ebeijia.zl.web.api.model.withdraw.suning.vo;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.mapper;
+package com.ebeijia.zl.web.api.model.welfaremart.mapper;
 
 import java.util.List;
 import java.util.Map;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysTransLog;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysTransLog;
 
 public interface CardKeysTransLogMapper {
 	

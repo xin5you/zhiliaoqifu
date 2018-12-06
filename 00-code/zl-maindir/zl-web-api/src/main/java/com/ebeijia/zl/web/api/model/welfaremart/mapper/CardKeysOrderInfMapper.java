@@ -1,8 +1,8 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.mapper;
+package com.ebeijia.zl.web.api.model.welfaremart.mapper;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysOrderInf;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysOrderInf;
 
 public interface CardKeysOrderInfMapper {
 	

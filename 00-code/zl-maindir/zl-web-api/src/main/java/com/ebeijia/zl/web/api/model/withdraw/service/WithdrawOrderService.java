@@ -1,10 +1,10 @@
-package com.cn.thinkx.wecard.api.module.withdraw.service;
+package com.ebeijia.zl.web.api.model.withdraw.service;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.cn.thinkx.wecard.api.module.withdraw.domain.WithdrawOrder;
-import com.cn.thinkx.wecard.api.module.withdraw.vo.WelfaremartResellReq;
-import com.cn.thinkx.wecard.api.module.withdraw.vo.WelfaremartResellResp;
+import com.ebeijia.zl.web.api.model.withdraw.domain.WithdrawOrder;
+import com.ebeijia.zl.web.api.model.withdraw.vo.WelfaremartResellReq;
+import com.ebeijia.zl.web.api.model.withdraw.vo.WelfaremartResellResp;
 
 public interface WithdrawOrderService {
 	

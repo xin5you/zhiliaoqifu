@@ -4,16 +4,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -48,7 +47,7 @@ public class TelProviderOrderInfController {
 		} catch (Exception e) {
 			logger.error("## 供应商订单列表查询异常", e);
 		}
-		mv.addObject("rechargeStateList", BaseConstants.providerOrderRechargeState.values());
+		mv.addObject("rechargeStateList", TelRechargeConstants.providerOrderRechargeState.values());
 		mv.addObject("operStatus", operStatus);
 		return mv;
 	}

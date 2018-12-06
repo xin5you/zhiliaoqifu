@@ -16,12 +16,12 @@ import com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrderUpload;
 import com.cn.thinkx.oms.phoneRecharge.req.PhoneRechargeRefundReq;
 import com.cn.thinkx.oms.phoneRecharge.resp.PhoneRechargeRefundResp;
 import com.cn.thinkx.oms.phoneRecharge.service.PhoneRechargeService;
-import com.cn.thinkx.pms.base.http.HttpClientUtil;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.BaseConstants.ChannelCode;
-import com.cn.thinkx.pms.base.utils.SignUtil;
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.ebeijia.zl.common.utils.constants.Constants.ChannelCode;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.SignUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -44,13 +44,13 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 		if (list != null && list.size() > 0) {
 			for (PhoneRechargeOrder phoneRechargeOrder : list) {
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrder.getSupplier()))
-					phoneRechargeOrder.setSupplier(BaseConstants.phoneRechargeSupplier.findByCode(phoneRechargeOrder.getSupplier()).getValue());
+					phoneRechargeOrder.setSupplier(TelRechargeConstants.phoneRechargeSupplier.findByCode(phoneRechargeOrder.getSupplier()).getValue());
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrder.getTransStat()))
-					phoneRechargeOrder.setTransStat(BaseConstants.phoneRechargeTransStat.findByCode(phoneRechargeOrder.getTransStat()).getValue());
+					phoneRechargeOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.findByCode(phoneRechargeOrder.getTransStat()).getValue());
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrder.getOrderType()))
-					phoneRechargeOrder.setOrderType(BaseConstants.phoneRechargeOrderType.findByCode(phoneRechargeOrder.getOrderType()).getValue());
+					phoneRechargeOrder.setOrderType(TelRechargeConstants.phoneRechargeOrderType.findByCode(phoneRechargeOrder.getOrderType()).getValue());
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrder.getReqChannel()))
-					phoneRechargeOrder.setReqChannel(BaseConstants.phoneRechargeReqChnl.findByCode(phoneRechargeOrder.getReqChannel()).getValue());
+					phoneRechargeOrder.setReqChannel(TelRechargeConstants.phoneRechargeReqChnl.findByCode(phoneRechargeOrder.getReqChannel()).getValue());
 				phoneRechargeOrder.setTransAmt(StringUtil.isNullOrEmpty(phoneRechargeOrder.getTransAmt()) ? "0": NumberUtils.RMBCentToYuan(phoneRechargeOrder.getTransAmt()));
 				phoneRechargeOrder.setTelephoneFace(StringUtil.isNullOrEmpty(phoneRechargeOrder.getTelephoneFace())? "0" : phoneRechargeOrder.getTelephoneFace());
 				phoneRechargeOrder.setDiscountsAmt(StringUtil.isNullOrEmpty(phoneRechargeOrder.getDiscountsAmt()) ? "0": phoneRechargeOrder.getDiscountsAmt());
@@ -68,13 +68,13 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 		if (proList != null && proList.size() > 0) {
 			for (PhoneRechargeOrderUpload phoneRechargeOrderUpload : proList) {
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getSupplier()))
-					phoneRechargeOrderUpload.setSupplier(BaseConstants.phoneRechargeSupplier.findByCode(phoneRechargeOrderUpload.getSupplier()).getValue());
+					phoneRechargeOrderUpload.setSupplier(TelRechargeConstants.phoneRechargeSupplier.findByCode(phoneRechargeOrderUpload.getSupplier()).getValue());
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getTransStat()))
-					phoneRechargeOrderUpload.setTransStat(BaseConstants.phoneRechargeTransStat.findByCode(phoneRechargeOrderUpload.getTransStat()).getValue());
+					phoneRechargeOrderUpload.setTransStat(TelRechargeConstants.phoneRechargeOrderType.findByCode(phoneRechargeOrderUpload.getTransStat()).getValue());
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getOrderType()))
-					phoneRechargeOrderUpload.setOrderType(BaseConstants.phoneRechargeOrderType.findByCode(phoneRechargeOrderUpload.getOrderType()).getValue());
+					phoneRechargeOrderUpload.setOrderType(TelRechargeConstants.phoneRechargeOrderType.findByCode(phoneRechargeOrderUpload.getOrderType()).getValue());
 				if (!StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getReqChannel()))
-					phoneRechargeOrderUpload.setReqChannel(BaseConstants.phoneRechargeReqChnl.findByCode(phoneRechargeOrderUpload.getReqChannel()).getValue());
+					phoneRechargeOrderUpload.setReqChannel(TelRechargeConstants.phoneRechargeReqChnl.findByCode(phoneRechargeOrderUpload.getReqChannel()).getValue());
 				phoneRechargeOrderUpload.setTransAmt(StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getTransAmt())? "0" : NumberUtils.RMBCentToYuan(phoneRechargeOrderUpload.getTransAmt()));
 				phoneRechargeOrderUpload.setTelephoneFace(StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getTelephoneFace()) ? "0": phoneRechargeOrderUpload.getTelephoneFace());
 				phoneRechargeOrderUpload.setDiscountsAmt(StringUtil.isNullOrEmpty(phoneRechargeOrderUpload.getDiscountsAmt()) ? "0": phoneRechargeOrderUpload.getDiscountsAmt());
@@ -101,19 +101,19 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 			req.setRefundOrderId(phoneRechargeOrder.getrId());
 			req.setRefundAmount(phoneRechargeOrder.getTransAmt());
 			req.setChannel(ChannelCode.CHANNEL8.toString());// 40007001
-			req.setRefundFlag(BaseConstants.refundFalg.refundFalg1.getCode());
+			req.setRefundFlag(TelRechargeConstants.refundFalg.refundFalg1.getCode());
 			req.setTimestamp(System.currentTimeMillis());
 			req.setSign(SignUtil.genSign(req, key));
 			String url = jedisClusterUtils.hget("TB_BASE_DICT_KV", "PHONE_RECHARGE_REFUND");
 			String result = HttpClientUtil.sendPostReturnStr(url, JSONObject.toJSONString(req));// 发起退款请求
 			logger.info("## 退款请求参数，[{}]，退款返回参数[{}]", JSONObject.toJSONString(req), result);
 			PhoneRechargeRefundResp resp = JSONObject.parseObject(result, PhoneRechargeRefundResp.class);
-			if (BaseConstants.RESPONSE_SUCCESS_CODE.equals(resp.getCode())) {
-				phoneRechargeOrder.setTransStat(BaseConstants.phoneRechargeTransStat.PRTS5.getCode());
+			if (TelRechargeConstants.RESPONSE_SUCCESS_CODE.equals(resp.getCode())) {
+				phoneRechargeOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat5.getCode());
 				resultMap.addAttribute("status", Boolean.TRUE);
 				resultMap.addAttribute("msg", "退款成功");
 			} else {
-				phoneRechargeOrder.setTransStat(BaseConstants.phoneRechargeTransStat.PRTS6.getCode());
+				phoneRechargeOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat6.getCode());
 			}
 			phoneRechargeMapper.updatePhoneRechargeOrder(phoneRechargeOrder);// 更新订单信息
 		} catch (Exception e) {

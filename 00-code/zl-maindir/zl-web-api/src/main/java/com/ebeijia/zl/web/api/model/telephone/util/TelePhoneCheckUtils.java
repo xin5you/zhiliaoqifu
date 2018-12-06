@@ -8,9 +8,9 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cn.thinkx.pms.base.http.HttpClient;
-import com.cn.thinkx.pms.base.http.HttpRequest;
-import com.cn.thinkx.pms.base.http.HttpResponse;
+import com.ebeijia.zl.common.utils.http.HttpClient;
+import com.ebeijia.zl.common.utils.http.HttpRequest;
+import com.ebeijia.zl.common.utils.http.HttpResponse;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -21,9 +21,6 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.model.TelChannelProductCheck;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.NumberUtils;
-import com.cn.thinkx.pms.base.utils.StringUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelItemList;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelProductInf;
@@ -31,6 +28,10 @@ import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelItemListFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductAreaFlag;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageInfo;
 
 @Controller
@@ -216,14 +217,14 @@ public class TelChannelInfController {
 					check = new TelChannelProductCheck();
 					check.setProductId(channelProductAll.getProductId());
 					check.setChannelRate(channelProductAll.getChannelRate());
-					check.setOperId(BaseConstants.OperatorType.findByCode(channelProductAll.getOperId()));
-					check.setProductType(BaseConstants.ChannelProductProType.findByCode(channelProductAll.getProductType()));
+					check.setOperId(TelRechargeConstants.OperatorType.findByCode(channelProductAll.getOperId()));
+					check.setProductType(TelRechargeConstants.ChannelProductProType.findByCode(channelProductAll.getProductType()));
 					check.setOperName(channelProductAll.getOperName());
 					check.setProductAmt(channelProductAll.getProductAmt());
 					check.setProductPrice(channelProductAll.getProductPrice());
 					check.setCreateTime(channelProductAll.getCreateTime());
 					check.setUpdateTime(channelProductAll.getUpdateTime());
-					check.setAreaFlag(BaseConstants.ChannelProductAreaFlag.findByCode(channelProductAll.getAreaFlag()));
+					check.setAreaFlag(TelRechargeConstants.ChannelProductAreaFlag.findByCode(channelProductAll.getAreaFlag()));
 					check.setChannelRate(channelProductAll.getChannelRate());
 					for (TelChannelProductInf telChannelProduct : channelProductist) {
 						if (channelProductAll.getProductId().equals(telChannelProduct.getProductId())) {
@@ -241,7 +242,7 @@ public class TelChannelInfController {
 		} catch (Exception e) {
 			logger.error(" ## 添加分销商信息出错", e);
 		}
-		mv.addObject("operIdList", BaseConstants.OperatorType.values());
+		mv.addObject("operIdList", TelRechargeConstants.OperatorType.values());
 		mv.addObject("channelProductistCheck", channelProductistCheck);
 		mv.addObject("telChannelInf", telChannelInf);
 		mv.addObject("telCPInf", telProduct);
@@ -304,19 +305,19 @@ public class TelChannelInfController {
 			TelChannelProductInf telProductInf = telChannelProductInfFacade.getChannelProductByItemId(id);
 			if(!StringUtil.isNullOrEmpty(telProductInf)){
 				if(!StringUtil.isNullOrEmpty(telProductInf.getAreaFlag()))
-					telProductInf.setAreaFlag(BaseConstants.ChannelProductAreaFlag.findByCode(telProductInf.getAreaFlag()));
+					telProductInf.setAreaFlag(TelRechargeConstants.ChannelProductAreaFlag.findByCode(telProductInf.getAreaFlag()));
 				if(!StringUtil.isNullOrEmpty(telProductInf.getOperId()))
-					telProductInf.setOperId(BaseConstants.OperatorType.findByCode(telProductInf.getOperId()));
+					telProductInf.setOperId(TelRechargeConstants.OperatorType.findByCode(telProductInf.getOperId()));
 				if(!StringUtil.isNullOrEmpty(telProductInf.getProductType()))
-					telProductInf.setProductType(BaseConstants.ChannelProductProType.findByCode(telProductInf.getProductType()));
+					telProductInf.setProductType(TelRechargeConstants.ChannelProductProType.findByCode(telProductInf.getProductType()));
 			}
 			mv.addObject("telProductInf", telProductInf);
 		} catch (Exception e) {
 			logger.error("## 通过id查找分销商产品信息异常", e);
 		}
-		mv.addObject("areaFlagList", BaseConstants.ChannelProductAreaFlag.values());
-		mv.addObject("productTypeList", BaseConstants.ChannelProductProType.values());
-		mv.addObject("operIdList", BaseConstants.OperatorType.values());
+		mv.addObject("areaFlagList", ChannelProductAreaFlag.values());
+		mv.addObject("productTypeList", TelRechargeConstants.ChannelProductProType.values());
+		mv.addObject("operIdList", TelRechargeConstants.OperatorType.values());
 		return mv;
 	}
 	

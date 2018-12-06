@@ -1,6 +1,6 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.service;
+package com.ebeijia.zl.web.api.model.welfaremart.service;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysProduct;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysProduct;
 
 public interface CardKeysProductService {
 	

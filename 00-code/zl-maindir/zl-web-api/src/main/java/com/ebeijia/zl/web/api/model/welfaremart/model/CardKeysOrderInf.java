@@ -1,14 +1,14 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.model;
+package com.ebeijia.zl.web.api.model.welfaremart.model;
 
-import com.cn.thinkx.pms.base.domain.BaseDomain;
 
+import com.cn.thinkx.common.base.core.domain.BaseEntity;
 /**
  * 卡密交易订单表
  * 
  * @author xiaomei
  *
  */
-public class CardKeysOrderInf extends BaseDomain {
+public class CardKeysOrderInf extends BaseEntity {
 
 	/**
 	 * 订单号

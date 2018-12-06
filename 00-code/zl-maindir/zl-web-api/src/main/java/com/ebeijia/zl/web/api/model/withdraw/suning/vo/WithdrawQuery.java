@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.suning.vo;
+package com.ebeijia.zl.web.api.model.withdraw.suning.vo;
 
 /**
  * 代付查询返回参数

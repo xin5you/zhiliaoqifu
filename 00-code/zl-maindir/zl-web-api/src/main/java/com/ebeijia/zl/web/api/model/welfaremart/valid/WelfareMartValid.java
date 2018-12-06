@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.valid;
+package com.ebeijia.zl.web.api.model.welfaremart.valid;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -7,10 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONArray;
-import com.cn.thinkx.common.redis.util.ChannelSignUtil;
-import com.cn.thinkx.pms.base.utils.StringUtil;
-import com.cn.thinkx.wecard.api.module.welfaremart.vo.NotifyOrder;
-import com.cn.thinkx.wechat.base.wxapi.util.WxSignUtil;
+import com.ebeijia.zl.common.utils.tools.ChannelSignUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.api.model.welfaremart.vo.NotifyOrder;
 
 public class WelfareMartValid {
 	

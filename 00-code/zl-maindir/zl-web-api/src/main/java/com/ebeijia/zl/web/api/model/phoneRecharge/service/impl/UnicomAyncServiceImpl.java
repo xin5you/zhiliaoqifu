@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSONArray;
+import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.web.api.model.phoneRecharge.model.PhoneRechargeOrder;
 import com.ebeijia.zl.web.api.model.phoneRecharge.service.PhoneRechargeService;
@@ -18,6 +19,8 @@ import com.ebeijia.zl.web.api.model.phoneRecharge.utils.DCUtils;
 import com.ebeijia.zl.web.api.model.phoneRecharge.vo.UnicomAyncNotify;
 import com.ebeijia.zl.web.api.model.phoneRecharge.vo.UnicomAyncReq;
 import com.ebeijia.zl.web.api.model.withdraw.suning.utils.HttpClientUtil;
+
+import redis.clients.jedis.JedisCluster;
 
 @Service("unicomAyncService")
 public class UnicomAyncServiceImpl implements UnicomAyncService {
@@ -43,10 +46,10 @@ public class UnicomAyncServiceImpl implements UnicomAyncService {
 		voReq.setDtCreate(DateUtil.getCurrentDateStr(DateUtil.FORMAT_YYYYMMDDHHMMSS));
 		voReq.setUid(flowOrder.getPhone());
 		voReq.setItemId(flowOrder.getGoodsNo());
-		if (phoneRechargeOrderType.PROT1.getCode().equals(flowOrder.getOrderType())) {// 充值话费
+		if (TelRechargeConstants.ShopType.ShopType1.getCode().equals(flowOrder.getOrderType())) {// 充值话费
 			voReq.setUserId(DINGCHI_HF_USERID);
 			voReq.setSign(DCUtils.genSign(voReq, DINGCHI_HF_KEY));
-		} else if (phoneRechargeOrderType.PROT2.getCode().equals(flowOrder.getOrderType())) {// 充值流量
+		} else if (TelRechargeConstants.ShopType.ShopType2.getCode().equals(flowOrder.getOrderType())) {// 充值流量
 			voReq.setUserId(DINGCHI_LL_USERID);
 			voReq.setSign(DCUtils.genSign(voReq, DINGCHI_LL_KEY));
 		} else {
@@ -54,20 +57,20 @@ public class UnicomAyncServiceImpl implements UnicomAyncService {
 			return null;
 		}
 		
-		String DINGCHI_URL = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, BaseConstants.DINGCHI_HTTP_URL);
-		String DINGCHI_BUY = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, BaseConstants.DINGCHI_BUY_URL);
+		String DINGCHI_URL = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, TelRechargeConstants.DINGCHI_HTTP_URL);
+		String DINGCHI_BUY = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, TelRechargeConstants.DINGCHI_BUY_URL);
 		
 		String url = DCUtils.genUrl(voReq, DINGCHI_URL + DINGCHI_BUY); // 请求GET路径(带参数)
 		logger.info("手机充值--->请求鼎驰直充接口URL[{}]", url);
-		String dingchiResp = HttpClientUtil.sendGet(url); 
+		String dingchiResp = com.ebeijia.zl.common.utils.http.HttpClientUtil.sendGet(url); 
 		logger.info("手机充值--->鼎驰返回支付信息[{}]", dingchiResp);
 		return dingchiResp;
 	}
 
 	@Override
 	public String query(HttpServletRequest req) {
-		String DINGCHI_URL = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, BaseConstants.DINGCHI_HTTP_URL);
-		String DINGCHI_QUERY = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, BaseConstants.DINGCHI_QUERY_URL);
+		String DINGCHI_URL = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, TelRechargeConstants.DINGCHI_HTTP_URL);
+		String DINGCHI_QUERY = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, TelRechargeConstants.DINGCHI_QUERY_URL);
 		
 		String userId = req.getParameter("userId");// 合作方用户编号(鼎驰科技方提供)
 		String serialno = req.getParameter("serialno");// 合作方商户系统的流水号,全局唯一
@@ -83,9 +86,9 @@ public class UnicomAyncServiceImpl implements UnicomAyncService {
 		vo.setSerialno(serialno);
 		String key = null;
 		
-		if (phoneRechargeOrderType.PROT1.getCode().equals(flowOrder.getOrderType())) {// 充值话费
+		if (TelRechargeConstants.ShopType.ShopType1.getCode().equals(flowOrder.getOrderType())) {// 充值话费
 			key = DINGCHI_HF_KEY;
-		} else if (phoneRechargeOrderType.PROT2.getCode().equals(flowOrder.getOrderType())) {// 充值流量
+		} else if (TelRechargeConstants.ShopType.ShopType2.getCode().equals(flowOrder.getOrderType())) {// 充值流量
 			key = DINGCHI_LL_KEY;
 		}
 		
@@ -123,30 +126,30 @@ public class UnicomAyncServiceImpl implements UnicomAyncService {
 		vo.setStatus(status);
 
 		String key = null;
-		if (phoneRechargeOrderType.PROT1.getCode().equals(flowOrder.getOrderType())) {// 充值话费
+		if (TelRechargeConstants.ShopType.ShopType1.getCode().equals(flowOrder.getOrderType())) {// 充值话费
 			key = DINGCHI_HF_KEY;
-		} else if (phoneRechargeOrderType.PROT2.getCode().equals(flowOrder.getOrderType())) {// 充值流量
+		} else if (TelRechargeConstants.ShopType.ShopType2.getCode().equals(flowOrder.getOrderType())) {// 充值流量
 			key = DINGCHI_LL_KEY;
 		}
 		
 		String hkbSign = DCUtils.genSign(vo, key);
-		if (!StringUtils.equals(sign, hkbSign)) {// 签名不正确
+		if (!hkbSign.equals(sign)) {// 签名不正确
 			logger.error("## 手机充值--->流量充值异步回调接口，验签失败，鼎驰回调信息[{}]", JSONArray.toJSONString(vo));
 			return null;
 		}
 
 		if ("3".equals(status)) {// 交易失败
 			logger.error("## 手机充值--->流量充值异步回调接口，鼎驰充值失败：鼎驰订单号[{}] 汇卡宝订单号[{}] 错误信息[{}]", id, downstreamSerialno, statusDesc);
-			flowOrder.setTransStat(phoneRechargeTransStat.PRTS3.getCode());
+			flowOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat3.getCode());
 		} else if ("2".equals(status)) {// 交易成功
 			logger.info("## 手机充值--->流量充值异步回调接口，鼎驰充值成功：鼎驰订单号[{}] 汇卡宝订单号[{}]", id, downstreamSerialno);
-			flowOrder.setTransStat(phoneRechargeTransStat.PRTS2.getCode());
+			flowOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat2.getCode());
 		} else {
 			logger.error("## 手机充值--->流量充值异步回调接口，鼎驰回调异常：鼎驰订单号[{}] status[{}] 错误信息[{}]", id, status, statusDesc);
 		}
 		
 		if (phoneRechargeService.updatePhoneRechargeOrder(flowOrder) < 1) {
-			logger.error("## 手机充值--->更新手机流量充值订单[{}]状态[{}]失败，用户[{}]", flowOrder.getrId(), phoneRechargeTransStat.findByCode(flowOrder.getTransStat()).getValue(), flowOrder.getUserId());
+			logger.error("## 手机充值--->更新手机流量充值订单[{}]状态[{}]失败，用户[{}]", flowOrder.getrId(), TelRechargeConstants.phoneRechargeOrderType.findByCode(flowOrder.getTransStat()).getValue(), flowOrder.getUserId());
 			return null;
 		}
 		return "ok";

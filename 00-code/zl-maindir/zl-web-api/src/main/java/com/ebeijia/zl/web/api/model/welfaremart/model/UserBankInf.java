@@ -1,6 +1,6 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.model;
+package com.ebeijia.zl.web.api.model.welfaremart.model;
 
-import com.cn.thinkx.pms.base.domain.BaseDomain;
+import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
 /**
  * 用户银行卡信息
@@ -8,7 +8,7 @@ import com.cn.thinkx.pms.base.domain.BaseDomain;
  * @author xiaomei
  *
  */
-public class UserBankInf extends BaseDomain {
+public class UserBankInf extends BaseEntity {
 
 	/**
 	 * 银行卡号

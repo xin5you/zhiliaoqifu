@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.telephone.service;
+package com.ebeijia.zl.web.api.model.telephone.service;
 
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespDomain;

@@ -1,10 +1,10 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.util;
+package com.ebeijia.zl.web.api.model.welfaremart.util;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.cn.thinkx.pms.base.utils.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 /**
  * 卡密生成器

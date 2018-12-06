@@ -1,6 +1,6 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.model;
+package com.ebeijia.zl.web.api.model.welfaremart.model;
 
-import com.cn.thinkx.pms.base.domain.BaseDomain;
+import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
 /**
  * 卡密产品信息
@@ -8,7 +8,7 @@ import com.cn.thinkx.pms.base.domain.BaseDomain;
  * @author xiaomei
  *
  */
-public class CardKeysProduct extends BaseDomain {
+public class CardKeysProduct extends BaseEntity {
 
 	/*
 	 * 产品号

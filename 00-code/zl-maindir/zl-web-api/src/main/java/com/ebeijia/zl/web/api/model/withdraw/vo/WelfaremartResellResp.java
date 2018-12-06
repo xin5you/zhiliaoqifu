@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.withdraw.vo;
+package com.ebeijia.zl.web.api.model.withdraw.vo;
 
 public class WelfaremartResellResp {
 	

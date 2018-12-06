@@ -8,9 +8,9 @@
  * <author>      <time>      <version>    <desc>
  * 修改人姓名             修改时间            版本号                  描述
  */
-package com.cn.thinkx.wecard.api.module.withdraw.suning.demo;
+package com.ebeijia.zl.web.api.model.withdraw.suning.demo;
 
-import com.cn.thinkx.wecard.api.module.withdraw.suning.dto.TransferQueryData;
+import com.ebeijia.zl.web.api.model.withdraw.suning.dto.TransferQueryData;
 
 /**
  * 〈一句话功能简述〉<br> 

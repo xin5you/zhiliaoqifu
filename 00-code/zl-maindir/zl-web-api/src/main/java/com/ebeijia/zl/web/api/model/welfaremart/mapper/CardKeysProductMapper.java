@@ -1,8 +1,8 @@
-package com.cn.thinkx.wecard.api.module.welfaremart.mapper;
+package com.ebeijia.zl.web.api.model.welfaremart.mapper;
 
 import java.util.List;
 
-import com.cn.thinkx.wecard.api.module.welfaremart.model.CardKeysProduct;
+import com.ebeijia.zl.web.api.model.welfaremart.model.CardKeysProduct;
 
 public interface CardKeysProductMapper {
 	

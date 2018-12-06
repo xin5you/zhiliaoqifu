@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
-
-import net.sf.json.JSONObject;
 
 @RunWith(SpringJUnit4ClassRunner.class)    
 @ContextConfiguration(locations = {"classpath*:/conf/applicationContext.xml"}) 

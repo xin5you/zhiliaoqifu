@@ -503,112 +503,10 @@ public class Constants {
 		}
 	}
 	
+
 	
-	/**
-	 * 订单类型
-	 * 
-	 * @author xiaomei
-	 *
-	 */
-	public enum PhoneRechargeOrderType {
-		OrderType1("1", "话费充值"),
-		OrderType2("2", "流量充值");
-		
-		private String code;
-		private String value;
-		
-		PhoneRechargeOrderType(String code, String value) {
-			this.code = code;
-			this.value = value;
-		}
-		
-		public String getCode() {
-			return code;
-		}
-		
-		public String getValue() {
-			return value;
-		}
-		
-		public static PhoneRechargeOrderType findByCode(String code) {
-			for (PhoneRechargeOrderType t : PhoneRechargeOrderType.values()) {
-				if (t.code.equalsIgnoreCase(code)) {
-					return t;
-				}
-			}
-			return null;
-		}
-	}
-	public enum SupplierType{
-		SupplierType1001("S1001","力方"),
-		SupplierType1002("S1002","鼎驰");
-		
-		private String code;
-		private String value;
-		
-		SupplierType(String code, String value) {
-			this.code = code;
-			this.value = value;
-		}
-		
-		public String getCode() {
-			return code;
-		}
-		
-		public String getValue() {
-			return value;
-		}
-		
-		public static SupplierType findByCode(String code) {
-			for (SupplierType t : SupplierType.values()) {
-				if (t.code.equalsIgnoreCase(code)) {
-					return t;
-				}
-			}
-			return null;
-		}
-	}
-	
-	/**
-	 * 手机充值交易状态
-	 * 
-	 * @author xiaomei
-	 *
-	 */
-	public enum PhoneRechargeTransStat {
-		TransStat0("0", "未付款"),
-		TransStat1("1", "充值中"),
-		TransStat2("2", "充值成功"),
-		TransStat3("3", "充值失败"),
-		TransStat4("4", "受理成功"),
-		TransStat5("5", "退款成功"),
-		TransStat6("6", "退款失败");
-		
-		private String code;
-		private String value;
-		
-		PhoneRechargeTransStat(String code, String value) {
-			this.code = code;
-			this.value = value;
-		}
-		
-		public String getCode() {
-			return code;
-		}
-		
-		public String getValue() {
-			return value;
-		}
-		
-		public static PhoneRechargeTransStat findByCode(String code) {
-			for (PhoneRechargeTransStat t : PhoneRechargeTransStat.values()) {
-				if (t.code.equalsIgnoreCase(code)) {
-					return t;
-				}
-			}
-			return null;
-		}
-	}
+
+
 	
 	public enum RechargeState{
 		RechargeState00("0","充值中"),
@@ -1269,40 +1167,7 @@ public class Constants {
 		}
 	}
 	
-	/**
-	 * 退款接口 标志
-	 * @author xiaomei
-	 *
-	 */
-	public enum refundFalg{
-		refundFalg1("1", "系统退款"), 
-		refundFalg2("2", "用户端退款");
 
-		private String code;
-		private String value;
-
-		refundFalg(String code, String value) {
-			this.code = code;
-			this.value = value;
-		}
-
-		public String getCode() {
-			return code;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public static refundFalg findByCode(String code) {
-			for (refundFalg t : refundFalg.values()) {
-				if (t.code.equalsIgnoreCase(code)) {
-					return t;
-				}
-			}
-			return null;
-		}
-	}
 	
 	/**
 	 * 交易返回码信息
@@ -1441,6 +1306,41 @@ public class Constants {
 		
 		public static returnType findByCode(String code) {
 			for (returnType t : returnType.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * 退款接口 标志
+	 * @author xiaomei
+	 *
+	 */
+	public enum refundFalg{
+		refundFalg1("1", "系统退款"), 
+		refundFalg2("2", "用户端退款");
+
+		private String code;
+		private String value;
+
+		refundFalg(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public static refundFalg findByCode(String code) {
+			for (refundFalg t : refundFalg.values()) {
 				if (t.code.equalsIgnoreCase(code)) {
 					return t;
 				}

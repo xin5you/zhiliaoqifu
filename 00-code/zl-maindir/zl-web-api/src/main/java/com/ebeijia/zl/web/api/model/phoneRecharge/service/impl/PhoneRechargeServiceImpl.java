@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cn.thinkx.ecom.redis.core.constants.RedisConstants;
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.TelRechargeConstants;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.web.api.model.phoneRecharge.mapper.PhoneRechargeMapper;
 import com.ebeijia.zl.web.api.model.phoneRecharge.model.PhoneRechargeOrder;
@@ -18,16 +21,15 @@ import com.ebeijia.zl.web.api.model.phoneRecharge.service.UnicomAyncService;
 import com.ebeijia.zl.web.api.model.phoneRecharge.valid.PhoneRechargeValid;
 import com.ebeijia.zl.web.api.model.welfaremart.vo.NotifyOrder;
 
+import redis.clients.jedis.JedisCluster;
+
 @Service("phoneRechargeService")
 public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private PhoneRechargeMapper phoneRechargeMapper;
-	
-	@Autowired
-	@Qualifier("personInfService")
-	private PersonInfService personInfService;
+
 	
 	@Autowired
 	@Qualifier("jedisCluster")
@@ -77,11 +79,11 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 			return false;
 		}
 		flowOrder.setChannelOrderNo(notifyReq.getTxnFlowNo());
-		if (BaseConstants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
-			flowOrder.setTransStat(phoneRechargeTransStat.PRTS1.getCode());
+		if (Constants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
+			flowOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat1.getCode());
 		}
-		if (BaseConstants.HKB_FAIL.equals(notifyReq.getRespResult())) {
-			flowOrder.setTransStat(phoneRechargeTransStat.PRTS3.getCode());
+		if (Constants.HKB_FAIL.equals(notifyReq.getRespResult())) {
+			flowOrder.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat3.getCode());
 		}
 		try {
 			if (phoneRechargeMapper.updatePhoneRechargeOrder(flowOrder) < 1) {
@@ -91,7 +93,7 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 		} catch (Exception e) {
 			logger.error("## 手机充值--->流量充值接口，更新用户[{}]订单[{}]异常{}", notifyReq.getUserId(), flowOrder.getrId(), e);
 		}
-		if (BaseConstants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
+		if (Constants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
 			phoneRechargeToDingChi(notifyReq.getOrderId());
 			return true;
 		}
@@ -122,18 +124,18 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 			rechargeOrde = new PhoneRechargeOrder();
 			rechargeOrde.setrId(notifyReq.getOrderId());
 			rechargeOrde.setChannelOrderNo(notifyReq.getTxnFlowNo());
-			if (BaseConstants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
-				rechargeOrde.setTransStat(phoneRechargeTransStat.PRTS1.getCode());
+			if (Constants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
+				rechargeOrde.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat1.getCode());
 			}
-			if (BaseConstants.HKB_FAIL.equals(notifyReq.getRespResult())) {
-				rechargeOrde.setTransStat(phoneRechargeTransStat.PRTS3.getCode());
+			if (Constants.HKB_FAIL.equals(notifyReq.getRespResult())) {
+				rechargeOrde.setTransStat(TelRechargeConstants.phoneRechargeOrderType.TransStat3.getCode());
 			}
 			int i = phoneRechargeMapper.updatePhoneRechargeOrder(rechargeOrde);
 			if (i != 1) {
 				logger.error("## 手机充值--->话费充值接口，修改用户[{}]订单[{}]信息失败", notifyReq.getUserId(), rechargeOrde.getrId());
 				return false;
 			}
-			if (BaseConstants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
+			if (Constants.HKB_SUCCESS.equals(notifyReq.getRespResult())) {
 				phoneRechargeToLiFang(notifyReq.getOrderId());
 				return true;
 			}
@@ -152,9 +154,9 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 		}
 		
 		String accessToken = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,
-				BaseConstants.BM_ACCESS_TOKEN);
+				TelRechargeConstants.BM_ACCESS_TOKEN);
 		String PHONE_RECHARGE_FRONT_REQUEST_URL = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,
-				BaseConstants.PHONE_RECHARGE_FRONT_REQUEST_URL);
+				TelRechargeConstants.PHONE_RECHARGE_FRONT_REQUEST_URL);
 		
 		rechargeOrder.setAccessToken(accessToken);
 		/*JSONObject paramData = new JSONObject();
@@ -171,7 +173,7 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 			return ;
 		}
 		String PHONE_RECHARGE_FRONT_REQUEST_URL = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,
-				BaseConstants.PHONE_RECHARGE_FRONT_REQUEST_URL);
+				TelRechargeConstants.PHONE_RECHARGE_FRONT_REQUEST_URL);
 		
 		logger.info("手机充值--->流量充值接口，提交请求链接[{}] 参数{}", PHONE_RECHARGE_FRONT_REQUEST_URL, JSONObject.toJSONString(rechargeOrder));
 		HttpClientUtil.sendPost(PHONE_RECHARGE_FRONT_REQUEST_URL, JSONObject.toJSONString(rechargeOrder));
