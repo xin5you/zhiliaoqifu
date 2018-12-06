@@ -1,6 +1,5 @@
 package com.cn.thinkx.ecom.activemq.core.service.impl;
 
-import java.util.Map;
 import java.util.TreeMap;
 
 import javax.jms.JMSException;
@@ -121,6 +120,17 @@ public class WechatMQProducerServiceImpl implements WechatMQProducerService {
 		templateMsgJmsTemplate.send(new MessageCreator() {
 			public Message createMessage(Session session) throws JMSException {
 				return session.createTextMessage(JSONObject.toJSONString(templateParam));
+			}
+		});
+	}
+	
+	/**
+	 * @param regOrderId 分销商话费充值订单号
+	 */
+	public void sendRechargeMobileMsg(final String channelOrderId){
+		templateMsgJmsTemplate.send(new MessageCreator() {
+			public Message createMessage(Session session) throws JMSException {
+				return session.createTextMessage(channelOrderId);
 			}
 		});
 	}

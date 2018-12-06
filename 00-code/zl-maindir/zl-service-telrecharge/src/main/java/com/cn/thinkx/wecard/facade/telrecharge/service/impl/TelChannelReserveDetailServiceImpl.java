@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.pms.base.utils.BaseConstants.ChannelReserveType;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants.ChannelReserveType;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelReserveDetailMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;

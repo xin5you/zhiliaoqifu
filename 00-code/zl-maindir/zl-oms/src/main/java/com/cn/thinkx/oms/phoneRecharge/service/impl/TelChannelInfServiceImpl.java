@@ -29,8 +29,8 @@ import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
-import com.ebeijia.zl.common.utils.tools.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 @Service("telChannelInfService")

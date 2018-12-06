@@ -21,7 +21,7 @@ import com.cn.thinkx.oms.sys.model.Resource;
 import com.cn.thinkx.oms.sys.model.User;
 import com.cn.thinkx.oms.sys.service.ResourceService;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
+import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 @Controller

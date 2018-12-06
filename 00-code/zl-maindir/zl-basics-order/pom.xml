@@ -10,7 +10,6 @@
 	</parent>
 
   <artifactId>zl-basics-order</artifactId>
-  <version>1.0.0.RELEASE</version>
   <name>zl-basics-order</name>
   <url>http://maven.apache.org</url>
   

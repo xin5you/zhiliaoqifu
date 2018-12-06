@@ -25,7 +25,7 @@ import com.cn.thinkx.oms.sys.model.ZTreeResource;
 import com.cn.thinkx.oms.sys.service.ResourceService;
 import com.cn.thinkx.oms.sys.service.RoleService;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
+import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.github.pagehelper.PageInfo;
 
@@ -52,7 +52,7 @@ public class RoleController {
 		
 		PageInfo<Role> pageList = null;
 		Role role=new Role();
-		role.setLoginType(LoginType.LoginType1.getCode());
+		role.setLoginType(com.ebeijia.zl.common.utils.constants.Constants.LoginType.LoginType1.getCode());
 		try {
 			pageList=roleService.getRolePage(startNum, pageSize, role);
 		} catch (Exception e) {

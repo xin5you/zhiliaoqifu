@@ -6,11 +6,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelProductInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelProductInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -81,13 +81,13 @@ public class TelChannelProductInfServiceImpl implements TelChannelProductInfFaca
 		for (TelChannelProductInf telChannelProductInf2 : telChannelProductInfList) {
 			if (!StringUtil.isNullOrEmpty(telChannelProductInf2.getOperId()))
 				telChannelProductInf2
-						.setOperId(BaseConstants.OperatorType.findByCode(telChannelProductInf2.getOperId()));
+						.setOperId(TelRechargeConstants.OperatorType.findByCode(telChannelProductInf2.getOperId()));
 			if (!StringUtil.isNullOrEmpty(telChannelProductInf2.getProductType()))
 				telChannelProductInf2.setProductType(
-						BaseConstants.ChannelProductProType.findByCode(telChannelProductInf2.getProductType()));
+						TelRechargeConstants.ChannelProductProType.findByCode(telChannelProductInf2.getProductType()));
 			if (!StringUtil.isNullOrEmpty(telChannelProductInf2.getAreaFlag()))
 				telChannelProductInf2.setAreaFlag(
-						BaseConstants.ChannelProductAreaFlag.findByCode(telChannelProductInf2.getAreaFlag()));
+						TelRechargeConstants.ChannelProductAreaFlag.findByCode(telChannelProductInf2.getAreaFlag()));
 		}
 		PageInfo<TelChannelProductInf> telProviderInfPage = new PageInfo<TelChannelProductInf>(
 				telChannelProductInfList);

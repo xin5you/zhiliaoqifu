@@ -40,12 +40,6 @@
             <version>${ebj.zl.version}</version>
         </dependency>
         
-        <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-facade-account</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-        
 <!-- 		<dependency> -->
 <!-- 		    <groupId>ch.qos.logback</groupId> -->
 <!-- 		    <artifactId>logback-classic</artifactId> -->

@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.facade.telrecharge;
+package com.cn.thinkx;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ebeijia</groupId>
@@ -64,24 +63,28 @@
     </repositories>
 
     <modules>
-        <module>zl-common</module>
-        <module>zl-core-activemq</module>
+    	<module>zl-common-utils</module>
+    	<module>zl-common-core</module>
+
         <module>zl-basics-goods</module>
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
         <module>zl-core-redis</module>
+        <module>zl-core-activemq</module>
+    	<module>zl-base-core</module>
         <module>zl-api-bm001</module>
-        <module>zl-cms</module>
-        <module>zl-common-core</module>
-        <module>zl-common-utils</module>
+        
+        <module>zl-facade-telrecharge</module>
         <module>zl-facade-account</module>
+        
+       	<module>zl-service-telrecharge</module>
         <module>zl-service-account</module>
-         <module>zl-oms</module>
-        <module>zl-base-core</module>
-    <module>zl-pms-base</module>
-    <module>zl-facade-telrecharge</module>
-    <module>zl-service-telrecharge</module>
-    </modules>
+        
+      
+        <module>zl-oms</module>
+	    <module>zl-cms</module>
+	    <module>zl-web-api</module>
+  </modules>
 
     <build>
         <plugins>

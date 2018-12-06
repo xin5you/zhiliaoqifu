@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.facade.telrecharge;
+package com.cn.thinkx;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -12,8 +12,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -27,8 +25,6 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @SpringBootApplication
-@ImportResource({"classpath:conf/spring-dubbo-service.xml"})
-@ComponentScan(basePackages = {"com.cn.thinkx"})
 public class TelrechargeApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	@Autowired
