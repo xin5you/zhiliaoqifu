@@ -7,7 +7,6 @@
 		<artifactId>zl-maindir</artifactId>
 		<version>1.0.0.RELEASE</version>
 	</parent>
-
 	 <artifactId>zl-base-core</artifactId>
 	 <packaging>jar</packaging>
 	 <name>zl-base-cores</name>
