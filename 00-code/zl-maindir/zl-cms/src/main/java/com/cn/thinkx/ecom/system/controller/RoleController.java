@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cn.thinkx.ecom.base.exception.BizHandlerException;
 import com.cn.thinkx.ecom.system.domain.Resource;
 import com.cn.thinkx.ecom.system.domain.Role;
 import com.cn.thinkx.ecom.system.domain.User;
