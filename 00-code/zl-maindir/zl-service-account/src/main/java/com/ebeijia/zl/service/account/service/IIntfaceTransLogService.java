@@ -15,6 +15,9 @@ import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
  */
 public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 	
+	 
+	 boolean updateById(IntfaceTransLog entity,boolean respFlag);
+	
 	/**
 	 * 
 	* @Description: 查询外部渠道订单号
@@ -30,7 +33,7 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	public IntfaceTransLog getItfTransLogDmsChannelTransId(String dmsRelatedKey,String transChnl);
+	 IntfaceTransLog getItfTransLogDmsChannelTransId(String dmsRelatedKey,String transChnl);
 	
 	/**
 	 * 
@@ -46,7 +49,7 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	public IntfaceTransLog newItfTransLog(
+	 IntfaceTransLog newItfTransLog(
 			String dms_related_key, //外部交易订单号
 			String user_id,
 			String trans_id,//交易类型
@@ -71,7 +74,7 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	public void addBizItfTransLog(
+	 void addBizItfTransLog(
 				IntfaceTransLog itfTransLog,
 				BigDecimal trans_amt,
 				BigDecimal upload_amt,
@@ -79,7 +82,9 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 				BigDecimal trans_fee,  //手续费
 				String trans_fee_type,
 				String tfr_in_user_id, //转入用户Id
+				String tfr_in_bId,
 				String tfr_out_user_id,//转出用户Id
+				String tfr_out_bId,
 				String additional_info
 			);
 

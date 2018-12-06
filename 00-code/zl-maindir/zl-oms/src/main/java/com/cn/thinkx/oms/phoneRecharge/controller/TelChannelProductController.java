@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.ChannelProductService;
 import com.cn.thinkx.oms.sys.model.User;
 import com.cn.thinkx.pms.base.utils.BaseConstants;
@@ -32,7 +31,7 @@ public class TelChannelProductController {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Autowired
 	private TelChannelProductInfFacade telChannelProductInfFacade;
 
 	@Autowired

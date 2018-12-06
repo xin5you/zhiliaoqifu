@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cn.thinkx.pms.base.utils.BaseConstants.ChannelReserveType;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelReserveDetail;
@@ -29,10 +28,10 @@ public class TelChannelReserveController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Autowired
 	private TelChannelInfFacade telChannelInfFacade;
 
-	@Reference(check=false)
+	@Autowired
 	private TelChannelReserveDetailFacade telChannelReserveDetailFacade;
 
 	/**

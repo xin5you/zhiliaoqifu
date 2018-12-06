@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import com.cn.thinkx.oms.sys.model.Resource;
 import com.cn.thinkx.oms.sys.service.ResourceService;
 import com.cn.thinkx.oms.sys.service.UserService;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
+import com.ebeijia.zl.common.utils.enums.TransCode.LoginType;
 
 /**
  * User userdetail该类实现 UserDetails 接口，该类在验证成功后会被保存在当前回话的principal对象中

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.oms.sys.model.User;
@@ -39,16 +38,16 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Autowired
 	private TelChannelOrderInfFacade telChannelOrderInfFacade;
 
-	@Reference(check=false)
+	@Autowired
 	private TelChannelInfFacade telChannelInfFacade;
 
-	@Reference(check=false)
+	@Autowired
 	private TelProviderOrderInfFacade telProviderOrderInfFacade;
 	
-	@Reference(check=false)
+	@Autowired
 	private TelChannelItemListFacade telChannelItemListFacade;
 
 	@Override

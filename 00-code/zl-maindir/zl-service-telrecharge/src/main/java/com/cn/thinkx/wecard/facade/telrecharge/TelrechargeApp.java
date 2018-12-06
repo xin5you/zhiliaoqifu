@@ -21,12 +21,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 
 
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @SpringBootApplication
-//@ImportResource({"classpath:conf/spring-dubbo-service.xml"})
+@ImportResource({"classpath:conf/spring-dubbo-service.xml"})
 @ComponentScan(basePackages = {"com.cn.thinkx"})
 public class TelrechargeApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
@@ -82,5 +83,11 @@ public class TelrechargeApp extends SpringBootServletInitializer implements WebA
 	public PlatformTransactionManager transactionManager() {
 			return new DataSourceTransactionManager(dataSource());
 	}
+	
+    @Bean
+    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
+        return new OptimisticLockerInterceptor();
+    }
+
 	
 }

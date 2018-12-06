@@ -8,8 +8,7 @@ import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelAreaInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelAreaInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelAreaInfFacade;
 
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
-@Service
+@Service("telChannelAreaInfFacade")
 public class TelChannelAreaInfServiceImpl  implements TelChannelAreaInfFacade {
 
 	@Autowired

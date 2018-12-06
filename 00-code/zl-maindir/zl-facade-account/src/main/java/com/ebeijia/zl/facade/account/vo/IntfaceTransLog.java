@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.SqlParser;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -163,6 +162,13 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
      */
     @TableField("tfr_in_user_id")
     private String tfrInUserId;
+    
+    
+    /**
+     * 转入账户类型
+     */
+    @TableField("tfr_in_b_id")
+    private String tfrInBId;
  
     /**
      * 转出账户
@@ -170,6 +176,12 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     @TableField("tfr_out_user_id")
     private String tfrOutUserId;
  
+    /**
+     * 转出账户类型
+     */
+    @TableField("tfr_out_b_id")
+    private String tfrOutBId;
+    
     /**
      * 附加信息
      */

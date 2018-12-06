@@ -1,6 +1,6 @@
 package com.cn.thinkx.ecom.system.domain;
 
-import com.ebeijia.zl.common.utils.domain.BaseEntity;
+import com.cn.thinkx.ecom.common.domain.BaseEntity;
 
 public class Resource extends BaseEntity {
 

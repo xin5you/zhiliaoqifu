@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,11 +13,14 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
 import com.ebeijia.zl.service.account.mapper.TransLogMapper;
@@ -93,10 +97,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		}
 		
 		boolean f=	this.saveBatch(sortList); //批量保存交易流水
-		
-		for(TransLog transLog:sortList){
-			System.out.println(transLog.getTxnPrimaryKey());
-		}
+
 		if(f){
 			return accountInfService.execute(voList);
 		}
@@ -120,15 +121,12 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		List<TransLog> voList=new ArrayList<TransLog>();
 		
 		/**
-			MB80("B80", "商户开户"), 
-			MB81("B81", "企业开户"),
-			MB82("B82", "供应商开户"),
-			MB83("B83", "分销商开户"),
-			
-			
-			MB40("B40", "商户账户转账"),
+			MB10("B10", "商户消费"),
+			MB20("B20", "商户充值"),
+			MB40("B40", "商户转账"),
 			MB50("B50", "企业员工充值"),
-			MB90("B90", "商户提现"), 
+			MB80("B80", "商户开户"),
+			MB90("B90", "商户收款"), 
 			
 			CW80("W80", "企业员工开户"),
 			CW81("W81", "密码重置"),
@@ -138,59 +136,95 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			CW74("W74", "退款（快捷）"),
 			
 			CW90("W90", "权益转让"),
-			CW91("W91", "现金账户转移");
+			CW91("W91", "员工收款");
 		 */
 		
-		TransLog transLog=new TransLog();
-		this.newTransLog(intfaceTransLog, transLog);
-
-	
-		if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
-			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
-			transLog.setUserId(intfaceTransLog.getTfrOutUserId());
-			transLog.setPriBId(intfaceTransLog.getPriBId());
-			transLog.setCardAttr(AccountCardAttrEnum.SUB.getValue());
-			addToVoList(voList,transLog,0);
-			
-			TransLog transLog2=new TransLog();
-			this.newTransLog(intfaceTransLog, transLog2);
-			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
-			transLog2.setUserId(intfaceTransLog.getTfrInUserId());
-			transLog2.setPriBId(intfaceTransLog.getPriBId());
-			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
-			addToVoList(voList,transLog2,1);
-			
-		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
-			//快捷支付 先充值到通卡账户，再从通卡账户扣除
-			transLog.setCardAttr(AccountCardAttrEnum.SUB.getValue());
-			addToVoList(voList,transLog,1);
-			//快捷消费 先充值，再消费
-			TransLog transLog2=new TransLog();
-			this.newTransLog(intfaceTransLog, transLog2);
-			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
-			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
-			addToVoList(voList,transLog2,0);
-		}else if (TransCode.CW80.getCode().equals(intfaceTransLog.getTransId())){
+		if (TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){
+			//商户消费
+			this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.SUB.getValue(), 0);
 			
 			TransLog transLog2=null;
 			int order=0;
-			Set<String> bIds=intfaceTransLog.getBIds();
+			 List<AccountTxnVo> transList= JSON.parseArray(intfaceTransLog.getRemarks(), AccountTxnVo.class);
+			 
+			for (AccountTxnVo txnVo : transList) {
+				transLog2=new TransLog();
+				this.newTransLog(intfaceTransLog, transLog2);
+				transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+				transLog2.setPriBId(txnVo.getTxnBId());
+				transLog2.setUploadAmt(txnVo.getTxnAmt());
+				transLog2.setCardAttr(AccountCardAttrEnum.OPER.getValue());
+				addToVoList(voList,transLog2,order);
+				order++;
+			}
 			
+			
+		}else if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
+			//商户充值
+			this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
+			
+		}else if (TransCode.MB40.getCode().equals(intfaceTransLog.getTransId())){
+			
+			//商户转账
+			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
+			
+			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
+		}
+		else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
+			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
+			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
+			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
+			
+			//TODO 比例存储到对应的账户的
+			
+			
+		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
+			//快捷支付 先充值到通卡账户，再从通卡账户扣除
+			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);
+			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.SUB.getValue(), 1);
+			
+		}else if (TransCode.CW10.getCode().equals(intfaceTransLog.getTransId())){
+			//企业员工消费
+			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.SUB.getValue(), 0);
+			
+		}else if (TransCode.CW80.getCode().equals(intfaceTransLog.getTransId()) || TransCode.MB80.getCode().equals(intfaceTransLog.getTransId())){
+			//企业员工开户，多个专项类型开户
+			TransLog transLog2=null;
+			int order=0;
+			Set<String> bIds=intfaceTransLog.getBIds();
 			for (String bId : bIds) {
 				transLog2=new TransLog();
 				this.newTransLog(intfaceTransLog, transLog2);
 				transLog2.setTxnPrimaryKey(IdUtil.getNextId());
 				transLog2.setPriBId(bId);
+				transLog2.setCardAttr(AccountCardAttrEnum.OPER.getValue());
 				addToVoList(voList,transLog2,order);
 				order++;
 			}
 			
 		}else{
-			addToVoList(voList,transLog,0);
+			this.addToVoList(voList, intfaceTransLog, null, null, null, 0);
 		}
 		return voList;
 	}
 	
+	private void addToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,int order){
+		TransLog transLog=new TransLog();
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		this.newTransLog(intfaceTransLog, transLog);
+		if(StringUtil.isNotEmpty(userId)){
+			transLog.setUserId(userId);
+		}
+		if(StringUtil.isNotEmpty(bId)){
+			transLog.setPriBId(bId);
+		}
+		if(StringUtil.isNotEmpty(cardAttr)){
+
+			transLog.setCardAttr(cardAttr);
+		}
+		addToVoList(voList,transLog,order);
+	}
+
 	
 	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){
 		transLog.setOrder(order);
@@ -201,7 +235,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	
 	
 	private void newTransLog(IntfaceTransLog intfaceTransLog,TransLog transLog){
-		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		
 		transLog.setItfPrimaryKey(intfaceTransLog.getItfPrimaryKey()); //接口层流水
 		transLog.setInsCode(intfaceTransLog.getInsCode());
 		transLog.setMchntCode(intfaceTransLog.getMchntCode());

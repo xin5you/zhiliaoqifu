@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
-import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.account.mapper.IntfaceTransLogMapper;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 
@@ -31,6 +30,16 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 	@Autowired
 	private IntfaceTransLogMapper  intfaceTransLogMapper;
 	
+	public  boolean updateById(IntfaceTransLog entity,boolean respCode){
+		 if(respCode){
+			 entity.setRespCode("00");
+		 }else{
+			 entity.setRespCode("99");
+		 }
+		 
+		 return super.updateById(entity);
+	 }
+		
 	/**
 	 * 
 	* @Description: 查询外部渠道订单号
@@ -117,7 +126,9 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 				BigDecimal trans_fee,  //手续费
 				String trans_fee_type,
 				String tfr_in_user_id, //转入用户Id
+				String tfr_in_bId,
 				String tfr_out_user_id,//转出用户Id
+				String tfr_out_bId,
 				String additional_info
 			){
 		itfTransLog.setTransAmt(trans_amt);
@@ -126,7 +137,9 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 		itfTransLog.setTransFee(trans_fee);
 		itfTransLog.setTransFeeType(trans_fee_type);
 		itfTransLog.setTfrInUserId(tfr_in_user_id);
+		itfTransLog.setTfrInBId(tfr_in_bId);
 		itfTransLog.setTfrOutUserId(tfr_out_user_id);
+		itfTransLog.setTfrOutBId(tfr_out_bId);
 		itfTransLog.setAdditionalInfo(additional_info);
 	}
 	

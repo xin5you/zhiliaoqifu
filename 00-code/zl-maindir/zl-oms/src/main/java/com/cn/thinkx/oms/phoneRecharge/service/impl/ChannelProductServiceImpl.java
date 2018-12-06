@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.ChannelProductService;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelItemListFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
@@ -15,10 +14,10 @@ public class ChannelProductServiceImpl implements ChannelProductService{
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Reference(check=false)
+	@Autowired
 	private TelChannelProductInfFacade telChannelProductInfFacade;
 
-	@Reference(check=false)
+	@Autowired
 	private TelChannelItemListFacade telChannelItemListFacade;
 
 	@Override

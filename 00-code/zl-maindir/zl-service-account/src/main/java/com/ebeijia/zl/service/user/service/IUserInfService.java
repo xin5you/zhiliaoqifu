@@ -72,4 +72,20 @@ public interface IUserInfService extends IService<UserInf> {
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
 	UserInf getUserInfByExternalId (String externalId,String channel);
+	
+	/**
+	* @Description: 获取用户信息
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月5日 下午4:23:55 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月5日     zhuqi           v1.0.0
+	 */
+	UserInf getUserInfByUserName(String userName);
 }

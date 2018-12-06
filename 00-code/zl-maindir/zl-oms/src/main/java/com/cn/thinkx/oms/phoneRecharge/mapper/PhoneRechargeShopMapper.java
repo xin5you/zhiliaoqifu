@@ -2,11 +2,8 @@ package com.cn.thinkx.oms.phoneRecharge.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeShop;
 
-@Mapper
 public interface PhoneRechargeShopMapper {
 
 	List<PhoneRechargeShop> getPhoneRechargeShopList(PhoneRechargeShop pps);

@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.cn.thinkx.ecom.common.mapper.BaseDao;
 import com.cn.thinkx.ecom.system.domain.User;
 import com.cn.thinkx.ecom.system.domain.UserRole;
-import com.ebeijia.zl.common.core.mapper.BaseDao;
 
 @Mapper
 public interface UserMapper extends BaseDao<User> {

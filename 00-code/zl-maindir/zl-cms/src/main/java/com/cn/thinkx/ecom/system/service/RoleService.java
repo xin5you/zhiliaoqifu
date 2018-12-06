@@ -2,8 +2,8 @@ package com.cn.thinkx.ecom.system.service;
 
 import java.util.List;
 
+import com.cn.thinkx.ecom.common.service.BaseService;
 import com.cn.thinkx.ecom.system.domain.Role;
-import com.ebeijia.zl.common.core.service.BaseService;
 import com.github.pagehelper.PageInfo;
 
 public interface RoleService extends BaseService<Role> {

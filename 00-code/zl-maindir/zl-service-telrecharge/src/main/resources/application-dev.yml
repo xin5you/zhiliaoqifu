@@ -50,7 +50,16 @@ spring:
     pool:
       max-connections: 50
   dubbo:
-    appname: provider-test
-    registry: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
-    protocol: dubbo_wecard_service_telrecharge
-    port: 28890
+    registry:
+      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
+    application:
+      name: dubbo_wecard_service_telrecharge
+    protocol:
+      name: dubbo
+      port: 28890
+    provider:
+      timeout: 10000
+      threadpool: fixed
+      threads: 100
+      accepts: 1000
+    scan: com.cn.thinkx

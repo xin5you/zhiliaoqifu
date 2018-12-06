@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
@@ -84,7 +85,7 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			user = new UserInf();
 			user.setUserId(IdUtil.getNextId());
 			user.setUserType(userType);
-			user.setUserName(userName);
+			user.setUserName(user.getUserId());
 			user.setCompanyId(companyId);
 			this.save(user);
 
@@ -134,12 +135,15 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
 	public String registerUserInfForCompany(String companyName,String userType,String companyId){
-		UserInf user = new UserInf();
-		user.setUserId(IdUtil.getNextId());
-		user.setUserType(userType);
-		user.setUserName(companyName);//公司名称
-		user.setCompanyId(companyId);
-		this.save(user);
+		UserInf user =this.getUserInfByUserName(companyId);
+		if(user ==null){
+			user=new UserInf();
+			user.setUserId(IdUtil.getNextId());
+			user.setUserType(userType);
+			user.setUserName(companyId);//公司名称
+			user.setCompanyId(companyId);
+			this.save(user);
+		}
 		return user.getUserId();
 	}
 	
@@ -191,6 +195,27 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	 */
 	public UserInf getUserInfByExternalId (String externalId,String channel){
 		return userInfMapper.getUserInfByExternalId(externalId, channel);
+	}
+	
+	/**
+	* @Description: 获取用户信息
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月5日 下午4:23:55 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月5日     zhuqi           v1.0.0
+	 */
+	public UserInf getUserInfByUserName(String userName){
+		QueryWrapper<UserInf> queryWrapper = new QueryWrapper<UserInf>();
+		queryWrapper.eq("user_name", userName);
+		queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
+		return userInfMapper.selectOne(queryWrapper);
 	}
 
 }

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.ebeijia.zl.common.utils.constants.Constants;
+import com.cn.thinkx.ecom.common.constants.Constants;
 
 public class EcomInterceptor extends HandlerInterceptorAdapter {
 
