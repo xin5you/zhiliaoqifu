@@ -1,9 +1,5 @@
 package com.cn.thinkx.ecom.common.handle;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.cn.thinkx.ecom.common.constants.ExceptionEnum;
 import com.cn.thinkx.ecom.common.domain.BaseResult;
 import com.cn.thinkx.ecom.common.exception.BizHandlerException;

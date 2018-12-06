@@ -48,4 +48,8 @@ public interface WechatMQProducerService {
 	 void sendTemplateMsg(final WechatTemplateParam templateParam);
 	 
 	 
+	 /*话费充值 充值订单号，发送到activemq中
+	 * @param regOrderId 分销商话费充值订单号
+	 */
+	void sendRechargeMobileMsg(final String channelOrderId);
 }

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.ecom.common.constants.Constants.RandomCodeType;
-import com.cn.thinkx.ecom.common.util.NumberUtils;
 import com.cn.thinkx.ecom.system.base.util.ValidateCode;
+import com.ebeijia.zl.common.utils.constants.Constants.RandomCodeType;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 
 /**
  *

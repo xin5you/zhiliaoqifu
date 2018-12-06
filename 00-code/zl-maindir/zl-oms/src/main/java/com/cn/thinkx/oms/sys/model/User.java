@@ -6,7 +6,7 @@ public class User extends BaseEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6165960653428358106L;
 	
-	protected String id;
+	private String id;
 	private String loginName; // 登录名
 	private String password; // 密码
 	private String userName; // 姓名

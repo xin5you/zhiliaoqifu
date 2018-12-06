@@ -5,15 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelProviderOrderInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telProviderOrderInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelProviderOrderInfImpl implements TelProviderOrderInfFacade {
 
 	@Autowired
@@ -65,9 +66,9 @@ public class TelProviderOrderInfImpl implements TelProviderOrderInfFacade {
 		List<TelProviderOrderInf> telProviderOrderInfList = getTelProviderOrderInfList(telProviderOrderInf);
 		for (TelProviderOrderInf telProviderOrderInf2 : telProviderOrderInfList) {
 			if(!StringUtil.isNullOrEmpty(telProviderOrderInf2.getPayState()))
-				telProviderOrderInf2.setPayState(BaseConstants.providerOrderPayState.findByCode(telProviderOrderInf2.getPayState()));
+				telProviderOrderInf2.setPayState(TelRechargeConstants.providerOrderPayState.findByCode(telProviderOrderInf2.getPayState()));
 			if(!StringUtil.isNullOrEmpty(telProviderOrderInf2.getRechargeState()))
-				telProviderOrderInf2.setRechargeState(BaseConstants.providerOrderRechargeState.findByCode(telProviderOrderInf2.getRechargeState()));
+				telProviderOrderInf2.setRechargeState(TelRechargeConstants.providerOrderRechargeState.findByCode(telProviderOrderInf2.getRechargeState()));
 		}
 		PageInfo<TelProviderOrderInf> telProviderOrderInfPage = new PageInfo<TelProviderOrderInf>(
 				telProviderOrderInfList);

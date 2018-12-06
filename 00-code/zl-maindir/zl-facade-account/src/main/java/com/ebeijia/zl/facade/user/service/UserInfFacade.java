@@ -1,7 +1,7 @@
 package com.ebeijia.zl.facade.user.service;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.facade.user.req.OpenUserInfReq;
+import com.ebeijia.zl.facade.user.req.OpenUserInfReqVo;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 
@@ -37,7 +37,7 @@ public interface UserInfFacade {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	BaseResult registerUserInf(OpenUserInfReq req);
+	BaseResult registerUserInf(OpenUserInfReqVo req);
 
 	/**
 	 * 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.oms.sys.model.User;
@@ -29,8 +30,8 @@ import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
-import com.ebeijia.zl.common.utils.tools.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 @Service("telChannelInfService")
@@ -38,16 +39,16 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
+	@Reference(check=false)
 	private TelChannelOrderInfFacade telChannelOrderInfFacade;
 
-	@Autowired
+	@Reference(check=false)
 	private TelChannelInfFacade telChannelInfFacade;
 
-	@Autowired
+	@Reference(check=false)
 	private TelProviderOrderInfFacade telProviderOrderInfFacade;
 	
-	@Autowired
+	@Reference(check=false)
 	private TelChannelItemListFacade telChannelItemListFacade;
 
 	@Override

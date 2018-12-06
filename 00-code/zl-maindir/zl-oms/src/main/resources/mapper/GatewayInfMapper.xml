@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.oms.specialAccount.mapper.GatewayInfMapper">
+		
+	<resultMap type="com.cn.thinkx.oms.specialAccount.model.GatewayInf" id="GatewayInfResultMap">
+		<result column="GATEWAY_ID" property="gId"/>
+		<result column="NAME" property="name"/>
+		<result column="GATEWAY_CODE" property="code"/>
+		<result column="GATEWAY_DESC" property="desc"/>
+		<result column="REMARKS" property="remarks"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+		<result column="LOCK_VERSION" property="lockVersion"/>
+		<collection property="bList" ofType="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf">
+			<result column="bId" property="bId"/>
+			<result column="bName" property="name"/>
+			<result column="bCode" property="code"/>
+			<result column="bType" property="type"/>
+		</collection>
+	</resultMap>
+	
+	
+	
+	<sql id="GatewayInfColumns">
+		g.GATEWAY_ID,
+		g.NAME,
+	    g.GATEWAY_CODE,
+	    g.GATEWAY_DESC,
+		g.REMARKS,
+		g.CREATE_USER, 
+		g.UPDATE_USER, 
+		g.CREATE_TIME, 
+		g.UPDATE_TIME, 
+		g.LOCK_VERSION
+	</sql>
+	
+	<select id="getGatewayInfById" parameterType="java.lang.String" resultMap="GatewayInfResultMap">
+			SELECT 
+  				<include refid="GatewayInfColumns" />,
+  				b.B_ID AS bId,
+  				b.NAME AS bName,
+  				b.CODE AS bCode,
+  				b.TYPE
+	 		FROM  TB_GATEWAY_INF g
+	 			LEFT JOIN TB_GATEWAY_BILLING_TYPE gb ON gb.GATEWAY_ID=g.GATEWAY_ID
+	 			LEFT JOIN TB_BILLING_TYPE b ON gb.B_ID=b.B_ID
+	 		WHERE b.DATA_STAT  = '0'
+	 			AND g.DATA_STAT  = '0'
+	 			AND gb.DATA_STAT  = '0'
+	 			AND g.GATEWAY_ID=#{gId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getGatewayInfByGatewayInf" parameterType="com.cn.thinkx.oms.specialAccount.model.GatewayInf" resultMap="GatewayInfResultMap">
+			SELECT 
+  				<include refid="GatewayInfColumns" />
+	 			FROM TB_GATEWAY_INF g WHERE g.DATA_STAT  = '0' AND 
+		        (g.NAME = #{name,jdbcType=VARCHAR} 
+				OR g.GATEWAY_CODE = #{code,jdbcType=VARCHAR}) 
+		    
+	 			
+	</select>
+	
+	<insert id="insertGatewayInf" parameterType="com.cn.thinkx.oms.specialAccount.model.GatewayInf">
+		INSERT INTO TB_GATEWAY_INF (
+			GATEWAY_ID,
+		    NAME,
+	        GATEWAY_CODE,
+	        GATEWAY_DESC,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER, 
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			LOCK_VERSION
+			)	VALUES	( 
+		 		#{gId,jdbcType=VARCHAR},
+		 		#{name,jdbcType=VARCHAR},
+		 		#{code,jdbcType=VARCHAR},
+		 		#{desc,jdbcType=VARCHAR},
+		 		'0',
+		 		#{remarks,jdbcType=VARCHAR},
+		 		#{createUser,jdbcType=VARCHAR},
+		 		#{createTime,jdbcType=BIGINT},
+		 		#{updateUser,jdbcType=VARCHAR},
+		 		#{updateTime,jdbcType=BIGINT},
+		 		0) 
+	</insert>
+	
+	<update id="updateGatewayInf" parameterType="com.cn.thinkx.oms.specialAccount.model.GatewayInf">
+			UPDATE TB_GATEWAY_INF SET
+				NAME=#{name,jdbcType=VARCHAR},
+				GATEWAY_CODE=#{code,jdbcType=VARCHAR},
+				GATEWAY_DESC=#{desc,jdbcType=VARCHAR},
+				REMARKS=#{remarks,jdbcType=VARCHAR},
+				LOCK_VERSION = LOCK_VERSION + 1,
+				UPDATE_TIME=#{updateTime,jdbcType=BIGINT},
+				UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+			WHERE GATEWAY_ID = #{gId,jdbcType=VARCHAR} 
+	</update>
+	
+	
+	<select id="getGatewayInfList" parameterType="com.cn.thinkx.oms.specialAccount.model.GatewayInf" resultMap="GatewayInfResultMap">
+		   SELECT 
+  				<include refid="GatewayInfColumns" />
+	 	   FROM  TB_GATEWAY_INF g
+	 	   WHERE
+	 			g.DATA_STAT  = '0'
+		   <if test="name !=null and name !='' ">
+				AND g.NAME LIKE '%' || #{name} || '%' 
+		   </if>
+				ORDER BY g.UPDATE_TIME DESC
+	</select>
+	
+	<update id="deleteGatewayInf" parameterType="com.cn.thinkx.oms.specialAccount.model.GatewayInf">
+			UPDATE TB_GATEWAY_INF SET
+		       DATA_STAT    = '1',
+		       LOCK_VERSION = LOCK_VERSION + 1,
+		       UPDATE_TIME  = #{updateTime, jdbcType=BIGINT},
+		       UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		    WHERE GATEWAY_ID = #{gId}
+	</update>
+</mapper>

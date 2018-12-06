@@ -67,18 +67,24 @@
                              </li>
                              </sec:authorize> --%>
                              
-                             <sec:authorize access="hasRole('ROLE_DIY_MANAGER')">
+                             <sec:authorize access="hasRole('ROLE_SPECIAL_ACCOUNT_MANAGE')">
                              <li class="dropdown">
-                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>商户自助平台<b class="caret"></b></a>
+                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>专用账户管理 <b class="caret"></b></a>
                                  <ul class="dropdown-menu">
-                                 	<sec:authorize access="hasRole('ROLE_DIY_USER')">
-                                     	<li><a href="${ctx }/diy/diyUser/listDiyUser.do">商户用户管理</a></li>
+                                     <sec:authorize access="hasRole('ROLE_BILLING_TYPE')">
+                                        <li><a href="${ctx }/specialAccount/billingType/listBillingType.do">账户类型管理</a></li>
                                      </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_DIY_ROLE')">
-                                     	<li><a href="${ctx }/diy/diyRole/listDiyRole.do">商户角色管理</a></li>
+                                     <sec:authorize access="hasRole('ROLE_COMPANY_INFO')">
+                                         <li><a href="${ctx }/specialAccount/company/listCompany.do">企业管理</a></li>
                                      </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_DIY_RESORCE')">
-                                     	<li><a href="${ctx }/diy/diyResource/listDiyResource.do">商户资源管理</a></li>
+                                     <sec:authorize access="hasRole('ROLE_GATEWAY_INFO')">
+                                         <li><a href="${ctx }/specialAccount/gateway/listGateway.do">网关管理</a></li>
+                                     </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT')">
+                                     	<li><a href="${ctx }/speaccount/batch/listOpenAccount.do">专用账户批量开户</a></li>
+                                     </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE')">
+                                     	<li><a href="${ctx }/speaccount/batchRecharge/listRecharge.do">专用账户批量充值</a></li>
                                      </sec:authorize>
                                  </ul>
                              </li>
@@ -86,10 +92,10 @@
                              
                              <sec:authorize access="hasRole('ROLE_PHONE_RECHARGE')">
                              <li class="dropdown">
-                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>手机充值<b class="caret"></b></a>
+                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>分销商管理<b class="caret"></b></a>
                                  <ul class="dropdown-menu">
                                  	<sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF')">
-                                     	<li><a href="${ctx }/channel/channelInf/listTelChannelInf.do">分销商管理</a></li>
+                                     	<li><a href="${ctx }/channel/channelInf/listTelChannelInf.do">分销商信息管理</a></li>
                                     </sec:authorize>
                                     <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_RESERVE')">
                                      	<li><a href="${ctx }/channel/reserve/listTelChannelReserve.do">分销商备付金管理</a></li>
@@ -106,12 +112,37 @@
 <!-- 									<sec:authorize access="hasRole('ROLE_TEL_CHANNEL_ITEM')"> -->
 										<li><a href="${ctx }/channel/item/listTelChannelItem.do">分销商产品折扣率管理</a></li>
 <!--                                     </sec:authorize> -->
+                                 </ul>
+                             </li>
+                             </sec:authorize>
+                             
+                             <sec:authorize access="hasRole('ROLE_PHONE_RECHARGE')">
+                             <li class="dropdown">
+                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>供应商管理<b class="caret"></b></a>
+                                 <ul class="dropdown-menu">
                                    	<sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF')">
                                    		<li><a href="${ctx }/provider/providerInf/listTelProviderInf.do">供应商信息管理</a></li>
                                    	</sec:authorize>
                                    	<sec:authorize access="hasRole('ROLE_TEL_PROVIDER_ORDER_INF')">
 										<li><a href="${ctx }/provider/providerOrder/listTelProviderOrderInf.do">供应商订单</a></li>
 									</sec:authorize>
+                                 </ul>
+                             </li>
+                             </sec:authorize>
+                             
+                             <sec:authorize access="hasRole('ROLE_DIY_MANAGER')">
+                             <li class="dropdown">
+                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>商户自助平台<b class="caret"></b></a>
+                                 <ul class="dropdown-menu">
+                                 	<sec:authorize access="hasRole('ROLE_DIY_USER')">
+                                     	<li><a href="${ctx }/diy/diyUser/listDiyUser.do">商户用户管理</a></li>
+                                     </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_DIY_ROLE')">
+                                     	<li><a href="${ctx }/diy/diyRole/listDiyRole.do">商户角色管理</a></li>
+                                     </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_DIY_RESORCE')">
+                                     	<li><a href="${ctx }/diy/diyResource/listDiyResource.do">商户资源管理</a></li>
+                                     </sec:authorize>
                                  </ul>
                              </li>
                              </sec:authorize>

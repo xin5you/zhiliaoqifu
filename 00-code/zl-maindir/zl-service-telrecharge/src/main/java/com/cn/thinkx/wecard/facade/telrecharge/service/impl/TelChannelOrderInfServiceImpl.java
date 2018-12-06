@@ -8,14 +8,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.ecom.activemq.core.service.RechargeMobileProducerService;
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.BaseConstants.providerOrderRechargeState;
-import com.cn.thinkx.pms.base.utils.DateUtil;
-import com.cn.thinkx.pms.base.utils.StringUtil;
+import com.cn.thinkx.ecom.activemq.core.service.WechatMQProducerService;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelOrderInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
@@ -30,10 +26,13 @@ import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacad
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telChannelOrderInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -51,7 +50,7 @@ public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade 
 	private TelProviderOrderInfFacade telProviderOrderInfFacade;
 	
 	@Autowired
-	private RechargeMobileProducerService rechargeMobileProducerService;
+	private WechatMQProducerService rechargeMobileProducerService;
 	
 	@Override
 	public TelChannelOrderInf getTelChannelOrderInfById(String channelOrderId) throws Exception {
@@ -187,11 +186,11 @@ public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade 
     		List<TelChannelOrderInf> telChannelOrderInfList = getTelChannelOrderInfList(telChannelOrderInf);
     		for (TelChannelOrderInf telChannelOrderInf2 : telChannelOrderInfList) {
 				if(!StringUtil.isNullOrEmpty(telChannelOrderInf2.getRechargeType()))
-					telChannelOrderInf2.setRechargeType(BaseConstants.phoneRechargeOrderType.findByCode(telChannelOrderInf2.getRechargeType()).getValue());
+					telChannelOrderInf2.setRechargeType(TelRechargeConstants.ShopType.findByCode(telChannelOrderInf2.getRechargeType()));
 				if(!StringUtil.isNullOrEmpty(telChannelOrderInf2.getOrderStat()))
-					telChannelOrderInf2.setOrderStat(BaseConstants.ChannelOrderStat.findByCode(telChannelOrderInf2.getOrderStat()));
+					telChannelOrderInf2.setOrderStat(TelRechargeConstants.ChannelOrderStat.findByCode(telChannelOrderInf2.getOrderStat()));
 				if(!StringUtil.isNullOrEmpty(telChannelOrderInf2.getNotifyStat()))
-					telChannelOrderInf2.setNotifyStat(BaseConstants.ChannelOrderNotifyStat.findByCode(telChannelOrderInf2.getNotifyStat()));
+					telChannelOrderInf2.setNotifyStat(TelRechargeConstants.ChannelOrderNotifyStat.findByCode(telChannelOrderInf2.getNotifyStat()));
 			}
     		PageInfo<TelChannelOrderInf> telChannelOrderInfPage = new PageInfo<TelChannelOrderInf>(telChannelOrderInfList);
     		return telChannelOrderInfPage;
@@ -203,7 +202,7 @@ public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade 
 		List<TelChannelOrderInf> telChannelOrderInfList = telChannelOrderInfMapper.getTelChannelOrderInfList(telChannelOrderInf);
 		for (TelChannelOrderInf telChannelOrderInf2 : telChannelOrderInfList) {
 			if(!StringUtil.isNullOrEmpty(telChannelOrderInf2.getRechargeState()))
-				telChannelOrderInf2.setRechargeState(providerOrderRechargeState.findByCode(telChannelOrderInf2.getRechargeState()));
+				telChannelOrderInf2.setRechargeState(TelRechargeConstants.providerOrderRechargeState.findByCode(telChannelOrderInf2.getRechargeState()));
 		}
 		PageInfo<TelChannelOrderInf> telChannelOrderInfPage = new PageInfo<TelChannelOrderInf>(telChannelOrderInfList);
 		return telChannelOrderInfPage;
@@ -214,7 +213,7 @@ public class TelChannelOrderInfServiceImpl  implements TelChannelOrderInfFacade 
 		List<TelChannelOrderInfUpload> list = telChannelOrderInfMapper.getTelChannelOrderInfListToUpload(order);
 		for (TelChannelOrderInfUpload telChannelOrderInf2 : list) {
 			if(!StringUtil.isNullOrEmpty(telChannelOrderInf2.getRechargeState()))
-				telChannelOrderInf2.setRechargeState(providerOrderRechargeState.findByCode(telChannelOrderInf2.getRechargeState()));
+				telChannelOrderInf2.setRechargeState(TelRechargeConstants.providerOrderRechargeState.findByCode(telChannelOrderInf2.getRechargeState()));
 		}
 		return list;
 	}

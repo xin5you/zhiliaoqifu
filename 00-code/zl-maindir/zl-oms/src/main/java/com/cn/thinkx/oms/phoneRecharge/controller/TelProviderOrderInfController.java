@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.pms.base.utils.BaseConstants;
 import com.cn.thinkx.pms.base.utils.NumberUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
@@ -22,7 +23,7 @@ public class TelProviderOrderInfController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
+	@Reference(check=false)
 	private TelProviderOrderInfFacade telProviderOrderInfFacade;
 
 	/**

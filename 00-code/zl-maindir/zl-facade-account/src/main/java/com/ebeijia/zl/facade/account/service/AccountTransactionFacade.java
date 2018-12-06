@@ -3,7 +3,10 @@ package com.ebeijia.zl.facade.account.service;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.facade.account.req.AccountTransactionReq;
+import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 
 /**
 * @Description: 账户交易
@@ -31,7 +34,7 @@ public interface AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	BaseResult executeRechargeByOneBId(AccountTransactionReq req) throws Exception;
+	BaseResult executeRechargeByOneBId(AccountRechargeReqVo req) throws Exception;
 	
 	
 	/**
@@ -48,7 +51,7 @@ public interface AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	BaseResult executeRecharge(List<AccountTransactionReq> list) throws Exception;
+	BaseResult executeRecharge(List<AccountRechargeReqVo> list) throws Exception;
 	
 	/**
 	* @Description: 消费接口
@@ -62,7 +65,7 @@ public interface AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	BaseResult executeConsume(AccountTransactionReq req) throws Exception;
+	BaseResult executeConsume(AccountConsumeReqVo req) throws Exception;
 
 	
   /**
@@ -76,5 +79,22 @@ public interface AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	BaseResult executeTransfer();
+	BaseResult executeTransfer(AccountTransferReqVo req) throws Exception;
+	
+	/**
+	 * 
+	* @Description: 退款交易
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月6日 上午9:29:36 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月6日     zhuqi           v1.0.0
+	 */
+	BaseResult executeRefund(AccountRefundReqVo req) throws Exception;
 }

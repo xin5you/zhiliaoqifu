@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.oms.specialAccount.mapper.BillingTypeInfMapper">
+		
+	<resultMap type="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf" id="BillingTypeInfResultMap">
+		<result column="B_ID" property="bId"/>
+		<result column="NAME" property="name"/>
+		<result column="CODE" property="code"/>
+		<result column="TYPE" property="type"/>
+		<result column="REMARKS" property="remarks"/>
+		<result column="CREATE_USER" property="createUser"/>
+		<result column="UPDATE_USER" property="updateUser"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+		<result column="LOCK_VERSION" property="lockVersion"/>
+	</resultMap>
+	
+	<sql id="BillingTypeInfColumns">
+		b.B_ID,
+		b.NAME,
+		b.CODE,
+		b.TYPE,
+		b.REMARKS,
+		b.CREATE_USER, 
+		b.UPDATE_USER, 
+		b.CREATE_TIME, 
+		b.UPDATE_TIME, 
+		b.LOCK_VERSION
+	</sql>
+	
+	<select id="getBillingTypeInfById" parameterType="java.lang.String" resultMap="BillingTypeInfResultMap">
+			SELECT 
+  				<include refid="BillingTypeInfColumns" />
+	 			FROM TB_BILLING_TYPE b 
+	 		WHERE b.B_ID = #{bId,jdbcType=VARCHAR} AND b.DATA_STAT  = '0'
+	</select>
+	
+	<select id="getBillingTypeInfByName" parameterType="java.lang.String" resultMap="BillingTypeInfResultMap">
+			SELECT 
+  				<include refid="BillingTypeInfColumns" />
+	 			FROM TB_BILLING_TYPE b 
+	 		WHERE b.NAME = #{name,jdbcType=VARCHAR} AND b.DATA_STAT  = '0'
+	</select>
+	
+	<insert id="insertBillingTypeInf" parameterType="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf">
+		INSERT INTO TB_BILLING_TYPE (
+			B_ID,
+			NAME,
+			CODE,
+			TYPE,
+			DATA_STAT,
+			REMARKS,
+			CREATE_USER, 
+			CREATE_TIME,
+			UPDATE_USER,
+			UPDATE_TIME,
+			LOCK_VERSION
+			)	VALUES	( 
+		 		#{bId,jdbcType=VARCHAR},
+		 		#{name,jdbcType=VARCHAR},
+		 		#{code,jdbcType=VARCHAR},
+		 		#{type,jdbcType=VARCHAR},
+		 		'0',
+		 		#{remarks,jdbcType=VARCHAR},
+		 		#{createUser,jdbcType=VARCHAR},
+		 		#{createTime,jdbcType=BIGINT},
+		 		#{updateUser,jdbcType=VARCHAR},
+		 		#{updateTime,jdbcType=BIGINT},
+		 		0
+		 	) 
+	</insert>
+	
+	<update id="updateBillingTypeInf" parameterType="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf">
+			UPDATE TB_BILLING_TYPE SET
+				NAME=#{name,jdbcType=VARCHAR},
+				CODE=#{code,jdbcType=VARCHAR},
+				TYPE=#{type,jdbcType=VARCHAR},
+				REMARKS=#{remarks,jdbcType=VARCHAR},
+				LOCK_VERSION = LOCK_VERSION + 1,
+				UPDATE_TIME=#{updateTime,jdbcType=BIGINT},
+				UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+			 WHERE B_ID = #{bId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<select id="getBillingTypeInfList" parameterType="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf" resultMap="BillingTypeInfResultMap">
+		SELECT 
+		   <include refid="BillingTypeInfColumns" />
+		    FROM TB_BILLING_TYPE b
+	    WHERE DATA_STAT  = '0'
+			 <if test="name !=null and name !='' ">
+			 	 AND b.NAME like '%' || #{name} || '%'
+			 </if>
+			 <if test="type != null and type != '' ">
+			 	and b.type = #{type}
+			 </if>
+			     ORDER BY b.UPDATE_TIME DESC
+	</select>
+	
+	<delete id="deleteBillingTypeInf" parameterType="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf">
+			UPDATE TB_BILLING_TYPE
+		    SET DATA_STAT    = '1',
+		       LOCK_VERSION = LOCK_VERSION + 1,
+		       UPDATE_TIME  = #{updateTime,jdbcType=BIGINT},
+		       UPDATE_USER=#{updateUser,jdbcType=VARCHAR}
+		    WHERE B_ID = #{bId,jdbcType=VARCHAR}
+	</delete>
+</mapper>

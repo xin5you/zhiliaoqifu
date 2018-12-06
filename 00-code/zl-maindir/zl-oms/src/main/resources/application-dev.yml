@@ -61,6 +61,10 @@ spring:
     password: admin
     pool:
       max-connections: 50
+  dubbo:
+    appname: zl-oms
+    registry: zookeeper://192.168.2.223:2181
+    protocol: dubbo
 myBatis:
   mapperLocations: classpath*:mapper/*.xml
   configLocations: classpath:conf/mybatis-config.xml

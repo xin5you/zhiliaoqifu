@@ -55,6 +55,16 @@ public class BaseTxnReq implements java.io.Serializable {
 	 * 渠道请求订单号 全渠道唯一
 	 */
 	private String dmsRelatedKey;
+	
+	/**
+	 * 用户外部渠道标识
+	 */
+	private String userChnlId;
+	
+	/**
+	 * 用户所属渠道
+	 */
+	private String userChnl;
 
 
 	public String getTransId() {
@@ -114,5 +124,25 @@ public class BaseTxnReq implements java.io.Serializable {
 
 	public void setDmsRelatedKey(String dmsRelatedKey) {
 		this.dmsRelatedKey = dmsRelatedKey;
+	}
+
+
+	public String getUserChnlId() {
+		return userChnlId;
+	}
+
+
+	public void setUserChnlId(String userChnlId) {
+		this.userChnlId = userChnlId;
+	}
+
+
+	public String getUserChnl() {
+		return userChnl;
+	}
+
+
+	public void setUserChnl(String userChnl) {
+		this.userChnl = userChnl;
 	}
 }

@@ -1,8 +1,5 @@
 package com.cn.thinkx.oms;
 
-import java.util.Properties;
-
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +25,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.WebStatFilter;
-import com.github.pagehelper.PageHelper;
+import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @ComponentScan("com.cn.thinkx")
 @SpringBootApplication
+@EnableDubboConfiguration
 public class OmsApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	@Autowired

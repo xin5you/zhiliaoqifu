@@ -21,6 +21,7 @@ import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.*;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 import com.qianmi.open.api.response.BmRechargeMobileGetPhoneInfoResponse;

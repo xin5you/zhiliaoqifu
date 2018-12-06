@@ -5,16 +5,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.pms.base.utils.BaseConstants;
-import com.cn.thinkx.pms.base.utils.StringUtil;
-import com.cn.thinkx.pms.base.utils.BaseConstants.providerDefaultRoute;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants.providerDefaultRoute;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelProviderInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderInfFacade;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telProviderInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelProviderInfServiceImpl implements TelProviderInfFacade {
 
 	@Autowired
@@ -78,7 +79,7 @@ public class TelProviderInfServiceImpl implements TelProviderInfFacade {
 		List<TelProviderInf> telProviderInfList = getTelProviderInfList(telProviderInf);
 		for (TelProviderInf telProviderInf2 : telProviderInfList) {
 			if(!StringUtil.isNullOrEmpty(telProviderInf2.getDefaultRoute()))
-				telProviderInf2.setDefaultRoute(BaseConstants.providerDefaultRoute.findByCode(telProviderInf2.getDefaultRoute()));
+				telProviderInf2.setDefaultRoute(TelRechargeConstants.providerDefaultRoute.findByCode(telProviderInf2.getDefaultRoute()));
 		}
 		PageInfo<TelProviderInf> telProviderInfPage = new PageInfo<TelProviderInf>(telProviderInfList);
 		return telProviderInfPage;

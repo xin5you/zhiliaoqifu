@@ -3,7 +3,6 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>zl-cms</artifactId>
-	<version>1.0</version>
 	<packaging>war</packaging>
 	<name>zl-cms</name>
 	
@@ -115,6 +114,12 @@
 			<artifactId>zl-common-utils</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-base-core</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
+
 		
 		<dependency>
 			<groupId>com.ebeijia</groupId>

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.facade.account.req.AccountOpenReq;
+import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
@@ -61,14 +61,23 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 	*-------------------------------------*
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
-	public BaseResult createAccount(AccountOpenReq req) throws Exception {
+	public BaseResult createAccount(AccountOpenReqVo req) throws Exception {
 		
 		log.info("==> 账户开户 mehtod=createAccount and OpenAccountReq={}",JSONArray.toJSON(req));
 		
 		/**
 		 * 注册用户信息
 		 */
-		String userId=userInfService.registerUserInf(req.getUserType(), req.getUserName(), req.getCompanyId(), req.getMobilePhone(), null, req.getIcardNo(), req.getTransId(), req.getTransChnl());
+		String userId=userInfService.registerUserInf(req.getUserType(),
+										req.getUserName(),
+										req.getCompanyId(),
+										req.getMobilePhone(), 
+										null, 
+										req.getIcardNo(), 
+										req.getTransId(), 
+										req.getTransChnl(),
+										req.getUserChnl(),
+										req.getUserChnlId());
 		
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
 		
@@ -76,7 +85,8 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
-		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),null);
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),
+				req.getUserChnl(),req.getUserChnlId(),null);
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		
 		

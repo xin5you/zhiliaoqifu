@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cn.thinkx.pms.base.utils.BaseConstants.ChannelReserveType;
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants.ChannelReserveType;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelReserveDetailMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
@@ -14,7 +14,8 @@ import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelReserveDetailFa
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@Service("telChannelReserveDetailFacade")
+@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
+@Service
 public class TelChannelReserveDetailServiceImpl  implements TelChannelReserveDetailFacade {
 
 	@Autowired
