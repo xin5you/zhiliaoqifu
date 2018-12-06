@@ -2,6 +2,7 @@ package com.ebeijia.zl.route.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,18 +19,21 @@ public class OrderController {
 
 
     //
-    @ApiOperation("订单创建")
+    @ApiOperation("商品订单创建")
+    @RequestMapping("/goods/create")
     public void createOrder(){
 
     }
 
     @ApiOperation("订单支付")
-    public void orderNextState(){
+    @RequestMapping("/goods/apply/{id}/")
+    public void orderNextState(@PathVariable("id") String orderId){
 
     }
 
     @ApiOperation("订单状态修改")
-    public void orderReplaceState(){
+    @RequestMapping("/goods/update/{id}")
+    public void orderReplaceState(@PathVariable("id") String orderId){
 
     }
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     @ApiOperation("注册")
+    @RequestMapping("/signup")
     public void signUp(){
         //获取手机号
         //获取对应id
