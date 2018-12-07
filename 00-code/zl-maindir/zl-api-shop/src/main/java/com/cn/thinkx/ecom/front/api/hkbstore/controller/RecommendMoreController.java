@@ -2,7 +2,7 @@ package com.cn.thinkx.ecom.front.api.hkbstore.controller;
 
 import com.cn.thinkx.ecom.basics.goods.domain.Floor;
 import com.cn.thinkx.ecom.basics.goods.domain.Goods;
-import com.cn.thinkx.ecom.front.api.banner.service.EcomBannerService;
+import com.cn.thinkx.ecom.front.api.black.banner.service.EcomBannerService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;

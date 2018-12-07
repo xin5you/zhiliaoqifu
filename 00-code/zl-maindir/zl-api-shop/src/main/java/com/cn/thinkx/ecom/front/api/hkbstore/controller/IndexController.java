@@ -7,7 +7,7 @@ import com.cn.thinkx.ecom.basics.member.domain.MemberInf;
 import com.cn.thinkx.ecom.basics.member.domain.UserMerchantAcct;
 import com.cn.thinkx.ecom.basics.member.service.UserMerchantAcctService;
 import com.cn.thinkx.ecom.basics.order.service.CartService;
-import com.cn.thinkx.ecom.front.api.banner.service.EcomBannerService;
+import com.cn.thinkx.ecom.front.api.black.banner.service.EcomBannerService;
 import com.cn.thinkx.ecom.front.api.black.domain.WithDrawBlacklistInf;
 import com.cn.thinkx.ecom.front.api.black.service.WithDrawBlacklistInfService;
 import com.cn.thinkx.ecom.front.api.member.service.MemberService;
@@ -137,8 +137,8 @@ public class IndexController {
 			/** 跳转知了企服收银台页面 */
 			resp.setContentType("text/html;charset=utf-8");
 			PrintWriter out = resp.getWriter();
-			out.println("<form name='cashSubmit' method='get'  action='" + url + "' >");
-			out.println("<input type='hidden' name='channel' value='" + channel + "'>");
+			out.println("<form NAME='cashSubmit' method='get'  action='" + url + "' >");
+			out.println("<input type='hidden' NAME='channel' value='" + channel + "'>");
 			out.println("</form>");
 			out.println("<script type='text/javascript'>");
 			out.println("document.cashSubmit.submit()");

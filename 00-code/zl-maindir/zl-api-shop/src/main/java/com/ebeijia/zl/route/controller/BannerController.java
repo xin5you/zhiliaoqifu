@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @User J
  * @Date 2018/12/05
  */
-@Api("定义Banner输出的相关接口")
+@Api(value = "/banner",description = "定义Banner输出的相关接口")
 @RequestMapping("/banner")
 @RestController
 public class BannerController {
-
 
 
 }
