@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,30 +25,30 @@ public class GoodsController {
     IGoodsService goodsService;
 
     @ApiOperation("商品列表，分页")
-    @RequestMapping("/list/{orderby}")
+    @RequestMapping(value = "/list/{orderby}",method = RequestMethod.GET)
     public void listGoods(@PathVariable(required = false) String orderby,int start,int limit){
         List<TbEcomGoods> list = goodsService.listGoods(0,orderby,start,limit);
     }
 
 
     @ApiOperation("按类型的商品列表")
-    @RequestMapping("/list/cat{catid}/{orderby}")
+    @RequestMapping(value = "/list/cat{catid}/{orderby}",method = RequestMethod.GET)
     public void listGoods(@PathVariable int catid, @PathVariable(required = false) String orderby,int start,int limit){
         List<TbEcomGoods> list = goodsService.listGoods(catid,orderby,start,limit);
     }
 
     @ApiOperation("商品详情")
-    @RequestMapping("/get/detail/{goods}")
+    @RequestMapping(value = "/detail/get/{goods}",method = RequestMethod.GET)
     public void goodsDetail(@PathVariable("goods") String goodsId){
         TbEcomGoodsDetail detail = goodsService.goodDetail(goodsId);
     }
 
     @ApiOperation("商品相册")
-    @RequestMapping("/get/gallery/{goods}")
+    @RequestMapping(value = "/gallery/get/{goods}",method = RequestMethod.GET)
     public void goodsGallery(@PathVariable("goods") String goodsId){}
 
     @ApiOperation("获取图片")
-    @RequestMapping("/get/image/{id}")
+    @RequestMapping(value = "/image/get/{id}",method = RequestMethod.GET)
     public void goodsImage(@PathVariable("id") String imageId){}
 
     //

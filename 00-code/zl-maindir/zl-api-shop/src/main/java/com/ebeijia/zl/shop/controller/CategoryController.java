@@ -26,7 +26,7 @@ public class CategoryController {
      * @return
      */
     @ApiOperation("获取普通商品分类")
-    @RequestMapping(value = "/goods/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/goods/list",method = RequestMethod.GET)
     public JsonResult listGoodsCategory(){
         List<TbEcomGoodsCategory> list = categoryService.listCategory(GoodsType.NORMAL);
         return null;
@@ -37,7 +37,7 @@ public class CategoryController {
      * @return
      */
     @ApiOperation("获取卡券商品分类")
-    @RequestMapping(value = "/coupon/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/coupon/list",method = RequestMethod.GET)
     public JsonResult listCouponCategory(){
         List<TbEcomGoodsCategory> list = categoryService.listCategory(GoodsType.COUPON);
         return null;

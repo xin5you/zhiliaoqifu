@@ -22,19 +22,19 @@ public class CouponController {
     ICouponService couponService;
 
     @ApiOperation("按类型的卡券列表")
-    @RequestMapping(value = "/list/cat{catid}/{order}",method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/list/cat{catid}/{order}",method = RequestMethod.GET)
     public void listGoods(@PathVariable int catid, @PathVariable String order, int start, int limit){
         List<TbEcomGoods> list = couponService.listGoods(catid,order,start,limit);
     }
 
     @ApiOperation("卡券详情")
-    @RequestMapping(value = "/get/detail/{goods}",method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/get/detail/{goods}",method = RequestMethod.GET)
     public void goodsDetail(@PathVariable("goods") String goodsId){
         TbEcomGoodsDetail detail = couponService.goodsDetail(goodsId);
     }
 
     @ApiOperation("获取图片")
-    @RequestMapping(value = "/get/image/{id}",method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/get/image/{id}",method = RequestMethod.GET)
     public void goodsImage(@PathVariable("id") String imageId){
 
     }

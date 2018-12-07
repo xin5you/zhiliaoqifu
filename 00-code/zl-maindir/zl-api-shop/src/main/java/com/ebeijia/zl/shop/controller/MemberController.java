@@ -23,7 +23,7 @@ public class MemberController {
     IMemberService memberService;
 
     @ApiOperation("注册")
-    @RequestMapping("/signup")
+    @RequestMapping(value = "/signup",method = RequestMethod.POST)
     public void signUp(){
         //获取手机号
         //获取对应id
@@ -32,7 +32,7 @@ public class MemberController {
     }
 
     @ApiOperation("新增地址，目前修改也一样调用这个接口")
-    @RequestMapping(value = "/address/new",method = RequestMethod.POST)
+    @RequestMapping(value = "/address/create",method = RequestMethod.POST)
     public void newAddress(){
 
     }

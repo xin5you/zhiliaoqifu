@@ -21,6 +21,4 @@ public class VaildCodeController {
         //30秒内只能发送一条验证码
     }
 
-
-
 }

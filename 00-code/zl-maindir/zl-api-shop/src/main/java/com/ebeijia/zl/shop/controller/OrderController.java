@@ -1,8 +1,10 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/order",method = RequestMethod.POST)
 @RestController
 public class OrderController {
+    @Autowired
+    IOrderService iOrderService;
     //订单状态机：    下单-支付中-A类支付完成-B类支付完成-发货-评价
     //                     取消  -A类退款       -B类退款 -退货-退货申请
 
@@ -25,7 +29,7 @@ public class OrderController {
     }
 
     @ApiOperation("订单支付确认")
-    @RequestMapping("/goods/apply//")
+    @RequestMapping("/goods/apply/{orderid}")
     public void orderNextState(@PathVariable("orderid") String orderId, @RequestParam("token") String token, PayInfo payInfo, @RequestParam("session") String session){
 
     }
