@@ -1,4 +1,4 @@
-package com.ebeijia.zl.route.controller;
+package com.ebeijia.zl.shop.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;

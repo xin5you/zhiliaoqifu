@@ -9,7 +9,7 @@ server:
 spring:
   datasource:
     jndi-name: JDBC
-    #NAME: mySpringBoot
+    #ID: mySpringBoot
     url: jdbc:oracle:thin:@10.0.0.104:1521:zldb
     username: isecmdb
     password: isecmdb

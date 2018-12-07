@@ -1,5 +1,7 @@
 package com.ebeijia.zl.shop.vo;
 
+import com.ebeijia.zl.shop.constants.ResultState;
+
 public class JsonResult<T> {
 
     private static final long serialVersionUID = -62401379125965102L;
@@ -7,7 +9,7 @@ public class JsonResult<T> {
     /*
      * 响应状态码，默认ResponseCode.SUCCESS
      */
-    private int code = 200;
+    private int code = ResultState.OK;
 
     /*
      * 响应详情说明
@@ -23,7 +25,7 @@ public class JsonResult<T> {
      * 默认构造器
      */
     public JsonResult() {
-        setCode(200);
+        setCode(ResultState.OK);
         setMessage("ok");
     }
 
@@ -31,7 +33,8 @@ public class JsonResult<T> {
     public JsonResult(T t){
         this.result = t;
         if (t == null){
-            setCode(404);
+            setCode(ResultState.NOT_FOUND);
+            return;
         }
     }
     /*

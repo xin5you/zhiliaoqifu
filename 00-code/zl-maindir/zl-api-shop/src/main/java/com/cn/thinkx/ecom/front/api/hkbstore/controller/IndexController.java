@@ -137,8 +137,8 @@ public class IndexController {
 			/** 跳转知了企服收银台页面 */
 			resp.setContentType("text/html;charset=utf-8");
 			PrintWriter out = resp.getWriter();
-			out.println("<form NAME='cashSubmit' method='get'  action='" + url + "' >");
-			out.println("<input type='hidden' NAME='channel' value='" + channel + "'>");
+			out.println("<form ID='cashSubmit' method='get'  action='" + url + "' >");
+			out.println("<input type='hidden' ID='channel' value='" + channel + "'>");
 			out.println("</form>");
 			out.println("<script type='text/javascript'>");
 			out.println("document.cashSubmit.submit()");

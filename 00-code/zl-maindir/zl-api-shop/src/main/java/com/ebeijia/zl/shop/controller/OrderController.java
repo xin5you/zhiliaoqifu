@@ -1,4 +1,4 @@
-package com.ebeijia.zl.route.controller;
+package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.shop.vo.PayInfo;
 import io.swagger.annotations.Api;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
  *
  */
 @Api(value = "/order",description = "用户定义订单相关接口")
-@RestController
 @RequestMapping(value = "/order",method = RequestMethod.POST)
+@RestController
 public class OrderController {
     //订单状态机：    下单-支付中-A类支付完成-B类支付完成-发货-评价
     //                     取消  -A类退款       -B类退款 -退货-退货申请

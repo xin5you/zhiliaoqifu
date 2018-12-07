@@ -1,4 +1,4 @@
-package com.ebeijia.zl.route.controller;
+package com.ebeijia.zl.shop.controller;
 
 
 import com.ebeijia.zl.shop.service.auth.IAuthService;

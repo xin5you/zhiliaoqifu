@@ -140,23 +140,23 @@ public class OrderPayController {
 			// 跳转知了企服收银台
 			resp.setContentType("text/html;charset=utf-8");
 			PrintWriter out = resp.getWriter();
-			out.println("<form NAME='cashSubmit' method='post'  action='" + CASH_URL + "' >");
+			out.println("<form ID='cashSubmit' method='post'  action='" + CASH_URL + "' >");
 			if (!StringUtil.isNullOrEmpty(order.getAttach()))
-				out.println("<input type='hidden' NAME='attach' value='" + order.getAttach() + "'>");
+				out.println("<input type='hidden' ID='attach' value='" + order.getAttach() + "'>");
 			if (!StringUtil.isNullOrEmpty(order.getRedirect_type()))
-				out.println("<input type='hidden' NAME='redirect_type' value='" + order.getRedirect_type() + "'>");
+				out.println("<input type='hidden' ID='redirect_type' value='" + order.getRedirect_type() + "'>");
 			if (!StringUtil.isNullOrEmpty(order.getRedirect_url()))
-				out.println("<input type='hidden' NAME='redirect_url' value='" + order.getRedirect_url() + "'>");
-			out.println("<input type='hidden' NAME='channel' value='" + order.getChannel() + "'>");
-			out.println("<input type='hidden' NAME='commodityName' value='" + order.getCommodityName() + "'>");
-			out.println("<input type='hidden' NAME='commodityNum' value='" + order.getCommodityNum() + "'>");
-			out.println("<input type='hidden' NAME='innerMerchantNo' value='" + order.getInnerMerchantNo() + "'>");
-			out.println("<input type='hidden' NAME='innerShopNo' value='" + order.getInnerShopNo() + "'>");
-			out.println("<input type='hidden' NAME='notify_url' value='" + order.getNotify_url() + "'>");
-			out.println("<input type='hidden' NAME='orderId' value='" + order.getOrderId() + "'>");
-			out.println("<input type='hidden' NAME='sign' value='" + order.getSign() + "'>");
-			out.println("<input type='hidden' NAME='txnAmount' value='" + order.getTxnAmount() + "'>");
-			out.println("<input type='hidden' NAME='userId' value='" + order.getUserId() + "'>");
+				out.println("<input type='hidden' ID='redirect_url' value='" + order.getRedirect_url() + "'>");
+			out.println("<input type='hidden' ID='channel' value='" + order.getChannel() + "'>");
+			out.println("<input type='hidden' ID='commodityName' value='" + order.getCommodityName() + "'>");
+			out.println("<input type='hidden' ID='commodityNum' value='" + order.getCommodityNum() + "'>");
+			out.println("<input type='hidden' ID='innerMerchantNo' value='" + order.getInnerMerchantNo() + "'>");
+			out.println("<input type='hidden' ID='innerShopNo' value='" + order.getInnerShopNo() + "'>");
+			out.println("<input type='hidden' ID='notify_url' value='" + order.getNotify_url() + "'>");
+			out.println("<input type='hidden' ID='orderId' value='" + order.getOrderId() + "'>");
+			out.println("<input type='hidden' ID='sign' value='" + order.getSign() + "'>");
+			out.println("<input type='hidden' ID='txnAmount' value='" + order.getTxnAmount() + "'>");
+			out.println("<input type='hidden' ID='userId' value='" + order.getUserId() + "'>");
 			out.println("</form>");
 			out.println("<script type='text/javascript'>");
 			out.println("document.cashSubmit.submit()");
