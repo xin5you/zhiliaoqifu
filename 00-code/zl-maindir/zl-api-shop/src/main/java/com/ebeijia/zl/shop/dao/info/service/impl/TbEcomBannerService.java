@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * Banner信息 Service 实现类
  *
  * @User J
- * @Date 2018-12-03
+ * @Date 2018-12-07
  */
 @Service
 public class TbEcomBannerService extends ServiceImpl<TbEcomBannerMapper, TbEcomBanner> implements ITbEcomBannerService{

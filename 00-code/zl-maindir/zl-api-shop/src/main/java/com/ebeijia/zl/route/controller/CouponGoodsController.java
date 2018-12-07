@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @User J
  * @Date 2018/12/05
  */
-@Api("用于定义卡券类商品接口")
+@Api(value = "/coupon", description = "用于定义卡券类商品接口")
 @RestController
 @RequestMapping("/coupon")
 public class CouponGoodsController {

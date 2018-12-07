@@ -7,13 +7,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @User J
  * @Date 2018/12/05
  */
-@Api("用于定义会员相关接口")
+@Api(value = "/member", description = "用于定义会员相关接口")
 @RestController
 @RequestMapping("/member")
 public class MemberController {
@@ -30,5 +31,10 @@ public class MemberController {
         TbEcomMember member =  memberService.createMember();
     }
 
+    @ApiOperation("新增地址")
+    @RequestMapping(value = "/address/new",method = RequestMethod.POST)
+    public void newAddress(){
+
+    }
 
 }

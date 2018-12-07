@@ -3,16 +3,13 @@ package com.ebeijia.zl.route.controller;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
  *
  */
-@Api("用户定义订单相关接口")
+@Api(value = "/order",description = "用户定义订单相关接口")
 @RestController
 @RequestMapping(value = "/order",method = RequestMethod.POST)
 public class OrderController {
@@ -20,24 +17,28 @@ public class OrderController {
     //                     取消  -A类退款       -B类退款 -退货-退货申请
 
 
-    //
-    @ApiOperation("商品订单创建")
-    @RequestMapping("/goods/create/{goodsid}")
-    public void createOrder(@PathVariable("goodsid") String goodsId,String token){
+    //不经过购物车直接下单
+    @ApiOperation("商品直接下单")
+    @RequestMapping("/goods/create/{sku}")
+    public void createOrder(@PathVariable("sku") String sku,@RequestParam("token") String token,@RequestParam("session") String session){
 
     }
 
-    @ApiOperation("订单支付")
-    @RequestMapping("/goods/apply/{orderid}/")
-    public void orderNextState(@PathVariable("orderid") String orderId,String token,PayInfo payInfo){
+    @ApiOperation("订单支付确认")
+    @RequestMapping("/goods/apply//")
+    public void orderNextState(@PathVariable("orderid") String orderId, @RequestParam("token") String token, PayInfo payInfo, @RequestParam("session") String session){
 
     }
 
     @ApiOperation("订单状态修改")
     @RequestMapping("/goods/update/{orderid}")
-    public void orderReplaceState(@PathVariable("orderid") String orderId,String token){
+    public void orderReplaceState(@PathVariable("orderid") String orderId,@RequestParam String token){
 
     }
+
+    @ApiOperation("订单详情")
+    @RequestMapping("/goods/detail/{orderid}")
+    public void goodsDetail(@PathVariable("orderid") String orderId,@RequestParam String token){}
 
 
 }

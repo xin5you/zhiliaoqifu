@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @User
  * @Date 2018/12/05
  */
-@Api("用于定义认证接口")
+@Api(value = "/auth", description = "用于定义认证接口")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {

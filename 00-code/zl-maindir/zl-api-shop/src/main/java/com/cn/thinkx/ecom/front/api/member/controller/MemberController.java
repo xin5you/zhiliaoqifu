@@ -9,7 +9,7 @@ import com.cn.thinkx.ecom.basics.member.service.AccountFansService;
 import com.cn.thinkx.ecom.basics.member.service.PersonInfService;
 import com.cn.thinkx.ecom.basics.member.service.UserMerchantAcctService;
 import com.cn.thinkx.ecom.basics.order.service.CartService;
-import com.cn.thinkx.ecom.front.api.banner.service.EcomBannerService;
+import com.cn.thinkx.ecom.front.api.black.banner.service.EcomBannerService;
 import com.cn.thinkx.ecom.front.api.black.domain.WithDrawBlacklistInf;
 import com.cn.thinkx.ecom.front.api.black.service.WithDrawBlacklistInfService;
 import com.cn.thinkx.ecom.front.api.card.service.CardKeysOrderService;

@@ -9,7 +9,7 @@ package com.ebeijia.zl.shop.dao.info.mapper;
  * Banner信息 Mapper 接口
  *
  * @User J
- * @Date 2018-12-03
+ * @Date 2018-12-07
  */
 @Mapper
 public interface TbEcomBannerMapper extends BaseMapper<TbEcomBanner> {
