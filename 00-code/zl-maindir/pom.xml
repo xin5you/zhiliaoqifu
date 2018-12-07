@@ -84,7 +84,9 @@
         <module>zl-oms</module>
 	    <module>zl-cms</module>
 	    <module>zl-web-api</module>
-  </modules>
+	    <module>zl-wechat-core</module>
+	    <module>zl-service-control</module>
+    </modules>
 
     <build>
         <plugins>
