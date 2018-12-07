@@ -54,6 +54,7 @@ public class MQConnectionConfig {
 	@Bean("activemqConnectionFactory")
 	@Primary
 	public SingleConnectionFactory connectionFactory(){
+		System.out.println("connectionFactoryconnectionFactoryconnectionFactory");
 		SingleConnectionFactory ConnectionFactory=new SingleConnectionFactory(pooledConnectionFactory());
 		return ConnectionFactory;
 	}

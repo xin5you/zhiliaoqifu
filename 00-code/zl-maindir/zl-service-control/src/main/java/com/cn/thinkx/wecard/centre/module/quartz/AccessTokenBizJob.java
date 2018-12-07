@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class AccessTokenBizJob implements Job{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 
 	/**
 	 * 刷新微信公众号AccountToken
@@ -23,6 +24,7 @@ public class AccessTokenBizJob implements Job{
 	 */
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("定时任务doRefreshAccessToken执行开始，时间[{}]", System.currentTimeMillis());
+		
 //		List<MpAccount> accountList = null;
 //		try {
 //			accountList = WxApiClient.getAllMpAccountList();
