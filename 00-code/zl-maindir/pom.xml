@@ -71,11 +71,12 @@
         <module>zl-basics-goods</module>
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
+        <module>zl-basics-wechat</module>
         
         <module>zl-core-redis</module>
         <module>zl-core-activemq</module>
-
        	<module>zl-core-wechat</module>
+       	
         <module>zl-facade-telrecharge</module>
         <module>zl-facade-account</module>
         
