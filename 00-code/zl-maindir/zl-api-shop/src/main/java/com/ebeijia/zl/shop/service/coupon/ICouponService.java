@@ -8,7 +8,7 @@ import java.util.List;
 public interface ICouponService {
     int checkVaild(String vaildCode);
 
-    List<TbEcomGoods> listGoods(int catid, String order, int start, int limit);
+    List<TbEcomGoods> listGoods(Integer catid, String order, Integer start, Integer limit);
 
     TbEcomGoodsDetail goodsDetail(String goodsId);
 }

@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,6 +23,8 @@ import java.math.BigDecimal;
  * @Date 2018-12-03
  */
 @Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper=false)
 @TableName("tb_ecom_goods")
 @ApiModel("商品表")

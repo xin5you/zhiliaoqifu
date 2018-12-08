@@ -16,7 +16,6 @@ public class PayController {
     @Autowired
     IPayService payService;
 
-
     @ApiOperation("绑定银行卡")
     @RequestMapping(value = "/card/bind",method = RequestMethod.POST)
     public void bindBankCard() {
