@@ -7,8 +7,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.wechat.base.wxapi.domain.MsgNews;
-import com.cn.thinkx.wechat.base.wxapi.domain.MsgText;
 import com.cn.thinkx.wechat.base.wxapi.vo.Article;
 import com.cn.thinkx.wechat.base.wxapi.vo.ArticleInfo;
 import com.cn.thinkx.wechat.base.wxapi.vo.CustomerMsgResponseNews;
@@ -16,6 +14,8 @@ import com.cn.thinkx.wechat.base.wxapi.vo.CustomerMsgResponseVo;
 import com.cn.thinkx.wechat.base.wxapi.vo.MsgRequest;
 import com.cn.thinkx.wechat.base.wxapi.vo.MsgResponseNews;
 import com.cn.thinkx.wechat.base.wxapi.vo.MsgResponseText;
+import com.ebeijia.zl.basics.wechat.domain.MsgNews;
+import com.ebeijia.zl.basics.wechat.domain.MsgText;
 
 /**
  * 消息builder工具类

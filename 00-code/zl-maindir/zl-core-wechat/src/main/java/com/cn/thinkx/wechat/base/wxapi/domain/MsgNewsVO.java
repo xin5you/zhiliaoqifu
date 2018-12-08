@@ -3,6 +3,8 @@ package com.cn.thinkx.wechat.base.wxapi.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ebeijia.zl.basics.wechat.domain.MsgNews;
+
 /**
  * 图文消息
  * 

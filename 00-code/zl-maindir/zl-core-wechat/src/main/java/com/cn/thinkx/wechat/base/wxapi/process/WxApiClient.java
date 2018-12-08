@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +15,12 @@ import org.springframework.context.annotation.Configuration;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.wechat.base.wxapi.domain.AccountFans;
-import com.cn.thinkx.wechat.base.wxapi.domain.MsgNews;
 import com.cn.thinkx.wechat.base.wxapi.vo.Material;
 import com.cn.thinkx.wechat.base.wxapi.vo.MaterialArticle;
 import com.cn.thinkx.wechat.base.wxapi.vo.MaterialItem;
 import com.cn.thinkx.wechat.base.wxapi.vo.TemplateMessage;
+import com.ebeijia.zl.basics.wechat.domain.AccountFans;
+import com.ebeijia.zl.basics.wechat.domain.MsgNews;
 
 
 /**
@@ -192,7 +193,7 @@ public class WxApiClient {
 				if (jsonObj.containsKey("nickname")) {// 昵称
 					try {
 						String nickname = jsonObj.getString("nickname");
-						fans.setNickname(nickname.getBytes("UTF-8"));
+						fans.setNickname(Base64.encodeBase64String(nickname.getBytes("utf-8")));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 					}
@@ -225,7 +226,7 @@ public class WxApiClient {
 					fans.setGroupid(jsonObj.getString("groupid"));
 				}
 				fans.setStatus(1);
-				fans.setCreatetime(new Date());
+				fans.setCreatetime(System.currentTimeMillis());
 				return fans;
 			}
 		}
