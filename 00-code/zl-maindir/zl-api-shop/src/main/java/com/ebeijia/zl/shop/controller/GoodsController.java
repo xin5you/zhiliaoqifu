@@ -46,12 +46,16 @@ public class GoodsController {
     @ApiOperation("商品相册")
     @RequestMapping(value = "/gallery/get/{goods}",method = RequestMethod.GET)
     public void goodsGallery(@PathVariable("goods") String goodsId){}
+//
+//    @ApiOperation("获取图片")
+//    @RequestMapping(value = "/image/get/{id}",method = RequestMethod.GET)
+//    public void goodsImage(@PathVariable("id") String imageId){}
 
-    @ApiOperation("获取图片")
-    @RequestMapping(value = "/image/get/{id}",method = RequestMethod.GET)
-    public void goodsImage(@PathVariable("id") String imageId){}
-
-    //
+    @ApiOperation("商品库存查询")
+    @RequestMapping(value = "/amount/get/{goods}",method = RequestMethod.GET)
+    public void goodsAvailableAmount(@PathVariable("goods") String goodsId){
+        TbEcomGoodsDetail detail = goodsService.goodDetail(goodsId);
+    }
     //
     //
 }
