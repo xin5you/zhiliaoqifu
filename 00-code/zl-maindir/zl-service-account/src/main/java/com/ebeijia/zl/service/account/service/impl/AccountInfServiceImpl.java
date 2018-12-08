@@ -19,6 +19,8 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.AccountStatusEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
@@ -182,6 +184,20 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
 		}
 		this.credit(account, transLog.getTransAmt());
+		
+		//员工账户充值 专用专项账户的按比例设置代金券权益额度
+		if(UserType.TYPE100.equals(account.getAccountType())){
+			if(SpecAccountTypeEnum.A0.equals(account.getBId()) || SpecAccountTypeEnum.A1.equals(account.getBId())){
+				
+			}else{
+				//所有的专用类型的账户充值 都需要按比例划分到消费额度里
+				BigDecimal cus_fee=new BigDecimal(0.1).setScale(4,BigDecimal.ROUND_HALF_DOWN); //加入消费比例是0.1 即 10%必须消费
+				
+			}
+		}else{
+			//非员工账户，消费额度是0
+			account.setConsumerBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN));
+		}
 		
 		boolean flag=accountLogService.save(account, transLog);
 		if(flag){

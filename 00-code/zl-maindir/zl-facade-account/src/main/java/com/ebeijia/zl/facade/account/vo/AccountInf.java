@@ -108,6 +108,13 @@ public class AccountInf extends Model<AccountInf> {
      */
     @TableField("freeze_amt")
     private BigDecimal freezeAmt;
+    
+    
+    /**
+     * 消费额度
+     */
+    @TableField("consumer_bal")
+    private BigDecimal consumerBal;
  
     /**
      * 最近交易日期

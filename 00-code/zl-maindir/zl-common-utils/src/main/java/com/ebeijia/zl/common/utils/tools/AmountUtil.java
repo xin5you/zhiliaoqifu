@@ -52,8 +52,8 @@ public abstract class AmountUtil {
 	 * @param v2乘数
 	 * @return
 	 */
-	public static double mul(BigDecimal v1, BigDecimal v2) {
-		return v1.multiply(v2).doubleValue();
+	public static BigDecimal mul(BigDecimal v1, BigDecimal v2) {
+		return v1.multiply(v2);
 	}
 
 	/**
