@@ -6,7 +6,7 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
-  config: classpath:conf/logback-account.xml
+  config: classpath:conf/logback-wechat.xml
 
 spring:
   datasource:
