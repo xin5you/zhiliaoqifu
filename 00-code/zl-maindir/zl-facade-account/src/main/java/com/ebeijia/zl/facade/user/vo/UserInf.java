@@ -12,7 +12,7 @@ import java.util.Calendar;
  *
  * 用户信息
  *
- * @User zhuqi
+ * @author zhuqi
  * @Date 2018-11-30
  */
 @Data

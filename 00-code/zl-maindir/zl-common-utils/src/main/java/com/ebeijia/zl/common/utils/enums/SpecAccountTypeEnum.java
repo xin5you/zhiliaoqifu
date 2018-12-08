@@ -1,5 +1,7 @@
 package com.ebeijia.zl.common.utils.enums;
 
+import java.math.BigDecimal;
+
 public enum SpecAccountTypeEnum{
 	
 	A0("A0", "通用账户","A"), 
@@ -19,8 +21,8 @@ public enum SpecAccountTypeEnum{
 	
 	private String name;
 	
-	
 	private String code;
+	
 
 	public String getbId() {
 		return bId;
