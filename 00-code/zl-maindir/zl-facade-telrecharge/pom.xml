@@ -15,7 +15,7 @@
   </properties>
  <dependencies>
     	<dependency>
-			<groupId>com.cn.thinkx.common</groupId>
+			<groupId>com.ebeijia</groupId>
 			<artifactId>zl-base-core</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>

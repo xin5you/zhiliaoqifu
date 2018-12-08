@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.oms.module.specialAccount.mapper.SpeAccountBatchOrderListMapper">
+	
+	<sql id="SpeAccountBatchOrderColumns">
+	       l.order_list_id,
+	       l.order_id,
+	       l.user_name,
+	       l.phone_no,
+	       l.user_card_no,
+	       l.amount,
+	       l.account_type,
+	       l.biz_type,
+	       l.order_stat,
+	       l.order_desc,
+	       l.resv1,
+	       l.resv2,
+	       l.resv3,
+	       l.resv4,
+	       l.resv5,
+	       l.resv6,
+	       l.data_stat,
+	       l.remarks,
+	       l.create_user,
+	       l.update_user,
+	       l.create_time,
+	       l.update_time,
+	       l.lock_version
+	</sql>
+	
+	<select id="getSpeAccountBatchOrderListByOrderId" parameterType="string" resultType="SpeAccountBatchOrderList">
+	   select 
+	   		<include refid="SpeAccountBatchOrderColumns" />,
+	   		o.company_id as companyId
+	   from tb_batch_order_list l left join tb_batch_order o on l.order_id = o.order_id
+	   where l.data_stat = '0' and o.data_stat = '0'
+	   		and l.order_id = #{orderId} 
+	  order by l.order_stat desc, l.update_time desc, order_list_id desc
+	</select>
+	
+	<select id="getSpeAccountBatchOrderListFailListByOrderId" parameterType="string" resultType="SpeAccountBatchOrderList">
+      select 
+      	<include refid="SpeAccountBatchOrderColumns" />,
+	   		o.company_id as companyId 
+      from tb_batch_order_list l left join tb_batch_order o on l.order_id = o.order_id
+      where l.data_stat='0' and o.data_stat = '0'
+      	and l.order_stat == '99'
+      	and l.order_id = #{orderId} 
+      
+    </select>
+    
+    <select id="getSpeAccountBatchOrderListByOrder" parameterType="SpeAccountBatchOrderList" resultType="SpeAccountBatchOrderList">
+    	select 
+       		<include refid="SpeAccountBatchOrderColumns" /> 
+        from tb_batch_order_list l
+        where l.data_stat='0' 
+        <if test="orderId != null and orderId != '' ">
+      		and l.order_id = #{orderId} 
+      	</if>
+      	<if test="phoneNo != null and phoneNo != '' ">
+      		and l.phone_no=#{phoneNo}
+      	</if>
+      	<if test="orderStat != null and orderStat != '' ">
+      		and l.order_stat=#{orderStat}
+      	</if>
+      	<if test="orderStat2 != null and orderStat2 != '' ">
+      		and l.order_stat=#{orderStat2}
+      	</if>
+    </select>
+    
+    <select id="getSpeAccountBatchOrderListByOrderListId" parameterType="string" resultType="SpeAccountBatchOrderList">
+    	select 
+       		<include refid="SpeAccountBatchOrderColumns" /> 
+        from tb_batch_order_list l
+        where l.data_stat='0' 
+        	and l.order_list_id = #{orderListId} 
+    </select>
+		
+	<insert id="addSpeAccountBatchOrderList" parameterType="java.util.ArrayList">
+		insert into tb_batch_order_list (
+			<include refid="SpeAccountBatchOrderColumns" />
+		) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.orderListId,jdbcType=VARCHAR},
+			#{item.orderId,jdbcType=VARCHAR},
+			#{item.userName,jdbcType=VARCHAR},
+			#{item.phoneNo,jdbcType=VARCHAR},
+			#{item.userCardNo,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=VARCHAR},
+			#{item.accounType,jdbcType=VARCHAR},
+			#{item.bizType,jdbcType=VARCHAR},
+			#{item.orderStat,jdbcType=VARCHAR},
+			#{item.orderDesc,jdbcType=VARCHAR},
+			#{item.resv1,jdbcType=VARCHAR},
+			#{item.resv2,jdbcType=VARCHAR},
+			#{item.resv3,jdbcType=VARCHAR},
+			#{item.resv4,jdbcType=VARCHAR},
+			#{item.resv5,jdbcType=VARCHAR},
+			#{item.resv6,jdbcType=VARCHAR},
+			'0',
+			#{item.remarks,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR},
+			#{item.updateUser,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=BIGINT},
+			#{item.updateTime,jdbcType=BIGINT},
+			0
+			)
+		</foreach>
+	</insert>
+
+	<insert id="addOrderList" parameterType="SpeAccountBatchOrderList">
+		insert into tb_batch_order_list
+		(
+			<include refid="SpeAccountBatchOrderColumns" />
+		) values (
+			#{orderListId,jdbcType=VARCHAR},
+			#{orderId,jdbcType=VARCHAR},
+			#{userName,jdbcType=VARCHAR},
+			#{phoneNo,jdbcType=VARCHAR},
+			#{userCardNo,jdbcType=VARCHAR},
+			#{amount,jdbcType=VARCHAR},
+			#{accounType,jdbcType=VARCHAR},
+			#{bizType,jdbcType=VARCHAR},
+			#{orderStat,jdbcType=VARCHAR},
+			#{orderDesc,jdbcType=VARCHAR},
+			#{resv1,jdbcType=VARCHAR},
+			#{resv2,jdbcType=VARCHAR},
+			#{resv3,jdbcType=VARCHAR},
+			#{resv4,jdbcType=VARCHAR},
+			#{resv5,jdbcType=VARCHAR},
+			#{resv6,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			#{createTime,jdbcType=BIGINT},
+			#{updateTime,jdbcType=BIGINT},
+			0
+		)
+	</insert>
+
+	<update id="updateSpeAccountBatchOrderList" parameterType="SpeAccountBatchOrderList">
+		update tb_batch_order_list
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="orderId != null and orderId != '' ">order_id = #{orderId,jdbcType=VARCHAR},</if>
+			<if test="userName != null and userName != '' ">user_name = #{userName,jdbcType=VARCHAR},</if>
+			<if test="phoneNo != null and phoneNo != '' ">phone_no = #{phoneNo,jdbcType=VARCHAR},</if>
+			<if test="userCardNo != null and userCardNo != '' ">user_card_no = #{userCardNo,jdbcType=VARCHAR},</if>
+			<if test="amount != null and amount != '' ">amount = #{amount,jdbcType=VARCHAR},</if>
+			<if test="accounType != null and accounType != '' ">account_type = #{accounType,jdbcType=VARCHAR},</if>
+			<if test="bizType != null and bizType != '' ">biz_type = #{bizType,jdbcType=VARCHAR},</if>
+			<if test="orderStat != null and orderStat != '' ">order_stat = #{orderStat,jdbcType=VARCHAR},</if>
+			<if test="orderDesc != null and orderDesc != '' ">order_desc = #{orderDesc,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null and dataStat != '' ">data_stat = #{dataStat,jdbcType=VARCHAR},</if>
+			<if test="remarks != null and remarks != '' ">remarks = #{remarks,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null and updateUser != '' ">update_user = #{updateUser,jdbcType=VARCHAR},</if>
+			update_time = #{updateTime,jdbcType=BIGINT},
+			lock_version = lock_version + 1
+		</trim>
+		where order_list_id = #{orderListId,jdbcType=VARCHAR} 
+			<!-- and lock_version = ${lockVersion} -->
+	</update>
+	
+	<update id="updateSpeAccountBatchOrderListByList" parameterType="java.util.ArrayList">
+		<foreach collection="list" item="item" index="index" separator=",">
+			update tb_batch_order_list
+			<trim prefix="SET" suffixOverrides=",">
+				<if test="item.orderId != null and item.orderId != '' ">order_id = #{item.orderId,jdbcType=VARCHAR},</if>
+				<if test="item.userName != null and item.userName != '' ">user_name = #{item.userName,jdbcType=VARCHAR},</if>
+				<if test="item.phoneNo != null and item.phoneNo != '' ">phone_no = #{item.phoneNo,jdbcType=VARCHAR},</if>
+				<if test="item.userCardNo != null and item.userCardNo != '' ">user_card_no = #{item.userCardNo,jdbcType=VARCHAR},</if>
+				<if test="item.amount != null and item.amount != '' ">amount = #{item.amount,jdbcType=VARCHAR},</if>
+				<if test="item.accounType != null and item.accounType != '' ">account_type = #{item.accounType,jdbcType=VARCHAR},</if>
+				<if test="item.bizType != null and item.bizType != '' ">biz_type = #{item.bizType,jdbcType=VARCHAR},</if>
+				<if test="item.orderStat != null and item.orderStat != '' ">order_stat = #{item.orderStat,jdbcType=VARCHAR},</if>
+				<if test="item.orderDesc != null and item.orderDesc != '' ">order_desc = #{item.orderDesc,jdbcType=VARCHAR},</if>
+				<if test="item.dataStat != null and item.dataStat != '' ">data_stat = #{item.dataStat,jdbcType=VARCHAR},</if>
+				<if test="item.remarks != null and item.remarks != '' ">remarks = #{item.remarks,jdbcType=VARCHAR},</if>
+				<if test="item.updateUser != null and item.updateUser != '' ">update_user = #{item.updateUser,jdbcType=VARCHAR},</if>
+				update_time = #{item.updateTime,jdbcType=BIGINT},
+				lock_version = lock_version + 1
+			</trim>
+			where order_list_id = #{item.orderListId,jdbcType=VARCHAR} 
+		</foreach>
+	</update>
+
+	<update id="deleteSpeAccountBatchOrderList" parameterType="string">
+		update tb_batch_order_list set data_stat = '1' where order_list_id=#{orderListId}
+	</update>
+        
+	
+</mapper>

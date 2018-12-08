@@ -5,6 +5,11 @@ import java.util.Date;
 
 import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
+/**
+ * 供应商订单明细表
+ * @author Administrator
+ *
+ */
 public class TelProviderOrderInf extends BaseEntity {
 
 	private static final long serialVersionUID = 4743861091318278165L;

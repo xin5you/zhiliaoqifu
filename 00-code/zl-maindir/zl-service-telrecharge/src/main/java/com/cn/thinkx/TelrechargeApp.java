@@ -19,11 +19,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 
 
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+@EnableDubboConfiguration
 @SpringBootApplication
 public class TelrechargeApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 

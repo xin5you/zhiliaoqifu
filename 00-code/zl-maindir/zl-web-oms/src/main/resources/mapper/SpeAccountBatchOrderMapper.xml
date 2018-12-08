@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.oms.module.specialAccount.mapper.SpeAccountBatchOrderMapper">
+
+	<sql id="SpeAccountBatchOrderColumns">
+		o.order_id,
+		o.order_name,
+		o.order_type,
+		o.order_date,
+		o.order_stat,
+		o.company_id,
+		o.resv1,
+		o.resv2,
+		o.resv3,
+		o.resv4,
+		o.resv5,
+		o.resv6,
+		o.data_stat,
+		o.remarks,
+		o.create_user,
+		o.update_user,
+		o.create_time,
+		o.update_time,
+		o.lock_version
+	</sql>
+
+	<select id="getSpeAccountBatchOrderList" parameterType="SpeAccountBatchOrder" resultType="SpeAccountBatchOrder">
+		select
+			<include refid="SpeAccountBatchOrderColumns" />,
+			c.name as companyName,
+			(select count(l.order_list_id)
+				from tb_batch_order_list l
+				where l.data_stat='0' and o.order_id = l.order_id
+			) as orderCount,
+			(select sum(l.amount)
+				from tb_batch_order_list l
+				where l.data_stat = '0' and l.order_id = o.order_id
+			) as sumAmount
+		from tb_batch_order o left join tb_company_inf c 
+			on o.company_id = c.company_id
+		where o.data_stat = '0' 
+			and c.data_stat = '0'
+			and o.order_type = #{orderType}
+		<if test="orderId != null and orderId != '' ">
+			and o.order_id = #{orderId}
+		</if>
+		<if test="orderName !=null and orderName != '' ">
+			and o.order_name like '%'|| #{orderName} ||'%'
+		</if>
+		<if test="orderStat !=null and orderStat != '' ">
+			and o.order_stat = #{orderStat}
+		</if>
+		<if test="companyName !=null and companyName != '' ">
+			and c.company_Name like '%'|| #{companyName} ||'%'
+		</if>
+		<if test="startTime !=null and startTime != '' ">
+			and o.create_time &gt;= #{startTime}
+		</if>
+		<if test="endTime !=null and endTime != '' ">
+			and o.create_time &lt;= #{endTime}
+		</if>
+		order by o.update_time desc
+
+	</select>
+
+	<select id="getSpeAccountBatchOrderByOrderId" parameterType="string" resultType="SpeAccountBatchOrder">
+		select 
+			<include refid="SpeAccountBatchOrderColumns" />,
+			c.name as companyName,
+			(select count(l.order_list_id)
+				from tb_batch_order_list l
+				where l.data_stat = '0'
+				and l.order_id = o.order_id
+			) as orderCount,
+			(select count(l.order_list_id)
+				from tb_batch_order_list l
+				where l.data_stat = '0'
+				and l.order_id = o.order_id
+				and l.order_stat = '0'
+			) as disposeWait,
+			(select count(l.order_list_id)
+				from tb_batch_order_list l
+				where l.data_stat = '0'
+				and l.order_id = o.order_id
+				and l.order_stat = '00'
+			) as disposeSuccess,
+			(select count(l.order_list_id)
+				from tb_batch_order_list l
+				where l.data_stat = '0'
+				and l.order_id = o.order_id
+				and l.order_stat = '99'
+			) as disposeFail,
+			(select sum(l.amount)
+				from tb_batch_order_list l
+				where l.data_stat = '0'
+				and l.order_id = o.order_id
+			) as sumAmount
+		from tb_batch_order o left join tb_company_inf c 
+			on o.company_id = c.company_id
+		where c.data_stat = '0'
+			and o.data_stat = '0' 
+			and o.order_id= #{orderId}
+	</select>
+
+	<select id="getSpeAccountBatchOrderById" parameterType="string"  resultType="SpeAccountBatchOrder">
+		select 
+			<include refid="SpeAccountBatchOrderColumns" />
+		from tb_batch_order o
+		where o.order_id = #{orderId}
+	</select>
+
+	<insert id="addSpeAccountBatchOrder" parameterType="SpeAccountBatchOrder">
+		insert into tb_speaccount_batch_order ( 
+			<include refid="SpeAccountBatchOrderColumns" />
+		) values (
+		#{orderId},
+		#{orderName,jdbcType=VARCHAR},
+		#{orderType,jdbcType=VARCHAR},
+		#{orderDate,jdbcType=BIGINT},
+		#{orderStat,jdbcType=VARCHAR},
+		#{companyId,jdbcType=VARCHAR},
+		#{resv1,jdbcType=VARCHAR},
+		#{resv2,jdbcType=VARCHAR},
+		#{resv3,jdbcType=VARCHAR},
+		#{resv4,jdbcType=VARCHAR},
+		#{resv5,jdbcType=VARCHAR},
+		#{resv6,jdbcType=VARCHAR},
+		'0',
+		#{remarks,jdbcType=VARCHAR},
+		#{createUser,jdbcType=VARCHAR},
+		#{updateUser,jdbcType=VARCHAR},
+		#{createTime,jdbcType=BIGINT},
+		#{updateTime,jdbcType=BIGINT},
+		0
+		)
+	</insert>
+
+	<update id="updateSpeAccountBatchOrder" parameterType="SpeAccountBatchOrder">
+		update tb_speaccount_batch_order
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="orderName != null and orderName != '' ">order_name = #{orderName,jdbcType=VARCHAR},</if>
+			<if test="orderType != null and orderType != '' ">order_type = #{orderType,jdbcType=VARCHAR},</if>
+			<if test="orderStat != null and orderStat != '' ">order_stat = #{orderStat,jdbcType=VARCHAR},</if>
+			<if test="dataStat != null and dataStat != '' ">data_stat = #{dataStat,jdbcType=VARCHAR},</if>
+			<if test="remarks != null and remarks != '' ">remarks = #{remarks,jdbcType=VARCHAR},</if>
+			<if test="updateUser != null and updateUser != '' ">update_user = #{updateUser,jdbcType=VARCHAR},</if>
+			<if test="companyId != null and companyId != '' ">company_id = #{companyId,jdbcType=VARCHAR},</if>
+			update_time = #{updateTime,jdbcType=BIGINT},
+			lock_version = lock_version+1
+		</trim>
+		where order_id = #{orderId,jdbcType=VARCHAR} and lock_version = ${lockVersion}
+	</update>
+
+
+	<update id="deleteSpeAccountBatchOrder" parameterType="string">
+		update tb_batch_order set data_stat = '1', lock_version = lock_version + 1 where order_id = #{orderId}
+	</update>
+
+
+</mapper>

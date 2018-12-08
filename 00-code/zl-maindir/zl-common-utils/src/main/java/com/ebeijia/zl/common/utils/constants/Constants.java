@@ -26,6 +26,20 @@ public class Constants {
 	//知了企服返回交易失败状态
 	public static final String HKB_FAIL = "FAIL";
 	
+	public static final String SUCCESS_CODE = "00";
+	
+	//手机充值退款加密key
+	public static final String PHONE_RECHARGE_REFUND = "TRANS_ORDER_REFUND";
+	public static final String PHONE_RECHARGE_REQ_KEY = "PHONE_RECHARGE_REQ_KEY";
+	public static final String PHONE_RECHARGE_REQ_REDIRECT_URL = "PHONE_RECHARGE_REQ_REDIRECT_URL";
+	public static final String PHONE_RECHARGE_REQ_NOTIFY_URL = "PHONE_RECHARGE_REQ_NOTIFY_URL";
+	public static final String PHONE_RECHARGE_REQ_URL = "PHONE_RECHARGE_REQ_URL";
+	public static final String GET_PHONE_INFO_URL = "GET_PHONE_INFO_URL";
+	public static final String PHONE_RECHARGE_ALL_GOODS = "PHONE_RECHARGE_ALL_GOODS";
+	public static final String PHONE_RECHARGE_YD_GOODS = "PHONE_RECHARGE_YD_GOODS";
+	public static final String PHONE_RECHARGE_LT_GOODS = "PHONE_RECHARGE_LT_GOODS";
+	public static final String PHONE_RECHARGE_DX_GOODS = "PHONE_RECHARGE_DX_GOODS";
+	
 	// 知了企服通卡信息
 	public static final String ACC_HKB_MCHNT_NO = "ACC_HKB_MCHNT_NO";
 	public static final String ACC_HKB_PROD_NO = "ACC_HKB_PROD_NO";
@@ -46,10 +60,6 @@ public class Constants {
 	public static final String DINGCHI_BUY_URL = "DINGCHI_BUY_URL";
 	public static final String DINGCHI_QUERY_URL = "DINGCHI_QUERY_URL";
 	public static final String DINGCHI_QUERYBAL_URL = "DINGCHI_QUERYBAL_URL";
-	
-	//手机充值退款加密key
-	public static final String PHONE_RECHARGE_REQ_KEY = "PHONE_RECHARGE_REQ_KEY";
-	public static final String PHONE_RECHARGE_REFUND = "TRANS_ORDER_REFUND";
 	
 	/** 自建电商退款*/
 	public static final String HKB_STORE_REFUND_KEY = "MYESHOP_SIGN_KEY";

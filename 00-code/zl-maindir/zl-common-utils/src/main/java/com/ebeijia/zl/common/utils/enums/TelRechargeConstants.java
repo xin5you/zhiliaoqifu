@@ -653,6 +653,47 @@ public class TelRechargeConstants {
 		}
 	}
 	
+	/**
+	 * 手机充值交易状态
+	 * 
+	 * @author xiaomei
+	 *
+	 */
+	public enum phoneRechargeTransStat {
+		PRTS0("0", "未付款"),
+		PRTS1("1", "充值中"),
+		PRTS2("2", "充值成功"),
+		PRTS3("3", "充值失败"),
+		PRTS4("4", "受理成功"),
+		PRTS5("5", "退款成功"),
+		PRTS6("6", "退款失败");
+		
+		private String code;
+		private String value;
+		
+		phoneRechargeTransStat(String code, String value) {
+			this.code = code;
+			this.value = value;
+		}
+		
+		public String getCode() {
+			return code;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+		
+		public static phoneRechargeTransStat findByCode(String code) {
+			for (phoneRechargeTransStat t : phoneRechargeTransStat.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+	
 	public static void main(String[] args) {
 		for (OperatorType t : OperatorType.values()) {
 			if (t.code.equalsIgnoreCase("1")) {
