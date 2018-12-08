@@ -23,7 +23,7 @@ public class CouponController {
 
     @ApiOperation("按类型的卡券列表")
     @RequestMapping(value = "/list/cat{catid}/{order}",method = RequestMethod.GET)
-    public void listGoods(@PathVariable int catid, @PathVariable String order, int start, int limit){
+    public void listGoods(@PathVariable Integer catid, @PathVariable String order, Integer start, Integer limit){
         List<TbEcomGoods> list = couponService.listGoods(catid,order,start,limit);
     }
 

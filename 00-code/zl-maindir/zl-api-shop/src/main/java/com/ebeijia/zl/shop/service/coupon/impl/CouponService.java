@@ -15,7 +15,7 @@ public class CouponService implements ICouponService {
     }
 
     @Override
-    public List<TbEcomGoods> listGoods(int catid, String order, int start, int limit) {
+    public List<TbEcomGoods> listGoods(Integer catid, String order, Integer start, Integer limit) {
         return null;
     }
 

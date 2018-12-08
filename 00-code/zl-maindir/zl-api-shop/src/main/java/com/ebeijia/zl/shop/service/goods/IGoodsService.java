@@ -2,13 +2,14 @@ package com.ebeijia.zl.shop.service.goods;
 
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
-
-import java.util.List;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsGallery;
+import com.github.pagehelper.PageInfo;
 
 public interface IGoodsService {
 
-    List<TbEcomGoods> listGoods(int catid, String orderby, int start, int limit);
+    PageInfo<TbEcomGoods> listGoods(Integer catid, String orderby, Integer start, Integer limit);
 
-    TbEcomGoodsDetail goodDetail(String goodsId);
+    TbEcomGoodsDetail getDetail(String goodsId);
 
+    TbEcomGoodsGallery getGallery(String goodsId);
 }
