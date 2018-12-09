@@ -19,11 +19,13 @@ public class PayController {
     @ApiOperation("绑定银行卡")
     @RequestMapping(value = "/card/bind",method = RequestMethod.POST)
     public void bindBankCard() {
+
     }
 
     @ApiOperation("列出银行卡")
     @RequestMapping(value = "/card/list",method = RequestMethod.GET)
     public void listAccountCard(@RequestParam("token") String token, @RequestParam("session") String session) {
+
     }
 
     //支付接口
@@ -31,7 +33,7 @@ public class PayController {
     @RequestMapping(value = "/deal/order/{orderid}",method = RequestMethod.POST)
     public void payOrder(@PathVariable("orderid") String orderId, @RequestParam("token")
             String token, PayInfo payInfo, @RequestParam("session") String session) {
-
+            payService.payOrder(token,payInfo,session);
     }
 
     @ApiOperation("列出可用专项账户类型与余额")
