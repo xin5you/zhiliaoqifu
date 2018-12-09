@@ -34,8 +34,8 @@ var addOpenAccount = {
             },
             messages: {
             	orderName: {required: "请输入订单名称"},
-            	accountType: { required: "请输入账户类型"},
-            	billingTypes: { required: "请输入开户项"}
+            	accountType: { required: "请选择账户类型"},
+            	billingTypes: { required: "请选择开户类型"}
             	
             },
             invalidHandler: function (form, validator) {
@@ -121,15 +121,35 @@ var addOpenAccount = {
 		$('#msg').modal({
 			backdrop : "static"
 		});
+		var orderName = $("#orderName").val();
+		var companyId = $("#companyId").val();
+		var accountType = $("#accountType").val();
+		var billingTypes = $("#billingTypes").val();
+		if(accountType==''){
+			Helper.alert("请选择账户类型");
+			return false;
+		} else {
+			if (accountType == "100" || accountType == "200") {
+				if (companyId == '') {
+					Helper.alert("请选择所属企业");
+					return false;
+				}
+			}
+		}
+		if(billingTypes==''){
+			Helper.alert("请选择开户类型");
+			return false;
+		}
+		
 		$("#pageMainForm").ajaxSubmit({
 			type:'post', // 提交方式 get/post
             url: Helper.getRootPath() + '/speaccount/batch/addOpenAccountCommit.do', // 需要提交的 url
             dataType: 'json',
             data: {
-				"orderName":$("#orderName").val(),
-				"accountType":$("#accountType").val(),
-				"companyId":$("#companyId").val(),
-				"billingTypes":$("#billingTypes").val()
+				"orderName":orderName,
+                "companyId":companyId,
+                "accountType":accountType,
+                "billingTypes":billingTypes
 			},
 			success: function(data){
 				if(data.status) {
@@ -188,9 +208,6 @@ var addOpenAccount = {
 		var name = $("#name").val();
 		var phone = $("#phone").val();
 		var card = $("#card").val();
-		/*var companyId = $("#companyId").val();
-		var accountType = $("#accountType").val();
-		var billingTypes = $("#billingTypes").val();*/
 		var re = /^1\d{10}$/;
 		if(name==''){
 			Helper.alert("请输入姓名");
@@ -212,14 +229,6 @@ var addOpenAccount = {
 			Helper.alert("请输入有效的身份证");
     		return false;
 		}
-		/*if(accountType==''){
-			Helper.alert("请选择账户类型");
-    		return false;
-		}
-		if(billingTypes==''){
-			Helper.alert("请选择开户项");
-    		return false;
-		}*/
 		$.ajax({
 			url: Helper.getRootPath() + '/speaccount/batch/addAccountInf.do',
             type: 'post',
@@ -228,10 +237,6 @@ var addOpenAccount = {
                 "name" : name, 
                 "phone" : phone, 
                 "card" : card
-                /*,
-                "companydId":companydId,
-                "accountType":accountType,
-                "billingTypes":billingTypes*/
             },
             success: function (result) {
             	if(result.status) {
@@ -247,14 +252,14 @@ var addOpenAccount = {
 		});
 	},
 	deleteAccountInf:function(){
-		var orderListId = $(this).attr('orderListId');
+		var puId = $(this).attr('accountInfPuid');
 		Helper.confirm("您确定删除该用户信息？",function(){
 			$.ajax({								  
 				url: Helper.getRootPath() + '/speaccount/batch/deleteAccountInf.do',
 				type: 'post',
 				dataType : "json",
 				data: {
-					"orderListId": orderListId
+					"puId": puId
 				},
 				success: function (result) {
 					if(result.status) {

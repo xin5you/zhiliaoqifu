@@ -1,5 +1,6 @@
 package com.cn.thinkx.oms.specialAccount.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,13 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.cn.thinkx.oms.common.util.OmsEnum.BatchOrderStat;
 import com.cn.thinkx.oms.specialAccount.mapper.SpeAccountBatchOrderListMapper;
 import com.cn.thinkx.oms.specialAccount.mapper.SpeAccountBatchOrderMapper;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList;
+import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
+import com.cn.thinkx.oms.specialAccount.service.CompanyInfService;
 import com.cn.thinkx.oms.specialAccount.service.SpeAccountBatchOrderListService;
 import com.cn.thinkx.oms.sys.model.User;
 import com.ebeijia.zl.common.utils.constants.Constants;
@@ -31,6 +37,17 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 	@Autowired
 	private SpeAccountBatchOrderMapper speAccountBatchOrderMapper;
 	
+	@Autowired
+	@Qualifier("companyInfService")
+	private CompanyInfService companyInfService;
+	
+	@Autowired
+	@Qualifier("billingTypeInfService")
+	private BillingTypeInfService billingTypeInfService;
+	
+	@Autowired
+	@Qualifier("jedisClusterUtils")
+	private JedisClusterUtils jedisClusterUtils;
 
 	@Override
 	public List<SpeAccountBatchOrderList> getSpeAccountBatchOrderListByOrderId(String orderId) { 
@@ -48,12 +65,12 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 		List<SpeAccountBatchOrderList> list = getSpeAccountBatchOrderListByOrderId(orderId);
 		PageInfo<SpeAccountBatchOrderList> page = null;
 		if (list != null) {
-			list.forEach(batchOrderList ->{
+			for (SpeAccountBatchOrderList batchOrderList : list) {
 				batchOrderList.setOrderStat(BatchOrderStat.findStat(batchOrderList.getOrderStat()));
 				if(!StringUtil.isEmpty(batchOrderList.getAmount())){
 					batchOrderList.setAmount(NumberUtils.RMBCentToYuan(batchOrderList.getAmount()));
 				}
-			});
+			}
 			page = new PageInfo<SpeAccountBatchOrderList>(list);
 		}
 		return page;
@@ -66,26 +83,12 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 		batchOrder.setUpdateUser(user.getId());
 		batchOrder.setUpdateTime(System.currentTimeMillis());
 		speAccountBatchOrderMapper.updateSpeAccountBatchOrder(batchOrder);
-		/*batchOrder.setOrderType(BatchOrderType.BatchOrderType_100.getCode());
-		batchOrder.setOrderDate(System.currentTimeMillis());
-		batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-		batchOrder.setCreateTime(System.currentTimeMillis());
-		batchOrder.setCreateUser(user.getId());
-		int i = speAccountBatchOrderMapper.addSpeAccountBatchOrder(batchOrder);
-		if (i < 1) {
-			return 0;
-		}*/
 		orderList.setOrderListId(UUID.randomUUID().toString());
-		orderList.setOrderId(batchOrder.getOrderId());
 		orderList.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
 		orderList.setCreateUser(user.getId());
 		orderList.setUpdateUser(user.getId());
 		orderList.setCreateTime(System.currentTimeMillis());
 		orderList.setUpdateTime(System.currentTimeMillis());
-		/*SpeAccountBatchOrder bo = new SpeAccountBatchOrder();
-		bo.setOrderId(orderList.getOrderId());
-		bo.setUpdateTime(System.currentTimeMillis());
-		speAccountBatchOrderMapper.updateSpeAccountBatchOrder(bo);*/
 		return speAccountBatchOrderListMapper.addOrderList(orderList);
 	}
 
@@ -125,6 +128,16 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 	@Override
 	public int updateSpeAccountBatchOrderListByList(List<SpeAccountBatchOrderList> list) {
 		return speAccountBatchOrderListMapper.updateSpeAccountBatchOrderListByList(list);
+	}
+
+	@Override
+	public LinkedList<SpeAccountBatchOrderList> getRedisBatchOrderList(String bathOpen) {
+		String getData = jedisClusterUtils.get(bathOpen); // 从缓存钟获取信息
+		LinkedList<SpeAccountBatchOrderList> orderList = null;
+		if (getData != null) {
+			orderList = new LinkedList(JSONObject.parseArray(getData, SpeAccountBatchOrderList.class));
+		}
+		return orderList;
 	}
 
 }

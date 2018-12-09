@@ -7,6 +7,13 @@ var addRecharge = {
 		addRecharge.initEvent();
 		addRecharge.initTip();
 	},
+	initEvent:function(){
+		$('.btn-recharge-list').on('click', addRecharge.loadRechargeListModal);
+		$('.btn-addRecharge').on('click', addRecharge.loadAddRechargeModal);
+		$('.btn-mould-download').on('click', addRecharge.loadMouldDownload);
+		$('.btn-submit').on('click', addRecharge.addAccountInf);
+		$('.btn-delete').on('click', addRecharge.deleteAccountInf);
+	},
 	initTip:function(){
 		var ttip_validator = $('.form_validation_tip').validate({
 
@@ -117,13 +124,7 @@ var addRecharge = {
         
 		});
 	},
-	initEvent:function(){
-		$('.btn-recharge-list').on('click', addRecharge.loadRechargeListModal);
-		$('.btn-addRecharge').on('click', addRecharge.loadAddRechargeModal);
-		$('.btn-mould-download').on('click', addRecharge.loadMouldDownload);
-		$('.btn-submit').on('click', addRecharge.addAccountInf);
-		$('.btn-delete').on('click', addRecharge.deleteAccountInf);
-	},
+	
 	loadRechargeListModal:function(){
 		$('#rechargeListModal').modal({
 			backdrop : "static"
@@ -147,10 +148,10 @@ var addRecharge = {
             url: Helper.getRootPath() + '/speaccount/batchRecharge/addRechargeCommit.do', // 需要提交的 url
             dataType: 'json',
             data: {
-            	"companyName":$("#companyName").val(),
             	"orderName":$("#orderName").val(),
-            	"accountType":$("#accountType").val(),
-            	"bizType":$("#bizType").val()
+            	"companyId":companyId,
+                "accountType":accountType,
+                "billingTypes":billingTypes
 			},
 			success: function(data){
 				if(data.status) {
@@ -190,7 +191,6 @@ var addRecharge = {
 		var name = $("#name").val();
 		var phone = $("#phone").val();
 		var card = $("#card").val();
-		var companydCode = $("#companydCode").val();
 		var money = $("#money").val();
 		var re = /^1\d{10}$/;
 		if(name==''){
@@ -213,10 +213,6 @@ var addRecharge = {
 			Helper.alert("请输入有效的身份证");
     		return false;
 		}
-		if(companydCode==''){
-			Helper.alert("请输入企业代码");
-    		return false;
-		}
 		if(money==''){
 			Helper.alert("请输入充值金额");
     		return false;
@@ -233,7 +229,6 @@ var addRecharge = {
                 "name" : name, 
                 "phone" : phone, 
                 "card" : card,
-                "companydCode":companydCode,
                 "money":money
             },
             success: function (result) {
@@ -251,14 +246,14 @@ var addRecharge = {
 	
 	},
 	deleteAccountInf:function(){
-		var puid = $(this).attr('accountInfPuid');
+		var puId = $(this).attr('accountInfPuid');
 		Helper.confirm("您确定删除该用户信息？",function(){
 			$.ajax({								  
 				url: Helper.getRootPath() + '/speaccount/batchRecharge/deleteAccountInf.do',
 				type: 'post',
 				dataType : "json",
 				data: {
-					"puid": puid
+					"puId": puId
 				},
 				success: function (result) {
 					if(result.status) {

@@ -3,18 +3,13 @@ package com.cn.thinkx.oms.specialAccount.util;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList;
 
 public class PagePersonUtil {
 	
-	@Autowired
+	/*@Autowired
 	@Qualifier("jedisClusterUtils")
-	private static JedisClusterUtils jedisClusterUtils;
+	private static JedisClusterUtils jedisClusterUtils;*/
 	
 	public static List<SpeAccountBatchOrderList> getPersonInfPageList(int startNum,int pageSize,LinkedList<SpeAccountBatchOrderList> personInfList){
 		List<SpeAccountBatchOrderList> list = new LinkedList<SpeAccountBatchOrderList>();
@@ -33,12 +28,12 @@ public class PagePersonUtil {
 		return list;
 	}
 	
-	public static LinkedList<SpeAccountBatchOrderList> getRedisBatchOrderList(String bathOpen){
+	/*public static LinkedList<SpeAccountBatchOrderList> getRedisBatchOrderList(String bathOpen){
 		String getData = jedisClusterUtils.get(bathOpen); // 从缓存钟获取信息
 		LinkedList<SpeAccountBatchOrderList> orderList = null;
 		if (getData != null) {
 			orderList = new LinkedList(JSONObject.parseArray(getData, SpeAccountBatchOrderList.class));
 		}
 		return orderList;
-	}
+	}*/
 }

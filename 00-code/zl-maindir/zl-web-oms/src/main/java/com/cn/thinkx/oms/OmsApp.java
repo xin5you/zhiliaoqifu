@@ -31,7 +31,7 @@ import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @ComponentScan("com.cn.thinkx")
 @SpringBootApplication
-@EnableDubboConfiguration
+//@EnableDubboConfiguration
 public class OmsApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	@Autowired

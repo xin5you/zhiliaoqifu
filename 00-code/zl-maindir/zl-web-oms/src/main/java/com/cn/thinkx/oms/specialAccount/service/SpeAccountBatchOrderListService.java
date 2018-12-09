@@ -1,5 +1,6 @@
 package com.cn.thinkx.oms.specialAccount.service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,4 +77,6 @@ public interface SpeAccountBatchOrderListService {
 	 * @return
 	 */
 	SpeAccountBatchOrderList getSpeAccountBatchOrderListByOrderListId(String orderListId);
+	
+	LinkedList<SpeAccountBatchOrderList> getRedisBatchOrderList(String bathOpen);
 }

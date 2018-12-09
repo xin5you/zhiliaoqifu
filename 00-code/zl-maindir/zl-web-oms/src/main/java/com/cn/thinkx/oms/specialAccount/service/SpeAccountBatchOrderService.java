@@ -73,7 +73,7 @@ public interface SpeAccountBatchOrderService {
 	 * @param orderId 订单
 	 * @param user 用户 
 	 */
-	void batchSpeAccountBatchOpenAccountITF(String orderId, User user,String commitStat);
+	int batchSpeAccountBatchOpenAccountITF(String orderId, User user,String commitStat);
 	
 	
 	/**
@@ -82,5 +82,7 @@ public interface SpeAccountBatchOrderService {
 	 * @param user
 	 * @param commitStat
 	 */
-	void batchSpeAccountRechargeITF(String orderId, User user,String commitStat);
+	int batchSpeAccountRechargeITF(String orderId, User user,String commitStat);
+	
+	int deleteOpenAccountCommit(String orderId, User user);
 }

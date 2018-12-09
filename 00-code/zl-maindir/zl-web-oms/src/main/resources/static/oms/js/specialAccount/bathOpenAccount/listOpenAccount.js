@@ -99,6 +99,7 @@ var listOpenAccount = {
 	            		location.href=Helper.getRootPath() + '/speaccount/batch/listOpenAccount.do?operStatus=1';
 	            	}else{
 	            		Helper.alter(result.msg);
+	            		return false;
 	            	}
 	            },
 	            error:function(){

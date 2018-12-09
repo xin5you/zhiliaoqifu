@@ -75,7 +75,6 @@
 				               <th>姓名</th>
 				               <th>身份证号码</th>
 				               <th>手机号</th>
-				               <th>企业代码</th>
 				               <th>状态</th>
 				               <th>备注</th>
 				             </tr>
@@ -87,7 +86,6 @@
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
                                     <td>${entity.phoneNo}</td>
-                                    <td>${entity.companydCode}</td>
 				                    <td>${entity.orderStat}</td>
 				                    <td>${entity.remarks}</td>
 				                 </tr>

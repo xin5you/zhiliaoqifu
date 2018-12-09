@@ -32,7 +32,7 @@
 						<div class="pull-right">
 							<button type="submit" class="btn btn-search">查 询</button>
 							<button type="button" class="btn btn-inverse btn-reset">重 置</button>
-							<button type="button" class="btn btn-primary btn-add">新 增</button>
+							<!-- <button type="button" class="btn btn-primary btn-add">新 增</button> -->
 <%-- 							<sec:authorize access="hasRole('ROLE_BILLING_TYPE_INTOEDIT')">
 								
 							</sec:authorize> --%>
@@ -60,7 +60,7 @@
 									<td>${b.remarks}</td>
 									<td>
 										<a bId="${b.bId}" title="编辑" href="#" class="btn-mini btn-edit"><i class="icon-edit"></i></a>
-										<a bId="${b.bId}" title="删除" href="#" class="btn-mini btn-delete"><i class="icon-remove"></i></a> 
+										<%-- <a bId="${b.bId}" title="删除" href="#" class="btn-mini btn-delete"><i class="icon-remove"></i></a>  --%>
 									</td>
 									<%-- <td>
 										<sec:authorize access="hasRole('ROLE_BILLING_TYPE_INTOEDIT')">

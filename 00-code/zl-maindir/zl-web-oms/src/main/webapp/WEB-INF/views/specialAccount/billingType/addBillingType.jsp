@@ -46,7 +46,7 @@
 							             <div class="controls">
 							             	<select id="code" name="code" class="chzn_a span6">
 								                 <c:forEach var="c" items="${billingTypeCodeList}" varStatus="st">
-													<option value="${c.code}" >${c.value }</option>
+													<option value="${c.bId}" >${c.name }</option>
 												 </c:forEach>
 							                 </select>
 							                 <span class="help-block"></span>
