@@ -4,7 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
-    <link rel="stylesheet" href="${ctx}/resource/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
+    <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="${ctx}/static/oms/js/specialAccount/batchRecharge/listRecharge.js"></script>
@@ -45,24 +45,33 @@
                                     </c:forEach>
                                     </select>
 		                       	</div>
+		                       	<div class="input-prepend">
+		           			   	   	<span class="add-on">企业名称:</span>
+		           			   	   	<select name="companyId" id="companyId" class="input-medium">
+                                    <option value="">--请选择--</option>
+                                    <c:forEach var="c" items="${companyList}" varStatus="sta">
+                                        <option value="${c.companyId}"  <c:if test="${c.companyId==order.companyId}">selected</c:if>   >${c.name }</option>
+                                    </c:forEach>
+                                    </select>
+		                       	</div>
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search"> 查 询 </button>
 								<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
-								<sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_INTOADD')">
+								<%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_INTOADD')"> --%>
 									<button type="button" class="btn btn-primary btn-add">新增</button>
-								</sec:authorize>
+								<%-- </sec:authorize> --%>
 							</div>
 						  </div>
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
 								<div class="input-prepend">
-		           			   	   	<span class="add-on">业务类型:</span>
-		           			   	   	<select name="bizType" id="bizType" class="input-medium">
+		           			   	   	<span class="add-on">账户类型:</span>
+		           			   	   	<select name="accountType" id="accountType" class="input-medium">
                                     <option value="">--请选择--</option>
-                                    <c:forEach var="rechaege" items="${rechargeTypeList}" varStatus="sta">
-										<option value="${rechaege.code}"   >${rechaege.type}</option>
-									</c:forEach>
+                                    <c:forEach var="c" items="${accountTypeList}" varStatus="sta">
+                                        <option value="${c.code}"  <c:if test="${c.code==order.accountType}">selected</c:if>   >${c.value }</option>
+                                    </c:forEach>
                                     </select>
 		                       	</div>
 	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
@@ -81,9 +90,8 @@
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 				             <tr>
-				               <th>订单号码</th>
+				               <th>订单号</th>
 				               <th>订单名称</th>
-				               <th>业务类型</th>
 				               <th>订单数量</th>
 				               <th>订单总金额</th>
 				               <th>订单状态</th>
@@ -91,7 +99,6 @@
 				               <th>创建时间</th>
                                <th>修改人</th>
                                <th>修改时间</th>
-<!--                                <th>开票状态</th> -->
 				               <th>操作</th>
 				             </tr>
 				             </thead>
@@ -100,34 +107,41 @@
                                  <tr>
                                     <td>${entity.orderId }</td>
                                     <td>${entity.orderName }</td>
-                                    <td>${entity.bizType }</td>
                                     <td>${entity.orderCount }</td>
                                     <td>${entity.sumAmount }</td>
                                     <td>${entity.orderStat }</td>
                                     <td>${entity.createUser }</td>
-                                    <td><fmt:formatDate value="${entity.createTime }" pattern="yyyy-MM-dd  HH:mm:ss"/></td>
+                                    <td>
+                                    	<jsp:useBean id="createTime" class="java.util.Date"/>
+										<jsp:setProperty name="createTime" property="time" value="${entity.createTime}"/>
+										<fmt:formatDate value="${createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                                    </td>
                                     <td>${entity.updateUser }</td>
-                                    <td><fmt:formatDate value="${entity.updateTime }" pattern="yyyy-MM-dd  HH:mm:ss"/></td>
+                                    <td>
+                                    	<jsp:useBean id="updateTime" class="java.util.Date"/>
+										<jsp:setProperty name="updateTime" property="time" value="${entity.updateTime}"/>
+										<fmt:formatDate value="${updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                                    </td>
                                     <td style = "text-align: left;">
                                     <c:if test="${entity.orderStat=='草稿' }">
-                                   <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERCOMMIT')">
+                                   <%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERCOMMIT')"> --%>
                                     	<a orderId="${entity.orderId }" title="提交" class="btn-mini btn-submit" href="#"><i class="icon-ok"></i></a>
-                                   </sec:authorize>
-                                   <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_INTOEDIT')">
+                                   <%-- </sec:authorize> --%>
+                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_INTOEDIT')"> --%>
                                     	<a orderId="${entity.orderId }" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-                                   </sec:authorize>
-                                   <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_DELETE')">
+                                   <%-- </sec:authorize> --%>
+                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_DELETE')"> --%>
                                    		<a orderId="${entity.orderId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                                   </sec:authorize>
+                                   <%-- </sec:authorize> --%>
                                     </c:if>
-                                    <c:if test="${entity.orderStat=='部分成功' }">
+                                   <%--  <c:if test="${entity.orderStat=='部分成功' }">
                                    <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERAGAINCOMMIT')">
                                     	<a orderId="${entity.orderId }" title="重新提交" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
                                    </sec:authorize>
-                                    </c:if>
-                                   <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_VIEW')">
+                                    </c:if> --%>
+                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_VIEW')"> --%>
                                     	<a orderId="${entity.orderId }" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-                                   </sec:authorize>
+                                   <%-- </sec:authorize> --%>
                                     </td>
                                  </tr>
                              </c:forEach>

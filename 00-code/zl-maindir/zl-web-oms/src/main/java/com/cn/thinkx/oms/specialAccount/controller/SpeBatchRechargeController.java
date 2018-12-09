@@ -1,6 +1,7 @@
 package com.cn.thinkx.oms.specialAccount.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -24,16 +25,18 @@ import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.cn.thinkx.oms.common.util.OmsEnum.BatchOrderStat;
 import com.cn.thinkx.oms.common.util.OmsEnum.BatchOrderType;
 import com.cn.thinkx.oms.specialAccount.model.BillingTypeInf;
+import com.cn.thinkx.oms.specialAccount.model.CompanyInf;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList;
 import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
+import com.cn.thinkx.oms.specialAccount.service.CompanyInfService;
 import com.cn.thinkx.oms.specialAccount.service.SpeAccountBatchOrderListService;
 import com.cn.thinkx.oms.specialAccount.service.SpeAccountBatchOrderService;
 import com.cn.thinkx.oms.specialAccount.util.OrderConstants;
 import com.cn.thinkx.oms.specialAccount.util.PagePersonUtil;
 import com.cn.thinkx.oms.sys.model.User;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.Page;
@@ -57,6 +60,10 @@ public class SpeBatchRechargeController {
 	@Autowired
 	@Qualifier("jedisClusterUtils")
 	private JedisClusterUtils jedisClusterUtils;
+	
+	@Autowired
+	@Qualifier("companyInfService")
+	private CompanyInfService companyInfService;
 
 	/**
 	 * 批量充值列表
@@ -77,13 +84,15 @@ public class SpeBatchRechargeController {
 		try {
 			pageList = speAccountBatchOrderService.getSpeAccountBatchOrderPage(startNum, pageSize, order, req);
 		} catch (Exception e) {
-			logger.error("## 查询列表信息出错", e);
+			logger.error("## 查询批量充值列表信息出错", e);
 		}
+		List<CompanyInf> companyList = companyInfService.getCompanyInfList(new CompanyInf());
 		mv.addObject("order", order);
 		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
-		mv.addObject("rechargeTypeList", SpecAccountTypeEnum.values());
+		mv.addObject("accountTypeList", UserType.values());
+		mv.addObject("companyList", companyList);
 		return mv;
 	}
 
@@ -98,14 +107,15 @@ public class SpeBatchRechargeController {
 	public ModelAndView intoAddRecharge(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("specialAccount/batchRecharge/addRecharge");
 		BigDecimal sumMoney = BigDecimal.ZERO;
-		BillingTypeInf billing = new BillingTypeInf();
-		billing.setCode(SpecAccountTypeEnum.B1.getCode());
-		List<BillingTypeInf> billingList = billingTypeInfService.getBillingTypeInfList(billing);
-		LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+		List<CompanyInf> companyList = companyInfService.getCompanyInfList(new CompanyInf());
+		List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
+		
+		LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+//		LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);	
 		Page<SpeAccountBatchOrderList> page = new Page<>(startNum, pageSize, false);
-		if (orderList != null) {
+		if (orderList != null && orderList.size() >= 1) {
 			double sum = orderList.stream().mapToDouble(o -> Double.valueOf(o.getAmount())).summaryStatistics().getSum();
 			sumMoney = sumMoney.add(BigDecimal.valueOf(sum));
 			page.setTotal(orderList.size());
@@ -120,8 +130,9 @@ public class SpeBatchRechargeController {
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("count", pageList.getTotal());
 		mv.addObject("sumMoney", sumMoney.doubleValue());
-		mv.addObject("billingList", billingList);
-		mv.addObject("rechargeTypeList", SpecAccountTypeEnum.values());
+		mv.addObject("accountTypeList", UserType.values());
+		mv.addObject("companyList", companyList);
+		mv.addObject("billingTypeList", billingTypeList);
 		return mv;
 	}
 
@@ -138,22 +149,33 @@ public class SpeBatchRechargeController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.addAttribute("status", Boolean.TRUE);
 		int i = 0;
-		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
-		LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
-		if (orderList == null) {
+		LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+//		LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+		if (orderList == null || orderList.size() < 1) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "没有添加任何数据！！！");
 			return resultMap;
 		}
-		String accountType = StringUtil.nullToString(req.getParameter("accountType"));
-		String bizType = StringUtil.nullToString(req.getParameter("bizType"));
+		String [] billingTypes=req.getParameterValues("billingTypes[]");
+		String bizType = "";
+		if (billingTypes != null && billingTypes.length > 0) {
+			for (String s : billingTypes) {
+				bizType += s + ",";
+			}
+//			bizType = bizType.substring(0, bizType.length() - 1);
+		}
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		order.setCompanyId(StringUtil.nullToString(req.getParameter("companyId")));
 		
+		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
+		order.setOrderId(UUID.randomUUID().toString());
 		order.setOrderName(StringUtil.nullToString(req.getParameter("orderName")));
+		order.setCompanyId(StringUtil.nullToString(req.getParameter("companyId")));
+		order.setAccountType(StringUtil.nullToString(req.getParameter("accountType")));
+		order.setBizType(bizType);
 		order.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
 		order.setOrderType(BatchOrderType.BatchOrderType_300.getCode());
+		order.setOrderDate(System.currentTimeMillis());
 		order.setCreateUser(user.getId().toString());
 		order.setUpdateUser(user.getId().toString());
 		order.setCreateTime(System.currentTimeMillis());
@@ -184,11 +206,6 @@ public class SpeBatchRechargeController {
 		String orderId = req.getParameter("orderId");
 		SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
-		if (order.getSumAmount() == null || "".equals(order.getSumAmount())) {
-			order.setSumAmount(NumberUtils.RMBCentToYuan("0"));
-		} else {
-			order.setSumAmount(NumberUtils.RMBCentToYuan(order.getSumAmount()));
-		}
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<SpeAccountBatchOrderList> pageList = speAccountBatchOrderListService.getSpeAccountBatchOrderListPage(startNum, pageSize, orderId);
@@ -211,10 +228,10 @@ public class SpeBatchRechargeController {
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
-		if (order.getSumAmount() == null || "".equals(order.getSumAmount())) {
-			order.setSumAmount(NumberUtils.RMBCentToYuan("0"));
-		} else {
-			order.setSumAmount(NumberUtils.RMBCentToYuan(order.getSumAmount()));
+		List<String> bizTypeList = new ArrayList<>();
+		for (String str : order.getBizType().split(",")) {
+			BillingTypeInf billingTypeInf = billingTypeInfService.getBillingTypeInfById(str);
+			bizTypeList.add(billingTypeInf.getbName());
 		}
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
@@ -222,6 +239,7 @@ public class SpeBatchRechargeController {
 		mv.addObject("order", order);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
+		mv.addObject("billingTypeList", bizTypeList);
 		return mv;
 	}
 
@@ -235,18 +253,22 @@ public class SpeBatchRechargeController {
 	@RequestMapping(value = "/deleteRechargeCommit")
 	@ResponseBody
 	public ModelMap deleteRechargeCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap map = new ModelMap();
-		map.put("status", Boolean.TRUE);
+		ModelMap resultMap = new ModelMap();
+		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		try {
-			SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderById(orderId);
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_20.getCode());
-			speAccountBatchOrderService.updateSpeAccountBatchOrder(order);
+			int i = speAccountBatchOrderService.deleteOpenAccountCommit(orderId, user);
+			if (i == 0) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除批量充值订单失败");
+			}
 		} catch (Exception e) {
-			map.put("status", Boolean.FALSE);
-			logger.error("## 删除批量充值订单,订单号：[{}]", orderId, e);
+			resultMap.put("status", Boolean.FALSE);
+			logger.error("## 删除批量充值订单出错,订单号：[{}]", orderId, e);
 		}
-		return map;
+		return resultMap;
 	}
 
 	/**
@@ -267,7 +289,12 @@ public class SpeBatchRechargeController {
 		try {
 			SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderById(orderId);
 			if (BatchOrderStat.BatchOrderStat_10.getCode().equals(order.getOrderStat())) {
-				speAccountBatchOrderService.batchSpeAccountRechargeITF(orderId, user, BatchOrderStat.BatchOrderStat_10.getCode());
+				int i = speAccountBatchOrderService.batchSpeAccountRechargeITF(orderId, user, BatchOrderStat.BatchOrderStat_10.getCode());
+				if (i == 0) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "提交批量开户订单失败");
+					return resultMap;
+				}
 			}
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
@@ -331,7 +358,7 @@ public class SpeBatchRechargeController {
 			orderList.setCreateTime(System.currentTimeMillis());
 			orderList.setUpdateTime(System.currentTimeMillis());
 			List<SpeAccountBatchOrderList> orderList2 = speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(orderList);
-			if (orderList2 != null || orderList2.size() >= 1) {
+			if (orderList2 != null && orderList2.size() > 0) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "电话号码重复！！！");
 				return resultMap;
@@ -383,29 +410,31 @@ public class SpeBatchRechargeController {
 			String phone = StringUtil.nullToString(req.getParameter("phone"));
 			String money = StringUtil.nullToString(req.getParameter("money"));
 			SpeAccountBatchOrderList order = new SpeAccountBatchOrderList();
-			order.setPuid(UUID.randomUUID().toString().replace("-", ""));
+			order.setPuId(UUID.randomUUID().toString().replace("-", ""));
 			order.setUserName(StringUtil.nullToString(req.getParameter("name")));
 			order.setUserCardNo(StringUtil.nullToString(req.getParameter("card")));
 			order.setPhoneNo(phone);
 			order.setAmount(NumberUtils.RMBCentToYuan(NumberUtils.RMBYuanToCent(money)));
-			LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
-			if (orderList == null) {
-				orderList = new LinkedList<SpeAccountBatchOrderList>();
-			}
-			orderList.forEach(o ->{
-				if (o.getPhoneNo().equals(phone)) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "电话号码重复！！！");
-					return;
-				}
-			});
 			
+			LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+//			LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+			if (orderList != null && orderList.size() >= 1) {
+				orderList.forEach(o ->{
+					if (o.getPhoneNo().equals(phone)) {
+						resultMap.put("status", Boolean.FALSE);
+						resultMap.put("msg", "电话号码重复！！！");
+						return;
+					}
+				});
+			} else {
+				orderList = new LinkedList<>();
+			}
 			orderList.addFirst(order);
 			jedisClusterUtils.setex(OrderConstants.speBathRechargeSession, JSON.toJSON(orderList).toString(), 1800); // 设置有效时间30分钟
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "系统故障，请稍后再试");
-			logger.error("## 添加充值用户信息出错", e);
+			logger.error("## 批量充值新增，添加充值名单出错！", e);
 		}
 		return resultMap;
 	}
@@ -423,19 +452,18 @@ public class SpeBatchRechargeController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.put("status", Boolean.TRUE);
 		try {
-			String puid = req.getParameter("puid");
-			LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
-			orderList.forEach(order ->{
-				if (order.getPuid().equals(puid)) {
-					orderList.remove(order);
-					return;
+			String puId = req.getParameter("puId");
+			LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
+			for (SpeAccountBatchOrderList o : orderList) {
+				if (o.getPuId().equals(puId)) {
+					orderList.remove(o);
 				}
-			});
+			}
 			jedisClusterUtils.setex(OrderConstants.speBathRechargeSession, JSON.toJSON(orderList).toString(), 1800); // 设置有效时间30分钟
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "系统故障，请稍后再试");
-			logger.error("## 删除批量充值用户信息", e);
+			logger.error("## 批量充值新增，删除充值用户名单出错", e);
 		}
 		return resultMap;
 	}

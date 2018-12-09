@@ -46,7 +46,15 @@
                                     </select>
 		                       	</div>
 		                       	
-							 
+							 	<div class="input-prepend">
+		           			   	   	<span class="add-on">企业名称:</span>
+		           			   	   	<select name="companyId" id="companyId" class="input-medium">
+                                    <option value="">--请选择--</option>
+                                    <c:forEach var="c" items="${companyList}" varStatus="sta">
+                                        <option value="${c.companyId}"  <c:if test="${c.companyId==order.companyId}">selected</c:if>   >${c.name }</option>
+                                    </c:forEach>
+                                    </select>
+		                       	</div>
 							<div class="pull-right">
 								
 								<button type="submit" class="btn btn-search"> 查 询 </button>
@@ -60,6 +68,15 @@
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
+								<div class="input-prepend">
+		           			   	   	<span class="add-on">账户类型:</span>
+		           			   	   	<select name="accountType" id="accountType" class="input-medium">
+                                    <option value="">--请选择--</option>
+                                    <c:forEach var="c" items="${accountTypeList}" varStatus="sta">
+                                        <option value="${c.code}"  <c:if test="${c.code==order.accountType}">selected</c:if>   >${c.value }</option>
+                                    </c:forEach>
+                                    </select>
+		                       	</div>
 	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
 	                                <span class="add-on">开始时间</span>
 	                                <input class="input-medium" id="startTime" name="startTime" readonly="readonly" type="text" value="${order.startTime }" />
@@ -80,6 +97,7 @@
 				               <th>订单名称</th>
 				               <th>订单数量</th>
 				               <th>订单状态</th>
+				               <th>账户类型</th>
 				               <th>企业名称</th>
 				               <th>创建人</th>
 				               <th>创建时间</th>
@@ -95,6 +113,7 @@
 				                 	<td>${entity.orderName }</td>
 									<td>${entity.orderCount }</td>
 									<td>${entity.orderStat }</td>
+									<td>${entity.accountType }</td>
 									<td>${entity.companyName }</td>
 				                    <td>${entity.createUser }</td>
 				                    <td>
@@ -120,11 +139,11 @@
 												<a orderId="${entity.orderId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 											<%-- </sec:authorize> --%>
 	                                    </c:if>
-	                                    <c:if test="${entity.orderStat=='处理失败' }">
-		                                    <%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERAGAINCOMMIT')"> --%>
+	                                    <%-- <c:if test="${entity.orderStat=='部分成功' }">
+		                                    <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERAGAINCOMMIT')">
 		                                    	<a orderId="${entity.orderId }" title="重新提交" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
-		                                    <%-- </sec:authorize> --%>
-	                                    </c:if>
+		                                    </sec:authorize>
+	                                    </c:if> --%>
 										<%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_VIEW')"> --%>
 											<a orderId="${entity.orderId }" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 										<%-- </sec:authorize> --%>

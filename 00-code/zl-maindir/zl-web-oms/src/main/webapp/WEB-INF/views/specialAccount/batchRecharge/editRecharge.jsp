@@ -4,7 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
-    <link rel="stylesheet" href="${ctx}/resource/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
+    <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="${ctx}/static/oms/js/specialAccount/batchRecharge/editRecharge.js"></script>
@@ -61,7 +61,6 @@
 				               <th>姓名</th>
 				               <th>身份证号码</th>
 				               <th>手机号</th>
-				               <th>企业代码</th>
 				               <th>金额</th>
 				               <th>操作</th>
 				             </tr>
@@ -73,12 +72,11 @@
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
                                     <td>${entity.phoneNo}</td>
-                                    <td>${entity.companydCode}</td>
                                     <td>${entity.amount}</td>
                                     <td>
-                                   <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERLISTDELETE')">
+                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERLISTDELETE')"> --%>
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                                   </sec:authorize>
+                                   <%-- </sec:authorize> --%>
                                     </td>
                                  </tr>
                              </c:forEach>
@@ -122,13 +120,6 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">企业代码：</label>
-                            <div class="controls">
-                                <input type="text" class="span3" id="companydCode" name ="companydCode" />
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="control-group">
                             <label class="control-label">金 额：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="money" />
@@ -139,9 +130,9 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-            <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERLISTCOMMIT')">
+            <%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERLISTCOMMIT')"> --%>
                 <button class="btn btn-primary btn-submit">确 定  </button>
-            </sec:authorize>
+            <%-- </sec:authorize> --%>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>   

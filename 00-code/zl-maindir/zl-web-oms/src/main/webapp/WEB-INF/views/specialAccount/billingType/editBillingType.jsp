@@ -38,11 +38,11 @@
 							             </div>
 							             </div>
 							     		<div class="control-group formSep">
-							             <label class="control-label">代码</label>
+							             <label class="control-label">账户类型</label>
 							             <div class="controls">
 							                 <select id="code" name="code" class="chzn_a span6">
 								                 <c:forEach var="c" items="${billingTypeCodeList}" varStatus="st">
-													<option value="${c.code}" <c:if test="${c.code==billingType.code }">selected="selected"</c:if>>${c.value }</option>
+													<option value="${c.code}" <c:if test="${c.code==billingType.code }">selected="selected"</c:if>>${c.name }</option>
 												 </c:forEach>
 							                 </select>
 							                 <span class="help-block"></span>

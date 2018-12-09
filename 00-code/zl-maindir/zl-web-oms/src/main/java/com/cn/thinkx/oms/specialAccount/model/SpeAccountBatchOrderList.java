@@ -9,8 +9,6 @@ public class SpeAccountBatchOrderList extends BaseEntity {
 	private String phoneNo;                         //手机号
 	private String userCardNo;                     //身份证号
 	private String amount;                          //金额
-	private String accountType;						//账户类型（企业级，用户级）
-	private String bizType;							//专项类型（九大类）
 	private String orderStat;                      //订单状态
 	private String orderDesc;                    //订单描述
 	private String resv1;                             //备用字段1
@@ -20,11 +18,11 @@ public class SpeAccountBatchOrderList extends BaseEntity {
 	private String resv5;                             //备用字段5
 	private String resv6;                             //备用字段6
 	
-	private String puid;
+	private String puId;
 	
 	private String companyId;
 	private String orderStat2;
-	
+
 	public String getOrderStat2() {
 		return orderStat2;
 	}
@@ -121,23 +119,10 @@ public class SpeAccountBatchOrderList extends BaseEntity {
 	public void setResv6(String resv6) {
 		this.resv6 = resv6;
 	}
-	public String getPuid() {
-		return puid;
+	public String getPuId() {
+		return puId;
 	}
-	public void setPuid(String puid) {
-		this.puid = puid;
+	public void setPuId(String puId) {
+		this.puId = puId;
 	}
-	public String getAccountType() {
-		return accountType;
-	}
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
-	public String getBizType() {
-		return bizType;
-	}
-	public void setBizType(String bizType) {
-		this.bizType = bizType;
-	}
-	
 }

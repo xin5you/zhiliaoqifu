@@ -4,7 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
-    <link rel="stylesheet" href="${ctx}/resource/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
+    <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="${ctx}/static/oms/js/specialAccount/bathOpenAccount/addOpenAccount.js"></script>
@@ -30,52 +30,50 @@
 						
 						<div class="row-fluid" >
 							 <div class="span12">
-		                       	
-		                       	<div class="control-group formSep">
-		           			   	   	<span class="add-on">订单名称:</span><input id="orderName" name="orderName" type="text" class="input-medium" value="${orderName}"/>
-		                       		<div class="control-group">
-							<label class="control-label">账户类型：</label>
-						    	<div class="controls">
-						        	<select class="form-control span6" id="accountType" name="accountType">
-										<c:forEach var="a" items="${accountTypeList}" varStatus="st">
-											<option value="${a.code}">${a.value }</option>
-										</c:forEach>
-									</select>
-								<span class="help-block"></span>
-							</div>
-						</div>
-                        <div class="control-group">
-							<label class="control-label">企业：</label>
-						    	<div class="controls">
-						        	<select class="form-control span6" id="companyId" name="companyId">
-										<c:forEach var="c" items="${companyList}" varStatus="st">
+							 	<div class="control-group formSep">
+		           			 	<span class="add-on">订单名称：</span><input id="orderName" name="orderName" type="text" class="input-medium" value="${orderName}"/>
+		                       	<span style="padding-left:  150px">
+		                       		<span class="add-on">账户类型：</span>
+                                        <select name="accountType" id="accountType" class="input-medium" style="width: 180px">
+                                        <option value="">--请选择--</option>
+                                        <c:forEach var="a" items="${accountTypeList}" varStatus="st">
+												<option value="${a.code}">${a.value }</option>
+											</c:forEach>
+                                        </select>
+		                       	</span>
+		                       	<span style="padding-left:  150px">
+		                       		<span class="add-on">所属企业：</span>
+                                        <select name="companyId" id="companyId" class="input-medium" style="width: 180px">
+                                        <option value="">--请选择--</option>
+                                        <c:forEach var="c" items="${companyList}" varStatus="st">
 											<option value="${c.companyId}">${c.name }</option>
 										</c:forEach>
-									</select>
-								<span class="help-block"></span>
-							</div>
-						</div>
-						<div class="control-group">
-						             <label class="control-label">需开户项：</label> 
-						             <div class="controls">
-						                  <select multiple class="form-control span6" id="billingTypes" name="billingTypes">
-											 <c:forEach var="b" items="${billingTypeList}" varStatus="st">
-											 		<option value="${b.bId}">${b.bName }</option>
-											 </c:forEach>
-											</select>
-						                 <span class="help-block"></span>
-						             </div>
-						         </div>
+                                        </select>
+		                       	</span>
 		                       	<div class="pull-right">
-                                    <button class="btn btn-primary btn-account-list" type="button">文件导入</button>
-                                    <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
+		                                    <button class="btn btn-primary btn-account-list" type="button">文件导入</button>
+		                                    <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
+	                            		</div>
                             </div>
-		                       	</div>
-							
+						   </div>
 						  </div>
-						</div>
 						<div class="control-group formSep">
-						      <label class="control-label">订单数量:</label>${count}
+						      <table cellpadding="5px" style="width: 100%">
+								<tr>
+									<td>
+										<label class="control-label" style="font-weight: bold;">订单数量：</label>
+						      			<label style="color: red;">${count }</label>
+									</td>
+									<td>
+										<label class="control-label" style="font-weight: bold;">开户类型：</label>
+										<select multiple name="billingTypes" id="billingTypes" class="form-control span4" >
+	                                        <c:forEach var="b" items="${billingTypeList}" varStatus="st">
+												<option value="${b.bId}">${b.bName }</option>
+											</c:forEach>
+                                        </select>
+									</td>
+								</tr>
+							</table>
 						</div>
 				         </br >  
 				         <div>
@@ -101,7 +99,7 @@
 									<td>${entity.userCardNo}</td>
 									<td>${entity.phoneNo}</td>
 				                    <td>
-									<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									<a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -115,9 +113,8 @@
                      <%--  </sec:authorize> --%>
                       <a href="${ctx }/speaccount/batch/listOpenAccount.do"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
+				      </div>
 			   </div>
-	    </div>
-	    
 	    <div id="accountListModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" >
             <div class="modal-header">
                 <button class="close" data-dismiss="modal">&times;</button>

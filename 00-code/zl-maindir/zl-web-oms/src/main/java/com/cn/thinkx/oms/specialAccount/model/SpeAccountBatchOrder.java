@@ -11,6 +11,8 @@ public class SpeAccountBatchOrder extends BaseEntity {
 	private long orderDate;                           //订单日期
 	private String orderStat;                          //订单状态
 	private String companyId;              				//企业ID
+	private String accountType;						//账户类型
+	private String bizType;							//专项类型（九大类）
 	private String resv1;                             //备用字段1
 	private String resv2;                             //备用字段2
 	private String resv3;                             //备用字段3
@@ -18,7 +20,6 @@ public class SpeAccountBatchOrder extends BaseEntity {
 	private String resv5;                             //备用字段5
 	private String resv6;                             //备用字段6
 
-	private String companyName;						//企业名称
 	private String orderCount;                     //订单数量
 	private String sumAmount;                   //总金额
 	private String startTime;                       //开始时间
@@ -27,9 +28,9 @@ public class SpeAccountBatchOrder extends BaseEntity {
 	private String disposeSuccess;             //处理成功
 	private String disposeFail;                   //处理失败
 	
-	
-	private String accountType;
-	private String bizType;
+	private String companyName;						//企业名称
+	private String accountTypeName;
+	private String bizTypeName;
 	
 	public String getAccountType() {
 		return accountType;
@@ -42,6 +43,18 @@ public class SpeAccountBatchOrder extends BaseEntity {
 	}
 	public void setBizType(String bizType) {
 		this.bizType = bizType;
+	}
+	public String getAccountTypeName() {
+		return accountTypeName;
+	}
+	public void setAccountTypeName(String accountTypeName) {
+		this.accountTypeName = accountTypeName;
+	}
+	public String getBizTypeName() {
+		return bizTypeName;
+	}
+	public void setBizTypeName(String bizTypeName) {
+		this.bizTypeName = bizTypeName;
 	}
 	public String getCompanyName() {
 		return companyName;

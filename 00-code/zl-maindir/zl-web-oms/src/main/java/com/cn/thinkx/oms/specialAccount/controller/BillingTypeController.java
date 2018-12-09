@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cn.thinkx.oms.common.util.OmsEnum.BillingTypeCode;
 import com.cn.thinkx.oms.specialAccount.model.BillingTypeInf;
 import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
 import com.cn.thinkx.oms.sys.model.User;
@@ -69,7 +70,7 @@ public class BillingTypeController {
 	@RequestMapping(value = "/intoAddBillingType")
 	public ModelAndView intoAddBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("specialAccount/billingType/addBillingType");
-		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
+		mv.addObject("billingTypeCodeList", BillingTypeCode.values());
 		return mv;
 	}
 	
@@ -101,7 +102,7 @@ public class BillingTypeController {
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfById(bId);
 		mv.addObject("billingType", billingType);
-		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
+		mv.addObject("billingTypeCodeList", BillingTypeCode.values());
 		return mv;
 	}
 	

@@ -2,6 +2,47 @@ package com.cn.thinkx.oms.common.util;
 
 public class OmsEnum {
 	
+	
+	public enum BillingTypeCode{
+		BillingTypeCode_A("A","A类账户"),
+		BillingTypeCode_B("B","B类账户"),
+		BillingTypeCode_C("C","C类账户");
+
+		private String code; 
+		private String name;
+
+		BillingTypeCode(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public static BillingTypeCode findType(String code){
+			for (BillingTypeCode t : BillingTypeCode.values()) {
+				if (t.getCode().contains(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+	
 	/**
 	 * 订单状态
 	 * @author Administrator
@@ -10,8 +51,7 @@ public class OmsEnum {
 	public enum BatchOrderStat{
 		BatchOrderStat_10("10","草稿"),
 		BatchOrderStat_20("20","取消"),
-		BatchOrderStat_30("30","待处理"),
-		BatchOrderStat_40("40","处理中"),
+		BatchOrderStat_30("30","处理中"),
 		BatchOrderStat_00("00","处理成功"),
 		BatchOrderStat_99("99","处理失败");
 

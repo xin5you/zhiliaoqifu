@@ -103,7 +103,7 @@ public class XlsReadFile {
 				Row row = sheet.getRow(rIndex);
 				if (row != null) {
 					order = new SpeAccountBatchOrderList();
-					order.setPuid(UUID.randomUUID().toString().replace("-", ""));
+					order.setPuId(UUID.randomUUID().toString().replace("-", ""));
 					if (row.getCell(0) == null) {
 						orderMap = null;
 						map.addAttribute("status", Boolean.FALSE);

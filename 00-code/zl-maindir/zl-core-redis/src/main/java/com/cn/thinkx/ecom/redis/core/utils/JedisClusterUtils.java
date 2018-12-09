@@ -41,7 +41,7 @@ public class JedisClusterUtils {
 	 * @param key 键
 	 * @return 值
 	 */
-	public  String get(String key) {
+	public String get(String key) {
 		String value = null;
 		try {
 			if (jedisCluster.exists(key)) {

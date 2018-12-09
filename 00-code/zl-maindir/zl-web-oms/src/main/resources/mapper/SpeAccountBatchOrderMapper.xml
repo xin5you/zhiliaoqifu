@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.cn.thinkx.oms.module.specialAccount.mapper.SpeAccountBatchOrderMapper">
+<mapper namespace="com.cn.thinkx.oms.specialAccount.mapper.SpeAccountBatchOrderMapper">
 
 	<sql id="SpeAccountBatchOrderColumns">
 		o.order_id,
@@ -10,6 +10,8 @@
 		o.order_date,
 		o.order_stat,
 		o.company_id,
+		o.account_type,
+		o.biz_type,
 		o.resv1,
 		o.resv2,
 		o.resv3,
@@ -51,8 +53,11 @@
 		<if test="orderStat !=null and orderStat != '' ">
 			and o.order_stat = #{orderStat}
 		</if>
-		<if test="companyName !=null and companyName != '' ">
-			and c.company_Name like '%'|| #{companyName} ||'%'
+		<if test="companyId !=null and companyId != '' ">
+			and o.company_id = #{companyId}
+		</if>
+		<if test="accountType !=null and accountType != '' ">
+			and o.account_type = #{accountType}
 		</if>
 		<if test="startTime !=null and startTime != '' ">
 			and o.create_time &gt;= #{startTime}
@@ -77,7 +82,7 @@
 				from tb_batch_order_list l
 				where l.data_stat = '0'
 				and l.order_id = o.order_id
-				and l.order_stat = '0'
+				and l.order_stat = '30'
 			) as disposeWait,
 			(select count(l.order_list_id)
 				from tb_batch_order_list l
@@ -111,33 +116,55 @@
 	</select>
 
 	<insert id="addSpeAccountBatchOrder" parameterType="SpeAccountBatchOrder">
-		insert into tb_speaccount_batch_order ( 
-			<include refid="SpeAccountBatchOrderColumns" />
+		insert into tb_batch_order ( 
+			order_id,
+			order_name,
+			order_type,
+			order_date,
+			order_stat,
+			company_id,
+			account_type,
+			biz_type,
+			resv1,
+			resv2,
+			resv3,
+			resv4,
+			resv5,
+			resv6,
+			data_stat,
+			remarks,
+			create_user,
+			update_user,
+			create_time,
+			update_time,
+			lock_version
 		) values (
-		#{orderId},
-		#{orderName,jdbcType=VARCHAR},
-		#{orderType,jdbcType=VARCHAR},
-		#{orderDate,jdbcType=BIGINT},
-		#{orderStat,jdbcType=VARCHAR},
-		#{companyId,jdbcType=VARCHAR},
-		#{resv1,jdbcType=VARCHAR},
-		#{resv2,jdbcType=VARCHAR},
-		#{resv3,jdbcType=VARCHAR},
-		#{resv4,jdbcType=VARCHAR},
-		#{resv5,jdbcType=VARCHAR},
-		#{resv6,jdbcType=VARCHAR},
-		'0',
-		#{remarks,jdbcType=VARCHAR},
-		#{createUser,jdbcType=VARCHAR},
-		#{updateUser,jdbcType=VARCHAR},
-		#{createTime,jdbcType=BIGINT},
-		#{updateTime,jdbcType=BIGINT},
-		0
+			#{orderId,jdbcType=VARCHAR},
+			#{orderName,jdbcType=VARCHAR},
+			#{orderType,jdbcType=VARCHAR},
+			#{orderDate,jdbcType=BIGINT},
+			#{orderStat,jdbcType=VARCHAR},
+			#{companyId,jdbcType=VARCHAR},
+			#{accountType,jdbcType=VARCHAR},
+			#{bizType,jdbcType=VARCHAR},
+			#{resv1,jdbcType=VARCHAR},
+			#{resv2,jdbcType=VARCHAR},
+			#{resv3,jdbcType=VARCHAR},
+			#{resv4,jdbcType=VARCHAR},
+			#{resv5,jdbcType=VARCHAR},
+			#{resv6,jdbcType=VARCHAR},
+			'0',
+			#{remarks,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR},
+			#{updateUser,jdbcType=VARCHAR},
+			#{createTime,jdbcType=BIGINT},
+			#{updateTime,jdbcType=BIGINT},
+			0
 		)
 	</insert>
 
 	<update id="updateSpeAccountBatchOrder" parameterType="SpeAccountBatchOrder">
-		update tb_speaccount_batch_order
+		update tb_batch_order
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="orderName != null and orderName != '' ">order_name = #{orderName,jdbcType=VARCHAR},</if>
 			<if test="orderType != null and orderType != '' ">order_type = #{orderType,jdbcType=VARCHAR},</if>
@@ -146,10 +173,12 @@
 			<if test="remarks != null and remarks != '' ">remarks = #{remarks,jdbcType=VARCHAR},</if>
 			<if test="updateUser != null and updateUser != '' ">update_user = #{updateUser,jdbcType=VARCHAR},</if>
 			<if test="companyId != null and companyId != '' ">company_id = #{companyId,jdbcType=VARCHAR},</if>
+			<if test="accountType != null and accountType != '' ">account_type = #{accountType,jdbcType=VARCHAR},</if>
+			<if test="bizType != null and bizType != '' ">biz_type = #{bizType,jdbcType=VARCHAR},</if>
 			update_time = #{updateTime,jdbcType=BIGINT},
 			lock_version = lock_version+1
 		</trim>
-		where order_id = #{orderId,jdbcType=VARCHAR} and lock_version = ${lockVersion}
+		where order_id = #{orderId,jdbcType=VARCHAR}
 	</update>
 
 

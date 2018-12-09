@@ -1,5 +1,6 @@
 package com.cn.thinkx.oms.specialAccount.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -85,8 +86,11 @@ public class SpeBatchOpenAccountController {
 		} catch (Exception e) {
 			logger.error("## 批量开户查询列表信息出错", e);
 		}
+		List<CompanyInf> companyList = companyInfService.getCompanyInfList(new CompanyInf());
 		mv.addObject("order", order);
 		mv.addObject("mapOrderStat", BatchOrderStat.values());
+		mv.addObject("accountTypeList", UserType.values());
+		mv.addObject("companyList", companyList);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
 		return mv;
@@ -106,36 +110,12 @@ public class SpeBatchOpenAccountController {
 		List<CompanyInf> companyList = companyInfService.getCompanyInfList(new CompanyInf());
 		List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
 		
-		/*SpeAccountBatchOrderList order = new SpeAccountBatchOrderList();
-		order.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-//		order.setOrderStat2(BatchOrderStat.BatchOrderStat_30.getCode());
-		LinkedList<SpeAccountBatchOrderList> orderList = (LinkedList<SpeAccountBatchOrderList>) speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(order);
+		LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		Page<SpeAccountBatchOrderList> page = new Page<>(startNum, pageSize, false);
-		if (orderList != null) {
-			page.setTotal(orderList.size());
-			List<SpeAccountBatchOrderList> list = PagePersonUtil.getPersonInfPageList(startNum, pageSize, orderList);
-			list.forEach(o ->{
-				page.add(o);
-			});
-		} else {
-			page.setTotal(0);
-		}
-		PageInfo<SpeAccountBatchOrderList> pageList = new PageInfo<SpeAccountBatchOrderList>(page);
-		mv.addObject("pageInfo", pageList);
-		mv.addObject("count", page.getTotal());*/
-		mv.addObject("accountTypeList", UserType.values());
-		mv.addObject("companyList", companyList);
-		mv.addObject("billingTypeList", billingTypeList);
-		
-		
-		LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
-		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
-		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		Page<SpeAccountBatchOrderList> page = new Page<>(startNum, pageSize, false);
-		if (orderList != null) {
+		if (orderList != null && orderList.size() >= 1) {
 			page.setTotal(orderList.size());
 			List<SpeAccountBatchOrderList> list = PagePersonUtil.getPersonInfPageList(startNum, pageSize, orderList);
 			list.forEach(o ->{
@@ -147,6 +127,9 @@ public class SpeBatchOpenAccountController {
 		PageInfo<SpeAccountBatchOrderList> pageList = new PageInfo<SpeAccountBatchOrderList>(page);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("count", page.getTotal());
+		mv.addObject("accountTypeList", UserType.values());
+		mv.addObject("companyList", companyList);
+		mv.addObject("billingTypeList", billingTypeList);
 		return mv;
 	}
 	
@@ -163,32 +146,37 @@ public class SpeBatchOpenAccountController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.addAttribute("status", Boolean.TRUE);
 		int i = 0;
-		LinkedList<SpeAccountBatchOrderList> orderLists = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
-		/*SpeAccountBatchOrderList orderList = new SpeAccountBatchOrderList();
-		orderList.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-		LinkedList<SpeAccountBatchOrderList> orderLists = (LinkedList<SpeAccountBatchOrderList>) speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(orderList);*/
-		
-		if (orderLists == null) {
+		LinkedList<SpeAccountBatchOrderList> orderLists = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
+		if (orderLists == null || orderLists.size() < 1) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "没有添加任何数据！！！");
 			return resultMap;
 		}
+		String [] billingTypes=req.getParameterValues("billingTypes[]");
+		String bizType = "";
+		if (billingTypes != null && billingTypes.length > 0) {
+			for (String s : billingTypes) {
+				bizType += s + ",";
+			}
+//			bizType = bizType.substring(0, bizType.length() - 1);
+		}
 		
-		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
+		
+		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
 		order.setOrderId(UUID.randomUUID().toString());
 		order.setOrderName(StringUtil.nullToString(req.getParameter("orderName")));
 		order.setCompanyId(StringUtil.nullToString(req.getParameter("companyId")));
+		order.setAccountType(StringUtil.nullToString(req.getParameter("accountType")));
+		order.setBizType(bizType);
 		order.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
 		order.setOrderType(BatchOrderType.BatchOrderType_100.getCode());
+		order.setOrderDate(System.currentTimeMillis());
 		order.setCreateUser(user.getId().toString());
 		order.setCreateTime(System.currentTimeMillis());
 		order.setUpdateUser(user.getId().toString());
 		order.setUpdateTime(System.currentTimeMillis());
-		
-		order.setAccountType(StringUtil.nullToString(req.getParameter("accountType")));
-		order.setBizType(StringUtil.nullToString(req.getParameter("bizType")));
 		try {
 			i = speAccountBatchOrderService.addSpeAccountBatchOrder(order, orderLists);
 			if (i > 0) {
@@ -237,12 +225,18 @@ public class SpeBatchOpenAccountController {
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
+		List<String> bizTypeList = new ArrayList<>();
+		for (String str : order.getBizType().split(",")) {
+			BillingTypeInf billingTypeInf = billingTypeInfService.getBillingTypeInfById(str);
+			bizTypeList.add(billingTypeInf.getbName());
+		}
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<SpeAccountBatchOrderList> pageList = speAccountBatchOrderListService.getSpeAccountBatchOrderListPage(startNum, pageSize, orderId);
 		mv.addObject("order", order);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
+		mv.addObject("billingTypeList", bizTypeList);
 		return mv;
 	}
 
@@ -262,11 +256,11 @@ public class SpeBatchOpenAccountController {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		try {
-			SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderById(orderId);
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_20.getCode());
-			order.setUpdateTime(System.currentTimeMillis());
-			order.setUpdateUser(user.getId());
-			speAccountBatchOrderService.updateSpeAccountBatchOrder(order);
+			int i = speAccountBatchOrderService.deleteOpenAccountCommit(orderId, user);
+			if (i == 0) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除批量开户订单失败");
+			}
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			logger.error("## 删除批量开户订单号{}出错", orderId, e);
@@ -292,7 +286,12 @@ public class SpeBatchOpenAccountController {
 		try {
 			SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderById(orderId);
 			if (BatchOrderStat.BatchOrderStat_10.getCode().equals(order.getOrderStat())) {
-				speAccountBatchOrderService.batchSpeAccountBatchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_10.getCode());
+				int i = speAccountBatchOrderService.batchSpeAccountBatchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_10.getCode());
+				if (i == 0) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "提交批量开户订单失败");
+					return resultMap;
+				}
 			}
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
@@ -348,15 +347,8 @@ public class SpeBatchOpenAccountController {
 			orderList.setUserName(StringUtil.nullToString(req.getParameter("name")));
 			orderList.setPhoneNo(StringUtil.nullToString(req.getParameter("phone")));
 			orderList.setUserCardNo(StringUtil.nullToString(req.getParameter("card")));
-			orderList.setCompanyId(StringUtil.nullToString(req.getParameter("companyId")));
-			/*orderList.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-			orderList.setOrderListId(UUID.randomUUID().toString());
-			orderList.setCreateUser(user.getId().toString());
-			orderList.setUpdateUser(user.getId().toString());
-			orderList.setCreateTime(System.currentTimeMillis());
-			orderList.setUpdateTime(System.currentTimeMillis());*/
 			List<SpeAccountBatchOrderList> orderList2 = speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(orderList);
-			if (orderList2 != null) {
+			if (orderList2 != null && orderList2.size() > 0) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "电话号码重复！！！");
 				return resultMap;
@@ -405,36 +397,27 @@ public class SpeBatchOpenAccountController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.put("status", Boolean.TRUE);
 		
-		HttpSession session = req.getSession();
-		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		String phone = StringUtil.nullToString(req.getParameter("phone"));
 		try {
 			SpeAccountBatchOrderList personOrder = new SpeAccountBatchOrderList();
-			personOrder.setPuid(UUID.randomUUID().toString());
+			personOrder.setPuId(UUID.randomUUID().toString().replace("-", ""));
 			personOrder.setUserName(StringUtil.nullToString(req.getParameter("name")));
 			personOrder.setUserCardNo(StringUtil.nullToString(req.getParameter("card")));
 			personOrder.setPhoneNo(phone);
-			LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
-			if (orderList == null) {
-				orderList = new LinkedList<SpeAccountBatchOrderList>();
+			
+			LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
+			if (orderList != null && orderList.size() >= 1) {
+				orderList.forEach(o ->{
+					if (o.getPhoneNo().equals(phone)) {
+						resultMap.put("status", Boolean.FALSE);
+						resultMap.put("msg", "电话号码重复！！！");
+						return;
+					}
+				});
+			} else {
+				orderList = new LinkedList<>();
 			}
-			/*SpeAccountBatchOrderList order = new SpeAccountBatchOrderList();
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-			LinkedList<SpeAccountBatchOrderList> orderList = (LinkedList<SpeAccountBatchOrderList>) speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(order);*/
-			orderList.forEach(o ->{
-				if (o.getPhoneNo().equals(phone)) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "电话号码重复！！！");
-					return;
-				}
-			});
 			orderList.addFirst(personOrder);
-			/*int i = speAccountBatchOrderListService.addOrderList(personOrder, user);
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加开户名单出错");
-				return resultMap;
-			}*/
 			jedisClusterUtils.setex(OrderConstants.speBathOpenAccountSession, JSON.toJSON(orderList).toString(), 1800); // 设置有效时间30分钟
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
@@ -458,33 +441,20 @@ public class SpeBatchOpenAccountController {
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			String puId = req.getParameter("puId");
-			/*SpeAccountBatchOrderList order = new SpeAccountBatchOrderList();
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-			LinkedList<SpeAccountBatchOrderList> batchOrderList = (LinkedList<SpeAccountBatchOrderList>) speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(order);*/
-			LinkedList<SpeAccountBatchOrderList> batchOrderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
-			batchOrderList.forEach(o ->{
-				if (o.getPuid().equals(puId)) {
+			LinkedList<SpeAccountBatchOrderList> batchOrderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathOpenAccountSession);
+			
+			for (SpeAccountBatchOrderList o : batchOrderList) {
+				if (o.getPuId().equals(puId)) {
 					batchOrderList.remove(o);
-					/*SpeAccountBatchOrderList orderList = new SpeAccountBatchOrderList();
-					orderList.setOrderListId(orderListId);
-					orderList.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
-					HttpSession session = req.getSession();
-					User user = (User)session.getAttribute(Constants.SESSION_USER);
-					orderList.setUpdateUser(user.getId());
-					orderList.setUpdateTime(System.currentTimeMillis());
-					if (speAccountBatchOrderListService.updateSpeAccountBatchOrderList(orderList) < 1){
-						logger.error("## 批量开户新增，删除开户名单{}失败", orderListId);
-					}*/
-					return;
 				}
-			});
+			}
 			jedisClusterUtils.setex(OrderConstants.speBathOpenAccountSession, JSON.toJSON(batchOrderList).toString(), 1800);
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "系统故障，请稍后再试");
-			logger.error("## 批量开户新增，删除开户名单出错", e);
+			logger.error("## 批量开户新增，删除开户用户名单出错", e);
 		}
-
 		return resultMap;
 	}
+	
 }

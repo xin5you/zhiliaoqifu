@@ -4,10 +4,10 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
-    <link rel="stylesheet" href="${ctx}/resource/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
+    <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="${ctx}/static/js/module/specialAccount/bathOpenAccount/editOpenAccount.js"></script>
+    <script src="${ctx}/static/oms/js/specialAccount/bathOpenAccount/editOpenAccount.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -25,10 +25,14 @@
 			        </nav>
 					<form id="mainForm" action="${ctx }/speaccount/batch/intoEditOpenAccount.do?orderId=${order.orderId}" class="form-inline" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+						<input type="hidden" id="accountType" name="accountType"  value="${order.accountType }"/>
+						<input type="hidden" id="companyId" name="companyId"  value="${order.companyId }"/>
+						<input type="hidden" id="bizType" name="bizType"  value="${order.bizType }"/>
 						<h3 class="heading">订单编辑</h3>
 						<div><button class="btn btn-primary btn-editAddAccount" type="button"> 添 加 </button></div><br/>
 						<div class="row-fluid" >
 							 <div class="span12">
+							 <div class="control-group formSep">
 		                       	<div style="display: flex;justify-content:left;">
 									<table cellpadding="5px" style="width: 80%">
 										<tr>
@@ -45,8 +49,29 @@
 												<span class="fontColor">${order.orderCount }</span>
 											</td>
 										</tr>
+										<tr>
+											<td>
+												<span class="fontBold">账户类型:</span>
+												<span class="fontColor">${order.accountTypeName }</span>
+											</td>
+											<td>
+												<span class="fontBold">所属企业:</span>
+												<span class="fontColor">${order.companyName }</span>
+											</td>
+											<td>
+												<span class="fontBold">开户类型:</span>
+												<span class="fontColor">
+													<select>
+														<c:forEach var="bList" items="${billingTypeList}" varStatus="st">
+															<optgroup label="${bList }"></optgroup>
+														</c:forEach>
+													</select>
+												</span>
+											</td>
+										</tr>
 									</table>
 								</div>
+							</div>
 						  </div>
 						</div>
 				         </br >       
@@ -57,7 +82,6 @@
 				               <th>姓名</th>
 				               <th>身份证号码</th>
 				               <th>手机号</th>
-				               <th>企业代码</th>
 				               <th>操作</th>
 				             </tr>
 				             </thead>
@@ -68,11 +92,10 @@
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
                                     <td>${entity.phoneNo}</td>
-                                    <td>${entity.companydCode}</td>
 				                    <td>
-                                   <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')">
+                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')"> --%>
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                                   </sec:authorize>
+                                  <%--  </sec:authorize> --%>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -119,9 +142,9 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-                <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTCOMMIT')">
+               <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTCOMMIT')"> --%>
                 	<button class="btn btn-primary btn-submit">确 定  </button>
-                </sec:authorize>
+               <%--  </sec:authorize> --%>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>   
