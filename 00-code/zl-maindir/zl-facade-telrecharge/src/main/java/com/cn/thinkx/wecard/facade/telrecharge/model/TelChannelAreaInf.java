@@ -3,7 +3,7 @@ package com.cn.thinkx.wecard.facade.telrecharge.model;
 import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
 /**
- * 分销商产品地区维护表
+ * 分销商话费地区维护表
  * @author zhuqiuyou
  */
 public class TelChannelAreaInf extends BaseEntity {

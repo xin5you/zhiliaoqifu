@@ -1,3 +1,4 @@
+#debug: true
 server:
   port: 8989
   contextPath: /
@@ -173,4 +174,7 @@ ECOM_SING_KEY: YPEgSbuyRcoDV49yHzx4wS4ZeKHFVQA84Hv4IunjH10
 HKB_H5_URL: http://hkb.tao-lue.com
 BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/ecom/recharge/mobileRechargeBack
 OPEN_BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/hkb/recharge/mobileRechargeBack
-
+pagehelper:
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

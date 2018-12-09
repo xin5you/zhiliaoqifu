@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 
 import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
+/**
+ * 分销商订单明细表
+ * @author Administrator
+ *
+ */
 public class TelChannelOrderInf extends BaseEntity {
 
 	private static final long serialVersionUID = -1203013799941780945L;
@@ -39,7 +44,6 @@ public class TelChannelOrderInf extends BaseEntity {
 	private String orderCount;
 	private BigDecimal orderRechargeAmt;
 	private BigDecimal orderPayAmt;
-	private String mchntCode;
 
 	public String getChannelOrderId() {
 		return channelOrderId;
@@ -281,14 +285,6 @@ public class TelChannelOrderInf extends BaseEntity {
 		this.orderPayAmt = orderPayAmt;
 	}
 	
-	public String getMchntCode() {
-		return mchntCode;
-	}
-
-	public void setMchntCode(String mchntCode) {
-		this.mchntCode = mchntCode;
-	}
-
 	@Override
 	public String toString() {
 		return "TelChannelOrderInf [channelOrderId=" + channelOrderId + ", channelId=" + channelId + ", outerTid="

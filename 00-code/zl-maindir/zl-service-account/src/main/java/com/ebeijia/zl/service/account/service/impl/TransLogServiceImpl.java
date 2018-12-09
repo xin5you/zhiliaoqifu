@@ -1,6 +1,5 @@
 package com.ebeijia.zl.service.account.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +63,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		/**
 		 * 创建交易流水记录
 		 */
-		List<TransLog> voList=this.doTransLog(intfaceTransLog);
+		List<TransLog> voList=doTransLog(intfaceTransLog);
 		
 		boolean b=this.execute(voList);
 		
@@ -116,7 +115,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	private List doTransLog(IntfaceTransLog intfaceTransLog){
+	private List<TransLog> doTransLog(IntfaceTransLog intfaceTransLog){
 		
 		List<TransLog> voList=new ArrayList<TransLog>();
 		
@@ -174,9 +173,6 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
 			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
 			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
-			
-			//TODO 比例存储到对应的账户的
-			
 			
 		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
 			//快捷支付 先充值到通卡账户，再从通卡账户扣除

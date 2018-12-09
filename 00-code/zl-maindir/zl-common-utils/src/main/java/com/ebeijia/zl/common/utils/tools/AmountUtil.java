@@ -52,8 +52,8 @@ public abstract class AmountUtil {
 	 * @param v2乘数
 	 * @return
 	 */
-	public static double mul(BigDecimal v1, BigDecimal v2) {
-		return v1.multiply(v2).doubleValue();
+	public static BigDecimal mul(BigDecimal v1, BigDecimal v2) {
+		return v1.multiply(v2);
 	}
 
 	/**
@@ -103,9 +103,9 @@ public abstract class AmountUtil {
 	/**
 	 * 判断 a 是否大于等于 b
 	 * 
-	 * @param a
-	 * @param b
-	 * @return a&gt;=b 返回true, a&lt;b 返回false
+	 * @param v1
+	 * @param v2
+	 * @return v1 &gt;=v2 返回true, v1 &lt;v2 返回false
 	 */
 	public static boolean greaterThanOrEqualTo(BigDecimal v1, BigDecimal v2) {
 
@@ -122,10 +122,9 @@ public abstract class AmountUtil {
 	 * @param b
 	 * @return a&gt;b 返回true, a&lt;=b 返回 false
 	 */
-	public static boolean bigger(double a, double b) {
-		BigDecimal v1 = BigDecimal.valueOf(a);
-		BigDecimal v2 = BigDecimal.valueOf(b);
-		if (v1.compareTo(v2) == 1) {
+	public static boolean bigger(BigDecimal a, BigDecimal b) {
+
+		if (a.compareTo(b) == 1) {
 			return true;
 		}
 		return false;

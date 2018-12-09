@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.oms.specialAccount.mapper.BillingTypeInfMapper">
+		
+	<sql id="BillingTypeInfColumns">
+		b.b_id,
+		b.b_name,
+		b.code,
+		b.lose_fee,
+		b.buy_fee,
+		b.remarks,
+		b.create_user, 
+		b.update_user, 
+		b.create_time, 
+		b.update_time, 
+		b.lock_version
+	</sql>
+	
+	<select id="getBillingTypeInfById" parameterType="java.lang.String" resultType="BillingTypeInf">
+			select 
+  				<include refid="BillingTypeInfColumns" />
+	 			from tb_billing_type b 
+	 		where b.b_id = #{bId,jdbcType=VARCHAR} and b.data_stat  = '0'
+	</select>
+	
+	<select id="getBillingTypeInfByName" parameterType="java.lang.String" resultType="BillingTypeInf">
+			select 
+  				<include refid="BillingTypeInfColumns" />
+	 			from tb_billing_type b 
+	 		where b.b_name = #{bName,jdbcType=VARCHAR} and b.data_stat  = '0'
+	</select>
+	
+	<insert id="insertBillingTypeInf" parameterType="BillingTypeInf">
+		insert into tb_billing_type (
+			b_id,
+			b_name,
+			code,
+			lose_fee,
+			buy_fee,
+			data_stat,
+			remarks,
+			create_user, 
+			create_time,
+			update_user,
+			update_time,
+			lock_version
+			)	values	( 
+		 		#{bId,jdbcType=VARCHAR},
+		 		#{bName,jdbcType=VARCHAR},
+		 		#{code,jdbcType=VARCHAR},
+		 		#{loseFee,jdbcType=DOUBLE},
+		 		#{buyFee,jdbcType=DOUBLE},
+		 		'0',
+		 		#{remarks,jdbcType=VARCHAR},
+		 		#{createUser,jdbcType=VARCHAR},
+		 		#{createTime,jdbcType=BIGINT},
+		 		#{updateUser,jdbcType=VARCHAR},
+		 		#{updateTime,jdbcType=BIGINT},
+		 		0
+		 	) 
+	</insert>
+	
+	<update id="updateBillingTypeInf" parameterType="BillingTypeInf">
+			update tb_billing_type set
+				b_name=#{bName,jdbcType=VARCHAR},
+				code=#{code,jdbcType=VARCHAR},
+				lose_fee=#{loseFee,jdbcType=DOUBLE},
+				buy_fee=#{buyFee,jdbcType=DOUBLE},
+				remarks=#{remarks,jdbcType=VARCHAR},
+				lock_version = lock_version + 1,
+				update_time=#{updateTime,jdbcType=BIGINT},
+				update_user=#{updateUser,jdbcType=VARCHAR}
+			 where b_id = #{bId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<select id="getBillingTypeInfList" parameterType="BillingTypeInf" resultType="BillingTypeInf">
+		select 
+		   <include refid="BillingTypeInfColumns" />
+		    from tb_billing_type b
+	    where data_stat  = '0'
+			 <if test="bName !=null and bName !='' ">
+			 	 and b.b_name like '%' || #{bName} || '%'
+			 </if>
+			 <if test="code !=null and code !='' ">
+			 	 and b.code like '%' || #{code} || '%'
+			 </if>
+			     order by b.update_time desc
+	</select>
+	
+	<delete id="deleteBillingTypeInf" parameterType="BillingTypeInf">
+			update tb_billing_type
+		    set data_stat = '1',
+		       lock_version = lock_version + 1,
+		       update_time  = #{updateTime,jdbcType=BIGINT},
+		       update_user=#{updateUser,jdbcType=VARCHAR}
+		    where b_id = #{bId,jdbcType=VARCHAR}
+	</delete>
+</mapper>

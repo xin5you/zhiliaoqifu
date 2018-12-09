@@ -13,7 +13,7 @@
 	<property name="ACCESS_LOG_HOME" value="../logs/account" />
 	
 	 <!-- 时间滚动输出 level为 INFO 日志 -->
-	 <appender name="file—info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	 <appender name="file-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	     <filter class="ch.qos.logback.classic.filter.LevelFilter">
 	         <level>INFO</level>
 	         <onMatch>ACCEPT</onMatch>
@@ -33,7 +33,7 @@
 	 </appender>
  
      <!-- 时间滚动输出 level为 ERROR 日志 -->
-     <appender name="file—error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+     <appender name="file-error" class="ch.qos.logback.core.rolling.RollingFileAppender">
          <filter class="ch.qos.logback.classic.filter.LevelFilter">
              <level>ERROR</level>
              <onMatch>ACCEPT</onMatch>
@@ -53,8 +53,8 @@
      
     <!-- root 日志输出级别--> 
 	<root level="info">
-		<appender-ref ref="file—info"/>
-		<appender-ref ref="file—error"/>
+		<appender-ref ref="file-info"/>
+		<appender-ref ref="file-error"/>
 		<appender-ref ref="stdout"/>
 	</root>
   

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="logImpl" value="SLF4J" />
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+	</settings>
+	<typeAliases>
+		<typeAlias alias="Integer" type="java.lang.Integer" />
+        <typeAlias alias="Long" type="java.lang.Long" />
+        <typeAlias alias="HashMap" type="java.util.HashMap" />
+        <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
+        <typeAlias alias="ArrayList" type="java.util.ArrayList" />
+        <typeAlias alias="LinkedList" type="java.util.LinkedList" />
+        <typeAlias alias="Double" type="java.lang.Double" />
+        
+        <typeAlias type="com.cn.thinkx.oms.sys.model.User" alias="User" />
+	 	<typeAlias type="com.cn.thinkx.oms.sys.model.Role" alias="Role" />
+	 	<typeAlias type="com.cn.thinkx.oms.sys.model.Resource" alias="Resource" />
+	 	<typeAlias type="com.cn.thinkx.oms.sys.model.RoleResource" alias="RoleResource" />
+	 	<typeAlias type="com.cn.thinkx.oms.sys.model.UserRole" alias="UserRole" />
+	 	<typeAlias type="com.cn.thinkx.oms.sys.model.Organization" alias="Organization" />
+	 	
+	 	<typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrder" alias="PhoneRechargeOrder" />
+        <typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrderUpload" alias="PhoneRechargeOrderUpload" />
+        <typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeShop" alias="PhoneRechargeShop" />
+        
+	 	<typeAlias type="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf" alias="BillingTypeInf" />
+        <typeAlias type="com.cn.thinkx.oms.specialAccount.model.CompanyInf" alias="CompanyInf" />
+	 	<typeAlias type="com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder" alias="SpeAccountBatchOrder" />
+        <typeAlias type="com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList" alias="SpeAccountBatchOrderList" />
+	 	<!-- <package name="com.ebeijia.zl.basics.system.domain"/> -->
+	</typeAliases>
+
+</configuration>

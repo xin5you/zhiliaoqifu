@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ebeijia.zl.basics.wechat.mapper.MsgTextMapper">
+
+	<select id="listForPage" parameterType="MsgText" resultType="MsgText">
+		select * from t_wx_client_msg_text t , t_wx_client_msg_base b where t.base_id = b.id order by t.id
+	</select>
+
+	<select id="getById" parameterType="java.lang.String" resultType="MsgText">
+		select * from t_wx_client_msg_text where id = #{id}
+	</select>
+	
+	<select id="getRandomMsg" parameterType="java.lang.String" resultType="MsgText">
+		select t.* from t_wx_client_msg_text t , t_wx_client_msg_base b
+		where b.inputcode = #{inputcode} and t.base_id = b.id and rownum &lt;=1
+		order by rand()
+	</select>
+	
+	<select id="getRandomMsg2" resultType="MsgText">
+		select t.* from t_wx_client_msg_text t , t_wx_client_msg_base b
+		where t.base_id = b.id and rownum &lt;=1
+		order by rand()
+	</select>
+
+	<insert id="add" parameterType="MsgText" flushCache="true">
+		insert into t_wx_client_msg_text ( content,base_id)  VALUES ( #{content},#{baseId} ) 
+	</insert>
+
+	<update id="update" parameterType="MsgText" flushCache="true">
+		update t_wx_client_msg_text set content = #{content} where id = #{id} 
+	</update>
+
+	<delete id="delete" parameterType="MsgText" >
+		delete from t_wx_client_msg_text where id = #{id}
+	</delete>
+
+</mapper>

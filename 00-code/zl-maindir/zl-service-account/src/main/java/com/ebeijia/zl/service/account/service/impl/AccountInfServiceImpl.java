@@ -19,16 +19,20 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.AccountStatusEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountInf;
 import com.ebeijia.zl.facade.account.vo.TransLog;
+import com.ebeijia.zl.facade.account.vo.TransTypesLog;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.account.mapper.AccountInfMapper;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
+import com.ebeijia.zl.service.account.service.ITransTypesLogService;
 import com.ebeijia.zl.service.account.utils.CodeEncryUtils;
 import com.ebeijia.zl.service.user.mapper.UserInfMapper;
 
@@ -53,6 +57,9 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	
 	@Autowired
 	private IAccountLogService accountLogService;
+	
+	@Autowired
+	private ITransTypesLogService transTypesLogService;
 	
 	/***
 	 * 
@@ -164,7 +171,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			account.setAccountStat("00");//00：正常 10：冻结 90：注销
 			account.setAccountType(transLog.getUserType());
 			account.setAccBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户时余额为0
-			log.info("==>oper<==");
 			return this.save(account);
 		}
 	}
@@ -181,6 +187,49 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (account == null) {
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
 		}
+		
+		/****** consumerBal set begin ***/
+		//员工账户充值 专用专项账户的按比例设置强制消费额度
+		if(UserType.TYPE100.equals(account.getAccountType())){
+			
+			//非 员工通用福利账户 并且 非现金账户
+			if(! SpecAccountTypeEnum.A0.equals(account.getBId()) && ! SpecAccountTypeEnum.A1.equals(account.getBId())){
+				
+				//所有的专用类型的账户充值 都需要按比例划分到消费额度里
+				//TODO 
+				double consumer_rate=0.1;
+				
+				BigDecimal consumerAmt=new BigDecimal(consumer_rate).setScale(4,BigDecimal.ROUND_HALF_DOWN); //加入消费比例是0.1 即 10%强制消费额度
+				
+				if(TransCode.MB50.getCode().equals(transLog.getTransId())){
+					//账户充值
+					account.setConsumerBal(AmountUtil.add(account.getConsumerBal(), consumerAmt));
+					
+				}else if(TransCode.CW11.getCode().equals(transLog.getTransId()) || TransCode.CW74.getCode().equals(transLog.getTransId())){ //退款 或 快捷退款场景
+						//退款操作
+						TransTypesLog transTypesLog=transTypesLogService.getById(transLog.getOrgTxnPrimaryKey());
+						if(transTypesLog !=null && transTypesLog.getTransAmt() !=null){
+							//如果原交易的强制消费金额 大于当前退款的金额
+							if(AmountUtil.greaterThanOrEqualTo(transTypesLog.getTransAmt(), transLog.getTransAmt())){
+								account.setConsumerBal(transLog.getTransAmt());
+								transTypesLog.setTransAmt(AmountUtil.sub(transTypesLog.getTransAmt(),transLog.getTransAmt()));//原交易所使用的强制消费额度
+							}else{
+								account.setConsumerBal(transTypesLog.getTransAmt());
+								transTypesLog.setTransAmt(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //原交易所使用的强制消费额段是0
+							}
+							transTypesLogService.updateById(transTypesLog);//修改数据
+						}
+					
+				}
+			}
+		}else{
+			//非员工账户，强制消费额度是0
+			account.setConsumerBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN));
+		}
+		/****** consumerBal set end ***/
+		
+		
+		/****** 操作余额 ***/
 		this.credit(account, transLog.getTransAmt());
 		
 		boolean flag=accountLogService.save(account, transLog);
@@ -209,6 +258,34 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (account == null) {
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
 		}
+		
+		/****** consumerBal set begin ***/
+		//员工账户消费 强制消费额度扣减
+		if(UserType.TYPE100.equals(account.getAccountType())){
+			
+			//非 员工通用福利账户 并且 非现金账户
+			if(! SpecAccountTypeEnum.A0.equals(account.getBId()) && ! SpecAccountTypeEnum.A1.equals(account.getBId())){
+				
+				//消费 或 快捷消费场景
+				if(TransCode.CW10.getCode().equals(transLog.getTransId()) || TransCode.CW71.getCode().equals(transLog.getTransId())){
+					
+					//如果用户的消费额度大于0
+					if(AmountUtil.bigger(account.getConsumerBal(), BigDecimal.valueOf(0))){
+						//保存专项类型的消费额度
+						BigDecimal typesTransAmount;
+						if(AmountUtil.greaterThanOrEqualTo(account.getConsumerBal(),transLog.getTransAmt())){
+							typesTransAmount=transLog.getTransAmt();
+						}else{
+							typesTransAmount=account.getConsumerBal();
+						}
+						transTypesLogService.save(transLog.getTxnPrimaryKey(), typesTransAmount);
+					}
+				}
+			}
+		}
+		/****** consumerBal set end ***/
+		
+		/****** 操作余额 ***/
 		this.debit(account, transLog.getTransAmt());
 		
 		boolean flag=accountLogService.save(account, transLog);
