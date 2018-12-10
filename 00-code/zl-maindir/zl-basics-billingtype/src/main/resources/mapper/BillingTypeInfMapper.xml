@@ -10,7 +10,7 @@
 		b.lose_fee,
 		b.buy_fee,
 		b.remarks,
-		b.create_user, 
+		b.create_user,  
 		b.update_user, 
 		b.create_time, 
 		b.update_time, 

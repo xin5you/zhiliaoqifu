@@ -73,7 +73,7 @@
         <module>zl-basics-member</module>
         <module>zl-basics-wechat</module>
         <module>zl-basics-billingtype</module>
-        
+         
         <module>zl-core-redis</module>
         <module>zl-core-activemq</module>
        	<module>zl-core-wechat</module>

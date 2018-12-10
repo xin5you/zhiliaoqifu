@@ -7,7 +7,7 @@ import com.github.pagehelper.PageInfo;
 
 public interface BillingTypeInfService {
 
-	/**
+	/** 
 	 * 通过ID查找专用账户类型
 	 * @param bId
 	 * @return 专用账户类型对象

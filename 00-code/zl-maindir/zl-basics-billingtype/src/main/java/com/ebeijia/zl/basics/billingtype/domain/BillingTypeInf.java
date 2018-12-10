@@ -1,7 +1,7 @@
 package com.ebeijia.zl.basics.billingtype.domain;
 
 import com.ebeijia.zl.common.utils.domain.BaseEntity;
-
+ 
 public class BillingTypeInf extends BaseEntity {
 	private String bId;
 	private String bName;

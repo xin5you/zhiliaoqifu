@@ -15,7 +15,7 @@ import com.github.pagehelper.PageInfo;
 
 @Service("billingTypeInfService")
 public class BillingTypeInfServiceImpl implements BillingTypeInfService {
-	
+	 
 	@Autowired
 	@Qualifier("billingTypeInfMapper")
 	private BillingTypeInfMapper billingTypeInfMapper;
