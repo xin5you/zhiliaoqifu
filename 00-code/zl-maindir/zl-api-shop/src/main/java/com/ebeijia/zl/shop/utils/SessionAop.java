@@ -4,6 +4,7 @@ import com.cn.thinkx.ecom.redis.core.utils.JedisUtilsWithNamespace;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Session AOP切面
- *
  */
 @Component
 @Aspect
@@ -35,35 +35,40 @@ public class SessionAop {
     Logger logger = LoggerFactory.getLogger(SessionAop.class);
 
     @Around(value = "@annotation(com.ebeijia.zl.shop.utils.TokenCheck)")
-    public Object aroundManager(ProceedingJoinPoint pj) throws Throwable{
-//        String path = request.getContextPath();
-//        String path = request.getScheme() + "://" + request.getServerName()
-//                + ":" + request.getServerPort() + path + "/";
-//        MethodSignature signature = (MethodSignature) pj.getSignature();
-        String token = getToken();
-        if (token != null){
-            String s = jedis.get(token);
-            //TODO fake login user
-            session.setAttribute("userId",100);
-        }
+    public Object aroundManager(ProceedingJoinPoint pj) throws Throwable {
+        //TODO 优化性能，避免执行不必要的逻辑
+            String path = request.getContextPath();
+            String fullpath = request.getScheme() + "://" + request.getServerName()
+                    + ":" + request.getServerPort() + path + "/";
+            MethodSignature signature = (MethodSignature) pj.getSignature();
+            logger.info("[Path:" + path + "],[FullPath:" + fullpath + "]");
+            logger.info("[signature:" + signature.toLongString() + "]");
+            String token = getToken();
+            if (token != null) {
+                String s = jedis.get(token);
+                logger.info("[user:" + s + "]");
+                //TODO fake login user
+                session.setAttribute("userId", s);
+            }
         Object proceed = pj.proceed();
         return proceed;
     }
 
-    private String getToken(){
+    private String getToken() {
         String token = request.getParameter("token");
-        if (token != null){
+        if (token != null) {
             return token;
         }
         Cookie[] cookies = request.getCookies();
-        for (Cookie c:cookies){
-            if (c.getName()=="token"){
-                return c.getValue();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName() == "token") {
+                    return c.getValue();
+                }
             }
         }
         return null;
     }
-
 
 
 }
