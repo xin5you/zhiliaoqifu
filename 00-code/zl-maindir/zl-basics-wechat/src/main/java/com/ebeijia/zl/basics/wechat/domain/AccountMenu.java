@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class AccountMenu extends Model<AccountMenu> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7251652810392691371L;
+
+	/**
      * 主键
      */
     @TableId(value = "id" ,type = IdType.UUID)
@@ -33,7 +38,7 @@ public class AccountMenu extends Model<AccountMenu> {
      * 类型
      */
     @TableField("type")
-    private String type;
+    private String mtype;
  
     /**
      * even_type
@@ -88,7 +93,6 @@ public class AccountMenu extends Model<AccountMenu> {
      */
     @TableField("gid")
     private Integer gid;
-
 
     @Override
     protected Serializable pkVal() { 

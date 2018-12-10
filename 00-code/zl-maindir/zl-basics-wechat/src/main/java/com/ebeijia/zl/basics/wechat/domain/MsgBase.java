@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class MsgBase extends Model<MsgBase> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5724477854731219113L;
+
+	/**
      * 主键
      */
     @TableId(value = "id" ,type = IdType.UUID)

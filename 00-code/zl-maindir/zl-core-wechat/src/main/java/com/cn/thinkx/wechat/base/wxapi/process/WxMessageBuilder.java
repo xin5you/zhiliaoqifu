@@ -16,6 +16,7 @@ import com.cn.thinkx.wechat.base.wxapi.vo.MsgResponseNews;
 import com.cn.thinkx.wechat.base.wxapi.vo.MsgResponseText;
 import com.ebeijia.zl.basics.wechat.domain.MsgNews;
 import com.ebeijia.zl.basics.wechat.domain.MsgText;
+import com.ebeijia.zl.basics.wechat.enums.MsgType;
 
 /**
  * 消息builder工具类

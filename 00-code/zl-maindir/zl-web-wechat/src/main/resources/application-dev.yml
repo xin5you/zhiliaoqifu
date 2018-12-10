@@ -1,12 +1,23 @@
 server:
   port: 10501
   contextPath: /
+  session:
+    cookie:
+      name: JSESSIONID
+      path: /
+      domain: 
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-wechat.xml
+    
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 
 spring:
   datasource:
@@ -21,4 +32,3 @@ spring:
     registry: zookeeper://127.0.0.1:2181
     protocol: dubbo
     port: 20880
-    

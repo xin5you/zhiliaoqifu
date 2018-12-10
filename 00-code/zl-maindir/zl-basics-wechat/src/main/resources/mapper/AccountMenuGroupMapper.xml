@@ -28,21 +28,6 @@
 		WHERE rownum &gt;= #{param2.start,jdbcType=INTEGER} AND rownum &lt;=#{param2.pageSize,jdbcType=INTEGER}
 		ORDER BY id 
 	</select>
-
-	<select id="getById" parameterType="java.lang.String" resultType="AccountMenuGroup">
-		SELECT 
-		<include refid="AccountMenuGroupColumns" />
-		 FROM t_wxcms_account_menu_group WHERE id =#{id}
-	</select>
-
-	<insert id="add" parameterType="AccountMenuGroup" flushCache="true">
-
-		insert into t_wxcms_account_menu_group ( id,name,enable,createtime ) values ( 
-			#{id},
-			#{name, jdbcType=VARCHAR},
-			#{enable, jdbcType=INTEGER},
-			sysdate) 
-	</insert>
 	
 	<update id="updateMenuGroupDisable" flushCache="true">
 			UPDATE t_wxcms_account_menu_group SET enable = 0
@@ -52,17 +37,11 @@
 		UPDATE t_wxcms_account_menu_group SET enable = 1 WHERE id =#{id}
 	</update>
 
-	<update id="update" parameterType="AccountMenuGroup" flushCache="true">
-		UPDATE t_wxcms_account_menu_group SET NAME = #{name},ENABLE = #{enable},CREATETIME = #{createtime} WHERE id =#{id} 
-	</update>
 
 	<delete id="deleteAllMenu" parameterType="AccountMenuGroup" >
 		DELETE FROM t_wxcms_account_menu WHERE gid =#{id}
 	</delete>
 
-	<delete id="delete" parameterType="AccountMenuGroup" >
-		DELETE FROM t_wxcms_account_menu_group WHERE id =#{id}
-	</delete>
 	
 	<select id="getMembersGroupsId" resultType="AccountMenuGroup">
 		SELECT 

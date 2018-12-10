@@ -1,4 +1,4 @@
-package com.cn.thinkx.wechat.base.wxapi.process;
+package com.ebeijia.zl.basics.wechat.enums;
 
 /**
  * 消息类型：所有微信涉及到的消息类型统一管理

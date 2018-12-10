@@ -14,9 +14,6 @@
 		order by id
 	</select>
 
-	<select id="getById" parameterType="java.lang.String" resultType="MsgBase">
-		select * from t_wx_client_msg_base where id = #{id}
-	</select>
 	
 	<select id="getMsgTextByBaseId" parameterType="java.lang.String" resultType="MsgText">
 		select t.* from t_wx_client_msg_text t , t_wx_client_msg_base b
@@ -51,29 +48,8 @@
 		</foreach>  
 	</select>
 
-	<insert id="add" parameterType="MsgBase" flushCache="true">
-   
-		insert into t_wx_client_msg_base ( id,msgtype,inputcode,rule,enable,readcount,favourcount,createtime ) values (
-			${id},
-			#{msgtype, jdbcType=VARCHAR},
-			#{inputcode, jdbcType=VARCHAR},
-			#{rule, jdbcType=VARCHAR},
-			#{enable, jdbcType=INTEGER},
-			#{readcount, jdbcType=INTEGER},
-			#{favourcount, jdbcType=VARCHAR},
-			sysdate) 
-	</insert>
-
-	<update id="update" parameterType="MsgBase" flushCache="true">
-		update t_wx_client_msg_base set msgtype = #{msgtype},inputcode = #{inputcode},rule = #{rule},enable = #{enable},readcount = #{readcount},favourcount = #{favourcount},createtime = #{createtime} where id = #{id} 
-	</update>
-	
 	<update id="updateInputcode" parameterType="MsgBase" flushCache="true">
 		update t_wx_client_msg_base set inputcode = #{inputcode} where id = #{id} 
 	</update>
-
-	<delete id="delete" parameterType="MsgBase" >
-		delete from t_wx_client_msg_base where id = #{id}
-	</delete>
 
 </mapper>
