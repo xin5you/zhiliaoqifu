@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.wechat.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -14,5 +16,11 @@ import com.ebeijia.zl.basics.wechat.domain.MpAccount;
  */
 @Mapper
 public interface MpAccountMapper extends BaseMapper<MpAccount> {
+	
+	public MpAccount getByAccount(String account);
+	
+	public MpAccount getSingleAccount();
+
+	public List<MpAccount> listForPage(MpAccount searchEntity);
 
 }

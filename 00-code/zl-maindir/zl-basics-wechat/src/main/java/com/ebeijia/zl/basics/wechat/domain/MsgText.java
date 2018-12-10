@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class MsgText extends Model<MsgText> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3746257993570049726L;
+
+	/**
      * 文本消息id
      */
     @TableId(value = "id" ,type = IdType.UUID)

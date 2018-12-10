@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class AccountFans extends Model<AccountFans> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5919812540763771072L;
+
+	/**
      * 客户粉丝id
      */
     @TableId(value = "id" ,type = IdType.UUID)

@@ -1,7 +1,11 @@
 package com.ebeijia.zl.basics.wechat.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.basics.wechat.domain.MsgBase;
+import com.ebeijia.zl.basics.wechat.domain.MsgNews;
+import com.ebeijia.zl.basics.wechat.domain.MsgText;
 
 
 /**
@@ -13,4 +17,9 @@ import com.ebeijia.zl.basics.wechat.domain.MsgBase;
  */
 public interface MsgBaseService extends IService<MsgBase> {
 
+	public List<MsgBase> listForPage(MsgBase searchEntity);
+	
+	public List<MsgNews> listMsgNewsByBaseId(String[] ids);
+	
+	public MsgText getMsgTextByBaseId(String id);
 }

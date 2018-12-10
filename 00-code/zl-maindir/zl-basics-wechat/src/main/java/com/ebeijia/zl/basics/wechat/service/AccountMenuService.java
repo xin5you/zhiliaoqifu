@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.wechat.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.basics.wechat.domain.AccountMenu;
 
@@ -12,5 +14,10 @@ import com.ebeijia.zl.basics.wechat.domain.AccountMenu;
  * @Date 2018-12-08
  */
 public interface AccountMenuService extends IService<AccountMenu> {
+	
+
+	public List<AccountMenu> listForPage(AccountMenu searchEntity);
+
+	public List<AccountMenu> listParentMenu();
 
 }

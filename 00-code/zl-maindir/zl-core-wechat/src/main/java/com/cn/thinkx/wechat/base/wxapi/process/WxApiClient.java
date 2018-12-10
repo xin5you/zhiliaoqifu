@@ -2,7 +2,6 @@ package com.cn.thinkx.wechat.base.wxapi.process;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -21,6 +20,7 @@ import com.cn.thinkx.wechat.base.wxapi.vo.MaterialItem;
 import com.cn.thinkx.wechat.base.wxapi.vo.TemplateMessage;
 import com.ebeijia.zl.basics.wechat.domain.AccountFans;
 import com.ebeijia.zl.basics.wechat.domain.MsgNews;
+import com.ebeijia.zl.basics.wechat.enums.MsgType;
 
 
 /**
