@@ -14,8 +14,7 @@
         <module>../zl-basics-goods</module>
         <module>../zl-basics-order</module>
         <module>../zl-basics-member</module>
-        <module>../zl-api-shop</module>
-        <module>../zl-shop</module>
+        <module>../zl-web-shop</module>
     </modules>
 
 </project>
