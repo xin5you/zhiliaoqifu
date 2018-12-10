@@ -3,7 +3,9 @@ package com.ebeijia.zl.shop.controller;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsGallery;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.service.goods.IGoodsService;
+import com.ebeijia.zl.shop.vo.JsonResult;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @User J
@@ -25,29 +29,32 @@ public class GoodsController {
     IGoodsService goodsService;
 
     @ApiOperation("商品列表，分页")
-    @RequestMapping(value = "/list/{orderby}",method = RequestMethod.GET)
-    public PageInfo<TbEcomGoods> listGoods(@PathVariable(required = false) String orderby, Integer start, Integer limit){
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public PageInfo<TbEcomGoods> listGoods(String orderby, Integer start, Integer limit){
         //TODO change VO design, vaild variable;
-        PageInfo<TbEcomGoods> list = goodsService.listGoods(0,orderby,start,limit);
+        PageInfo<TbEcomGoods> list = goodsService.listGoods(null,orderby,start,limit);
         return list;
     }
 
     @ApiOperation("按类型的商品列表")
-    @RequestMapping(value = "/list/cat{catid}/{orderby}",method = RequestMethod.GET)
-    public void listGoods(@PathVariable Integer catid, @PathVariable(required = false) String orderby,Integer start,Integer limit){
+    @RequestMapping(value = "/list/cat{catid}",method = RequestMethod.GET)
+    public PageInfo<TbEcomGoods> listGoods(@PathVariable Integer catid, String orderby, Integer start, Integer limit){
         PageInfo<TbEcomGoods> list = goodsService.listGoods(catid,orderby,start,limit);
+        return list;
     }
 
     @ApiOperation("商品详情")
     @RequestMapping(value = "/detail/get/{goods}",method = RequestMethod.GET)
-    public void goodsDetail(@PathVariable("goods") String goodsId){
+    public TbEcomGoodsDetail goodsDetail(@PathVariable("goods") String goodsId){
         TbEcomGoodsDetail detail = goodsService.getDetail(goodsId);
+        return detail;
     }
 
     @ApiOperation("商品相册")
     @RequestMapping(value = "/gallery/get/{goods}",method = RequestMethod.GET)
-    public void goodsGallery(@PathVariable("goods") String goodsId){
+    public JsonResult<TbEcomGoodsGallery> goodsGallery(@PathVariable("goods") String goodsId){
         TbEcomGoodsGallery goodsGallery = goodsService.getGallery(goodsId);
+        return new JsonResult<TbEcomGoodsGallery>(goodsGallery);
     }
 
 //
@@ -55,10 +62,11 @@ public class GoodsController {
 //    @RequestMapping(value = "/image/get/{id}",method = RequestMethod.GET)
 //    public void goodsImage(@PathVariable("id") String imageId){}
 
-    @ApiOperation("商品库存查询")
+    @ApiOperation("商品对应货品查询、库存查询")
     @RequestMapping(value = "/amount/get/{goods}",method = RequestMethod.GET)
-    public void goodsAvailableAmount(@PathVariable("goods") String goodsId){
-        TbEcomGoodsDetail detail = goodsService.getDetail(goodsId);
+    public JsonResult<List<TbEcomGoodsProduct>> goodsAvailableAmount(@PathVariable("goods") String goodsId){
+        List<TbEcomGoodsProduct> detail = goodsService.listSkuByGoodsId(goodsId);
+        return new JsonResult<>(detail);
     }
     //
     //

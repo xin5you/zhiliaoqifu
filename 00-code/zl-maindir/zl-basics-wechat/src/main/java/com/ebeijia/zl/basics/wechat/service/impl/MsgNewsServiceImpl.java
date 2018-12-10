@@ -1,5 +1,8 @@
 package com.ebeijia.zl.basics.wechat.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,5 +19,24 @@ import com.ebeijia.zl.basics.wechat.service.MsgNewsService;
  */
 @Service
 public class MsgNewsServiceImpl extends ServiceImpl<MsgNewsMapper, MsgNews> implements MsgNewsService{
+	
+	@Autowired
+	private MsgNewsMapper msgNewsMapper;
+
+	@Override
+	public List<MsgNews>  getMsgNewsByCode(String inputCode) {
+		return msgNewsMapper.getMsgNewsByCode(inputCode);
+	}
+
+	@Override
+	public List<MsgNews> listForPage(MsgNews searchEntity) {
+		return msgNewsMapper.listForPage(searchEntity);
+	}
+
+	public List<MsgNews> getRandomMsgByContent(String inputcode ,Integer num){
+		return msgNewsMapper.getRandomMsgByContent(inputcode, num);
+	}
+
+
 
 }

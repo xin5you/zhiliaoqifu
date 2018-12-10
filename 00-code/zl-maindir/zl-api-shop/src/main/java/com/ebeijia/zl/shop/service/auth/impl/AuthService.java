@@ -23,6 +23,9 @@ public class AuthService implements IAuthService {
 
     @Override
     public Token phoneLogin(String phone, String pwd) {
+
+        //TODO 验证码校验
+
         //测试用
         HashMap<String, String> token = new HashMap<>();
         token.put("userid","TT233");

@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class MpAccount extends Model<MpAccount> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3670017829189279347L;
+
+	/**
      * 主键
      */
     @TableId(value = "id" ,type = IdType.UUID)

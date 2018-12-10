@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class AccountMenuGroup extends Model<AccountMenuGroup> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1164532674327256660L;
+
+	/**
      * 主键
      */
     @TableId(value = "id" ,type = IdType.UUID)

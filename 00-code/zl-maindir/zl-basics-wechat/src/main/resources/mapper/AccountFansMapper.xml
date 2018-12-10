@@ -50,11 +50,7 @@
 		ORDER BY id DESC
 	</select>
 
-	<select id="getById" parameterType="java.lang.String" resultType="AccountFans">
-		SELECT 
-		 <include refid="AccountFansColumns" />
-		 FROM tb_wx_client_fans WHERE id = #{id}
-	</select>
+
 	
 	<select id="getByOpenId" parameterType="java.lang.String" resultType="AccountFans">
 		SELECT 
@@ -62,46 +58,7 @@
 		 FROM tb_wx_client_fans WHERE openid = #{openId}
 	</select>
 
-	<insert id="add" parameterType="AccountFans">
-		<![CDATA[ 
-		INSERT INTO tb_wx_client_fans (
-			openid,
-			wxid,
-			subscribestatus,
-			subscribetime,
-			nickname,
-			gender,
-			language,
-			country,
-			province,
-			city,
-			headimgurl,
-			fans_status,
-			remark,
-			status,
-			unionid,
-			groupid,
-			createtime
-		) VALUES ( 
-			#{openId},
-			#{wxid,jdbcType=VARCHAR},
-			#{subscribestatus,jdbcType=VARCHAR},
-			#{subscribetime},
-			#{nickname,jdbcType=VARCHAR},
-			#{gender,jdbcType=VARCHAR},
-			#{language,jdbcType=VARCHAR},
-			#{country,jdbcType=VARCHAR},
-			#{province,jdbcType=VARCHAR},
-			#{city,jdbcType=VARCHAR},
-			#{headimgurl,jdbcType=VARCHAR},
-			#{fansStatus,jdbcType=VARCHAR},
-			#{remark,jdbcType=VARCHAR},
-			#{status,jdbcType=VARCHAR},
-			#{unionid,jdbcType=VARCHAR},
-			#{groupid,jdbcType=VARCHAR},
-			sysDate) 
-		 ]]>
-	</insert>
+
 	
 	<insert id="addList" parameterType="list">  
         insert into tb_wx_client_fans ( openid,subscribestatus,subscribetime,nickname,gender,language,country,province,city,headimgurl,remark,status,id,wxid,createtime )
@@ -112,27 +69,6 @@
         	 ]]>
         </foreach> 
     </insert>
-	
-	<update id="update" parameterType="AccountFans" flushCache="true">
-		UPDATE tb_wx_client_fans SET 
-			wxid=#{wxid,jdbcType=VARCHAR},
-			subscribestatus=#{subscribestatus,jdbcType=VARCHAR},
-			nickname=#{nickname,jdbcType=VARCHAR},
-			gender=#{gender,jdbcType=VARCHAR},
-			language=#{language,jdbcType=VARCHAR},
-			country=#{country,jdbcType=VARCHAR},
-			province=#{province,jdbcType=VARCHAR},
-			city=#{city,jdbcType=VARCHAR},
-			headimgurl=#{headimgurl,jdbcType=VARCHAR},
-			remark=#{remark,jdbcType=VARCHAR},
-			status=#{status,jdbcType=VARCHAR},
-			unionid=#{unionid,jdbcType=VARCHAR}
-			where id = #{id} 
-	</update>
-
-	<delete id="delete" parameterType="AccountFans" >
-		DELETE FROM tb_wx_client_fans WHERE id = #{id}
-	</delete>
 	
 	<delete id="deleteByOpenId" parameterType="java.lang.String" >
 		DELETE FROM tb_wx_client_fans WHERE openid = #{openId}

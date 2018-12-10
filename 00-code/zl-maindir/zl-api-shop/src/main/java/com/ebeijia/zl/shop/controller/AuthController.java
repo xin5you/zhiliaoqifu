@@ -2,6 +2,7 @@ package com.ebeijia.zl.shop.controller;
 
 
 import com.ebeijia.zl.shop.service.auth.IAuthService;
+import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.Token;
 import io.swagger.annotations.Api;
@@ -25,6 +26,7 @@ public class AuthController {
     IAuthService authService;
 
     //这里只有手机和验证码的登录
+    @TokenCheck
     @ApiOperation("常规登录")
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public JsonResult<Token> login(@ApiParam("手机号") String phone, @ApiParam("验证码") String pwd) {

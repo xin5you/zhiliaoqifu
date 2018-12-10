@@ -38,6 +38,13 @@
             <version>${ebj.zl.version}</version>
         </dependency>
         
+
+         <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-wechat</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
 		
 		<dependency>
 		    <groupId>org.aspectj</groupId>

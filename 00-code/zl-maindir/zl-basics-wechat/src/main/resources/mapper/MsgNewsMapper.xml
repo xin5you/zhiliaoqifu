@@ -14,19 +14,16 @@
 		order by b.createtime desc
 	</select>
 
-	<select id="getById" parameterType="java.lang.String" resultType="MsgNews">
-		select * from t_wx_client_msg_news where id = #{id}
-	</select>
 	
 	<select id="getRandomMsgByContent" resultType="MsgNews">
-		SELECT t.* from t_wx_client_msg_news t , t_wx_client_msg_base b
-		WHERE b.inputCode like '%' || '${param1}' || '%' and t.base_id = b.id AND rownum &lt;=#{param2}
+		select t.* from t_wx_client_msg_news t , t_wx_client_msg_base b
+		where b.inputcode like '%' || '${param1}' || '%' and t.base_id = b.id and rownum &lt;=#{param2}
 	</select>
 	
 	<select id="getRandomMsg" parameterType="java.lang.Integer" resultType="MsgNews">
-		SELECT t.* from t_wx_client_msg_news t , t_wx_client_msg_base b
-		WHERE t.base_id = b.id AND rownum &lt;=#{num}
-		ORDER BY dbms_random.value() 
+		select t.* from t_wx_client_msg_news t , t_wx_client_msg_base b
+		where t.base_id = b.id and rownum &lt;=#{num}
+		order by rand()
 	</select>
 	
 	<select id="getMsgNewsByIds" resultType="MsgNews" >
@@ -36,21 +33,16 @@
 		</foreach>  
 	</select>
 
-	<insert id="add" parameterType="MsgNews" flushCache="true" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_wx_client_msg_news ( TITLE,AUTHOR,BRIEF,DESCRIPTION,PICPATH,SHOWPIC,URL,FROMURL,BASE_ID )  VALUES ( #{title},#{author},#{brief},#{description},#{picpath},#{showpic},#{url},#{fromurl},#{baseId} ) 
-	</insert>
+
 
 	<update id="updateUrl" parameterType="MsgNews" flushCache="true">
-		UPDATE t_wx_client_msg_news SET URL = #{url} WHERE ID = #{id} 
-	</update>
-	
-	<update id="update" parameterType="MsgNews" flushCache="true">
-		update t_wx_client_msg_news set title = #{title},author = #{author},brief = #{brief},description = #{description},picpath = #{picpath},url = #{url},fromurl = #{fromurl},showpic = #{showpic} where id = #{id} 
+		update t_wx_client_msg_news set url = #{url} where id = #{id} 
 	</update>
 
-	<delete id="delete" parameterType="MsgNews" >
-		delete from t_wx_client_msg_news where id = #{id}
-	</delete>
+
+	<select id="getMsgNewsByCode" resultType="MsgNews" parameterType="java.lang.String" >
+		select t.* from t_wx_client_msg_news t ,t_wx_client_msg_base b where t.base_id=b.id and b.inputcode=#{inputCode}
+	</select>
 
 	<select id="getMsgNewsBySubscribe" resultType="MsgNews">
 		select t.* from t_wx_client_msg_news t ,t_wx_client_msg_base b where t.base_id=b.id and b.inputcode='subscribe'
