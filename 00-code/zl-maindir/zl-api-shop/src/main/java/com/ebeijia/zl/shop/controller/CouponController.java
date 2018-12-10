@@ -31,13 +31,9 @@ public class CouponController {
     @RequestMapping(value = "/get/detail/{goods}",method = RequestMethod.GET)
     public void goodsDetail(@PathVariable("goods") String goodsId){
         TbEcomGoodsDetail detail = couponService.goodsDetail(goodsId);
-    }
-
-    @ApiOperation("获取图片")
-    @RequestMapping(value = "/get/image/{id}",method = RequestMethod.GET)
-    public void goodsImage(@PathVariable("id") String imageId){
 
     }
+
 
     @ApiOperation("卡券转让")
     @RequestMapping(value = "/share",method = RequestMethod.POST)

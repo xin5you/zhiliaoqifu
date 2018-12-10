@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 
 import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
+/**
+ * 分销商充值产品管理表
+ * @author Administrator
+ *
+ */
 public class TelChannelProductInf extends BaseEntity {
 	
 	private static final long serialVersionUID = 946746869188132111L;

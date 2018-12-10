@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cn.thinkx.wecard.facade.telrecharge.enums.TelRechargeConstants.ChannelReserveType;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelInfMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.mapper.TelChannelReserveDetailMapper;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelReserveDetail;
 import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelReserveDetailFacade;
-import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelReserveType;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 

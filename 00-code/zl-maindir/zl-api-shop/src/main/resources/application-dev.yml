@@ -23,7 +23,7 @@ spring:
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
-  thymeleaf: 
+  thymeleaf:
     prefix: classpath:/views/
     #content-type: text/html
     #suffix: .html
@@ -33,14 +33,14 @@ spring:
     cache: false
   session:
     store-type: redis
-  redis: 
+  redis:
     timeout: 3000
     cluster:
        nodes: 192.168.2.110:7111,192.168.2.110:7112,192.168.2.110:7113,192.168.2.110:7114,192.168.2.110:7115,192.168.2.110:7116
        connection-timeout: 1000
        soTimeout: 3000
        max-attempts: 5
-       password: 
+       password:
        max-redirects: 2
     pool:
        max-total: 1024

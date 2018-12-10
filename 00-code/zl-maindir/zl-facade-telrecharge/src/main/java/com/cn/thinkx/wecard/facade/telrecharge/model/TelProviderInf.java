@@ -3,11 +3,17 @@ package com.cn.thinkx.wecard.facade.telrecharge.model;
 
 import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
+/**
+ * 供应商信息
+ * @author Administrator
+ *
+ */
 public class TelProviderInf extends BaseEntity {
 	
 	private static final long serialVersionUID = 6955327888569894630L;
 	
 	private String providerId;
+	private String bId;
 	private String providerName;
 	private String appUrl;
 	private String appSecret;
@@ -22,6 +28,12 @@ public class TelProviderInf extends BaseEntity {
 	private String resv4;
 	private String resv5;
 	private String resv6;
+	public String getbId() {
+		return bId;
+	}
+	public void setbId(String bId) {
+		this.bId = bId;
+	}
 	public String getProviderId() {
 		return providerId;
 	}

@@ -32,7 +32,6 @@ public class GoodsController {
         return list;
     }
 
-
     @ApiOperation("按类型的商品列表")
     @RequestMapping(value = "/list/cat{catid}/{orderby}",method = RequestMethod.GET)
     public void listGoods(@PathVariable Integer catid, @PathVariable(required = false) String orderby,Integer start,Integer limit){
@@ -50,6 +49,7 @@ public class GoodsController {
     public void goodsGallery(@PathVariable("goods") String goodsId){
         TbEcomGoodsGallery goodsGallery = goodsService.getGallery(goodsId);
     }
+
 //
 //    @ApiOperation("获取图片")
 //    @RequestMapping(value = "/image/get/{id}",method = RequestMethod.GET)

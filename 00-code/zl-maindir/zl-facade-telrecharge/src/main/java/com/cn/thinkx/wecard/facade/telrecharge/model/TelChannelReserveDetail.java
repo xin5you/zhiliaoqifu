@@ -4,11 +4,16 @@ import java.math.BigDecimal;
 
 import com.cn.thinkx.common.base.core.domain.BaseEntity;
 
+/**
+ * 分销商备付金追加信息
+ * @author Administrator
+ *
+ */
 public class TelChannelReserveDetail extends BaseEntity {
 	
 	private static final long serialVersionUID = 5199687496392595046L;
 	
-	private String id	;
+	private String id;
 	private String channelId;
 	private BigDecimal reserveAmt;
 	private String reserveType;

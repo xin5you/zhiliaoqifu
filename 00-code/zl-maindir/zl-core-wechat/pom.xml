@@ -50,7 +50,11 @@
 			<artifactId>zl-common-utils</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-basics-wechat</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.ebeijia</groupId>
 			<artifactId>zl-core-redis</artifactId>
