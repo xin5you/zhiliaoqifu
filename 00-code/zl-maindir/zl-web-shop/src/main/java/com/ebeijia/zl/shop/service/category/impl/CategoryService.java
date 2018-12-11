@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class CategoryService implements ICategoryService {
     @Autowired
-    ITbEcomGoodsCategoryService goodsCategoryDao;
+    private ITbEcomGoodsCategoryService goodsCategoryDao;
 
 
     @Override

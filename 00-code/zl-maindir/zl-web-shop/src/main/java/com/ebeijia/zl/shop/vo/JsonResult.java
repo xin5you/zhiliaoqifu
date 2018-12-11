@@ -30,13 +30,14 @@ public class JsonResult<T> {
     }
 
 
-    public JsonResult(T t){
+    public JsonResult(T t) {
         this.result = t;
-        if (t == null){
+        if (t == null) {
             setCode(ResultState.NOT_FOUND);
             return;
         }
     }
+
     /*
      * 状态码构造器
      */
@@ -55,24 +56,27 @@ public class JsonResult<T> {
         setResult(null);
     }
 
-    public void setCode(int responseCode) {
+    public JsonResult<T> setCode(int responseCode) {
         code = responseCode;
+        return this;
     }
 
     public int getCode() {
-       return code;
+        return code;
     }
 
-    public void setMessage(String message) {
+    public JsonResult<T> setMessage(String message) {
         this.message = message;
+        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setResult(T result) {
+    public JsonResult<T> setResult(T result) {
         this.result = result;
+        return this;
     }
 
     public T getResult() {

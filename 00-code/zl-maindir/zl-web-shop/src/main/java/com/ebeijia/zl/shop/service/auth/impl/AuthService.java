@@ -16,10 +16,10 @@ public class AuthService implements IAuthService {
     private static Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
-    JedisClusterUtils jedis;
+    private JedisClusterUtils jedis;
 
     @Autowired
-    JedisUtilsWithNamespace jedis2;
+    private JedisUtilsWithNamespace jedis2;
 
     @Override
     public Token phoneLogin(String phone, String pwd) {

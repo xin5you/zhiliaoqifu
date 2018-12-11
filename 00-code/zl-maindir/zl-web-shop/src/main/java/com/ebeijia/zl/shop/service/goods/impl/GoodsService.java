@@ -19,22 +19,17 @@ import java.util.List;
 @Service
 public class GoodsService implements IGoodsService {
     @Autowired
-    ITbEcomGoodsService goodsDao;
+    private ITbEcomGoodsService goodsDao;
 
     @Autowired
-    ITbEcomGoodsDetailService detailDao;
+    private ITbEcomGoodsDetailService detailDao;
 
     @Autowired
-    ITbEcomGoodsGalleryService galleryDao;
+    private ITbEcomGoodsGalleryService galleryDao;
 
     @Autowired
-    ITbEcomGoodsProductService productDao;
+    private ITbEcomGoodsProductService productDao;
 
-    @Autowired
-    ITbEcomSpecificationService specificationDao;
-
-    @Autowired
-    ITbEcomCatGoodsRoleService catGoodsRoleDao;
 
     @Override
     public PageInfo<TbEcomGoods> listGoods(Integer catid, String orderby, Integer start, Integer limit) {

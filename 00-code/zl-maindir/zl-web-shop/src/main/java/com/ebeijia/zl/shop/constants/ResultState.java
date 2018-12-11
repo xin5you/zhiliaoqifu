@@ -10,6 +10,9 @@ public interface ResultState {
     //没有登录
     int UNAUTHORIZED = 401;
 
+    //代表请求被拒绝，比如太频繁
+    int FORBIDDEN = 403;
+
     //没有发现资源
     int NOT_FOUND = 404;
 

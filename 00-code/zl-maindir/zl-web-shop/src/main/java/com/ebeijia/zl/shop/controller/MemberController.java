@@ -4,6 +4,7 @@ package com.ebeijia.zl.shop.controller;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.service.member.IMemberService;
 import com.ebeijia.zl.shop.vo.JsonResult;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     @Autowired
-    IMemberService memberService;
+    private IMemberService memberService;
 
     @ApiOperation("注册")
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
@@ -30,6 +31,16 @@ public class MemberController {
         //获取对应id
         //生产账户
         TbEcomMember member =  memberService.createMember();
+    }
+
+    @ApiOperation("用户信息查询")
+    @RequestMapping(value = "/get",method = RequestMethod.GET)
+    public JsonResult<MemberInfo> findUser(){
+        //获取手机号
+        //获取对应id
+        //生产账户
+        TbEcomMember member =  memberService.createMember();
+        return new JsonResult<>(new MemberInfo());
     }
 
     @ApiOperation("新增地址，目前修改也一样调用这个接口")
