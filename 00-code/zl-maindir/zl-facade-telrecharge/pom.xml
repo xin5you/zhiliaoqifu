@@ -14,20 +14,28 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
  <dependencies>
-    	<dependency>
-			<groupId>com.ebeijia</groupId>
-			<artifactId>zl-base-core</artifactId>
-			<version>${ebj.zl.version}</version>
+<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<version>1.1.1</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>com.github.jsqlparser</groupId>
-			<artifactId>jsqlparser</artifactId>
-			<version>0.9.5</version>
+		    <groupId>com.baomidou</groupId>
+		    <artifactId>mybatis-plus</artifactId>
+		     <version>${mybatis.plus.version}</version>
 		</dependency>
-		<dependency>
-		    <groupId>com.github.pagehelper</groupId>
-		    <artifactId>pagehelper</artifactId>
-		    <version>4.1.6</version>
-		</dependency>
+		
+		       <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-common-utils</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+		
+		 <dependency>
+	       <groupId>org.projectlombok</groupId>
+	       <artifactId>lombok</artifactId>
+	       <version>${lombok.version}</version>
+	   </dependency>
   </dependencies>
 </project>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.thinkx.wecard.facade.telrecharge.mapper.RetailChnlOrderInfMapper">
+
+
+	<sql id="TableName">
+		tb_retail_chnl_order_inf
+	</sql>
+	
+	<select id="getList" parameterType="RetailChnlProductInf" resultType="RetailChnlProductInf">
+		SELECT 
+	  		m.channel_order_id, 
+			m.channel_id, 
+			m.outer_tid, 
+			m.recharge_phone, 
+		    m.recharge_type,
+			m.recharge_value, 
+			m.item_num, 
+			m.pay_amt,
+			m.order_stat, 
+			m.notify_stat, 
+			m.notify_flag, 
+			m.notify_url, 
+			m.app_version,
+			m.product_id, 
+			m.channel_rate,
+			m.resv1,
+			m.resv2,
+			m.resv3,
+			m.resv4,
+			m.resv5,
+			m.resv6,
+			m.data_stat,
+			m.remarks,
+			m.create_user,
+			m.update_user,
+			m.create_time,
+			m.update_time,
+			m.lock_version,
+	  		c.channel_name
+		FROM <include refid="TableName" /> m left join tb_retail_chnl_inf c on m.channel_id = c.channel_id
+		where m.data_stat='0' 
+		<if test="channelName !=null and channelName !='' ">
+			and c.channel_name like '%' || #{channelName} || '%'
+		</if>
+		<if test="channelOrderId !=null and channelOrderId !='' ">
+			and m.channel_order_id = #{channelOrderId}
+		</if>
+		<if test="outerTid !=null and outerTid !='' ">
+			and m.outer_tid = #{outerTid}
+		</if>
+		<if test="rechargeType !=null and rechargeType !='' ">
+			and m.recharge_type = #{rechargeType}
+		</if>
+		<if test="orderStat !=null and orderStat !='' ">
+			and m.order_stat = #{orderStat}
+		</if>
+		<if test="notifyStat !=null and notifyStat !='' ">
+			and m.notify_stat = #{notifyStat}
+		</if>
+		order by m.update_time desc
+		
+	</select>
+	
+
+		
+
+	
+	<select id="getRetailChnlProductInfByOuterId" parameterType="java.lang.String" resultMap="RetailChnlProductInfResultMap">
+		SELECT 
+	  		<include refid="ColumnResult" />
+		 		     FROM 	<include refid="TableName" /> m
+		              WHERE m.data_stat='0' AND m.outer_tid=#{outerId} AND m.channel_id=#{channelId}
+	</select>
+	
+	<select id="getRetailChnlOrderInfList" parameterType="RetailChnlProductInf" resultType="RetailChnlProductInf">
+		select o.channel_order_id,
+		       p.oper_name,
+		       o.recharge_phone,
+		       o.item_num,
+		       o.recharge_value,
+		       o.pay_amt,
+		       pr.recharge_state,
+		       o.create_time
+		  from tb_retail_chnl_order_inf   o,
+		       tb_retail_chnl_product_inf p,
+		       tb_retail_chnl_inf         c,
+		       tb_tel_provider_order_inf  pr
+		 where o.product_id = p.product_id
+		   and o.channel_id = c.channel_id
+		   and o.channel_order_id = pr.channel_order_id
+		   and o.data_stat = '0'
+		   and p.data_stat = '0'
+		   and c.data_stat = '0'
+		   and pr.data_stat = '0'
+		   and c.resv1 = #{mchntCode}
+		   <if test="channelOrderId != null and channelOrderId != '' ">
+		   and o.channel_order_id = #{channelOrderId}
+		   </if>
+		   <if test="rechargePhone != null and rechargePhone != '' ">
+		   and o.recharge_phone = #{rechargePhone}
+		   </if>
+		   <if test="rechargeState != null and rechargeState != '' ">
+		   and pr.recharge_state = #{rechargeState}
+		   </if>
+		   <if test="startDate != null and startDate != '' ">
+		   and o.create_time &gt;= #{startDate}
+		   </if>
+		   <if test="endDate != null and endDate != '' ">
+		   and o.create_time &lt;= #{endDate})
+		   </if>
+		 order by o.create_time desc
+	</select>
+
+	
+</mapper>

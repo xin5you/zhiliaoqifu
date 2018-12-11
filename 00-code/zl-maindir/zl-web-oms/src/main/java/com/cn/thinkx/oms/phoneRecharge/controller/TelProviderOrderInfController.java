@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.providerOrderRechargeState;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -23,7 +23,7 @@ public class TelProviderOrderInfController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelProviderOrderInfFacade telProviderOrderInfFacade;
+	private ProviderOrderInfFacade telProviderOrderInfFacade;
 
 	/**
 	 * 供应商订单列表

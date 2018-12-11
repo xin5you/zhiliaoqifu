@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.thinkx.wecard.facade.telrecharge.mapper.RetailChnlItemListMapper">
+		
+	
+	<select id="getList" parameterType="RetailChnlItemList" resultType="RetailChnlItemList">
+		SELECT 
+			c.oper_name,
+			c.oper_id,
+			m.id,
+	  		m.channel_rate,
+	  		ca.channel_name
+		from tb_retail_chnl_product_inf c
+		inner tb_retail_chnl_item_list m on c.product_id = m.product_id 
+		left join tb_retail_chnl_inf ca on m.channel_id = ca.channel_id
+		where  m.data_stat='0'
+		<if test="productId !=null and productId !='' ">
+			and m.product_id = #{productId}
+		</if>
+		<if test="operName !=null and operName !='' ">
+			and c.oper_name like '%' || #{operName} || '%'
+		</if>
+		<if test="operId !=null and operId !='' ">
+			and c.oper_id = #{operId}
+		</if>
+		order by m.update_time desc
+	</select>
+
+	
+	<update id="deleteByProductId" parameterType="string">
+		UPDATE <include refid="TableName" /> set data_stat='1'  where　product_id = #{productId} 
+	</update>
+</mapper>

@@ -24,7 +24,7 @@ public class TeleRespVO extends TeleBaseDomain {
 
 	private String facePrice; // 充值面值
 
-	private String itemNum; // 充值数量
+	private Integer itemNum; // 充值数量
 
 	private String outerTid; // 外部分销商订单号
 
@@ -87,11 +87,11 @@ public class TeleRespVO extends TeleBaseDomain {
 		this.facePrice = facePrice;
 	}
 
-	public String getItemNum() {
+	public Integer getItemNum() {
 		return itemNum;
 	}
 
-	public void setItemNum(String itemNum) {
+	public void setItemNum(Integer itemNum) {
 		this.itemNum = itemNum;
 	}
 

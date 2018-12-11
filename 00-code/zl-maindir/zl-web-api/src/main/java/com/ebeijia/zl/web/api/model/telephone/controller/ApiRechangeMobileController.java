@@ -21,9 +21,9 @@ import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespDomain;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
@@ -43,11 +43,11 @@ public class ApiRechangeMobileController {
 
 	@Autowired
 	@Qualifier("telChannelInfFacade")
-	private TelChannelInfFacade telChannelInfFacade;
+	private RetailChnlInfFacade telChannelInfFacade;
 
 	@Autowired
 	@Qualifier("telChannelOrderInfFacade")
-	private TelChannelOrderInfFacade telChannelOrderInfFacade;
+	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
 
 	@Autowired
 	@Qualifier("rechargeMobileProducerService")
@@ -55,7 +55,7 @@ public class ApiRechangeMobileController {
 
 	@Autowired
 	@Qualifier("telProviderOrderInfFacade")
-	private TelProviderOrderInfFacade telProviderOrderInfFacade;
+	private ProviderOrderInfFacade telProviderOrderInfFacade;
 
 	/**
 	 * 分销商发起手机充值

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cn.thinkx.wecard.facade.telrecharge.mapper.ProviderOrderInfMapper">
+		
+	<resultMap type="ProviderOrderInf" id="ProviderOrderInfResultMap">
+		<result column="reg_order_id" property="regOrderId"/>
+		<result column="channel_order_id" property="channelOrderId"/>
+		<result column="reg_order_amt" property="regOrderAmt"/>
+		<result column="operate_time" property="operateTime" />
+		<result column="pay_state" property="payState"/>
+		<result column="recharge_state" property="rechargeState"/>
+		<result column="item_cost" property="itemCost"/>
+		<result column="trans_cost" property="transCost"/>
+		<result column="revoke_message" property="revokeMessage"/>
+		<result column="bill_id" property="billId"/>
+		<result column="provider_id" property="providerId"/>
+		<result column="oper_num" property="operNum"/>	
+		<result column="resv1" property="resv1"/>
+		<result column="resv2" property="resv2"/>
+		<result column="resv3" property="resv3"/>
+		<result column="resv4" property="resv4"/>
+		<result column="resv5" property="resv5"/>
+		<result column="resv6" property="resv6"/>
+		<result column="data_stat" property="dataStat"/>
+		<result column="remarks" property="remarks"/>
+		<result column="create_user" property="createUser"/>
+		<result column="update_user" property="updateUser"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="lock_version" property="lockVersion"/>
+	</resultMap>
+	
+	<sql id="TableName">
+			tb_provider_order_inf
+	</sql>
+	
+	<sql id="ColumnResult">
+		reg_order_id, 
+		channel_order_id,
+		reg_order_amt, 
+		operate_time, 
+		pay_state, 
+		recharge_state, 
+		item_cost, 
+		trans_cost,
+		revoke_message, 
+		bill_id, 
+		provider_id, 
+		oper_num,
+		resv1,
+		resv2,
+		resv3,
+		resv4,
+		resv5,
+		resv6,
+		data_stat,
+		remarks,
+		create_user	,
+		update_user,
+		create_time,
+		update_time,
+		lock_version
+	</sql>
+
+
+	
+	<select id="getList" parameterType="ProviderOrderInf" resultMap="ProviderOrderInfResultMap">
+		SELECT 
+	  		<include refid="ColumnResult" />
+		FROM  <include refid="TableName" /> m
+		WHERE m.data_stat='0' 
+		<if test="regOrderId !=null and regOrderId !='' ">
+			and m.reg_order_id = #{regOrderId}
+		</if>
+		<if test="channelOrderId !=null and channelOrderId !='' ">
+			and m.channel_order_id = #{channelOrderId}
+		</if>
+		<if test="billId !=null and billId !='' ">
+			and m.bill_id = #{billId}
+		</if>
+		<if test="rechargeState !=null and rechargeState !='' ">
+			and m.recharge_state = #{rechargeState}
+		</if>
+		order by m.update_time desc
+	</select>
+	
+
+	
+		<update id="deleteById" parameterType="string">
+			UPDATE <include refid="TableName" /> SET DATA_STAT='1'  WHERE　reg_order_id = #{regOrderId} 
+		</update>
+		
+	<select id="getTelOrderInfByChannelOrderId" parameterType="java.lang.String" resultMap="ProviderOrderInfResultMap">
+		SELECT 
+	  		<include refid="ColumnResult" />
+		 		     FROM 	<include refid="TableName" /> m
+		              WHERE m.data_stat='0' AND channel_order_id=#{channelOrderId}
+	</select>
+	
+		
+	<select id="getListByTimer" parameterType="ProviderOrderInf" resultMap="ProviderOrderInfResultMap">
+		SELECT 
+	  		<include refid="ColumnResult" />
+		FROM  <include refid="TableName" /> m
+		WHERE m.data_stat='0' 
+		<if test="rechargeState !=null and rechargeState !='' ">
+			AND m.recharge_state = #{rechargeState}
+		</if>
+		AND sysdate - 1/(60*24) >m.update_time  and m.update_time > sysdate - 10/(60*24)
+		order by m.update_time desc
+	</select>
+</mapper>

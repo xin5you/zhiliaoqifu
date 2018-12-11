@@ -16,8 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelReserveDetail;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelReserveDetailFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelReserveType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -30,10 +30,10 @@ public class TelChannelReserveController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelChannelInfFacade telChannelInfFacade;
+	private RetailChnlInfFacade telChannelInfFacade;
 
 	@Reference(check=false)
-	private TelChannelReserveDetailFacade telChannelReserveDetailFacade;
+	private CompanyInfFacade telChannelReserveDetailFacade;
 
 	/**
 	 * 分销商备付金列表

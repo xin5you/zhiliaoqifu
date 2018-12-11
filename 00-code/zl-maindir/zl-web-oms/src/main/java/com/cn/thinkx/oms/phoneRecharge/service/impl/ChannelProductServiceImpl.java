@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.ChannelProductService;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelItemListFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlItemListFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlProductInfFacade;
 
 @Service("channelProductService")
 public class ChannelProductServiceImpl implements ChannelProductService{
@@ -16,10 +16,10 @@ public class ChannelProductServiceImpl implements ChannelProductService{
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Reference(check=false)
-	private TelChannelProductInfFacade telChannelProductInfFacade;
+	private RetailChnlProductInfFacade telChannelProductInfFacade;
 
 	@Reference(check=false)
-	private TelChannelItemListFacade telChannelItemListFacade;
+	private RetailChnlItemListFacade telChannelItemListFacade;
 
 	@Override
 	public int deleteTelChannelProductInf(String productId) {

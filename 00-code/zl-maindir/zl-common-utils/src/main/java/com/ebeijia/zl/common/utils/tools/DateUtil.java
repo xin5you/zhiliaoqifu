@@ -634,12 +634,7 @@ public class DateUtil {
 	}
 	
 	public static void main(String[] args) {
-		try {
-			System.out.println(getFullFormatStr("20161129142330"));
-			System.out.println(getDateText(new Date(),FORMAT_YYYYMMDDHHMMSS));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.out.println(DateUtil.COMMON_FULL.getDateText(new Date(System.currentTimeMillis())));
 	}
 
 	/**
@@ -669,5 +664,6 @@ public class DateUtil {
 			return d.compareTo(ed) <= 0;
 		}
 	}
+	
 
 }

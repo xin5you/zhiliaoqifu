@@ -18,9 +18,9 @@ import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
@@ -37,15 +37,15 @@ public class ApiRechargeNotifyController {
 	
 	@Autowired
 	@Qualifier("telChannelInfFacade")
-	private TelChannelInfFacade telChannelInfFacade;
+	private RetailChnlInfFacade telChannelInfFacade;
 	
 	@Autowired
 	@Qualifier("telChannelOrderInfFacade")
-	private TelChannelOrderInfFacade telChannelOrderInfFacade;
+	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
 	
 	@Autowired
 	@Qualifier("telProviderOrderInfFacade")
-	private TelProviderOrderInfFacade telProviderOrderInfFacade;
+	private ProviderOrderInfFacade telProviderOrderInfFacade;
 	
 	/**
 	 * 手机充值 汇卡宝商城回调

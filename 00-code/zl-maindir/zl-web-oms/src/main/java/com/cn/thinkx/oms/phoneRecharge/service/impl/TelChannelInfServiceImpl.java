@@ -20,10 +20,10 @@ import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelItemList;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelItemListFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlItemListFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
@@ -39,16 +39,16 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelChannelOrderInfFacade telChannelOrderInfFacade;
+	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
 
 	@Reference(check=false)
-	private TelChannelInfFacade telChannelInfFacade;
+	private RetailChnlInfFacade telChannelInfFacade;
 
 	@Reference(check=false)
-	private TelProviderOrderInfFacade telProviderOrderInfFacade;
+	private ProviderOrderInfFacade telProviderOrderInfFacade;
 	
 	@Reference(check=false)
-	private TelChannelItemListFacade telChannelItemListFacade;
+	private RetailChnlItemListFacade telChannelItemListFacade;
 
 	@Override
 	public ModelMap doCallBackNotifyChannel(String channelOrderId) {

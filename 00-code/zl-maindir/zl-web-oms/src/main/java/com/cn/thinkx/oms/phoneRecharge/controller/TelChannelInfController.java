@@ -26,9 +26,9 @@ import com.cn.thinkx.oms.sys.model.User;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelItemList;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelProductInf;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelItemListFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlItemListFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlProductInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductAreaFlag;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductProType;
@@ -73,16 +73,16 @@ public class TelChannelInfController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelChannelInfFacade telChannelInfFacade;
+	private RetailChnlInfFacade telChannelInfFacade;
 
 	@Reference(check=false)
-	private TelChannelProductInfFacade telChannelProductInfFacade;
+	private RetailChnlProductInfFacade telChannelProductInfFacade;
 
 	@Autowired
 	private TelChannelInfService telChannelInfService;
 	
 	@Reference(check=false)
-	private TelChannelItemListFacade telChannelItemListFacade;
+	private RetailChnlItemListFacade telChannelItemListFacade;
 
 	/**
 	 * 分销商信息列表

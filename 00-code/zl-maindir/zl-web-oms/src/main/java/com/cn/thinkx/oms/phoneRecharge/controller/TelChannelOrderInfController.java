@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelOrderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelOrderNotifyStat;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelOrderStat;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ShopType;
@@ -29,7 +29,7 @@ public class TelChannelOrderInfController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelChannelOrderInfFacade telChannelOrderInfFacade;
+	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
 
 	@Autowired
 	private TelChannelInfService telChannelInfService;

@@ -20,7 +20,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.ChannelProductService;
 import com.cn.thinkx.oms.sys.model.User;
 import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelProductInf;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelChannelProductInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlProductInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductAreaFlag;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductProType;
@@ -36,7 +36,7 @@ public class TelChannelProductController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelChannelProductInfFacade telChannelProductInfFacade;
+	private RetailChnlProductInfFacade telChannelProductInfFacade;
 
 	@Autowired
 	private ChannelProductService channelProductService;

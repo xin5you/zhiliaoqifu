@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.thinkx.wecard.facade.telrecharge.mapper.RetailChnlProductInfMapper">
+		
+	<resultMap type="RetailChnlProductInf" id="RetailChnlProductInfResultMap">
+		<result column="product_id" property="productId"/>
+		<result column="oper_name" property="operName"/>
+		<result column="oper_id" property="operId"/>
+		<result column="area_flag" property="areaFlag"/>
+		<result column="product_amt" property="productAmt"/>
+		<result column="product_price" property="productPrice"/>
+		<result column="product_type" property="productType"/>
+		<result column="channel_rate" property="channelRate"/>
+		<result column="resv1" property="resv1"/>
+		<result column="resv2" property="resv2"/>
+		<result column="resv3" property="resv3"/>
+		<result column="resv4" property="resv4"/>
+		<result column="resv5" property="resv5"/>
+		<result column="resv6" property="resv6"/>
+		<result column="data_stat" property="dataStat"/>
+		<result column="remarks" property="remarks"/>
+		<result column="create_user" property="createUser"/>
+		<result column="update_user" property="updateUser"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="lock_version" property="lockVersion"/>
+		<result column="chnl_item_id" property="chnlItemId"/>
+		<result column="channel_rate" property="channelRate"/>
+		<result column="channel_id" property="channelId"/>
+	</resultMap>
+	
+	<sql id="TableName">
+			tb_retail_chnl_product_inf
+	</sql>
+	
+	<sql id="ColumnResult">
+		product_id, 
+		oper_name, 
+		oper_id, 
+		area_flag, 
+		product_amt, 
+		product_price,
+		product_type,
+		resv1,
+		resv2,
+		resv3,
+		resv4,
+		resv5,
+		resv6,
+		data_stat,
+		remarks,
+		create_user	,
+		update_user,
+		create_time,
+		update_time,
+		lock_version
+	</sql>
+
+	
+	<select id="getList" parameterType="RetailChnlProductInf" resultMap="RetailChnlProductInfResultMap">
+		SELECT 
+	  		<include refid="ColumnResult" />
+		FROM <include refid="TableName" /> m
+		WHERE m.data_stat='0'
+		<if test="operName !=null and operName !='' ">
+			AND m.oper_name like '%' || #{operName} || '%'
+		</if>
+		<if test="operId !=null and operId !='' ">
+			AND m.oper_id = #{operId}
+		</if>
+		<if test="areaFlag !=null and areaFlag !='' ">
+			AND m.area_flag = #{areaFlag}
+		</if>
+		<if test="productType !=null and productType !='' ">
+			AND m.product_type = #{productType}
+		</if>
+		order by m.update_time desc
+	</select>
+	
+	<select id="getChannelProductByItemId" parameterType="String" resultMap="RetailChnlProductInfResultMap">
+		select
+			l.id, 
+			l.channel_id,
+		    p.product_id, 
+		    p.oper_name, 
+		    p.oper_id, 
+		    p.area_flag, 
+		    p.product_amt, 
+		    p.product_price,
+		    p.product_type,
+		    l.channel_rate
+        from tb_retail_chnl_product_inf p,
+         tb_retail_chnl_item_list l,
+         tb_retail_chnl_inf a  
+         where  p.data_stat='0'
+        and l.data_stat='0'
+        and a.data_stat='0'
+        and p.product_id=l.product_id
+        and l.channel_id=a.channel_id
+		AND l.chnl_item_id = #{id}
+	</select>
+	
+	<select id="getChannelProductListByChannelId" parameterType="String" resultMap="RetailChnlProductInfResultMap">
+		select 
+			cp.product_id, 
+			cp.oper_name, 
+			cp.oper_id, 
+			cp.area_flag, 
+			cp.product_amt, 
+			cp.product_price,
+			cp.product_type,
+			cp.data_stat,
+			cp.remarks,
+			cp.create_user,
+			cp.update_user,
+			cp.create_time,
+			cp.update_time,
+			cp.lock_version,
+			item.chnl_item_id,
+			item.channel_rate
+		from tb_retail_chnl_product_inf cp inner join tb_retail_chnl_item_list item 
+		on cp.product_id = item.product_id
+		where cp.data_stat='0'
+		and item.channel_id  = #{channelId}
+		order by cp.update_time desc
+	</select>
+	
+
+	
+		<update id="deleteById" parameterType="string">
+			UPDATE <include refid="TableName" /> SET DATA_STAT='1'  WHERE　PRODUCT_ID = #{productId} 
+		</update>
+		
+	<select id="getProductRateByMaps" parameterType="java.util.Map" resultMap="RetailChnlProductInfResultMap">
+    	select 
+		p.product_id, 
+		p.oper_name, 
+		p.oper_id, 
+		p.area_flag, 
+		p.product_amt, 
+		p.product_price,
+		p.product_type,
+    	l.channel_rate
+    from tb_retail_chnl_product_inf p,
+         tb_retail_chnl_item_list l,
+         tb_retail_chnl_inf a
+        where  p.data_stat='0'
+        and l.data_stat='0'
+        and a.data_stat='0'
+        and p.product_id=l.product_id
+        and l.channel_id=a.channel_id
+        AND p.OPER_ID=#{operId}
+        AND p.PRODUCT_TYPE=#{productType}
+        AND p.PRODUCT_AMT=#{productAmt}
+        AND a.CHANNEL_ID=#{channelId}
+        <if test="productId != null and productId != ''">
+        	AND  p.product_id=#{productId}
+        </if>
+	</select>
+
+</mapper>
