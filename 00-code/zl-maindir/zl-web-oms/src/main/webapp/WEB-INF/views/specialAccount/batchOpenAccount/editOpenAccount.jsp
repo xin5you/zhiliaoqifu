@@ -25,9 +25,8 @@
 			        </nav>
 					<form id="mainForm" action="${ctx }/speaccount/batch/intoEditOpenAccount.do?orderId=${order.orderId}" class="form-inline" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
-						<input type="hidden" id="accountType" name="accountType"  value="${order.accountType }"/>
 						<input type="hidden" id="companyId" name="companyId"  value="${order.companyId }"/>
-						<input type="hidden" id="bizType" name="bizType"  value="${order.bizType }"/>
+						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
 						<h3 class="heading">订单编辑</h3>
 						<div><button class="btn btn-primary btn-editAddAccount" type="button"> 添 加 </button></div><br/>
 						<div class="row-fluid" >
@@ -52,7 +51,7 @@
 										<tr>
 											<td>
 												<span class="fontBold">账户类型:</span>
-												<span class="fontColor">${order.accountTypeName }</span>
+												<span class="fontColor">${accountTypeName }</span>
 											</td>
 											<td>
 												<span class="fontBold">所属企业:</span>
@@ -61,9 +60,10 @@
 											<td>
 												<span class="fontBold">开户类型:</span>
 												<span class="fontColor">
-													<select>
+													<select multiple name="billingTypes" id="billingTypes" class="form-control span8">
 														<c:forEach var="bList" items="${billingTypeList}" varStatus="st">
-															<optgroup label="${bList }"></optgroup>
+															<%-- <optgroup label="${bList }"></optgroup> --%>
+															<option value="${bList.bId }">${bList.name }</option>
 														</c:forEach>
 													</select>
 												</span>
@@ -92,6 +92,7 @@
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
                                     <td>${entity.phoneNo}</td>
+                                   <%--  <td>${entity.bizTypeName}</td> --%>
 				                    <td>
                                   <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')"> --%>
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>

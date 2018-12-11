@@ -39,7 +39,7 @@ public interface SpeAccountBatchOrderListService {
 	 * @param orderList
 	 * @return
 	 */
-	int addOrderList(SpeAccountBatchOrderList orderList, User user);
+	int addOrderList(SpeAccountBatchOrderList orderList, User user, String[] bizType);
 	
 	/**
 	 * 删除订单明细

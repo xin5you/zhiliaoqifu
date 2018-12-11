@@ -27,11 +27,10 @@
         <typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrderUpload" alias="PhoneRechargeOrderUpload" />
         <typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeShop" alias="PhoneRechargeShop" />
         
-	 	<typeAlias type="com.cn.thinkx.oms.specialAccount.model.BillingTypeInf" alias="BillingTypeInf" />
-        <typeAlias type="com.cn.thinkx.oms.specialAccount.model.CompanyInf" alias="CompanyInf" />
 	 	<typeAlias type="com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder" alias="SpeAccountBatchOrder" />
         <typeAlias type="com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList" alias="SpeAccountBatchOrderList" />
-	 	<!-- <package name="com.ebeijia.zl.basics.system.domain"/> -->
+	 	
+	 	<package name="com.ebeijia.zl.basics.billingtype.domain"/>
 	</typeAliases>
 
 </configuration>

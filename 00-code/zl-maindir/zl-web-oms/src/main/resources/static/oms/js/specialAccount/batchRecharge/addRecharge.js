@@ -29,21 +29,17 @@ var addRecharge = {
             rules: {
             	companyName:{ required: true },
             	orderName: { required: true },
-            	accountType:{required: true },
             	bizType:{required: true }
             },
             messages: {
             	companyName: {
-                    required: "请输入公司名称"
+                    required: "请选择公司名称"
                 },
             	orderName: {
                     required: "请输入订单名称"
                 },
-                accountType:{
-                	required:"请选择充值账户"
-                },
                 bizType:{
-                	required:"请选择充值类型"
+                	required:"请选择充值账户类型"
                 }
             },
             invalidHandler: function (form, validator) {
@@ -143,6 +139,17 @@ var addRecharge = {
 		$('#msg').modal({
 			backdrop : "static"
 		});
+		var companyId = $("#companyId").val();
+		var accountType = $("#accountType").val();
+		var billingType = $("#billingType").val();
+		if (companyId == '') {
+			Helper.alert("请选择企业名称");
+			return false;
+		}
+		if(billingType==''){
+			Helper.alert("请选择充值类型");
+			return false;
+		}
 		$("#pageMainForm").ajaxSubmit({
 			type:'post', // 提交方式 get/post
             url: Helper.getRootPath() + '/speaccount/batchRecharge/addRechargeCommit.do', // 需要提交的 url
@@ -150,8 +157,8 @@ var addRecharge = {
             data: {
             	"orderName":$("#orderName").val(),
             	"companyId":companyId,
-                "accountType":accountType,
-                "billingTypes":billingTypes
+            	"accountType":accountType,
+                "billingType":billingType
 			},
 			success: function(data){
 				if(data.status) {

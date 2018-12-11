@@ -23,19 +23,20 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.cn.thinkx.oms.common.util.OmsEnum.BatchOrderStat;
-import com.cn.thinkx.oms.common.util.OmsEnum.BatchOrderType;
-import com.cn.thinkx.oms.specialAccount.model.BillingTypeInf;
-import com.cn.thinkx.oms.specialAccount.model.CompanyInf;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList;
-import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
-import com.cn.thinkx.oms.specialAccount.service.CompanyInfService;
 import com.cn.thinkx.oms.specialAccount.service.SpeAccountBatchOrderListService;
 import com.cn.thinkx.oms.specialAccount.service.SpeAccountBatchOrderService;
 import com.cn.thinkx.oms.specialAccount.util.OrderConstants;
 import com.cn.thinkx.oms.specialAccount.util.PagePersonUtil;
 import com.cn.thinkx.oms.sys.model.User;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.CompanyInf;
+import com.cn.thinkx.wecard.facade.telrecharge.service.CompanyInfFacade;
+import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -62,8 +63,8 @@ public class SpeBatchRechargeController {
 	private JedisClusterUtils jedisClusterUtils;
 	
 	@Autowired
-	@Qualifier("companyInfService")
-	private CompanyInfService companyInfService;
+	@Qualifier("companyInfFacade")
+	private CompanyInfFacade companyInfFacade;
 
 	/**
 	 * 批量充值列表
@@ -80,18 +81,18 @@ public class SpeBatchRechargeController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);		
 		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
-		order.setOrderType(BatchOrderType.BatchOrderType_300.getCode());
+		order.setOrderType(TransCode.MB50.getCode());
 		try {
 			pageList = speAccountBatchOrderService.getSpeAccountBatchOrderPage(startNum, pageSize, order, req);
 		} catch (Exception e) {
 			logger.error("## 查询批量充值列表信息出错", e);
 		}
-		List<CompanyInf> companyList = companyInfService.getCompanyInfList(new CompanyInf());
+		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(new CompanyInf());
 		mv.addObject("order", order);
 		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
-		mv.addObject("accountTypeList", UserType.values());
+//		mv.addObject("accountTypeList", UserType.TYPE100.getValue());
 		mv.addObject("companyList", companyList);
 		return mv;
 	}
@@ -107,7 +108,7 @@ public class SpeBatchRechargeController {
 	public ModelAndView intoAddRecharge(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("specialAccount/batchRecharge/addRecharge");
 		BigDecimal sumMoney = BigDecimal.ZERO;
-		List<CompanyInf> companyList = companyInfService.getCompanyInfList(new CompanyInf());
+		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(new CompanyInf());
 		List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
 		
 		LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
@@ -130,7 +131,7 @@ public class SpeBatchRechargeController {
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("count", pageList.getTotal());
 		mv.addObject("sumMoney", sumMoney.doubleValue());
-		mv.addObject("accountTypeList", UserType.values());
+		mv.addObject("accountType", UserType.TYPE100);
 		mv.addObject("companyList", companyList);
 		mv.addObject("billingTypeList", billingTypeList);
 		return mv;
@@ -150,43 +151,18 @@ public class SpeBatchRechargeController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		int i = 0;
 		LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
-//		LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
 		if (orderList == null || orderList.size() < 1) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "没有添加任何数据！！！");
 			return resultMap;
 		}
-		String [] billingTypes=req.getParameterValues("billingTypes[]");
-		String bizType = "";
-		if (billingTypes != null && billingTypes.length > 0) {
-			for (String s : billingTypes) {
-				bizType += s + ",";
-			}
-//			bizType = bizType.substring(0, bizType.length() - 1);
-		}
-		HttpSession session = req.getSession();
-		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
-		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
-		order.setOrderId(UUID.randomUUID().toString());
-		order.setOrderName(StringUtil.nullToString(req.getParameter("orderName")));
-		order.setCompanyId(StringUtil.nullToString(req.getParameter("companyId")));
-		order.setAccountType(StringUtil.nullToString(req.getParameter("accountType")));
-		order.setBizType(bizType);
-		order.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-		order.setOrderType(BatchOrderType.BatchOrderType_300.getCode());
-		order.setOrderDate(System.currentTimeMillis());
-		order.setCreateUser(user.getId().toString());
-		order.setUpdateUser(user.getId().toString());
-		order.setCreateTime(System.currentTimeMillis());
-		order.setUpdateTime(System.currentTimeMillis());
 		try {
-			i = speAccountBatchOrderService.addSpeAccountBatchOrder(order, orderList);
+			i = speAccountBatchOrderService.addSpeAccountBatchOrder(req, orderList, TransCode.MB50.getCode());
 			if (i > 0) {
 				jedisClusterUtils.del(OrderConstants.speBathRechargeSession);
 			}
 		} catch (Exception e) {
-			logger.error("新增批量充值订单出错----->>[{}]", e.getMessage());
+			logger.error("## 新增批量充值订单出错----->>[{}]", e.getMessage());
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "新增批量充值失败，请重新添加");
 		}
@@ -228,18 +204,19 @@ public class SpeBatchRechargeController {
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		SpeAccountBatchOrder order = speAccountBatchOrderService.getSpeAccountBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
-		List<String> bizTypeList = new ArrayList<>();
-		for (String str : order.getBizType().split(",")) {
-			BillingTypeInf billingTypeInf = billingTypeInfService.getBillingTypeInfById(str);
-			bizTypeList.add(billingTypeInf.getbName());
-		}
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<SpeAccountBatchOrderList> pageList = speAccountBatchOrderListService.getSpeAccountBatchOrderListPage(startNum, pageSize, orderId);
+		List<SpeAccountBatchOrderList> list = new ArrayList<>();
+		list = speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrderId(orderId);
+//		list = list.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(SpeAccountBatchOrderList::getBizType))), ArrayList::new));
 		mv.addObject("order", order);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
-		mv.addObject("billingTypeList", bizTypeList);
+		mv.addObject("bizType", list.get(0).getBizType());
+		mv.addObject("bizTypeName", SpecAccountTypeEnum.findByBId(list.get(0).getBizType()).getName());
+		mv.addObject("accountType", list.get(0).getAccountType());
+		mv.addObject("accountTypeName", UserType.findByCode(list.get(0).getAccountType()).getValue());
 		return mv;
 	}
 
@@ -343,6 +320,7 @@ public class SpeBatchRechargeController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String bizType = StringUtil.nullToString(req.getParameter("bizType")); 
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		try {
@@ -351,19 +329,22 @@ public class SpeBatchRechargeController {
 			orderList.setUserName(StringUtil.nullToString(req.getParameter("name")));
 			orderList.setPhoneNo(StringUtil.nullToString(req.getParameter("phone")));
 			orderList.setUserCardNo(StringUtil.nullToString(req.getParameter("card")));
-			orderList.setAmount(NumberUtils.RMBYuanToCent(StringUtil.nullToString(req.getParameter("money"))));
-			orderList.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
+			orderList.setAccountType(StringUtil.nullToString(req.getParameter("accountType")));
+			orderList.setAmount(Double.valueOf(NumberUtils.RMBYuanToCent(StringUtil.nullToString(req.getParameter("money")))));
 			orderList.setCreateUser(user.getId().toString());
 			orderList.setUpdateUser(user.getId().toString());
 			orderList.setCreateTime(System.currentTimeMillis());
 			orderList.setUpdateTime(System.currentTimeMillis());
+			
+			String[] bizTypes = {bizType};
+			
 			List<SpeAccountBatchOrderList> orderList2 = speAccountBatchOrderListService.getSpeAccountBatchOrderListByOrder(orderList);
 			if (orderList2 != null && orderList2.size() > 0) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "电话号码重复！！！");
 				return resultMap;
 			}
-			speAccountBatchOrderListService.addOrderList(orderList, user);
+			speAccountBatchOrderListService.addOrderList(orderList, user, bizTypes);
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "系统故障，请稍后再试");
@@ -414,7 +395,7 @@ public class SpeBatchRechargeController {
 			order.setUserName(StringUtil.nullToString(req.getParameter("name")));
 			order.setUserCardNo(StringUtil.nullToString(req.getParameter("card")));
 			order.setPhoneNo(phone);
-			order.setAmount(NumberUtils.RMBCentToYuan(NumberUtils.RMBYuanToCent(money)));
+			order.setAmount(Double.valueOf(NumberUtils.RMBCentToYuan(NumberUtils.RMBYuanToCent(money))));
 			
 			LinkedList<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListService.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);
 //			LinkedList<SpeAccountBatchOrderList> orderList = PagePersonUtil.getRedisBatchOrderList(OrderConstants.speBathRechargeSession);

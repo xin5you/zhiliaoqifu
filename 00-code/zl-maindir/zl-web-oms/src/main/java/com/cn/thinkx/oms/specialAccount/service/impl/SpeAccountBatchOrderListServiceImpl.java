@@ -1,5 +1,6 @@
 package com.cn.thinkx.oms.specialAccount.service.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -18,11 +19,11 @@ import com.cn.thinkx.oms.specialAccount.mapper.SpeAccountBatchOrderListMapper;
 import com.cn.thinkx.oms.specialAccount.mapper.SpeAccountBatchOrderMapper;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList;
-import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
-import com.cn.thinkx.oms.specialAccount.service.CompanyInfService;
 import com.cn.thinkx.oms.specialAccount.service.SpeAccountBatchOrderListService;
 import com.cn.thinkx.oms.sys.model.User;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
@@ -36,14 +37,6 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 	
 	@Autowired
 	private SpeAccountBatchOrderMapper speAccountBatchOrderMapper;
-	
-	@Autowired
-	@Qualifier("companyInfService")
-	private CompanyInfService companyInfService;
-	
-	@Autowired
-	@Qualifier("billingTypeInfService")
-	private BillingTypeInfService billingTypeInfService;
 	
 	@Autowired
 	@Qualifier("jedisClusterUtils")
@@ -67,29 +60,37 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 		if (list != null) {
 			for (SpeAccountBatchOrderList batchOrderList : list) {
 				batchOrderList.setOrderStat(BatchOrderStat.findStat(batchOrderList.getOrderStat()));
+				batchOrderList.setAccountTypeName(UserType.findByCode(batchOrderList.getAccountType()).getValue());
+				batchOrderList.setBizTypeName(SpecAccountTypeEnum.findByBId(batchOrderList.getBizType()).getName());
 				if(!StringUtil.isEmpty(batchOrderList.getAmount())){
-					batchOrderList.setAmount(NumberUtils.RMBCentToYuan(batchOrderList.getAmount()));
+					batchOrderList.setAmount(Double.valueOf(NumberUtils.RMBCentToYuan(batchOrderList.getAmount().toString())));
 				}
 			}
+//			list = list.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(SpeAccountBatchOrderList::getPhoneNo))), ArrayList::new));
 			page = new PageInfo<SpeAccountBatchOrderList>(list);
 		}
 		return page;
 	}
 
 	@Override
-	public int addOrderList(SpeAccountBatchOrderList orderList, User user) {
+	public int addOrderList(SpeAccountBatchOrderList orderList, User user, String[] bizType) {
 		SpeAccountBatchOrder batchOrder = new SpeAccountBatchOrder();
 		batchOrder.setOrderId(orderList.getOrderId());
 		batchOrder.setUpdateUser(user.getId());
 		batchOrder.setUpdateTime(System.currentTimeMillis());
 		speAccountBatchOrderMapper.updateSpeAccountBatchOrder(batchOrder);
-		orderList.setOrderListId(UUID.randomUUID().toString());
-		orderList.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
-		orderList.setCreateUser(user.getId());
-		orderList.setUpdateUser(user.getId());
-		orderList.setCreateTime(System.currentTimeMillis());
-		orderList.setUpdateTime(System.currentTimeMillis());
-		return speAccountBatchOrderListMapper.addOrderList(orderList);
+		List<SpeAccountBatchOrderList> batchOrderList = new ArrayList<SpeAccountBatchOrderList>();
+		for (String type : bizType) {
+			orderList.setOrderListId(UUID.randomUUID().toString());
+			orderList.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
+			orderList.setBizType(type);
+			orderList.setCreateUser(user.getId());
+			orderList.setUpdateUser(user.getId());
+			orderList.setCreateTime(System.currentTimeMillis());
+			orderList.setUpdateTime(System.currentTimeMillis());
+			batchOrderList.add(orderList);
+		}
+		return speAccountBatchOrderListMapper.addSpeAccountBatchOrderList(batchOrderList);
 	}
 
 	@Override
@@ -102,7 +103,13 @@ public class SpeAccountBatchOrderListServiceImpl implements SpeAccountBatchOrder
 		bo.setUpdateUser(user.getId().toString());
 		bo.setUpdateTime(System.currentTimeMillis());
 		speAccountBatchOrderMapper.updateSpeAccountBatchOrder(bo);
-		return speAccountBatchOrderListMapper.deleteSpeAccountBatchOrderList(orderListId);
+		List<SpeAccountBatchOrderList> orderList = speAccountBatchOrderListMapper.getSpeAccountBatchOrderListByOrderId(bol.getOrderId());
+		for (SpeAccountBatchOrderList list : orderList) {
+			list.setOrderStat(BatchOrderStat.BatchOrderStat_20.getCode());
+			list.setUpdateUser(user.getId());
+			list.setUpdateTime(System.currentTimeMillis());
+		}
+		return speAccountBatchOrderListMapper.updateSpeAccountBatchOrderListByList(orderList);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.cn.thinkx.oms.phoneRecharge.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.cn.thinkx.oms.specialAccount.model.BillingTypeInf;
-import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.service.TelProviderInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.ProviderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderInfFacade;
+import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.providerDefaultRoute;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -36,10 +36,9 @@ public class TelProviderInfController {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Reference(check=false)
-	private TelProviderInfFacade telProviderInfFacade;
+	private ProviderInfFacade telProviderInfFacade;
 	
 	@Autowired
-	@Qualifier("billingTypeInfService")
 	private BillingTypeInfService billingTypeInfService;
 
 	/**
@@ -55,9 +54,8 @@ public class TelProviderInfController {
 		int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 		try {
-			TelProviderInf telProviderInf = this.getTelProviderInf(request);
-			PageInfo<TelProviderInf> pageList = telProviderInfFacade.getTelProviderInfPage(startNum, pageSize,
-					telProviderInf);
+			ProviderInf telProviderInf = this.getProviderInf(request);
+			PageInfo<ProviderInf> pageList = telProviderInfFacade.getProviderInfPage(startNum, pageSize, telProviderInf);
 			mv.addObject("pageInfo", pageList);
 			mv.addObject("telProviderInf", telProviderInf);
 		} catch (Exception e) {
@@ -77,10 +75,10 @@ public class TelProviderInfController {
 	@RequestMapping(value = "/intoAddTelProviderInf")
 	public ModelAndView intoAddTelProviderInf(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telProviderInf/addTelProviderInf");
-		TelProviderInf telProviderInf = new TelProviderInf();
+		ProviderInf telProviderInf = new ProviderInf();
 		telProviderInf.setDefaultRoute(providerDefaultRoute.DefaultRoute0.getCode());
 		try {
-			List<TelProviderInf> list = telProviderInfFacade.getTelProviderInfList(telProviderInf);
+			List<ProviderInf> list = telProviderInfFacade.getProviderInfList(telProviderInf);
 			if(list.size() == 0){
 				mv.addObject("defaultRouteState", "0");
 			}else{
@@ -107,7 +105,7 @@ public class TelProviderInfController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
-			TelProviderInf telProviderInf = this.getTelProviderInf(req);
+			ProviderInf telProviderInf = this.getProviderInf(req);
 			telProviderInf.setDataStat("0");
 			HttpSession session = req.getSession();
 			User user = (User)session.getAttribute(Constants.SESSION_USER);
@@ -116,7 +114,7 @@ public class TelProviderInfController {
 				telProviderInf.setUpdateUser(user.getId().toString());
 			}
 			telProviderInf.setProviderId(UUID.randomUUID().toString());
-			telProviderInfFacade.saveTelProviderInf(telProviderInf);
+			telProviderInfFacade.saveProviderInf(telProviderInf);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "新增失败，请重新添加");
@@ -137,7 +135,7 @@ public class TelProviderInfController {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telProviderInf/editTelProviderInf");
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
-			TelProviderInf telProviderInf = telProviderInfFacade.getTelProviderInfById(providerId);
+			ProviderInf telProviderInf = telProviderInfFacade.getProviderInfById(providerId);
 			List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(null);
 			mv.addObject("billingTypeList", billingTypeList);
 			mv.addObject("telProviderInf", telProviderInf);
@@ -167,7 +165,7 @@ public class TelProviderInfController {
 				logger.error("## 编辑供应商信息异常,供应商providerId:[{}]为空", providerId);
 			}
 //			TelProviderInf tpInf = telProviderInfFacade.getTelProviderInfById(providerId);
-			TelProviderInf telProviderInf = this.getTelProviderInf(req);
+			ProviderInf telProviderInf = this.getProviderInf(req);
 			telProviderInf.setProviderId(providerId);
 //			tpInf.setProviderId(providerId);
 			HttpSession session = req.getSession();
@@ -183,7 +181,7 @@ public class TelProviderInfController {
 //			tpInf.setProviderRate(telProviderInf.getProviderRate());
 //			tpInf.setOperSolr(telProviderInf.getOperSolr());
 //			tpInf.setRemarks(telProviderInf.getRemarks());
-			telProviderInfFacade.updateTelProviderInf(telProviderInf);
+			telProviderInfFacade.updateProviderInf(telProviderInf);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "编辑失败，请联系管理员");
@@ -204,7 +202,7 @@ public class TelProviderInfController {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telProviderInf/viewTelProviderInf");
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
-			TelProviderInf telProviderInf = telProviderInfFacade.getTelProviderInfById(providerId);
+			ProviderInf telProviderInf = telProviderInfFacade.getProviderInfById(providerId);
 			mv.addObject("telProviderInf", telProviderInf);
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);
@@ -231,7 +229,7 @@ public class TelProviderInfController {
 				resultMap.addAttribute("msg", "删除失败,供应商id为空");
 				logger.error("## 删除供应商信息异常,供应商providerId:[{}]为空", providerId);
 			}
-			telProviderInfFacade.deleteTelProviderInfById(providerId);
+			telProviderInfFacade.deleteProviderInfById(providerId);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "删除失败，请联系管理员");
@@ -243,15 +241,15 @@ public class TelProviderInfController {
 	/**
 	 * 封装供应商实体
 	 */
-	public TelProviderInf getTelProviderInf(HttpServletRequest req) {
-		TelProviderInf telProviderInf = new TelProviderInf();
-		telProviderInf.setbId(StringUtil.nullToString(req.getParameter("bId")));
+	public ProviderInf getProviderInf(HttpServletRequest req) {
+		ProviderInf telProviderInf = new ProviderInf();
+		telProviderInf.setBId(StringUtil.nullToString(req.getParameter("bId")));
 		telProviderInf.setProviderName(StringUtil.nullToString(req.getParameter("providerName")));
 		telProviderInf.setAppUrl(StringUtil.nullToString(req.getParameter("appUrl")));
 		telProviderInf.setAppSecret(StringUtil.nullToString(req.getParameter("appSecret")));
 		telProviderInf.setAccessToken(StringUtil.nullToString(req.getParameter("accessToken")));
 		telProviderInf.setDefaultRoute(StringUtil.nullToString(req.getParameter("defaultRoute")));
-		telProviderInf.setProviderRate(StringUtil.nullToString(req.getParameter("providerRate")));
+		telProviderInf.setProviderRate(new BigDecimal(StringUtil.nullToString(req.getParameter("providerRate"))));
 		if (!StringUtil.isNullOrEmpty(req.getParameter("operSolr")))
 			telProviderInf.setOperSolr(Integer.valueOf(req.getParameter("operSolr")));
 		telProviderInf.setRemarks(StringUtil.nullToString(req.getParameter("remarks")));

@@ -21,6 +21,7 @@ import org.springframework.ui.ModelMap;
 
 import com.cn.thinkx.oms.common.model.SMSMessage;
 import com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 
 public class XlsReadFile {
 	
@@ -173,14 +174,13 @@ public class XlsReadFile {
 						}
 						if (!Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$")
 								.matcher(getValue(row.getCell(4))).find()) {
-							// orderList = null;
 							orderMap = null;
 							map.addAttribute("status", Boolean.FALSE);
 							map.addAttribute("msg", "第" + (rIndex + 1) + "行金额错误!!!");
 							return map;
 						}
 						// order.setAmount(""+NumberUtils.formatMoney(NumberUtils.RMBYuanToCent(getValue(row.getCell(3)))));
-						order.setAmount(getValue(row.getCell(4)));
+						order.setAmount(Double.valueOf(NumberUtils.RMBYuanToCent(getValue(row.getCell(4)))));
 					}
 					// orderList.addLast(order);
 					orderMap.put(order.getPhoneNo(), order);

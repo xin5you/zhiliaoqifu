@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.ChannelProductService;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelProductInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlProductInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlProductInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductAreaFlag;
@@ -54,10 +54,9 @@ public class TelChannelProductController {
 		int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 
-		TelChannelProductInf product = this.getTelChannelProductInf(request);
+		RetailChnlProductInf product = this.getRetailChnlProductInf(request);
 		try {
-			PageInfo<TelChannelProductInf> pageList = telChannelProductInfFacade.getTelChannelProductInfPage(startNum,
-					pageSize, product);
+			PageInfo<RetailChnlProductInf> pageList = telChannelProductInfFacade.getRetailChnlProductInfPage(startNum, pageSize, product);
 			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 分销商产品信息列表查询异常", e);
@@ -98,7 +97,7 @@ public class TelChannelProductController {
 		ModelMap resultMap = new ModelMap();
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
-			TelChannelProductInf telChannelProductInf = this.getTelChannelProductInf(req);
+			RetailChnlProductInf telChannelProductInf = this.getRetailChnlProductInf(req);
 			telChannelProductInf.setDataStat("0");
 			HttpSession session = req.getSession();
 			User user = (User)session.getAttribute(Constants.SESSION_USER);
@@ -128,8 +127,7 @@ public class TelChannelProductController {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telChannelProduct/editTelChannelProduct");
 		String productId = StringUtil.nullToString(req.getParameter("productId"));
 		try {
-			TelChannelProductInf telChannelProductInf = telChannelProductInfFacade
-					.getTelChannelProductInfById(productId);
+			RetailChnlProductInf telChannelProductInf = telChannelProductInfFacade.getRetailChnlProductInfById(productId);
 			mv.addObject("telCPInf", telChannelProductInf);
 		} catch (Exception e) {
 			logger.error("## 通过id查找分销商产品信息异常", e);
@@ -158,8 +156,8 @@ public class TelChannelProductController {
 				resultMap.addAttribute("msg", "编辑失败,分销商产品id为空");
 				logger.error("## 编辑分销商产品信息异常,分销商产品productId:[{}]为空", productId);
 			}
-			TelChannelProductInf telCPInf = telChannelProductInfFacade.getTelChannelProductInfById(productId);
-			TelChannelProductInf telChannelProductInf = this.getTelChannelProductInf(req);
+			RetailChnlProductInf telCPInf = telChannelProductInfFacade.getRetailChnlProductInfById(productId);
+			RetailChnlProductInf telChannelProductInf = this.getRetailChnlProductInf(req);
 			HttpSession session = req.getSession();
 			User user = (User)session.getAttribute(Constants.SESSION_USER);
 			if (user != null) {
@@ -172,7 +170,7 @@ public class TelChannelProductController {
 			telCPInf.setProductPrice(telChannelProductInf.getProductPrice());
 			telCPInf.setProductType(telChannelProductInf.getProductType());
 			telCPInf.setRemarks(telChannelProductInf.getRemarks());
-			telChannelProductInfFacade.updateTelChannelProductInf(telCPInf);
+			telChannelProductInfFacade.updateRetailChnlProductInf(telCPInf);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "编辑失败，请联系管理员");
@@ -194,7 +192,7 @@ public class TelChannelProductController {
 		String productId = StringUtil.nullToString(req.getParameter("productId"));
 		try {
 			if (!StringUtil.isNullOrEmpty(productId)) {
-				TelChannelProductInf telCPInf = telChannelProductInfFacade.getTelChannelProductInfById(productId);
+				RetailChnlProductInf telCPInf = telChannelProductInfFacade.getRetailChnlProductInfById(productId);
 				mv.addObject("telCPInf", telCPInf);
 			}
 		} catch (Exception e) {
@@ -233,10 +231,10 @@ public class TelChannelProductController {
 		return resultMap;
 	}
 	
-	public TelChannelProductInf getTelChannelProductInf(HttpServletRequest req) {
+	public RetailChnlProductInf getRetailChnlProductInf(HttpServletRequest req) {
 		String productAmt = StringUtil.nullToString(req.getParameter("productAmt"));
 		String productPrice = StringUtil.nullToString(req.getParameter("productPrice"));
-		TelChannelProductInf product = new TelChannelProductInf();
+		RetailChnlProductInf product = new RetailChnlProductInf();
 		product.setOperName(StringUtil.nullToString(req.getParameter("operName")));
 		product.setOperId(StringUtil.nullToString(req.getParameter("operId")));
 		product.setAreaFlag(StringUtil.nullToString(req.getParameter("areaFlag")));

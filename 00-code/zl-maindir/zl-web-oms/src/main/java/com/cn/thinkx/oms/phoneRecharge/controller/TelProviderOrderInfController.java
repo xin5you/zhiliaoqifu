@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.ProviderOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.providerOrderRechargeState;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -39,9 +39,8 @@ public class TelProviderOrderInfController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
-			TelProviderOrderInf telProviderOrderInf = this.getTelProviderOrderInf(req);
-			PageInfo<TelProviderOrderInf> pageList = telProviderOrderInfFacade.getTelProviderOrderInfPage(startNum,
-					pageSize, telProviderOrderInf);
+			ProviderOrderInf telProviderOrderInf = this.getProviderOrderInf(req);
+			PageInfo<ProviderOrderInf> pageList = telProviderOrderInfFacade.getProviderOrderInfPage(startNum, pageSize, telProviderOrderInf);
 			mv.addObject("pageInfo", pageList);
 			mv.addObject("telProviderOrderInf", telProviderOrderInf);
 		} catch (Exception e) {
@@ -58,8 +57,8 @@ public class TelProviderOrderInfController {
 	 * @param req
 	 * @return
 	 */
-	public TelProviderOrderInf getTelProviderOrderInf(HttpServletRequest req) {
-		TelProviderOrderInf telProviderOrderInf = new TelProviderOrderInf();
+	public ProviderOrderInf getProviderOrderInf(HttpServletRequest req) {
+		ProviderOrderInf telProviderOrderInf = new ProviderOrderInf();
 		telProviderOrderInf.setRegOrderId(StringUtil.nullToString(req.getParameter("regOrderId")));
 		telProviderOrderInf.setChannelOrderId(StringUtil.nullToString(req.getParameter("channelOrderId")));
 		telProviderOrderInf.setBillId(StringUtil.nullToString(req.getParameter("billId")));

@@ -26,21 +26,13 @@
 			        </nav>
 					<form id="pageMainForm" action="${ctx}/speaccount/batch/intoAddOpenAccount.do" class="form-inline form_validation_tip" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
 						<h3 class="heading">录入订单</h3>
 						
 						<div class="row-fluid" >
 							 <div class="span12">
 							 	<div class="control-group formSep">
 		           			 	<span class="add-on">订单名称：</span><input id="orderName" name="orderName" type="text" class="input-medium" value="${orderName}"/>
-		                       	<span style="padding-left:  150px">
-		                       		<span class="add-on">账户类型：</span>
-                                        <select name="accountType" id="accountType" class="input-medium" style="width: 180px">
-                                        <option value="">--请选择--</option>
-                                        <c:forEach var="a" items="${accountTypeList}" varStatus="st">
-												<option value="${a.code}">${a.value }</option>
-											</c:forEach>
-                                        </select>
-		                       	</span>
 		                       	<span style="padding-left:  150px">
 		                       		<span class="add-on">所属企业：</span>
                                         <select name="companyId" id="companyId" class="input-medium" style="width: 180px">

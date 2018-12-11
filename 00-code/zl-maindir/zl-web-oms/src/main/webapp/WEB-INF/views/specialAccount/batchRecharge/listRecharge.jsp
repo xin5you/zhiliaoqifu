@@ -65,7 +65,7 @@
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
-								<div class="input-prepend">
+								<%-- <div class="input-prepend">
 		           			   	   	<span class="add-on">账户类型:</span>
 		           			   	   	<select name="accountType" id="accountType" class="input-medium">
                                     <option value="">--请选择--</option>
@@ -73,7 +73,7 @@
                                         <option value="${c.code}"  <c:if test="${c.code==order.accountType}">selected</c:if>   >${c.value }</option>
                                     </c:forEach>
                                     </select>
-		                       	</div>
+		                       	</div> --%>
 	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
 	                                <span class="add-on">开始时间</span>
 	                                <input class="input-medium" id="startTime" name="startTime" readonly="readonly" type="text" value="${order.startTime }" />

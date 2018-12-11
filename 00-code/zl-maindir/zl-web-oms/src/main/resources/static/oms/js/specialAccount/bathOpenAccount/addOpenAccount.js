@@ -125,16 +125,9 @@ var addOpenAccount = {
 		var companyId = $("#companyId").val();
 		var accountType = $("#accountType").val();
 		var billingTypes = $("#billingTypes").val();
-		if(accountType==''){
-			Helper.alert("请选择账户类型");
+		if (companyId == '') {
+			Helper.alert("请选择所属企业");
 			return false;
-		} else {
-			if (accountType == "100" || accountType == "200") {
-				if (companyId == '') {
-					Helper.alert("请选择所属企业");
-					return false;
-				}
-			}
 		}
 		if(billingTypes==''){
 			Helper.alert("请选择开户类型");

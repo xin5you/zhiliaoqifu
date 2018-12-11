@@ -1,7 +1,5 @@
 package com.cn.thinkx.oms.specialAccount.model;
 
-import java.util.Date;
-
 import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
 public class SpeAccountBatchOrder extends BaseEntity {
@@ -11,8 +9,6 @@ public class SpeAccountBatchOrder extends BaseEntity {
 	private long orderDate;                           //订单日期
 	private String orderStat;                          //订单状态
 	private String companyId;              				//企业ID
-	private String accountType;						//账户类型
-	private String bizType;							//专项类型（九大类）
 	private String resv1;                             //备用字段1
 	private String resv2;                             //备用字段2
 	private String resv3;                             //备用字段3
@@ -28,34 +24,8 @@ public class SpeAccountBatchOrder extends BaseEntity {
 	private String disposeSuccess;             //处理成功
 	private String disposeFail;                   //处理失败
 	
-	private String companyName;						//企业名称
-	private String accountTypeName;
-	private String bizTypeName;
+	private String companyName;
 	
-	public String getAccountType() {
-		return accountType;
-	}
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
-	public String getBizType() {
-		return bizType;
-	}
-	public void setBizType(String bizType) {
-		this.bizType = bizType;
-	}
-	public String getAccountTypeName() {
-		return accountTypeName;
-	}
-	public void setAccountTypeName(String accountTypeName) {
-		this.accountTypeName = accountTypeName;
-	}
-	public String getBizTypeName() {
-		return bizTypeName;
-	}
-	public void setBizTypeName(String bizTypeName) {
-		this.bizTypeName = bizTypeName;
-	}
 	public String getCompanyName() {
 		return companyName;
 	}

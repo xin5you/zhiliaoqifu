@@ -43,7 +43,10 @@
 				                       	         <span class="fontBold">订单状态:</span>
 				                       	         <span class="fontColor">${order.orderStat }</span>
 			                       	         </td>
-			                       	         <td></td>
+			                       	         <td>
+			                       	         	<span class="fontBold">企业名称:</span>
+				                       	         <span class="fontColor">${order.companyName }</span>
+			                       	         </td>
 			                       	     </tr>
 			                       	     <tr>
 			                       	         <td>
@@ -75,6 +78,8 @@
 				               <th>姓名</th>
 				               <th>身份证号码</th>
 				               <th>手机号</th>
+				               <th>账户类型</th>
+				               <th>开户类型</th>
 				               <th>状态</th>
 				               <th>备注</th>
 				             </tr>
@@ -86,6 +91,8 @@
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
                                     <td>${entity.phoneNo}</td>
+                                    <td>${entity.accountTypeName}</td>
+                                    <td>${entity.bizTypeName}</td>
 				                    <td>${entity.orderStat}</td>
 				                    <td>${entity.remarks}</td>
 				                 </tr>

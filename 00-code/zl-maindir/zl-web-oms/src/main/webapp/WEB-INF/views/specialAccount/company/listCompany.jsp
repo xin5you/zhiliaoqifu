@@ -59,6 +59,7 @@
 				               <th>联系人</th>
 				               <th>联系电话</th>
 				               <th>交易开关状态</th>
+				               <th>开户状态</th>
 				               <th>备注</th>
 				               <th>操作</th>
 				             </tr>
@@ -74,15 +75,25 @@
 				                    <td>
 				                    	<c:if test="${company.transFlag=='1'}">关</c:if>
 				                    	<c:if test="${company.transFlag=='0'}">开</c:if>
-				                    </td>				                 
+				                    </td>	
+				                    <td>
+				                    	<c:if test="${company.isOpen=='1'}">已开户</c:if>
+				                    	<c:if test="${company.isOpen=='0'}">未开户</c:if>
+				                    </td>			                 
 				                    <td>${company.remarks}</td>
 				                    <td>
+				                    	<c:if test="${company.isOpen=='0'}">
+											<a companyId="${company.companyId}" title="开户" class="btn-mini btn-open" href="#"><i class="icon-pencil"></i></a>
+				                    	</if>
 				                            <%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_INTOEDIT')"> --%>
 											<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 											<%-- </sec:authorize> --%>
 											<%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_DELETE')"> --%>
 											<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 											<%-- </sec:authorize> --%>
+				                    	<c:if test="${company.isOpen=='1'}">
+											<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
+				                    	</if>
 				                    </td>
 				                 </tr>
 				             </c:forEach>

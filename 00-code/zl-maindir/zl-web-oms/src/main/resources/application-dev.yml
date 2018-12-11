@@ -18,7 +18,7 @@ spring:
   datasource:
 #   jndi-name: JDBC
     #name: mySpringBoot
-    url: jdbc:mysql://192.168.2.110:3306/zldb_test
+    url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver

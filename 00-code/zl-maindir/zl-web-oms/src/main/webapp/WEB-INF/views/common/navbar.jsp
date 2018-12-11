@@ -67,27 +67,6 @@
                              </li>
                              </sec:authorize> --%>
                              
-                             <sec:authorize access="hasRole('ROLE_SPECIAL_ACCOUNT_MANAGE')">
-                             <li class="dropdown">
-                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>账户管理 <b class="caret"></b></a>
-                                 <ul class="dropdown-menu">
-                                     <sec:authorize access="hasRole('ROLE_BILLING_TYPE')">
-                                        <li><a href="${ctx }/specialAccount/billingType/listBillingType.do">账户类型管理</a></li>
-                                     </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_COMPANY_INFO')">
-                                         <li><a href="${ctx }/specialAccount/company/listCompany.do">企业管理</a></li>
-                                     </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT')">
-                                     	<li><a href="${ctx }/speaccount/batch/listOpenAccount.do">批量开户</a></li>
-                                     	<li><a href="${ctx }/speaccount/batchRecharge/listRecharge.do">批量充值</a></li>
-                                     </sec:authorize>
-                                     <!-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE')"> -->
-                                     	
-                                     <!-- </sec:authorize> -->
-                                 </ul>
-                             </li>
-                             </sec:authorize>
-                             
                              <!-- <sec:authorize access="hasRole('ROLE_PHONE_RECHARGE')"> -->
                              <li class="dropdown">
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>分销商管理<b class="caret"></b></a>
@@ -130,6 +109,17 @@
                              </li>
                              </sec:authorize>
                              
+                             <sec:authorize access="hasRole('ROLE_SPECIAL_ACCOUNT_MANAGE')">
+                             <li class="dropdown">
+                             	<a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>企业管理 <b class="caret"></b></a>
+                                 <ul class="dropdown-menu">
+                                 	<sec:authorize access="hasRole('ROLE_COMPANY_INFO')">
+                                         <li><a href="${ctx }/specialAccount/company/listCompany.do">企业信息管理</a></li>
+                                     </sec:authorize>
+                                 </ul>
+                             </li>
+                             </sec:authorize>
+                             
                              <sec:authorize access="hasRole('ROLE_DIY_MANAGER')">
                              <li class="dropdown">
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>商户自助平台<b class="caret"></b></a>
@@ -143,6 +133,25 @@
                                      <sec:authorize access="hasRole('ROLE_DIY_RESORCE')">
                                      	<li><a href="${ctx }/diy/diyResource/listDiyResource.do">商户资源管理</a></li>
                                      </sec:authorize>
+                                 </ul>
+                             </li>
+                             </sec:authorize>
+                             
+                             <sec:authorize access="hasRole('ROLE_SPECIAL_ACCOUNT_MANAGE')">
+                             <li class="dropdown">
+                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>账户管理 <b class="caret"></b></a>
+                                 <ul class="dropdown-menu">
+                                     <sec:authorize access="hasRole('ROLE_BILLING_TYPE')">
+                                        <li><a href="${ctx }/specialAccount/billingType/listBillingType.do">账户类型管理</a></li>
+                                     </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT')">
+                                     	<li><a href="${ctx }/speaccount/batch/listOpenAccount.do">批量开户</a></li>
+                                     	<li><a href="${ctx }/speaccount/batchRecharge/listRecharge.do">批量充值</a></li>
+                                     	<li><a href="${ctx }/speaccount/transferAccount/listTransferAccounts.do">转账</a></li>
+                                     </sec:authorize>
+                                     <!-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE')"> -->
+                                     	
+                                     <!-- </sec:authorize> -->
                                  </ul>
                              </li>
                              </sec:authorize>

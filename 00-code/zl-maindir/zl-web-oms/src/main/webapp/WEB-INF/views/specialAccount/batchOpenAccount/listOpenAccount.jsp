@@ -25,6 +25,7 @@
 			        </nav>
 					<form id="searchForm" action="${ctx }/speaccount/batch/listOpenAccount.do" class="form-inline" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
 						<h3 class="heading">批量开户列表</h3>
 						
 						<div class="row-fluid" >
@@ -68,15 +69,6 @@
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
-								<div class="input-prepend">
-		           			   	   	<span class="add-on">账户类型:</span>
-		           			   	   	<select name="accountType" id="accountType" class="input-medium">
-                                    <option value="">--请选择--</option>
-                                    <c:forEach var="c" items="${accountTypeList}" varStatus="sta">
-                                        <option value="${c.code}"  <c:if test="${c.code==order.accountType}">selected</c:if>   >${c.value }</option>
-                                    </c:forEach>
-                                    </select>
-		                       	</div>
 	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
 	                                <span class="add-on">开始时间</span>
 	                                <input class="input-medium" id="startTime" name="startTime" readonly="readonly" type="text" value="${order.startTime }" />
@@ -97,7 +89,6 @@
 				               <th>订单名称</th>
 				               <th>订单数量</th>
 				               <th>订单状态</th>
-				               <th>账户类型</th>
 				               <th>企业名称</th>
 				               <th>创建人</th>
 				               <th>创建时间</th>
@@ -113,7 +104,6 @@
 				                 	<td>${entity.orderName }</td>
 									<td>${entity.orderCount }</td>
 									<td>${entity.orderStat }</td>
-									<td>${entity.accountType }</td>
 									<td>${entity.companyName }</td>
 				                    <td>${entity.createUser }</td>
 				                    <td>

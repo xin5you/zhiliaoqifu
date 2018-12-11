@@ -56,7 +56,7 @@ public interface SpeAccountBatchOrderService {
 	 * @param personInfList
 	 * @return
 	 */
-	int addSpeAccountBatchOrder(SpeAccountBatchOrder order ,LinkedList<SpeAccountBatchOrderList> personInfList);
+	int addSpeAccountBatchOrder(HttpServletRequest req ,LinkedList<SpeAccountBatchOrderList> personInfList, String orderType);
 	
 	SpeAccountBatchOrder getSpeAccountBatchOrderByOrderId(String orderId);
 	

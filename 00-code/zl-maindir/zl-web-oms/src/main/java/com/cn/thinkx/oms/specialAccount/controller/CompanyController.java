@@ -12,16 +12,15 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.oms.specialAccount.model.CompanyInf;
-import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
-import com.cn.thinkx.oms.specialAccount.service.CompanyInfService;
+import com.cn.thinkx.oms.specialAccount.service.CompanyService;
 import com.cn.thinkx.oms.sys.model.User;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.CompanyInf;
+import com.cn.thinkx.wecard.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -34,13 +33,11 @@ public class CompanyController {
 	Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
 	@Autowired
-	@Qualifier("billingTypeInfService")
-	private BillingTypeInfService billingTypeInfService;
-
+	private CompanyInfFacade companyInfFacade;
+	
 	@Autowired
-	@Qualifier("companyInfService")
-	private CompanyInfService companyInfService;
-
+	private CompanyService companyService;
+	
 	/**
 	 * 企业信息列表查询
 	 * 
@@ -59,7 +56,7 @@ public class CompanyController {
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-			pageList = companyInfService.getCompanyInfList(startNum, pageSize, companyInf);//将企业信息对象作为参数传入，实现通过条件查询列表
+			pageList = companyInfFacade.getCompanyInfList(startNum, pageSize, companyInf);//将企业信息对象作为参数传入，实现通过条件查询列表
 		} catch (Exception e) {
 			logger.error("## 查询企业列表信息出错", e);
 		}
@@ -83,7 +80,7 @@ public class CompanyController {
 		resultMap.put("status", Boolean.TRUE);
 		
 		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
-		CompanyInf company = companyInfService.getCompanyInfByLawCode(lawCode);
+		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(lawCode);
 		if (!StringUtil.isNullOrEmpty(company)) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "社会信用代码已存在，请重新输入");
@@ -91,11 +88,11 @@ public class CompanyController {
 		}
 		CompanyInf companyInf = getCompanyInf(req);
 		try {
-			int i = companyInfService.insertCompanyInf(companyInf);
-			if (i < 1) {
+			if (companyInfFacade.insertCompanyInf(companyInf)) {
+				
+			} else {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "新增企业信息失败");
-				return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error("## 新增企业信息出错", e);
@@ -107,7 +104,7 @@ public class CompanyController {
 	public ModelAndView intoEditCompany(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("specialAccount/company/editCompany");
 		String companyId = req.getParameter("companyId");
-		CompanyInf companyInf = companyInfService.getCompanyInfById(companyId);
+		CompanyInf companyInf = companyInfFacade.getCompanyInfById(companyId);
 		mv.addObject("companyInf", companyInf);
 		return mv;
 	}
@@ -120,9 +117,9 @@ public class CompanyController {
 		
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
-		CompanyInf companyInfCode = companyInfService.getCompanyInfById(companyId);
+		CompanyInf companyInfCode = companyInfFacade.getCompanyInfById(companyId);
 		if (!companyInfCode.getLawCode().equals(lawCode)) {
-			CompanyInf company = companyInfService.getCompanyInfByLawCode(lawCode);
+			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(lawCode);
 			if (!StringUtil.isNullOrEmpty(company)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "社会信用代码已存在，请重新输入");
@@ -132,8 +129,9 @@ public class CompanyController {
 		
 		try {
 			CompanyInf companyInf = getCompanyInf(req);
-			int i = companyInfService.updateCompanyInf(companyInf);
-			if (i < 1) {
+			if (companyInfFacade.updateCompanyInf(companyInf)) {
+				
+			} else {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "修改企业信息失败");
 			}
@@ -158,8 +156,9 @@ public class CompanyController {
 		company.setUpdateTime(System.currentTimeMillis());
 		company.setUpdateUser(user.getId());
 		try {
-			int i = companyInfService.deleteCompanyInf(company);
-			if (i < 1) {
+			if (companyInfFacade.deleteCompanyInf(company)) {
+				
+			} else {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "删除企业信息失败");
 			}
@@ -176,7 +175,7 @@ public class CompanyController {
 		CompanyInf companyInf = null;
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		if (!StringUtil.isNullOrEmpty(companyId)) {
-			companyInf = companyInfService.getCompanyInfById(companyId);
+			companyInf = companyInfFacade.getCompanyInfById(companyId);
 		} else {
 			companyInf = new CompanyInf();
 			companyInf.setCompanyId(UUID.randomUUID().toString());
@@ -195,5 +194,22 @@ public class CompanyController {
 		return companyInf;
 	}
 	
+	@RequestMapping(value = "/openAccountCompany")
+	@ResponseBody
+	public Map<String, Object> openAccountCompany(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		try {
+			int i = companyService.openAccountCompany(req);
+			if (i < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("status", "企业开户失败，请稍后再试");
+				return resultMap;
+			}
+		} catch (Exception e) {
+			logger.error("## 新增企业信息出错", e);
+		}
+		return resultMap;
+	}
 	
 }

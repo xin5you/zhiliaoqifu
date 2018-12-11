@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelOrderNotifyStat;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelOrderStat;
@@ -46,7 +46,7 @@ public class TelChannelOrderInfController {
 		String operStatus = StringUtil.nullToString(request.getParameter("operStatus"));
 		int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
-		TelChannelOrderInf orderInf = new TelChannelOrderInf();
+		RetailChnlOrderInf orderInf = new RetailChnlOrderInf();
 		orderInf.setChannelName(StringUtil.nullToString(request.getParameter("channelName")));
 		orderInf.setChannelOrderId(StringUtil.nullToString(request.getParameter("channelOrderId")));
 		orderInf.setOuterTid(StringUtil.nullToString(request.getParameter("outerTid")));
@@ -54,8 +54,7 @@ public class TelChannelOrderInfController {
 		orderInf.setOrderStat(StringUtil.nullToString(request.getParameter("orderStat")));
 		orderInf.setNotifyStat(StringUtil.nullToString(request.getParameter("notifyStat")));
 		try {
-			PageInfo<TelChannelOrderInf> pageList = telChannelOrderInfFacade.getTelChannelOrderInfPage(startNum,
-					pageSize, orderInf);
+			PageInfo<RetailChnlOrderInf> pageList = telChannelOrderInfFacade.getRetailChnlOrderInfPage(startNum, pageSize, orderInf);
 			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 分销商订单查询异常", e);

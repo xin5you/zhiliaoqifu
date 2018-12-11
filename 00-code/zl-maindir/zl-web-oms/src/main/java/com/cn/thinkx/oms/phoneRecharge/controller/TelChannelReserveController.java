@@ -1,8 +1,6 @@
 package com.cn.thinkx.oms.phoneRecharge.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,14 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelReserveDetail;
-import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlInf;
 import com.cn.thinkx.wecard.facade.telrecharge.service.CompanyInfFacade;
+import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelReserveType;
-import com.ebeijia.zl.common.utils.tools.NumberUtils;
-import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.github.pagehelper.PageInfo;
 
 @Controller
 @RequestMapping(value = "channel/reserve")
@@ -41,7 +35,7 @@ public class TelChannelReserveController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/listTelChannelReserve")
+	/*@RequestMapping("/listTelChannelReserve")
 	public ModelAndView listTelChannelReserve(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telChannelReserve/listTelChannelReserve");
 		String operStatus = StringUtil.nullToString(request.getParameter("operStatus"));
@@ -61,14 +55,14 @@ public class TelChannelReserveController {
 		mv.addObject("reserve", reserve);
 		mv.addObject("operStatus", operStatus);
 		return mv;
-	}
+	}*/
 
 	@RequestMapping(value = "/intoAddTelChannelReserve")
 	public ModelAndView intoAddTelChannelReserve(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telChannelReserve/addTelChannelReserve");
-		List<TelChannelInf> list = null;
+		List<RetailChnlInf> list = null;
 		try {
-			list = telChannelInfFacade.getTelChannelInfList(null);
+			list = telChannelInfFacade.getRetailChnlInfList(null);
 		} catch (Exception e) {
 			logger.error("## 查询分销商列表出错", e);
 		}
@@ -77,7 +71,7 @@ public class TelChannelReserveController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/addTelChannelReserveCommit")
+	/*@RequestMapping(value = "/addTelChannelReserveCommit")
 	public ModelAndView addTelChannelReserveCommit(HttpServletRequest req, HttpServletResponse resp) {
 		ModelAndView mv = new ModelAndView("redirect:/channel/reserve/listTelChannelReserve.do");
 		String channelId = req.getParameter("channelId");
@@ -99,9 +93,9 @@ public class TelChannelReserveController {
 			logger.error(" ## 添加商品备付金出错", e);
 		}
 		return mv;
-	}
+	}*/
 
-	@RequestMapping(value = "/intoViewTelChannelReserve")
+	/*@RequestMapping(value = "/intoViewTelChannelReserve")
 	public ModelAndView intoViewTelChannelReserve(HttpServletRequest req, HttpServletResponse resp) {
 		ModelAndView mv = new ModelAndView("phoneRecharge/telChannelReserve/viewTelChannelReserve");
 		String reserveId = StringUtil.nullToString(req.getParameter("reserveId"));
@@ -114,5 +108,5 @@ public class TelChannelReserveController {
 		}
 		mv.addObject("reserve", reserve);
 		return mv;
-	}
+	}*/
 }

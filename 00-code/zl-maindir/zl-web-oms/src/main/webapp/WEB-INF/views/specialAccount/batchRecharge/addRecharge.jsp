@@ -8,7 +8,7 @@
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="${ctx}/static/oms/js/specialAccount/batchRecharge/addRecharge.js"></script>
-    <script src="${ctx}/static/js/jquery/jquery.form.js"></script>
+    <script src="${ctx}/static/jquery/jquery.form.js"></script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -26,6 +26,7 @@
 		 </nav>
 		<form id="pageMainForm" action="${ctx }/speaccount/batchRecharge/intoAddRecharge.do" class="form-inline form_validation_tip" method="post">
 			<input type="hidden" id="operStatus"  value="${operStatus }"/>
+			<input type="hidden" id="accountType" name="accountType" value="${accountType.code }"/>
 			<h3 class="heading">录入订单</h3>
 			<div class="row-fluid" >
 				<div class="span12">
@@ -41,6 +42,14 @@
 			            	</select>
 	       	    		</span>
 	       	    		<span style="padding-left:  150px">
+		      	    		<span class="add-on">充值账户：</span>
+	       	    			<select name="billingType" id="billingType" class="input-medium" >
+                               <c:forEach var="b" items="${billingTypeList}" varStatus="sta">
+                                   <option value="${b.bId}">${b.bName}</option>
+                               </c:forEach>
+                             </select>
+                     	</span>
+	       	    		<%-- <span style="padding-left:  150px">
 		      	    		<span class="add-on">账户类型：</span>
 		                 	<select name="accountType" id="accountType" class="input-medium" style="width: 180px">
 								<option value="">--请选择--</option>
@@ -48,7 +57,7 @@
 								    <option value="${a.code}"   >${a.value}</option>
 								</c:forEach>
 		                	</select>
-	                	</span>
+	                	</span> --%>
 	                  	<div class="pull-right">
 	                        <button class="btn btn-primary btn-recharge-list" type="button">文件导入</button>
 	                        <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
@@ -68,12 +77,8 @@
 				      		<label style="color: red;">${sumMoney }</label>
 						</td>
 						<td>
-							<label class="control-label" style="font-weight: bold;">充值类型:</label>
-							<select multiple name="billingTypes" id="billingTypes" class="form-control span4" >
-                               <c:forEach var="b" items="${billingTypeList}" varStatus="sta">
-                                   <option value="${b.bId}">${b.bName}</option>
-                               </c:forEach>
-                             </select>
+							<label class="control-label" style="font-weight: bold;">账户类型:</label>
+							<label style="color: red;">${accountType.value }</label>
 						</td>
 					</tr>
 				</table>

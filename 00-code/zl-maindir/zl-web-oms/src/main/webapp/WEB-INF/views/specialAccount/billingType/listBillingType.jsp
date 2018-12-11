@@ -43,7 +43,7 @@
 						<thead>
 							<tr>
 								<th>账户类型名称</th>
-								<th>代码</th>
+								<th>账户类型代码</th>
 								<th>折损率</th>
 								<th>可购率</th>
 								<th>备注</th>
@@ -54,7 +54,7 @@
 							<c:forEach var="b" items="${pageInfo.list}" varStatus="st">
 								<tr>
 									<td>${b.bName}</td>
-									<td>${b.code}</td>
+									<td>${b.code}类</td>
 									<td>${b.loseFee}</td>
 									<td>${b.buyFee}</td>
 									<td>${b.remarks}</td>

@@ -8,7 +8,9 @@ public class SpeAccountBatchOrderList extends BaseEntity {
 	private String userName;                         //用户名
 	private String phoneNo;                         //手机号
 	private String userCardNo;                     //身份证号
-	private String amount;                          //金额
+	private Double amount;                          //金额
+	private String accountType;						//账户类型
+	private String bizType;							//专项类型（九大类）
 	private String orderStat;                      //订单状态
 	private String orderDesc;                    //订单描述
 	private String resv1;                             //备用字段1
@@ -17,23 +19,85 @@ public class SpeAccountBatchOrderList extends BaseEntity {
 	private String resv4;                             //备用字段4
 	private String resv5;                             //备用字段5
 	private String resv6;                             //备用字段6
+	private String tfrInId;
+	private String tfrInBid;
+	private String tfrOutId;
+	private String tfrOutBid;
 	
 	private String puId;
 	
-	private String companyId;
 	private String orderStat2;
+	private String orderStat3;
+	
+	private String companyId;
+	private String accountTypeName;
+	private String bizTypeName;
 
-	public String getOrderStat2() {
-		return orderStat2;
+	public String getTfrInId() {
+		return tfrInId;
 	}
-	public void setOrderStat2(String orderStat2) {
-		this.orderStat2 = orderStat2;
+	public void setTfrInId(String tfrInId) {
+		this.tfrInId = tfrInId;
+	}
+	public String getTfrInBid() {
+		return tfrInBid;
+	}
+	public void setTfrInBid(String tfrInBid) {
+		this.tfrInBid = tfrInBid;
+	}
+	public String getTfrOutId() {
+		return tfrOutId;
+	}
+	public void setTfrOutId(String tfrOutId) {
+		this.tfrOutId = tfrOutId;
+	}
+	public String getTfrOutBid() {
+		return tfrOutBid;
+	}
+	public void setTfrOutBid(String tfrOutBid) {
+		this.tfrOutBid = tfrOutBid;
 	}
 	public String getCompanyId() {
 		return companyId;
 	}
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
+	}
+	public String getOrderStat3() {
+		return orderStat3;
+	}
+	public void setOrderStat3(String orderStat3) {
+		this.orderStat3 = orderStat3;
+	}
+	public String getBizTypeName() {
+		return bizTypeName;
+	}
+	public void setBizTypeName(String bizTypeName) {
+		this.bizTypeName = bizTypeName;
+	}
+	public String getAccountTypeName() {
+		return accountTypeName;
+	}
+	public void setAccountTypeName(String accountTypeName) {
+		this.accountTypeName = accountTypeName;
+	}
+	public String getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	public String getBizType() {
+		return bizType;
+	}
+	public void setBizType(String bizType) {
+		this.bizType = bizType;
+	}
+	public String getOrderStat2() {
+		return orderStat2;
+	}
+	public void setOrderStat2(String orderStat2) {
+		this.orderStat2 = orderStat2;
 	}
 	public String getOrderListId() {
 		return orderListId;
@@ -65,10 +129,10 @@ public class SpeAccountBatchOrderList extends BaseEntity {
 	public void setUserCardNo(String userCardNo) {
 		this.userCardNo = userCardNo;
 	}
-	public String getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 	public String getOrderStat() {

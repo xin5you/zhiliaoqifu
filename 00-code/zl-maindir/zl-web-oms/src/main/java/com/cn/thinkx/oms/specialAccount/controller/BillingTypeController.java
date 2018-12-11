@@ -11,16 +11,14 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cn.thinkx.oms.common.util.OmsEnum.BillingTypeCode;
-import com.cn.thinkx.oms.specialAccount.model.BillingTypeInf;
-import com.cn.thinkx.oms.specialAccount.service.BillingTypeInfService;
 import com.cn.thinkx.oms.sys.model.User;
+import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -30,11 +28,9 @@ import com.github.pagehelper.PageInfo;
 @Controller
 @RequestMapping(value = "specialAccount/billingType")
 public class BillingTypeController {
-
 	Logger logger = LoggerFactory.getLogger(BillingTypeController.class);
-
+	
 	@Autowired
-	@Qualifier("billingTypeInfService")
 	private BillingTypeInfService billingTypeInfService;
 
 	/**
@@ -70,7 +66,7 @@ public class BillingTypeController {
 	@RequestMapping(value = "/intoAddBillingType")
 	public ModelAndView intoAddBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("specialAccount/billingType/addBillingType");
-		mv.addObject("billingTypeCodeList", BillingTypeCode.values());
+		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
 		return mv;
 	}
 	
@@ -102,7 +98,7 @@ public class BillingTypeController {
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfById(bId);
 		mv.addObject("billingType", billingType);
-		mv.addObject("billingTypeCodeList", BillingTypeCode.values());
+		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
 		return mv;
 	}
 	
@@ -178,8 +174,8 @@ public class BillingTypeController {
 		billingType.setbName(bName);
 		billingType.setCode(code);
 		billingType.setRemarks(remarks);
-		billingType.setLoseFee(Double.valueOf(loseFee));
-		billingType.setBuyFee(Double.valueOf(buyFee));
+		billingType.setLoseFee(Double.valueOf(NumberUtils.RMBYuanToCent(loseFee)));
+		billingType.setBuyFee(Double.valueOf(NumberUtils.RMBYuanToCent(buyFee)));
 		billingType.setUpdateUser(user.getId());
 		billingType.setUpdateTime(System.currentTimeMillis());
 		return billingType;

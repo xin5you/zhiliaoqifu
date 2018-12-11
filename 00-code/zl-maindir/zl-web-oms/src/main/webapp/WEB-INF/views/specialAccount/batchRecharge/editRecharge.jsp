@@ -25,6 +25,9 @@
 			        </nav>
 					<form id="searchForm" action="" class="form-inline" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+						<input type="hidden" id="companyId" name="companyId"  value="${order.companyId }"/>
+						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
+						<input type="hidden" id="bizType" name="bizType"  value="${bizType }"/>
 						<h3 class="heading">订单编辑</h3>
 						<div><button class="btn btn-primary btn-editAddRecharge" type="button">添加</button></div><br/>
 						<div class="row-fluid" >
@@ -47,6 +50,20 @@
                                             <td>
                                                 <span class="fontBold">订单总量:</span>
                                                 <span class="fontColor">${order.orderCount }</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td>
+                                                <span class="fontBold">企业名称:</span>
+                                                <span class="fontColor">${order.companyName }</span>
+                                            </td>
+                                            <td>
+                                                <span class="fontBold">账户类型:</span>
+                                                <span class="fontColor">${accountTypeName }</span>
+                                            </td>
+                                            <td>
+                                                <span class="fontBold">充值账户类型:</span>
+                                                <span class="fontColor">${bizTypeName }</span>
                                             </td>
                                         </tr>
                                     </table>

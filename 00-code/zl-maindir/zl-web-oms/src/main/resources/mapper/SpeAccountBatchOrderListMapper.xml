@@ -10,6 +10,12 @@
 	       l.phone_no,
 	       l.user_card_no,
 	       l.amount,
+	       l.account_type,
+		   l.biz_type,
+		   l.tfr_in_id,
+		   l.tfr_in_bid,
+		   l.tfr_out_id,
+		   l.tfr_out_bid,
 	       l.order_stat,
 	       l.order_desc,
 	       l.resv1,
@@ -30,7 +36,7 @@
 	<select id="getSpeAccountBatchOrderListByOrderId" parameterType="string" resultType="SpeAccountBatchOrderList">
 	   select 
 	   		<include refid="SpeAccountBatchOrderColumns" />,
-	   		o.company_id as companyId,o.account_type as accountType,o.biz_type as bizType
+	   		o.company_id as companyId
 	   from tb_batch_order_list l left join tb_batch_order o on l.order_id = o.order_id
 	   where l.data_stat = '0' and o.data_stat = '0'
 	   		and l.order_id = #{orderId} 
@@ -59,11 +65,20 @@
       	<if test="phoneNo != null and phoneNo != '' ">
       		and l.phone_no=#{phoneNo}
       	</if>
+      	<if test="accountType != null and accountType != '' ">
+      		and l.account_type=#{accountType}
+      	</if>
+      	<if test="bizType != null and bizType != '' ">
+      		and l.biz_type=#{bizType}
+      	</if>
       	<if test="orderStat != null and orderStat != '' ">
       		and l.order_stat=#{orderStat}
       	</if>
       	<if test="orderStat2 != null and orderStat2 != '' ">
       		and l.order_stat=#{orderStat2}
+      	</if>
+      	<if test="orderStat3 != null and orderStat3 != '' ">
+      		and l.order_stat=#{orderStat3}
       	</if>
     </select>
     
@@ -83,6 +98,12 @@
 	       phone_no,
 	       user_card_no,
 	       amount,
+	       account_type,
+		   biz_type,
+		   tfr_in_id,
+		   tfr_in_bid,
+		   tfr_out_id,
+		   tfr_out_bid,
 	       order_stat,
 	       order_desc,
 	       resv1,
@@ -106,7 +127,13 @@
 			#{item.userName,jdbcType=VARCHAR},
 			#{item.phoneNo,jdbcType=VARCHAR},
 			#{item.userCardNo,jdbcType=VARCHAR},
-			#{item.amount,jdbcType=VARCHAR},
+			#{item.amount,jdbcType=DOUBLE},
+			#{item.accountType,jdbcType=DOUBLE},
+			#{item.bizType,jdbcType=DOUBLE},
+			#{item.tfrInId,jdbcType=DOUBLE},
+			#{item.tfrInBid,jdbcType=DOUBLE},
+			#{item.tfrOutId,jdbcType=DOUBLE},
+			#{item.tfrOutBid,jdbcType=DOUBLE},
 			#{item.orderStat,jdbcType=VARCHAR},
 			#{item.orderDesc,jdbcType=VARCHAR},
 			#{item.resv1,jdbcType=VARCHAR},
@@ -135,6 +162,12 @@
 	       phone_no,
 	       user_card_no,
 	       amount,
+	       account_type,
+		   biz_type,
+		   tfr_in_id,
+		   tfr_in_bid,
+		   tfr_out_id,
+		   tfr_out_bid,
 	       order_stat,
 	       order_desc,
 	       resv1,
@@ -156,7 +189,13 @@
 			#{userName,jdbcType=VARCHAR},
 			#{phoneNo,jdbcType=VARCHAR},
 			#{userCardNo,jdbcType=VARCHAR},
-			#{amount,jdbcType=VARCHAR},
+			#{amount,jdbcType=DOUBLE},
+			#{accountType,jdbcType=DOUBLE},
+			#{bizType,jdbcType=DOUBLE},
+			#{tfrInId,jdbcType=DOUBLE},
+			#{tfrInBid,jdbcType=DOUBLE},
+			#{tfrOutId,jdbcType=DOUBLE},
+			#{itfrOutBid,jdbcType=DOUBLE},
 			#{orderStat,jdbcType=VARCHAR},
 			#{orderDesc,jdbcType=VARCHAR},
 			#{resv1,jdbcType=VARCHAR},
@@ -183,6 +222,12 @@
 			<if test="phoneNo != null and phoneNo != '' ">phone_no = #{phoneNo,jdbcType=VARCHAR},</if>
 			<if test="userCardNo != null and userCardNo != '' ">user_card_no = #{userCardNo,jdbcType=VARCHAR},</if>
 			<if test="amount != null and amount != '' ">amount = #{amount,jdbcType=VARCHAR},</if>
+			<if test="accountType != null and accountType != '' ">account_type = #{accountType,jdbcType=VARCHAR},</if>
+			<if test="bizType != null and bizType != '' ">biz_type = #{bizType,jdbcType=VARCHAR},</if>
+			<if test="tfrInId != null and tfrInId != '' ">tfr_in_id = #{tfrInId,jdbcType=VARCHAR},</if>
+			<if test="tfrInBid != null and tfrInBid != '' ">tfr_in_bid = #{tfrInBid,jdbcType=VARCHAR},</if>
+			<if test="tfrOutId != null and tfrOutId != '' ">tfr_out_id = #{tfrOutId,jdbcType=VARCHAR},</if>
+			<if test="tfrOutBid != null and tfrOutBid != '' ">tfr_out_bid = #{tfrOutBid,jdbcType=VARCHAR},</if>
 			<if test="orderStat != null and orderStat != '' ">order_stat = #{orderStat,jdbcType=VARCHAR},</if>
 			<if test="orderDesc != null and orderDesc != '' ">order_desc = #{orderDesc,jdbcType=VARCHAR},</if>
 			<if test="dataStat != null and dataStat != '' ">data_stat = #{dataStat,jdbcType=VARCHAR},</if>
@@ -196,14 +241,19 @@
 	</update>
 	
 	<update id="updateSpeAccountBatchOrderListByList" parameterType="java.util.ArrayList">
-		<foreach collection="list" item="item" index="index" separator=",">
+		 <foreach collection="list" item="item" index="index" open="" close="" separator=";">
 			update tb_batch_order_list
-			<trim prefix="SET" suffixOverrides=",">
-				<if test="item.orderId != null and item.orderId != '' ">order_id = #{item.orderId,jdbcType=VARCHAR},</if>
+			<set>
 				<if test="item.userName != null and item.userName != '' ">user_name = #{item.userName,jdbcType=VARCHAR},</if>
 				<if test="item.phoneNo != null and item.phoneNo != '' ">phone_no = #{item.phoneNo,jdbcType=VARCHAR},</if>
 				<if test="item.userCardNo != null and item.userCardNo != '' ">user_card_no = #{item.userCardNo,jdbcType=VARCHAR},</if>
-				<if test="item.amount != null and item.amount != '' ">amount = #{item.amount,jdbcType=VARCHAR},</if>
+				<if test="item.amount != null and item.amount != '' ">amount = #{item.amount,jdbcType=DOUBLE},</if>
+				<if test="item.accountType != null and item.accountType != '' ">account_type = #{item.accountType,jdbcType=VARCHAR},</if>
+				<if test="item.bizType != null and item.bizType != '' ">biz_type = #{item.bizType,jdbcType=VARCHAR},</if>
+				<if test="item.tfrInId != null and item.tfrInId != '' ">tfr_in_id = #{item.tfrInId,jdbcType=VARCHAR},</if>
+				<if test="item.tfrInBid != null and item.tfrInBid != '' ">tfr_in_bid = #{item.tfrInBid,jdbcType=VARCHAR},</if>
+				<if test="item.tfrOutId != null and item.tfrOutId != '' ">tfr_out_id = #{item.tfrOutId,jdbcType=VARCHAR},</if>
+				<if test="item.tfrOutBid != null and item.tfrOutBid != '' ">tfr_out_bid = #{item.tfrOutBid,jdbcType=VARCHAR},</if>
 				<if test="item.orderStat != null and item.orderStat != '' ">order_stat = #{item.orderStat,jdbcType=VARCHAR},</if>
 				<if test="item.orderDesc != null and item.orderDesc != '' ">order_desc = #{item.orderDesc,jdbcType=VARCHAR},</if>
 				<if test="item.dataStat != null and item.dataStat != '' ">data_stat = #{item.dataStat,jdbcType=VARCHAR},</if>
@@ -211,8 +261,10 @@
 				<if test="item.updateUser != null and item.updateUser != '' ">update_user = #{item.updateUser,jdbcType=VARCHAR},</if>
 				update_time = #{item.updateTime,jdbcType=BIGINT},
 				lock_version = lock_version + 1
-			</trim>
-			where order_list_id = #{item.orderListId,jdbcType=VARCHAR} 
+			</set>
+			<where>
+				order_list_id = #{item.orderListId,jdbcType=VARCHAR} 
+			</where> 
 		</foreach>
 	</update>
 

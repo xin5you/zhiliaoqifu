@@ -10,8 +10,6 @@
 		o.order_date,
 		o.order_stat,
 		o.company_id,
-		o.account_type,
-		o.biz_type,
 		o.resv1,
 		o.resv2,
 		o.resv3,
@@ -54,10 +52,7 @@
 			and o.order_stat = #{orderStat}
 		</if>
 		<if test="companyId !=null and companyId != '' ">
-			and o.company_id = #{companyId}
-		</if>
-		<if test="accountType !=null and accountType != '' ">
-			and o.account_type = #{accountType}
+			and c.company_id = #{companyId}
 		</if>
 		<if test="startTime !=null and startTime != '' ">
 			and o.create_time &gt;= #{startTime}
@@ -82,7 +77,7 @@
 				from tb_batch_order_list l
 				where l.data_stat = '0'
 				and l.order_id = o.order_id
-				and l.order_stat = '30'
+				and l.order_stat = '10'
 			) as disposeWait,
 			(select count(l.order_list_id)
 				from tb_batch_order_list l
@@ -123,8 +118,6 @@
 			order_date,
 			order_stat,
 			company_id,
-			account_type,
-			biz_type,
 			resv1,
 			resv2,
 			resv3,
@@ -145,8 +138,6 @@
 			#{orderDate,jdbcType=BIGINT},
 			#{orderStat,jdbcType=VARCHAR},
 			#{companyId,jdbcType=VARCHAR},
-			#{accountType,jdbcType=VARCHAR},
-			#{bizType,jdbcType=VARCHAR},
 			#{resv1,jdbcType=VARCHAR},
 			#{resv2,jdbcType=VARCHAR},
 			#{resv3,jdbcType=VARCHAR},
@@ -173,8 +164,6 @@
 			<if test="remarks != null and remarks != '' ">remarks = #{remarks,jdbcType=VARCHAR},</if>
 			<if test="updateUser != null and updateUser != '' ">update_user = #{updateUser,jdbcType=VARCHAR},</if>
 			<if test="companyId != null and companyId != '' ">company_id = #{companyId,jdbcType=VARCHAR},</if>
-			<if test="accountType != null and accountType != '' ">account_type = #{accountType,jdbcType=VARCHAR},</if>
-			<if test="bizType != null and bizType != '' ">biz_type = #{bizType,jdbcType=VARCHAR},</if>
 			update_time = #{updateTime,jdbcType=BIGINT},
 			lock_version = lock_version+1
 		</trim>

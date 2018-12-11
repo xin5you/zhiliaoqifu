@@ -1,6 +1,7 @@
 package com.cn.thinkx.oms.phoneRecharge.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +16,15 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.oms.phoneRecharge.service.TelChannelInfService;
 import com.cn.thinkx.oms.sys.model.User;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelItemList;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.ProviderOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlItemList;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlItemListFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
@@ -62,16 +63,16 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 				logger.error("## 该分销商订单回调异常，分销商订单号channelOrderId:[{}]是空", channelOrderId);
 				return resultMap;
 			}
-			TelChannelOrderInf telChannelOrderInf = telChannelOrderInfFacade.getTelChannelOrderInfById(channelOrderId);
+			RetailChnlOrderInf telChannelOrderInf = telChannelOrderInfFacade.getRetailChnlOrderInfById(channelOrderId);
 			if (StringUtil.isNullOrEmpty(telChannelOrderInf.getNotifyUrl())) {
 				resultMap.addAttribute("status", Boolean.FALSE);
 				resultMap.addAttribute("msg", "该订单不能回调，回调地址是空");
 				logger.error("## 该分销商订单不能回调，回调地址是空NotifyUrl:[{}]", telChannelOrderInf.getNotifyUrl());
 				return resultMap;
 			}
-			TelChannelInf telChannelInf = telChannelInfFacade.getTelChannelInfById(telChannelOrderInf.getChannelId());
+			RetailChnlInf telChannelInf = telChannelInfFacade.getRetailChnlInfById(telChannelOrderInf.getChannelId());
 
-			TelProviderOrderInf telProviderOrderInf = telProviderOrderInfFacade
+			ProviderOrderInf telProviderOrderInf = telProviderOrderInfFacade
 					.getTelOrderInfByChannelOrderId(channelOrderId);
 			// 异步通知供应商
 			TeleRespVO respVo = new TeleRespVO();
@@ -80,7 +81,10 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 			respVo.setPayState(telChannelOrderInf.getOrderStat());
 			respVo.setRechargeState(telProviderOrderInf.getRechargeState()); // 充值状态
 			if (telProviderOrderInf.getOperateTime() != null) {
-				respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(telProviderOrderInf.getOperateTime()));
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+			    String operateTimeStr = format.format(telProviderOrderInf.getOperateTime());  
+			    Date operateTimeDate = format.parse(operateTimeStr);
+				respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(operateTimeDate));
 			}
 			respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(new Date(telChannelOrderInf.getCreateTime()))); // 操作时间
 			respVo.setFacePrice(telChannelOrderInf.getRechargeValue().toString());
@@ -112,7 +116,7 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 			} else {
 				telChannelOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
 			}
-			telChannelOrderInfFacade.updateTelChannelOrderInf(telChannelOrderInf);
+			telChannelOrderInfFacade.updateRetailChnlOrderInf(telChannelOrderInf);
 		} catch (Exception ex) {
 			logger.error("## 手机充值 回调通知分销商异常-->{}", ex);
 		}
@@ -124,7 +128,7 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 		try {
 			String[] productIds = ids.split(",");
 			for (int i = 0; i < productIds.length; i++) {
-				TelChannelItemList telChannelItemList = new TelChannelItemList();
+				RetailChnlItemList telChannelItemList = new RetailChnlItemList();
 				HttpSession session = req.getSession();
 				User user = (User) session.getAttribute(Constants.SESSION_USER);
 				if (user != null) {
@@ -134,8 +138,8 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 				telChannelItemList.setProductId(productIds[i]);
 				telChannelItemList.setDataStat("0");
 				telChannelItemList.setChannelRate(new BigDecimal(channelRate));
-				telChannelItemList.setChannelId(channelId);
-				telChannelItemListFacade.saveTelChannelItemList(telChannelItemList);
+				telChannelItemList.setAreaId(channelId);
+				telChannelItemListFacade.saveRetailChnlItemList(telChannelItemList);
 			}
 		} catch (Exception e) {
 			logger.error("## 楼层添加商品失败", e);

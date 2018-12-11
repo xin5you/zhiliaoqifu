@@ -24,7 +24,9 @@ var editRecharge = {
 		var name = $("#name").val();
 		var phone = $("#phone").val();
 		var card = $("#card").val();
-		var companydCode = $("#companydCode").val();
+		var companyId = $("#companyId").val();
+		var accountType = $("#accountType").val();
+		var bizType = $("#bizType").val();
 		var money = $("#money").val();
 		var re = /^1\d{10}$/;
 		if(name==''){
@@ -72,7 +74,9 @@ var editRecharge = {
                 "name" : name, 
                 "phone" : phone, 
                 "card" : card,
-                "companydCode":companydCode,
+                "companyId" : companyId,
+                "accountType" : accountType,
+                "bizType" : bizType,
                 "money":money
             },
             success: function (result) {

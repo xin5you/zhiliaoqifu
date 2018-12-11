@@ -24,6 +24,10 @@ var editOpenAccount = {
 		var name = $("#name").val();
 		var phone = $("#phone").val();
 		var card = $("#card").val();
+		var companyId = $("#companyId").val();
+		var accountType = $("#accountType").val();
+		var bizType = $("#bizType").val();
+		
 		var re = /^1\d{10}$/;
 		if(name==''){
 			Helper.alert("请输入姓名");
@@ -53,7 +57,10 @@ var editOpenAccount = {
             	"orderId":orderId,
                 "name" : name, 
                 "phone" : phone, 
-                "card" : card
+                "card" : card,
+                "companyId" : companyId,
+                "accountType" : accountType,
+                "bizType" : bizType
             },
             success: function (result) {
             	if(result.status) {
