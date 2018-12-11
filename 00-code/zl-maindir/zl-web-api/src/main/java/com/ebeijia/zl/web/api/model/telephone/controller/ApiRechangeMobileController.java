@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.activemq.core.service.RechargeMobileProducerService;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.ProviderOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespDomain;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
@@ -42,20 +42,23 @@ public class ApiRechangeMobileController {
 	private ApiRechargeMobileService apiRechargeMobileService;
 
 	@Autowired
-	@Qualifier("telChannelInfFacade")
-	private RetailChnlInfFacade telChannelInfFacade;
+	@Qualifier("RetailChnlInfFacade")
+	private RetailChnlInfFacade RetailChnlInfFacade;
 
 	@Autowired
-	@Qualifier("telChannelOrderInfFacade")
-	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
+	@Qualifier("RetailChnlOrderInfFacade")
+	private RetailChnlOrderInfFacade RetailChnlOrderInfFacade;
 
 	@Autowired
 	@Qualifier("rechargeMobileProducerService")
 	private RechargeMobileProducerService rechargeMobileProducerService;
 
 	@Autowired
-	@Qualifier("telProviderOrderInfFacade")
-	private ProviderOrderInfFacade telProviderOrderInfFacade;
+	@Qualifier("ProviderOrderInfFacade")
+	private ProviderOrderInfFacade ProviderOrderInfFacade;
+	
+	@Autowired
+	private ApiRechangeMobileValid apiRechangeMobileValid;
 
 	/**
 	 * 分销商发起手机充值
@@ -90,39 +93,39 @@ public class ApiRechangeMobileController {
 	public TeleRespDomain getOrder(HttpServletRequest request, TeleReqVO reqVo) {
 
 		try {
-			TelChannelInf telChannelInf = telChannelInfFacade.getTelChannelInfById(reqVo.getChannelId());
-			if (!ApiRechangeMobileValid.rechargeSignValid(reqVo, telChannelInf.getChannelKey())) {
+			RetailChnlInf retailChnlInf = RetailChnlInfFacade.getRetailChnlInfById(reqVo.getChannelId());
+			if (!apiRechangeMobileValid.rechargeSignValid(reqVo, retailChnlInf.getChannelKey())) {
 				return ResultsUtil.error("110102", "token验证失败");
 			}
-			TelChannelOrderInf telChannelOrderInf = null;
+			RetailChnlOrderInf retailChnlOrderInf = null;
 			if (StringUtil.isNotEmpty(reqVo.getChannelOrderId())) {
-				telChannelOrderInf = telChannelOrderInfFacade.getTelChannelOrderInfById(reqVo.getChannelOrderId());
+				retailChnlOrderInf = RetailChnlOrderInfFacade.getRetailChnlOrderInfById(reqVo.getChannelOrderId());
 			} else {
-				telChannelOrderInf = telChannelOrderInfFacade.getTelChannelOrderInfByOuterId(reqVo.getOuterTid(),
+				retailChnlOrderInf = RetailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(),
 						reqVo.getChannelId());
 			}
 
-			if (telChannelOrderInf != null) {
-				TelProviderOrderInf telProviderOrderInf = telProviderOrderInfFacade.getTelOrderInfByChannelOrderId(telChannelOrderInf.getChannelOrderId());
+			if (retailChnlOrderInf != null) {
+				ProviderOrderInf providerOrderInf = ProviderOrderInfFacade.getTelOrderInfByChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 				TeleRespVO respVo = new TeleRespVO();
-				respVo.setSaleAmount(telChannelOrderInf.getPayAmt().toString());
-				respVo.setChannelOrderId(telChannelOrderInf.getChannelOrderId());
-				respVo.setPayState(telChannelOrderInf.getOrderStat());
-				respVo.setRechargeState(telProviderOrderInf.getRechargeState());
-				respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(telChannelOrderInf.getCreateTime()));
-				if (telProviderOrderInf.getOperateTime() != null) {
-					respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(telProviderOrderInf.getOperateTime()));
+				respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
+				respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
+				respVo.setPayState(retailChnlOrderInf.getOrderStat());
+				respVo.setRechargeState(providerOrderInf.getRechargeState());
+				respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(new Date(retailChnlOrderInf.getCreateTime())));
+				if (providerOrderInf.getOperateTime() != null) {
+					respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(new Date(providerOrderInf.getOperateTime())));
 				}
-				respVo.setFacePrice(telChannelOrderInf.getRechargeValue().toString());
-				respVo.setItemNum(telChannelOrderInf.getItemNum());
-				respVo.setOuterTid(telChannelOrderInf.getOuterTid());
+				respVo.setFacePrice(retailChnlOrderInf.getRechargeValue().toString());
+				respVo.setItemNum(retailChnlOrderInf.getItemNum());
+				respVo.setOuterTid(retailChnlOrderInf.getOuterTid());
 				respVo.setChannelId(reqVo.getChannelId());
 				respVo.setChannelToken(reqVo.getChannelToken());
 				respVo.setV(reqVo.getV());
 				respVo.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
 				respVo.setMethod(reqVo.getMethod());
-				respVo.setSubErrorCode(telProviderOrderInf.getResv1());
-				String retSign = MD5SignUtils.genSign(respVo, "key", telChannelInf.getChannelKey(),
+				respVo.setSubErrorCode(providerOrderInf.getResv1());
+				String retSign = MD5SignUtils.genSign(respVo, "key", retailChnlInf.getChannelKey(),
 						new String[] { "sign", "serialVersionUID" }, null);
 				respVo.setSign(retSign);
 				return ResultsUtil.success(respVo);

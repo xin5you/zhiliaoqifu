@@ -1,4 +1,4 @@
-package com.cn.thinkx.wecard.api.module.telephone.util;
+package com.ebeijia.zl.web.api.model.telephone.util;
 
 import java.util.HashMap;
 import java.util.Map;

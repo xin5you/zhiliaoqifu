@@ -7,20 +7,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelProviderOrderInf;
+import com.cn.thinkx.ecom.redis.core.utils.RedisDictProperties;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.ProviderOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
@@ -36,16 +36,16 @@ public class ApiRechargeNotifyController {
 	private Logger logger = LoggerFactory.getLogger(ApiRechargeNotifyController.class);
 	
 	@Autowired
-	@Qualifier("telChannelInfFacade")
-	private RetailChnlInfFacade telChannelInfFacade;
+	private RetailChnlInfFacade retailChnlInfFacade;
 	
 	@Autowired
-	@Qualifier("telChannelOrderInfFacade")
-	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
+	private RetailChnlOrderInfFacade retailChnlOrderInfFacade;
 	
 	@Autowired
-	@Qualifier("telProviderOrderInfFacade")
-	private ProviderOrderInfFacade telProviderOrderInfFacade;
+	private ProviderOrderInfFacade providerOrderInfFacade;
+	
+	@Autowired
+	private RedisDictProperties  redisDictProperties;
 	
 	/**
 	 * 手机充值 汇卡宝商城回调
@@ -74,81 +74,81 @@ public class ApiRechargeNotifyController {
 		logger.info(JSONObject.toJSONString(reqResult));
 		
 		String retSign=MD5SignUtils.genSign(reqResult, "key",
-				RedisDictProperties.getInstance().getdictValueByCode("P1003_SIGN_KEY"),
+				redisDictProperties.getdictValueByCode("P1003_SIGN_KEY"),
 				new String[]{"sign","serialVersionUID"}, null);
 		if(retSign.equals(reqResult.getSign())){
 			//获取供应商订单 && 修改供应商订单
-			TelProviderOrderInf telProviderOrderInf =telProviderOrderInfFacade.getTelProviderOrderInfById(reqResult.getChannelOrderNo());
+			ProviderOrderInf providerOrderInf =providerOrderInfFacade.getProviderOrderInfById(reqResult.getChannelOrderNo());
 			try{
 				if("1".equals(reqResult.getCode())){
-					telProviderOrderInf.setResv1("00"); //存储返回code
-					telProviderOrderInf.setOperateTime(new Date());
-					telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode());
+					providerOrderInf.setResv1("00"); //存储返回code
+					providerOrderInf.setOperateTime(System.currentTimeMillis());
+					providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode());
 				}else{
-					telProviderOrderInf.setResv1(reqResult.getCode()); //存储返回错误的code
-					telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode());
+					providerOrderInf.setResv1(reqResult.getCode()); //存储返回错误的code
+					providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode());
 				}
-				 telProviderOrderInfFacade.updateTelProviderOrderInf(telProviderOrderInf);
+				 providerOrderInfFacade.updateProviderOrderInf(providerOrderInf);
 			}catch(Exception ex){
 				logger.error("#手机充值 修改供应商订单异常-->{}",ex);
 			}
 			
 			//回调通知分销商
 			try{
-				TelChannelOrderInf telChannelOrderInf=telChannelOrderInfFacade.getTelChannelOrderInfById(telProviderOrderInf.getChannelOrderId());
+				RetailChnlOrderInf retailChnlOrderInf=retailChnlOrderInfFacade.getRetailChnlOrderInfById(providerOrderInf.getChannelOrderId());
 				if(!"1".equals(reqResult.getCode())){
 					//修改订单状态 为申请退款，处理状态 为失败
-					telChannelOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());  //处理失败
-					telChannelOrderInf.setResv1(reqResult.getCode());
-					telChannelOrderInfFacade.updateTelChannelOrderInf(telChannelOrderInf);
+					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());  //处理失败
+					retailChnlOrderInf.setResv1(reqResult.getCode());
+					retailChnlOrderInfFacade.updateRetailChnlOrderInf(retailChnlOrderInf);
 				}else{
-					telChannelOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode());  //已经付款
-					telChannelOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());  //处理成功
-					 telChannelOrderInfFacade.updateTelChannelOrderInf(telChannelOrderInf);
+					retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode());  //已经付款
+					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());  //处理成功
+					 retailChnlOrderInfFacade.updateRetailChnlOrderInf(retailChnlOrderInf);
 				}
 				
-			 if("0".equals(telChannelOrderInf.getNotifyFlag())){
-				TelChannelInf telChannelInf=telChannelInfFacade.getTelChannelInfById(telChannelOrderInf.getChannelId());
+			 if("0".equals(retailChnlOrderInf.getNotifyFlag())){
+				RetailChnlInf retailChnlInf=retailChnlInfFacade.getRetailChnlInfById(retailChnlOrderInf.getChannelId());
 					//异步通知供应商
 					TeleRespVO respVo=new TeleRespVO();
-					respVo.setSaleAmount(telChannelOrderInf.getPayAmt().toString());
-					respVo.setChannelOrderId(telChannelOrderInf.getChannelOrderId());
-					respVo.setPayState(telChannelOrderInf.getOrderStat());
-					respVo.setRechargeState(telProviderOrderInf.getRechargeState()); //充值状态
-					if(telProviderOrderInf.getOperateTime() !=null){
-						respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(telProviderOrderInf.getOperateTime()));
+					respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
+					respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
+					respVo.setPayState(retailChnlOrderInf.getOrderStat());
+					respVo.setRechargeState(providerOrderInf.getRechargeState()); //充值状态
+					if(providerOrderInf.getOperateTime() !=null){
+						respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(new Date(providerOrderInf.getOperateTime())));
 					}
-					respVo.setOrderTime(String.valueOf(telChannelOrderInf.getCreateTime())); //操作时间
-					respVo.setFacePrice(telChannelOrderInf.getRechargeValue().toString());
-					respVo.setItemNum(telChannelOrderInf.getItemNum());
-					respVo.setOuterTid(telChannelOrderInf.getOuterTid());
-					respVo.setChannelId(telChannelOrderInf.getChannelId());
-					respVo.setChannelToken(telChannelInf.getChannelCode());
-					respVo.setV(telChannelOrderInf.getAppVersion());
+					respVo.setOrderTime(String.valueOf(retailChnlOrderInf.getCreateTime())); //操作时间
+					respVo.setFacePrice(retailChnlOrderInf.getRechargeValue().toString());
+					respVo.setItemNum(retailChnlOrderInf.getItemNum());
+					respVo.setOuterTid(retailChnlOrderInf.getOuterTid());
+					respVo.setChannelId(retailChnlOrderInf.getChannelId());
+					respVo.setChannelToken(retailChnlInf.getChannelCode());
+					respVo.setV(retailChnlOrderInf.getAppVersion());
 					respVo.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
 					if(!"1".equals(reqResult.getCode())){
-						respVo.setSubErrorCode(telProviderOrderInf.getResv1());
+						respVo.setSubErrorCode(providerOrderInf.getResv1());
 						respVo.setSubErrorMsg(reqResult.getMsg());
 					}else{
-						respVo.setSubErrorCode(telProviderOrderInf.getResv1());
+						respVo.setSubErrorCode(providerOrderInf.getResv1());
 					}
-					if("1".equals(telChannelOrderInf.getRechargeType())){
+					if("1".equals(retailChnlOrderInf.getRechargeType())){
 						respVo.setMethod(ReqMethodCode.R1.getValue());
-					}else if("2".equals(telChannelOrderInf.getRechargeType())){
+					}else if("2".equals(retailChnlOrderInf.getRechargeType())){
 						respVo.setMethod(ReqMethodCode.R2.getValue());
 					}
-					String psotToken=MD5SignUtils.genSign(respVo, "key", telChannelInf.getChannelKey(), new String[]{"sign","serialVersionUID"}, null);
+					String psotToken=MD5SignUtils.genSign(respVo, "key", retailChnlInf.getChannelKey(), new String[]{"sign","serialVersionUID"}, null);
 					respVo.setSign(psotToken);
 					
 					//修改通知后 分销商的处理状态
-					logger.info("##发起分销商回调[{}],返回参数:[{}]",telChannelOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
-					String result=HttpClientUtil.sendPostReturnStr(telChannelOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
+					logger.info("##发起分销商回调[{}],返回参数:[{}]",retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
+					String result=HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
 					if(result !=null && "SUCCESS ".equals(result.toUpperCase() )){
-						telChannelOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
+						retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
 					}else{
-						telChannelOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
+						retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
 					}
-					telChannelOrderInfFacade.updateTelChannelOrderInf(telChannelOrderInf);
+					retailChnlOrderInfFacade.updateRetailChnlOrderInf(retailChnlOrderInf);
 				}
 			}catch(Exception ex){
 				logger.error("##手机充值 回调通知分销商异常-->",ex);

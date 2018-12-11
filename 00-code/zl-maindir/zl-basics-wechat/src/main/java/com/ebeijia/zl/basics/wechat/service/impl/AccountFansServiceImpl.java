@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -27,7 +28,8 @@ import com.github.pagehelper.PageInfo;
 @Service
 public class AccountFansServiceImpl extends ServiceImpl<AccountFansMapper, AccountFans> implements AccountFansService{
 
-	@Autowired
+	@Autowired(required=true)
+	@Qualifier("accountFansMapper")
 	private AccountFansMapper accountFansMapper;
 
 

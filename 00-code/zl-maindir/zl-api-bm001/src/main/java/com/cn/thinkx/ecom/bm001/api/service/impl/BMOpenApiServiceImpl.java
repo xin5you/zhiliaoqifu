@@ -38,17 +38,19 @@ public class BMOpenApiServiceImpl implements BMOpenApiService {
 		try {
 			response = client.execute(req, accessToken);
 		} catch (ApiException e) {
-			logger.error(" ## 调用力方查询单个话费直充商品出错",e);
+			logger.error(" ## 调用力方查询单个话费直充商品出错[{}]",e);
 		}
 		return response;
 	}
 
 	@Override
 	public BmRechargeMobilePayBillResponse handlePayBill(PayBillReq payBillReq, String accessToken) {
+		
 		OpenClient client = getOpenClient();
 		BmRechargeMobilePayBillRequest req = new BmRechargeMobilePayBillRequest();
 		req.setMobileNo(payBillReq.getMobileNo());
 		req.setRechargeAmount(payBillReq.getRechargeAmount());
+		
 		if(!StringUtil.isNullOrEmpty(payBillReq.getOuterTid())){
 			req.setOuterTid(payBillReq.getOuterTid());
 		}

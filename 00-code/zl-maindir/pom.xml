@@ -89,7 +89,6 @@
 	    <module>zl-web-cms</module>
 	    <module>zl-web-api</module>
     	<module>zl-web-wechat</module>
-    <module>zl-basics-company</module>
   </modules>
 
     <build>

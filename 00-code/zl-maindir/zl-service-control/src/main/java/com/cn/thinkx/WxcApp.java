@@ -22,8 +22,6 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableCaching
 @EnableTransactionManagement
 @EnableAutoConfiguration
-@ComponentScan("com.cn.thinkx")
-@ComponentScan("com.ebeijia.zl")
 @EnableJms
 @SpringBootApplication
 public class WxcApp extends SpringBootServletInitializer implements WebApplicationInitializer {

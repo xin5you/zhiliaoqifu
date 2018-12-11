@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.thinkx.ecom.activemq.core.service.RechargeMobileProducerService;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelInf;
-import com.cn.thinkx.wecard.facade.telrecharge.model.TelChannelOrderInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlInf;
+import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespDomain;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
+import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
 import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
@@ -35,12 +35,12 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	@Qualifier("telChannelInfFacade")
-	private RetailChnlInfFacade telChannelInfFacade;
+	@Qualifier("retailChnlInfFacade")
+	private RetailChnlInfFacade retailChnlInfFacade;
 
 	@Autowired
-	@Qualifier("telChannelOrderInfFacade")
-	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
+	@Qualifier("retailChnlOrderInfFacade")
+	private RetailChnlOrderInfFacade retailChnlOrderInfFacade;
 
 	@Autowired
 	@Qualifier("rechargeMobileProducerService")
@@ -49,49 +49,52 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 	@Autowired
 	@Qualifier("telProviderOrderInfFacade")
 	private ProviderOrderInfFacade telProviderOrderInfFacade;
+	
+	@Autowired
+	private ApiRechangeMobileValid apiRechangeMobileValid;
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	public TeleRespDomain payment(TeleReqVO reqVo) throws Exception {
 		// step1:判断请求的数据是否完整
-		if (!ApiRechangeMobileValid.rechargeValueValid(reqVo)) {
+		if (!apiRechangeMobileValid.rechargeValueValid(reqVo)) {
 			return ResultsUtil.error("110101", "参数不合法");
 		}
 
 		// step2:验签
-		TelChannelInf telChannelInf = null;
+		RetailChnlInf retailChnlInf = null;
 		try {
-			telChannelInf = telChannelInfFacade.getTelChannelInfById(reqVo.getChannelId());
+			retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(reqVo.getChannelId());
 		} catch (Exception e) {
 			logger.error("## 查询分销商异常", e);
 		}
 		try {
-			if (telChannelInf == null || !ApiRechangeMobileValid.rechargeSignValid(reqVo, telChannelInf.getChannelKey())) {
+			if (retailChnlInf == null || !apiRechangeMobileValid.rechargeSignValid(reqVo, retailChnlInf.getChannelKey())) {
 				return ResultsUtil.error("110102", "token验证失败");
 			}
 		} catch (ParseException e) {
-			logger.error("## 分销商签名验证异常 key[{}]", telChannelInf.getChannelKey(), e);
+			logger.error("## 分销商签名验证异常 key[{}]", retailChnlInf.getChannelKey(), e);
 		}
 
-		TelChannelOrderInf telChannelOrderInf = null;
+		RetailChnlOrderInf retailChnlOrderInf = null;
 		if (StringUtil.isNotEmpty(reqVo.getOuterTid())) {
 			try {
-				telChannelOrderInf = telChannelOrderInfFacade.getTelChannelOrderInfByOuterId(reqVo.getOuterTid(), reqVo.getChannelId());
+				retailChnlOrderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(), reqVo.getChannelId());
 			} catch (Exception e) {
 				logger.error("## 查询外部订单[{}]异常", reqVo.getOuterTid(), e);
 			}
 		}
 
-		if (telChannelOrderInf == null) {
-			telChannelOrderInf = new TelChannelOrderInf();
-			telChannelOrderInf.setChannelId(reqVo.getChannelId());
-			telChannelOrderInf.setOuterTid(reqVo.getOuterTid());
-			telChannelOrderInf.setRechargePhone(reqVo.getRechargePhone());
-			telChannelOrderInf.setRechargeType(ReqMethodCode.findByValue(reqVo.getMethod()).getCode());
-			telChannelOrderInf.setRechargeValue(new BigDecimal(reqVo.getRechargeAmount()).setScale(3, BigDecimal.ROUND_DOWN)); // 充值的金额
-			telChannelOrderInf.setProductId(reqVo.getProductId());
-			telChannelOrderInf.setNotifyUrl(reqVo.getCallback());
-			telChannelOrderInf.setAppVersion(reqVo.getV());
+		if (retailChnlOrderInf == null) {
+			retailChnlOrderInf = new RetailChnlOrderInf();
+			retailChnlOrderInf.setChannelId(reqVo.getChannelId());
+			retailChnlOrderInf.setOuterTid(reqVo.getOuterTid());
+			retailChnlOrderInf.setRechargePhone(reqVo.getRechargePhone());
+			retailChnlOrderInf.setRechargeType(ReqMethodCode.findByValue(reqVo.getMethod()).getCode());
+			retailChnlOrderInf.setRechargeValue(new BigDecimal(reqVo.getRechargeAmount()).setScale(3, BigDecimal.ROUND_DOWN)); // 充值的金额
+			retailChnlOrderInf.setProductId(reqVo.getProductId());
+			retailChnlOrderInf.setNotifyUrl(reqVo.getCallback());
+			retailChnlOrderInf.setAppVersion(reqVo.getV());
 		} else {
 			return ResultsUtil.error("110103", "重复订单请求");
 		}
@@ -105,15 +108,15 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 		// step5:return 创建订单
 		TeleRespDomain<TeleRespVO> respTxn = null;
 		try {
-			respTxn = telChannelOrderInfFacade.proChannelOrder(telChannelOrderInf, operId, "ALL");
+			respTxn = retailChnlOrderInfFacade.proChannelOrder(retailChnlOrderInf, operId, "ALL");
 		} catch (Exception ex) {
-			logger.error("## 创建充值订单{}异常", telChannelOrderInf.toString(), ex);
+			logger.error("## 创建充值订单{}异常", retailChnlOrderInf.toString(), ex);
 		}
 		logger.info("创建订单返回respTxn-->{}",JSONObject.toJSONString(respTxn));
 		if (respTxn == null || !"00".equals(respTxn.getCode())) {
-			TelChannelOrderInf orderInf = null;
+			RetailChnlOrderInf orderInf = null;
 			try {
-				orderInf = telChannelOrderInfFacade.getTelChannelOrderInfByOuterId(reqVo.getOuterTid(), reqVo.getChannelId());
+				orderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(), reqVo.getChannelId());
 			} catch (Exception e) {
 				logger.error("## 查询外部订单[{}]异常 channelId[{}]", reqVo.getOuterTid(), reqVo.getChannelId(), e);
 			}
@@ -142,16 +145,16 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 			voResp.setV(reqVo.getV());
 			voResp.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
 			voResp.setMethod(reqVo.getMethod());
-			String retSign = MD5SignUtils.genSign(voResp, "key", telChannelInf.getChannelKey(), new String[] { "sign", "serialVersionUID" }, null);
+			String retSign = MD5SignUtils.genSign(voResp, "key", retailChnlInf.getChannelKey(), new String[] { "sign", "serialVersionUID" }, null);
 			voResp.setSign(retSign);
 			respTxn.setData(voResp);
 		}
 
 		// 发送消息
 		try {
-			telChannelOrderInfFacade.doRechargeMobileMsg(respTxn.getData().getChannelOrderId());
+			retailChnlOrderInfFacade.doRechargeMobileMsg(respTxn.getData().getChannelOrderId());
 		} catch (Exception ex) {
-			logger.error("## 订单[{}]发送充值队列消息异常", respTxn.getData().getChannelOrderId(), ex);
+			logger.error("## 订单[{}]发送充值队列消息异常{},error :{}", respTxn.getData().getChannelOrderId(), ex);
 		}
 		
 		return respTxn;

@@ -6,17 +6,26 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
 import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
+import redis.clients.jedis.JedisCluster;
+
+@Configurable
 public class ApiRechangeMobileValid {
 
-	public static Logger logger = LoggerFactory.getLogger(ApiRechangeMobileValid.class);
+	public  Logger logger = LoggerFactory.getLogger(ApiRechangeMobileValid.class);
+	
+	
+
+	@Autowired
+	private  JedisCluster jedisCluster; 
 
 	/**
 	 * 分销商请求充值 数据判断
@@ -24,7 +33,7 @@ public class ApiRechangeMobileValid {
 	 * @param resp
 	 * @return false
 	 */
-	public static boolean rechargeValueValid(TeleReqVO req) {
+	public  boolean rechargeValueValid(TeleReqVO req) {
 		logger.info("渠道请求参数{}", JSONObject.toJSON(req));
 		
 		if (StringUtil.isNullOrEmpty(req.getChannelId())) {
@@ -75,7 +84,7 @@ public class ApiRechangeMobileValid {
 	 * @return false
 	 * @throws ParseException
 	 */
-	public static boolean rechargeSignValid(TeleReqVO reqVo, String signKey) throws ParseException {
+	public  boolean rechargeSignValid(TeleReqVO reqVo, String signKey) throws ParseException {
 		Date reqTime = DateUtil.COMMON_FULL.getFormat().parse(reqVo.getTimestamp());
 		Date currDate = new Date();
 		long absTime = Math.abs((currDate.getTime() - reqTime.getTime()) / 1000);
@@ -89,16 +98,18 @@ public class ApiRechangeMobileValid {
 		}
 
 		// 是否有5s内的重复
-		String tokenV = JedisClusterUtils.getInstance().get("api.recharge.mobile.token:" + sginfor);
+		String tokenV = jedisCluster.get("api.recharge.mobile.token:" + sginfor);
 		if (StringUtil.isNotEmpty(tokenV)) {
 			return false;
 		} else {
-			JedisClusterUtils.getInstance().set("api.recharge.mobile.token:" + sginfor, sginfor, 5);
+			String key="api.recharge.mobile.token:" + sginfor;
+			jedisCluster.set(key, sginfor);
+			jedisCluster.expire(key, 5);
 		}
 		return true;
 	}
 
-	public static void main(String[] args) {
+	public  void main(String[] args) {
 		TeleReqVO t = new TeleReqVO();
 		t.setChannelId("201807111800008888001");
 		t.setChannelToken("8a8d79196b28498eb0358e1dd42ec080");
