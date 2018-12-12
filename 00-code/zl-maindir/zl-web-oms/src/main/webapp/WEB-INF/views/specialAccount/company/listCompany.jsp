@@ -91,9 +91,9 @@
 											<%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_DELETE')"> --%>
 											<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 											<%-- </sec:authorize> --%>
-				                    	<c:if test="${company.isOpen=='1'}">
+				                    	<%-- <c:if test="${company.isOpen=='1'}">
 											<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
-				                    	</if>
+				                    	</if> --%>
 				                    </td>
 				                 </tr>
 				             </c:forEach>

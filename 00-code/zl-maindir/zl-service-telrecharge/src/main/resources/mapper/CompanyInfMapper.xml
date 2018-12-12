@@ -41,12 +41,11 @@
 		order by c.update_time desc
 	</select>
 
-	<select id="getCompanyInfByLawCode" parameterType="java.lang.String"
-		resultType="CompanyInf">
+	<select id="getCompanyInfByLawCode" parameterType="java.lang.String" resultType="CompanyInf">
 		select
 		<include refid="CompanyInfColumns" />
-		from tb_company_inf c where c.data_stat = '0' and c.law_code =
-		#{lawCode,jdbcType=VARCHAR}
+		from tb_company_inf c 
+		where c.data_stat = '0' and c.law_code = #{lawCode,jdbcType=VARCHAR}
 	</select>
 
 

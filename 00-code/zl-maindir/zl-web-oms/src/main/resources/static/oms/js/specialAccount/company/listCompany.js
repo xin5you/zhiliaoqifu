@@ -17,7 +17,7 @@ var listCompany = {
 		$('.btn-add').on('click', listCompany.intoAddcompany);
 		$('.btn-reset').on('click', listCompany.searchReset);
 		$('.btn-open').on('click', listCompany.openAccountCompany);
-		$('.btn-tansfer').on('click', listCompany.intoAddTransferAccount);
+//		$('.btn-tansfer').on('click', listCompany.intoAddTransferAccount);
 		
 	},
 	searchReset:function(){

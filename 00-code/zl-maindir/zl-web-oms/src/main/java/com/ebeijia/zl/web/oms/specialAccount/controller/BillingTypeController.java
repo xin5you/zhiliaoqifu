@@ -11,19 +11,18 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.oms.sys.model.User;
 import com.github.pagehelper.PageInfo;
 
 @Controller

@@ -45,12 +45,6 @@
             <version>${ebj.zl.version}</version>
         </dependency>
         
-<!-- 		<dependency> -->
-<!-- 		    <groupId>ch.qos.logback</groupId> -->
-<!-- 		    <artifactId>logback-classic</artifactId> -->
-<!-- 		    <version>1.3.0-alpha4</version> -->
-<!-- 		</dependency> -->
-		
 		<dependency>
 		    <groupId>org.aspectj</groupId>
 		    <artifactId>aspectjrt</artifactId>
@@ -80,13 +74,6 @@
 	        <artifactId>zkclient</artifactId>
 	        <version>0.10</version>
 	    </dependency>
-
-	
-		<!-- 这个依赖会把配置文件的值注入到@value里面 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>com.ebeijia</groupId>

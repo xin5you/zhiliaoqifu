@@ -3,18 +3,23 @@ package com.ebeijia.zl.web.oms.phoneRecharge.service.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
@@ -31,7 +36,12 @@ import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
+import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
 import com.ebeijia.zl.web.oms.phoneRecharge.service.TelChannelInfService;
+import com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrder;
+import com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrderList;
+import com.ebeijia.zl.web.oms.specialAccount.service.SpeAccountBatchOrderListService;
+import com.ebeijia.zl.web.oms.specialAccount.service.SpeAccountBatchOrderService;
 import com.ebeijia.zl.web.oms.sys.model.User;
 
 @Service("telChannelInfService")
@@ -39,18 +49,24 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlInfFacade telChannelInfFacade;
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private ProviderOrderInfFacade telProviderOrderInfFacade;
 	
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlItemListFacade telChannelItemListFacade;
-
+	
+	@Autowired
+	private SpeAccountBatchOrderService speAccountBatchOrderService;
+	
+	@Autowired
+	private SpeAccountBatchOrderListService speAccountBatchOrderListService;
+	
 	@Override
 	public ModelMap doCallBackNotifyChannel(String channelOrderId) {
 		ModelMap resultMap = new ModelMap();
@@ -142,10 +158,70 @@ public class TelChannelInfServiceImpl implements TelChannelInfService {
 				telChannelItemListFacade.saveRetailChnlItemList(telChannelItemList);
 			}
 		} catch (Exception e) {
-			logger.error("## 楼层添加商品失败", e);
+			logger.error("## 添加分销商折扣率失败", e);
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public int telChannelOpenAccount(HttpServletRequest req) {
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		RetailChnlInf telChnl = null;
+		try {
+			telChnl = telChannelInfFacade.getRetailChnlInfById(channelId);
+			if (StringUtil.isNullOrEmpty(telChnl)) {
+				return 0;
+			}
+		} catch (Exception e) {
+			logger.error("## 查询分销商{}信息失败", channelId);
+			return 0;
+		}
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+		SpeAccountBatchOrder order = new SpeAccountBatchOrder();
+		order.setOrderId(UUID.randomUUID().toString());
+		order.setOrderType(TransCode.MB80.getCode());
+		order.setOrderDate(System.currentTimeMillis());
+		order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+		order.setCompanyId(channelId);
+		order.setCreateUser(user.getId());
+		order.setUpdateUser(user.getId());
+		order.setCreateTime(System.currentTimeMillis());
+		order.setUpdateTime(System.currentTimeMillis());
+		int orderResult = speAccountBatchOrderService.addSpeAccountBatchOrder(order);
+		SpeAccountBatchOrderList orderList = new SpeAccountBatchOrderList();
+		orderList.setOrderId(order.getOrderId());
+		orderList.setUserName(telChnl.getChannelName());
+		orderList.setPhoneNo(telChnl.getPhoneNo());
+		orderList.setAccountType(UserType.TYPE400.getCode());
+		String[] bizType = {SpecAccountTypeEnum.B1.getbId(),
+				SpecAccountTypeEnum.B2.getbId(),
+				SpecAccountTypeEnum.B3.getbId(),
+				SpecAccountTypeEnum.B4.getbId(),
+				SpecAccountTypeEnum.B5.getbId(),
+				SpecAccountTypeEnum.B6.getbId(),
+				SpecAccountTypeEnum.B7.getbId(),
+				SpecAccountTypeEnum.B8.getbId(),
+				SpecAccountTypeEnum.B9.getbId()};
+		if (orderResult < 0) {
+			return 0;
+		}
+		int orderListResult = speAccountBatchOrderListService.addOrderList(orderList, user, bizType);
+		if (orderListResult < 0) {
+			return 0;
+		}
+		int i = speAccountBatchOrderService.batchSpeAccountBatchOpenAccountITF(order.getOrderId(), user, BatchOrderStat.BatchOrderStat_00.getCode());
+		if (i < 1) {
+			return 0;
+		}
+		try {
+			telChnl.setIsOpen("1");
+			telChannelInfFacade.updateRetailChnlInf(telChnl);
+		} catch (Exception e) {
+			logger.error("## 更新分销商{}开户状态失败", channelId);
+		}
+		return 1;
 	}
 
 }

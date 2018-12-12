@@ -3,14 +3,42 @@
 
 <mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.RetailChnlInfMapper">
 		
+	<sql id="TableName">
+		tb_retail_chnl_inf
+	</sql>
+	
+	<sql id="ColumnResult">
+		channel_id,
+		channel_name,
+		channel_code,
+		channel_key,
+		channel_reserve_amt,
+		channel_prewarning_amt,
+		phone_no,
+		is_open,
+		email,
+		resv1,
+		resv2,
+		resv3,
+		resv4,
+		resv5,
+		resv6,
+		data_stat,
+		remarks,
+		create_user	,
+		update_user,
+		create_time,
+		update_time,
+		LOCK_VERSION
+	</sql>	
 
 	<select id="getList" parameterType="RetailChnlInf" resultType="RetailChnlInf">
-		SELECT 
+		select 
 	  		<include refid="ColumnResult" />
-		FROM 	tb_retai_chnl_inf m
-		WHERE m.data_stat='0' 
+		from tb_retail_chnl_inf m
+		where m.data_stat='0' 
 		<if test="channelName != null and channelName != '' ">
-			AND M.channel_name LIKE '%' || #{channelName} || '%'
+			and m.channel_name like '%' || #{channelName} || '%'
 		</if>
 		order by m.update_time desc
 	</select>

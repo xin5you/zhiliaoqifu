@@ -3,33 +3,6 @@
 
 <mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.RetailChnlProductInfMapper">
 		
-	<resultMap type="RetailChnlProductInf" id="RetailChnlProductInfResultMap">
-		<result column="product_id" property="productId"/>
-		<result column="oper_name" property="operName"/>
-		<result column="oper_id" property="operId"/>
-		<result column="area_flag" property="areaFlag"/>
-		<result column="product_amt" property="productAmt"/>
-		<result column="product_price" property="productPrice"/>
-		<result column="product_type" property="productType"/>
-		<result column="channel_rate" property="channelRate"/>
-		<result column="resv1" property="resv1"/>
-		<result column="resv2" property="resv2"/>
-		<result column="resv3" property="resv3"/>
-		<result column="resv4" property="resv4"/>
-		<result column="resv5" property="resv5"/>
-		<result column="resv6" property="resv6"/>
-		<result column="data_stat" property="dataStat"/>
-		<result column="remarks" property="remarks"/>
-		<result column="create_user" property="createUser"/>
-		<result column="update_user" property="updateUser"/>
-		<result column="create_time" property="createTime"/>
-		<result column="update_time" property="updateTime"/>
-		<result column="lock_version" property="lockVersion"/>
-		<result column="chnl_item_id" property="chnlItemId"/>
-		<result column="channel_rate" property="channelRate"/>
-		<result column="channel_id" property="channelId"/>
-	</resultMap>
-	
 	<sql id="TableName">
 			tb_retail_chnl_product_inf
 	</sql>
@@ -58,27 +31,27 @@
 	</sql>
 
 	
-	<select id="getList" parameterType="RetailChnlProductInf" resultMap="RetailChnlProductInfResultMap">
-		SELECT 
+	<select id="getList" parameterType="RetailChnlProductInf" resultType="RetailChnlProductInf">
+		select 
 	  		<include refid="ColumnResult" />
-		FROM <include refid="TableName" /> m
-		WHERE m.data_stat='0'
+		from <include refid="TableName" /> m
+		where m.data_stat='0'
 		<if test="operName !=null and operName !='' ">
-			AND m.oper_name like '%' || #{operName} || '%'
+			and m.oper_name like '%' || #{operName} || '%'
 		</if>
 		<if test="operId !=null and operId !='' ">
-			AND m.oper_id = #{operId}
+			and m.oper_id = #{operId}
 		</if>
 		<if test="areaFlag !=null and areaFlag !='' ">
-			AND m.area_flag = #{areaFlag}
+			and m.area_flag = #{areaFlag}
 		</if>
 		<if test="productType !=null and productType !='' ">
-			AND m.product_type = #{productType}
+			and m.product_type = #{productType}
 		</if>
 		order by m.update_time desc
 	</select>
 	
-	<select id="getChannelProductByItemId" parameterType="String" resultMap="RetailChnlProductInfResultMap">
+	<select id="getChannelProductByItemId" parameterType="String" resultType="RetailChnlProductInf">
 		select
 			l.id, 
 			l.channel_id,
@@ -98,10 +71,10 @@
         and a.data_stat='0'
         and p.product_id=l.product_id
         and l.channel_id=a.channel_id
-		AND l.chnl_item_id = #{id}
+		and l.chnl_item_id = #{id}
 	</select>
 	
-	<select id="getChannelProductListByChannelId" parameterType="String" resultMap="RetailChnlProductInfResultMap">
+	<select id="getChannelProductListByChannelId" parameterType="String" resultType="RetailChnlProductInf">
 		select 
 			cp.product_id, 
 			cp.oper_name, 
@@ -129,10 +102,10 @@
 
 	
 		<update id="deleteById" parameterType="string">
-			UPDATE <include refid="TableName" /> SET DATA_STAT='1'  WHERE　PRODUCT_ID = #{productId} 
+			update <include refid="TableName" /> set data_stat='1'  where　product_id = #{productId} 
 		</update>
 		
-	<select id="getProductRateByMaps" parameterType="java.util.Map" resultMap="RetailChnlProductInfResultMap">
+	<select id="getProductRateByMaps" parameterType="java.util.Map" resultType="RetailChnlProductInf">
     	select 
 		p.product_id, 
 		p.oper_name, 
@@ -150,12 +123,12 @@
         and a.data_stat='0'
         and p.product_id=l.product_id
         and l.channel_id=a.channel_id
-        AND p.oper_id=#{operId}
-        AND p.product_type=#{productType}
-        AND p.product_amt=#{productAmt}
-        AND a.channel_id=#{channelId}
+        and p.oper_id=#{operId}
+        and p.product_type=#{productType}
+        and p.product_amt=#{productAmt}
+        and a.channel_id=#{channelId}
         <if test="productId != null and productId != ''">
-        	AND  p.product_id=#{productId}
+        	and  p.product_id=#{productId}
         </if>
 	</select>
 

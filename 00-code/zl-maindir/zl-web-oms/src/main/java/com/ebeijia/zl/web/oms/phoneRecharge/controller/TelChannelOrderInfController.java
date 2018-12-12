@@ -28,7 +28,7 @@ public class TelChannelOrderInfController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
 
 	@Autowired

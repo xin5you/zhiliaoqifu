@@ -22,7 +22,7 @@ public class TelProviderOrderInfController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private ProviderOrderInfFacade telProviderOrderInfFacade;
 
 	/**

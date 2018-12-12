@@ -49,6 +49,8 @@
 					               <th>默认路由标识</th>
 					               <th>供应商折扣</th>
 					               <th>操作顺序</th>
+					               <th>专项类型</th>
+					               <th>是否开户</th>
 					               <th>操作</th>
 					             </tr>
 				             </thead>
@@ -62,16 +64,27 @@
 				                    <td>${entity.defaultRoute}</td>
 				                    <td>${entity.providerRate}</td>
 				                    <td>${entity.operSolr}</td>
+				                    <td>${entity.bName}</td>
 				                    <td>
-				                    <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_INTOEDIT')">
+				                    	<c:if test="${entity.isOpen == '0'}">未开户</c:if>
+				                    	<c:if test="${entity.isOpen == '1'}">已开户</c:if>
+				                    </td>
+				                    <td>
+				                    <%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_INTOEDIT')"> --%>
 									<a providerId="${entity.providerId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									</sec:authorize>
-									<sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_DELETE')">
+									<%-- </sec:authorize> --%>
+									<%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_DELETE')"> --%>
 									<a providerId="${entity.providerId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-									</sec:authorize>
-									<sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_VIEW')">
+									<%-- </sec:authorize> --%>
+									<%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_VIEW')"> --%>
 									<a providerId="${entity.providerId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-									</sec:authorize>
+									<%-- </sec:authorize> --%>
+									<c:if test="${entity.isOpen=='0'}">
+										<a providerId="${entity.providerId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
+				                    </c:if>
+				                    <c:if test="${entity.isOpen=='1'}">
+										<a providerId="${entity.providerId}" title="转账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+				                    </c:if>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -81,5 +94,38 @@
 				      </form>
 			   </div>
 	    </div>
+	    
+	    
+	    <div id="addTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<form class="form-horizontal">
+		    <div class="modal-header">
+		        <button class="close" data-dismiss="modal">&times;</button>
+		        <h3 id="commodityInfModal_h">转账</h3>
+		    </div>
+		    <div class="modal-body">
+		        <input type="hidden" id="provider_id" />
+		        <fieldset>
+		            <div class="control-group">
+		                <label class="control-label">转账金额：</label>
+		                <div class="controls">
+		                    <input type="text" class="span3" id="amount" name="amount"/>
+		                    <span class="help-block"></span>
+		                </div>
+		            </div>
+		            <div class="control-group">
+		                <label class="control-label">转至企业：</label>
+		                <div class="controls">
+		                    <input type="text" class="span3" id="company" name="company" />
+		                    <span class="help-block"></span>
+		                </div>  
+		            </div>
+		        </fieldset>
+		    </div>
+		</form>
+		<div class="modal-footer" style="text-align: center;">
+		    <button class="btn btn-primary btn-submit">确 定  </button>
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+		</div>
+	</div>
 </body>
 </html>

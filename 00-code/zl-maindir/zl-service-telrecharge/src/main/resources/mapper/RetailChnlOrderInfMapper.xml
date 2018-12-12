@@ -8,6 +8,37 @@
 		tb_retail_chnl_order_inf
 	</sql>
 	
+	<sql id="ColumnResult">
+		channel_order_id, 
+		channel_id, 
+		outer_tid, 
+		recharge_phone, 
+	    recharge_type,
+		recharge_value, 
+		item_num, 
+		pay_amt,
+		order_stat, 
+		notify_stat, 
+		notify_flag, 
+		notify_url, 
+		app_version,
+		product_id, 
+		channel_rate,
+		resv1,
+		resv2,
+		resv3,
+		resv4,
+		resv5,
+		resv6,
+		data_stat,
+		remarks,
+		create_user	,
+		update_user,
+		create_time,
+		update_time,
+		lock_version
+	</sql>
+	
 	<select id="getList" parameterType="RetailChnlProductInf" resultType="RetailChnlProductInf">
 		SELECT 
 	  		m.channel_order_id, 
@@ -67,7 +98,7 @@
 		
 
 	
-	<select id="getRetailChnlProductInfByOuterId" parameterType="java.lang.String" resultMap="RetailChnlProductInfResultMap">
+	<select id="getRetailChnlProductInfByOuterId" parameterType="java.lang.String" resultType="RetailChnlProductInf">
 		SELECT 
 	  		<include refid="ColumnResult" />
 		 		     FROM 	<include refid="TableName" /> m

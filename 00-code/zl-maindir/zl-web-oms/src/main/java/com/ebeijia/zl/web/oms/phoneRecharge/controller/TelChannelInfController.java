@@ -2,7 +2,6 @@ package com.ebeijia.zl.web.oms.phoneRecharge.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,48 +40,19 @@ import com.github.pagehelper.PageInfo;
 @RequestMapping(value = "channel/channelInf")
 public class TelChannelInfController {
 	
-	public static void main(String[] args) {
-		System.out.println(Long.toString(new Date().getTime()));
-		/*//时间戳转化为Sting或Date
-		SimpleDateFormat format1 = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		Long time1=new Long(445555555);
-		String d = format1.format(time1);
-		Date date1 = null;
-		try {
-			date1 = format1.parse(d);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		System.out.println("Format To String(Date):"+d);
-		System.out.println("Format To Date:"+date1);
-		
-		
-		//Date或者String转化为时间戳
-		SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-		String time="1970-01-06 11:45:55";
-		Date date = null;
-		try {
-			date = format.parse(time);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		System.out.print("Format To times:"+date.getTime());*/
-	}
-
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
-	private RetailChnlInfFacade telChannelInfFacade;
+	@Reference(check = false, version = "1.0.0")
+	private RetailChnlInfFacade retailChnlInfFacade;
 
-	@Reference(check=false)
-	private RetailChnlProductInfFacade telChannelProductInfFacade;
+	@Reference(check = false, version = "1.0.0")
+	private RetailChnlProductInfFacade retailChnlProductInfFacade;
 
 	@Autowired
 	private TelChannelInfService telChannelInfService;
 	
-	@Reference(check=false)
-	private RetailChnlItemListFacade telChannelItemListFacade;
+	@Reference(check = false, version = "1.0.0")
+	private RetailChnlItemListFacade retailChnlItemListFacade;
 
 	/**
 	 * 分销商信息列表
@@ -102,7 +72,7 @@ public class TelChannelInfController {
 		telChannelInf.setChannelName(channelName);
 		PageInfo<RetailChnlInf> pageList = null;
 		try {
-			pageList = telChannelInfFacade.getRetailChnlInfPage(startNum, pageSize, telChannelInf);
+			pageList = retailChnlInfFacade.getRetailChnlInfPage(startNum, pageSize, telChannelInf);
 		} catch (Exception e) {
 			logger.error(" ## 查询分销商信息列表出错",e);
 		}
@@ -132,7 +102,7 @@ public class TelChannelInfController {
 			telChannelInf.setCreateTime(System.currentTimeMillis());
 			telChannelInf.setUpdateTime(System.currentTimeMillis());
 			telChannelInf.setChannelId(UUID.randomUUID().toString());
-			if (telChannelInfFacade.saveRetailChnlInf(telChannelInf)) {
+			if (retailChnlInfFacade.saveRetailChnlInf(telChannelInf)) {
 				mv.addObject("operStatus", 1);
 			}
 		} catch (Exception e) {
@@ -149,7 +119,7 @@ public class TelChannelInfController {
 
 		RetailChnlInf telChannelInf = null;
 		try {
-			telChannelInf = telChannelInfFacade.getRetailChnlInfById(channelId);
+			telChannelInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
 		} catch (Exception e) {
 			logger.error(" ## 跳转分销商信息编辑页面出错",e);
 		}
@@ -167,7 +137,7 @@ public class TelChannelInfController {
 			User user = (User)session.getAttribute(Constants.SESSION_USER);
 			telChannelInf.setUpdateUser(user.getId().toString());
 			telChannelInf.setUpdateTime(System.currentTimeMillis());
-			if (telChannelInfFacade.updateRetailChnlInf(telChannelInf)) {
+			if (retailChnlInfFacade.updateRetailChnlInf(telChannelInf)) {
 				mv.addObject("operStatus", 2);
 			}
 		} catch (Exception e) {
@@ -184,7 +154,7 @@ public class TelChannelInfController {
 
 		RetailChnlInf telChannelInf = null;
 		try {
-			telChannelInf = telChannelInfFacade.getRetailChnlInfById(channelId);
+			telChannelInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
 		} catch (Exception e) {
 			logger.error(" ## 查看分销商信息详情出错",e);
 		}
@@ -200,16 +170,14 @@ public class TelChannelInfController {
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 
 		try {
-			if (telChannelInfFacade.deleteRetailChnlInfById(channelId)) {
-				
-			} else {
+			if (!retailChnlInfFacade.deleteRetailChnlInfById(channelId)) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "删除商品失败，请重新操作");
+				resultMap.put("msg", "删除分销商信息失败，请重新操作");
 			}
 		} catch (Exception e) {
-			logger.error(" ## 删除手机充值商品出错 ", e);
+			logger.error(" ## 删除分销商信息出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "删除商品失败，请重新操作");
+			resultMap.put("msg", "删除分销商信息失败，请重新操作");
 		}
 		return resultMap;
 	}
@@ -228,7 +196,7 @@ public class TelChannelInfController {
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 
 		if (StringUtil.isNullOrEmpty(channelId)) {
-			logger.error("## 添加分销商信息出错,分销商主键channelId：[{}]是空", channelId);
+			logger.error("## 进入分销商添加折扣率出错,分销商主键channelId：[{}]是空", channelId);
 			return mv;
 		}
 		List<RetailChnlProductInf> listAll = null;
@@ -241,13 +209,13 @@ public class TelChannelInfController {
 		RetailChnlProductInf telProduct = new RetailChnlProductInf();
 		try {
 			// 查询分销商信息
-			telChannelInf = telChannelInfFacade.getRetailChnlInfById(channelId);
+			telChannelInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
 
 			// 全部的手机充值产品
 			telProduct.setOperId(StringUtil.nullToString(req.getParameter("operId")));
-			listAll = telChannelProductInfFacade.getRetailChnlProductInfList(telProduct);
+			listAll = retailChnlProductInfFacade.getRetailChnlProductInfList(telProduct);
 			// 当前分销商有手机充值产品
-			channelProductist = telChannelProductInfFacade.getChannelProductListByChannelId(channelId);
+			channelProductist = retailChnlProductInfFacade.getChannelProductListByChannelId(channelId);
 			if (!StringUtil.isNullOrEmpty(channelProductist) && listAll.size() > 0) {
 				for (RetailChnlProductInf channelProductAll : listAll) {
 					check = new TelChannelProductCheck();
@@ -276,7 +244,7 @@ public class TelChannelInfController {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(" ## 添加分销商信息出错", e);
+			logger.error(" ## 进入分销商添加折扣率出错", e);
 		}
 		mv.addObject("operIdList", OperatorType.values());
 		mv.addObject("channelProductistCheck", channelProductistCheck);
@@ -338,7 +306,7 @@ public class TelChannelInfController {
 			if(StringUtil.isNullOrEmpty(id)){
 				return mv;
 			}
-			RetailChnlProductInf telProductInf = telChannelProductInfFacade.getChannelProductByItemId(id);
+			RetailChnlProductInf telProductInf = retailChnlProductInfFacade.getChannelProductByItemId(id);
 			if(!StringUtil.isNullOrEmpty(telProductInf)){
 				if(!StringUtil.isNullOrEmpty(telProductInf.getAreaFlag()))
 					telProductInf.setAreaFlag(ChannelProductAreaFlag.findByCode(telProductInf.getAreaFlag()));
@@ -376,7 +344,7 @@ public class TelChannelInfController {
 				resultMap.addAttribute("msg", "编辑失败,分销商产品折扣率id为空");
 				logger.error("## 编辑分销商产品信息折扣率异常,分销商产品折扣率id:[{}]为空", itemId);
 			}
-			RetailChnlItemList telChannelItemList = telChannelItemListFacade.getRetailChnlItemListById(itemId);
+			RetailChnlItemList telChannelItemList = retailChnlItemListFacade.getRetailChnlItemListById(itemId);
 			HttpSession session = req.getSession();
 			User user = (User)session.getAttribute(Constants.SESSION_USER);
 			if (user != null) {
@@ -384,11 +352,30 @@ public class TelChannelInfController {
 			}
 			if(!StringUtil.isNullOrEmpty(req.getParameter("channelRate")))
 				telChannelItemList.setChannelRate(new BigDecimal(req.getParameter("channelRate")));
-			telChannelItemListFacade.updateRetailChnlItemList(telChannelItemList);
+			retailChnlItemListFacade.updateRetailChnlItemList(telChannelItemList);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "编辑失败，请联系管理员");
 			logger.error("## 编辑分销商产品信息异常", e);
+		}
+		return resultMap;
+	}
+	
+	@RequestMapping(value = "/telChannelOpenAccount")
+	@ResponseBody
+	public ModelMap telChannelOpenAccount(HttpServletRequest req, HttpServletResponse response) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		try {
+			int i = telChannelInfService.telChannelOpenAccount(req);
+			if (i < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "开户失败，请重新操作");
+			}
+		} catch (Exception e) {
+			logger.error(" ## 分销商开户出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "分销商开户失败，请重新操作");
 		}
 		return resultMap;
 	}
@@ -411,8 +398,14 @@ public class TelChannelInfController {
 		telChannelInf.setChannelName(channelName);
 		telChannelInf.setChannelCode(channelCode);
 		telChannelInf.setChannelKey(channelKey);
-		telChannelInf.setChannelReserveAmt(new BigDecimal(channelReserveAmt));
-		telChannelInf.setChannelPrewarningAmt(new BigDecimal(channelPrewarningAmt));
+		if (!StringUtil.isNullOrEmpty(channelReserveAmt)) {
+			String reserveAmtCent = NumberUtils.RMBYuanToCent(channelReserveAmt);
+			telChannelInf.setChannelReserveAmt(new BigDecimal(reserveAmtCent));
+		}
+		if (!StringUtil.isNullOrEmpty(channelPrewarningAmt)) {
+			String prewarningAmtCent = NumberUtils.RMBYuanToCent(channelPrewarningAmt);
+			telChannelInf.setChannelPrewarningAmt(new BigDecimal(prewarningAmtCent));
+		}
 		telChannelInf.setPhoneNo(phoneNo);
 		telChannelInf.setEmail(email);
 		telChannelInf.setRemarks(remarks);
@@ -421,5 +414,5 @@ public class TelChannelInfController {
 		}
 		return telChannelInf;
 	}
-
+	
 }

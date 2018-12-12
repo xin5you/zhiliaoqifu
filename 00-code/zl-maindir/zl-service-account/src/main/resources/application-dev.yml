@@ -10,15 +10,23 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:mysql://192.168.2.110:3306/zldb_test
+    url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
   dubbo:
-    appname: provider-test
-    registry: zookeeper://192.168.2.223:2181
-    protocol: dubbo
-    port: 20880
+    application:
+      name: zl-service-account
+    protocol:
+      name: dubbo
+      port: 20880
+      accepts: 1000
+    provider:
+      id: provider_zl-service-account
+      timeout: 2000
+      delay: -1
+    registry:
+      address: zookeeper://127.0.0.1:2181
     

@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.github.pagehelper.PageInfo;
@@ -20,5 +22,6 @@ public interface CompanyInfService extends IService<CompanyInf> {
 	
 	public PageInfo<CompanyInf> getCompanyInfList(int startNum, int pageSize,CompanyInf companyInf);
 	
-	public CompanyInf getCompanyInfByLawCode(String lawCode);
+	public CompanyInf getCompanyInfByLawCode(@Param("lawCode")String lawCode);
+	
 }

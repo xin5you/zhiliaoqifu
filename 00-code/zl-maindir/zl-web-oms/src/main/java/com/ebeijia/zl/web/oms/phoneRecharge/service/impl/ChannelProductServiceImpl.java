@@ -14,10 +14,10 @@ public class ChannelProductServiceImpl implements ChannelProductService{
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlProductInfFacade telChannelProductInfFacade;
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlItemListFacade telChannelItemListFacade;
 
 	@Override

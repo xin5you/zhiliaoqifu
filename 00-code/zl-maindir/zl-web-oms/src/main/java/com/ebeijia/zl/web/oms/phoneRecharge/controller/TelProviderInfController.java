@@ -26,6 +26,7 @@ import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
+import com.ebeijia.zl.web.oms.phoneRecharge.service.ProviderInfService;
 import com.ebeijia.zl.web.oms.sys.model.User;
 import com.github.pagehelper.PageInfo;
 
@@ -35,11 +36,14 @@ public class TelProviderInfController {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private ProviderInfFacade telProviderInfFacade;
 	
 	@Autowired
 	private BillingTypeInfService billingTypeInfService;
+	
+	@Autowired
+	private ProviderInfService providerInfService;
 
 	/**
 	 * 供应商列表 信息
@@ -112,6 +116,8 @@ public class TelProviderInfController {
 			if (user != null) {
 				telProviderInf.setCreateUser(user.getId().toString());
 				telProviderInf.setUpdateUser(user.getId().toString());
+				telProviderInf.setCreateTime(System.currentTimeMillis());
+				telProviderInf.setUpdateTime(System.currentTimeMillis());
 			}
 			telProviderInf.setProviderId(UUID.randomUUID().toString());
 			telProviderInfFacade.saveProviderInf(telProviderInf);
@@ -203,6 +209,8 @@ public class TelProviderInfController {
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			ProviderInf telProviderInf = telProviderInfFacade.getProviderInfById(providerId);
+			BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfById(telProviderInf.getBId());
+			telProviderInf.setbName(billingType.getbName());
 			mv.addObject("telProviderInf", telProviderInf);
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);
@@ -234,6 +242,25 @@ public class TelProviderInfController {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "删除失败，请联系管理员");
 			logger.error("## 删除供应商信息异常", e);
+		}
+		return resultMap;
+	}
+	
+	@RequestMapping(value = "/telProviderOpenAccount")
+	@ResponseBody
+	public ModelMap telProviderOpenAccount(HttpServletRequest req, HttpServletResponse response) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		try {
+			int i = providerInfService.telProviderOpenAccount(req);
+			if (i < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "开户失败，请重新操作");
+			}
+		} catch (Exception e) {
+			logger.error(" ## 供应商开户出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "供应商开户失败，请重新操作");
 		}
 		return resultMap;
 	}

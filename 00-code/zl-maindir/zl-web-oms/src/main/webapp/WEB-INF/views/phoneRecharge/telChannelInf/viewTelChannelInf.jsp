@@ -88,7 +88,13 @@
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
-                                        
+							     		
+                                        <div class="control-group">
+                                             <label class="control-label">是否开户</label>
+                                             <div class="controls">
+                                                  <input type="text" class="span6" id="email" name="email" value="<c:if test="${telChannelInf.isOpen == '0' }">未开户</c:if><c:if test="${telChannelInf.isOpen == '0' }">已开户</c:if>" readonly="readonly"/>
+                                             </div>
+                                        </div>
                                         
                                         <div class="control-group">
                                              <label class="control-label">备注</label>

@@ -3,6 +3,7 @@ package com.ebeijia.zl.service.telrecharge.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -17,7 +18,7 @@ import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 @Mapper
 public interface CompanyInfMapper extends BaseMapper<CompanyInf> {
 
-	CompanyInf getCompanyInfByLawCode(String lawCode);
+	CompanyInf getCompanyInfByLawCode(@Param("lawCode") String lawCode);
 	
 	public List<CompanyInf> getCompanyInfList(CompanyInf companyInf);
 }

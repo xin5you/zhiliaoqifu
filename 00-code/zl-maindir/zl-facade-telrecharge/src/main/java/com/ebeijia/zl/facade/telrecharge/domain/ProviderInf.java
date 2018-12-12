@@ -161,10 +161,19 @@ public class ProviderInf extends Model<ProviderInf> {
      */
     @TableField("lock_version")
     private Integer lockVersion;
-
+    
+    private String bName;
 
     @Override
     protected Serializable pkVal() { 
         return this.providerId;
     }
+
+	public String getbName() {
+		return bName;
+	}
+
+	public void setbName(String bName) {
+		this.bName = bName;
+	}
 }
