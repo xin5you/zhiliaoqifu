@@ -59,9 +59,9 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>com.alibaba.spring.boot</groupId>
-		    <artifactId>dubbo-spring-boot-starter</artifactId>
-		    <version>1.0.1</version>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>dubbo</artifactId>
+		    <version>2.6.0</version>
 		</dependency>
         
         <dependency>

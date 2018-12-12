@@ -3,7 +3,7 @@ package com.ebeijia.zl.service.account.facade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
@@ -28,10 +28,10 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 * Date         Author          Version
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
- */
+*/
 
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
-@Service
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName="accountManageFacade")
 public class AccountManageFacadeImpl implements AccountManageFacade {
 	
 	private final  Logger log = LoggerFactory.getLogger(AccountManageFacadeImpl.class);

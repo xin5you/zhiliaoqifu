@@ -15,14 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 
 @EnableCaching
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @SpringBootApplication
-@EnableDubboConfiguration
 public class AccountApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 

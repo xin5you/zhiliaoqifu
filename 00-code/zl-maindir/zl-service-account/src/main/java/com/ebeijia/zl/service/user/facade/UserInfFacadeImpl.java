@@ -1,7 +1,7 @@
 package com.ebeijia.zl.service.user.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
@@ -27,7 +27,8 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 *-------------------------------------*
 * 2018年12月3日     zhuqi           v1.0.0
  */
-@Service
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName="userInfFacade")
 public class UserInfFacadeImpl implements UserInfFacade {
 	
 	
