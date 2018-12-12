@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
@@ -26,7 +27,7 @@ import com.ebeijia.zl.web.oms.sys.model.User;
 @Service("companyService")
 public class CompanyServiceImpl implements CompanyService{
 
-	@Autowired
+	@Reference(check=false)
 	private CompanyInfFacade companyInfFacade;
 	
 	@Autowired

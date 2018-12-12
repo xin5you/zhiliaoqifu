@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -32,7 +33,7 @@ public class CompanyController {
 
 	Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
-	@Autowired
+	@Reference(check=false)
 	private CompanyInfFacade companyInfFacade;
 	
 	@Autowired

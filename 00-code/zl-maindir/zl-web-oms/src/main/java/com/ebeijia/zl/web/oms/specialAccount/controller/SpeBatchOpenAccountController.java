@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
@@ -64,7 +65,7 @@ public class SpeBatchOpenAccountController {
 	@Autowired
 	private BillingTypeInfService billingTypeInfService;
 
-	@Autowired
+	@Reference(check=false)
 	private CompanyInfFacade companyInfFacade;
 	
 	/**

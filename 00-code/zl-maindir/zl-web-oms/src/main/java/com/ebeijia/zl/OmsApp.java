@@ -33,6 +33,7 @@ public class OmsApp extends SpringBootServletInitializer implements WebApplicati
 
 	@Autowired
 	private MyBatisProps myBatis;
+	
 	@Autowired
 	private Environment env;
 	
