@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.ecom.redis.core.utils.RedisDictProperties;
-import com.cn.thinkx.wecard.facade.telrecharge.domain.ProviderOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlInf;
-import com.cn.thinkx.wecard.facade.telrecharge.domain.RetailChnlOrderInf;
-import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespVO;
-import com.cn.thinkx.wecard.facade.telrecharge.service.ProviderOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.cn.thinkx.wecard.facade.telrecharge.utils.ResultsUtil;
-import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants;
-import com.cn.thinkx.wecard.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
+import com.ebeijia.zl.core.redis.utils.RedisDictProperties;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
+import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
+import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
+import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
+import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
+import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
+import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
+import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
 import com.ebeijia.zl.web.api.model.telephone.vo.HKbCallBackResult;
 
 @RestController

@@ -9,7 +9,6 @@
   </parent>
 
   <artifactId>zl-api-bm001</artifactId>
-  <version>1.0.0.RELEASE</version>
   <name>zl-api-bm001</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -19,12 +18,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>oracle</groupId>
-			<artifactId>ojdbc</artifactId>
-			<version>6</version>
-			<type>jar</type>
 		</dependency>
 		<!-- 单元测试 -->
 		<dependency>
@@ -68,4 +61,5 @@
 		</dependency>
 		<!-- http end -->
 	</dependencies>
+	
 </project>

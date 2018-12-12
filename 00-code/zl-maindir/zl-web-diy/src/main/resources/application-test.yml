@@ -16,7 +16,7 @@ spring:
       name: dubbo_diy
     protocol:
       name: dubbo
-    scan: com.cn.thinkx.diy
+    scan: com.ebeijia.zl.web.diy
   datasource:
     jndi-name: JDBC
   thymeleaf: 

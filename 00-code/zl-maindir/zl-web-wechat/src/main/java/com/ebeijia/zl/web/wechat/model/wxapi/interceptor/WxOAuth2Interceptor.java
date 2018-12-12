@@ -7,12 +7,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.cn.thinkx.wechat.base.wxapi.process.MpAccount;
-import com.cn.thinkx.wechat.base.wxapi.process.OAuthScope;
-import com.cn.thinkx.wechat.base.wxapi.process.WxApi;
-import com.cn.thinkx.wechat.base.wxapi.process.WxApiClient;
-import com.cn.thinkx.wechat.base.wxapi.process.WxMemoryCacheClient;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.core.wechat.process.MpAccount;
+import com.ebeijia.zl.core.wechat.process.OAuthScope;
+import com.ebeijia.zl.core.wechat.process.WxApi;
+import com.ebeijia.zl.core.wechat.process.WxApiClient;
+import com.ebeijia.zl.core.wechat.process.WxMemoryCacheClient;
 import com.ebeijia.zl.web.wechat.model.utils.HttpWebUtil;
 
 /**

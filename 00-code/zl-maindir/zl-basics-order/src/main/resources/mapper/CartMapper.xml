@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.CartMapper">
+<mapper namespace="com.ebeijia.zl.basics.order.mapper.CartMapper">
 
 	<sql id="cartColumns">
 		CART_ID,
@@ -112,7 +112,7 @@
 
 	<insert id="insert" parameterType="Cart">
 		<selectKey resultType="String" order="BEFORE" keyProperty="cartId">
-			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getCardId" />
+			<include refid="com.ebeijia.zl.basics.order.mapper.SqlCommonMapper.getCardId" />
 		</selectKey>
 		INSERT INTO
 			<include refid="tableName" />

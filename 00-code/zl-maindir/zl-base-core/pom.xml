@@ -9,7 +9,7 @@
 	</parent>
 	 <artifactId>zl-base-core</artifactId>
 	 <packaging>jar</packaging>
-	 <name>zl-base-cores</name>
+	 <name>zl-base-core</name>
   	 <url>http://maven.apache.org</url>
   	 
   <properties>

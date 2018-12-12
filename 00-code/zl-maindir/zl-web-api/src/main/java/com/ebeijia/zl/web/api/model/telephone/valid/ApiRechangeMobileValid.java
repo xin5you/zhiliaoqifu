@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.telrecharge.resp.TeleReqVO;
 
 import redis.clients.jedis.JedisCluster;
 

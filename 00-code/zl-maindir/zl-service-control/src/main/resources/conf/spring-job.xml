@@ -8,10 +8,10 @@
 	
 	
 	<!--刷新BaseDict begin -->
-	<bean id="doBaseDictBizJob" class="com.cn.thinkx.wecard.centre.module.quartz.BaseDictBizJob"></bean>
+	<bean id="doBaseDictBizJob" class="com.ebeijia.zl.service.control.quartz.BaseDictBizJob"></bean>
 	
 	<bean id="doBaseDictBizTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">  
-	    <property name="jobClass" value="com.cn.thinkx.wecard.centre.module.quartz.conf.JobDetailBean" />  
+	    <property name="jobClass" value="com.ebeijia.zl.service.control.quartz.conf.JobDetailBean" />  
 	    <property name="durability" value="true" />
 	    <property name="description" value="刷新 account配置" />
 	    <property name="jobDataAsMap">

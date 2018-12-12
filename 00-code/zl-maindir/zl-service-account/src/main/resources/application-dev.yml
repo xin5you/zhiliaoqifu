@@ -18,7 +18,7 @@ spring:
 
   dubbo:
     appname: provider-test
-    registry: zookeeper://127.0.0.1:2181
+    registry: zookeeper://192.168.2.223:2181
     protocol: dubbo
     port: 20880
     

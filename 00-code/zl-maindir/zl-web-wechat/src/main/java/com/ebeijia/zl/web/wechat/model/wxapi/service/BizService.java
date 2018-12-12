@@ -1,9 +1,8 @@
 package com.ebeijia.zl.web.wechat.model.wxapi.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.wechat.base.wxapi.process.MpAccount;
-import com.cn.thinkx.wechat.base.wxapi.vo.MsgRequest;
 import com.ebeijia.zl.basics.wechat.domain.AccountFans;
+import com.ebeijia.zl.core.wechat.process.MpAccount;
+import com.ebeijia.zl.core.wechat.vo.MsgRequest;
 
 
 /**

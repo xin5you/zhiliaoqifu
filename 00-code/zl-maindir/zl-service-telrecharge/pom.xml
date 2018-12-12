@@ -8,7 +8,7 @@
 		<artifactId>zl-maindir</artifactId>
 		<version>1.0.0.RELEASE</version>
 	</parent>
-	<groupId>com.cn.thinkx</groupId>
+	<groupId>com.ebeijia.zl.service</groupId>
 	<artifactId>zl-service-telrecharge</artifactId>
 	<packaging>war</packaging>
 	<name>zl-service-telrecharge</name>

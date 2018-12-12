@@ -15,13 +15,13 @@
         <typeAlias alias="ArrayList" type="java.util.ArrayList" />
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
         
-        <typeAlias alias="UserRole" type="com.cn.thinkx.ecom.system.domain.UserRole"/>
-		<typeAlias alias="User" type="com.cn.thinkx.ecom.system.domain.User" />
-        <typeAlias alias="RoleResource" type="com.cn.thinkx.ecom.system.domain.RoleResource"/>
-        <typeAlias alias="Resource" type="com.cn.thinkx.ecom.system.domain.Resource"/>
-        <typeAlias alias="Role" type="com.cn.thinkx.ecom.system.domain.Role"/>
+        <typeAlias alias="UserRole" type="com.ebeijia.zl.web.cms.system.domain.UserRole"/>
+		<typeAlias alias="User" type="com.ebeijia.zl.web.cms.system.domain.User" />
+        <typeAlias alias="RoleResource" type="com.ebeijia.zl.web.cms.system.domain.RoleResource"/>
+        <typeAlias alias="Resource" type="com.ebeijia.zl.web.cms.system.domain.Resource"/>
+        <typeAlias alias="Role" type="com.ebeijia.zl.web.cms.system.domain.Role"/>
         
-		<package name="com.cn.thinkx.ecom.basics.member.domain"/>
+		<package name="com.ebeijia.zl.basics.member.domain"/>
 	</typeAliases>
 
 </configuration>

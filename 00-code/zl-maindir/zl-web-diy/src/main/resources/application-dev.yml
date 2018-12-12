@@ -16,7 +16,7 @@ spring:
       #name: dubbo_diy
     #protocol:
       #name: dubbo
-    #scan: com.cn.thinkx.diy
+    #scan: com.ebeijia.zl.web.diy
   datasource:
     name: mySpringBoot
     url: jdbc:mysql://192.168.2.110:3306/zldb_test

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.cn.thinkx.ecom.basics.goods.mapper.SpecValuesMapper">
+<mapper namespace="com.ebeijia.zl.basics.goods.mapper.SpecValuesMapper">
 	
 	<sql id="SpecValuesColumns">
 		 SPEC_VALUE_ID,
@@ -43,7 +43,7 @@
 	
 	  <insert id="insert"  parameterType="SpecValues">
 		   <selectKey resultType="String" order="BEFORE" keyProperty="specValueId">  
-				<include refid="com.cn.thinkx.ecom.basics.goods.domain.SqlCommonMapper.getSpecValuesId" />
+				<include refid="com.ebeijia.zl.basics.goods.domain.SqlCommonMapper.getSpecValuesId" />
 			</selectKey>
 			
 		INSERT INTO 

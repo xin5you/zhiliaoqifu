@@ -1,8 +1,12 @@
 package com.ebeijia.zl.shop.utils;
 
-import com.cn.thinkx.ecom.redis.core.utils.JedisUtilsWithNamespace;
-import com.ebeijia.zl.shop.vo.JsonResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Enumeration;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,11 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
+import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
+import com.ebeijia.zl.shop.vo.JsonResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Session AOP切面

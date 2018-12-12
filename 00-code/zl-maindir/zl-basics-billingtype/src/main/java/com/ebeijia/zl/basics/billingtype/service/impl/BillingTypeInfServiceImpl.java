@@ -3,7 +3,6 @@ package com.ebeijia.zl.basics.billingtype.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
@@ -17,7 +16,6 @@ import com.github.pagehelper.PageInfo;
 public class BillingTypeInfServiceImpl implements BillingTypeInfService {
 	 
 	@Autowired
-	@Qualifier("billingTypeInfMapper")
 	private BillingTypeInfMapper billingTypeInfMapper;
 	
 	/**

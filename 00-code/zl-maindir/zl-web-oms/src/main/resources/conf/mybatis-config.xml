@@ -16,19 +16,19 @@
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
         <typeAlias alias="Double" type="java.lang.Double" />
         
-        <typeAlias type="com.cn.thinkx.oms.sys.model.User" alias="User" />
-	 	<typeAlias type="com.cn.thinkx.oms.sys.model.Role" alias="Role" />
-	 	<typeAlias type="com.cn.thinkx.oms.sys.model.Resource" alias="Resource" />
-	 	<typeAlias type="com.cn.thinkx.oms.sys.model.RoleResource" alias="RoleResource" />
-	 	<typeAlias type="com.cn.thinkx.oms.sys.model.UserRole" alias="UserRole" />
-	 	<typeAlias type="com.cn.thinkx.oms.sys.model.Organization" alias="Organization" />
+        <typeAlias type="com.ebeijia.zl.web.oms.sys.model.User" alias="User" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.Role" alias="Role" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.Resource" alias="Resource" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.RoleResource" alias="RoleResource" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.UserRole" alias="UserRole" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.Organization" alias="Organization" />
 	 	
-	 	<typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrder" alias="PhoneRechargeOrder" />
-        <typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeOrderUpload" alias="PhoneRechargeOrderUpload" />
-        <typeAlias type="com.cn.thinkx.oms.phoneRecharge.model.PhoneRechargeShop" alias="PhoneRechargeShop" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeOrder" alias="PhoneRechargeOrder" />
+        <typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeOrderUpload" alias="PhoneRechargeOrderUpload" />
+        <typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeShop" alias="PhoneRechargeShop" />
         
-	 	<typeAlias type="com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrder" alias="SpeAccountBatchOrder" />
-        <typeAlias type="com.cn.thinkx.oms.specialAccount.model.SpeAccountBatchOrderList" alias="SpeAccountBatchOrderList" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrder" alias="SpeAccountBatchOrder" />
+        <typeAlias type="com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrderList" alias="SpeAccountBatchOrderList" />
 	 	
 	 	<package name="com.ebeijia.zl.basics.billingtype.domain"/>
 	</typeAliases>

@@ -65,4 +65,4 @@ myBatis:
   mapperLocations: classpath*:mapper/*.xml
   configLocations: classpath:conf/mybatis-config.xml
 logging:
-  config: classpath:conf/logback-ecom.xml
+  config: classpath:conf/logback-cms.xml

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.cn.thinkx.ecom.basics.member.mapper.MemberInfMapper">
+<mapper namespace="com.ebeijia.zl.basics.member.mapper.MemberInfMapper">
 
 
 		<resultMap type="MemberInf" id="MemberInfResultMap">
@@ -72,7 +72,7 @@
 	<insert id="insert" parameterType="MemberInf">
 		<selectKey resultType="String" order="BEFORE" keyProperty="membeId">
 			<include
-				refid="com.cn.thinkx.ecom.basics.member.base.mapper.SqlCommonMapper.getEomMemberId" />
+				refid="com.ebeijia.zl.basics.member.base.mapper.SqlCommonMapper.getEomMemberId" />
 		</selectKey>
 		INSERT INTO TB_ECOM_MEMBER(
 		MEMBER_ID,

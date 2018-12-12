@@ -1,15 +1,16 @@
 package com.ebeijia.zl.shop.service.auth.impl;
 
-import com.cn.thinkx.ecom.redis.core.utils.JedisClusterUtils;
-import com.cn.thinkx.ecom.redis.core.utils.JedisUtilsWithNamespace;
-import com.ebeijia.zl.shop.service.auth.IAuthService;
-import com.ebeijia.zl.shop.vo.Token;
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
+import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
+import com.ebeijia.zl.shop.service.auth.IAuthService;
+import com.ebeijia.zl.shop.vo.Token;
 
 @Service
 public class AuthService implements IAuthService {

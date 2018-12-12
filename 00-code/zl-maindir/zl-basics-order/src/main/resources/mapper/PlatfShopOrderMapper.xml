@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.cn.thinkx.ecom.basics.order.mapper.PlatfShopOrderMapper">
+<mapper namespace="com.ebeijia.zl.basics.order.mapper.PlatfShopOrderMapper">
 
 	<sql id="platfShopOrderColumns">
 		S_ORDER_ID,
@@ -89,7 +89,7 @@
 
 	<insert id="insert" parameterType="PlatfShopOrder">
 		<selectKey resultType="String" order="BEFORE" keyProperty="sOrderId">
-			<include refid="com.cn.thinkx.ecom.basics.order.mapper.SqlCommonMapper.getPlatfShopOrderId" />
+			<include refid="com.ebeijia.zl.basics.order.mapper.SqlCommonMapper.getPlatfShopOrderId" />
 		</selectKey>
 		INSERT INTO
 			<include refid="tableName" />

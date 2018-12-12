@@ -34,9 +34,9 @@
 								<button type="submit" class="btn btn-search"> 查 询 </button>
 								<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
 								 
-								 <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF_INTOADD')">
+								<%--  <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF_INTOADD')"> --%>
 								<button type="button" class="btn btn-primary btn-add">新增分销商</button>
-								</sec:authorize>
+								<%-- </sec:authorize> --%>
 							</div>
 						</div>
 				         </br >       

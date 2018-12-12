@@ -19,18 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.thinkx.ecom.redis.core.utils.RedisDictProperties;
-import com.cn.thinkx.wechat.base.wxapi.aes.WXBizMsgCrypt;
-import com.cn.thinkx.wechat.base.wxapi.process.MpAccount;
-import com.cn.thinkx.wechat.base.wxapi.process.MsgXmlUtil;
-import com.cn.thinkx.wechat.base.wxapi.process.WxApiClient;
-import com.cn.thinkx.wechat.base.wxapi.process.WxMemoryCacheClient;
-import com.cn.thinkx.wechat.base.wxapi.process.WxSign;
-import com.cn.thinkx.wechat.base.wxapi.util.WxSignUtil;
-import com.cn.thinkx.wechat.base.wxapi.vo.MsgRequest;
-import com.cn.thinkx.wechat.base.wxapi.vo.SemaphoreMap;
 import com.ebeijia.zl.basics.wechat.domain.AccountFans;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.core.redis.utils.RedisDictProperties;
+import com.ebeijia.zl.core.wechat.aes.WXBizMsgCrypt;
+import com.ebeijia.zl.core.wechat.process.MpAccount;
+import com.ebeijia.zl.core.wechat.process.MsgXmlUtil;
+import com.ebeijia.zl.core.wechat.process.WxApiClient;
+import com.ebeijia.zl.core.wechat.process.WxMemoryCacheClient;
+import com.ebeijia.zl.core.wechat.process.WxSign;
+import com.ebeijia.zl.core.wechat.util.WxSignUtil;
+import com.ebeijia.zl.core.wechat.vo.MsgRequest;
+import com.ebeijia.zl.core.wechat.vo.SemaphoreMap;
 import com.ebeijia.zl.web.wechat.model.utils.JsonView;
 import com.ebeijia.zl.web.wechat.model.wxapi.service.BizService;
 

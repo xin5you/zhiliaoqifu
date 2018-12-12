@@ -1,7 +1,7 @@
 package com.ebeijia.zl.web.api.model.telephone.service;
 
-import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleReqVO;
-import com.cn.thinkx.wecard.facade.telrecharge.resp.TeleRespDomain;
+import com.ebeijia.zl.facade.telrecharge.resp.TeleReqVO;
+import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 
 public interface ApiRechargeMobileService {
 	
