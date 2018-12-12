@@ -8,15 +8,14 @@
 	</settings>
 
 	<typeAliases>
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelAreaInf" alias="TelChannelAreaInf" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelInf" alias="TelChannelInf" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelItemList" alias="TelChannelItemList" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelOrderInf" alias="TelChannelOrderInf" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelProductInf" alias="TelChannelProductInf" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelReserveDetail" alias="TelChannelReserveDetail" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelProviderInf"   alias="TelProviderInf" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelProviderOrderInf" alias="TelProviderOrderInf" />
-		<typeAlias type="com.ebeijia.zl.service.telrecharge.model.TelChannelOrderInfUpload" alias="TelChannelOrderInfUpload" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.CompanyInf" alias="CompanyInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.ProviderInf" alias="ProviderInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf" alias="ProviderOrderInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlAreaInf" alias="RetailChnlAreaInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf" alias="RetailChnlInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlItemList" alias="RetailChnlItemList" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf"   alias="RetailChnlOrderInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf" alias="RetailChnlProductInf" />
 	</typeAliases>
 	
 	<mappers>

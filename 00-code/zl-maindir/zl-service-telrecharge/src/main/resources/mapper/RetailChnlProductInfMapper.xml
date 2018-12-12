@@ -150,10 +150,10 @@
         and a.data_stat='0'
         and p.product_id=l.product_id
         and l.channel_id=a.channel_id
-        AND p.OPER_ID=#{operId}
-        AND p.PRODUCT_TYPE=#{productType}
-        AND p.PRODUCT_AMT=#{productAmt}
-        AND a.CHANNEL_ID=#{channelId}
+        AND p.oper_id=#{operId}
+        AND p.product_type=#{productType}
+        AND p.product_amt=#{productAmt}
+        AND a.channel_id=#{channelId}
         <if test="productId != null and productId != ''">
         	AND  p.product_id=#{productId}
         </if>

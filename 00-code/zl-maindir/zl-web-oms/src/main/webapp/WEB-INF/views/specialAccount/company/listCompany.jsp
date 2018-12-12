@@ -31,9 +31,9 @@
 		                       	<div class="input-prepend">
 		           			   	   	<span class="add-on">交易开关状态</span>
 		           			   	   	<select name="transFlag" id="transFlag" class="input-medium">
-                                    <option value="">--请选择--</option>
-                                    <option <c:if test="${companyInf.transFlag == '0' }">selected="selected"</c:if> value="0">开</option>
-                                    <option <c:if test="${companyInf.transFlag == '1' }">selected="selected"</c:if> value="1">关</option>
+	                                    <option value="">--请选择--</option>
+	                                    <option <c:if test="${companyInf.transFlag == '0' }">selected="selected"</c:if> value="0">开</option>
+	                                    <option <c:if test="${companyInf.transFlag == '1' }">selected="selected"</c:if> value="1">关</option>
                                     </select>
 		                       	</div>
 		                       	<div class="input-prepend">
