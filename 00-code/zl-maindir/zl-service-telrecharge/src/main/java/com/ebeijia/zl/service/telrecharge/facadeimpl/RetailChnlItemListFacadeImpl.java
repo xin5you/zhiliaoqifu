@@ -3,7 +3,7 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlItemList;
@@ -13,8 +13,8 @@ import com.ebeijia.zl.service.telrecharge.service.RetailChnlItemListService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
-@Service
+@Configuration  
+@com.alibaba.dubbo.config.annotation.Service(interfaceName="retailChnlItemListFacade")
 public class RetailChnlItemListFacadeImpl implements RetailChnlItemListFacade {
 
 	@Autowired

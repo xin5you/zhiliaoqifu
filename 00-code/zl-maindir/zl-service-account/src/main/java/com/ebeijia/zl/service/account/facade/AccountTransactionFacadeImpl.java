@@ -5,7 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -40,26 +40,8 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
-
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
-@Service
-
-
-
-/**
- * 
-* 
-* @Description: 该类的功能描述
-*
-* @version: v1.0.0
-* @author: zhuqi
-* @date: 2018年12月5日 上午11:52:48 
-*
-* Modification History:
-* Date         Author          Version
-*-------------------------------------*
-* 2018年12月5日     zhuqi           v1.0.0
- */
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName="accountTransactionFacade")
 public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
 	
