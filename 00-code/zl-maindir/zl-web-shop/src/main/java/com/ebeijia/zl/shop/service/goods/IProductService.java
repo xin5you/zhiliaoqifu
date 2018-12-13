@@ -8,7 +8,7 @@ import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
-public interface IGoodsService {
+public interface IProductService {
 
     PageInfo<TbEcomGoods> listGoods(Integer catid, String orderby, Integer start, Integer limit);
 

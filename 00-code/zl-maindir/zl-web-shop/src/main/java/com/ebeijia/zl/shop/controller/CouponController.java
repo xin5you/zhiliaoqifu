@@ -22,16 +22,18 @@ public class CouponController {
     ICouponService couponService;
 
     @ApiOperation("按类型的卡券列表")
-    @RequestMapping(value = "/list/cat{catid}/{order}",method = RequestMethod.GET)
-    public void listGoods(@PathVariable Integer catid, @PathVariable String order, Integer start, Integer limit){
-        List<TbEcomGoods> list = couponService.listGoods(catid,order,start,limit);
+    @RequestMapping(value = "/list/cat{catid}",method = RequestMethod.GET)
+    public JsonResult<List<TbEcomGoods>> listGoods(@PathVariable Integer catid, String orderby, Integer start, Integer limit){
+        List<TbEcomGoods> list = couponService.listGoods(catid,orderby,start,limit);
+        return new JsonResult<>(list);
+
     }
 
     @ApiOperation("卡券详情")
     @RequestMapping(value = "/get/detail/{goods}",method = RequestMethod.GET)
-    public void goodsDetail(@PathVariable("goods") String goodsId){
+    public JsonResult<TbEcomGoodsDetail> goodsDetail(@PathVariable("goods") String goodsId){
         TbEcomGoodsDetail detail = couponService.goodsDetail(goodsId);
-
+        return new JsonResult<>(detail);
     }
 
 

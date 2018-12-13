@@ -2,13 +2,11 @@ package com.ebeijia.zl.shop.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 
 @ApiModel("转账信息")
-@Getter
-@Setter
+@Data
 @ToString
 public class DealInfo {
 

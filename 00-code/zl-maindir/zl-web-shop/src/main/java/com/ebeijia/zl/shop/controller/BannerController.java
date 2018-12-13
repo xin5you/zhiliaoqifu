@@ -1,6 +1,8 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomBanner;
 import com.ebeijia.zl.shop.service.banner.IBannerService;
+import com.ebeijia.zl.shop.vo.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,8 @@ public class BannerController {
 
     @ApiOperation("获取图片")
     @RequestMapping(value = "/get",method = RequestMethod.GET)
-    public void goodsImage(String pos,String spec,Integer index){
-
+    public JsonResult<TbEcomBanner> goodsImage(String pos, String spec, Integer index){
+        return null;
     }
 
 

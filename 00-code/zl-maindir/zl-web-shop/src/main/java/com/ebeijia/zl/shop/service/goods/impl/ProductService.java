@@ -8,7 +8,7 @@ import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsGallery;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.*;
-import com.ebeijia.zl.shop.service.goods.IGoodsService;
+import com.ebeijia.zl.shop.service.goods.IProductService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GoodsService implements IGoodsService {
+public class ProductService implements IProductService {
     @Autowired
     private ITbEcomGoodsService goodsDao;
 

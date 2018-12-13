@@ -26,11 +26,12 @@ public class MemberController {
 
     @ApiOperation("注册")
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
-    public void signUp(){
+    public JsonResult<TbEcomMember> signUp(){
         //获取手机号
         //获取对应id
         //生产账户
         TbEcomMember member =  memberService.createMember();
+        return new JsonResult<>(member);
     }
 
     @ApiOperation("用户信息查询")
@@ -45,9 +46,9 @@ public class MemberController {
 
     @ApiOperation("新增地址，目前修改也一样调用这个接口")
     @RequestMapping(value = "/address/create",method = RequestMethod.POST)
-    public JsonResult<Integer> newAddress(String token, String address, Integer pos){
+    public JsonResult newAddress(String token, String address, Integer pos){
         Integer state = memberService.newAddress(token,address,pos);
-        JsonResult<Integer> result = new JsonResult<>();
+        JsonResult<Object> result = new JsonResult<>();
         result.setCode(state);
         return result;
     }

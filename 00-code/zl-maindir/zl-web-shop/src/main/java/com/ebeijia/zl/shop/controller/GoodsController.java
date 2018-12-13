@@ -4,7 +4,7 @@ import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsGallery;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
-import com.ebeijia.zl.shop.service.goods.IGoodsService;
+import com.ebeijia.zl.shop.service.goods.IProductService;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 public class GoodsController {
     @Autowired
-    IGoodsService goodsService;
+    IProductService goodsService;
 
     @ApiOperation("商品列表，分页")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
@@ -45,16 +45,16 @@ public class GoodsController {
 
     @ApiOperation("商品详情")
     @RequestMapping(value = "/detail/get/{goods}",method = RequestMethod.GET)
-    public TbEcomGoodsDetail goodsDetail(@PathVariable("goods") String goodsId){
+    public JsonResult<TbEcomGoodsDetail> goodsDetail(@PathVariable("goods") String goodsId){
         TbEcomGoodsDetail detail = goodsService.getDetail(goodsId);
-        return detail;
+        return new JsonResult<>(detail);
     }
 
     @ApiOperation("商品相册")
     @RequestMapping(value = "/gallery/get/{goods}",method = RequestMethod.GET)
     public JsonResult<TbEcomGoodsGallery> goodsGallery(@PathVariable("goods") String goodsId){
         TbEcomGoodsGallery goodsGallery = goodsService.getGallery(goodsId);
-        return new JsonResult<TbEcomGoodsGallery>(goodsGallery);
+        return new JsonResult<>(goodsGallery);
     }
 
 //

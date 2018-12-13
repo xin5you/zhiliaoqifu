@@ -32,7 +32,7 @@ public class Swagger2Config {
                         .version("版本号:1.0.0.RELEASE")
                         .build())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ebeijia.zl"))
+                .apis(RequestHandlerSelectors.basePackage("com.ebeijia.zl.shop"))
                 .paths(PathSelectors.any())
                 .build();
     }
