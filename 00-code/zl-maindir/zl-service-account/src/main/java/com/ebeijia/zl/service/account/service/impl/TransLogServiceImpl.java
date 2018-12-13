@@ -19,6 +19,7 @@ import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
@@ -57,7 +58,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	public boolean execute(IntfaceTransLog intfaceTransLog) throws Exception{
+	public boolean execute(IntfaceTransLog intfaceTransLog) throws AccountBizException{
 		log.info("==>execute create transLog begin...");
 		
 		/**
@@ -83,12 +84,10 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	public boolean execute(List<TransLog> voList) {
+	public boolean execute(List<TransLog> voList) throws AccountBizException{
 		
 		List<TransLog> sortList = new ArrayList<>();
 		if(voList !=null && voList.size()>1){
-	    
-	    	
 	    	//交易流水顺序执行
 	    	voList.stream().sorted((e1, e2) -> {
 				return Integer.compare(e1.getOrder(), e2.getOrder());
@@ -115,7 +114,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	private List<TransLog> doTransLog(IntfaceTransLog intfaceTransLog){
+	private List<TransLog> doTransLog(IntfaceTransLog intfaceTransLog)throws AccountBizException{
 		
 		List<TransLog> voList=new ArrayList<TransLog>();
 		

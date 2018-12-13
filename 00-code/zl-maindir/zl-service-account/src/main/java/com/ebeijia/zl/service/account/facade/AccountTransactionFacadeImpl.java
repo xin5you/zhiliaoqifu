@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +14,7 @@ import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
@@ -73,7 +75,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	*-------------------------------------*
 	* 2018年12月5日     zhuqi           v1.0.0
 	 */
-	public BaseResult executeRechargeByOneBId(AccountRechargeReqVo req) throws Exception {
+	public BaseResult executeRechargeByOneBId(AccountRechargeReqVo req){
 		
 		log.info("==>  账户充值 mehtod=executeRechargeByOneBId and AccountRechargeReqVo={}",JSONArray.toJSON(req));
 		
@@ -149,7 +151,14 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		
 		//执行操作
-		boolean eflag=transLogService.execute(intfaceTransLog); 
+		boolean eflag=false; 
+	     try {  
+	    	 eflag=transLogService.execute(intfaceTransLog); 
+	      } catch (AccountBizException accountBizException) {  
+	           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+	           return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
+	      } 
+		
 		
 		//修改当前接口请求交易状态
 		intfaceTransLogService.updateById(intfaceTransLog,eflag);
@@ -157,8 +166,21 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
 
-	
+	/**
+	* @Description: 消费接口
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年11月30日 上午11:08:55 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年11月30日     zhuqi           v1.0.0
+	 */
 	public BaseResult executeRecharge(List list) throws Exception {
+		
+		//TODO 批量用户充值
 		
 		return null;
 		
@@ -222,7 +244,14 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLogService.save(intfaceTransLog);
 		
 		//执行操作
-		boolean eflag=transLogService.execute(intfaceTransLog);
+		boolean eflag=false; 
+	     try {  
+	    	 eflag=transLogService.execute(intfaceTransLog); 
+	      } catch (AccountBizException accountBizException) {  
+	           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+	           return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
+	      } 
+		
 		
 		//修改当前接口请求交易状态
 		intfaceTransLogService.updateById(intfaceTransLog,eflag);
@@ -298,7 +327,14 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 	
 	//执行操作
-	boolean eflag=transLogService.execute(intfaceTransLog); 
+	boolean eflag=false; 
+     try {  
+    	 eflag=transLogService.execute(intfaceTransLog); 
+      } catch (AccountBizException accountBizException) {  
+           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+           return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
+      } 
+	
 	
 	//修改当前接口请求交易状态
 	intfaceTransLogService.updateById(intfaceTransLog,eflag);

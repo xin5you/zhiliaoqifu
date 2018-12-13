@@ -111,10 +111,10 @@ public class AccountInf extends Model<AccountInf> {
     
     
     /**
-     * 消费额度
+     * 代金券额度
      */
-    @TableField("consumer_bal")
-    private BigDecimal consumerBal;
+    @TableField("coupon_bal")
+    private BigDecimal couponBal;
  
     /**
      * 最近交易日期

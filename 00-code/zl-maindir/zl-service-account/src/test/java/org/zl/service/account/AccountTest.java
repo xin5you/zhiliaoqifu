@@ -31,7 +31,7 @@ public class AccountTest {
     	
     	req.setTransId(TransCode.MB80.getCode());
     	req.setTransChnl("40001001");
-    	req.setMobilePhone("13501755206");
+//    	req.setMobilePhone("13501755206");
     	req.setUserName("ebj供应商");
     	req.setUserType(UserType.TYPE300.getCode());
     	req.setCompanyId("100000000000000000000000");
@@ -41,7 +41,7 @@ public class AccountTest {
     	Set<String>  bids=new HashSet<>();
     	bids.add("A0");
 //    	bids.add("A1");
-//    	bids.add("B1");
+    	bids.add("B1");
 //    	bids.add("B2");
 //    	bids.add("B3");
 //    	bids.add("B4");

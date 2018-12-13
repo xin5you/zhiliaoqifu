@@ -104,7 +104,7 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private String priBId;
  
     /**
-     * 卡号
+     * 用户操作类型
      */
     @TableField("user_type")
     private String userType;

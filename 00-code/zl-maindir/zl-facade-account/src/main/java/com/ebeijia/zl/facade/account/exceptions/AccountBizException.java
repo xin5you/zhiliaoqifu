@@ -21,7 +21,8 @@ public class AccountBizException extends BizException {
 	private  final Logger log = LoggerFactory.getLogger(AccountBizException.class);
 
 	public static final AccountBizException ACCOUNT_NOT_EXIT = new AccountBizException(20080001, "账户不存在");
-
+	
+	public static final AccountBizException ACCOUNT_COUPONBAL_IS_NOT_ENOUGH = new AccountBizException(20080002, "代金券额度不足");
 
 	public static final AccountBizException ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH = new AccountBizException(20080100, "可用余额不足");
 

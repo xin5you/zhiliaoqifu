@@ -28,7 +28,7 @@ public class BizException extends RuntimeException {
 	/**
 	 * 具体异常码
 	 */
-	protected int code;
+	protected int code=99;
 
 	public BizException(int code, String msgFormat, Object... args) {
 		super(String.format(msgFormat, args));
