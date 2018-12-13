@@ -171,8 +171,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
 			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
-			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
 			
+			TransLog transLog2=new TransLog();
+			this.newTransLog(intfaceTransLog, transLog2);
+			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+			transLog2.setUserId(intfaceTransLog.getTfrInUserId());
+			transLog2.setPriBId(intfaceTransLog.getTfrInBId());
+			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+			transLog2.setTransId(TransCode.CW50.getCode());
+			addToVoList(voList,transLog2,1);
 		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
 			//快捷支付 先充值到通卡账户，再从通卡账户扣除
 			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);

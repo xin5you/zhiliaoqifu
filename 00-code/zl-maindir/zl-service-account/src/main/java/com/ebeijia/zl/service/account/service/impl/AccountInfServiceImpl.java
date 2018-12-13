@@ -187,7 +187,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if(UserType.TYPE100.equals(account.getAccountType())){
 			
 			//非 员工通用福利账户 并且 非现金账户
-			if(! SpecAccountTypeEnum.A0.equals(account.getBId()) && ! SpecAccountTypeEnum.A1.equals(account.getBId())){
+			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
 				
 				//所有的专用类型的账户充值 都需要按比例划分到消费额度里
 				double coupon_rate=0.9;
@@ -242,7 +242,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if(UserType.TYPE100.equals(account.getAccountType())){
 			
 			//非 员工通用福利账户 并且 非现金账户
-			if(! SpecAccountTypeEnum.A0.equals(account.getBId()) && ! SpecAccountTypeEnum.A1.equals(account.getBId())){
+			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
 				
 				//购买代金券
 				if(TransCode.CW20.getCode().equals(transLog.getTransId())){

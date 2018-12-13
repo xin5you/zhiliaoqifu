@@ -144,7 +144,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 													personInf.getUserId(),
 													req.getPriBId(),
 													fromUser.getUserId(),
-													SpecAccountTypeEnum.A0.getCode(),
+													SpecAccountTypeEnum.A00.getCode(),
 													null);
 		}
 		
@@ -155,7 +155,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	     try {  
 	    	 eflag=transLogService.execute(intfaceTransLog); 
 	      } catch (AccountBizException accountBizException) {  
-	           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+	           
 	           return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 	      } 
 		
@@ -248,7 +248,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	     try {  
 	    	 eflag=transLogService.execute(intfaceTransLog); 
 	      } catch (AccountBizException accountBizException) {  
-	           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+	           
 	           return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 	      } 
 		
@@ -331,14 +331,12 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
      try {  
     	 eflag=transLogService.execute(intfaceTransLog); 
       } catch (AccountBizException accountBizException) {  
-           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
            return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
       } 
 	
 	
 	//修改当前接口请求交易状态
 	intfaceTransLogService.updateById(intfaceTransLog,eflag);
-	
 	return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
 

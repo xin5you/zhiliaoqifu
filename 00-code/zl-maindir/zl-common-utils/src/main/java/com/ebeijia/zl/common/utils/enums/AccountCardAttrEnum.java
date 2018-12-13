@@ -1,25 +1,25 @@
 package com.ebeijia.zl.common.utils.enums;
 public enum AccountCardAttrEnum {
 
-	OPER("开户", "OPEN"),
+	OPER("开户", "0"),
 	/**
 	 * 加款
 	 */
-	ADD("加款", "ADD"),
+	ADD("加款", "1"),
 
 	/**
 	 * 减款
 	 */
-	SUB("减款", "SUB"),
-	/**
-	 * 冻结
-	 */
-	FROZEN("冻结", "FROZEN"),
-
-	/**
-	 * 解冻
-	 */
-	UNFROZEN("解冻", "UNFROZEN");
+	SUB("减款", "2");
+//	/**
+//	 * 冻结
+//	 */
+//	FROZEN("冻结", "FROZEN"),
+//
+//	/**
+//	 * 解冻
+//	 */
+//	UNFROZEN("解冻", "UNFROZEN");
 
 
 
