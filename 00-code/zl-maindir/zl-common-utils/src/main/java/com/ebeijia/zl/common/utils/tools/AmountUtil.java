@@ -31,7 +31,7 @@ public abstract class AmountUtil {
 	 * @return
 	 */
 	public static BigDecimal add(BigDecimal b1, BigDecimal b2) {
-		return b1.add(b2);
+		return b1.add(b2).setScale(4,BigDecimal.ROUND_HALF_DOWN);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public abstract class AmountUtil {
 	 * @return
 	 */
 	public static BigDecimal sub(BigDecimal v1, BigDecimal v2) {
-		return v1.subtract(v2);
+		return v1.subtract(v2).setScale(4,BigDecimal.ROUND_HALF_UP);
 	}
 
 	/**
@@ -137,10 +137,8 @@ public abstract class AmountUtil {
 	 * @param b
 	 * @return a&lt;b 返回true, a&gt;=b 返回 false
 	 */
-	public static boolean lessThan(double a, double b) {
-		BigDecimal v1 = BigDecimal.valueOf(a);
-		BigDecimal v2 = BigDecimal.valueOf(b);
-		if (v1.compareTo(v2) == -1) {
+	public static boolean lessThan(BigDecimal a, BigDecimal b) {
+		if (a.compareTo(b) == -1) {
 			return true;
 		}
 		return false;

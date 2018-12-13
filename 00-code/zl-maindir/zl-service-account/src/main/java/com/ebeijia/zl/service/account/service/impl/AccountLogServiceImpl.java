@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountInf;
 import com.ebeijia.zl.facade.account.vo.AccountLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
@@ -43,7 +44,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	public boolean save(AccountInf accountInf,TransLog transLog) {
+	public boolean save(AccountInf accountInf,TransLog transLog) throws AccountBizException{
 		AccountLog entity=new AccountLog();
 		entity.setActPrimaryKey(IdUtil.getNextId());
 		entity.setAccountNo(accountInf.getAccountNo()); //賬戶Id

@@ -1,6 +1,7 @@
 package com.ebeijia.zl.service.account.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountInf;
 import com.ebeijia.zl.facade.account.vo.AccountLog;
 import com.ebeijia.zl.facade.account.vo.TransLog;
@@ -15,5 +16,5 @@ import com.ebeijia.zl.facade.account.vo.TransLog;
  */
 public interface IAccountLogService extends IService<AccountLog> {
 
-	boolean save(AccountInf accountInf,TransLog transLog);
+	boolean save(AccountInf accountInf,TransLog transLog)throws AccountBizException;
 }

@@ -3,6 +3,7 @@ package com.ebeijia.zl.service.account.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountInf;
 import com.ebeijia.zl.facade.account.vo.TransLog;
 
@@ -31,7 +32,7 @@ public interface IAccountInfService extends IService<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	AccountInf getAccountInfByUserType(String userType,String userId,String bId,String companyId);
+	AccountInf getAccountInfByUserType(String userType,String userId,String bId,String companyId) throws AccountBizException;
 	
 	/**
 	 * 
@@ -50,7 +51,7 @@ public interface IAccountInfService extends IService<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	AccountInf getAccountInfByUserId(String userId,String bId);
+	AccountInf getAccountInfByUserId(String userId,String bId) throws AccountBizException;
 
 	/**
 	 * 
@@ -68,7 +69,7 @@ public interface IAccountInfService extends IService<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	boolean execute(List<TransLog> voList);
+	boolean execute(List<TransLog> voList) throws AccountBizException;
 	
 	
 }
