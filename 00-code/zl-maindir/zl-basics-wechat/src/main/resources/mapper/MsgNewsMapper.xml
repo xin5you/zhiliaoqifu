@@ -10,7 +10,7 @@
 	
 	<select id="pageWebNewsList" resultType="MsgNews">
 		select t.* , b.createtime as createtimestr from t_wx_client_msg_news t , t_wx_client_msg_base b 
-		where t.base_id = b.id and rownum &gt;= #{param2.start,jdbctype=integer} and rownum &lt;=#{param2.pagesize,jdbctype=integer}
+		where t.base_id = b.id and rownum &gt;= #{param2.start,jdbcType=INTEGER} and rownum &lt;=#{param2.pagesize,jdbcType=INTEGER}
 		order by b.createtime desc
 	</select>
 

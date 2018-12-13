@@ -27,7 +27,7 @@ import com.ebeijia.zl.web.oms.sys.model.User;
 @Service("companyService")
 public class CompanyServiceImpl implements CompanyService{
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private CompanyInfFacade companyInfFacade;
 	
 	@Autowired

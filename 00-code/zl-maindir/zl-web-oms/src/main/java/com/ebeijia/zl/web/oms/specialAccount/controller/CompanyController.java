@@ -33,7 +33,7 @@ public class CompanyController {
 
 	Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private CompanyInfFacade companyInfFacade;
 	
 	@Autowired

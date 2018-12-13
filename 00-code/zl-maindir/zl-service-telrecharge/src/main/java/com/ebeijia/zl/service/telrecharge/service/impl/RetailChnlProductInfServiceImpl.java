@@ -100,7 +100,6 @@ public class RetailChnlProductInfServiceImpl extends ServiceImpl<RetailChnlProdu
 
 	@Override
 	public List<RetailChnlProductInf> getList(RetailChnlProductInf retailChnlProductInf) {
-		// TODO Auto-generated method stub
 		return retailChnlProductInfMapper.getList(retailChnlProductInf);
 	}
 

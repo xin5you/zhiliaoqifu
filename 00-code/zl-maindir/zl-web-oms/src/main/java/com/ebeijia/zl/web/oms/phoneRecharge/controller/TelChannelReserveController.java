@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelReserveType;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
-import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 
 @Controller
@@ -23,11 +22,8 @@ public class TelChannelReserveController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private RetailChnlInfFacade telChannelInfFacade;
-
-	@Reference(check=false)
-	private CompanyInfFacade telChannelReserveDetailFacade;
 
 	/**
 	 * 分销商备付金列表

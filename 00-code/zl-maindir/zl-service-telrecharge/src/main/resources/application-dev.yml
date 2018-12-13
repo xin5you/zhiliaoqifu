@@ -50,6 +50,15 @@ spring:
     pool:
       max-connections: 50
   dubbo:
-    appname: zl-telrecharge
-    registry: zookeeper://192.168.2.223:2181
-    protocol: dubbo
+    application:
+      name: zl-service-telrecharge
+    protocol:
+      name: dubbo
+      port: 20881
+      accepts: 1000
+    provider:
+      id: provider_zl-service-telrecharge
+      timeout: 2000
+      delay: -1
+    registry:
+      address: zookeeper://192.168.2.223:2181

@@ -14,6 +14,8 @@
         <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
         <typeAlias alias="ArrayList" type="java.util.ArrayList" />
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
+        
+        <package name="com.ebeijia.zl.basics.wechat.domain"/>
 	</typeAliases>
 
 </configuration>

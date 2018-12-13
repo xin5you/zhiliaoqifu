@@ -4,7 +4,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
@@ -12,8 +12,8 @@ import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlOrderInfService;
 import com.github.pagehelper.PageInfo;
 
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
-@Service
+@Configuration  
+@com.alibaba.dubbo.config.annotation.Service(interfaceName="retailChnlOrderInfFacade")
 public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -18,6 +18,7 @@ var listTelChannelInf = {
 		$('.btn-reset').on('click', listTelChannelInf.searchReset);
 		$('.btn-grant-role').on('click', listTelChannelInf.intoAddTelChannelReserve);
 		$('.a').on('click', listTelChannelInf.intoAddTelChannelRate);
+		$('.btn-openAccount').on('click', listTelChannelInf.telChannelOpenAccount);
 	},
 	searchData: function(){
 		document.forms['searchForm'].submit();
@@ -65,10 +66,36 @@ var listTelChannelInf = {
 	            		location.href=Helper.getRootPath() + '/channel/channelInf/listTelChannelInf.do?operStatus=4';
 	            	}else{
 	            		Helper.alter(result.msg);
+	            		return false;
 	            	}
 	            },
 	            error:function(){
 	            	Helper.alert("系统故障，请稍后再试");
+	            }
+	      });
+		});
+	},
+	telChannelOpenAccount : function() {
+		var channelId = $(this).attr('channelId');
+		Helper.confirm("您是否对该分销商进行开户？",function(){
+		    $.ajax({								  
+	            url: Helper.getRootPath() + '/channel/channelInf/telChannelOpenAccount.do',
+	            type: 'post',
+	            dataType : "json",
+	            data: {
+	                "channelId": channelId
+	            },
+	            success: function (data) {
+	            	if(data.status){
+	            		location.href=Helper.getRootPath() + '/channel/channelInf/listTelChannelInf.do?operStatus=4';
+	            	}else{
+	            		Helper.alter(data.msg);
+	            		return false;
+	            	}
+	            },
+	            error:function(){
+	            	Helper.alert("系统超时，请稍微再试试");
+	            	return false;
 	            }
 	      });
 		});

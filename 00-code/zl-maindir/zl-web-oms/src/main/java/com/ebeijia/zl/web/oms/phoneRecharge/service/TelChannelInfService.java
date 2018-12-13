@@ -22,4 +22,6 @@ public interface TelChannelInfService {
 	 * @return
 	 */
 	boolean addTelChannelRate(HttpServletRequest req, String channelId, String channelRate, String ids);
+	
+	int telChannelOpenAccount(HttpServletRequest req);
 }

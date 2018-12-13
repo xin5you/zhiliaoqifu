@@ -3,14 +3,17 @@
 
 <mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.RetailChnlItemListMapper">
 		
+	<sql id="TableName">
+			tb_retail_chnl_item_list
+	</sql>
 	
 	<select id="getList" parameterType="RetailChnlItemList" resultType="RetailChnlItemList">
-		SELECT 
+		select 
 			c.oper_name,
 			c.oper_id,
 			m.id,
 	  		m.channel_rate,
-	  		ca.channel_name
+	  	    ca.channel_name
 		from tb_retail_chnl_product_inf c
 		inner tb_retail_chnl_item_list m on c.product_id = m.product_id 
 		left join tb_retail_chnl_inf ca on m.channel_id = ca.channel_id
@@ -29,6 +32,6 @@
 
 	
 	<update id="deleteByProductId" parameterType="string">
-		UPDATE <include refid="TableName" /> set data_stat='1'  where　product_id = #{productId} 
+		update <include refid="TableName" /> set data_stat='1'  where　product_id = #{productId} 
 	</update>
 </mapper>

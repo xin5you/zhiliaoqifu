@@ -58,10 +58,10 @@ public class SpeAccountBatchOrderServiceImpl implements SpeAccountBatchOrderServ
 	@Autowired
 	private SpeAccountBatchOrderMapper speAccountBatchOrderMapper;
 	
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private AccountManageFacade accountManageFacade;
 	
-	@Reference(check=false)
+	@Reference(check = false, version = "1.0.0")
 	private AccountTransactionFacade accountTransactionFacade;
 	
 	@Override

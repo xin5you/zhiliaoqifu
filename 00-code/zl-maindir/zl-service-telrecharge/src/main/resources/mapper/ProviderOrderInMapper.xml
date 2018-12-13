@@ -3,34 +3,6 @@
 
 <mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.ProviderOrderInfMapper">
 		
-	<resultMap type="ProviderOrderInf" id="ProviderOrderInfResultMap">
-		<result column="reg_order_id" property="regOrderId"/>
-		<result column="channel_order_id" property="channelOrderId"/>
-		<result column="reg_order_amt" property="regOrderAmt"/>
-		<result column="operate_time" property="operateTime" />
-		<result column="pay_state" property="payState"/>
-		<result column="recharge_state" property="rechargeState"/>
-		<result column="item_cost" property="itemCost"/>
-		<result column="trans_cost" property="transCost"/>
-		<result column="revoke_message" property="revokeMessage"/>
-		<result column="bill_id" property="billId"/>
-		<result column="provider_id" property="providerId"/>
-		<result column="oper_num" property="operNum"/>	
-		<result column="resv1" property="resv1"/>
-		<result column="resv2" property="resv2"/>
-		<result column="resv3" property="resv3"/>
-		<result column="resv4" property="resv4"/>
-		<result column="resv5" property="resv5"/>
-		<result column="resv6" property="resv6"/>
-		<result column="data_stat" property="dataStat"/>
-		<result column="remarks" property="remarks"/>
-		<result column="create_user" property="createUser"/>
-		<result column="update_user" property="updateUser"/>
-		<result column="create_time" property="createTime"/>
-		<result column="update_time" property="updateTime"/>
-		<result column="lock_version" property="lockVersion"/>
-	</resultMap>
-	
 	<sql id="TableName">
 			tb_provider_order_inf
 	</sql>
@@ -62,14 +34,12 @@
 		update_time,
 		lock_version
 	</sql>
-
-
 	
-	<select id="getList" parameterType="ProviderOrderInf" resultMap="ProviderOrderInfResultMap">
-		SELECT 
+	<select id="getList" parameterType="ProviderOrderInf" resultType="ProviderOrderInf">
+		select 
 	  		<include refid="ColumnResult" />
-		FROM  <include refid="TableName" /> m
-		WHERE m.data_stat='0' 
+		from  <include refid="TableName" /> m
+		where m.data_stat='0' 
 		<if test="regOrderId !=null and regOrderId !='' ">
 			and m.reg_order_id = #{regOrderId}
 		</if>
@@ -88,26 +58,26 @@
 
 	
 		<update id="deleteById" parameterType="string">
-			UPDATE <include refid="TableName" /> SET DATA_STAT='1'  WHERE　reg_order_id = #{regOrderId} 
+			update <include refid="TableName" /> set data_stat='1'  where　reg_order_id = #{regOrderId} 
 		</update>
 		
-	<select id="getTelOrderInfByChannelOrderId" parameterType="java.lang.String" resultMap="ProviderOrderInfResultMap">
-		SELECT 
+	<select id="getTelOrderInfByChannelOrderId" parameterType="java.lang.String" resultType="ProviderOrderInf">
+		select 
 	  		<include refid="ColumnResult" />
-		 		     FROM 	<include refid="TableName" /> m
-		              WHERE m.data_stat='0' AND channel_order_id=#{channelOrderId}
+		 		     from 	<include refid="TableName" /> m
+		              where m.data_stat='0' and channel_order_id=#{channelOrderId}
 	</select>
 	
 		
-	<select id="getListByTimer" parameterType="ProviderOrderInf" resultMap="ProviderOrderInfResultMap">
-		SELECT 
+	<select id="getListByTimer" parameterType="ProviderOrderInf" resultType="ProviderOrderInf">
+		select 
 	  		<include refid="ColumnResult" />
-		FROM  <include refid="TableName" /> m
-		WHERE m.data_stat='0' 
+		from  <include refid="TableName" /> m
+		where m.data_stat='0' 
 		<if test="rechargeState !=null and rechargeState !='' ">
-			AND m.recharge_state = #{rechargeState}
+			and m.recharge_state = #{rechargeState}
 		</if>
-		AND sysdate - 1/(60*24) >m.update_time  and m.update_time > sysdate - 10/(60*24)
+		and sysdate - 1/(60*24) >m.update_time  and m.update_time > sysdate - 10/(60*24)
 		order by m.update_time desc
 	</select>
 </mapper>

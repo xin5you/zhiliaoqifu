@@ -16,6 +16,9 @@ var listTelProviderInf = {
 		$('.btn-view').on('click', listTelProviderInf.intoViewTelProviderInf);
 		$('.btn-search').on('click', listTelProviderInf.searchData);
 		$('.btn-reset').on('click', listTelProviderInf.searchReset);
+		$('.btn-openAccount').on('click', listTelProviderInf.telProviderOpenAccount);
+		$('.btn-transfer').on('click', listTelProviderInf.loadAddTransferModal);
+		$('.btn-submit').on('click', listTelProviderInf.addTransferCommit);
 	},
 	searchData: function(){
 		document.forms['searchForm'].submit();
@@ -59,5 +62,93 @@ var listTelProviderInf = {
 	            }
 	      });
 		});
+	},
+	telProviderOpenAccount : function() {
+		var providerId = $(this).attr('providerId');
+		Helper.confirm("您是否对该供应商进行开户？",function(){
+		    $.ajax({								  
+	            url: Helper.getRootPath() + '/provider/providerInf/telProviderOpenAccount.do',
+	            type: 'post',
+	            dataType : "json",
+	            data: {
+	                "providerId": providerId
+	            },
+	            success: function (data) {
+	            	if(data.status){
+	            		location.href=Helper.getRootPath() + '/provider/providerInf/listTelProviderInf.do?operStatus=4';
+	            	}else{
+	            		Helper.alter(data.msg);
+	            		return false;
+	            	}
+	            },
+	            error:function(){
+	            	Helper.alert("系统超时，请稍微再试试");
+	            	return false;
+	            }
+	      });
+		});
+	},
+	loadAddTransferModal:function(){
+		$('#addTransferModal').modal({
+			backdrop : "static"
+		});
+	},
+	addTransferCommit:function(){
+		var name = $("#name").val();
+		var phone = $("#phone").val();
+		var card = $("#card").val();
+		var money = $("#money").val();
+		var re = /^1\d{10}$/;
+		if(name==''){
+			Helper.alert("请输入姓名");
+    		return false;
+		}
+		if(phone==''){
+			Helper.alert("请输入手机号码");
+    		return false;
+		}
+		if(phone.length!=11){
+			Helper.alert("请输入有效的手机号码");
+    		return false;
+		}
+		if(!re.test(phone)){
+			Helper.alert("请输入有效的手机号码");
+    		return false;
+		}
+		if(card.length>18){
+			Helper.alert("请输入有效的身份证");
+    		return false;
+		}
+		if(money==''){
+			Helper.alert("请输入充值金额");
+    		return false;
+		}
+		if(!/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(money)){
+			Helper.alert("请输入正确的充值金额");
+    		return false;
+		}
+		$.ajax({
+			url: Helper.getRootPath() + '/speaccount/batchRecharge/addAccountInf.do',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "name" : name, 
+                "phone" : phone, 
+                "card" : card,
+                "money":money
+            },
+            success: function (result) {
+            	if(result.status) {
+                	location = Helper.getRootPath() + '/speaccount/batchRecharge/intoAddRecharge.do';
+                } else {
+                	Helper.alert(result.msg);
+                	return false;
+                }
+            },
+            error:function(){
+            	Helper.alert("系统故障，请稍后再试");
+            }
+		});
+	
 	}
 }

@@ -2,15 +2,15 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlAreaInf;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlAreaInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlAreaInfService;
 
-@com.alibaba.dubbo.config.annotation.Service(version = "1.0.0")
-@Service
+@Configuration  
+@com.alibaba.dubbo.config.annotation.Service(interfaceName="retailChnlAreaInfFacade")
 public class RetailChnlAreaInfFacadeImpl  implements RetailChnlAreaInfFacade {
 
 	@Autowired

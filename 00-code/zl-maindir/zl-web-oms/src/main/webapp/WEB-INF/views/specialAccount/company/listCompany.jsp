@@ -31,9 +31,9 @@
 		                       	<div class="input-prepend">
 		           			   	   	<span class="add-on">交易开关状态</span>
 		           			   	   	<select name="transFlag" id="transFlag" class="input-medium">
-                                    <option value="">--请选择--</option>
-                                    <option <c:if test="${companyInf.transFlag == '0' }">selected="selected"</c:if> value="0">开</option>
-                                    <option <c:if test="${companyInf.transFlag == '1' }">selected="selected"</c:if> value="1">关</option>
+	                                    <option value="">--请选择--</option>
+	                                    <option <c:if test="${companyInf.transFlag == '0' }">selected="selected"</c:if> value="0">开</option>
+	                                    <option <c:if test="${companyInf.transFlag == '1' }">selected="selected"</c:if> value="1">关</option>
                                     </select>
 		                       	</div>
 		                       	<div class="input-prepend">
@@ -91,9 +91,9 @@
 											<%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_DELETE')"> --%>
 											<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 											<%-- </sec:authorize> --%>
-				                    	<c:if test="${company.isOpen=='1'}">
+				                    	<%-- <c:if test="${company.isOpen=='1'}">
 											<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
-				                    	</if>
+				                    	</if> --%>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
