@@ -9,8 +9,8 @@
         <version>1.0.0.RELEASE</version>
     </parent>
 
-    <artifactId>zl-basic-coupon</artifactId>
-    <name>zl-baisc-coupon</name>
+    <artifactId>zl-basics-coupon</artifactId>
+    <name>zl-baiscs-coupon</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
