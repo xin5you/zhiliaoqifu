@@ -2,8 +2,8 @@ package com.ebeijia.zl.common.utils.enums;
 
 public enum SpecAccountTypeEnum{
 	
-	A0("A00", "通用账户","A"), 
-	A1("A01", "托管账户","A"),
+	A00("A00", "通用账户","A"), 
+	A01("A01", "托管账户","A"),
 	
 	B01("B01", "办公用品","B"),
 	B02("B02", "差旅专用","B"),
