@@ -2,4 +2,97 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.service.account.mapper.AccountInfMapper">
 
+
+	<select id="getAccountVOToUserList" parameterType="java.lang.String" resultType="AccountVO">
+		SELECT
+		ai.account_no,
+		ai.user_id,
+		ai.b_id,
+		ai.account_type,
+		ai.acc_bal,
+		ai.coupon_bal,
+		u.user_name,
+		p.personal_name
+		FROM
+		tb_account_inf ai,
+		tb_user_inf u,
+		tb_person_inf p
+		
+		where 
+			ai.user_id=u.user_id
+		and p.user_id=u.user_id
+		and u.user_id=#{userId}
+		and u.user_type='100'
+	</select>
+	
+	
+	<select id="getAccountVOToCompanyList" parameterType="java.lang.String" resultType="AccountVO">
+		SELECT
+		ai.account_no,
+		ai.user_id,
+		ai.b_id,
+		ai.account_type,
+		ai.acc_bal,
+		ai.coupon_bal,
+		u.user_name,
+		p.personal_name
+		FROM
+		tb_account_inf ai,
+		tb_user_inf u,
+		tb_person_inf p
+		
+		where 
+			ai.user_id=u.user_id
+		and p.user_id=u.user_id
+		and u.user_id=#{userId}
+		and u.user_type='300'
+	</select>
+	
+	
+<select id="getAccountVOToProviderList" parameterType="java.lang.String" resultType="AccountVO">
+	SELECT
+		ai.account_no,
+		ai.user_id,
+		ai.b_id,
+		ai.account_type,
+		ai.acc_bal,
+		ai.coupon_bal,
+		u.user_name,
+		p.provider_name	AS personal_name
+		FROM
+		tb_account_inf ai,
+		tb_user_inf u,
+		tb_provider_inf p
+		
+		where 
+			ai.user_id=u.user_id
+		and p.provider_id=u.company_id
+		and u.user_id='08e73c06-68c3-4225-9765-de0f5d2b6897'
+		and u.company_id='200000000000000000000000'
+		and u.user_type='300'
+	</select>
+	
+	
+  <select id="getAccountVOToRetailList" parameterType="java.lang.String" resultType="AccountVO">
+	SELECT
+		ai.account_no,
+		ai.user_id,
+		ai.b_id,
+		ai.account_type,
+		ai.acc_bal,
+		ai.coupon_bal,
+		u.user_name,
+		p.channel_name	AS personal_name
+		FROM
+		tb_account_inf ai,
+		tb_user_inf u,
+		tb_retail_chnl_inf p
+		
+		where 
+		    ai.user_id=u.user_id
+		and p.channel_id=u.company_id
+		and u.user_id='08e73c06-68c3-4225-9765-de0f5d2b6897'
+		and u.company_id='200000000000000000000000'
+		and u.user_type='400'
+	</select>
 </mapper>

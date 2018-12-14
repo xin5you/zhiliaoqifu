@@ -1,9 +1,9 @@
 package com.ebeijia.zl.service.account.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
+import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
-import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
-import com.ebeijia.zl.facade.account.vo.TransLog;
 
 
 /**

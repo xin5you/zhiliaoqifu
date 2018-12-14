@@ -1,4 +1,4 @@
-package com.ebeijia.zl.facade.account.vo;
+package com.ebeijia.zl.facade.account.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

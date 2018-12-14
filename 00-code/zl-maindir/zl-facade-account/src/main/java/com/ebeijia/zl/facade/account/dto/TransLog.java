@@ -1,8 +1,7 @@
-package com.ebeijia.zl.facade.account.vo;
+package com.ebeijia.zl.facade.account.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Set;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -16,42 +15,42 @@ import lombok.EqualsAndHashCode;
 
 /**
  *
- * itf接口平台流水表
+ * 账户交易流水
  *
  * @User zhuqi
  * @Date 2018-12-03
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-@TableName("tb_intface_trans_log")
-public class IntfaceTransLog extends Model<IntfaceTransLog> {
+@TableName("tb_trans_log")
+public class TransLog extends Model<TransLog> {
+ 
+    /**
+     * 交易流水号
+     */
+    @TableId(value = "txn_primary_key" ,type = IdType.UUID)
+    private String txnPrimaryKey;
  
     /**
      * 接口平台流水号
      */
-    @TableId(value = "itf_primary_key" ,type = IdType.UUID)
+    @TableField("itf_primary_key")
     private String itfPrimaryKey;
  
     /**
-     * 清算日期
+     * 原交易流水号
      */
-    @TableField("settle_date")
-    private String settleDate;
+    @TableField("org_txn_primary_key")
+    private String orgTxnPrimaryKey;
  
     /**
-     * 原接口平台流水号
-     */
-    @TableField("org_itf_primary_key")
-    private String orgItfPrimaryKey;
- 
-    /**
-     * 订单号
+     * 外部系统流水号
      */
     @TableField("dms_related_key")
     private String dmsRelatedKey;
  
     /**
-     * 原订单号
+     * 原外部系统交易流水号
      */
     @TableField("org_dms_related_key")
     private String orgDmsRelatedKey;
@@ -63,15 +62,22 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private String transId;
  
     /**
-     * 0x0001：是否应答
-            0x0002：是否被撤消
-            0x0004：是否被冲正
-            0x0010：是否被退货
-            0x0020：是否被差错
-            
+     * 交易渠道
      */
-    @TableField("trans_st")
-    private String transSt;
+    @TableField("trans_chnl")
+    private String transChnl;
+ 
+    /**
+     * 终端号
+     */
+    @TableField("term_code")
+    private String termCode;
+ 
+    /**
+     * 门店
+     */
+    @TableField("shop_code")
+    private String shopCode;
  
     /**
      * 机构号
@@ -86,48 +92,22 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private String mchntCode;
  
     /**
-     * 门店号
-     */
-    @TableField("shop_code")
-    private String shopCode;
- 
-    /**
-     * 表示交易结果
-     */
-    @TableField("resp_code")
-    private String respCode;
- 
-    /**
      * 主账号
      */
     @TableField("pri_b_id")
     private String priBId;
  
     /**
-     * 用户操作类型
+     * 卡号
      */
     @TableField("user_type")
     private String userType;
  
     /**
-     * 平台唯一用户标识
+     * 用户名
      */
     @TableField("user_id")
     private String userId;
-    
-    
-    /**
-     * 用户渠道
-     */
-    @TableField("user_chnl")
-    private String userChnl;
-    
-    
-    /**
-     * 用户渠道id
-     */
-    @TableField("user_chnl_id")
-    private String userChnlId;
  
     /**
      * 产品号
@@ -154,53 +134,27 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private String transCurrCd;
  
     /**
-     * 交易渠道
+     * A 账户加
+            D 账户减
+            O 开户操作
+            
      */
-    @TableField("trans_chnl")
-    private String transChnl;
+    @TableField("card_attr")
+    private String cardAttr;
  
-    /**
-     * 手续费
-     */
-    @TableField("trans_fee")
-    private BigDecimal transFee;
- 
-    /**
-     * 手续费类型
-     */
-    @TableField("trans_fee_type")
-    private String transFeeType;
- 
-    /**
-     * 转入账户
-     */
-    @TableField("tfr_in_user_id")
-    private String tfrInUserId;
-    
-    
-    /**
-     * 转入账户类型
-     */
-    @TableField("tfr_in_b_id")
-    private String tfrInBId;
- 
-    /**
-     * 转出账户
-     */
-    @TableField("tfr_out_user_id")
-    private String tfrOutUserId;
- 
-    /**
-     * 转出账户类型
-     */
-    @TableField("tfr_out_b_id")
-    private String tfrOutBId;
-    
     /**
      * 附加信息
      */
     @TableField("additional_info")
     private String additionalInfo;
+ 
+    /**
+     * 表示交易结果:
+            00:成功
+            其他失败
+     */
+    @TableField("resp_code")
+    private String respCode;
  
     /**
      * 数据状态
@@ -245,16 +199,15 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     @TableField("lock_version")
     private Integer lockVersion;
 
+    /****业务代码***/
     /**
-     *  业务数据
-     *  
-     *  专项账户类型
+     * 执行顺序
      */
     @TableField(exist=false)
-    private Set<String> bIds;
+    private Integer order;
 
     @Override
     protected Serializable pkVal() { 
-        return this.itfPrimaryKey;
+        return this.txnPrimaryKey;
     }
 }

@@ -3,9 +3,9 @@ package com.ebeijia.zl.service.account.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.account.dto.AccountInf;
+import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
-import com.ebeijia.zl.facade.account.vo.AccountInf;
-import com.ebeijia.zl.facade.account.vo.TransLog;
 
 
 /**

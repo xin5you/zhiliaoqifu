@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
 import com.ebeijia.zl.service.account.mapper.IntfaceTransLogMapper;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 

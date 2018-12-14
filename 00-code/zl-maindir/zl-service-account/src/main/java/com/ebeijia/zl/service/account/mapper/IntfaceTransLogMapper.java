@@ -3,7 +3,7 @@ package com.ebeijia.zl.service.account.mapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
 
 /**
  *
