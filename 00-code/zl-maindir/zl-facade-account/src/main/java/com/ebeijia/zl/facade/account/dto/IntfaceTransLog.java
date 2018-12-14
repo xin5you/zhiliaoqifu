@@ -55,6 +55,19 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
      */
     @TableField("org_dms_related_key")
     private String orgDmsRelatedKey;
+    
+    /**
+     * 交易描述
+     */
+    @TableField("trans_desc")
+    private String transDesc;
+    
+    
+    /**
+     * 交易数据
+     */
+    @TableField("trans_number")
+    private String transNumber;
  
     /**
      * 交易类型代码
@@ -63,12 +76,8 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private String transId;
  
     /**
-     * 0x0001：是否应答
-            0x0002：是否被撤消
-            0x0004：是否被冲正
-            0x0010：是否被退货
-            0x0020：是否被差错
-            
+     * 0:未处理
+     * 1:已处理      
      */
     @TableField("trans_st")
     private String transSt;
