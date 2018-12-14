@@ -54,6 +54,20 @@ public class TransLog extends Model<TransLog> {
      */
     @TableField("org_dms_related_key")
     private String orgDmsRelatedKey;
+    
+    
+    /**
+     * 交易描述
+     */
+    @TableField("trans_desc")
+    private String transDesc;
+    
+    
+    /**
+     * 交易数量
+     */
+    @TableField("trans_number")
+    private int transNumber=1;
  
     /**
      * 交易类型代码

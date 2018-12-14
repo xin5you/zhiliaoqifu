@@ -64,10 +64,10 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     
     
     /**
-     * 交易数据
+     * 交易数量
      */
     @TableField("trans_number")
-    private String transNumber;
+    private int transNumber=1;
  
     /**
      * 交易类型代码
