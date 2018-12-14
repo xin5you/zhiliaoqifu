@@ -55,11 +55,6 @@
 		order by m.update_time desc
 	</select>
 	
-
-	
-		<update id="deleteById" parameterType="string">
-			update <include refid="TableName" /> set data_stat='1'  where　reg_order_id = #{regOrderId} 
-		</update>
 		
 	<select id="getTelOrderInfByChannelOrderId" parameterType="java.lang.String" resultType="ProviderOrderInf">
 		select 

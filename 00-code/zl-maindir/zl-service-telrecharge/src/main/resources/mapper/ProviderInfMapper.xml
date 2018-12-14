@@ -7,9 +7,6 @@
 			tb_provider_inf
 	</sql>
 	
-		<update id="deleteById" parameterType="string">
-			update <include refid="TableName" /> set data_stat='1'  where　provider_id = #{providerId} 
-		</update>
 		
 		<update id="updateByDefaultRoute">
 			update <include refid="TableName" /> set default_route= '1'  where　default_route = '0'

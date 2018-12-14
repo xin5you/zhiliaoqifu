@@ -24,6 +24,11 @@ import lombok.EqualsAndHashCode;
 public class CompanyInf extends Model<CompanyInf> {
  
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4797212919449958495L;
+
+	/**
      * 企业id
      */
     @TableId(value = "company_id" ,type = IdType.UUID)

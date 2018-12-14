@@ -4,7 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
@@ -20,7 +19,7 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 
 @EnableCaching
 @EnableTransactionManagement
-@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+@EnableAutoConfiguration
 @SpringBootApplication
 public class TelrechargeApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 

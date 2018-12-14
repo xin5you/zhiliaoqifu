@@ -7,9 +7,9 @@ server:
       path: /
       domain: 
 
-myBatis:
-  mapperLocations: classpath*:mapper/*.xml
-  configLocations: classpath:conf/mybatis-config.xml
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-telrecharge.xml
 

@@ -99,12 +99,6 @@
 		order by cp.update_time desc
 	</select>
 	
-
-	
-		<update id="deleteById" parameterType="string">
-			update <include refid="TableName" /> set data_stat='1'  where　product_id = #{productId} 
-		</update>
-		
 	<select id="getProductRateByMaps" parameterType="java.util.Map" resultType="RetailChnlProductInf">
     	select 
 		p.product_id, 
