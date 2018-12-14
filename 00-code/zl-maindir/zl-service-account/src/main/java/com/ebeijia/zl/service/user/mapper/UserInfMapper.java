@@ -41,4 +41,22 @@ public interface UserInfMapper extends BaseMapper<UserInf> {
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
 	UserInf getUserInfByExternalId (@Param("externalId") String externalId, @Param("channel") String channel);
+	
+	
+	/**
+	 * 根据手机号查找用户信息
+	* @Description: 该函数的功能描述
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月14日 上午10:38:23 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月14日     zhuqi           v1.0.0
+	 */
+	UserInf getUserInfByMobilePhone(@Param("phoneNo") String phoneNo);
 }

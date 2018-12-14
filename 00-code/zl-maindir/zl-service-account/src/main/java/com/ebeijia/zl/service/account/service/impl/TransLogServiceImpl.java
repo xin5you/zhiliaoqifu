@@ -18,6 +18,7 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
@@ -184,6 +185,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			transLog2.setPriBId(intfaceTransLog.getTfrInBId());
 			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 			transLog2.setTransId(TransCode.CW50.getCode());
+			transLog2.setUserType(UserType.TYPE100.getCode());
 			addToVoList(voList,transLog2,1);
 		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
 			//快捷支付 先充值到通卡账户，再从通卡账户扣除

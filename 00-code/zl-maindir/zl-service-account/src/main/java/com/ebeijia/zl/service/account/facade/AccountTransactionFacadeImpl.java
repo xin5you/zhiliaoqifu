@@ -101,7 +101,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 
 			/****实例化接口流水****/
 			intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(),req.getPriBId(),
-																  req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getTransChnl(),null);
+																  req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
 			intfaceTransLogService.addBizItfTransLog(
 					intfaceTransLog, 
 					req.getTransAmt(),
@@ -109,42 +109,12 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 					null,
 					null, 
 					null, 
+					toUserInf.getUserId(),
+					req.getPriBId(),
 					null,
 					null,
-					req.getUserChnl(),
-					req.getUserChnlId(),
 					null);
 			
-		}else if(TransCode.MB50.getCode().equals(req.getTransId())){
-			//企业员工充值
-			PersonInf personInf=personInfService.getPersonInfByPhoneNo(req.getMobilePhone());
-		
-			UserInf fromUser= userInfService.getUserInfByUserName(req.getFromCompanyId());
-			
-			if(personInf==null || fromUser==null){
-				return ResultsUtil.error("99", "用户或企业未开户");
-			}
-			
-			/****实例化接口流水****/
-			intfaceTransLog=intfaceTransLogService.newItfTransLog(
-					req.getDmsRelatedKey(),
-					personInf.getUserId(), 
-					req.getTransId(), 
-					null, 
-					req.getUserType(), 
-					req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
-			intfaceTransLogService.addBizItfTransLog(
-													intfaceTransLog, 
-													req.getTransAmt(),
-													req.getUploadAmt(), 
-													null,
-													null, 
-													null, 
-													personInf.getUserId(),
-													req.getPriBId(),
-													fromUser.getUserId(),
-													req.getPriBId(),
-													null);
 		}
 		
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
@@ -212,6 +182,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		
 		/**获取用户数据*/
 		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
+	
 		
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
@@ -287,9 +258,15 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		
 		//企业账户转账 通过企业Id转账到企业
 		if (TransCode.MB40.getCode().equals(req.getTransId())){
+			
 			fromUserInf= userInfService.getUserInfByUserName(req.getTfrOutUserId());
+			
 			toUserInf =userInfService.getUserInfByUserName(req.getTfrInUserId());
 
+		}else if(TransCode.MB50.getCode().equals(req.getTransId())){
+			//企业员工充值
+			toUserInf=userInfService.getUserInfByMobilePhone(req.getTfrInUserId());
+			fromUserInf= userInfService.getUserInfByUserName(req.getTfrOutUserId());
 		}
 		
 		if(fromUserInf==null ){
@@ -302,9 +279,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
 				req.getDmsRelatedKey(),
-				req.getUserId(),
+				fromUserInf.getUserId(),
 				req.getTransId(), 
-				null,
+				req.getTfrOutBId(),
 				req.getUserType(),
 				req.getTransChnl(),
 				req.getUserChnl(),
@@ -348,7 +325,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	@Override
 	public BaseResult executeRefund(AccountRefundReqVo req) throws Exception {
 		
-		log.info("==>  账户转账 mehtod=executeRefund and AccountRefundReqVo={}",JSONArray.toJSON(req));
+		log.info("==>  退款操作 mehtod=executeRefund and AccountRefundReqVo={}",JSONArray.toJSON(req));
 		
 		/**
 		 * 订单交易检验

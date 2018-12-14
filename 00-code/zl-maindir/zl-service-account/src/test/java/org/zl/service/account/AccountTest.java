@@ -42,28 +42,28 @@ public class AccountTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-//    @Test
-//   public void createAccountForProvider() throws Exception{
-//    	AccountOpenReqVo req=new AccountOpenReqVo();
-//    	req.setTransId(TransCode.MB80.getCode());
-//    	req.setTransChnl(TransChnl.CHANNEL0.toString());
-//    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-//    	req.setUserChnlId("300000000000000000000000");
-//    	req.setUserName("zl供应商供应商");
-//    	req.setUserType(UserType.TYPE300.getCode());
-//    	req.setCompanyId("300000000000000000000000");
-//    	req.setDmsRelatedKey(IdUtil.getNextId());
-//    	
-//    	
-//    	Set<String>  bids=new HashSet<>();
-//    	bids.add(SpecAccountTypeEnum.A00.getbId());
-//    	bids.add(SpecAccountTypeEnum.A01.getbId());
-//    	bids.add(SpecAccountTypeEnum.B01.getbId());
-//    	bids.add(SpecAccountTypeEnum.B02.getbId());
-//    	
-//    	req.setbIds(bids);
-//    	txnAccountInfFacade.createAccount(req);
-//   }
+    @Test
+   public void createAccountForProvider() throws Exception{
+    	AccountOpenReqVo req=new AccountOpenReqVo();
+    	req.setTransId(TransCode.MB80.getCode());
+    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+    	req.setUserChnlId("300000000000000000000000");
+    	req.setUserName("zl供应商供应商");
+    	req.setUserType(UserType.TYPE300.getCode());
+    	req.setCompanyId("300000000000000000000000");
+    	req.setDmsRelatedKey(IdUtil.getNextId());
+    	
+    	
+    	Set<String>  bids=new HashSet<>();
+    	bids.add(SpecAccountTypeEnum.A00.getbId());
+    	bids.add(SpecAccountTypeEnum.A01.getbId());
+    	bids.add(SpecAccountTypeEnum.B01.getbId());
+    	bids.add(SpecAccountTypeEnum.B02.getbId());
+    	
+    	req.setbIds(bids);
+    	txnAccountInfFacade.createAccount(req);
+   }
     
     
     /**
@@ -81,28 +81,28 @@ public class AccountTest {
     *-------------------------------------*
     * 2018年12月14日     zhuqi           v1.0.0
      */
-//    @Test
-//   public void createAccountForZL() throws Exception{
-//    	AccountOpenReqVo req=new AccountOpenReqVo();
-//    	req.setTransId(TransCode.MB80.getCode());
-//    	req.setTransChnl(TransChnl.CHANNEL0.toString());
-//    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-//    	req.setUserChnlId("200000000000000000000000");
-//    	req.setUserName("zl平台");
-//    	req.setUserType(UserType.TYPE200.getCode());
-//    	req.setCompanyId("200000000000000000000000");
-//    	req.setDmsRelatedKey(IdUtil.getNextId());
-//    	
-//    	
-//    	Set<String>  bids=new HashSet<>();
-//    	bids.add(SpecAccountTypeEnum.A00.getbId());
-//    	bids.add(SpecAccountTypeEnum.A01.getbId());
-//    	bids.add(SpecAccountTypeEnum.B01.getbId());
-//    	bids.add(SpecAccountTypeEnum.B02.getbId());
-//    	
-//    	req.setbIds(bids);
-//    	txnAccountInfFacade.createAccount(req);
-//   }
+    @Test
+   public void createAccountForZL() throws Exception{
+    	AccountOpenReqVo req=new AccountOpenReqVo();
+    	req.setTransId(TransCode.MB80.getCode());
+    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+    	req.setUserChnlId("200000000000000000000000");
+    	req.setUserName("zl平台");
+    	req.setUserType(UserType.TYPE200.getCode());
+    	req.setCompanyId("200000000000000000000000");
+    	req.setDmsRelatedKey(IdUtil.getNextId());
+    	
+    	
+    	Set<String>  bids=new HashSet<>();
+    	bids.add(SpecAccountTypeEnum.A00.getbId());
+    	bids.add(SpecAccountTypeEnum.A01.getbId());
+    	bids.add(SpecAccountTypeEnum.B01.getbId());
+    	bids.add(SpecAccountTypeEnum.B02.getbId());
+    	
+    	req.setbIds(bids);
+    	txnAccountInfFacade.createAccount(req);
+   }
 	
 	
 	
@@ -121,27 +121,27 @@ public class AccountTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-//    @Test
-//   public void createAccountForZLCompany() throws Exception{
-//    	AccountOpenReqVo req=new AccountOpenReqVo();
-//    	req.setTransId(TransCode.MB80.getCode());
-//    	req.setTransChnl(TransChnl.CHANNEL0.toString());
-//    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-//    	req.setUserChnlId("200000000000000000000001");
-//    	req.setUserName("zl平台企业");
-//    	req.setUserType(UserType.TYPE200.getCode());
-//    	req.setCompanyId("200000000000000000000001");
-//    	req.setDmsRelatedKey(IdUtil.getNextId());
-//    	
-//    	Set<String>  bids=new HashSet<>();
-//    	bids.add(SpecAccountTypeEnum.A00.getbId());
-//    	bids.add(SpecAccountTypeEnum.A01.getbId());
-//    	bids.add(SpecAccountTypeEnum.B01.getbId());
-//    	bids.add(SpecAccountTypeEnum.B02.getbId());
-//    	
-//    	req.setbIds(bids);
-//    	txnAccountInfFacade.createAccount(req);
-//   }
+    @Test
+   public void createAccountForZLCompany() throws Exception{
+    	AccountOpenReqVo req=new AccountOpenReqVo();
+    	req.setTransId(TransCode.MB80.getCode());
+    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+    	req.setUserChnlId("200000000000000000000001");
+    	req.setUserName("zl平台企业");
+    	req.setUserType(UserType.TYPE200.getCode());
+    	req.setCompanyId("200000000000000000000001");
+    	req.setDmsRelatedKey(IdUtil.getNextId());
+    	
+    	Set<String>  bids=new HashSet<>();
+    	bids.add(SpecAccountTypeEnum.A00.getbId());
+    	bids.add(SpecAccountTypeEnum.A01.getbId());
+    	bids.add(SpecAccountTypeEnum.B01.getbId());
+    	bids.add(SpecAccountTypeEnum.B02.getbId());
+    	
+    	req.setbIds(bids);
+    	txnAccountInfFacade.createAccount(req);
+   }
     
     
 	/**
