@@ -2,6 +2,7 @@ package com.ebeijia.zl.facade.telrecharge.service;
 
 import java.util.List;
 
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingType;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.github.pagehelper.PageInfo;
 
@@ -23,4 +24,10 @@ public interface ProviderInfFacade {
 	List<ProviderInf> getProviderInfList(ProviderInf  providerInf) throws Exception;
 	
 	PageInfo<ProviderInf> getProviderInfPage(int startNum, int pageSize, ProviderInf providerInf) throws Exception; 
+	
+	List<ProviderBillingType> getListByProviderId(String providerId) throws Exception;
+	
+	boolean saveBatchProviderBillingType(List<ProviderBillingType>  providerBillingTypes) throws Exception;
+
+	boolean deleteProviderBillingTypeById(String providerId) throws Exception;
 }

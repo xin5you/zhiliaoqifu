@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.ProviderBillingTypeMapper">
+		
+	<sql id="TableName">
+			tb_provider_billingtype
+	</sql>
+	
+	<select id="getListByProviderId" parameterType="ProviderBillingType" resultType="ProviderBillingType">
+		select 
+	  		<include refid="ColumnResult" />
+		from tb_provider_billingtype m
+			and m.provider_id = #{providerId}
+	</select>	
+
+</mapper>

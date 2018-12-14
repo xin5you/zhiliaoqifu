@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingType;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
 import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants.providerDefaultRoute;
+import com.ebeijia.zl.service.telrecharge.service.ProviderBillingTypeService;
 import com.ebeijia.zl.service.telrecharge.service.ProviderInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -20,6 +22,9 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 
 	@Autowired
 	private ProviderInfService providerInfService;
+	
+	@Autowired
+	private ProviderBillingTypeService providerBillingTypeService;
 
 	@Override
 	public ProviderInf getProviderInfById(String providerId) throws Exception {
@@ -83,5 +88,20 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 		}
 		PageInfo<ProviderInf> ProviderInfPage = new PageInfo<ProviderInf>(ProviderInfList);
 		return ProviderInfPage;
+	}
+
+	@Override
+	public List<ProviderBillingType> getListByProviderId(String providerId) throws Exception {
+		return providerBillingTypeService.getListByProviderId(providerId);
+	}
+
+	@Override
+	public boolean saveBatchProviderBillingType(List<ProviderBillingType> providerBillingTypes) throws Exception {
+		return providerBillingTypeService.saveBatch(providerBillingTypes);
+	}
+
+	@Override
+	public boolean deleteProviderBillingTypeById(String providerId) throws Exception {
+		return providerBillingTypeService.removeById(providerId);
 	}
 }

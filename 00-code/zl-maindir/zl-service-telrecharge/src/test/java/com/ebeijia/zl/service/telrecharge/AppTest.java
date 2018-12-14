@@ -1,7 +1,5 @@
 package com.ebeijia.zl.service.telrecharge;
 
-import java.math.BigDecimal;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ebeijia.zl.TelrechargeApp;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
@@ -32,11 +29,11 @@ public class AppTest {
 	@Autowired
 	private RetailChnlItemListFacade retailChnlItemListFacade;
 	@Autowired
-	private RetailChnlOrderInfFacade telChannelOrderInfFacade;
+	private RetailChnlOrderInfFacade retailChnlOrderInfFacade;
 	@Autowired
-	private ProviderInfFacade telProviderInfFacade;
+	private ProviderInfFacade providerInfFacade;
 	@Autowired
-	private ProviderOrderInfFacade telProviderOrderInfFacade;
+	private ProviderOrderInfFacade providerOrderInfFacade;
 	
 	
 	@Test
@@ -44,9 +41,9 @@ public class AppTest {
 		CompanyInf company = new CompanyInf();
 		company.setAddress("aaa");
 		company.setCompanyId("88b6fda4-0cc7-4be1-9495-0256a0bf30ac");
-		companyInfFacade.getCompanyInfByLawCode("88b6fda4-0cc7-4be1-9495-0256a0bf30ac");
+		companyInfFacade.getCompanyInfList(new CompanyInf());
 		
-		RetailChnlInf a = new RetailChnlInf();
+		/*RetailChnlInf a = new RetailChnlInf();
 		a.setChannelId("1");
 		a.setChannelCode("1");
 		a.setChannelKey("1");
@@ -62,6 +59,6 @@ public class AppTest {
 		a.setPhoneNo("1");
 		a.setUpdateTime(System.currentTimeMillis());
 		a.setUpdateUser("1");
-		/*retailChnlInfFacade.getRetailChnlInfById("1");*/
+		retailChnlInfFacade.getRetailChnlInfById("1");*/
 	}
 }

@@ -1,8 +1,12 @@
 package com.ebeijia.zl.dubbo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.alibaba.dubbo.config.MethodConfig;
 import com.alibaba.dubbo.config.spring.ServiceBean;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 
@@ -23,6 +27,65 @@ public class ProviderInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(providerInfFacade);
 		serviceBean.setCluster("failfast");
+		
+List<MethodConfig> methods = new ArrayList<MethodConfig>();
+		
+		MethodConfig methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderInfById");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("saveProviderInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("updateProviderInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("deleteProviderInfById");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderInfList");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderInfPage");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getListByProviderId");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("saveBatchProviderBillingType");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("deleteProviderBillingTypeById");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
 		return serviceBean;
 	}
 }

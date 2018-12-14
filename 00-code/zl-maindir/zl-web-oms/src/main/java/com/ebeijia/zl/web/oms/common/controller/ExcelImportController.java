@@ -26,9 +26,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
-import com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrderList;
-import com.ebeijia.zl.web.oms.specialAccount.util.OrderConstants;
-import com.ebeijia.zl.web.oms.specialAccount.util.XlsReadFile;
+import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
+import com.ebeijia.zl.web.oms.utils.OrderConstants;
+import com.ebeijia.zl.web.oms.utils.XlsReadFile;
 
 @Controller
 @RequestMapping(value = "common/excelImport")
@@ -43,8 +43,8 @@ public class ExcelImportController {
 	@RequestMapping(value = "/excelImp")
 	@ResponseBody
 	public ModelMap importEcxel(HttpServletRequest req, HttpServletResponse response) {
-		LinkedList<SpeAccountBatchOrderList> orderList = new LinkedList<SpeAccountBatchOrderList>();
-		Map<String, SpeAccountBatchOrderList> orderMap = new LinkedHashMap<String, SpeAccountBatchOrderList>();
+		LinkedList<BatchOrderList> orderList = new LinkedList<BatchOrderList>();
+		Map<String, BatchOrderList> orderMap = new LinkedHashMap<String, BatchOrderList>();
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
 		MultipartFile multipartFile = multipartRequest.getFile("file");
 		ModelMap map = null;
@@ -75,11 +75,11 @@ public class ExcelImportController {
 			logger.error(" ##  读取excel数据异常", e);
 		}
 		if (batchType.equals("openAccount")) {
-			jedisClusterUtils.setex(OrderConstants.speBathOpenAccountSession, JSON.toJSONString(orderList),
+			jedisClusterUtils.setex(OrderConstants.openAccountSession, JSON.toJSONString(orderList),
 					1800);
 		}
 		if (batchType.equals("recharge")) {
-			jedisClusterUtils.setex(OrderConstants.speBathRechargeSession, JSON.toJSONString(orderList),
+			jedisClusterUtils.setex(OrderConstants.rechargeSession, JSON.toJSONString(orderList),
 					1800);
 		}
 		return map;

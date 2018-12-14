@@ -84,7 +84,7 @@
 			 	 and b.b_name like '%' || #{bName} || '%'
 			 </if>
 			 <if test="code !=null and code !='' ">
-			 	 and b.code like '%' || #{code} || '%'
+			 	 and b.code = #{code}
 			 </if>
 			     order by b.update_time desc
 	</select>
