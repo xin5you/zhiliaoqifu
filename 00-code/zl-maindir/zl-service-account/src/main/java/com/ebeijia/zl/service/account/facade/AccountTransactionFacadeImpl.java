@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -144,7 +143,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 													personInf.getUserId(),
 													req.getPriBId(),
 													fromUser.getUserId(),
-													SpecAccountTypeEnum.A00.getCode(),
+													req.getPriBId(),
 													null);
 		}
 		
@@ -238,7 +237,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												null);
 		
 		//保存消费类型信息 重要数据存储 重要 重要
-		intfaceTransLog.setRemarks(JSONObject.toJSONString(req.getTransList())); 
+		intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req.getTransList())); 
 		
 		/****保存接口易流水****/
 		intfaceTransLogService.save(intfaceTransLog);
@@ -291,8 +290,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			fromUserInf= userInfService.getUserInfByUserName(req.getTfrOutUserId());
 			toUserInf =userInfService.getUserInfByUserName(req.getTfrInUserId());
 
-		}else{
-			//TODO 员工转账开发
 		}
 		
 		if(fromUserInf==null ){
@@ -305,9 +302,13 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
 				req.getDmsRelatedKey(),
-				req.getUserId(), req.getTransId(), 
-				null, req.getUserType(),
-				req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
+				req.getUserId(),
+				req.getTransId(), 
+				null,
+				req.getUserType(),
+				req.getTransChnl(),
+				req.getUserChnl(),
+				req.getUserChnlId(),null);
 		intfaceTransLogService.addBizItfTransLog(
 												intfaceTransLog, 
 												req.getTransAmt(),
@@ -321,8 +322,8 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												req.getTfrOutBId(),
 												null);
 		
-	//保存转账类型信息 重要数据存储 重要 重要
-	intfaceTransLog.setRemarks(req.getTfrOutUserId()+","+req.getTfrOutBId()+"-->"+req.getTfrInUserId()+","+req.getTfrInBId());
+	//保存转账类型信息
+	intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req));
 	
 	intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 	
@@ -340,7 +341,10 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
 
-
+	
+	/**
+	 * 退款操作
+	 */
 	@Override
 	public BaseResult executeRefund(AccountRefundReqVo req) throws Exception {
 		

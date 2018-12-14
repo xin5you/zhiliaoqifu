@@ -92,12 +92,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	    	voList.stream().sorted((e1, e2) -> {
 				return Integer.compare(e1.getOrder(), e2.getOrder());
 			}).forEach(e -> sortList.add(e));
+		}else{
+			sortList.addAll(voList);
 		}
+		voList.clear();
 		
 		boolean f=	this.saveBatch(sortList); //批量保存交易流水
 
 		if(f){
-			return accountInfService.execute(voList);
+			return accountInfService.execute(sortList);
 		}
 		return f;
 	}
@@ -121,20 +124,22 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		/**
 			MB10("B10", "商户消费"),
 			MB20("B20", "商户充值"),
+			MB80("B80", "商户开户"),
 			MB40("B40", "商户转账"),
 			MB50("B50", "企业员工充值"),
-			MB80("B80", "商户开户"),
 			MB90("B90", "商户收款"), 
-			
+		
 			CW80("W80", "企业员工开户"),
 			CW81("W81", "密码重置"),
-			CW10("W10", "消费"),
-			CW71("W71", "快捷消费"),
+			CW10("W10", "商品消费"),
+			CW50("W50", "员工充值"),
+			CW71("W71", "微信支付"),
+			CW20("W20", "购买代金券"),
 			CW11("W11", "退款"),
 			CW74("W74", "退款（快捷）"),
-			
+			CW40("W40", "员工转账"),
 			CW90("W90", "权益转让"),
-			CW91("W91", "员工收款");
+			CW91("W91", "商户收款");
 		 */
 		
 		if (TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){

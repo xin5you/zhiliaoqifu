@@ -164,8 +164,17 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			account.setBId(transLog.getPriBId()); //专项账户类型
 			account.setAccountStat("00");//00：正常 10：冻结 90：注销
 			account.setAccountType(transLog.getUserType());
-			account.setAccBal(new BigDecimal(0)); //开户时余额为0
-			return this.save(account);
+			account.setAccBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户时余额为0
+			
+			boolean flag= this.save(account);
+			if(flag){
+				flag=accountLogService.save(account, transLog);//保存賬戶信息
+			}
+			if(!flag){
+				throw AccountBizException.ACCOUNT_CREATE_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
+			}
+			
+			return flag;
 		}
 	}
 	

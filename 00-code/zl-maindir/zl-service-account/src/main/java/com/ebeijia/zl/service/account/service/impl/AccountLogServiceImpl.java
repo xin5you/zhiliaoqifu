@@ -52,6 +52,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 		entity.setTxnAmt(transLog.getTransAmt());  //交易金額
 		entity.setTxnRealAmt(transLog.getTransAmt()); //賬戶處理金額
 		entity.setTransChnl(transLog.getTransChnl()); //交易渠道
+		entity.setAccType(transLog.getCardAttr());
 		entity.setTransId(transLog.getTransId());
 		entity.setTxnDate(accountInf.getLastTxnDate());
 		entity.setTxnTime(accountInf.getLastTxnTime());
