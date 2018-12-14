@@ -28,7 +28,7 @@ public class ProviderInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setRef(providerInfFacade);
 		serviceBean.setCluster("failfast");
 		
-List<MethodConfig> methods = new ArrayList<MethodConfig>();
+		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 		
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderInfById");
@@ -64,24 +64,6 @@ List<MethodConfig> methods = new ArrayList<MethodConfig>();
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderInfPage");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("getListByProviderId");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("saveBatchProviderBillingType");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("deleteProviderBillingTypeById");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //

@@ -39,9 +39,13 @@ public class AppTest {
 	@Test
 	public void chnl() throws Exception{
 		CompanyInf company = new CompanyInf();
-		company.setAddress("aaa");
-		company.setCompanyId("88b6fda4-0cc7-4be1-9495-0256a0bf30ac");
-		companyInfFacade.getCompanyInfList(new CompanyInf());
+		company.setCompanyId("142412");
+		company.setName("111");
+		company.setDataStat("0");
+		company.setCreateTime(System.currentTimeMillis());
+		company.setUpdateTime(System.currentTimeMillis());
+		company.setLockVersion(0);
+		companyInfFacade.deleteCompanyInf(company);
 		
 		/*RetailChnlInf a = new RetailChnlInf();
 		a.setChannelId("1");

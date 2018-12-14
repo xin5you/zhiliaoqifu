@@ -1,0 +1,20 @@
+package com.ebeijia.zl.basics.billingtype.service;
+
+import java.util.List;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.basics.billingtype.domain.BaseDict;
+import com.github.pagehelper.PageInfo;
+
+
+/**
+ * 字典信息接口
+ * @author Administrator
+ *
+ */
+public interface BaseDictService extends IService<BaseDict> {
+	
+	List<BaseDict> getBaseDictList(BaseDict baseDict);
+
+	public PageInfo<BaseDict> getBaseDictList(int startNum, int pageSize, BaseDict baseDict);
+}

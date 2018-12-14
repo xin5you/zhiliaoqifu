@@ -1,9 +1,7 @@
 package com.ebeijia.zl.web.oms.providerChnl.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
@@ -24,7 +21,6 @@ import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
-import com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingType;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder;
@@ -69,26 +65,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		}
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
-		List<ProviderBillingType> pbList = new ArrayList<>();
-		for (SpecAccountTypeEnum type : SpecAccountTypeEnum.values()) {
-			if (!SpecAccountTypeEnum.A01.getbId().equals(type.getbId())) {
-				ProviderBillingType pb = new ProviderBillingType();
-				pb.setId(IdUtil.getNextId());
-				pb.setProviderId(providerId);
-				pb.setBId(type.getbId());
-				pbList.add(pb);
-			}
-		}
-		try {
-			if(!providerInfFacade.saveBatchProviderBillingType(pbList)) {
-				logger.error("## 新增供应商账户类型关联信息失败，providerId--->{}", providerId);
-				return 0;
-			}
-		} catch (Exception e1) {
-			logger.error("## 新增供应商账户类型关联信息异常，providerId--->{}", providerId);
-			return 0;
-		}
 		
 		BatchOrderList orderList = new BatchOrderList();
 		orderList.setUserName(providerInf.getProviderName());
