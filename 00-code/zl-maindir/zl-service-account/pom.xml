@@ -68,6 +68,12 @@
             <groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.4.10</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
         </dependency>
         
         <dependency>
@@ -99,6 +105,7 @@
 	</repositories>
 
 	<build>
+		<finalName>web-account</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

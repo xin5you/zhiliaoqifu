@@ -9,7 +9,7 @@
 <!-- 	</appender> -->
 	
 	<!--定义本地目录路径，系统自动生成-->
-	<property name="ACCESS_LOG_HOME" value="../logs/mcht" />
+	<property name="ACCESS_LOG_HOME" value="./logs/mcht" />
 	
 	 <!-- 时间滚动输出 level为 INFO 日志 -->
 	 <appender name="file-info" class="ch.qos.logback.core.rolling.RollingFileAppender">

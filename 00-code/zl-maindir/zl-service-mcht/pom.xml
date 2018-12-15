@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>zl-service-mcht</artifactId>
 	<packaging>war</packaging>
-	<name>zl-service-telrecharge</name>
+	<name>zl-service-mcht</name>
 	<url>http://maven.apache.org</url>
 	
 	<dependencies>
@@ -99,6 +99,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>web-mchnt</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -108,6 +109,23 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			
+			<plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-war-plugin</artifactId>  
+                <version>2.6</version>  
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>  
+                </configuration>  
+            </plugin>
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-surefire-plugin</artifactId>
+	            <configuration>
+	                <!-- 如果是true表示忽略测试 -->
+	                <skip>true</skip>
+            	</configuration>
+        	</plugin>
 		</plugins>
 	</build>
 </project>
