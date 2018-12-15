@@ -61,4 +61,4 @@ spring:
       timeout: 2000
       delay: -1
     registry:
-      address: zookeeper://192.168.2.110:12801?backup=192.168.2.110:12802,192.168.2.110:12803
+      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
