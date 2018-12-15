@@ -69,13 +69,13 @@
 	                                      <span class="help-block"></span>
 	                                  </div>
                                  </div>
-								<div class="control-group formSep">
+								<%-- <div class="control-group formSep">
 	                                  <label class="control-label">专项类型</label>
 	                                  <div class="controls">
 	                                      <input type="text" class="span6" id="bType" name="bType" maxlength="8" value="${providerInf.bName}" readonly="readonly"/>
 	                                      <span class="help-block"></span>
 	                                  </div>
-                                 </div>
+                                 </div> --%>
                                 <div class="control-group formSep">
                                     <label class="control-label">操作顺序</label>
                                     <div class="controls">

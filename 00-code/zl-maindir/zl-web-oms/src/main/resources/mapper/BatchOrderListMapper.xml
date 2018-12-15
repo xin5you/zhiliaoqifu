@@ -49,7 +49,7 @@
 	   		o.company_id as companyId 
       from tb_batch_order_list l left join tb_batch_order o on l.order_id = o.order_id
       where l.data_stat='0' and o.data_stat = '0'
-      	and l.order_stat == #{orderStat}
+      	and l.order_stat = #{orderStat}
       	and l.order_id = #{orderId} 
     </select>
     

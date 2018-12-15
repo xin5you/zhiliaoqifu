@@ -33,7 +33,7 @@
 						                 	<span class="help-block"></span>
 						             </div>
 					     		</div>
-					     		<c:if test="${telProviderInf.isOpen == '0'}">
+					     		<%-- <c:if test="${telProviderInf.isOpen == '0'}">
 					     		<div class="control-group formSep">
 						             <label class="control-label">账户类型</label>
 						             <div class="controls">
@@ -44,7 +44,7 @@
 			                                </select>
 						             </div>
 					     		</div>
-					     		</c:if>
+					     		</c:if> --%>
 					     		<div class="control-group formSep">
 						             <label class="control-label">app_url</label>
 						             <div class="controls">

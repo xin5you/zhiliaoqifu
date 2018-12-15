@@ -28,5 +28,9 @@ public interface BatchOrderService {
 	
 	int batchRechargeITF(String orderId, User user, String orderStat);
 	
+	int batchTransferAccountITF(String orderId, User user, String orderStat);
+	
 	int addBatchOrder(BatchOrder order);
+	
+	BatchOrder getBatchOrderByOrderId(String orderId);
 }

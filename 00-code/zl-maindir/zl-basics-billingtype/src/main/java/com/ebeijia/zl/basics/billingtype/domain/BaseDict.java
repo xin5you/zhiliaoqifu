@@ -31,43 +31,43 @@ public class BaseDict extends Model<BaseDict> {
      * 字典代码
      */
     @TableField("dict_code")
-    private String lawCode;
+    private String dictCode;
  
     /**
      * 是否默认（0:是，1：否）
      */
     @TableField("isdefault")
-    private String transFlag;
+    private String isdefault;
  
     /**
      * 字典序号
      */
     @TableField("seq")
-    private String name;
+    private String seq;
  
     /**
      * 字典名称
      */
     @TableField("dict_name")
-    private String address;
+    private String dictName;
  
     /**
      * 父级Id
      */
     @TableField("pid")
-    private String phoneNo;
+    private String pid;
  
     /**
      * 字典类型
      */
     @TableField("dict_type")
-    private String contacts;
+    private String dictType;
  
     /**
      * 字典值
      */
     @TableField("dict_value")
-    private String isOpen;
+    private String dictValue;
  
     /**
      * 状态

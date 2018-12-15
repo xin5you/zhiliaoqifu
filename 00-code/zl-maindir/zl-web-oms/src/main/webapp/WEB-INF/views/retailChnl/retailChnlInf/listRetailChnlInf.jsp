@@ -69,21 +69,11 @@
 				                    	<c:if test="${entity.isOpen == '1'}">已开户</c:if>
 				                    </td>
 				                    <td>
-				                    <%-- <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_ITEM_LIST_INTOADD')"> --%>
-									<a channelId="${entity.channelId}" title="添加产品折扣率" class="btn-mini btn-edit a" href="#"><i class="icon-pencil"></i></a> 
-									<%-- </sec:authorize> --%>
-				                    <%-- <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_RESERVE_INTOLIST')"> --%>
-									<a channelId="${entity.channelId}" title="追加备付金" class="btn-grant-role"  href="#"><i class="icon-plus"></i></a> 
-									<%-- </sec:authorize> --%>
-				                    <%-- <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF_INTOEDIT')"> --%>
+									<%-- <a channelId="${entity.channelId}" title="添加产品折扣率" class="btn-mini btn-edit a" href="#"><i class="icon-pencil"></i></a> 
+									<a channelId="${entity.channelId}" title="追加备付金" class="btn-grant-role"  href="#"><i class="icon-plus"></i></a>  --%>
 									<a channelId="${entity.channelId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<%-- </sec:authorize> --%>
-									<%-- <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF_DELETE')"> --%>
 									<a channelId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-									<%-- </sec:authorize> --%>
-									<%-- <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF_VIEW')"> --%>
 									<a channelId="${entity.channelId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-									<%-- </sec:authorize> --%>
 									<c:if test="${entity.isOpen=='0'}">
 										<a channelId="${entity.channelId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
 				                    </c:if>

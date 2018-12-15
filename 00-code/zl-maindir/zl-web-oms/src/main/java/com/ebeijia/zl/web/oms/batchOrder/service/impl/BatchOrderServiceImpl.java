@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.batchOrder.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -33,6 +34,7 @@ import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
@@ -157,6 +159,11 @@ public class BatchOrderServiceImpl implements BatchOrderService {
 				o.setOrderStat(BatchOrderStat.BatchOrderStat_10.getCode());
 				o.setAccountType(accountType);
 				o.setBizType(billingType);
+				o.setAmount(new BigDecimal(NumberUtils.RMBYuanToCent(orderList.getAmount().toString())));
+				o.setTfrInBid(billingType);
+				o.setTfrInId(orderList.getPhoneNo());
+				o.setTfrOutBid(billingType);
+				o.setTfrOutId(order.getCompanyId());
 				o.setCreateUser(order.getCreateUser());
 				o.setUpdateUser(order.getUpdateUser());
 				o.setCreateTime(System.currentTimeMillis());
@@ -292,13 +299,20 @@ public class BatchOrderServiceImpl implements BatchOrderService {
 		BatchOrderList orderList = new BatchOrderList();
 		orderList.setOrderId(orderId);
 		orderList.setOrderStat(orderStat);
-		List<BatchOrderList> batchOrderList = batchOrderListMapper.getBatchOrderListByOrderStat(orderList);
-		if (batchOrderList == null) {
-			logger.error("## 批量开户名单为空");
+		List<BatchOrderList> batchOrderList = new ArrayList<>();
+		try {
+			batchOrderList = batchOrderListMapper.getBatchOrderListByOrderStat(orderList);
+			if (batchOrderList == null || batchOrderList.size() < 1) {
+				logger.error("## 批量开户名单为空");
+				return 0;
+			}
+		} catch (Exception e) {
+			logger.error("## 查询开户订单信息异常");
 			return 0;
 		}
 		List<AccountOpenReqVo> reqVoList = new ArrayList<>();
 		Set<String> bIds = new TreeSet<>();
+		String accountType = null;
 		for (BatchOrderList batchOrder : batchOrderList) {
 			bIds.add(batchOrder.getBizType());
 			AccountOpenReqVo reqVo = new AccountOpenReqVo();
@@ -310,15 +324,23 @@ public class BatchOrderServiceImpl implements BatchOrderService {
 				reqVo.setTransId(TransCode.CW80.getCode());
 			} else {
 				reqVo.setTransId(TransCode.MB80.getCode());
-				reqVo.setUserId(batchOrder.getCompanyId());
+				reqVo.setUserId(order.getCompanyId());
+				reqVo.setUserChnlId(order.getCompanyId());
 			}
 			reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
 			reqVo.setUserType(batchOrder.getAccountType());
 			reqVo.setDmsRelatedKey(batchOrder.getOrderListId());
 			reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 			reqVoList.add(reqVo);
+			accountType = batchOrder.getAccountType();
 		}
-		reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getMobilePhone))), ArrayList::new));
+		
+		if (UserType.TYPE100.getCode().equals(accountType)) {
+			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getMobilePhone))), ArrayList::new));
+		} else {
+			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getUserName))), ArrayList::new));
+		}
+		
 		int openAccount = 0;
 		BaseResult result = null;
 		List<BatchOrderList> batchOrderLists = new ArrayList<>();
@@ -340,11 +362,11 @@ public class BatchOrderServiceImpl implements BatchOrderService {
 					oLists.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
 				}
 			}
-			openAccount += batchOrderListMapper.updateBatchOrderListByList(batchOrderLists);
+			openAccount = batchOrderListMapper.updateBatchOrderListByList(batchOrderLists);
 
 		}
 		if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
-			if (openAccount > 0 && batchOrderLists.size() == openAccount) {
+			if (openAccount > 0) {
 				order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
 			} else {
 				order.setOrderStat(BatchOrderStat.BatchOrderStat_40.getCode());
@@ -374,7 +396,6 @@ public class BatchOrderServiceImpl implements BatchOrderService {
 			return 0;
 		}
 		
-		int i = 0 ;
 		if (batchOrderList != null && batchOrderList.size() > 0) {
 			List<AccountRechargeReqVo> reqVoList = new ArrayList<>();
 			for (BatchOrderList batchOrder : batchOrderList) {
@@ -446,6 +467,82 @@ public class BatchOrderServiceImpl implements BatchOrderService {
 	@Override
 	public int addBatchOrder(BatchOrder order) {
 		return batchOrderMapper.addBatchOrder(order);
+	}
+
+	@Override
+	public BatchOrder getBatchOrderByOrderId(String orderId) {
+		return batchOrderMapper.getBatchOrderByOrderId(orderId);
+	}
+
+	@Override
+	public int batchTransferAccountITF(String orderId, User user, String orderStat) {
+		BatchOrder order = batchOrderMapper.getBatchOrderById(orderId);
+		
+		BatchOrderList orderList = new BatchOrderList();
+		orderList.setOrderId(orderId);
+		orderList.setOrderStat(orderStat);
+		List<BatchOrderList> batchOrderList = batchOrderListMapper.getBatchOrderListByOrderStat(orderList);
+		if (batchOrderList == null) {
+			logger.error("## 批量充值名单为空");
+			return 0;
+		}
+		
+		if (batchOrderList != null && batchOrderList.size() > 0) {
+			List<AccountTransferReqVo> reqVoList = new ArrayList<>();
+			for (BatchOrderList batchOrder : batchOrderList) {
+				AccountTransferReqVo reqVo = new AccountTransferReqVo();
+				reqVo.setTransAmt(batchOrder.getAmount());
+				reqVo.setUploadAmt(batchOrder.getAmount());
+				reqVo.setTfrInBId(batchOrder.getTfrInBid());
+				reqVo.setTfrInUserId(batchOrder.getTfrInId());
+				reqVo.setTfrOutBId(batchOrder.getTfrOutBid());
+				reqVo.setTfrOutUserId(batchOrder.getTfrOutId());
+				reqVo.setTransId(TransCode.MB50.getCode());
+				reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
+				reqVo.setUserId(batchOrder.getPhoneNo());
+				reqVo.setUserType(UserType.TYPE200.getCode());
+				reqVo.setDmsRelatedKey(batchOrder.getOrderListId());
+				reqVo.setUserChnlId(order.getCompanyId());
+				reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+
+				Set<String> bIds = new TreeSet<>();
+				bIds.add(batchOrder.getBizType());
+				reqVo.setbIds(bIds);
+
+				reqVoList.add(reqVo);
+			}
+			BaseResult result = new BaseResult();
+			if (batchOrderList.size() > 1) {
+				try {
+					
+				} catch (Exception e) {
+					logger.error("## 远程调用批量转账接口出错{}", reqVoList, e);
+				}
+			} else {
+				try {
+					result = accountTransactionFacade.executeTransfer(reqVoList.get(0));
+				} catch (Exception e) {
+					logger.error("## 远程调用转账接口出错{}", reqVoList.get(0), e);
+					
+				}
+			}
+			for (BatchOrderList oList : batchOrderList) {
+				if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
+					oList.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+					order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+				} else {
+					oList.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+					order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+				}
+			}
+			int orderListResult = batchOrderListMapper.updateBatchOrderListByList(batchOrderList);
+			int orderRsult = batchOrderMapper.updateBatchOrder(order);
+			if (orderListResult < 0 || orderRsult < 0) {
+				logger.error("## 更新批量充值后的订单状态信息失败，batchOrder--->{},batchOrderList--->{}", JSONArray.toJSONString(order), JSONArray.toJSONString(batchOrderList));
+				return 0;
+			}
+		}
+		return 1;
 	}
 
 }

@@ -16,7 +16,8 @@ var listTelProviderInf = {
 		$('.btn-view').on('click', listTelProviderInf.intoViewTelProviderInf);
 		$('.btn-search').on('click', listTelProviderInf.searchData);
 		$('.btn-reset').on('click', listTelProviderInf.searchReset);
-		$('.btn-openAccount').on('click', listTelProviderInf.telProviderOpenAccount);
+		$('.btn-openAccount').on('click', listTelProviderInf.loadAddOpenAccountModal);
+		$('.btn-openAccount-submit').on('click', listTelProviderInf.telProviderOpenAccount);
 		$('.btn-transfer').on('click', listTelProviderInf.loadAddProviderTransferModal);
 		$('.btn-submit').on('click', listTelProviderInf.addProviderTransferCommit);
 	},
@@ -63,30 +64,44 @@ var listTelProviderInf = {
 	      });
 		});
 	},
-	telProviderOpenAccount : function() {
+	loadAddOpenAccountModal:function(){
 		var providerId = $(this).attr('providerId');
-		Helper.confirm("您是否对该供应商进行开户？",function(){
-		    $.ajax({								  
-	            url: Helper.getRootPath() + '/provider/providerInf/providerOpenAccount.do',
-	            type: 'post',
-	            dataType : "json",
-	            data: {
-	                "providerId": providerId
-	            },
-	            success: function (data) {
-	            	if(data.status){
-	            		location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
-	            	}else{
-	            		Helper.alter(data.msg);
-	            		return false;
-	            	}
-	            },
-	            error:function(){
-	            	Helper.alert("系统超时，请稍微再试试");
-	            	return false;
-	            }
-	      });
+		$('#providerId').val(providerId);
+		$('#addOpenAccountModal').modal({
+			backdrop : "static"
 		});
+	},
+	telProviderOpenAccount : function() {
+		var providerId = $('#providerId').val();
+		
+		$('#msg').modal({
+			backdrop : "static"
+		});
+		
+		$.ajax({								  
+            url: Helper.getRootPath() + '/provider/providerInf/providerOpenAccount.do',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "providerId": providerId,
+                "companyId": providerId,
+                "orderName": "供应商"+providerId+"开户"
+            },
+            success: function (data) {
+            	if(data.status){
+            		location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
+            	}else{
+            		$('#msg').modal('hide');
+            		Helper.alter(data.msg);
+            		return false;
+            	}
+            },
+            error:function(){
+            	$('#msg').modal('hide');
+            	Helper.alert("系统超时，请稍微再试试");
+            	return false;
+            }
+      });
 	},
 	loadAddProviderTransferModal:function(){
 		$('#addTransferModal').modal({

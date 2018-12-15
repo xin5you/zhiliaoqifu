@@ -33,7 +33,7 @@
 						                 	<span class="help-block"></span>
 						             </div>
 					     		</div>
-					     		<div class="control-group formSep">
+					     		<%-- <div class="control-group formSep">
 						             <label class="control-label">账户类型</label>
 						             <div class="controls">
 						               		<select name="bId" id="bId" class="span6">
@@ -42,7 +42,7 @@
 											 </c:forEach>
 			                                </select>
 						             </div>
-					     		</div>
+					     		</div> --%>
 					     		<div class="control-group formSep">
 						             <label class="control-label">app_url</label>
 						             <div class="controls">

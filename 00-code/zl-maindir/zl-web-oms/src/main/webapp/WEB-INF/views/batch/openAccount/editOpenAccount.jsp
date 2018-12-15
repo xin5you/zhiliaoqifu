@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="${ctx}/static/oms/js/bath/openAccount/editOpenAccount.js"></script>
+    <script src="${ctx}/static/oms/js/batch/openAccount/editOpenAccount.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -92,7 +92,7 @@
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
                                     <td>${entity.phoneNo}</td>
-                                   <%--  <td>${entity.bizTypeName}</td> --%>
+                                    <td>${entity.bizTypeName}</td>
 				                    <td>
                                   <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')"> --%>
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
@@ -105,7 +105,7 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
 				      </form>
 				      <br/>
-                      <a href="${ctx }/batch/accountOpen/listOpenAccount.do"><button class="btn btn-primary" type="button">返回</button></a>
+                      <a href="${ctx }/batch/openAccount/listOpenAccount.do"><button class="btn btn-primary" type="button">返回</button></a>
 			   </div>
 	    </div>
 	    

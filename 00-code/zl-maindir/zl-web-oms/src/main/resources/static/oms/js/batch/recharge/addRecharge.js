@@ -132,7 +132,7 @@ var addRecharge = {
 		});
 	},
 	loadMouldDownload:function(){
-		var url = Helper.getRootPath()+"/common/excelDownload/excelUpload.do?batchType=speRecharge";
+		var url = Helper.getRootPath()+"/common/excelDownload/excelUpload.do?batchType=recharge";
 		location.href=url;
 	},
 	addRechargeCommit:function(){

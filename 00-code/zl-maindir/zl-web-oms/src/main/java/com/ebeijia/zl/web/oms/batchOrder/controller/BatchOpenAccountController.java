@@ -182,7 +182,7 @@ public class BatchOpenAccountController {
 	public ModelAndView intoViewOpenAccount(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("batch/openAccount/viewOpenAccount");
 		String orderId = req.getParameter("orderId");
-		BatchOrder order = batchOrderService.getBatchOrderById(orderId);
+		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);

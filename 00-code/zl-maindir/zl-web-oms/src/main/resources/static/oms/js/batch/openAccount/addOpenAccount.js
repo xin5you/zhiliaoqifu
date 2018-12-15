@@ -29,13 +29,11 @@ var addOpenAccount = {
             },
             rules: {
             	orderName: { required: true },
-            	accountType: { required: true},
-            	billingTypes: { required: true}
+            	accountType: { required: true}
             },
             messages: {
             	orderName: {required: "请输入订单名称"},
-            	accountType: { required: "请选择账户类型"},
-            	billingTypes: { required: "请选择开户类型"}
+            	accountType: { required: "请选择账户类型"}
             	
             },
             invalidHandler: function (form, validator) {
@@ -166,7 +164,7 @@ var addOpenAccount = {
 		});
 	},
 	loadMouldDownload:function(){
-		var url = Helper.getRootPath()+"/common/excelDownload/excelUpload.do?batchType=speOpenAccount";
+		var url = Helper.getRootPath()+"/common/excelDownload/excelUpload.do?batchType=openAccount";
 		location.href=url;
 	},
 	accountImport:function(){
@@ -223,7 +221,7 @@ var addOpenAccount = {
     		return false;
 		}
 		$.ajax({
-			url: Helper.getRootPath() + '/batch/openAccount//addAccountInf.do',
+			url: Helper.getRootPath() + '/batch/openAccount/addAccountInf.do',
             type: 'post',
             dataType : "json",
             data: {

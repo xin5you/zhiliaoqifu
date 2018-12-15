@@ -2,14 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.ProviderInfMapper">
-		
+
 	<sql id="TableName">
-			tb_provider_inf
+		tb_provider_inf
 	</sql>
 	
-		
-		<update id="updateByDefaultRoute">
-			update <include refid="TableName" /> set default_route= '1'  where　default_route = '0'
-		</update>
+	<sql id="ColumnResult">
+	 	provider_id,
+	  	provider_name,
+	    app_url, 
+	    app_secret,
+	    access_token, 
+	    default_route,
+	    provider_rate, 
+	    oper_solr,
+	    is_open,
+		resv1,
+		resv2,
+		resv3,
+		resv4,
+		resv5,
+		resv6,
+		data_stat,
+		remarks,
+		create_user	,
+		update_user,
+		create_time,
+		update_time,
+		lock_version
+	</sql>
+	
+	<select id="getList" parameterType="ProviderInf" resultType="ProviderInf">
+		select 
+	  		<include refid="ColumnResult" />
+		from 	
+			<include refid="TableName" /> m
+		where m.data_stat='0'
+		<if test="providerName !=null and providerName !='' ">
+			and m.provider_name like '%' || #{providerName} || '%'
+		</if>
+		<if test="defaultRoute !=null and defaultRoute !='' ">
+			and m.default_route = #{defaultRoute}
+		</if>
+		order by m.update_time desc
+	</select>
+	
+	<update id="updateByDefaultRoute">
+		update
+			<include refid="TableName" />
+		set default_route= '1' where default_route = '0'
+	</update>
 
 </mapper>

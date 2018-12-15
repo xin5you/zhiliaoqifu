@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ebeijia.zl.basics.billingtype.mapper.BaseDictMapper">
+		
+	<sql id="BaseDictColumns">
+		dict_id,
+		dict_code,
+		isdefault,
+		seq,
+		dict_name,
+		pid,
+		dict_type,
+		dict_value,
+		data_stat,
+		remarks,
+		create_user,  
+		update_user, 
+		create_time, 
+		update_time, 
+		lock_version
+	</sql>
+	
+	<select id="getBaseDictList" parameterType="BaseDict" resultType="BaseDict">
+		select 
+		   <include refid="BaseDictColumns" />
+		    from tb_base_dict
+	    where data_stat  = '0'
+			 <if test="dictName !=null and dictName !='' ">
+			 	 and dict_name like '%' || #{dictName} || '%'
+			 </if>
+			     order by update_time desc
+	</select>
+	
+</mapper>

@@ -4,7 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
-    <script src="${ctx}/static/oms/js//company/listCompany.js"></script>
+    <script src="${ctx}/static/oms/js/company/listCompany.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -14,8 +14,8 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>专用账户管理</li>
-			                    <li><a href="${ctx }/company/listCompany.do">企业管理</a></li>
+			                    <li>企业管理</li>
+			                    <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
 			                    <li>企业列表</li>
 			                </ul>
 			            </div>
@@ -65,55 +65,65 @@
 				             </tr>
 				             </thead>
 				             <tbody>
-				             <c:forEach var="company" items="${pageInfo.list}" varStatus="st">
-				                 <tr>
-				                 	<td>${company.name}</td>
-				                    <td>${company.lawCode}</td>
-				                    <td>${company.address}</td>
-				                    <td>${company.contacts}</td>
-				                    <td>${company.phoneNo}</td>
-				                    <td>
-				                    	<c:if test="${company.transFlag=='1'}">关</c:if>
-				                    	<c:if test="${company.transFlag=='0'}">开</c:if>
-				                    </td>	
-				                    <td>
-				                    	<c:if test="${company.isOpen=='1'}">已开户</c:if>
-				                    	<c:if test="${company.isOpen=='0'}">未开户</c:if>
-				                    </td>			                 
-				                    <td>${company.remarks}</td>
-				                    <td>
-				                    	<c:if test="${company.isOpen=='0'}">
-											<a companyId="${company.companyId}" title="开户" class="btn-mini btn-open" href="#"><i class="icon-pencil"></i></a>
-				                    	</if>
-				                            <%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_INTOEDIT')"> --%>
-											<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-											<%-- </sec:authorize> --%>
-											<%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_DELETE')"> --%>
-											<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-											<%-- </sec:authorize> --%>
-				                    	<%-- <c:if test="${company.isOpen=='1'}">
-											<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
-				                    	</if> --%>
-				                    </td>
-				                 </tr>
-				             </c:forEach>
+					             <c:forEach var="company" items="${pageInfo.list}" varStatus="st">
+					                 <tr>
+					                 	<td>${company.name}</td>
+					                    <td>${company.lawCode}</td>
+					                    <td>${company.address}</td>
+					                    <td>${company.contacts}</td>
+					                    <td>${company.phoneNo}</td>
+					                    <td>
+					                    	<c:if test="${company.transFlag=='1'}">关</c:if>
+					                    	<c:if test="${company.transFlag=='0'}">开</c:if>
+					                    </td>	
+					                    <td>
+					                    	<c:if test="${company.isOpen=='1'}">已开户</c:if>
+					                    	<c:if test="${company.isOpen=='0'}">未开户</c:if>
+					                    </td>			                 
+					                    <td>${company.remarks}</td>
+					                    <td>
+					                    	<c:if test="${company.isOpen=='0'}">
+												<a companyId="${company.companyId}" title="开户" class="btn-mini btn-open" href="#"><i class="icon-pencil"></i></a>
+					                    	</c:if>
+												<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+												<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+					                    	<%-- <c:if test="${company.isOpen=='1'}">
+												<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
+					                    	</if> --%>
+					                    </td>
+					                 </tr>
+					             </c:forEach>
 				             </tbody>
 				         </table>
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
 				      </form>
 			   </div>
 	    </div>
-      <div id="msg" style="display: none;">${msg }</div>
-<script>
-$(function(){
-	var msg = $('#msg').html();
-	if (msg != "" && msg != null) {
-		setTimeout(function() {
-			Helper.alert(msg);	
-		}, 1000);
+	    
+      <div id="addOpenAccountModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<form class="form-horizontal">
+		    <div class="modal-header">
+		        <button class="close" data-dismiss="modal">&times;</button>
+		        <h3 id="commodityInfModal_h">开户</h3>
+		    </div>
+		    <div class="modal-body">
+		        <input type="hidden" id="companyId" name="companyId"/>
+		        <span>你确定对该企业开户吗？</span>
+		    </div>
+		</form>
+		<div class="modal-footer" style="text-align: center;">
+		    <button class="btn btn-primary btn-open-submit">确 定  </button>
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+		</div>
+	</div>
 	
-	}
-});
-</script>
+	<div id="msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
+              <div class="modal-header">
+                    
+                    <h3 id="commodityInfModal_h">温馨提示</h3>
+                </div>
+                <br/><br/><br/>
+              <h3 align="center">信息正在处理......</h3>
+        </div>
 </body>
 </html>

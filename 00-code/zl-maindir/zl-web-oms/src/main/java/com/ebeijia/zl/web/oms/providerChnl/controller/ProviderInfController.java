@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
@@ -98,8 +97,6 @@ public class ProviderInfController {
 			}else{
 				mv.addObject("defaultRouteState", "1");
 			}
-			List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(null);
-			mv.addObject("billingTypeList", billingTypeList);
 		} catch (Exception e) {
 			logger.error("## 进入添加供应商信息异常", e);
 		}
@@ -120,22 +117,15 @@ public class ProviderInfController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
 			ProviderInf providerInf = this.getProviderInf(req);
-			providerInf.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			HttpSession session = req.getSession();
-			
-			User user = (User)session.getAttribute(Constants.SESSION_USER);
-			if (user != null) {
-				providerInf.setCreateUser(user.getId().toString());
-				providerInf.setUpdateUser(user.getId().toString());
-				providerInf.setCreateTime(System.currentTimeMillis());
-				providerInf.setUpdateTime(System.currentTimeMillis());
+			if(!providerInfFacade.saveProviderInf(providerInf)) {
+				resultMap.addAttribute("status", Boolean.FALSE);
+				resultMap.addAttribute("msg", "新增失败，请重新添加");
 			}
-			providerInf.setProviderId(IdUtil.getNextId());
-			providerInfFacade.saveProviderInf(providerInf);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "新增失败，请重新添加");
 			logger.error("## 添加供应商信息异常", e);
+			return resultMap;
 		}
 		return resultMap;
 	}
@@ -153,8 +143,6 @@ public class ProviderInfController {
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			ProviderInf providerInf = providerInfFacade.getProviderInfById(providerId);
-			List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(null);
-			mv.addObject("billingTypeList", billingTypeList);
 			mv.addObject("providerInf", providerInf);
 		} catch (Exception e) {
 			logger.error("## 通过id查找供应商信息异常", e);
@@ -181,18 +169,17 @@ public class ProviderInfController {
 				resultMap.addAttribute("msg", "编辑失败,供应商id为空");
 				logger.error("## 编辑供应商信息异常,供应商providerId:[{}]为空", providerId);
 			}
+			
 			ProviderInf providerInf = this.getProviderInf(req);
-			providerInf.setProviderId(providerId);
-			HttpSession session = req.getSession();
-			User user = (User)session.getAttribute(Constants.SESSION_USER);
-			if (user != null) {
-				providerInf.setUpdateUser(user.getId().toString());
+			if (!providerInfFacade.updateProviderInf(providerInf)) {
+				resultMap.addAttribute("status", Boolean.FALSE);
+				resultMap.addAttribute("msg", "编辑失败，请联系管理员");
 			}
-			providerInfFacade.updateProviderInf(providerInf);
 		} catch (Exception e) {
 			resultMap.addAttribute("status", Boolean.FALSE);
 			resultMap.addAttribute("msg", "编辑失败，请联系管理员");
 			logger.error("## 编辑供应商信息异常", e);
+			return resultMap;
 		}
 		return resultMap;
 	}
@@ -210,8 +197,6 @@ public class ProviderInfController {
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			ProviderInf providerInf = providerInfFacade.getProviderInfById(providerId);
-			BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfById(providerInf.getBId());
-			providerInf.setbName(billingType.getbName());
 			mv.addObject("providerInf", providerInf);
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);
@@ -262,6 +247,7 @@ public class ProviderInfController {
 			logger.error(" ## 供应商开户出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "供应商开户失败，请重新操作");
+			return resultMap;
 		}
 		return resultMap;
 	}
@@ -289,17 +275,44 @@ public class ProviderInfController {
 	 * 封装供应商实体
 	 */
 	public ProviderInf getProviderInf(HttpServletRequest req) {
-		ProviderInf providerInf = new ProviderInf();
-		providerInf.setBId(StringUtil.nullToString(req.getParameter("bId")));
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+		
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String lockVersion = StringUtil.nullToString(req.getParameter("lockVersion"));
+		String providerRate = StringUtil.nullToString(req.getParameter("providerRate"));
+		
+		ProviderInf providerInf = null;
+		try {
+			if (!StringUtil.isNullOrEmpty(providerId)) {
+				providerInf = providerInfFacade.getProviderInfById(providerId);
+			} else {
+				providerInf = new ProviderInf();
+				providerInf.setProviderId(IdUtil.getNextId());
+				providerInf.setCreateUser(user.getId());
+				providerInf.setCreateTime(System.currentTimeMillis());
+				providerInf.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				providerInf.setLockVersion(0);
+			}
+		} catch (Exception e) {
+			logger.error("## 查询供应商信息失败，providerId--->{}", providerId);
+		}
 		providerInf.setProviderName(StringUtil.nullToString(req.getParameter("providerName")));
 		providerInf.setAppUrl(StringUtil.nullToString(req.getParameter("appUrl")));
 		providerInf.setAppSecret(StringUtil.nullToString(req.getParameter("appSecret")));
 		providerInf.setAccessToken(StringUtil.nullToString(req.getParameter("accessToken")));
 		providerInf.setDefaultRoute(StringUtil.nullToString(req.getParameter("defaultRoute")));
-		providerInf.setProviderRate(new BigDecimal(StringUtil.nullToString(req.getParameter("providerRate"))));
+		if (!StringUtil.isNullOrEmpty(providerRate)) {
+			providerInf.setProviderRate(new BigDecimal(providerRate));
+		}
 		if (!StringUtil.isNullOrEmpty(req.getParameter("operSolr")))
 			providerInf.setOperSolr(Integer.valueOf(req.getParameter("operSolr")));
 		providerInf.setRemarks(StringUtil.nullToString(req.getParameter("remarks")));
+		if (!StringUtil.isNullOrEmpty(lockVersion)) {
+			providerInf.setLockVersion(Integer.valueOf(lockVersion) + 1);
+		}
+		providerInf.setUpdateUser(user.getId().toString());
+		providerInf.setUpdateTime(System.currentTimeMillis());
 		return providerInf;
 	}
 }

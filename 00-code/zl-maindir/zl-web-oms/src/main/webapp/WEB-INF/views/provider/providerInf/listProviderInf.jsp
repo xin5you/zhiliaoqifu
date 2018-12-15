@@ -47,7 +47,6 @@
 					               <th>默认路由标识</th>
 					               <th>供应商折扣</th>
 					               <th>操作顺序</th>
-					               <th>专项类型</th>
 					               <th>是否开户</th>
 					               <th>操作</th>
 					             </tr>
@@ -62,12 +61,14 @@
 				                    <td>${entity.defaultRoute}</td>
 				                    <td>${entity.providerRate}</td>
 				                    <td>${entity.operSolr}</td>
-				                    <td>${entity.bName}</td>
 				                    <td>
 				                    	<c:if test="${entity.isOpen == '0'}">未开户</c:if>
 				                    	<c:if test="${entity.isOpen == '1'}">已开户</c:if>
 				                    </td>
 				                    <td>
+				                    <c:if test="${entity.isOpen=='0'}">
+										<a providerId="${entity.providerId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
+				                    </c:if>
 				                    <%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_INTOEDIT')"> --%>
 									<a providerId="${entity.providerId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 									<%-- </sec:authorize> --%>
@@ -77,9 +78,6 @@
 									<%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_VIEW')"> --%>
 									<a providerId="${entity.providerId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 									<%-- </sec:authorize> --%>
-									<c:if test="${entity.isOpen=='0'}">
-										<a providerId="${entity.providerId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
-				                    </c:if>
 				                    <c:if test="${entity.isOpen=='1'}">
 										<a providerId="${entity.providerId}" title="转账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
 				                    </c:if>
@@ -93,6 +91,22 @@
 			   </div>
 	    </div>
 	    
+	    <div id="addOpenAccountModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<form class="form-horizontal">
+		    <div class="modal-header">
+		        <button class="close" data-dismiss="modal">&times;</button>
+		        <h3 id="commodityInfModal_h">开户</h3>
+		    </div>
+		    <div class="modal-body">
+		        <input type="hidden" id="providerId" name="providerId"/>
+		        <span>你确定对该供应商开户吗？</span>
+		    </div>
+		</form>
+		<div class="modal-footer" style="text-align: center;">
+		    <button class="btn btn-primary btn-openAccount-submit">确 定  </button>
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+		</div>
+	</div>
 	    
 	    <div id="addTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<form class="form-horizontal">
@@ -130,5 +144,14 @@
 		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 		</div>
 	</div>
+	
+	<div id="msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
+              <div class="modal-header">
+                    
+                    <h3 id="commodityInfModal_h">温馨提示</h3>
+                </div>
+                <br/><br/><br/>
+              <h3 align="center">信息正在处理......</h3>
+        </div>
 </body>
 </html>

@@ -2,7 +2,9 @@ package com.ebeijia.zl.web.oms.retailChnl.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductAreaFlag;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductProType;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.OperatorType;
@@ -89,25 +92,23 @@ public class RetailChnlInfController {
 	}
 
 	@RequestMapping(value = "/addRetailChnlInfCommit")
-	public ModelAndView addRetailChnlInfCommit(HttpServletRequest req, HttpServletResponse resp) {
-		ModelAndView mv = new ModelAndView("redirect:retailChnl/retailChnlInf/listRetailChnlInf.do");
-
+	@ResponseBody
+	public Map<String, Object> addRetailChnlInfCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
-			HttpSession session = req.getSession();
-			User user = (User)session.getAttribute(Constants.SESSION_USER);
-			retailChnlInf.setCreateUser(user.getId().toString());
-			retailChnlInf.setUpdateUser(user.getId().toString());
-			retailChnlInf.setCreateTime(System.currentTimeMillis());
-			retailChnlInf.setUpdateTime(System.currentTimeMillis());
-			retailChnlInf.setChannelId(IdUtil.getNextId());
-			if (retailChnlInfFacade.saveRetailChnlInf(retailChnlInf)) {
-				mv.addObject("operStatus", 1);
+			if (!retailChnlInfFacade.saveRetailChnlInf(retailChnlInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加分销商信息失败");
 			}
 		} catch (Exception e) {
 			logger.error(" ## 添加分销商信息出错",e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "添加分销商信息失败");
+			return resultMap;
 		}
-		return mv;
+		return resultMap;
 	}
 
 	@RequestMapping(value = "/intoEditRetailChnlInf")
@@ -127,23 +128,25 @@ public class RetailChnlInfController {
 	}
 
 	@RequestMapping(value = "/editRetailChnlInfCommit")
-	public ModelAndView editTelChannelInfCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("redirect:retailChnl/retailChnlInf/listRetailChnlInf.do");
+	@ResponseBody
+	public Map<String, Object> editTelChannelInfCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
-			HttpSession session = req.getSession();
-			User user = (User)session.getAttribute(Constants.SESSION_USER);
-			retailChnlInf.setUpdateUser(user.getId().toString());
-			retailChnlInf.setUpdateTime(System.currentTimeMillis());
-			if (retailChnlInfFacade.updateRetailChnlInf(retailChnlInf)) {
-				mv.addObject("operStatus", 2);
+			if (!retailChnlInfFacade.updateRetailChnlInf(retailChnlInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑分销商信息失败");
+				return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error(" ## 编辑分销商信息列表出错",e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑分销商信息失败");
 		}
 
-		return mv;
+		return resultMap;
 	}
 
 	@RequestMapping(value = "/intoViewRetailChnlInf")
@@ -380,6 +383,9 @@ public class RetailChnlInfController {
 	}
 	
 	private RetailChnlInf getRetailChnlInf(HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+		
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 		String channelName = StringUtil.nullToString(req.getParameter("channelName"));
 		String channelCode = StringUtil.nullToString(req.getParameter("channelCode"));
@@ -391,7 +397,17 @@ public class RetailChnlInfController {
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
 		String lockVersion = StringUtil.nullToString(req.getParameter("lockVersion"));
 
-		RetailChnlInf retailChnl = new RetailChnlInf();
+		RetailChnlInf retailChnl = null;
+		if (!StringUtil.isNullOrEmpty(channelId)) {
+			retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
+		} else {
+			retailChnl = new RetailChnlInf();
+			retailChnl.setChannelId(IdUtil.getNextId());
+			retailChnl.setCreateUser(user.getId());
+			retailChnl.setCreateTime(System.currentTimeMillis());
+			retailChnl.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			retailChnl.setLockVersion(0);
+		}
 
 		retailChnl.setChannelId(channelId);
 		retailChnl.setChannelName(channelName);
@@ -411,6 +427,8 @@ public class RetailChnlInfController {
 		if (!StringUtil.isNullOrEmpty(lockVersion)) {
 			retailChnl.setLockVersion(Integer.valueOf(lockVersion));
 		}
+		retailChnl.setUpdateUser(user.getId());
+		retailChnl.setUpdateTime(System.currentTimeMillis());
 		return retailChnl;
 	}
 	

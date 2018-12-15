@@ -102,6 +102,7 @@
                                      <sec:authorize access="hasRole('ROLE_SYS_ORGANIZATION')">
                                      	<li><a href="${ctx }/sys/organization/listOrganization.do">部门管理</a></li>
                                      </sec:authorize>
+                                     <li><a href="${ctx }/baseDict/listBaseDict.do">字典管理</a></li>
                                  </ul>
                              </li>
                              </sec:authorize>

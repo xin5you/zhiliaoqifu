@@ -1,9 +1,8 @@
-/*package com.ebeijia.zl.web.oms.basedict.controller;
+package com.ebeijia.zl.web.oms.basedict.controller;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,10 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ebeijia.zl.basics.billingtype.domain.BaseDict;
-import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.ebeijia.zl.basics.billingtype.service.BaseDictService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.web.oms.sys.model.User;
@@ -36,93 +34,107 @@ public class BaseDictController {
 	private BaseDictService baseDictService;
 
 	@RequestMapping(value = "/listBaseDict")
-	public ModelAndView listBillingType(HttpServletRequest req, HttpServletResponse response) {
+	public ModelAndView listBaseDict(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("baseDict/listBaseDict");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		PageInfo<BaseDict> pageList = null;
 		BaseDict baseDict = new BaseDict();
-		baseDict.setbName(StringUtil.nullToString(req.getParameter("bName")));
+		baseDict.setDictName(StringUtil.nullToString(req.getParameter("dictName")));
+		baseDict.setDictCode(StringUtil.nullToString(req.getParameter("dictCode")));
 		
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-			pageList = billingTypeInfService.getBillingTypeInfList(startNum, pageSize, billingTypeInf);
+			pageList = baseDictService.getBaseDictListPage(startNum, pageSize, baseDict);
 		
 		} catch (Exception e) {
-			logger.error("## 查询专用账户类型列表信息出错", e);
+			logger.error("## 查询字典列表信息出错", e);
 		}
 		
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
-		mv.addObject("billingTypeInf", billingTypeInf);
+		mv.addObject("baseDict", baseDict);
 		return mv;
 	}
 	
-	@RequestMapping(value = "/intoEditBillingType")
-	public ModelAndView intoEditBillingType(HttpServletRequest req, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("billingType/editBillingType");
-		String bId = StringUtil.nullToString(req.getParameter("bId"));
-		BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfById(bId);
-		mv.addObject("billingType", billingType);
-		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
+	@RequestMapping(value = "/intoEditBaseDict")
+	public ModelAndView intoEditBaseDict(HttpServletRequest req, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("baseDict/editBaseDict");
+		String dictId = StringUtil.nullToString(req.getParameter("dictId"));
+		BaseDict baseDict = baseDictService.getById(dictId);
+		mv.addObject("baseDict", baseDict);
 		return mv;
 	}
 	
-	@RequestMapping(value = "/editBillingType")
+	@RequestMapping(value = "/editBaseDictCommit")
 	@ResponseBody
-	public Map<String, Object> editBillingType(HttpServletRequest req, HttpServletResponse response) {
+	public Map<String, Object> editBaseDictCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String bId = StringUtil.nullToString(req.getParameter("bId"));
-		String bName = StringUtil.nullToString(req.getParameter("bName"));
-		BillingTypeInf billingTypeName = billingTypeInfService.getBillingTypeInfById(bId);
-		if (!billingTypeName.getbName().equals(bName)) {
-			BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfByName(bName);
-			if (!StringUtil.isNullOrEmpty(billingType)) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "账户类型已存在，请重新输入");
-				return resultMap;
+		
+		String dictId = StringUtil.nullToString(req.getParameter("dictId"));
+		String dictCode = StringUtil.nullToString(req.getParameter("dictCode"));
+		
+		boolean flag = true;
+		List<BaseDict> baseDictList = baseDictService.getBaseDictList(new BaseDict());
+		for (BaseDict dict : baseDictList) {
+			if (dict.getDictCode().equalsIgnoreCase(dictCode)) {
+				if (!dict.getDictId().equals(dictId)) {
+					flag = false;
+					break;
+				}
 			}
 		}
 		
-		resultMap.put("status", Boolean.TRUE);
-		BillingTypeInf billingTypeInfo = getBillingTypeInf(req);
-		int i = billingTypeInfService.updateBillingTypeInf(billingTypeInfo);
-		if (i < 1) {
+		if (!flag) {
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "编辑账户类型失败");
+			resultMap.put("msg", "字典代码已存在，请重新输入");
+			return resultMap;
 		}
+		
+		BaseDict baseDict = getBaseDict(req);
+		if (!baseDictService.updateById(baseDict)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑字典信息失败");
+		}
+		
+		resultMap.put("status", Boolean.TRUE);
 		return resultMap;
 	}
 	
-	private BillingTypeInf getBillingTypeInf(HttpServletRequest req) {
+	private BaseDict getBaseDict(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		
-		String bId = StringUtil.nullToString(req.getParameter("bId"));
-		String bName = StringUtil.nullToString(req.getParameter("bName"));
-		String code = StringUtil.nullToString(req.getParameter("code"));
+		String dictId = StringUtil.nullToString(req.getParameter("dictId"));
+		String dictCode = StringUtil.nullToString(req.getParameter("dictCode"));
+		String isdefault = StringUtil.nullToString(req.getParameter("isdefault"));
+		String seq = StringUtil.nullToString(req.getParameter("seq"));
+		String dictName = StringUtil.nullToString(req.getParameter("dictName"));
+		String pid = StringUtil.nullToString(req.getParameter("pid"));
+		String dictType = StringUtil.nullToString(req.getParameter("dictType"));
+		String dictValue = StringUtil.nullToString(req.getParameter("dictValue"));
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
-		String loseFee = StringUtil.nullToString(req.getParameter("loseFee"));
-		String buyFee = StringUtil.nullToString(req.getParameter("buyFee"));
 		
-		BillingTypeInf billingType = null;
-		if (!StringUtil.isNullOrEmpty(bId)) {
-			billingType = billingTypeInfService.getBillingTypeInfById(bId);
+		BaseDict baseDict = null;
+		if (!StringUtil.isNullOrEmpty(dictId)) {
+			baseDict = baseDictService.getById(dictId);
 		} else {
-			billingType = new BillingTypeInf();
-			billingType.setbId(UUID.randomUUID().toString());
-			billingType.setCreateUser(user.getId());
-			billingType.setCreateTime(System.currentTimeMillis());
+			baseDict = new BaseDict();
+			baseDict.setDictId(IdUtil.getNextId());
+			baseDict.setCreateUser(user.getId());
+			baseDict.setCreateTime(System.currentTimeMillis());
 		}
-		billingType.setbName(bName);
-		billingType.setCode(code);
-		billingType.setRemarks(remarks);
-		billingType.setLoseFee(new BigDecimal(NumberUtils.RMBYuanToCent(loseFee)));
-		billingType.setBuyFee(new BigDecimal(NumberUtils.RMBYuanToCent(buyFee)));
-		billingType.setUpdateUser(user.getId());
-		billingType.setUpdateTime(System.currentTimeMillis());
-		return billingType;
+		baseDict.setDictCode(dictCode);
+		baseDict.setRemarks(remarks);
+		baseDict.setDictName(dictName);
+		baseDict.setDictType(dictType);
+		baseDict.setDictValue(dictValue);
+		baseDict.setIsdefault(isdefault);
+		baseDict.setSeq(seq);
+		baseDict.setPid(pid);
+		baseDict.setUpdateUser(user.getId());
+		baseDict.setUpdateTime(System.currentTimeMillis());
+		return baseDict;
 	}
 	
 }
-*/

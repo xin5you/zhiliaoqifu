@@ -16,5 +16,5 @@ public interface BaseDictService extends IService<BaseDict> {
 	
 	List<BaseDict> getBaseDictList(BaseDict baseDict);
 
-	public PageInfo<BaseDict> getBaseDictList(int startNum, int pageSize, BaseDict baseDict);
+	public PageInfo<BaseDict> getBaseDictListPage(int startNum, int pageSize, BaseDict baseDict);
 }

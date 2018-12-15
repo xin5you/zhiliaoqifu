@@ -29,7 +29,12 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	@Override
 	public boolean saveProviderInf(ProviderInf providerInf) throws Exception {
 		if(providerDefaultRoute.DefaultRoute0.getCode().equals(providerInf.getDefaultRoute())){
-			providerInfService.updateByDefaultRoute();
+			ProviderInf p = new ProviderInf();
+			p.setDefaultRoute(providerDefaultRoute.DefaultRoute0.getCode());
+			List<ProviderInf> providerList = providerInfService.getProviderInfList(p);
+			if (providerList != null && providerList.size() >= 1) {
+				providerInfService.updateByDefaultRoute();
+			}
 		}
 		return providerInfService.save(providerInf);
 	}
@@ -38,9 +43,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	public boolean updateProviderInf(ProviderInf ProviderInf) throws Exception {
 		ProviderInf tpInf = this.getProviderInfById(ProviderInf.getProviderId());
 		if(providerDefaultRoute.DefaultRoute0.getCode().equals(ProviderInf.getDefaultRoute())){
-			if(!providerDefaultRoute.DefaultRoute0.getCode().equals(tpInf.getDefaultRoute())){	//修改的供应商数据原来不是默认路由
-				providerInfService.updateByDefaultRoute();
-			}
+			providerInfService.updateByDefaultRoute();
 		}
 		tpInf.setProviderName(ProviderInf.getProviderName());
 		tpInf.setAppUrl(ProviderInf.getAppUrl());
@@ -49,8 +52,10 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 		tpInf.setDefaultRoute(ProviderInf.getDefaultRoute());
 		tpInf.setProviderRate(ProviderInf.getProviderRate());
 		tpInf.setOperSolr(ProviderInf.getOperSolr());
+		tpInf.setIsOpen(ProviderInf.getIsOpen());
 		tpInf.setRemarks(ProviderInf.getRemarks());
 		tpInf.setUpdateUser(ProviderInf.getUpdateUser());
+		tpInf.setUpdateTime(System.currentTimeMillis());
 		return providerInfService.updateById(tpInf);
 	}
 

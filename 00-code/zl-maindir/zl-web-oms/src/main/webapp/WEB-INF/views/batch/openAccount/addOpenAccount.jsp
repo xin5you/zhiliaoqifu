@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="${ctx}/static/oms/js/bath/openAccount/addOpenAccount.js"></script>
+    <script src="${ctx}/static/oms/js/batch/openAccount/addOpenAccount.js"></script>
     <script src="${ctx}/static/jquery/jquery.form.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>订单管理</li>
+			                    <li>账户管理</li>
 			                    <li><a href="${ctx }/batch/openAccount/listOpenAccount.do">批量开户</a></li>
 			                     <li>录入订单</li>
 			                </ul>

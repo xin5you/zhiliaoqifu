@@ -3,7 +3,6 @@ package com.ebeijia.zl.web.oms.company.controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -48,11 +50,18 @@ public class CompanyController {
 	 */
 	@RequestMapping(value = "/listCompany")
 	public ModelAndView listCompany(HttpServletRequest req, HttpServletResponse response) throws IOException {
-		ModelAndView mv = new ModelAndView("listCompany");
+		ModelAndView mv = new ModelAndView("company/listCompany");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
+		String name = StringUtil.nullToString(req.getParameter("name"));
+		String transFlag = StringUtil.nullToString(req.getParameter("transFlag"));
+		String contacts = StringUtil.nullToString(req.getParameter("contacts"));
+		
+		CompanyInf companyInf = new CompanyInf();//通过封装类将前台查询条件用对象接收
+		companyInf.setName(name);
+		companyInf.setTransFlag(transFlag);
+		companyInf.setContacts(contacts);
+		
 		PageInfo<CompanyInf> pageList = null;
-		CompanyInf companyInf = this.getCompanyInf(req);//通过封装类将前台查询条件用对象接收
-	     
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
@@ -69,7 +78,7 @@ public class CompanyController {
 
 	@RequestMapping(value = "/intoAddCompany")
 	public ModelAndView intoAddCompany(HttpServletRequest req, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("addCompany");
+		ModelAndView mv = new ModelAndView("company/addCompany");
 		
 		return mv;
 	}
@@ -89,21 +98,22 @@ public class CompanyController {
 		}
 		CompanyInf companyInf = getCompanyInf(req);
 		try {
-			if (companyInfFacade.insertCompanyInf(companyInf)) {
-				
-			} else {
+			if (!companyInfFacade.insertCompanyInf(companyInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "新增企业信息失败");
 			}
 		} catch (Exception e) {
 			logger.error("## 新增企业信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增企业信息失败");
+			return resultMap;
 		}
 		return resultMap;
 	}
 
 	@RequestMapping(value = "/intoEditCompany")
 	public ModelAndView intoEditCompany(HttpServletRequest req, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("editCompany");
+		ModelAndView mv = new ModelAndView("company/editCompany");
 		String companyId = req.getParameter("companyId");
 		CompanyInf companyInf = companyInfFacade.getCompanyInfById(companyId);
 		mv.addObject("companyInf", companyInf);
@@ -127,7 +137,6 @@ public class CompanyController {
 				return resultMap;
 			}
 		}
-		
 		try {
 			CompanyInf companyInf = getCompanyInf(req);
 			if (companyInfFacade.updateCompanyInf(companyInf)) {
@@ -179,9 +188,12 @@ public class CompanyController {
 			companyInf = companyInfFacade.getCompanyInfById(companyId);
 		} else {
 			companyInf = new CompanyInf();
-			companyInf.setCompanyId(UUID.randomUUID().toString());
+			companyInf.setCompanyId(IdUtil.getNextId());
+			companyInf.setIsOpen(IsOpenEnum.ISOPEN_FALSE.getCode());
+			companyInf.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			companyInf.setCreateUser(user.getId());
 			companyInf.setCreateTime(System.currentTimeMillis());
+			companyInf.setLockVersion(0);
 		}
 		companyInf.setLawCode(StringUtil.nullToString(req.getParameter("lawCode")));
 		companyInf.setName(StringUtil.nullToString(req.getParameter("name")));
@@ -192,6 +204,7 @@ public class CompanyController {
 		companyInf.setContacts(StringUtil.nullToString(req.getParameter("contacts")));
 		companyInf.setUpdateUser(user.getId());
 		companyInf.setUpdateTime(System.currentTimeMillis());
+		companyInf.setLockVersion(0);
 		return companyInf;
 	}
 	
@@ -210,6 +223,7 @@ public class CompanyController {
 			logger.error("## 企业开户异常", e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("status", "企业开户失败，请稍后再试");
+			return resultMap;
 		}
 		return resultMap;
 	}

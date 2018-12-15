@@ -78,12 +78,17 @@ public class CompanyServiceImpl implements CompanyService{
 		}
 		
 		String orderId = jedisClusterUtils.get(OrderConstants.companyOrderIdSession);
-		int i = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
-		if (i < 1) {
-			logger.error("## 调用开户接口失败");
+		try {
+			int i = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
+			if (i < 1) {
+				logger.error("## 调用开户接口失败");
+				return 0;
+			}
+		} catch (Exception e) {
+			logger.error("## 调用企业开户接口失败");
 			return 0;
 		}
-		
+				
 		jedisClusterUtils.del(OrderConstants.companyOrderIdSession);
 		
 		try {

@@ -135,16 +135,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		orderList.setAmount(new BigDecimal(NumberUtils.RMBYuanToCent(amount)));
 		orderList.setTfrInBid(SpecAccountTypeEnum.A00.getbId());
 		orderList.setTfrInId(companyId);
-		orderList.setTfrOutBid(providerInf.getBId());
+//		orderList.setTfrOutBid(providerInf.getBId());
 		orderList.setTfrOutId(providerInf.getProviderId());
-		String[] bizType = {providerInf.getBId()};
+//		String[] bizType = {providerInf.getBId()};
 		if (orderResult < 0) {
 			return 0;
 		}
-		int orderListResult = batchOrderListService.addOrderListByUpdateOpenAccount(orderList, user, bizType);
-		if (orderListResult < 0) {
-			return 0;
-		}
+//		int orderListResult = batchOrderListService.addOrderListByUpdateOpenAccount(orderList, user, bizType);
+//		if (orderListResult < 0) {
+//			return 0;
+//		}
 		int i = batchOrderService.batchOpenAccountITF(order.getOrderId(), user, BatchOrderStat.BatchOrderStat_00.getCode());
 		if (i < 1) {
 			return 0;

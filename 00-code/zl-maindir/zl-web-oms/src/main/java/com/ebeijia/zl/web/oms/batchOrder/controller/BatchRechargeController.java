@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -114,13 +115,9 @@ public class BatchRechargeController {
 		company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 		
-		List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
-		for (BillingTypeInf b : billingTypeList) {
-			if (SpecAccountTypeEnum.A01.getbId().equals(b.getbId())) {
-				billingTypeList.remove(b);
-			}
-		}
-		
+		List<BillingTypeInf> bList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
+		List<BillingTypeInf> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getbId().equals(t.getbId())).collect(Collectors.toList());
+
 		LinkedList<BatchOrderList> orderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.rechargeSession);
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);	
@@ -296,7 +293,7 @@ public class BatchRechargeController {
 					return resultMap;
 				}
 			}
-			int i = batchOrderService.batchRechargeITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
+			int i = batchOrderService.batchTransferAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
 			if (i < 1) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "提交批量开户订单失败");

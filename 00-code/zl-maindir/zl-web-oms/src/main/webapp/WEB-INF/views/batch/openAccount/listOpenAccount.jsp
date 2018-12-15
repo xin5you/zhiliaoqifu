@@ -17,7 +17,7 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>员工管理</li>
+			                    <li>账户管理</li>
 			                    <li><a href="${ctx }/batch/openAccount/listOpenAccount.do">批量开户</a></li>
 			                     <li>批量开户列表</li>
 			                </ul>

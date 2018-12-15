@@ -31,12 +31,6 @@ public class ProviderInf extends Model<ProviderInf> {
     private String providerId;
  
     /**
-     * 专项类型id
-     */
-    @TableField("b_id")
-    private String bId;
- 
-    /**
      * 供应商名称
      */
     @TableField("provider_name")
@@ -162,18 +156,9 @@ public class ProviderInf extends Model<ProviderInf> {
     @TableField("lock_version")
     private Integer lockVersion;
     
-    private String bName;
-
     @Override
     protected Serializable pkVal() { 
         return this.providerId;
     }
 
-	public String getbName() {
-		return bName;
-	}
-
-	public void setbName(String bName) {
-		this.bName = bName;
-	}
 }

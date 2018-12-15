@@ -1,6 +1,5 @@
 package com.ebeijia.zl.basics.billingtype.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +24,16 @@ public class BaseDictServiceImpl extends ServiceImpl<BaseDictMapper, BaseDict> i
 	private BaseDictMapper baseDictMapper;
 
 	@Override
-	public PageInfo<BaseDict> getBaseDictList(int startNum, int pageSize, BaseDict baseDict) {
+	public PageInfo<BaseDict> getBaseDictListPage(int startNum, int pageSize, BaseDict baseDict) {
 		PageHelper.startPage(startNum, pageSize);
-		List<BaseDict> list = new ArrayList<>();
+		List<BaseDict> list = getBaseDictList(baseDict);
 		PageInfo<BaseDict> page = new PageInfo<BaseDict>(list);
 		return page;
 	}
 
 	@Override
 	public List<BaseDict> getBaseDictList(BaseDict baseDict) {
-		// TODO Auto-generated method stub
-		return null;
+		return baseDictMapper.getBaseDictList(baseDict);
 	}
 
 }

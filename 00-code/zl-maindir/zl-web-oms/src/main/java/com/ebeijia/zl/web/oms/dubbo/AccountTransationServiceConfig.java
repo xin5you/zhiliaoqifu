@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.dubbo.config.MethodConfig;
 import com.alibaba.dubbo.config.spring.ReferenceBean;
-import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 
 /**
