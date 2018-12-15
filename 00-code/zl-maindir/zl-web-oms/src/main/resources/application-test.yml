@@ -5,7 +5,7 @@ server:
     cookie:
       name: JSESSIONID
       path: /
-      domain: .tao-lue.com
+      domain: 
 spring:
   mvc:
     view: 
@@ -16,8 +16,8 @@ spring:
   resources:
     static-locations: classpath:/static/
   datasource:
-    jndi-name: JDBC
-    name: mySpringBoot
+#   jndi-name: JDBC
+    #name: mySpringBoot
     url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
     username: root
     password: root
@@ -62,9 +62,12 @@ spring:
     pool:
       max-connections: 50
   dubbo:
-    appname: zl-oms
-    registry: zookeeper://192.168.2.62:2181
-    protocol: dubbo
+    application:
+      name: zl-web-oms
+    consumer:
+      check: false
+    registry:
+      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
 myBatis:
   mapperLocations: classpath*:mapper/*.xml
   configLocations: classpath:conf/mybatis-config.xml
