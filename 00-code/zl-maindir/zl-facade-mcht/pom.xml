@@ -7,7 +7,7 @@
 		<artifactId>zl-maindir</artifactId>
 		<version>1.0.0.RELEASE</version>
 	</parent>
-  <artifactId>zl-facade-telrecharge</artifactId>
+  <artifactId>zl-facade-mcht</artifactId>
   <name>zl-facade-telrecharge</name>
   <url>http://maven.apache.org</url>
   <properties>

@@ -8,7 +8,7 @@
 		<artifactId>zl-maindir</artifactId>
 		<version>1.0.0.RELEASE</version>
 	</parent>
-	<artifactId>zl-service-telrecharge</artifactId>
+	<artifactId>zl-service-mcht</artifactId>
 	<packaging>war</packaging>
 	<name>zl-service-telrecharge</name>
 	<url>http://maven.apache.org</url>
@@ -80,9 +80,10 @@
 	        <version>0.10</version>
 	    </dependency>
 
+
 		<dependency>
 			<groupId>com.ebeijia</groupId>
-			<artifactId>zl-facade-telrecharge</artifactId>
+			<artifactId>zl-facade-mcht</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
 		<dependency>

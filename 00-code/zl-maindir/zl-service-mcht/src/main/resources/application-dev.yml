@@ -1,6 +1,6 @@
 server:
   port: 10202
-  contextPath: /telrecharge
+  contextPath: /mcht
   session:
     cookie:
       name: JSESSIONID
@@ -11,7 +11,7 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
-  config: classpath:conf/logback-telrecharge.xml
+  config: classpath:conf/logback-mcht.xml
 
 spring:
   datasource:

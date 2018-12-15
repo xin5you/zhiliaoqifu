@@ -182,7 +182,7 @@
 		</dependency> -->
 		<dependency>
 				<groupId>com.ebeijia</groupId>
-				<artifactId>zl-facade-telrecharge</artifactId>
+				<artifactId>zl-facade-mcht</artifactId>
 				<version>${ebj.zl.version}</version>
 	    </dependency>
 	    <dependency>
