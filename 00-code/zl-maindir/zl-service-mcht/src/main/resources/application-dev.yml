@@ -51,13 +51,13 @@ spring:
       max-connections: 50
   dubbo:
     application:
-      name: zl-service-telrecharge
+      name: zl-service-mcht
     protocol:
       name: dubbo
       port: 20881
       accepts: 1000
     provider:
-      id: provider_zl-service-telrecharge
+      id: provider_zl-service-mcht
       timeout: 2000
       delay: -1
     registry:
