@@ -15,6 +15,8 @@
         <typeAlias alias="ArrayList" type="java.util.ArrayList" />
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
         
+        <typeAlias type="com.ebeijia.zl.facade.account.dto.AccountInf" alias="AccountInf"/>
+        <typeAlias type="com.ebeijia.zl.facade.account.vo.AccountVO" alias="AccountVO"/>
         
        	<typeAlias type="com.ebeijia.zl.facade.user.vo.UserInf" alias="UserInf" />
 		<typeAlias type="com.ebeijia.zl.facade.user.vo.PersonInf" alias="PersonInf" />

@@ -87,6 +87,8 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 		}
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),
 				req.getUserChnl(),req.getUserChnlId(),null);
+		intfaceTransLog.setTransDesc("开户");
+		intfaceTransLog.setMchntCode(req.getCompanyId());
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		
 		

@@ -246,6 +246,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	private void newTransLog(IntfaceTransLog intfaceTransLog,TransLog transLog){
 		
 		transLog.setItfPrimaryKey(intfaceTransLog.getItfPrimaryKey()); //接口层流水
+		transLog.setTransDesc(intfaceTransLog.getTransDesc());
+		transLog.setTransNumber(intfaceTransLog.getTransNumber());
 		transLog.setInsCode(intfaceTransLog.getInsCode());
 		transLog.setMchntCode(intfaceTransLog.getMchntCode());
 		transLog.setShopCode(intfaceTransLog.getShopCode());

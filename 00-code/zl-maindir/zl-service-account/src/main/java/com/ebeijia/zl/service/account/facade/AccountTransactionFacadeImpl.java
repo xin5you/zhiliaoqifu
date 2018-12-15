@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
@@ -20,7 +19,6 @@ import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
-import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
@@ -115,8 +113,12 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 					null,
 					null);
 			
+			//企业信息
+			intfaceTransLog.setMchntCode(req.getFromCompanyId());
 		}
 		
+		intfaceTransLog.setTransDesc(req.getTransDesc());
+
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		
 		//执行操作
@@ -298,7 +300,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												fromUserInf.getUserId(),
 												req.getTfrOutBId(),
 												null);
-		
+	
+	intfaceTransLog.setTransDesc(req.getTransDesc());
+	intfaceTransLog.setMchntCode(fromUserInf.getCompanyId());
 	//保存转账类型信息
 	intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req));
 	

@@ -46,23 +46,24 @@ public class AccountTransTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-//    @Test
-//   public void executeRechargeToPrivoder() throws Exception{
-//    	AccountRechargeReqVo req=new AccountRechargeReqVo();
-//    	
-//    	req.setTransId(TransCode.MB20.getCode());
-//    	req.setTransChnl(TransChnl.CHANNEL0.toString());
-//    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-//    	req.setUserChnlId("300000000000000000000000");
-//    	req.setUserType(UserType.TYPE300.getCode());
-//    	req.setFromCompanyId("300000000000000000000000");
-//    	req.setTransAmt(new BigDecimal(500000));
-//    	req.setUploadAmt(new BigDecimal(500000));
-//    	req.setDmsRelatedKey(IdUtil.getNextId());
-//    	req.setPriBId(SpecAccountTypeEnum.A00.getbId());
-//    	
-//    	accountTransactionFacade.executeRechargeByOneBId(req);
-//   }
+    @Test
+   public void executeRechargeToPrivoder() throws Exception{
+    	AccountRechargeReqVo req=new AccountRechargeReqVo();
+    	
+    	req.setTransId(TransCode.MB20.getCode());
+    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+    	req.setUserChnlId("300000000000000000000000");
+    	req.setUserType(UserType.TYPE300.getCode());
+    	req.setFromCompanyId("300000000000000000000000");
+    	req.setTransAmt(new BigDecimal(500000));
+    	req.setUploadAmt(new BigDecimal(500000));
+    	req.setDmsRelatedKey(IdUtil.getNextId());
+    	req.setPriBId(SpecAccountTypeEnum.A00.getbId());
+    	req.setTransDesc("供应商上账");
+    	
+    	accountTransactionFacade.executeRechargeByOneBId(req);
+   }
 	
 	
 	
@@ -143,27 +144,27 @@ public class AccountTransTest {
 	
 	
 
-  @Test
- public void executeRechargeToUser() throws Exception{
-	  AccountTransferReqVo req=new AccountTransferReqVo();
-  	
-	req.setTransId(TransCode.MB50.getCode());
-	req.setTransChnl(TransChnl.CHANNEL0.toString());
-	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-	req.setUserChnlId("200000000000000000000001");
-	req.setUserType(UserType.TYPE200.getCode());
-
-	req.setTransAmt(new BigDecimal(500000));
-	req.setUploadAmt(new BigDecimal(500000));
-	req.setDmsRelatedKey(IdUtil.getNextId());
-	req.setTfrOutUserId("200000000000000000000001");
-	req.setTfrOutBId(SpecAccountTypeEnum.A00.getbId());
-	req.setTfrInUserId("13501755206");
-	req.setTfrInBId(SpecAccountTypeEnum.A00.getbId());
-	
-	BaseResult<Object> result= accountTransactionFacade.executeTransfer(req);
-	
-	System.out.println(JSONArray.toJSONString(result));
- }
+//  @Test
+// public void executeRechargeToUser() throws Exception{
+//	  AccountTransferReqVo req=new AccountTransferReqVo();
+//  	
+//	req.setTransId(TransCode.MB50.getCode());
+//	req.setTransChnl(TransChnl.CHANNEL0.toString());
+//	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+//	req.setUserChnlId("200000000000000000000001");
+//	req.setUserType(UserType.TYPE200.getCode());
+//
+//	req.setTransAmt(new BigDecimal(500000));
+//	req.setUploadAmt(new BigDecimal(500000));
+//	req.setDmsRelatedKey(IdUtil.getNextId());
+//	req.setTfrOutUserId("200000000000000000000001");
+//	req.setTfrOutBId(SpecAccountTypeEnum.A00.getbId());
+//	req.setTfrInUserId("13501755206");
+//	req.setTfrInBId(SpecAccountTypeEnum.A00.getbId());
+//	
+//	BaseResult<Object> result= accountTransactionFacade.executeTransfer(req);
+//	
+//	System.out.println(JSONArray.toJSONString(result));
+// }
 	
 }
