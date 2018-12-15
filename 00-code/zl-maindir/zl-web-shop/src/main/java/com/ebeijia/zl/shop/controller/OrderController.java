@@ -1,7 +1,9 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderInf;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
+import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,28 +28,30 @@ public class OrderController {
     @TokenCheck
     @ApiOperation("商品直接下单")
     @RequestMapping("/goods/create/{sku}")
-    public void createOrder(@PathVariable("sku") String sku,@RequestParam("token") String token,@RequestParam("session") String session){
-
+    public JsonResult<TbEcomOrderInf> createOrder(@PathVariable("sku") String sku, @RequestParam("session") String session){
+        return new JsonResult<>(new TbEcomOrderInf());
     }
 
     @TokenCheck
     @ApiOperation("订单支付确认")
     @RequestMapping("/goods/apply/{orderid}")
-    public void orderNextState(@PathVariable("orderid") String orderId, @RequestParam("token") String token, PayInfo payInfo, @RequestParam("session") String session){
-
+    public JsonResult<TbEcomOrderInf> orderNextState(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session){
+        return new JsonResult<>(new TbEcomOrderInf());
     }
 
     @TokenCheck
     @ApiOperation("订单状态修改")
     @RequestMapping("/goods/update/{orderid}")
-    public void orderReplaceState(@PathVariable("orderid") String orderId,@RequestParam String token){
-
+    public JsonResult<Object> orderReplaceState(@PathVariable("orderid") String orderId, @RequestParam String token){
+        return new JsonResult<>().setCode(200);
     }
 
     @TokenCheck
     @ApiOperation("订单详情")
     @RequestMapping("/goods/detail/{orderid}")
-    public void goodsDetail(@PathVariable("orderid") String orderId,@RequestParam String token){}
+    public JsonResult<TbEcomOrderInf> goodsDetail(@PathVariable("orderid") String orderId, @RequestParam String token){
+        return new JsonResult<>(new TbEcomOrderInf());
+    }
 
 
 }

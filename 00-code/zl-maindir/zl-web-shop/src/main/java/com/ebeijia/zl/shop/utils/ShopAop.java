@@ -1,12 +1,7 @@
 package com.ebeijia.zl.shop.utils;
 
-import java.util.Enumeration;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,9 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
-import com.ebeijia.zl.shop.vo.JsonResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 /**
  * Session AOP切面
@@ -44,14 +41,15 @@ public class ShopAop {
     @Around(value = "@annotation(com.ebeijia.zl.shop.utils.TokenCheck)")
     public Object tokenAccess(ProceedingJoinPoint pj) throws Throwable {
         //TODO 优化性能，避免执行不必要的逻辑
-            doLog(pj);
-            String token = getToken();
-            if (token != null) {
-                String s = jedis.get(token);
-                logger.info("[user:" + s + "]");
-                //TODO fake login user
-                session.setAttribute("userId", s);
-            }
+        doLog(pj);
+        String token = getToken();
+        logger.info(token);
+        if (token != null) {
+            String s = jedis.get(token);
+            logger.info("[user:" + s + "]");
+            //TODO fake login user
+            session.setAttribute("userId", s);
+        }
         Object proceed = pj.proceed();
         return proceed;
     }
@@ -79,11 +77,11 @@ public class ShopAop {
         System.out.println(nextSession);
 
         //处理缓存
-        if (sessionId!=null && useCache) {
+        if (sessionId != null && useCache) {
             String json = jedis.get(signature.toLongString() + sessionId);
-            if (json!=null){
+            if (json != null) {
                 if (json == "undefined") {
-                    return new JsonResult<>().setCode(403).setMessage("请求正在处理");
+                  throw new AdviceMessenger(403,"处理中，请稍后");
                 }
                 return json;
             }
@@ -114,7 +112,7 @@ public class ShopAop {
     private boolean isUseCache(ProceedingJoinPoint pj) {
         MethodSignature signature = (MethodSignature) pj.getSignature();
         SessionCheck annotation = signature.getMethod().getAnnotation(SessionCheck.class);
-        if (annotation != null){
+        if (annotation != null) {
             return annotation.cache();
         }
         return false;
@@ -126,7 +124,8 @@ public class ShopAop {
         Enumeration e1 = request.getHeaderNames();
         while (e1.hasMoreElements()) {
             String headerName = (String) e1.nextElement();
-            System.out.println(headerName);
+            System.out.print("/" + headerName);
+            System.out.println("");
             if (headerName.equals("Authorization") || headerName.equals("authorization")) {
                 return request.getHeader(headerName);
             }

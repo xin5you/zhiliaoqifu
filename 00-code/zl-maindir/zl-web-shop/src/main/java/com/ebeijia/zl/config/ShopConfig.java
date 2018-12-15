@@ -2,7 +2,7 @@ package com.ebeijia.zl.config;
 
 public interface ShopConfig {
     //用于Redis命名空间或注册发现时标记自己
-    String ID = "zl-web-shop";
+    String ID = "ZL_WEB_SHOP_";
 
     //单位秒，表示避免重复提交的时间间隔
     int SUBMIT_INTERVAL = 3;

@@ -24,8 +24,9 @@ public class BannerController {
 
     @ApiOperation("获取图片")
     @RequestMapping(value = "/get",method = RequestMethod.GET)
-    public JsonResult<TbEcomBanner> goodsImage(String pos, String spec, Integer index){
-        return null;
+    public JsonResult<TbEcomBanner> getImage(String pos, String spec, Integer index){
+        TbEcomBanner banner = bannerService.getImage(pos,spec,index);
+        return new JsonResult<>(banner);
     }
 
 

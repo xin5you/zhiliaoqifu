@@ -35,15 +35,14 @@ public class PayController {
     @TokenCheck
     @ApiOperation("支付订单")
     @RequestMapping(value = "/deal/order/{orderid}",method = RequestMethod.POST)
-    public void payOrder(@PathVariable("orderid") String orderId, @RequestParam("token")
-            String token, PayInfo payInfo, @RequestParam("session") String session) {
-            payService.payOrder(token,payInfo,session);
+    public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {
+            payService.payOrder(payInfo,session);
     }
 
     @TokenCheck
     @ApiOperation("列出可用专项账户类型与余额")
     @RequestMapping(value = "/balance/list/{type}",method = RequestMethod.GET)
-    public void listAccountDetail(@RequestParam("token") String token, @PathVariable(value = "type",required = false) String type,@RequestParam("session") String session) {
+    public void listAccountDetail(@PathVariable(value = "type",required = false) String type,@RequestParam("session") String session) {
 
     }
 
@@ -70,9 +69,8 @@ public class PayController {
     @TokenCheck
     @ApiOperation("托管账户转出到银行卡")
     @RequestMapping(value = "/deal/transfer",method = RequestMethod.POST)
-    public JsonResult transferToCard(@RequestParam("deal") DealInfo dealInfo, @RequestParam("token")
-                                                 String token, @RequestParam(value = "session", required = false) String session){
-        int state = payService.transferToCard(token,dealInfo);
+    public JsonResult transferToCard(@RequestParam("deal") DealInfo dealInfo, @RequestParam(value = "session", required = false) String session){
+        int state = payService.transferToCard(dealInfo);
         return null;
     }
 

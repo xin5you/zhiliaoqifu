@@ -60,7 +60,7 @@ public class GoodsController {
 //
 //    @ApiOperation("获取图片")
 //    @RequestMapping(value = "/image/get/{id}",method = RequestMethod.GET)
-//    public void goodsImage(@PathVariable("id") String imageId){}
+//    public void getImage(@PathVariable("id") String imageId){}
 
     @ApiOperation("商品对应货品查询、库存查询")
     @RequestMapping(value = "/amount/get/{goods}",method = RequestMethod.GET)

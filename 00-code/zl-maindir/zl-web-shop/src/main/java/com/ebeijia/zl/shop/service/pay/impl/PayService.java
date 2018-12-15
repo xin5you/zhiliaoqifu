@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 public class PayService implements IPayService {
 
     @Override
-    public int transferToCard(String token, DealInfo dealInfo) {
+    public int transferToCard(DealInfo dealInfo) {
         return 0;
     }
 
     @Override
-    public void payOrder(String token, PayInfo payInfo, String session) {
+    public void payOrder(PayInfo payInfo, String session) {
         //验证输入信息有效性
         //幂等性验证
         //写入redis乐观锁
