@@ -32,17 +32,11 @@ public class ExcelUploadController {
 		try {
 			String batchType = req.getParameter("batchType");
 			String path = null;
-			/*if (batchType.equals("openAccount")) {
-				path = RedisDictProperties.getInstance().getdictValueByCode("OMS_BATCH_OPEN_ACCOUNT_EXCEL_PATH");
+			if (batchType.equals("openAccount")) {
+				path = jedisClusterUtils.hget("TB_BASE_DICT_KV", "OMS_BATCH_OPEN_ACCOUNT_EXCEL_PATH");
 			}
 			if (batchType.equals("recharge")) {
-				path = RedisDictProperties.getInstance().getdictValueByCode("OMS_BATCH_RECHARGE_EXCEL_PATH");
-			}*/
-			if (batchType.equals("speOpenAccount")) {
-				path = jedisClusterUtils.hget("TB_BASE_DICT_KV", "OMS_SPE_BATCH_OPEN_ACCOUNT_EXCEL_PATH");
-			}
-			if (batchType.equals("speRecharge")) {
-				path = jedisClusterUtils.hget("TB_BASE_DICT_KV", "OMS_SPE_BATCH_RECHARGE_EXCEL_PATH");
+				path = jedisClusterUtils.hget("TB_BASE_DICT_KV", "OMS_BATCH_RECHARGE_EXCEL_PATH");
 			}
 			logger.info("模板下载地址------>>{}", path);
 			URL url = new URL(path);
@@ -62,10 +56,10 @@ public class ExcelUploadController {
 			// // 取得文件名。
 			String filename = file.getName();
 			String newFileName = filename.substring(0, filename.indexOf("."));
-			if (newFileName.equals("batchOpenAccount") || newFileName.equals("speBatchOpenAccount")) {
+			if (newFileName.equals("batchOpenAccount")) {
 				newFileName = "批量开户模板";
 			}
-			if (newFileName.equals("batchRecharge") || newFileName.equals("speBatchRecharge")) {
+			if (newFileName.equals("batchRecharge")) {
 				newFileName = "批量充值模板";
 			}
 			resp.setHeader("content-disposition",

@@ -27,8 +27,8 @@
         <typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeOrderUpload" alias="PhoneRechargeOrderUpload" />
         <typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeShop" alias="PhoneRechargeShop" />
         
-	 	<typeAlias type="com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrder" alias="SpeAccountBatchOrder" />
-        <typeAlias type="com.ebeijia.zl.web.oms.specialAccount.model.SpeAccountBatchOrderList" alias="SpeAccountBatchOrderList" />
+	 	<typeAlias type="com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder" alias="BatchOrder" />
+        <typeAlias type="com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList" alias="BatchOrderList" />
 	 	
 	 	<package name="com.ebeijia.zl.basics.billingtype.domain"/>
 	</typeAliases>

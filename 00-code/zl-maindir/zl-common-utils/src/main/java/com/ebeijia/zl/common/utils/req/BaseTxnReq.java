@@ -2,6 +2,7 @@ package com.ebeijia.zl.common.utils.req;
 
 import java.util.Set;
 
+
 /**
  * 
 * 
@@ -65,6 +66,18 @@ public class BaseTxnReq implements java.io.Serializable {
 	 * 用户所属渠道
 	 */
 	private String userChnl;
+	
+	
+    /**
+     * 交易描述
+     */
+    private String transDesc;
+    
+    
+    /**
+     * 交易数量
+     */
+    private int transNumber=1;
 
 
 	public String getTransId() {
@@ -144,5 +157,25 @@ public class BaseTxnReq implements java.io.Serializable {
 
 	public void setUserChnl(String userChnl) {
 		this.userChnl = userChnl;
+	}
+
+
+	public String getTransDesc() {
+		return transDesc;
+	}
+
+
+	public void setTransDesc(String transDesc) {
+		this.transDesc = transDesc;
+	}
+
+
+	public int getTransNumber() {
+		return transNumber;
+	}
+
+
+	public void setTransNumber(int transNumber) {
+		this.transNumber = transNumber;
 	}
 }

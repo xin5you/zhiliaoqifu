@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.account.dto.AccountInf;
+import com.ebeijia.zl.facade.account.dto.AccountLog;
+import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
-import com.ebeijia.zl.facade.account.vo.AccountInf;
-import com.ebeijia.zl.facade.account.vo.AccountLog;
-import com.ebeijia.zl.facade.account.vo.TransLog;
 import com.ebeijia.zl.service.account.mapper.AccountLogMapper;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
 
@@ -52,6 +52,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 		entity.setTxnAmt(transLog.getTransAmt());  //交易金額
 		entity.setTxnRealAmt(transLog.getTransAmt()); //賬戶處理金額
 		entity.setTransChnl(transLog.getTransChnl()); //交易渠道
+		entity.setAccType(transLog.getCardAttr());
 		entity.setTransId(transLog.getTransId());
 		entity.setTxnDate(accountInf.getLastTxnDate());
 		entity.setTxnTime(accountInf.getLastTxnTime());

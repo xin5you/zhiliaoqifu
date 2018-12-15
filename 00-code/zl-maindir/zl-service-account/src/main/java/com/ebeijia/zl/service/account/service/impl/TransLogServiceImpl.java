@@ -18,11 +18,12 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
+import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
-import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
-import com.ebeijia.zl.facade.account.vo.TransLog;
 import com.ebeijia.zl.service.account.mapper.TransLogMapper;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
@@ -92,12 +93,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	    	voList.stream().sorted((e1, e2) -> {
 				return Integer.compare(e1.getOrder(), e2.getOrder());
 			}).forEach(e -> sortList.add(e));
+		}else{
+			sortList.addAll(voList);
 		}
+		voList.clear();
 		
 		boolean f=	this.saveBatch(sortList); //批量保存交易流水
 
 		if(f){
-			return accountInfService.execute(voList);
+			return accountInfService.execute(sortList);
 		}
 		return f;
 	}
@@ -121,20 +125,22 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		/**
 			MB10("B10", "商户消费"),
 			MB20("B20", "商户充值"),
+			MB80("B80", "商户开户"),
 			MB40("B40", "商户转账"),
 			MB50("B50", "企业员工充值"),
-			MB80("B80", "商户开户"),
 			MB90("B90", "商户收款"), 
-			
+		
 			CW80("W80", "企业员工开户"),
 			CW81("W81", "密码重置"),
-			CW10("W10", "消费"),
-			CW71("W71", "快捷消费"),
+			CW10("W10", "商品消费"),
+			CW50("W50", "员工充值"),
+			CW71("W71", "微信支付"),
+			CW20("W20", "购买代金券"),
 			CW11("W11", "退款"),
 			CW74("W74", "退款（快捷）"),
-			
+			CW40("W40", "员工转账"),
 			CW90("W90", "权益转让"),
-			CW91("W91", "员工收款");
+			CW91("W91", "商户收款");
 		 */
 		
 		if (TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){
@@ -179,6 +185,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			transLog2.setPriBId(intfaceTransLog.getTfrInBId());
 			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 			transLog2.setTransId(TransCode.CW50.getCode());
+			transLog2.setUserType(UserType.TYPE100.getCode());
 			addToVoList(voList,transLog2,1);
 		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
 			//快捷支付 先充值到通卡账户，再从通卡账户扣除
@@ -239,6 +246,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	private void newTransLog(IntfaceTransLog intfaceTransLog,TransLog transLog){
 		
 		transLog.setItfPrimaryKey(intfaceTransLog.getItfPrimaryKey()); //接口层流水
+		transLog.setTransDesc(intfaceTransLog.getTransDesc());
+		transLog.setTransNumber(intfaceTransLog.getTransNumber());
 		transLog.setInsCode(intfaceTransLog.getInsCode());
 		transLog.setMchntCode(intfaceTransLog.getMchntCode());
 		transLog.setShopCode(intfaceTransLog.getShopCode());

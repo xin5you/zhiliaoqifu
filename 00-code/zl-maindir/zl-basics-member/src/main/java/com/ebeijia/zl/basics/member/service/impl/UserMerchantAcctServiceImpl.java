@@ -1,14 +1,15 @@
 package com.ebeijia.zl.basics.member.service.impl;
 
-import com.ebeijia.zl.basics.member.domain.UserMerchantAcct;
-import com.ebeijia.zl.basics.member.mapper.UserMerchantAcctMapper;
-import com.ebeijia.zl.basics.member.service.UserMerchantAcctService;
-import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ebeijia.zl.basics.member.domain.UserMerchantAcct;
+import com.ebeijia.zl.basics.member.mapper.UserMerchantAcctMapper;
+import com.ebeijia.zl.basics.member.service.UserMerchantAcctService;
+import com.ebeijia.zl.common.utils.enums.TransChnl;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 
 @Service
 public class UserMerchantAcctServiceImpl implements UserMerchantAcctService {
@@ -18,7 +19,7 @@ public class UserMerchantAcctServiceImpl implements UserMerchantAcctService {
 
 	
 	public List<UserMerchantAcct> getUserMerchantAcctByUser(UserMerchantAcct entity) {
-		entity.setChannelCode(Constants.ChannelCode.CHANNEL1.toString());
+		entity.setChannelCode(TransChnl.CHANNEL1.toString());
 		List<UserMerchantAcct> list = userMerchantAcctMapper.getUserMerchantAcctByUser(entity);
 		if (list != null && list.size() > 0) {
 			for (UserMerchantAcct acc : list) {

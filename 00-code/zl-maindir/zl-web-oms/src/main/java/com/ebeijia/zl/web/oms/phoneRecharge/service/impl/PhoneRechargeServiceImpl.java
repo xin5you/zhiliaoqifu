@@ -10,12 +10,12 @@ import org.springframework.ui.ModelMap;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.ChannelCode;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.phoneRechargeOrderType;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.phoneRechargeReqChnl;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.phoneRechargeSupplier;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.phoneRechargeTransStat;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.refundFalg;
+import com.ebeijia.zl.common.utils.enums.TransChnl;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.SignUtil;
@@ -105,7 +105,7 @@ public class PhoneRechargeServiceImpl implements PhoneRechargeService {
 			req.setOriOrderId(phoneRechargeOrder.getrId());
 			req.setRefundOrderId(phoneRechargeOrder.getrId());
 			req.setRefundAmount(phoneRechargeOrder.getTransAmt());
-			req.setChannel(ChannelCode.CHANNEL8.toString());// 40007001
+			req.setChannel(TransChnl.CHANNEL8.toString());// 40007001
 			req.setRefundFlag(refundFalg.refundFalg1.getCode());
 			req.setTimestamp(System.currentTimeMillis());
 			req.setSign(SignUtil.genSign(req, key));

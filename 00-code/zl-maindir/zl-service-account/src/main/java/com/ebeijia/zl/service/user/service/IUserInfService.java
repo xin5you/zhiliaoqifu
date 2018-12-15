@@ -89,4 +89,21 @@ public interface IUserInfService extends IService<UserInf> {
 	* 2018年12月5日     zhuqi           v1.0.0
 	 */
 	UserInf getUserInfByUserName(String userName);
+	
+	/**
+	 * 
+	* @Description: 手机号查找用户信息
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月14日 上午10:39:46 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月14日     zhuqi           v1.0.0
+	 */
+	UserInf getUserInfByMobilePhone(String mobilePhone);
 }

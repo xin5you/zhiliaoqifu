@@ -3,7 +3,7 @@ package com.ebeijia.zl.service.account.service;
 import java.math.BigDecimal;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
 
 
 /**

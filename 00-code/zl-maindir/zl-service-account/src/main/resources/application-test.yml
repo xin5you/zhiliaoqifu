@@ -1,6 +1,7 @@
 server:
-  port: 11201
-  contextPath: /
+  port: 10201
+  contextPath: /itf
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
@@ -16,7 +17,15 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
   dubbo:
-    appname: provider-test
-    registry: zookeeper://192.268.2.110:12811?backup=192.268.2.110:12812,192.268.2.110:12813
-    protocol: dubbo
-    port: 12880
+    application:
+      name: zl-service-account
+    protocol:
+      name: dubbo
+      port: 20880
+      accepts: 1000
+    provider:
+      id: provider_zl-service-account
+      timeout: 2000
+      delay: -1
+    registry:
+      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183

@@ -3,9 +3,11 @@ package com.ebeijia.zl.service.account.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.account.dto.AccountInf;
+import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
-import com.ebeijia.zl.facade.account.vo.AccountInf;
-import com.ebeijia.zl.facade.account.vo.TransLog;
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
+import com.ebeijia.zl.facade.account.vo.AccountVO;
 
 
 /**
@@ -71,5 +73,21 @@ public interface IAccountInfService extends IService<AccountInf> {
 	 */
 	boolean execute(List<TransLog> voList) throws AccountBizException;
 	
+	/**
+	 * 
+	* @Description: 账户列表查询
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月14日 下午2:19:31 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月14日     zhuqi           v1.0.0
+	 */
+	List<AccountVO> getAccountInfList(AccountQueryReqVo req);
 	
 }

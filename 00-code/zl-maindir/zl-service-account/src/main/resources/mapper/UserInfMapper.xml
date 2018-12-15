@@ -53,4 +53,26 @@
 			and c.data_stat='0'
 			and p.data_stat='0'
 	</select>
+	
+	
+	<select id="getUserInfByMobilePhone" parameterType="java.lang.String" resultType="userInf">
+		select
+			m.user_id,
+			m.user_name,
+			m.user_type,
+			m.product_code,
+			m.data_stat,
+			m.remarks,
+			m.create_user,
+			m.create_time,
+			m.lock_version
+		from
+			tb_user_inf m,
+			tb_person_inf p
+		where 
+			m.user_id=p.user_id
+			and p.mobile_phone_no=#{phoneNo}
+			and m.data_stat='0'
+			and p.data_stat='0'
+	</select>
 </mapper>

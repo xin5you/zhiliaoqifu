@@ -62,9 +62,12 @@ spring:
     pool:
       max-connections: 50
   dubbo:
-    appname: zl-web-oms
-    registry: zookeeper://127.0.0.1:2181
-    protocol: dubbo
+    application:
+      name: zl-web-oms
+    consumer:
+      check: false
+    registry:
+      address: zookeeper://127.0.0.1:2181
 myBatis:
   mapperLocations: classpath*:mapper/*.xml
   configLocations: classpath:conf/mybatis-config.xml

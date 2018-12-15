@@ -1,6 +1,6 @@
 server:
   port: 10201
-  contextPath: /
+  contextPath: /itf
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
@@ -28,5 +28,4 @@ spring:
       timeout: 2000
       delay: -1
     registry:
-      address: zookeeper://192.168.2.223:2181
-    
+      address: zookeeper://127.0.0.1:2181

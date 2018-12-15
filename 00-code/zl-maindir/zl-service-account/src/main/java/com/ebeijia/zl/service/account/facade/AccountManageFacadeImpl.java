@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
 import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
-import com.ebeijia.zl.facade.account.vo.IntfaceTransLog;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
@@ -87,6 +87,8 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 		}
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),
 				req.getUserChnl(),req.getUserChnlId(),null);
+		intfaceTransLog.setTransDesc("开户");
+		intfaceTransLog.setMchntCode(req.getCompanyId());
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		
 		

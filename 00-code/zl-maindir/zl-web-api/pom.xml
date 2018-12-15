@@ -28,30 +28,7 @@
 			<scope>provided</scope>
 		</dependency>
         
-         <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common-core</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-redis</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-activemq</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-		
-		<dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-facade-telrecharge</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-       
+
 		
 		<dependency>
 		    <groupId>org.aspectj</groupId>
@@ -100,7 +77,30 @@
 			<artifactId>pwdencrypt</artifactId>
 			<version>1.0</version>
 		</dependency>
-
+         <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-common-core</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-redis</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-activemq</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-facade-mcht</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+       
 
 		 <dependency>  
 	        <groupId>org.springframework.boot</groupId>  

@@ -68,20 +68,22 @@
     	<module>zl-base-core</module>
     	<module>zl-api-bm001</module>
     	
+    	
         <module>zl-basics-goods</module>
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
         <module>zl-basics-wechat</module>
         <module>zl-basics-billingtype</module>
+        <module>zl-diy-api</module>
          
         <module>zl-core-redis</module>
         <module>zl-core-activemq</module>
        	<module>zl-core-wechat</module>
        	
-        <module>zl-facade-telrecharge</module>
+        <module>zl-facade-mcht</module>
         <module>zl-facade-account</module>
         
-       	<module>zl-service-telrecharge</module>
+       	<module>zl-service-mcht</module>
         <module>zl-service-account</module>
 	    <module>zl-service-control</module>
       

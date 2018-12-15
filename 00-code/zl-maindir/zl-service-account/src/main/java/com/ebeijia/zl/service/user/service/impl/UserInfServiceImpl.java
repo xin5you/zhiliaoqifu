@@ -228,5 +228,25 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 		queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
 		return userInfMapper.selectOne(queryWrapper);
 	}
+	
+	
+	/**
+	 * 
+	* @Description: 手机号查找用户信息
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月14日 上午10:39:46 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月14日     zhuqi           v1.0.0
+	 */
+	public UserInf getUserInfByMobilePhone(String mobilePhone){
+		return userInfMapper.getUserInfByMobilePhone(mobilePhone);
+	}
 
 }

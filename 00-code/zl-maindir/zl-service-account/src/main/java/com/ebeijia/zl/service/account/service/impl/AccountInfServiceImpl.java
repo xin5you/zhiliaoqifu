@@ -1,6 +1,7 @@
 package com.ebeijia.zl.service.account.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +25,11 @@ import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.facade.account.dto.AccountInf;
+import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
-import com.ebeijia.zl.facade.account.vo.AccountInf;
-import com.ebeijia.zl.facade.account.vo.TransLog;
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
+import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.account.mapper.AccountInfMapper;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
@@ -164,8 +167,17 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			account.setBId(transLog.getPriBId()); //专项账户类型
 			account.setAccountStat("00");//00：正常 10：冻结 90：注销
 			account.setAccountType(transLog.getUserType());
-			account.setAccBal(new BigDecimal(0)); //开户时余额为0
-			return this.save(account);
+			account.setAccBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户时余额为0
+			
+			boolean flag= this.save(account);
+			if(flag){
+				flag=accountLogService.save(account, transLog);//保存賬戶信息
+			}
+			if(!flag){
+				throw AccountBizException.ACCOUNT_CREATE_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
+			}
+			
+			return flag;
 		}
 	}
 	
@@ -358,5 +370,41 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		entity.setUpdateTime(System.currentTimeMillis());
 		entity.setUpdateUser("99999999");
 		return super.updateById(entity);
+	}
+	
+	
+	/**
+	 * 
+	* @Description: 账户列表查询
+	*
+	* @param:描述1描述
+	*
+	* @version: v1.0.0
+	* @author: zhuqi
+	* @date: 2018年12月14日 下午2:19:31 
+	*
+	* Modification History:
+	* Date         Author          Version
+	*-------------------------------------*
+	* 2018年12月14日     zhuqi           v1.0.0
+	 */
+	public List<AccountVO> getAccountInfList(AccountQueryReqVo req){
+		
+		 List<AccountVO> list=new ArrayList<>();
+		 
+		 if(UserType.TYPE100.equals(req.getUserType())){
+			 
+		 }else if(UserType.TYPE200.equals(req.getUserType())){
+			 list=accountInfMapper.getAccountVOToCompanyList(req.getUserChnlId());
+		 }else if(UserType.TYPE300.equals(req.getUserType())){
+			 
+			 list=accountInfMapper.getAccountVOToProviderList(req.getUserChnlId());
+		 }else if(UserType.TYPE400.equals(req.getUserType())){
+			 
+			 list=accountInfMapper.getAccountVOToRetailList(req.getUserChnlId());
+		 }else {
+			 
+		 }
+		 return list;
 	}
 }
