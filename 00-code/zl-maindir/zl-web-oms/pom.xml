@@ -211,6 +211,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>zl-web-oms</finalName>
+		<finalName>oms</finalName>
 	</build>
 </project>

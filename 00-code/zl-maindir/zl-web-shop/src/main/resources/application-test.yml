@@ -1,20 +1,18 @@
+#debug: true
 server:
-  servlet:
-   port: 12201
-   contextPath: /ecom-front
-   session:
-     cookie:
-       name: JSESSIONID
-       path: /
-       domain: .tao-lue.com
+  port: 12201
+  contextPath: /web-shop
+  session:
+    cookie:
+      name: JSESSIONID
+      path: /
+      domain:
 spring:
   datasource:
-    jndi-name: JDBC
-    name: mySpringBoot
-    url: jdbc:oracle:thin:@192.168.1.101:1521:dfkdb
-    username: isecmdb
-    password: isecmdb
-    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     minActive: 1
     maxActive: 20
@@ -25,24 +23,24 @@ spring:
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
-  thymeleaf: 
+  thymeleaf:
     prefix: classpath:/views/
     #content-type: text/html
     #suffix: .html
     #mode: HTML5
     #encoding: UTF-8
     # set to false for hot refresh
-    #cache: false
+    cache: false
   session:
     store-type: redis
-  redis: 
+  redis:
     timeout: 3000
     cluster:
-       nodes: 192.168.1.101:7111,192.168.1.201:7112,192.168.1.202:7113
+       nodes: 192.168.2.110:7111,192.168.2.110:7112,192.168.2.110:7113,192.168.2.110:7114,192.168.2.110:7115,192.168.2.110:7116
        connection-timeout: 1000
        soTimeout: 3000
        max-attempts: 5
-       password: 
+       password:
        max-redirects: 2
     pool:
        max-total: 1024
@@ -59,7 +57,7 @@ spring:
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
   mq:
-    brokerURL: failover:(tcp://192.168.1.101:51511,tcp://192.168.1.201:51512,tcp://192.168.1.202:51513)?randomize=false
+    brokerURL: failover:(tcp://192.168.2.110:51511,tcp://192.168.2.110:51512,tcp://192.168.2.110:51513)?randomize=false
     username: admin
     password: admin
     pool:
@@ -67,23 +65,23 @@ spring:
 myBatis:
   mapperLocations: classpath*:mapper/*.xml
   configLocations: classpath:conf/mybatis-config.xml
-  #typeAliasesPackage: com.cn.thinx.ecom.front.test.domain
+  #typeAliasesPackage: com.cn.thinx.ecom_cms.test.domain
 logging:
   config: classpath:conf/logback-ecom.xml
-
+  
 #知了企服加解密key（商城主页和订单）
 HKB_AES_KEY: litj49jk4op589o4
+
+#电商商城入口链接
+ECOM_HOME: http://127.0.0.1:8989/ecom-front/homePage/listEshopHomePage
+#电商我的订单入口链接：
+ECOM_ORDER: http://127.0.0.1:8989/ecom-front/order/listOrderInf
 
 #海易通加解密key（商城主页和订单）
 HYT_AES_KEY: litj49jk4op589o4
 #商城入口链接（海镱通）
 HYT: http://www.yomale.com/mall/infomation?parameterHYT=6f4a4275636274496a6a56565532686c466c2b732b4831316c6170336d494533487a4f3639624f706b596b3761566b4d783931424f536f3876306363727a694b
-
-#电商商城入口链接
-ECOM_HOME: http://ecm.tao-lue.com/ecom-front/homePage/listEshopHomePage
-#电商我的订单入口链接：
-ECOM_ORDER: http://ecm.tao-lue.com/ecom-front/order/listOrderInf
-
+  
 #家乐宝加解密key（商城主页和订单）
 JLB_AES_KEY: 18dffhD3Mxwiobpo
 #商城入口链接（家乐宝）
@@ -170,9 +168,13 @@ yx:
         method: /callbackRefundResultWithExpress
 #网易严选相关配置-----end
 CASH_URL: http://cas.tao-lue.com/ecom-cash/trans/order/unifiedOrder
-REDIRECT_URL: http://ecm.tao-lue.com/ecom-front/goods/orderPay/redirectResult
-NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/goods/orderPay/backResult
+REDIRECT_URL: 
+NOTIFY_URL: http://192.168.2.110:8989/ecom-front/goods/orderPay/backResult
 ECOM_SING_KEY: YPEgSbuyRcoDV49yHzx4wS4ZeKHFVQA84Hv4IunjH10
 HKB_H5_URL: http://hkb.tao-lue.com
 BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/ecom/recharge/mobileRechargeBack
 OPEN_BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/hkb/recharge/mobileRechargeBack
+pagehelper:
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
