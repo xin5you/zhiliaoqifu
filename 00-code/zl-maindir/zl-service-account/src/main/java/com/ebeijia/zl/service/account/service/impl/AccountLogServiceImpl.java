@@ -1,5 +1,7 @@
 package com.ebeijia.zl.service.account.service.impl;
 
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
+import com.ebeijia.zl.facade.account.vo.AccountLogVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,6 +16,8 @@ import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.service.account.mapper.AccountLogMapper;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
+
+import java.util.List;
 
 /**
  *
@@ -66,5 +70,14 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 		entity.setUpdateUser("99999999");
 		entity.setLockVersion(0);
 		return super.save(entity);
+	}
+
+	/**
+	 * 账单查询
+	 * @param req
+	 * @return
+	 */
+	public List<AccountLogVo> getAccountLogVoList(AccountQueryReqVo req){
+		return null;
 	}
 }

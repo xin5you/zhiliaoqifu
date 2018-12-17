@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.facade.account.dto.AccountInf;
+import com.ebeijia.zl.facade.account.dto.AccountLog;
 import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
@@ -89,5 +90,4 @@ public interface IAccountInfService extends IService<AccountInf> {
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
 	List<AccountVO> getAccountInfList(AccountQueryReqVo req);
-	
 }

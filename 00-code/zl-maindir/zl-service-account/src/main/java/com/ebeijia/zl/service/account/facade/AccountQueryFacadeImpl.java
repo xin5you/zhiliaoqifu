@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.account.facade;
 
 import java.util.List;
 
+import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
+import com.ebeijia.zl.facade.account.vo.AccountLogVo;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,18 +49,46 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	private IAccountInfService accountInfService;
 
 	@Override
-	public List<AccountVO> getAccountInfList(AccountQueryReqVo req) throws Exception {
+	public List<AccountVO> getAccountInfList(AccountQueryReqVo req) throws AccountBizException {
 		return accountInfService.getAccountInfList(req);
 	}
 
 	@Override
-	public PageInfo<AccountVO> getAccountInfPage(int startNum, int pageSize, AccountQueryReqVo req) throws Exception {
+	public PageInfo<AccountVO> getAccountInfPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException {
 		PageHelper.startPage(startNum, pageSize);
 		List<AccountVO> list = getAccountInfList(req);
 		PageInfo<AccountVO> page = new PageInfo<AccountVO>(list);
 		return page;
 	}
 
+	/**
+	 *
+	 * @Description: 账户账单分页查询
+	 *
+	 * @param:描述1描述
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月14日 下午2:16:11
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月14日     zhuqi           v1.0.0
+	 */
+	@Override
+	public PageInfo<AccountLogVo> getAccountLogPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException{
+		return null;
+	}
 
-	
+	/**
+	 * 当前交易记录明细
+	 * @param req
+	 * @return
+	 * @throws AccountBizException
+	 */
+	@Override
+	public AccountLogVo getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException{
+		return null;
+	}
 }

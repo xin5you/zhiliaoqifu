@@ -5,6 +5,10 @@ import com.ebeijia.zl.facade.account.dto.AccountInf;
 import com.ebeijia.zl.facade.account.dto.AccountLog;
 import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
+import com.ebeijia.zl.facade.account.vo.AccountLogVo;
+
+import java.util.List;
 
 
 /**
@@ -17,4 +21,11 @@ import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 public interface IAccountLogService extends IService<AccountLog> {
 
 	boolean save(AccountInf accountInf,TransLog transLog)throws AccountBizException;
+
+	/**
+	 * 账单查询
+	 * @param req
+	 * @return
+	 */
+	List<AccountLogVo> getAccountLogVoList(AccountQueryReqVo req);
 }
