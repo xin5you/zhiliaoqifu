@@ -5,6 +5,7 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.TokenCheck;
+import com.ebeijia.zl.shop.vo.AddressInfo;
 import com.ebeijia.zl.shop.vo.EcomOrderDetailInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
@@ -41,7 +42,7 @@ public class OrderController {
     @TokenCheck
     @ApiOperation("订单支付确认")
     @RequestMapping(value = "/goods/apply/{orderid}",method = RequestMethod.POST)
-    public JsonResult<TbEcomOrderInf> orderNextState(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session){
+    public JsonResult<TbEcomOrderInf> orderNextState(@PathVariable("orderid") String orderId, AddressInfo address, PayInfo payInfo, @RequestParam("session") String session){
         return new JsonResult<>(new TbEcomOrderInf());
     }
 

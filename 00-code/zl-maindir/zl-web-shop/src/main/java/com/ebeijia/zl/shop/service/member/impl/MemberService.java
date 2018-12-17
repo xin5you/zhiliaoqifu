@@ -7,6 +7,7 @@ import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMemberAddress;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import com.ebeijia.zl.shop.service.member.IMemberService;
+import com.ebeijia.zl.shop.vo.AddressInfo;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class MemberService implements IMemberService {
     }
 
     @Override
-    public Integer newAddress(String address, Integer pos) {
+    public Integer newAddress(AddressInfo address, Integer pos) {
         return null;
     }
 

@@ -5,6 +5,7 @@ import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMemberAddress;
 import com.ebeijia.zl.shop.service.member.IMemberService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
+import com.ebeijia.zl.shop.vo.AddressInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import io.swagger.annotations.Api;
@@ -51,7 +52,7 @@ public class MemberController {
     @TokenCheck
     @ApiOperation("新增地址，目前修改也一样调用这个接口")
     @RequestMapping(value = "/address/create",method = RequestMethod.POST)
-    public JsonResult newAddress(String address, Integer pos){
+    public JsonResult newAddress(AddressInfo address, Integer pos){
         Integer state = memberService.newAddress(address,pos);
         JsonResult<Object> result = new JsonResult<>();
         result.setCode(state);
@@ -61,9 +62,9 @@ public class MemberController {
     @TokenCheck
     @ApiOperation("查询收货地址")
     @RequestMapping(value = "/address/list",method = RequestMethod.GET)
-    public JsonResult<TbEcomMemberAddress> listAddress(){
+    public JsonResult<AddressInfo> listAddress(){
         TbEcomMemberAddress address = memberService.listAddress();
-        JsonResult<TbEcomMemberAddress> result = new JsonResult(address);
+        JsonResult<AddressInfo> result = new JsonResult();
         return result;
     }
 
