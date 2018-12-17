@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Resource;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -75,7 +75,7 @@ public class DiyResourceController {
 		mv.addObject("diyResourceList", diyResourceList);
 		
 		String resourceId=StringUtil.nullToString(req.getParameter("resourceId"));
-		Resource parantRes=resourceService.getResourceById(resourceId);
+		Resource parantRes=resourceService.getById(resourceId);
 		mv.addObject("parantRes", parantRes);
 		
 		return mv;
@@ -104,7 +104,7 @@ public class DiyResourceController {
 				resultMap.put("msg", checkResource.getResourceKey()+"已经存在，请重新输入");
 				return resultMap;
 			}
-			resourceService.insertResource(diyResource);
+			resourceService.save(diyResource);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -126,7 +126,7 @@ public class DiyResourceController {
 	public ModelAndView intoEditDiyResource(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("diy/diyResource/editDiyResource");
 		String resourceId=req.getParameter("resourceId");
-		Resource diyResource=resourceService.getResourceById(resourceId);
+		Resource diyResource=resourceService.getById(resourceId);
 		
 		//查找上级菜单列表
 		Resource diyResource1=new Resource();
@@ -164,7 +164,7 @@ public class DiyResourceController {
 					return resultMap;
 				}
 			}
-			resourceService.updateResource(diyResource);
+			resourceService.updateById(diyResource);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -185,7 +185,7 @@ public class DiyResourceController {
 		Resource diyResource=null;
 		String resourceId=StringUtil.nullToString(req.getParameter("resourceId"));
 		if(!StringUtil.isNullOrEmpty(resourceId)){
-			diyResource=resourceService.getResourceById(resourceId);
+			diyResource=resourceService.getById(resourceId);
 		}else{
 			diyResource=new Resource();
 			diyResource.setId(UUID.randomUUID().toString());

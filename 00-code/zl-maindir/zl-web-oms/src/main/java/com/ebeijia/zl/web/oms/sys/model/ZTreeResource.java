@@ -7,6 +7,7 @@ public class ZTreeResource implements java.io.Serializable {
 	private String pId; // 父级
 	private boolean checked;
 	private String icon;
+
 	public String getId() {
 		return id;
 	}

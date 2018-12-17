@@ -1,110 +1,134 @@
 package com.ebeijia.zl.web.oms.sys.model;
 
-import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
-public class User extends BaseEntity implements java.io.Serializable {
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-	private static final long serialVersionUID = 6165960653428358106L;
-	
-	private String id;
-	private String loginName; // 登录名
-	private String password; // 密码
-	private String userName; // 姓名
-	private String phoneNo;
-	private String loginType; // 登录类型
-	private String isdefault; // 是否默认
-	private String organizationId;
-	
-	private String roleId;
-	private String roleName;
-	private String organizationName;
-	private String supplierId;
-	private String supplierName;
-	private String roleCheckflag; // 分销商角色标识 0:是 1：否
-	
-	public String getRoleCheckflag() {
-		return roleCheckflag;
-	}
-	public void setRoleCheckflag(String roleCheckflag) {
-		this.roleCheckflag = roleCheckflag;
-	}
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getLoginName() {
-		return loginName;
-	}
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getPhoneNo() {
-		return phoneNo;
-	}
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
-	}
-	public String getLoginType() {
-		return loginType;
-	}
-	public void setLoginType(String loginType) {
-		this.loginType = loginType;
-	}
-	public String getIsdefault() {
-		return isdefault;
-	}
-	public void setIsdefault(String isdefault) {
-		this.isdefault = isdefault;
-	}
-	public String getOrganizationId() {
-		return organizationId;
-	}
-	public void setOrganizationId(String organizationId) {
-		this.organizationId = organizationId;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-	public String getOrganizationName() {
-		return organizationName;
-	}
-	public void setOrganizationName(String organizationName) {
-		this.organizationName = organizationName;
-	}
-	public String getSupplierId() {
-		return supplierId;
-	}
-	public void setSupplierId(String supplierId) {
-		this.supplierId = supplierId;
-	}
-	public String getSupplierName() {
-		return supplierName;
-	}
-	public void setSupplierName(String supplierName) {
-		this.supplierName = supplierName;
-	}
-	
+import java.io.Serializable;
+
+/**
+ *
+ * 平台用户信息表
+ *
+ * @User myGen
+ * @Date 2018-12-17
+ */
+@Data
+@EqualsAndHashCode(callSuper=false)
+@TableName("tb_web_user")
+public class User extends Model<User> {
+ 
+    /**
+     * 用户id
+     */
+    @TableId(value = "id" ,type = IdType.UUID)
+    private String id;
+ 
+    /**
+     * 用户名
+     */
+    @TableField("user_name")
+    private String userName;
+ 
+    /**
+     * 密码
+     */
+    @TableField("password")
+    private String password;
+ 
+    /**
+     * 登录名
+     */
+    @TableField("login_name")
+    private String loginName;
+ 
+    /**
+     * 手机号码
+     */
+    @TableField("phone_no")
+    private String phoneNo;
+ 
+    /**
+     * 1.oms(运营管理平台)
+            2.cms(电商管理平台)
+            3.diy(商户自助服务平台)
+     */
+    @TableField("login_type")
+    private String loginType;
+ 
+    /**
+     * 默认标志
+     */
+    @TableField("isdefault")
+    private String isdefault;
+ 
+    /**
+     * 状态
+     */
+    @TableField("data_stat")
+    private String dataStat;
+ 
+    /**
+     * 备注
+     */
+    @TableField("remarks")
+    private String remarks;
+ 
+    /**
+     * 创建人
+     */
+    @TableField("create_user")
+    private String createUser;
+ 
+    /**
+     * 修改人
+     */
+    @TableField("update_user")
+    private String updateUser;
+ 
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private Long createTime;
+ 
+    /**
+     * 修改时间
+     */
+    @TableField("update_time")
+    private Long updateTime;
+ 
+    /**
+     * 乐观锁版本
+     */
+    @TableField("lock_version")
+    private Integer lockVersion;
+ 
+    /**
+     * 组织机构id
+     */
+    @TableField("organization_id")
+    private String organizationId;
+ 
+    /**
+     * 所属供应商
+     */
+    @TableField("supplier_id")
+    private String supplierId;
+
+    @TableField(exist = false)
+    private String roleCheckflag;
+
+    @TableField(exist = false)
+    private String roleName;
+
+    @Override
+    protected Serializable pkVal() { 
+        return this.id;
+    }
 }

@@ -1,57 +1,116 @@
 package com.ebeijia.zl.web.oms.sys.model;
 
-import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
-public class Organization extends BaseEntity implements java.io.Serializable {
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-	private String id;
-	private String name;
-	private String address;
-	private String code;
-	private String icon;
-	private String seq;
-	private String pid;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getCode() {
-		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-	}
-	public String getIcon() {
-		return icon;
-	}
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-	public String getSeq() {
-		return seq;
-	}
-	public void setSeq(String seq) {
-		this.seq = seq;
-	}
-	public String getPid() {
-		return pid;
-	}
-	public void setPid(String pid) {
-		this.pid = pid;
-	}
-	
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+
+/**
+ *
+ * oms组织机构表
+ *
+ * @User myGen
+ * @Date 2018-12-17
+ */
+@Data
+@EqualsAndHashCode(callSuper=false)
+@TableName("tb_web_organization")
+public class Organization extends Model<Organization> {
+ 
+    /**
+     * 主键
+     */
+    @TableId(value = "id" ,type = IdType.UUID)
+    private String id;
+ 
+    /**
+     * 地址
+     */
+    @TableField("address")
+    private String address;
+ 
+    /**
+     * 代码
+     */
+    @TableField("code")
+    private String code;
+ 
+    /**
+     * 标识
+     */
+    @TableField("icon")
+    private String icon;
+ 
+    /**
+     * 名称
+     */
+    @TableField("name")
+    private String name;
+ 
+    /**
+     * 序号
+     */
+    @TableField("seq")
+    private Integer seq;
+ 
+    /**
+     * 父id
+     */
+    @TableField("pid")
+    private String pid;
+ 
+    /**
+     * 状态
+     */
+    @TableField("data_stat")
+    private String dataStat;
+ 
+    /**
+     * 备注
+     */
+    @TableField("remarks")
+    private String remarks;
+ 
+    /**
+     * 创建人
+     */
+    @TableField("create_user")
+    private String createUser;
+ 
+    /**
+     * 修改人
+     */
+    @TableField("update_user")
+    private String updateUser;
+ 
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private Long createTime;
+ 
+    /**
+     * 修改时间
+     */
+    @TableField("update_time")
+    private Long updateTime;
+ 
+    /**
+     * 乐观锁版本
+     */
+    @TableField("lock_version")
+    private Integer lockVersion;
+
+
+    @Override
+    protected Serializable pkVal() { 
+        return this.id;
+    }
 }

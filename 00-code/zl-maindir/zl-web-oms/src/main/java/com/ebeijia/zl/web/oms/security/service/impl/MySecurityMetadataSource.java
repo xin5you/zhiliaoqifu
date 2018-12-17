@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.ebeijia.zl.web.oms.sys.model.Resource;
+import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -15,10 +17,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.common.utils.tools.StringUtils;
 
 @Service
 public class MySecurityMetadataSource implements FilterInvocationSecurityMetadataSource {

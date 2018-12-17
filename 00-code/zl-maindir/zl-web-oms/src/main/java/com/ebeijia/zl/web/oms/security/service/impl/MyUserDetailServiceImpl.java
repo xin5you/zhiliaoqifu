@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ebeijia.zl.web.oms.sys.model.Resource;
+import com.ebeijia.zl.web.oms.sys.service.ResourceService;
+import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,9 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 
 /**

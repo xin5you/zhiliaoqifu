@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Organization;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Organization;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.OrganizationService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
@@ -79,7 +79,7 @@ public class OrganizationController {
 			Organization organization=getOrganizationInfo(req);
 			organization.setCreateUser(u.getId());
 			organization.setUpdateUser(u.getId());
-			organizationService.saveOrganization(organization);
+			organizationService.save(organization);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -100,7 +100,7 @@ public class OrganizationController {
 	public ModelAndView intoEditOrganization(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("sys/organization/editOrganization");
 		String organId=req.getParameter("organId");
-		Organization organ=organizationService.getOrganizationById(organId);
+		Organization organ=organizationService.getById(organId);
 		
 		//查找上级菜单列表
 		Organization organ1=new Organization();
@@ -128,7 +128,7 @@ public class OrganizationController {
 		try {
 			Organization organ=getOrganizationInfo(req);
 			organ.setUpdateUser(u.getId());
-			organizationService.updateOrganization(organ);
+			organizationService.updateById(organ);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -152,7 +152,7 @@ public class OrganizationController {
 		Organization organ=null;
 		String organId=StringUtil.nullToString(req.getParameter("organId"));
 		if(!StringUtil.isNullOrEmpty(organId)){
-			organ=organizationService.getOrganizationById(organId);
+			organ=organizationService.getById(organId);
 		}else{
 			organ=new Organization();
 			organ.setId(UUID.randomUUID().toString());
@@ -163,7 +163,7 @@ public class OrganizationController {
 		organ.setCode(StringUtil.nullToString(req.getParameter("code")));
 		organ.setAddress(StringUtil.nullToString(req.getParameter("address")));
 		organ.setIcon(StringUtil.nullToString(req.getParameter("icon")));
-		organ.setSeq(StringUtil.nullToString(req.getParameter("seq")));
+		organ.setSeq(Integer.parseInt(req.getParameter("seq")));
 		organ.setPid(StringUtil.nullToString(req.getParameter("pid")));
 		organ.setUpdateTime(System.currentTimeMillis());
 		return organ;
@@ -183,7 +183,7 @@ public class OrganizationController {
 		resultMap.put("status", Boolean.TRUE);
 		String organId=req.getParameter("organId");
 		try {
-			organizationService.deleteOrganization(organId);
+			organizationService.removeById(organId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);

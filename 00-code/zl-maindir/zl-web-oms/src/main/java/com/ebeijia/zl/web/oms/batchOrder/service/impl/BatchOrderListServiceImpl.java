@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
 import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderListService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 

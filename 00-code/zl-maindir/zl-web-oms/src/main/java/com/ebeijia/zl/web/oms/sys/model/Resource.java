@@ -1,108 +1,137 @@
 package com.ebeijia.zl.web.oms.sys.model;
 
-import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
-public class Resource extends BaseEntity implements java.io.Serializable {
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
-	private String id;
-	private String description; // 描述
-	private String icon; // 图标
-	private String resourceName; // 名称
-	private String resourceType;// 资源类型, 0菜单 1功能
-	private String loginType;
-	private String url; // 菜单路径
-	private Integer seq; // 排序号
-	private String pid; // 父级
-	private String resourceKey;
-	
-	private boolean checked;
 
-	public String getId() {
-		return id;
-	}
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+import java.io.Serializable;
 
-	public String getDescription() {
-		return description;
-	}
+/**
+ *
+ * 平台资源表
+ *
+ * @User myGen
+ * @Date 2018-12-17
+ */
+@Data
+@EqualsAndHashCode(callSuper=false)
+@TableName("tb_web_resource")
+public class Resource extends Model<Resource> {
+ 
+    /**
+     * 资源id
+     */
+    @TableId(value = "id" ,type = IdType.UUID)
+    private String id;
+ 
+    /**
+     * 资源描述
+     */
+    @TableField("description")
+    private String description;
+ 
+    /**
+     * 标识
+     */
+    @TableField("icon")
+    private String icon;
+ 
+    /**
+     * 资源名称
+     */
+    @TableField("resource_name")
+    private String resourceName;
+ 
+    /**
+     * 0菜单 1功能
+     */
+    @TableField("resource_type")
+    private String resourceType;
+ 
+    /**
+     * 资源Key
+     */
+    @TableField("resource_key")
+    private String resourceKey;
+ 
+    /**
+     * 序号
+     */
+    @TableField("seq")
+    private Integer seq;
+ 
+    /**
+     * URL
+     */
+    @TableField("url")
+    private String url;
+ 
+    /**
+     * 父级编号
+     */
+    @TableField("pid")
+    private String pid;
+ 
+    /**
+     * 0启用 1停用
+     */
+    @TableField("data_stat")
+    private String dataStat;
+ 
+    /**
+     * 备注
+     */
+    @TableField("remarks")
+    private String remarks;
+ 
+    /**
+     * 创建人
+     */
+    @TableField("create_user")
+    private String createUser;
+ 
+    /**
+     * 修改人
+     */
+    @TableField("update_user")
+    private String updateUser;
+ 
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private Long createTime;
+ 
+    /**
+     * 修改时间
+     */
+    @TableField("update_time")
+    private Long updateTime;
+ 
+    /**
+     * 乐观锁版本
+     */
+    @TableField("lock_version")
+    private Integer lockVersion;
+ 
+    /**
+     * 1.oms(运营管理平台)
+            2.cms(电商管理平台)
+            3.diy(商户自助服务平台)
+     */
+    @TableField("login_type")
+    private String loginType;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public String getResourceName() {
-		return resourceName;
-	}
-
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
-
-	public String getResourceType() {
-		return resourceType;
-	}
-
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
-	}
-
-	public String getLoginType() {
-		return loginType;
-	}
-
-	public void setLoginType(String loginType) {
-		this.loginType = loginType;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public Integer getSeq() {
-		return seq;
-	}
-
-	public void setSeq(Integer seq) {
-		this.seq = seq;
-	}
-
-	public String getPid() {
-		return pid;
-	}
-
-	public void setPid(String pid) {
-		this.pid = pid;
-	}
-
-	public String getResourceKey() {
-		return resourceKey;
-	}
-
-	public void setResourceKey(String resourceKey) {
-		this.resourceKey = resourceKey;
-	}
-
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
-	
+    @Override
+    protected Serializable pkVal() { 
+        return this.id;
+    }
 }

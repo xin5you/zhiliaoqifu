@@ -24,7 +24,8 @@
 		<result column="role_id" property="roleId"/>
 		<result column="role_name" property="roleName"/>
 	</resultMap>
-	
+
+
 	<sql id="UserColumns">
 		m.id,
 		m.user_name,
@@ -43,71 +44,10 @@
 		m.organization_id,
 		m.supplier_id
 	</sql>
+
+
 	
-	<select id="getUserById" parameterType="java.lang.String" resultMap="UserResultMap">
-		select 
-	  		<include refid="UserColumns" />
-		from tb_web_user m where  m.id = #{id} and m.login_type='1'
-	</select>
-	
-	<insert id="insertUser" parameterType="User">
-		insert into tb_web_user (
-			id,
-			user_name,
-			password,
-			login_name,
-			phone_no,
-			login_type,
-			isdefault,
-			data_stat,
-			remarks,
-			create_user,
-			update_user,
-			create_time,
-			update_time,
-			lock_version,
-			organization_id,
-			supplier_id
-		) values ( 
-		 	#{id},
-		 	#{userName,jdbcType=VARCHAR},
-		 	#{password,jdbcType=VARCHAR},
-		 	#{loginName,jdbcType=VARCHAR},
-		 	#{phoneNo,jdbcType=VARCHAR},
-		 	#{loginType,jdbcType=VARCHAR},
-		 	'1',
-		 	'0',
-		 	#{remarks,jdbcType=VARCHAR},
-		 	#{createUser,jdbcType=VARCHAR},
-		 	#{updateUser,jdbcType=VARCHAR},
-		 	#{createTime,jdbcType=BIGINT},
-		 	#{updateTime,jdbcType=BIGINT},
-		 	0,
-		 	#{organizationId,jdbcType=VARCHAR},
-		 	#{supplierId,jdbcType=VARCHAR}
-		 ) 
-	</insert>
-	
-	<update id="updateUser" parameterType="User">
-		update tb_web_user
-		<set>
-			user_name=#{userName,jdbcType=VARCHAR},
-			login_name=#{loginName,jdbcType=VARCHAR},
-			login_type=#{loginType,jdbcType=VARCHAR},
-			isdefault=#{isdefault,jdbcType=VARCHAR},
-			data_stat=#{dataStat,jdbcType=VARCHAR},
-			update_user=#{updateUser,jdbcType=VARCHAR},
-			update_time=#{updateTime,jdbcType=BIGINT},
-			lock_version=lock_version + 1,
-		<if test="organizationId !=null and organizationId !='' ">
-			organization_id=#{organizationId,jdbcType=VARCHAR},
-		</if>
-		<if test="supplierId !=null and supplierId !='' ">
-			supplier_id=#{supplierId,jdbcType=VARCHAR}
-		</if>
-		</set>
-			where id = #{id}
-	</update>
+
 
 	<delete id="deleteUser" parameterType="java.lang.String" >
 		 delete tb_web_user m where  m.id = #{id}

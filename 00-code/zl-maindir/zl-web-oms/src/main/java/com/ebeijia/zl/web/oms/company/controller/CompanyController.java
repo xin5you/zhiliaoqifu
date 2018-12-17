@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.web.oms.company.service.CompanyService;
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.github.pagehelper.PageInfo;
 
 @Controller

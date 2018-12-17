@@ -43,11 +43,7 @@
 		 lock_version	
 	</sql>
 	
-	<select id="getResourceById" parameterType="String" resultMap="ResourceltMap">
-		select
-			<include refid="ResourceColumns" />
-		from tb_web_resource where id = #{resourceId}
-	</select>
+
 	
 	 <select id="getResourceByKey" parameterType="String" resultMap="ResourceltMap">
 		select
@@ -57,64 +53,8 @@
 		and login_type = #{loginType}
 	</select>
 	
-	<insert id="insertResource" parameterType="Resource">
-		insert into tb_web_resource(
-			 id,
-			 description, 
-			 icon, 
-			 resource_name, 
-			 resource_type, 
-			 login_type,
-			 resource_key,
-			 seq, 
-			 url,
-			 pid,
-		 	 data_stat,
-		 	 remarks,
-		 	 create_user,
-			 update_user,
-			 create_time,
-			 update_time,
-			 lock_version	
-		  ) values (
-		  	#{id},
-		  	#{description,jdbcType=VARCHAR},
-		  	#{icon,jdbcType=VARCHAR},
-		  	#{resourceName,jdbcType=VARCHAR},
-		  	#{resourceType,jdbcType=VARCHAR},
-		  	#{loginType,jdbcType=VARCHAR},
-		  	#{resourceKey,jdbcType=VARCHAR},
-		  	#{seq,jdbcType=VARCHAR},
-		  	#{url,jdbcType=VARCHAR},
-		  	#{pid,jdbcType=VARCHAR},
-		  	'0',
-		 	#{remarks,jdbcType=VARCHAR},
-		 	#{createUser,jdbcType=VARCHAR},
-		 	#{updateUser,jdbcType=VARCHAR},
-		 	#{createTime,jdbcType=BIGINT},
-		 	#{updateTime,jdbcType=BIGINT},
-		 	'0'
-		  )
-	</insert>
-	
-	 <update id="updateResource" parameterType="Resource">
-	 update tb_web_resource
-		<set>
-			description=#{description,jdbcType=VARCHAR},
-			icon=#{icon,jdbcType=VARCHAR},
-			resource_name=#{resourceName,jdbcType=VARCHAR},
-			resource_type=#{resourceType,jdbcType=VARCHAR},
-			login_type=#{loginType,jdbcType=VARCHAR},
-			resource_key=#{resourceKey,jdbcType=VARCHAR},
-			seq=#{seq,jdbcType=VARCHAR},
-			url=#{url,jdbcType=VARCHAR},
-			pid=#{pid,jdbcType=VARCHAR},
-			update_user=#{updateUser,jdbcType=VARCHAR},
-			update_time=#{updateTime,jdbcType=BIGINT},
-			lock_version=LOCK_VERSION + 1
-		</set>
-			where id = #{id}
-	 </update>
+
+
 	 
 	<delete id="deleteResource" parameterType="java.lang.String" >
 		 delete from tb_web_resource where id = #{id}

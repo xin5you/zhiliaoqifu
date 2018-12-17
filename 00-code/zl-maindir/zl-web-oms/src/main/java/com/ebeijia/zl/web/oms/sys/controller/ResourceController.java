@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Resource;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -64,7 +64,7 @@ public class ResourceController {
 		mv.addObject("resourceList", resourceList);
 		
 		String resourceId=StringUtil.nullToString(req.getParameter("resourceId"));
-		Resource parantRes=resourceService.getResourceById(resourceId);
+		Resource parantRes=resourceService.getById(resourceId);
 		mv.addObject("parantRes", parantRes);
 		
 		return mv;
@@ -90,7 +90,7 @@ public class ResourceController {
 				resultMap.put("msg", checkResource.getResourceKey()+"已经存在，请重新输入");
 				return resultMap;
 			}
-			resourceService.insertResource(resource);
+			resourceService.save(resource);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -111,7 +111,7 @@ public class ResourceController {
 	public ModelAndView intoEditResource(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("sys/resource/editResource");
 		String resourceId=req.getParameter("resourceId");
-		Resource resource=resourceService.getResourceById(resourceId);
+		Resource resource=resourceService.getById(resourceId);
 		
 		//查找上级菜单列表
 		Resource resource1=new Resource();
@@ -146,7 +146,7 @@ public class ResourceController {
 					return resultMap;
 				}
 			}
-			resourceService.updateResource(resource);
+			resourceService.updateById(resource);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -172,7 +172,7 @@ public class ResourceController {
 		HttpSession session = req.getSession();
 		User u = (User)session.getAttribute(Constants.SESSION_USER);
 		if(!StringUtil.isNullOrEmpty(resourceId)){
-			resource=resourceService.getResourceById(resourceId);
+			resource=resourceService.getById(resourceId);
 		}else{
 			resource=new Resource();
 			resource.setId(UUID.randomUUID().toString());

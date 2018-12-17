@@ -9,6 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Organization;
+import com.ebeijia.zl.web.oms.sys.model.Role;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.OrganizationService;
+import com.ebeijia.zl.web.oms.sys.service.RoleService;
+import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Organization;
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.OrganizationService;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
@@ -139,7 +139,7 @@ public class UserController {
 		try {
 			HttpSession session=req.getSession();
 			User user=(User)session.getAttribute(Constants.SESSION_USER);
-			User currUser=userService.getUserById(user.getId().toString());
+			User currUser=userService.getById(user.getId().toString());
 			if(currUser !=null){
 				if(!currUser.getPassword().equals(oldPasswrod)){
 					resultMap.put("status", Boolean.FALSE);
@@ -147,7 +147,7 @@ public class UserController {
 					return resultMap;
 				}
 				currUser.setPassword(newPasswordPage);
-				userService.updateUser(currUser);
+				userService.updateById(currUser);
 			}
 
 		} catch (Exception e) {
@@ -171,7 +171,7 @@ public class UserController {
 	public ModelAndView intoEditUser(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("sys/user/editUser");
 		String userId=req.getParameter("userId");
-		User user=userService.getUserById(userId);
+		User user=userService.getById(userId);
 		
 		List<Organization> organizationList=organizationService.getOrganizationList(new Organization());
 		Role role = new Role();
@@ -239,7 +239,7 @@ public class UserController {
 		HttpSession session = req.getSession();
 		User u = (User)session.getAttribute(Constants.SESSION_USER);
 		if(!StringUtil.isNullOrEmpty(userId)){
-			user = userService.getUserById(userId);
+			user = userService.getById(userId);
 		}else{
 			user = new User();
 			user.setId(UUID.randomUUID().toString());//后面用uuid设置userId值
@@ -274,7 +274,7 @@ public class UserController {
 		resultMap.put("status", Boolean.TRUE);
 		String userId=req.getParameter("userId");
 		try {
-			userService.deleteUser(userId);
+			userService.removeById(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);

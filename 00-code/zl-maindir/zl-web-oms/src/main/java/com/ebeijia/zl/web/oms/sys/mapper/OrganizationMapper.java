@@ -1,22 +1,20 @@
 package com.ebeijia.zl.web.oms.sys.mapper;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ebeijia.zl.web.oms.sys.model.Organization;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.ebeijia.zl.web.oms.sys.model.Organization;
+import java.util.List;
 
+/**
+ *
+ * oms组织机构表 Mapper 接口
+ *
+ * @User myGen
+ * @Date 2018-12-17
+ */
 @Mapper
-public interface OrganizationMapper{
-	
-	 int saveOrganization(Organization entity);
-	 
-	 int updateOrganization(Organization entity);
-	 
-	 int deleteOrganization(String organId);
-	 
-	 Organization getOrganizationById(String organId);
-	 
-	 List<Organization> getOrganizationList(Organization entity);
-	
+public interface OrganizationMapper extends BaseMapper<Organization> {
+
+    List<Organization> getOrganizationList(Organization entity);
 }

@@ -21,7 +21,7 @@
 	<sql id="roleColumns">
 		 id,
 		 role_name,
-		 description, 
+		 description,
 		 login_type,
 		 seq,
 		 data_stat,
@@ -32,43 +32,8 @@
 		 update_time,
 		 lock_version
 	</sql>
-	
-	<select id="getRoleById" parameterType="java.lang.String" resultMap="RoleResultMap">
-		select
-		<include refid="roleColumns" />
-		from tb_web_role where id = #{Id}
-	</select>
-	
-	
-	<insert id="insertRole" parameterType="Role">
-		insert into tb_web_role(
-			id,
-			role_name,
-			description,
-			login_type,
-			seq,
-		    data_stat,
-		    remarks,
-		    create_user,
-		    update_user,
-		    create_time,
-		    update_time,
-		    lock_version
-		) values (
-			#{id},
-			#{roleName,jdbcType=VARCHAR},
-			#{description,jdbcType=VARCHAR},
-			#{loginType,jdbcType=VARCHAR},
-			#{seq,jdbcType=VARCHAR},
-		 	'0',
-		 	#{remarks,jdbcType=VARCHAR},
-		 	#{createUser,jdbcType=VARCHAR},
-		 	#{updateUser,jdbcType=VARCHAR},
-		 	#{createTime,jdbcType=BIGINT},
-		 	#{updateTime,jdbcType=BIGINT},
-		 	'0'
-		)
-	</insert>
+
+
 	
 	<select id="getRoleList" parameterType="Role" resultMap="RoleResultMap">
 		select
@@ -81,20 +46,7 @@
 		delete from tb_web_role where id=#{id}
 	</delete>
 	
-	<update id="updateRole" parameterType="Role">
-		update tb_web_role
-		<set>
-			role_name = #{roleName,jdbcType=VARCHAR},
-			description = #{description,jdbcType=VARCHAR},
-			login_type = #{loginType,jdbcType=VARCHAR},
-			seq = #{seq,jdbcType=VARCHAR},
-			update_user=#{updateUser,jdbcType=VARCHAR},
-			update_time=#{updateTime,jdbcType=BIGINT},
-			lock_version=lock_version + 1
-		</set>
-		where id = #{id}
-	</update>
-	
+
 	<select id="getUserRoleByUserId" parameterType="java.lang.String" resultMap="RoleResultMap">
 		select
 		<include refid="roleColumns" />

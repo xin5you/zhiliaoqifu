@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Role;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.RoleService;
+import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
@@ -148,7 +148,7 @@ public class DiyUserController{
 	public ModelAndView intoEditDiyUser(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("diy/diyUser/editDiyUser");
 		String userId = req.getParameter("userId");
-		User diyUser = userService.getUserById(userId);
+		User diyUser = userService.getById(userId);
 		Role role = new Role();
 		role.setLoginType(LoginType.LoginType3.getCode());
 		// 获取角色列表
@@ -217,7 +217,7 @@ public class DiyUserController{
 		resultMap.put("status", Boolean.TRUE);
 		String userId = req.getParameter("userId");
 		try {
-			userService.deleteUser(userId);
+			userService.removeById(userId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -235,7 +235,7 @@ public class DiyUserController{
 		User diyUser = null;
 		String userId = StringUtil.nullToString(req.getParameter("userId"));
 		if (!StringUtil.isNullOrEmpty(userId)) {
-			diyUser = userService.getUserById(userId);
+			diyUser = userService.getById(userId);
 		} else {
 			diyUser = new User();
 			diyUser.setId(UUID.randomUUID().toString());

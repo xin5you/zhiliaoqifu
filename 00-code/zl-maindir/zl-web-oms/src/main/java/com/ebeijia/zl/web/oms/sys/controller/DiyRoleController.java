@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Resource;
+import com.ebeijia.zl.web.oms.sys.model.Role;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.ResourceService;
+import com.ebeijia.zl.web.oms.sys.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.ebeijia.zl.web.oms.sys.model.ZTreeResource;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -111,7 +111,7 @@ public class DiyRoleController {
 			role.setUpdateUser(user.getId());
 			role.setCreateTime(System.currentTimeMillis());
 			role.setUpdateTime(System.currentTimeMillis());
-			roleService.insertRole(role);
+			roleService.save(role);
 			resultMap.put("status", Boolean.TRUE);
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -132,7 +132,7 @@ public class DiyRoleController {
 	public ModelAndView intoEditDiyRole(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("diy/diyRole/editDiyRole");
 		String id=req.getParameter("id");
-		Role diyRole=roleService.getRoleById(id);
+		Role diyRole=roleService.getById(id);
 		mv.addObject("diyRole", diyRole);
 		return mv;
 	}
@@ -154,7 +154,7 @@ public class DiyRoleController {
 			User user=(User)session.getAttribute(Constants.SESSION_USER);
 			String id = StringUtil.nullToString(req.getParameter("id"));
 			if(!StringUtil.isNullOrEmpty(id)){
-				diyRole = roleService.getRoleById(id);
+				diyRole = roleService.getById(id);
 			}else{
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg","添加失败，请稍微再试");
@@ -167,7 +167,7 @@ public class DiyRoleController {
 			diyRole.setLoginType(LoginType.LoginType3.getCode());
 			diyRole.setUpdateUser(user.getId().toString());
 			diyRole.setUpdateTime(System.currentTimeMillis());
-			roleService.updateRole(diyRole);
+			roleService.updateById(diyRole);
 			resultMap.put("status", Boolean.TRUE);
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -191,7 +191,7 @@ public class DiyRoleController {
 		resultMap.put("status", Boolean.TRUE);
 		String id=StringUtil.nullToString(req.getParameter("id"));
 		try {
-			roleService.deleteRoleById(id);
+			roleService.removeById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);

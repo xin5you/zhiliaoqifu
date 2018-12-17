@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.sys.model.Resource;
+import com.ebeijia.zl.web.oms.sys.model.Role;
+import com.ebeijia.zl.web.oms.sys.model.User;
+import com.ebeijia.zl.web.oms.sys.service.ResourceService;
+import com.ebeijia.zl.web.oms.sys.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.ebeijia.zl.web.oms.sys.model.ZTreeResource;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -171,7 +171,7 @@ public class RoleController {
 			role.setUpdateUser(u.getId());
 			role.setCreateTime(System.currentTimeMillis());
 			role.setUpdateTime(System.currentTimeMillis());
-			roleService.insertRole(role);
+			roleService.save(role);
 			resultMap.put("status", Boolean.TRUE);
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -186,7 +186,7 @@ public class RoleController {
 	public ModelAndView intoEditRole(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/role/editRole");
 		String roleId=req.getParameter("roleId");
-		Role role=roleService.getRoleById(roleId);
+		Role role=roleService.getById(roleId);
 		mv.addObject("role", role);
 		return mv;
 	}
@@ -207,7 +207,7 @@ public class RoleController {
 		String seq=req.getParameter("seq");
 		String description=req.getParameter("description");
 		try{
-			Role role=roleService.getRoleById(roleId);
+			Role role=roleService.getById(roleId);
 			role.setRoleName(roleName);
 			role.setDescription(description);
 			role.setSeq(Integer.parseInt(seq));
@@ -216,7 +216,7 @@ public class RoleController {
 			User u = (User)session.getAttribute(Constants.SESSION_USER);
 			role.setUpdateUser(u.getId());
 			role.setUpdateTime(System.currentTimeMillis());
-			roleService.updateRole(role);
+			roleService.updateById(role);
 			resultMap.put("status", Boolean.TRUE);
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -241,7 +241,7 @@ public class RoleController {
 		resultMap.put("status", Boolean.TRUE);
 		String roleId=req.getParameter("roleId");
 		try {
-			roleService.deleteRoleById(roleId);
+			roleService.removeById(roleId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
