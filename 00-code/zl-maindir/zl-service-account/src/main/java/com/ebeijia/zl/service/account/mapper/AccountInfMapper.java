@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.facade.account.dto.AccountInf;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  *
@@ -23,8 +24,9 @@ public interface AccountInfMapper extends BaseMapper<AccountInf> {
 	 * 
 	* @Description: 获取用户的账户列表
 	*
-	* @param:描述1描述
-	*
+	* @param: userChnlId 外部渠道用户主键
+	* @param: userChnl 外部渠道定义
+	* @param: userType 用户类型
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年12月14日 下午2:24:58 
@@ -34,14 +36,14 @@ public interface AccountInfMapper extends BaseMapper<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-	List<AccountVO> getAccountVOToUserList(String usreId);
+	List<AccountVO> getAccountVOToUserList( @Param("userChnlId")String userChnlId,@Param("userChnl")String userChnl,@Param("userType")String userType);
 	
 	/**
 	 * 
 	* @Description: 获取企业的账户列表
 	*
-	* @param:描述1描述
-	*
+	* @param: userChnlId 企业Id
+	* @param: userType 用户类型
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年12月14日 下午2:25:22 
@@ -51,14 +53,14 @@ public interface AccountInfMapper extends BaseMapper<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-	List<AccountVO> getAccountVOToCompanyList(String companyId);
+	List<AccountVO> getAccountVOToCompanyList(@Param("userChnlId")String userChnlId,@Param("userType")String userType);
 	
 	/**
 	 * 
 	* @Description: 获取供应商的账户列表
 	*
-	* @param:描述1描述
-	*
+	* @param: userChnlId 供应商Id
+	* @param: userType 用户类型
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年12月14日 下午2:25:46 
@@ -68,14 +70,14 @@ public interface AccountInfMapper extends BaseMapper<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-	List<AccountVO> getAccountVOToProviderList(String providerId);
+	List<AccountVO> getAccountVOToProviderList(@Param("userChnlId")String userChnlId,@Param("userType")String userType);
 	
 	/**
 	 * 
 	* @Description: 获取分销商的账户列表
 	*
-	* @param:描述1描述
-	*
+	* @param: userChnlId 分销商Id
+	* @param: userType 用户类型
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年12月14日 下午2:26:31 
@@ -85,6 +87,6 @@ public interface AccountInfMapper extends BaseMapper<AccountInf> {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-	List<AccountVO> getAccountVOToRetailList(String channelId);
+	List<AccountVO> getAccountVOToRetailList(@Param("userChnlId")String userChnlId,@Param("userType")String userType);
 
 }

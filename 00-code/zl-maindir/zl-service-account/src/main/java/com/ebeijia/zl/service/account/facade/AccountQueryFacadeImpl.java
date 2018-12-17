@@ -2,6 +2,7 @@ package com.ebeijia.zl.service.account.facade;
 
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +48,15 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 
 	@Override
 	public List<AccountVO> getAccountInfList(AccountQueryReqVo req) throws Exception {
-		
-		return null;
+		return accountInfService.getAccountInfList(req);
 	}
 
 	@Override
 	public PageInfo<AccountVO> getAccountInfPage(int startNum, int pageSize, AccountQueryReqVo req) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		PageHelper.startPage(startNum, pageSize);
+		List<AccountVO> list = getAccountInfList(req);
+		PageInfo<AccountVO> page = new PageInfo<AccountVO>(list);
+		return page;
 	}
 
 
