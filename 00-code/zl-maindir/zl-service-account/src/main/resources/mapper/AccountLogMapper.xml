@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.service.account.mapper.AccountLogMapper">
 
+
+    <select id="getAccountLogVoList" parameterType="java.lang.String" resultType="AccountLogVO">
+          select
+		    al.txn_primary_key,
+			al.txn_date,
+			al.txn_time,
+			al.acc_type,
+			al.txn_amt,
+			al.acc_total_bal,
+			tl.trans_desc,
+		    tl.trans_number,
+			tl.trans_id,
+			tl.pri_b_id,
+			tl.mchnt_code
+		from
+			        tb_account_log al
+		 LEFT JOIN tb_account_inf ai on al.account_no=ai.account_no
+		 LEFT JOIN tb_trans_log tl on al.txn_primary_key=tl.txn_primary_key
+		 LEFT JOIN tb_user_inf u on  u.user_id=ai.user_id
+		 LEFT JOIN tb_channel_user_inf ci on ci.user_id=u.user_id
+	</select>
 </mapper>

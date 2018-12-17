@@ -1,7 +1,9 @@
 package com.ebeijia.zl.facade.account.req;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
- * 
 * 
 * @Description: 账户信息查询列表
 *
@@ -14,7 +16,9 @@ package com.ebeijia.zl.facade.account.req;
 *-------------------------------------*
 * 2018年12月14日     zhuqi           v1.0.0
  */
-public class AccountQueryReqVo implements java.io.Serializable {
+@Data
+@EqualsAndHashCode(callSuper=false)
+public class AccountQueryReqVo{
 
 	private static final long serialVersionUID = -5097911751512172022L;
 
@@ -36,44 +40,22 @@ public class AccountQueryReqVo implements java.io.Serializable {
 	 * 用户所属渠道
 	 */
 	private String userChnl;
-	
+
+
+	/** 账单查询业务字段 begin*/
+
 	/**
 	 * 专项账户Id
 	 */
 	private String bId;
-	
-	
 
-	public String getUserType() {
-		return userType;
-	}
+	/**
+	 * 开始时间 时间戳
+	 */
+	private Long sDate;
 
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
-
-	public String getUserChnlId() {
-		return userChnlId;
-	}
-
-	public void setUserChnlId(String userChnlId) {
-		this.userChnlId = userChnlId;
-	}
-
-	public String getUserChnl() {
-		return userChnl;
-	}
-
-	public void setUserChnl(String userChnl) {
-		this.userChnl = userChnl;
-	}
-
-	public String getbId() {
-		return bId;
-	}
-
-	public void setbId(String bId) {
-		this.bId = bId;
-	}
-	
+	/**
+	 * 结束时间 时间戳
+	 */
+	private Long eDate;
 }

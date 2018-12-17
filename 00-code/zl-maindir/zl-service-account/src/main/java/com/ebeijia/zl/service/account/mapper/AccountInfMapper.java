@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.account.mapper;
 
 import java.util.List;
 
+import com.ebeijia.zl.facade.account.dto.AccountLog;
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
