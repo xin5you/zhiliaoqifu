@@ -51,7 +51,8 @@ public class HttpWebUtil{
 	public  String getCustomerDomainUrl(){
 		return redisDictProperties.getdictValueByCode("CUSTOMER_DOMAIN_URL");
 	}
-	
+
+
 	/**
 	 * websocket 连接域名解析
 	 */

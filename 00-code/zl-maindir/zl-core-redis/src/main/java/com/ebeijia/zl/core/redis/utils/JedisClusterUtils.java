@@ -97,7 +97,6 @@ public class JedisClusterUtils {
 		return result;
 	}
 
-
 	/**
 	 * 删除缓存
 	 * @param key 键

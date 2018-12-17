@@ -12,7 +12,6 @@ import org.apache.commons.net.ftp.FTPReply;
 import com.ebeijia.zl.FtpProps;
 
 public class FTPUtil {
-	
 	/**
 	 * ftp 实例化客户端
 	 * 
