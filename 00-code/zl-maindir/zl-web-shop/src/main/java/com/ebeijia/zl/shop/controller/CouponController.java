@@ -4,6 +4,7 @@ import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
 import com.ebeijia.zl.shop.service.coupon.ICouponService;
 import com.ebeijia.zl.shop.vo.JsonResult;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,9 +24,10 @@ public class CouponController {
 
     @ApiOperation("按类型的卡券列表")
     @RequestMapping(value = "/list/cat{catid}",method = RequestMethod.GET)
-    public JsonResult<List<TbEcomGoods>> listGoods(@PathVariable Integer catid, String orderby, Integer start, Integer limit){
+    public JsonResult<PageInfo<TbEcomGoods>> listGoods(@PathVariable Integer catid, String orderby, Integer start, Integer limit){
         List<TbEcomGoods> list = couponService.listGoods(catid,orderby,start,limit);
-        return new JsonResult<>(list);
+        PageInfo<TbEcomGoods> pageInfo = new PageInfo(list);
+        return new JsonResult<>(pageInfo);
 
     }
 

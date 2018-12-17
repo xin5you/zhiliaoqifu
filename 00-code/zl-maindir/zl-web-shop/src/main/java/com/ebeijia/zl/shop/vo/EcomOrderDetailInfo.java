@@ -2,11 +2,14 @@ package com.ebeijia.zl.shop.vo;
 
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderProductItem;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderShip;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
 
+
+@ApiModel("订单详情信息")
 @Data
 public class EcomOrderDetailInfo {
 
