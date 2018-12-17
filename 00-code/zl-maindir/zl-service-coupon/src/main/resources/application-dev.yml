@@ -1,0 +1,50 @@
+server:
+  port: 8601
+  contextPath: /
+  session:
+    cookie:
+      name: JSESSIONID
+      path: /
+      domain: .i-zhiliao.com
+#logging:
+#  config: classpath:conf/logback.xml
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.2.110:3306/zldb_test
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    
+  mq:
+    brokerURL: failover:(tcp://192.168.2.110:51511,tcp://192.168.2.110:51512,tcp://192.168.2.110:51513)?randomize=false
+    username: admin
+    password: admin
+    pool:
+      max-connections: 50
+  redis: 
+    timeout: 3000
+    cluster:
+       nodes: 192.168.2.110:7111,192.168.2.110:7112,192.168.2.110:7113,192.168.2.110:7114,192.168.2.110:7115,192.168.2.110:7116
+       connection-timeout: 1000
+       soTimeout: 3000
+       max-attempts: 5
+       password: 
+       max-redirects: 2
+    pool:
+       max-total: 1024
+       max-active: 8
+       max-idle: 8
+       max-wait: -1
+       min-idle: 0
+       block-when-exhausted: true
+       max-wait-millis: 3000
+       test-on-borrow: false
+       test-on-return: false
+       test-while-idle: true
+       minEvictableIdleTimeMillis: 60000
+       timeBetweenEvictionRunsMillis: 60000
+       numTestsPerEvictionRun: 1      
+  session:
+     store-type: redis
