@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * 用于包装账户认证中心返回的令牌信息
  */
@@ -12,7 +14,9 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class Token {
+public class Token implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String token;
 //    private String userId;

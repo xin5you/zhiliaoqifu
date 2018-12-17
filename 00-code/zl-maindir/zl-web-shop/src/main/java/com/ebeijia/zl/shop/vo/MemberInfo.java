@@ -3,17 +3,19 @@ package com.ebeijia.zl.shop.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
- *
  * 用户个人信息
  *
  * @User zhuqi
  * @Date 2018-11-30
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
-public class MemberInfo{
+@EqualsAndHashCode(callSuper = false)
+public class MemberInfo implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 36
      */

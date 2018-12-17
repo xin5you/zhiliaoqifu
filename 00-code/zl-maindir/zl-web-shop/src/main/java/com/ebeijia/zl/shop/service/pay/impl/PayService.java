@@ -1,16 +1,19 @@
 package com.ebeijia.zl.shop.service.pay.impl;
 
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PayService implements IPayService {
 
     @Override
-    public int transferToCard(DealInfo dealInfo) {
-        return 0;
+    public int transferToCard(DealInfo dealInfo, Double session) {
+        return (int) (Math.random()*10000);
     }
 
     @Override
@@ -25,7 +28,7 @@ public class PayService implements IPayService {
     }
 
     @Override
-    public void listDeals(String type, Long begin, Long end) {
-
+    public List<TbEcomPayOrderDetails> listDeals(String type, Long begin, Long end) {
+        return null;
     }
 }

@@ -1,16 +1,14 @@
 package com.ebeijia.zl.core.redis.utils;
 
-import java.util.*;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.exceptions.JedisDataException;
+
+import java.util.*;
 
 /**
  * redis 工具类
@@ -589,7 +587,7 @@ public class JedisClusterUtils {
 	 * @param requestId 请求标识
 	 * @return 是否释放成功
 	 */
-	public static boolean releaseDistributedLock(String lockKey, String requestId) {
+	public boolean releaseDistributedLock(String lockKey, String requestId) {
 		String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 		Object result = jedisCluster.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));
 		if (RELEASE_SUCCESS.equals(result)) {

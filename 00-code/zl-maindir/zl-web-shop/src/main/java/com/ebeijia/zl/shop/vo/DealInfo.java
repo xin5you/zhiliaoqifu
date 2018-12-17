@@ -5,10 +5,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @ApiModel("转账信息")
 @Data
 @ToString
-public class DealInfo {
+public class DealInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty("源账户类型，目前只有托管账户可以转账")
     String sourceType;

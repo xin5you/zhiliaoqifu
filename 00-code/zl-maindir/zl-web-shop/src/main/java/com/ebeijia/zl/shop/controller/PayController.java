@@ -8,6 +8,7 @@ import com.ebeijia.zl.shop.vo.PayInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "/pay", description = "用于定义支付、信用卡相关接口")
@@ -60,6 +61,7 @@ public class PayController {
     @RequestMapping(value = "/deal/list/",method = RequestMethod.GET)
     public void listAccountDealsWithTimestamp(String type, @RequestParam(value = "session", required = false) String session, Long begin,Long end) {
         payService.listDeals(type,begin,end);
+
     }
 
     /**
@@ -69,9 +71,12 @@ public class PayController {
     @TokenCheck
     @ApiOperation("托管账户转出到银行卡")
     @RequestMapping(value = "/deal/transfer",method = RequestMethod.POST)
-    public JsonResult transferToCard(@RequestParam("deal") DealInfo dealInfo, @RequestParam(value = "session", required = false) String session){
-        int state = payService.transferToCard(dealInfo);
-        return null;
+    public JsonResult transferToCard(@Param("deal") DealInfo dealInfo, @Param(value = "session") Double session){
+        if (session == null){
+            session = 0D;
+        }
+        int state = payService.transferToCard(dealInfo,session);
+        return new JsonResult(state);
     }
 
 }

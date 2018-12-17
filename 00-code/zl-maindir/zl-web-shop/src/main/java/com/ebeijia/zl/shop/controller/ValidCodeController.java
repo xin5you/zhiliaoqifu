@@ -24,7 +24,7 @@ public class ValidCodeController {
 
     @ApiOperation("根据手机号获取验证码，返回发送状态")
     @RequestMapping(value = "/phone",method = RequestMethod.POST)
-    public JsonResult<Object> phoneValidCode(@RequestParam("phone")String phoneNum){
+    public JsonResult<Object> phoneValidCode(@RequestParam("phone")String phoneNum,@RequestParam String method){
         //30秒内只能发送一条验证码
         return new JsonResult<>();
     }

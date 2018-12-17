@@ -2,7 +2,9 @@ package com.ebeijia.zl.shop.vo;
 
 import com.ebeijia.zl.shop.constants.ResultState;
 
-public class JsonResult<T> {
+import java.io.Serializable;
+
+public class JsonResult<T> implements Serializable {
 
     private static final long serialVersionUID = -62401379125965102L;
 

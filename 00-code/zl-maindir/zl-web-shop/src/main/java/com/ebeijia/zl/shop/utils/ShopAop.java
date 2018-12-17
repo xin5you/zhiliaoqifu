@@ -76,7 +76,7 @@ public class ShopAop {
 
         System.out.println(nextSession);
 
-        //处理缓存
+        //处理缓存 
         if (sessionId != null && useCache) {
             String json = jedis.get(signature.toLongString() + sessionId);
             if (json != null) {
