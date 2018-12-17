@@ -1,7 +1,6 @@
 package com.ebeijia.zl.basics.member.service.impl;
 
 import com.ebeijia.zl.basics.member.domain.MemberInf;
-import com.ebeijia.zl.basics.member.domain.UserInf;
 import com.ebeijia.zl.basics.member.mapper.MemberInfMapper;
 import com.ebeijia.zl.basics.member.service.MemberInfService;
 import com.ebeijia.zl.common.core.service.impl.BaseServiceImpl;
@@ -29,28 +28,20 @@ public class MemberInfServiceImpl extends BaseServiceImpl<MemberInf> implements 
 		entity.setOpenId(openId);
 		return this.getMemberInfByUserId(entity);
 	}
-	
+
 	/**
 	 * 知了企服用户 注册成为电商会员
 	 * @param openId
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public	MemberInf RegMemberInfByOpenId(String openId) throws Exception{
-		
+
 		//查找当前openId是否已经注册
 		MemberInf entity=this.getMemberInfByOpenId(openId);
 		if(entity !=null){
 			return entity;
 		}
-		
-		UserInf user=memberInfMapper.getUserInfByOpenId(openId);
-		entity=new MemberInf();
-		entity.setOpenId(openId);
-		entity.setUserId(user.getUserId());
-		entity.setPersonId(user.getPersonalId());
-		entity.setDataStat("0");
-		this.insert(entity);
 		return entity;
 	}
 }

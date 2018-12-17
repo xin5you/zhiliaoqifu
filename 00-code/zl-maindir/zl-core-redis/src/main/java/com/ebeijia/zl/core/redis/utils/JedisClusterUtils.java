@@ -1,10 +1,6 @@
 package com.ebeijia.zl.core.redis.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.exceptions.JedisDataException;
 
@@ -23,8 +20,13 @@ import redis.clients.jedis.exceptions.JedisDataException;
 public class JedisClusterUtils {
 	private static Logger logger = LoggerFactory.getLogger(JedisClusterUtils.class);
 
+	private static final String LOCK_SUCCESS = "OK";
+	private static final String SET_IF_NOT_EXIST = "NX";
+	private static final String SET_WITH_EXPIRE_TIME = "PX";
+	private static final Long RELEASE_SUCCESS = 1L;
+
 	@Autowired
-	private  JedisCluster jedisCluster; 
+	private  JedisCluster jedisCluster;
 
 	/**
 	 * 获取jedisCluster实例
@@ -153,7 +155,7 @@ public class JedisClusterUtils {
      * 设置 list (序列化)
      * @param <T> 
      * @param key 
-     * @param value 
+     * @param list
      */  
     public <T> void setList(String key ,List<T> list){ 
             try {  
@@ -173,7 +175,8 @@ public class JedisClusterUtils {
      * 设置 list及超时时间(序列化)
      * @param <T> 
      * @param key 
-     * @param value 
+     * @param list
+	 * @param cacheSeconds
      */  
     public <T> void setexList(String key ,List<T> list,int cacheSeconds){ 
             try {  
@@ -213,7 +216,7 @@ public class JedisClusterUtils {
      * 设置 map(序列化)
      * @param <T> 
      * @param key 
-     * @param value 
+     * @param map
      */  
     public <T> void setMap(String key ,Map<String,T> map){  
         try {  
@@ -230,7 +233,8 @@ public class JedisClusterUtils {
      * 设置 map及超时时间(序列化)
      * @param <T> 
      * @param key 
-     * @param value 
+     * @param map
+	 * @param cacheSeconds
      */  
     public <T> void setexMap(String key ,Map<String,T> map,int cacheSeconds){  
         try {  
@@ -268,8 +272,8 @@ public class JedisClusterUtils {
 	
 	/**
 	 * 设置key中指定hash集中指定字段的值
-	 * @param cacheKey
 	 * @param key
+	 * @param field
 	 * @param value
 	 */
 	public  void hset(String key, String field, String value) {
@@ -325,7 +329,7 @@ public class JedisClusterUtils {
 	/**
 	 * 设置key的sortedset集合
 	 * @param key
-	 * @param member
+	 * @param scoreMembers
 	 */
 	public void zadd(String key,Map<String,Double> scoreMembers){
 
@@ -466,9 +470,6 @@ public class JedisClusterUtils {
 		return flag;
 	}
 
-
-
-
 	/**
 	 * 设置key的set集合
 	 * @param key
@@ -487,7 +488,6 @@ public class JedisClusterUtils {
 		} catch (Exception e) {
 			logger.error("设置set集合失败---->sadd key is "+key+",member is "+member.toArray(str)+"e is ",e);
 		}
-
 	}
 
 	/**
@@ -562,14 +562,40 @@ public class JedisClusterUtils {
 		}	
 		return sismember;
 	}
-
-	
-	public  void pubChannel(String channel,String msg){      	
+	public  void pubChannel(String channel,String msg){
 		try {
 			jedisCluster.publish(channel, msg);  
 			logger.info("pubChannel Channel:{}  MSG:{}", channel,msg);
 		} catch (Exception e) {
 			logger.error("pubChannel Channel:{}  MSG:{}", channel,msg,e);
 		} 
+	}
+	/**
+	 * 尝试获取分布式锁
+	 * @param lockKey 锁
+	 * @param requestId 请求标识
+	 * @param expireTime 超期时间
+	 * @return 是否获取成功
+	 */
+	public  boolean tryGetDistributedLock(String lockKey, String requestId, int expireTime) {
+		String result =jedisCluster.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
+		if (LOCK_SUCCESS.equals(result)) {
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 释放分布式锁
+	 * @param lockKey 锁
+	 * @param requestId 请求标识
+	 * @return 是否释放成功
+	 */
+	public static boolean releaseDistributedLock(String lockKey, String requestId) {
+		String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+		Object result = jedisCluster.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));
+		if (RELEASE_SUCCESS.equals(result)) {
+			return true;
+		}
+		return false;
 	}
 }

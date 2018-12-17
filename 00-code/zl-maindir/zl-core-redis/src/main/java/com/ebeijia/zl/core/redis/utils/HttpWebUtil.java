@@ -19,9 +19,6 @@ public class HttpWebUtil{
 	
 	/**
 	 * 获取商户服务系统的路径
-	 * @param httpServletRequest
-	 * @param httpServletResponse
-	 * @param url
 	 */
 	public  String getMerchantDomainUrl(){
 		return redisDictProperties.getdictValueByCode("MERCHANT_DOMAIN_URL");
@@ -29,7 +26,6 @@ public class HttpWebUtil{
 	
 	/**
 	 * 获取我的订单的路径
-	 * @return
 	 */
 	public  String getOrderDomainUrl(){
 		return redisDictProperties.getdictValueByCode("ORDER_DOMAIN_URL");
@@ -37,14 +33,13 @@ public class HttpWebUtil{
 	
 	/**
 	 * 获取商城对接的密钥
-	 * @return
 	 */
 	public  String getReqAesKey(){
 		return redisDictProperties.getdictValueByCode("40006001_REQ_AES_KEY");
 	}
 	
-	/**获取汇卡宝图片服务器路径
-	 * @return
+	/**
+	 * 获取汇卡宝图片服务器路径
 	 */
 	public  String getHkbUrlImg(){
 		return redisDictProperties.getdictValueByCode("HKB_URL_IMG");
@@ -52,9 +47,6 @@ public class HttpWebUtil{
 	
 	/**
 	 * 获取客户系统的域名
-	 * @param httpServletRequest
-	 * @param httpServletResponse
-	 * @param url
 	 */
 	public  String getCustomerDomainUrl(){
 		return redisDictProperties.getdictValueByCode("CUSTOMER_DOMAIN_URL");
@@ -62,7 +54,6 @@ public class HttpWebUtil{
 	
 	/**
 	 * websocket 连接域名解析
-	 * @return
 	 */
 	public  String getMerchantWsUrl(){
 		String wsurl=getMerchantDomainUrl();

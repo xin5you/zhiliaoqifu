@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import com.ebeijia.zl.web.cms.FtpProps;
+import com.ebeijia.zl.FtpProps;
 
 public class FTPUtil {
 	
