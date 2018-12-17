@@ -16,13 +16,15 @@
 		FROM
 		tb_account_inf ai,
 		tb_user_inf u,
-		tb_person_inf p
-		
-		where 
+		tb_person_inf p,
+		tb_channel_user_inf cui
+		where
 			ai.user_id=u.user_id
 		and p.user_id=u.user_id
-		and u.user_id=#{userId}
-		and u.user_type='100'
+		and u.user_id=cui.user_id
+		and cui.external_id=#{userChnlId}
+		and cui.channel_code=#{userChnl}
+		and u.user_type=#{userType}
 	</select>
 	
 	
@@ -43,8 +45,8 @@
 		
 		where ai.user_id=u.user_id
 		and p.company_id=u.company_id
-		and u.user_name='200000000000000000000000'
-		and u.user_type='200'
+		and u.user_name=#{userChnlId}
+		and u.user_type=#{userType}
 	</select>
 	
 	
@@ -66,8 +68,8 @@
 		where 
 			ai.user_id=u.user_id
 		and p.provider_id=u.company_id
-		and u.user_name='200000000000000000000000'
-		and u.user_type='300'
+		and u.user_name=#{userChnlId}
+		and u.user_type=#{userType}
 	</select>
 	
 	
@@ -89,7 +91,7 @@
 		where 
 		    ai.user_id=u.user_id
 		and p.channel_id=u.company_id
-		and u.user_name='200000000000000000000000'
-		and u.user_type='400'
+		and u.user_name=#{userChnlId}
+		and u.user_type=#{userType}
 	</select>
 </mapper>

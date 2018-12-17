@@ -119,29 +119,22 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
 	public boolean execute(List<TransLog> voList){
-		
 		if(voList !=null && voList.size()>0){
-			
 			for(TransLog transLog:voList){
-				
 				if (AccountCardAttrEnum.OPER.getValue().equals(transLog.getCardAttr())) {
 					//账户开户
 					this.open(transLog);
-					
 				} else if (AccountCardAttrEnum.ADD.getValue().equals(transLog.getCardAttr())) {
 					//账户加款
 					this.credit(transLog);
-					
 				} else if (AccountCardAttrEnum.SUB.getValue().equals(transLog.getCardAttr())) {
 					//账户减款
 					this.debit(transLog);
-					
 				}else{
 					throw AccountBizException.ACCOUNT_CARD_ATTR_ERROR.newInstance("账户不存在,用户编号{%s}", transLog.getCardAttr()).print();
 				}
 //				else if (AccountCardAttrEnum.FROZEN.getValue().equals(transLog.getCardAttr())){
 //					//账户冻结
-//					
 //				} else if (AccountCardAttrEnum.UNFROZEN.getValue().equals(transLog.getCardAttr())){
 //					//账户解冻
 //				}
@@ -180,15 +173,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			return flag;
 		}
 	}
-	
 	/**
 	 * 加款
-	 * 
 	 */
-	
 	private boolean credit(TransLog transLog) {
 		log.info("==>credit transLog={}",JSONArray.toJSON(transLog));
-		
 		AccountInf account = this.getAccountInfByUserId(transLog.getUserId(), transLog.getPriBId());
 		if (account == null) {
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
@@ -197,13 +186,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		/****** consumerBal set begin ***/
 		//员工账户充值 专用专项账户的按比例设置强制消费额度
 		if(UserType.TYPE100.equals(account.getAccountType())){
-			
 			//非 员工通用福利账户 并且 非现金账户
 			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
-				
 				//所有的专用类型的账户充值 都需要按比例划分到消费额度里
+				//TODO 获取代金券购买比例值
 				double coupon_rate=0.9;
-				
 				BigDecimal couponBalAmt=new BigDecimal(coupon_rate); //加入消费比例是0.1 即 10%强制消费额度
 				
 				if(TransCode.MB50.getCode().equals(transLog.getTransId())){
@@ -229,15 +216,12 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if(!flag){
 			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
 		}
-		
 		log.info("==>credit<==");
 		return true;
 
 	}
-
 	/**
 	 * 减款
-	 * 
 	 * @return
 	 */
 	
@@ -301,8 +285,8 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 
 	/**
 	 * 支出
-	 * 
-	 * @param amount
+	 * @param account
+	 * @param transAmt
 	 */
 	public void debit(AccountInf account,BigDecimal transAmt) {
 		if (! AccountStatusEnum.ACTIVE.getValue().equals(account.getAccountStat())) {
@@ -321,8 +305,8 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	
 	/**
 	 * 验证可用余额是否足够
-	 * 
-	 * @param amount
+	 * @param account
+	 * @param transAmt 交易金额
 	 * @return
 	 */
 	public boolean availableBalanceIsEnough(AccountInf account,BigDecimal transAmt) {
@@ -343,12 +327,9 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		entity.setMaxTxnAmt1(new BigDecimal(5000000));//单笔Pos交易限额 
 		entity.setMaxDayTxnAmt1(new BigDecimal(15000000)); //每日Pos交易限额
 		entity.setDayTotalAmt1(new BigDecimal(0));//当天POS交易額
-		
-		
-		entity.setMaxTxnAmt2(new BigDecimal(5000000));//单笔web交易限额 
+		entity.setMaxTxnAmt2(new BigDecimal(5000000));//单笔web交易限额
 		entity.setMaxDayTxnAmt2(new BigDecimal(15000000)); //每日web交易限额
 		entity.setDayTotalAmt2(new BigDecimal(0));//当天web交易額
-		
 		entity.setFreezeAmt(new BigDecimal(0));
 		entity.setLastTxnDate(DateUtil.COMPAT.getDateText(new Date()));
 		entity.setLastTxnTime(DateUtil.getCurrentTimeStr());
@@ -371,8 +352,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		entity.setUpdateUser("99999999");
 		return super.updateById(entity);
 	}
-	
-	
+
 	/**
 	 * 
 	* @Description: 账户列表查询
@@ -389,21 +369,15 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
 	public List<AccountVO> getAccountInfList(AccountQueryReqVo req){
-		
 		 List<AccountVO> list=new ArrayList<>();
-		 
-		 if(UserType.TYPE100.equals(req.getUserType())){
-			 
-		 }else if(UserType.TYPE200.equals(req.getUserType())){
-			 list=accountInfMapper.getAccountVOToCompanyList(req.getUserChnlId());
-		 }else if(UserType.TYPE300.equals(req.getUserType())){
-			 
-			 list=accountInfMapper.getAccountVOToProviderList(req.getUserChnlId());
-		 }else if(UserType.TYPE400.equals(req.getUserType())){
-			 
-			 list=accountInfMapper.getAccountVOToRetailList(req.getUserChnlId());
-		 }else {
-			 
+		 if(UserType.TYPE100.getCode().equals(req.getUserType())){
+			 list=accountInfMapper.getAccountVOToUserList(req.getUserChnlId(),req.getUserChnl(),req.getUserType());
+		 }else if(UserType.TYPE200.getCode().equals(req.getUserType())){
+			 list=accountInfMapper.getAccountVOToCompanyList(req.getUserChnlId(),req.getUserType());
+		 }else if(UserType.TYPE300.getCode().equals(req.getUserType())){
+			 list=accountInfMapper.getAccountVOToProviderList(req.getUserChnlId(),req.getUserType());
+		 }else if(UserType.TYPE400.getCode().equals(req.getUserType())){
+			 list=accountInfMapper.getAccountVOToRetailList(req.getUserChnlId(),req.getUserType());
 		 }
 		 return list;
 	}
