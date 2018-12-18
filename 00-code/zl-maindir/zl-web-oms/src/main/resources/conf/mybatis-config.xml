@@ -16,22 +16,12 @@
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
         <typeAlias alias="Double" type="java.lang.Double" />
         
-        <typeAlias type="com.ebeijia.zl.web.oms.sys.model.User" alias="User" />
-	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.Role" alias="Role" />
-	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.Resource" alias="Resource" />
-	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.RoleResource" alias="RoleResource" />
-	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.UserRole" alias="UserRole" />
-	 	<typeAlias type="com.ebeijia.zl.web.oms.sys.model.Organization" alias="Organization" />
-	 	
-	 	<typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeOrder" alias="PhoneRechargeOrder" />
-        <typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeOrderUpload" alias="PhoneRechargeOrderUpload" />
-        <typeAlias type="com.ebeijia.zl.web.oms.phoneRecharge.model.PhoneRechargeShop" alias="PhoneRechargeShop" />
-        
 	 	<typeAlias type="com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder" alias="BatchOrder" />
         <typeAlias type="com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList" alias="BatchOrderList" />
 	 	
 	 	<package name="com.ebeijia.zl.shop.dao.member.domain"/>
 		<package name="com.ebeijia.zl.basics.billingtype.domain"/>
+		<package name="com.ebeijia.zl.basics.system.domain"/>
 
 	</typeAliases>
 

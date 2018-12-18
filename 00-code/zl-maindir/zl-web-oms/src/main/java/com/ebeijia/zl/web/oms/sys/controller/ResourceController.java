@@ -3,15 +3,11 @@ package com.ebeijia.zl.web.oms.sys.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ebeijia.zl.basics.system.domain.Resource;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 @Controller
@@ -33,19 +34,17 @@ public class ResourceController {
 	@Autowired
 	private ResourceService resourceService;
 
-	
 	@RequestMapping(value = "/listResource")
 	public ModelAndView listResource(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/resource/listResource");
-		String operStatus=StringUtil.nullToString(req.getParameter("operStatus"));
+		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		
 		List<Resource> pageList = null;
 		try {
 			Resource resource = new Resource();
 			resource.setLoginType(LoginType.LoginType1.getCode());
-			pageList=resourceService.getResourceList(resource);
+			pageList = resourceService.getResourceList(resource);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("查询列表信息出错", e);
 		}
 		mv.addObject("pageInfo", pageList);
@@ -53,20 +52,22 @@ public class ResourceController {
 		return mv;
 	}
 	
-	
 	@RequestMapping(value = "/intoAddResource")
 	public ModelAndView intoAddResource(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/resource/addResource");
-		Resource resource=new Resource();
+		
+		String resourceId = StringUtil.nullToString(req.getParameter("resourceId"));
+		
+		Resource resource = new Resource();
 		resource.setLoginType(LoginType.LoginType1.getCode());
 		resource.setResourceType("0");
-		List<Resource>  resourceList=resourceService.getResourceList(resource);
+		
+		List<Resource> resourceList = resourceService.getResourceList(resource);
+		
+		Resource parantRes = resourceService.getById(resourceId);
+		
 		mv.addObject("resourceList", resourceList);
-		
-		String resourceId=StringUtil.nullToString(req.getParameter("resourceId"));
-		Resource parantRes=resourceService.getById(resourceId);
 		mv.addObject("parantRes", parantRes);
-		
 		return mv;
 	}
 	
@@ -80,26 +81,28 @@ public class ResourceController {
 	@ResponseBody
 	public Map<String, Object> addResourceCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
 		resultMap.put("status", Boolean.TRUE);
+		
 		try {
-			Resource resource=getResourceInfo(req);
-			Resource checkResource=resourceService.getResourceByKey(resource.getResourceKey(), LoginType.LoginType1.getCode());
-			if(checkResource !=null){
+			Resource resource = getResourceInfo(req);
+			Resource checkResource = resourceService.getResourceByKey(resource.getResourceKey(), LoginType.LoginType1.getCode());
+			if(checkResource != null){
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", checkResource.getResourceKey()+"已经存在，请重新输入");
 				return resultMap;
 			}
-			resourceService.save(resource);
+			if (!resourceService.save(resource)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增资源失败，请重新添加");
+				return resultMap;
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "新增资源失败，请重新添加");
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		return resultMap;
 	}
-	
 	
 	/**
 	 * @param req
@@ -110,14 +113,15 @@ public class ResourceController {
 	@RequestMapping(value = "/intoEditResource")
 	public ModelAndView intoEditResource(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("sys/resource/editResource");
-		String resourceId=req.getParameter("resourceId");
-		Resource resource=resourceService.getById(resourceId);
+		
+		String resourceId = req.getParameter("resourceId");
+		Resource resource = resourceService.getById(resourceId);
 		
 		//查找上级菜单列表
-		Resource resource1=new Resource();
+		Resource resource1 = new Resource();
 		resource1.setResourceType("0");
 		resource1.setLoginType(LoginType.LoginType1.getCode());
-		List<Resource>  resourceList=resourceService.getResourceList(resource1);
+		List<Resource> resourceList = resourceService.getResourceList(resource1);
 		
 		mv.addObject("resourceList", resourceList);
 		mv.addObject("resource", resource);
@@ -137,16 +141,20 @@ public class ResourceController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
-			Resource resource=getResourceInfo(req);
-			Resource checkResource=resourceService.getResourceByKey(resource.getResourceKey(), resource.getLoginType());
-			if(checkResource !=null){
+			Resource resource = getResourceInfo(req);
+			Resource checkResource = resourceService.getResourceByKey(resource.getResourceKey(), resource.getLoginType());
+			if(checkResource != null){
 				if(!resource.getId().equals(checkResource.getId())){
 					resultMap.put("status", Boolean.FALSE);
 					resultMap.put("msg", checkResource.getResourceKey()+"已经存在，请重新输入");
 					return resultMap;
 				}
 			}
-			resourceService.updateById(resource);
+			if (!resourceService.updateById(resource)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑资源失败，请重新添加");
+				return resultMap;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -155,7 +163,6 @@ public class ResourceController {
 		}
 		return resultMap;
 	}
-
 	
 	/**
 	* @Title: getResourceInfo
@@ -167,30 +174,37 @@ public class ResourceController {
 	* @throws
 	*/ 
 	private Resource getResourceInfo(HttpServletRequest req) throws Exception {
-		Resource resource=null;
-		String resourceId=StringUtil.nullToString(req.getParameter("resourceId"));
+		String resourceId = StringUtil.nullToString(req.getParameter("resourceId"));
+		String seq = StringUtil.nullToString(req.getParameter("seq"));
+		
 		HttpSession session = req.getSession();
 		User u = (User)session.getAttribute(Constants.SESSION_USER);
-		if(!StringUtil.isNullOrEmpty(resourceId)){
-			resource=resourceService.getById(resourceId);
-		}else{
-			resource=new Resource();
-			resource.setId(UUID.randomUUID().toString());
+		
+		Resource resource = null;
+		if (!StringUtil.isNullOrEmpty(resourceId)) {
+			resource = resourceService.getById(resourceId);
+		} else {
+			resource = new Resource();
+			resource.setId(IdUtil.getNextId());
 			resource.setCreateUser(u.getId());
 			resource.setCreateTime(System.currentTimeMillis());
+			resource.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			resource.setLockVersion(0);
 		}
-		resource.setUpdateUser(u.getId());
+		
 		resource.setResourceName(StringUtil.nullToString(req.getParameter("resourceName")));
 		resource.setResourceKey(StringUtil.nullToString(req.getParameter("resourceKey")).toUpperCase());
 		resource.setUrl(StringUtil.nullToString(req.getParameter("url")));
 		resource.setDescription(StringUtil.nullToString(req.getParameter("description")));
 		resource.setIcon(StringUtil.nullToString(req.getParameter("icon")));
-		resource.setSeq(Integer.parseInt(StringUtil.nullToString(req.getParameter("seq"))));
+		if (!StringUtil.isNullOrEmpty(seq)) {
+			resource.setSeq(Integer.parseInt(seq));
+		}
 		resource.setResourceType(StringUtil.nullToString(req.getParameter("resourceType")));
 		resource.setPid(StringUtil.nullToString(req.getParameter("pid")));
-		resource.setDataStat(StringUtil.nullToString(req.getParameter("dataStat")));
 		resource.setLoginType(LoginType.LoginType1.getCode());
 		resource.setUpdateTime(System.currentTimeMillis());
+		resource.setUpdateUser(u.getId());
 		return resource;
 	}
 
@@ -206,11 +220,15 @@ public class ResourceController {
 	public Map<String, Object> deleteResourceCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
-		String resourceId=req.getParameter("resourceId");
+		
+		String resourceId = req.getParameter("resourceId");
 		try {
-			resourceService.deleteResource(resourceId);
+			if (!resourceService.removeById(resourceId)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除资源失败，请重新操作");
+				return resultMap;
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "删除资源失败，请重新操作");
 			logger.error(e.getLocalizedMessage(), e);

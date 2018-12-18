@@ -79,10 +79,10 @@
 								<jsp:setProperty name="createTime" property="time" value="${diyUser.createTime}"/>
 								<fmt:formatDate value="${createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 							</td>
-							<td><c:if test="${diyUser.isdefault =='0'}">是</c:if>
-								<c:if test="${diyUser.isdefault !='0'}">否</c:if></td>
-							<td><c:if test="${diyUser.dataStat =='0'}">正常</c:if>
-								<c:if test="${diyUser.dataStat !='0'}">停用</c:if></td>
+							<td><c:if test="${diyUser.isdefault == '0'}">是</c:if>
+								<c:if test="${diyUser.isdefault != '0'}">否</c:if></td>
+							<td><c:if test="${diyUser.dataStat == '0'}">正常</c:if>
+								<c:if test="${diyUser.dataStat != '0'}">停用</c:if></td>
 							<td><c:if
 									test="${diyUser.isdefault =='0' && diyUser.dataStat =='0'}">
 									<c:if test="${diyUser.roleCheckflag =='1'}">

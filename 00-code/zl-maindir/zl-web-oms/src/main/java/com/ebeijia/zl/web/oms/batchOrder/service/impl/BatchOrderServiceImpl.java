@@ -7,14 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +19,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
@@ -50,12 +49,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @Service("batchOrderService")
-public class BatchOrderServiceImpl implements BatchOrderService {
+public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOrder> implements BatchOrderService {
 
 	Logger logger = LoggerFactory.getLogger(BatchOrderServiceImpl.class);
 	
-	ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-
 	@Autowired
 	private BatchOrderListMapper batchOrderListMapper;
 	

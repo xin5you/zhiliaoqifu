@@ -36,11 +36,7 @@
 						         <div class="control-group">
 						             <label class="control-label">排序</label>
 						             <div class="controls">
-<!-- 						                 <input type="text" class="span6" id="seq" name="seq"/> -->
-						                 <span class="ui-spinner ui-widget ui-widget-content ui-corner-all">
-						                 	<input id="seq" name="seq" class="span12 ui-spinner-input" value="1" aria-valuenow="-5" autocomplete="off" role="spinbutton" type="text">
-						                 	<a class="ui-spinner-button ui-spinner-up ui-corner-tr" tabindex="-1"><span class="ui-icon ui-icon-triangle-1-n">▲</span></a>
-						                 	<a class="ui-spinner-button ui-spinner-down ui-corner-br" tabindex="-1"><span class="ui-icon ui-icon-triangle-1-s">▼</span></a></span>
+						                 <input type="text" class="span6" id="seq" name="seq" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						             </div>
 						         </div>
 						

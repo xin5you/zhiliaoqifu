@@ -2,10 +2,11 @@ package com.ebeijia.zl.basics.billingtype.service;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.github.pagehelper.PageInfo;
 
-public interface BillingTypeInfService {
+public interface BillingTypeInfService extends IService<BillingTypeInf> {
 
 	/** 
 	 * 通过ID查找专用账户类型
@@ -33,7 +34,7 @@ public interface BillingTypeInfService {
 	 * @param MerchantInf
 	 * @return PageInfo对象
 	 */
-	public PageInfo<BillingTypeInf> getBillingTypeInfList(int startNum, int pageSize, BillingTypeInf billingTypeInf);
+	public PageInfo<BillingTypeInf> getBillingTypeInfListPage(int startNum, int pageSize, BillingTypeInf billingTypeInf);
 	
 	public int updateBillingTypeInf(BillingTypeInf billingTypeInf);
 	

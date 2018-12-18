@@ -22,8 +22,20 @@ var addCompany = {
     		return false;
     	}
 		var address = $("#address").val();
+		if(address =='' || address == null){
+    		Helper.alert("请输入地址");
+    		return false;
+    	}
 		var contacts = $("#contacts").val();
+		if(contacts =='' || contacts == null){
+    		Helper.alert("请输入联系人");
+    		return false;
+    	}
 		var phoneNo = $("#phoneNo").val();
+		if(phoneNo =='' || phoneNo == null){
+    		Helper.alert("请输入联系电话");
+    		return false;
+    	}
 		var remarks = $("#remarks").val();
 		var transFlag = $("#transFlag").val();
 		if (transFlag == null || transFlag == "") {

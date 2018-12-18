@@ -22,9 +22,9 @@
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>分销商管理<b class="caret"></b></a>
                                  <ul class="dropdown-menu">
                                      	<li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
-                                     	<li><a href="${ctx }/retailChnl/reserve/listRetailChnlReserve.do">分销商备付金管理</a></li>
+                                     	<%-- <li><a href="${ctx }/retailChnl/reserve/listRetailChnlReserve.do">分销商备付金管理</a></li> --%>
 										<li><a href="${ctx }/retailChnl/retailChnlOrder/listRetailChnlOrderInf.do">分销商订单</a></li>
-										<li><a href="${ctx }/retailChnl/retailChnlProduct/listRetailChnlProduct.do">分销商充值产品管理</a></li>
+										<%-- <li><a href="${ctx }/retailChnl/retailChnlProduct/listRetailChnlProduct.do">分销商充值产品管理</a></li> --%>
 										<%-- <li><a href="${ctx }/retailChnl/areaInf/listRetailChnlAreaInf.do">分销商话费地区维护</a></li>
 										<li><a href="${ctx }/retailChnl/item/listRetailChnlItem.do">分销商产品折扣率管理</a></li> --%>
                                  </ul>

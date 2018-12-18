@@ -50,7 +50,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group formSep">
-							             <label class="control-label">地址</label>
+							             <label class="control-label">地址<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="address" name="address" />
 							                 <span class="help-block"></span>
@@ -58,7 +58,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group formSep">
-							             <label class="control-label">联系人</label>
+							             <label class="control-label">联系人<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="contacts" name="contacts" />
 							                 <span class="help-block"></span>
@@ -66,7 +66,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group formSep">
-							             <label class="control-label">联系电话</label>
+							             <label class="control-label">联系电话<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="phoneNo" name="phoneNo" />
 							                 <span class="help-block"></span>
@@ -74,7 +74,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group formSep">
-							             <label class="control-label">交易开关</label>
+							             <label class="control-label">交易开关<span style="color:red">*</span></label>
 							             <div class="controls">
 							             	<select id="transFlag" name="transFlag" class="chzn_a span6">
 							             		<option value="" >---请选择---</option>

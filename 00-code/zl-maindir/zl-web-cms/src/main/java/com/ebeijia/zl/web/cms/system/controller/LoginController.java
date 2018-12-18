@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.Constants.RandomCodeType;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.LoginType;
+import com.ebeijia.zl.common.utils.tools.MD5Utils;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.web.cms.system.domain.Resource;
 import com.ebeijia.zl.web.cms.system.domain.Role;
 import com.ebeijia.zl.web.cms.system.domain.User;
 import com.ebeijia.zl.web.cms.system.service.ResourceService;
 import com.ebeijia.zl.web.cms.system.service.RoleService;
 import com.ebeijia.zl.web.cms.system.service.UserService;
-import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
-import com.ebeijia.zl.common.utils.constants.Constants.RandomCodeType;
-import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
-import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.tools.MD5Utils;
-import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 
 @RestController
 public class LoginController {

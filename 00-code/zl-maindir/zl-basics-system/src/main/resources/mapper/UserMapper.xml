@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ebeijia.zl.basics.system.mapper.UserMapper">
+
+	<sql id="UserColumns">
+		m.id,
+		m.user_name,
+		m.password,
+		m.login_name,
+		m.phone_no,
+		m.login_type,
+		m.isdefault,
+		m.data_stat,
+		m.remarks,
+		m.create_user,
+		m.update_user,
+		m.create_time,
+		m.update_time,
+		m.lock_version,
+		m.organization_id,
+		m.supplier_id
+	</sql>
+
+	<select id="getUserByName" parameterType="User" resultType="User">
+		select 
+	  		<include refid="UserColumns" />
+		from tb_web_user m 
+		where m.login_type = #{loginType}
+		<if test="loginName !=null and loginName !='' ">
+			and m.login_name = #{loginName}
+		</if>
+		<if test="userName !=null and userName !='' ">
+			and m.user_name = #{userName}
+		</if>
+	</select>
+	
+	<select id="getUserOmsList" parameterType="User" resultType="User">
+		select 
+	  		<include refid="UserColumns" />, 
+	  		o.name as organization_name, r.id as role_id, r.role_name as role_name 
+	  	from tb_web_user m
+         	left join tb_web_organization o on o.ID = m.organization_id
+         	left join tb_web_user_role ur on m.id = ur.user_id
+         	left join tb_web_role r on ur.role_id = r.id
+        where  m.data_stat = '0'
+        	and m.login_type = #{loginType}
+        <if test="userName !=null and userName !='' ">
+			and m.user_name like '%' || #{userName} || '%'
+		</if>
+		<if test="loginName !=null and loginName !='' ">
+			and m.login_name like '%' || #{loginName} || '%'
+		</if>
+		<if test="phoneNo !=null and phoneNo !='' ">
+			and m.phone_no like '%' || #{phoneNo} || '%'
+		</if>
+		order by m.update_time desc
+	</select>
+	
+	<select id="getUserDiyList" parameterType="User" resultType="User">
+		select 
+	  		<include refid="UserColumns" />, 
+	  		r.id as role_id, r.role_name as role_name 
+	  	from tb_web_user m
+         	left join tb_web_user_role ur on m.id = ur.user_id
+         	left join tb_web_role r on ur.role_id = r.id
+        where  m.data_stat = '0'
+        	and m.login_type = #{loginType}
+        <if test="userName !=null and userName !='' ">
+			and m.user_name like '%' || #{userName} || '%'
+		</if>
+		<if test="loginName !=null and loginName !='' ">
+			and m.login_name like '%' || #{loginName} || '%'
+		</if>
+		<if test="phoneNo !=null and phoneNo !='' ">
+			and m.phone_no like '%' || #{phoneNo} || '%'
+		</if>
+		order by m.update_time desc
+	</select>
+	
+	<select id="getUserByPhoneNo" parameterType="User" resultType="User">
+		 select 
+	  		<include refid="UserColumns" />
+		 from tb_web_user m 
+		 where m.phone_no=#{phoneNo} 
+		 	and m.data_stat='0'
+		 	and m.login_type=#{loginType}
+	</select>
+</mapper>

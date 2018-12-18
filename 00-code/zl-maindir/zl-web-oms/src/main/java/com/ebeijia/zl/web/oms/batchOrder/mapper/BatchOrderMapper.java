@@ -6,11 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder;
 import com.github.pagehelper.PageInfo;
 
 @Mapper
-public interface BatchOrderMapper {
+public interface BatchOrderMapper extends BaseMapper<BatchOrder> {
 
 	List<BatchOrder> getBatchOrderList(BatchOrder order);
 	

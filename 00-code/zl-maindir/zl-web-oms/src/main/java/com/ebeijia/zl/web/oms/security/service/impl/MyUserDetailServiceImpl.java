@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +14,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
+import com.ebeijia.zl.basics.system.domain.Resource;
+import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.basics.system.service.UserService;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 
 /**
  * User userdetail该类实现 UserDetails 接口，该类在验证成功后会被保存在当前回话的principal对象中
@@ -47,13 +47,13 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 		System.err.println("-----------MyUserDetailServiceImpl loadUserByUsername ----------- ");
 		
 		//取得用户的权限
-		com.ebeijia.zl.web.oms.sys.model.User users=null;
+		com.ebeijia.zl.basics.system.domain.User users = null;
 		try {
 			users = userService.getUserByName(null, username, LoginType.LoginType1.getCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if  (users==null)  
+		if  (users == null)  
             throw new UsernameNotFoundException(username+" not exist!");  
 		Collection<GrantedAuthority> grantedAuths = obtionGrantedAuthorities(users);
 		// 封装成spring security的user
@@ -70,7 +70,7 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 	}
 
 	// 取得用户的权限
-	private Set<GrantedAuthority> obtionGrantedAuthorities(com.ebeijia.zl.web.oms.sys.model.User user) {
+	private Set<GrantedAuthority> obtionGrantedAuthorities(com.ebeijia.zl.basics.system.domain.User user) {
 		List<Resource> resources = resourceService.getUserResourceByUserId(String.valueOf(user.getId()));
 		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();
 		for (Resource res : resources) {

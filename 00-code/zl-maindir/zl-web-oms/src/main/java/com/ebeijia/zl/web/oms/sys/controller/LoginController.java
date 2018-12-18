@@ -3,8 +3,6 @@ package com.ebeijia.zl.web.oms.sys.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ebeijia.zl.web.oms.sys.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,9 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(value = "/login")
 public class LoginController {
-	
-	@Autowired
-	private UserService userService;
 	
 	@RequestMapping(value = "/loginIndex")
 	public ModelAndView loginIndex(HttpServletRequest req, HttpServletResponse response) {

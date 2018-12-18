@@ -62,7 +62,7 @@
 						         <div class="control-group">
 						             <label class="control-label">排序</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="seq" name="seq" value="${resource.seq }"/>
+						                 <input type="text" class="span6" id="seq" name="seq" value="${resource.seq }" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						                 <span class="help-block" style="color: red;">请输入整数</span>
 						             </div>
 						         </div>

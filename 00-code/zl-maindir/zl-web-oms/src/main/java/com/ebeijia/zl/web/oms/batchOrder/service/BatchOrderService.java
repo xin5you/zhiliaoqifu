@@ -5,12 +5,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.github.pagehelper.PageInfo;
 
-public interface BatchOrderService {
+public interface BatchOrderService extends IService<BatchOrder> {
 	
 	List<BatchOrder> getBatchOrderList(BatchOrder order);
 	

@@ -8,7 +8,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
@@ -34,7 +35,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @Service("batchOrderListService")
-public class BatchOrderListServiceImpl implements BatchOrderListService {
+public class BatchOrderListServiceImpl extends ServiceImpl<BatchOrderListMapper, BatchOrderList> implements BatchOrderListService {
 	
 	Logger logger = LoggerFactory.getLogger(BatchOrderListServiceImpl.class);
 	

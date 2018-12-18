@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.LoginType;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.web.cms.base.exception.BizHandlerException;
 import com.ebeijia.zl.web.cms.system.domain.Resource;
 import com.ebeijia.zl.web.cms.system.domain.Role;
 import com.ebeijia.zl.web.cms.system.domain.User;
 import com.ebeijia.zl.web.cms.system.service.ResourceService;
 import com.ebeijia.zl.web.cms.system.service.RoleService;
-import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
-import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
-import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.tools.NumberUtils;
-import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.github.pagehelper.PageInfo;
 
 @RestController

@@ -5,11 +5,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
-import com.ebeijia.zl.web.oms.sys.model.User;
 import com.github.pagehelper.PageInfo;
 
-public interface BatchOrderListService {
+public interface BatchOrderListService extends IService<BatchOrderList> {
 
 	LinkedList<BatchOrderList> getRedisBatchOrderList(String bathOpen);
 	

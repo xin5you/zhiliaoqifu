@@ -48,6 +48,7 @@
 	               <th>登录名</th>
 	               <th>姓名</th>
 	               <th>所属部门</th>
+	               <th>角色名称</th>
 	               <th>创建时间</th>
 	               <th>是否默认</th>
 	               <th>状态</th>
@@ -60,13 +61,14 @@
 	                    <td>${user.loginName}</td>
 	                    <td>${user.userName}</td>
 						<td>${user.organizationName}</td>
+						<td>${user.roleName}</td>
 						<td>
 							<jsp:useBean id="createTime" class="java.util.Date"/>
 							<jsp:setProperty name="createTime" property="time" value="${user.createTime}"/>
 							<fmt:formatDate value="${createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 						</td>
-						<td><c:if test="${user.isdefault =='0'}">是</c:if><c:if test="${user.isdefault !='0'}">否</c:if></td>
-						<td><c:if test="${user.dataStat =='0'}">正常</c:if><c:if test="${user.dataStat !='0'}">停用</c:if></td>
+						<td><c:if test="${user.isdefault == '0'}">是</c:if><c:if test="${user.isdefault != '0'}">否</c:if></td>
+						<td><c:if test="${user.dataStat == '0'}">正常</c:if><c:if test="${user.dataStat != '0'}">停用</c:if></td>
 	                    <td>
 	                    	<c:if test="${user.isdefault !='0' && user.dataStat !='1'}">
 	                    		<sec:authorize access="hasRole('ROLE_SYS_USER_INTOEDIT')">

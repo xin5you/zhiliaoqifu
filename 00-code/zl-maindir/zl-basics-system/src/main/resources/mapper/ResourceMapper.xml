@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ebeijia.zl.basics.system.mapper.ResourceMapper">
+	
+	<sql id="ResourceColumns">
+		 id,
+		 description, 
+		 icon, 
+		 resource_name,
+		 resource_type,
+		 login_type,
+		 resource_key,
+		 seq,
+		 url,
+		 pid,
+		 data_stat,
+		 remarks,
+		 create_user,
+		 update_user,
+		 create_time,
+		 update_time,
+		 lock_version	
+	</sql>
+	
+	 <select id="getResourceByKey" parameterType="Resource" resultType="Resource">
+		select
+			<include refid="ResourceColumns" />
+		from tb_web_resource 
+		where resource_key = #{resourceKey}
+		and login_type = #{loginType}
+	</select>
+	 
+	<select id="getResourceList" parameterType="Resource" resultType="Resource">
+		select 
+			<include refid="ResourceColumns" /> 
+		from tb_web_resource 
+		where find_in_set(id, getResourceChild('0'))
+			and login_type = #{loginType}
+		<if test="resourceType !=null and resourceType !='' ">
+			and resource_type = #{resourceType}
+		</if>
+	</select>
+	
+	<!-- 根据rId获取该用户的权限-->
+	<select id="getRoleResourceByRoleId" parameterType="String" resultType="Resource">
+		select 
+		<include refid="ResourceColumns" />
+		from tb_web_resource 
+		where data_stat ='0' and id in(
+			select resource_id 
+			from tb_web_role_resource 
+			where role_id = #{roleId}
+		)
+	</select>
+	
+	<!-- 根据用户Id获取该用户的权限-->
+	<select id="getUserResourceByUserId" parameterType="String" resultType="Resource">
+		select 
+		<include refid="ResourceColumns" />
+		from tb_web_resource 
+		where  data_stat='0' and id in(
+			select resource_id from
+			tb_web_role_resource 
+			where role_id in(
+				select role_id from tb_web_user_role
+				where user_id = #{userId}
+			)
+		)
+	</select>
+
+</mapper>

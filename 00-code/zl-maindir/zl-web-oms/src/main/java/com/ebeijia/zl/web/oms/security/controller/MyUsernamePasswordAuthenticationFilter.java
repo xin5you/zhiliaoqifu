@@ -4,18 +4,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.UserService;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.Constants.RandomCodeType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
@@ -34,7 +33,6 @@ public class MyUsernamePasswordAuthenticationFilter extends
     private int showCheckCode = 0;
     
 	@Autowired
-	@Qualifier("userService")
 	private UserService userService;
 	
  	public int getShowCheckCode() {

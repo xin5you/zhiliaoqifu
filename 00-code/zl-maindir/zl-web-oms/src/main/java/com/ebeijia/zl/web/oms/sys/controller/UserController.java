@@ -9,26 +9,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.Organization;
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.OrganizationService;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ebeijia.zl.basics.system.domain.Organization;
+import com.ebeijia.zl.basics.system.domain.Role;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.OrganizationService;
+import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserService;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 import com.github.pagehelper.PageInfo;
 
 @Controller
@@ -38,7 +39,6 @@ public class UserController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
-	@Qualifier("userService")
 	private UserService userService;
 
 	@Autowired
@@ -47,17 +47,27 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
+	@Autowired
+	private UserRoleResourceService userRoleResourceService;
+	
 	@RequestMapping(value = "/listUser")
 	public ModelAndView listUser(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/user/listUser");
-		String operStatus=StringUtil.nullToString(req.getParameter("operStatus"));
+		
+		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
+		String loginName = StringUtil.nullToString(req.getParameter("loginName"));
+		String userName = StringUtil.nullToString(req.getParameter("userName"));
+		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		User bizUser=new User();
+		
 		PageInfo<User> pageList = null;
+		User bizUser = new User();
 		try {
-			bizUser=getUserInfo(req);
-			pageList=userService.getUserPage(startNum, pageSize, bizUser);
+			bizUser.setUserName(userName);
+			bizUser.setLoginName(loginName);
+			bizUser.setLoginType(LoginType.LoginType1.getCode());
+			pageList = userService.getUserPage(startNum, pageSize, bizUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("查询角色列表信息出错", e);
@@ -68,11 +78,10 @@ public class UserController {
 		return mv;
 	}
 	
-	
 	@RequestMapping(value = "/intoAddUser")
 	public ModelAndView intoAddUser(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/user/addUser");
-		List<Organization> organizationList=organizationService.getOrganizationList(new Organization());
+		List<Organization> organizationList = organizationService.getOrganizationList(new Organization());
 		Role role = new Role();
 		role.setLoginType(LoginType.LoginType1.getCode());
 		List<Role> roleList = roleService.getRoleList(role);
@@ -105,16 +114,17 @@ public class UserController {
 				return resultMap;
 			}
 			user.setPassword(MD5Utils.MD5(user.getPassword()));
-			userService.saveUser(user, rolesIds);
+			if(userRoleResourceService.insertUserRole(user, rolesIds) < 1){
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增用户失败，请重新添加");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "新增用户失败，请重新添加");
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		return resultMap;
 	}
-	
 	
 	/**
 	 * 修改密码
@@ -137,10 +147,10 @@ public class UserController {
 			return resultMap;
 		}
 		try {
-			HttpSession session=req.getSession();
-			User user=(User)session.getAttribute(Constants.SESSION_USER);
-			User currUser=userService.getById(user.getId().toString());
-			if(currUser !=null){
+			HttpSession session = req.getSession();
+			User user = (User)session.getAttribute(Constants.SESSION_USER);
+			User currUser = userService.getById(user.getId().toString());
+			if(currUser != null){
 				if(!currUser.getPassword().equals(oldPasswrod)){
 					resultMap.put("status", Boolean.FALSE);
 					resultMap.put("msg", "请输入正确的旧密码");
@@ -158,8 +168,6 @@ public class UserController {
 		}
 		return resultMap;
 	}
-	
-	
 	
 	/**
 	 * @param req
@@ -200,22 +208,25 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		resultMap.put("status", Boolean.TRUE);
-		String [] rolesIds=req.getParameterValues("rolesIds[]");
+		String [] rolesIds = req.getParameterValues("rolesIds[]");
 
 		try {
-			User user=getUserInfo(req);
+			User user = getUserInfo(req);
 			
-			User loginNameUser=userService.getUserByName("", user.getLoginName(), LoginType.LoginType1.getCode());
-			if(loginNameUser !=null){
+			User loginNameUser = userService.getUserByName("", user.getLoginName(), LoginType.LoginType1.getCode());
+			if(loginNameUser != null){
 				if(!user.getId().equals(loginNameUser.getId())){
 					resultMap.put("status", Boolean.FALSE);
 					resultMap.put("msg", "当前登陆名已存在，请重新输入");
 					return resultMap;
 				}
 			}
-			userService.updateUser(user, rolesIds);
+			if (userRoleResourceService.updateUserRole(user, rolesIds) < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑用户失败，请重新操作");
+				return resultMap;
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑用户失败，请重新操作");
 			logger.error(e.getLocalizedMessage(), e);
@@ -234,10 +245,12 @@ public class UserController {
 	* @throws
 	*/ 
 	private User getUserInfo(HttpServletRequest req) throws Exception {
-		User user = null;
 		String userId = StringUtil.nullToString(req.getParameter("userId"));
+		
 		HttpSession session = req.getSession();
 		User u = (User)session.getAttribute(Constants.SESSION_USER);
+		
+		User user = null;
 		if(!StringUtil.isNullOrEmpty(userId)){
 			user = userService.getById(userId);
 		}else{
@@ -245,11 +258,14 @@ public class UserController {
 			user.setId(UUID.randomUUID().toString());//后面用uuid设置userId值
 			user.setCreateUser(u.getId());
 			user.setCreateTime(System.currentTimeMillis());
+			user.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			user.setLockVersion(0);
+			user.setIsdefault("1");
 		}
 		
 		user.setLoginName(StringUtil.nullToString(req.getParameter("loginName")));
 		user.setUserName(StringUtil.nullToString(req.getParameter("userName")));
-		String password=StringUtil.nullToString(req.getParameter("password"));
+		String password = StringUtil.nullToString(req.getParameter("password"));
 		if(!StringUtil.isNullOrEmpty(password)){
 			user.setPassword(password);
 		}

@@ -16,8 +16,8 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>手机充值</li>
-			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商管理</a></li>
+			                    <li>分销商管理</li>
+			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
 			                     <li>编辑分销商</li>
 			                </ul>
 			            </div>
@@ -31,7 +31,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商名称</label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelName" name="channelName" value="${retailChnlInf.channelName }" maxlength="32"/>
+							                 <input type="text" class="span6" id="channelName" name="channelName" value="${retailChnlInf.channelName }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -39,7 +39,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商编号</label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelCode" name="channelCode" value="${retailChnlInf.channelCode }" maxlength="32"/>
+							                 <input type="text" class="span6" id="channelCode" name="channelCode" value="${retailChnlInf.channelCode }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -47,7 +47,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商KEY</label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelKey" name="channelKey" value="${retailChnlInf.channelKey }" maxlength="64" />
+							                 <input type="text" class="span6" id="channelKey" name="channelKey" value="${retailChnlInf.channelKey }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -80,7 +80,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">邮箱</label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="email" name="email" value="${retailChnlInf.email }" maxlength="64"/>
+							                 <input type="text" class="span6" id="email" name="email" value="${retailChnlInf.email }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>

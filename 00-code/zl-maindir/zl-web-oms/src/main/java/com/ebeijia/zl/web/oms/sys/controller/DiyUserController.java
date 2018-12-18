@@ -3,16 +3,11 @@ package com.ebeijia.zl.web.oms.sys.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
-import com.ebeijia.zl.web.oms.sys.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ebeijia.zl.basics.system.domain.Role;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 import com.github.pagehelper.PageInfo;
 
 @Controller
@@ -39,6 +41,9 @@ public class DiyUserController{
 
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	private UserRoleResourceService userRoleResourceService;
 
 	/**
 	 * 查询商户用户列表
@@ -50,16 +55,21 @@ public class DiyUserController{
 	@RequestMapping(value = "/listDiyUser")
 	public ModelAndView listDiyUser(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("diy/diyUser/listDiyUser");
+		
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
+		String userName = StringUtil.nullToString(req.getParameter("userName"));
+		String phoneNo = StringUtil.nullToString(req.getParameter("phoneNo"));
+		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		User bizUser=new User();
+		
 		PageInfo<User> pageList = null;
+		User bizUser = new User();
 		try {
-			HttpSession session=req.getSession();
-			User user = (User)session.getAttribute(Constants.SESSION_USER);
-			bizUser = getDiyUserInfo(req, user);
-			pageList = userService.getDiyUserPage(startNum, pageSize, bizUser);
+			bizUser.setPhoneNo(phoneNo);
+			bizUser.setUserName(userName);
+			bizUser.setLoginType(LoginType.LoginType3.getCode());
+			pageList = userService.getUserPage(startNum, pageSize, bizUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("查询角色列表信息出错", e);
@@ -105,9 +115,7 @@ public class DiyUserController{
 		resultMap.put("status", Boolean.TRUE);
 		String roleId = StringUtil.nullToString(req.getParameter("roleId"));
 		try {
-			HttpSession session=req.getSession();
-			User user=(User)session.getAttribute(Constants.SESSION_USER);
-			User diyUser = getDiyUserInfo(req, user);
+			User diyUser = getDiyUserInfo(req);
 			User phoneNoUser = userService.getUserByPhoneNo(diyUser);
 			if (phoneNoUser != null) {
 				resultMap.put("status", Boolean.FALSE);
@@ -121,14 +129,17 @@ public class DiyUserController{
 				return resultMap;
 			}
 			diyUser.setPassword(MD5Utils.MD5(diyUser.getPassword()));
-			diyUser.setIsdefault("0");
+			
 			String[] roleIds = {roleId};
-			userService.saveUser(diyUser, roleIds);
+			if (userRoleResourceService.insertUserRole(diyUser, roleIds) < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增用户失败，请重新添加");
+				return resultMap;
+			}
 
 			//TODO 添加分销商信息于用户的关联
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "新增用户失败，请重新添加");
 			logger.error(e.getLocalizedMessage(), e);
@@ -147,14 +158,18 @@ public class DiyUserController{
 	@RequestMapping(value = "/intoEditDiyUser")
 	public ModelAndView intoEditDiyUser(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("diy/diyUser/editDiyUser");
+		
 		String userId = req.getParameter("userId");
 		User diyUser = userService.getById(userId);
+		
 		Role role = new Role();
 		role.setLoginType(LoginType.LoginType3.getCode());
+		
 		// 获取角色列表
 		List<Role> diyRoleList = roleService.getRoleList(role);
-		mv.addObject("diyRoleList", diyRoleList);
 		List<Role> diyUserRoleList = roleService.getUserRoleByUserId(diyUser.getId().toString());
+		
+		mv.addObject("diyRoleList", diyRoleList);
 		mv.addObject("diyUserRoleList", diyUserRoleList);
 		mv.addObject("diyUser", diyUser);
 		return mv;
@@ -175,9 +190,7 @@ public class DiyUserController{
 		resultMap.put("status", Boolean.TRUE);
 		String roleId = StringUtil.nullToString(req.getParameter("roleId"));
 		try {
-			HttpSession session=req.getSession();
-			User user=(User)session.getAttribute(Constants.SESSION_USER);
-			User diyUser = getDiyUserInfo(req, user);
+			User diyUser = getDiyUserInfo(req);
 			User phoneNoUser = userService.getUserByPhoneNo(diyUser);
 			if (phoneNoUser != null && !phoneNoUser.getId().equals(diyUser.getId())) {
 				resultMap.put("status", Boolean.FALSE);
@@ -193,7 +206,11 @@ public class DiyUserController{
 				}
 			}
 			String[] roleIds = {roleId};
-			userService.updateUser(diyUser, roleIds);
+			if (userRoleResourceService.updateUserRole(diyUser, roleIds) < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑用户失败，请重新操作");
+				return resultMap;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -231,17 +248,25 @@ public class DiyUserController{
 	 * @Title: getUserInfo @Description: 用户表封装 @param @param
 	 * req @param @return @param @throws Exception @return User 返回类型 @throws
 	 */
-	private User getDiyUserInfo(HttpServletRequest req, User user) throws Exception {
-		User diyUser = null;
+	private User getDiyUserInfo(HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+		User u = (User)session.getAttribute(Constants.SESSION_USER);
+		
 		String userId = StringUtil.nullToString(req.getParameter("userId"));
+		
+		User diyUser = null;
 		if (!StringUtil.isNullOrEmpty(userId)) {
 			diyUser = userService.getById(userId);
 		} else {
 			diyUser = new User();
-			diyUser.setId(UUID.randomUUID().toString());
-			diyUser.setCreateUser(user.getId().toString());
+			diyUser.setId(IdUtil.getNextId());
+			diyUser.setCreateUser(u.getId().toString());
 			diyUser.setCreateTime(System.currentTimeMillis());
+			diyUser.setIsdefault("1");
+			diyUser.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			diyUser.setLockVersion(0);
 		}
+		
 		diyUser.setUserName(StringUtil.nullToString(req.getParameter("userName")));
 		String password = StringUtil.nullToString(req.getParameter("password"));
 		if (!StringUtil.isNullOrEmpty(password)) {
@@ -250,7 +275,7 @@ public class DiyUserController{
 		diyUser.setPhoneNo(StringUtil.nullToString(req.getParameter("phoneNo")));
 		diyUser.setLoginType(LoginType.LoginType3.getCode());
 		diyUser.setSupplierId(StringUtil.nullToString(req.getParameter("supplierId")));
-		diyUser.setUpdateUser(user.getId().toString());
+		diyUser.setUpdateUser(u.getId().toString());
 		diyUser.setUpdateTime(System.currentTimeMillis());
 		return diyUser;
 	}

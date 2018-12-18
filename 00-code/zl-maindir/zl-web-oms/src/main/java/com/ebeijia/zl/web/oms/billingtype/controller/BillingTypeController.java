@@ -3,13 +3,11 @@ package com.ebeijia.zl.web.oms.billingtype.controller;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -47,12 +47,12 @@ public class BillingTypeController {
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		PageInfo<BillingTypeInf> pageList = null;
 		BillingTypeInf billingTypeInf = new BillingTypeInf();
-		billingTypeInf.setbName(StringUtil.nullToString(req.getParameter("bName")));//创建专用账户类型对象，并设置name属性
+		billingTypeInf.setBName(StringUtil.nullToString(req.getParameter("bName")));//创建专用账户类型对象，并设置name属性
 		
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-			pageList = billingTypeInfService.getBillingTypeInfList(startNum, pageSize, billingTypeInf);//将创建的专用账户类型对象传入查询专用账户类型列表的参数中，实现通过专用账户类型名称来模糊查询列表的功能，name为空则为查询所有
+			pageList = billingTypeInfService.getBillingTypeInfListPage(startNum, pageSize, billingTypeInf);//将创建的专用账户类型对象传入查询专用账户类型列表的参数中，实现通过专用账户类型名称来模糊查询列表的功能，name为空则为查询所有
 		
 		} catch (Exception e) {
 			logger.error("## 查询专用账户类型列表信息出错", e);
@@ -110,7 +110,7 @@ public class BillingTypeController {
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		String bName = StringUtil.nullToString(req.getParameter("bName"));
 		BillingTypeInf billingTypeName = billingTypeInfService.getBillingTypeInfById(bId);
-		if (!billingTypeName.getbName().equals(bName)) {
+		if (!billingTypeName.getBName().equals(bName)) {
 			BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfByName(bName);
 			if (!StringUtil.isNullOrEmpty(billingType)) {
 				resultMap.put("status", Boolean.FALSE);
@@ -140,7 +140,7 @@ public class BillingTypeController {
 		
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		BillingTypeInf billingType = new BillingTypeInf();
-		billingType.setbId(bId);
+		billingType.setBId(bId);
 		billingType.setUpdateTime(System.currentTimeMillis());
 		billingType.setUpdateUser(user.getId());
 		
@@ -168,11 +168,11 @@ public class BillingTypeController {
 			billingType = billingTypeInfService.getBillingTypeInfById(bId);
 		} else {
 			billingType = new BillingTypeInf();
-			billingType.setbId(UUID.randomUUID().toString());
+			billingType.setBId(IdUtil.getNextId());
 			billingType.setCreateUser(user.getId());
 			billingType.setCreateTime(System.currentTimeMillis());
 		}
-		billingType.setbName(bName);
+		billingType.setBName(bName);
 		billingType.setCode(code);
 		billingType.setRemarks(remarks);
 		billingType.setLoseFee(new BigDecimal(NumberUtils.RMBYuanToCent(loseFee)));

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
+import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
@@ -116,7 +116,7 @@ public class BatchRechargeController {
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 		
 		List<BillingTypeInf> bList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
-		List<BillingTypeInf> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getbId().equals(t.getbId())).collect(Collectors.toList());
+		List<BillingTypeInf> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getbId().equals(t.getBId())).collect(Collectors.toList());
 
 		LinkedList<BatchOrderList> orderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.rechargeSession);
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);

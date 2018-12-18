@@ -2,200 +2,200 @@ package com.ebeijia.zl.web.oms.batchOrder.model;
 
 import java.math.BigDecimal;
 
-import com.ebeijia.zl.common.utils.domain.BaseEntity;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
-public class BatchOrderList extends BaseEntity {
-	private String orderListId;                     	 //订单明细_id
-	private String orderId;                              //订单号
-	private String userName;                         //用户名
-	private String phoneNo;                         //手机号
-	private String userCardNo;                     //身份证号
-	private BigDecimal amount;                          //金额
-	private String accountType;						//账户类型
-	private String bizType;							//专项类型（九大类）
-	private String orderStat;                      //订单状态
-	private String orderDesc;                    //订单描述
-	private String resv1;                             //备用字段1
-	private String resv2;                             //备用字段2
-	private String resv3;                             //备用字段3
-	private String resv4;                             //备用字段4
-	private String resv5;                             //备用字段5
-	private String resv6;                             //备用字段6
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper=false)
+@TableName("tb_batch_order_list")
+public class BatchOrderList extends Model<BatchOrder>{
+	/**
+     * 订单明细_id
+     */
+    @TableId(value = "order_list_id" ,type = IdType.UUID)
+	private String orderListId;                     	 
+    
+    /**
+     * 订单号
+     */
+    @TableField("order_id")
+	private String orderId;                          
+    
+    /**
+     * 用户名
+     */
+    @TableField("user_name")
+	private String userName;                       
+    
+    /**
+     * 手机号
+     */
+    @TableField("phone_no")
+	private String phoneNo;                       
+    
+    /**
+     * 身份证号
+     */
+    @TableField("user_card_no")
+	private String userCardNo;                  
+    
+    /**
+     * 金额
+     */
+    @TableField("amount")
+	private BigDecimal amount;                         
+    
+    /**
+     * 账户类型
+     */
+    @TableField("account_type")
+	private String accountType;				
+    
+    /**
+     * 专项类型（九大类）
+     */
+    @TableField("biz_type")
+	private String bizType;						
+    
+    /**
+     * 订单状态
+     */
+    @TableField("order_stat")
+	private String orderStat;                   
+    
+    /**
+     * 订单描述
+     */
+    @TableField("order_desc")
+	private String orderDesc;                  
+    
+    /**
+     * 订单名称
+     */
+    @TableField("tfr_in_id")
 	private String tfrInId;
+    
+    /**
+     * 订单名称
+     */
+    @TableField("tfr_in_bid")
 	private String tfrInBid;
+    
+    /**
+     * 订单名称
+     */
+    @TableField("tfr_out_id")
 	private String tfrOutId;
+    
+    /**
+     * 订单名称
+     */
+    @TableField("tfr_out_bid")
 	private String tfrOutBid;
+    
+    /**
+     * 备用字段1
+     */
+    @TableField("resv1")
+	private String resv1;                            
+    
+    /**
+     * 用户名
+     */
+    @TableField("resv2")
+	private String resv2;                            
+    
+    /**
+     * 备用字段3
+     */
+    @TableField("resv3")
+	private String resv3;                           
+    
+    /**
+     * 备用字段4
+     */
+    @TableField("resv4")
+	private String resv4;                             
+    
+    /**
+     * 备用字段5
+     */
+    @TableField("resv5")
+	private String resv5;                            
+    
+    /**
+     * 备用字段6
+     */
+    @TableField("resv6")
+	private String resv6;     
+    
+    /**
+     * 状态
+     */
+    @TableField("data_stat")
+    private String dataStat;
+ 
+    /**
+     * 备注
+     */
+    @TableField("remarks")
+    private String remarks;
+ 
+    /**
+     * 创建人
+     */
+    @TableField("create_user")
+    private String createUser;
+ 
+    /**
+     * 修改人
+     */
+    @TableField("update_user")
+    private String updateUser;
+ 
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private Long createTime;
+ 
+    /**
+     * 修改时间
+     */
+    @TableField("update_time")
+    private Long updateTime;
+ 
+    /**
+     * 乐观锁版本
+     */
+    @TableField("lock_version")
+    private Integer lockVersion;
 	
+    @TableField(exist = false)
 	private String puId;
 	
+    @TableField(exist = false)
 	private String orderStat2;
+    
+    @TableField(exist = false)
 	private String orderStat3;
+    
+    @TableField(exist = false)
 	private String orderStat4;
 	
+    @TableField(exist = false)
 	private String companyId;
+    
+    @TableField(exist = false)
 	private String accountTypeName;
+    
+    @TableField(exist = false)
 	private String bizTypeName;
 
-	public String getOrderStat4() {
-		return orderStat4;
-	}
-	public void setOrderStat4(String orderStat4) {
-		this.orderStat4 = orderStat4;
-	}
-	public String getTfrInId() {
-		return tfrInId;
-	}
-	public void setTfrInId(String tfrInId) {
-		this.tfrInId = tfrInId;
-	}
-	public String getTfrInBid() {
-		return tfrInBid;
-	}
-	public void setTfrInBid(String tfrInBid) {
-		this.tfrInBid = tfrInBid;
-	}
-	public String getTfrOutId() {
-		return tfrOutId;
-	}
-	public void setTfrOutId(String tfrOutId) {
-		this.tfrOutId = tfrOutId;
-	}
-	public String getTfrOutBid() {
-		return tfrOutBid;
-	}
-	public void setTfrOutBid(String tfrOutBid) {
-		this.tfrOutBid = tfrOutBid;
-	}
-	public String getCompanyId() {
-		return companyId;
-	}
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
-	}
-	public String getOrderStat3() {
-		return orderStat3;
-	}
-	public void setOrderStat3(String orderStat3) {
-		this.orderStat3 = orderStat3;
-	}
-	public String getBizTypeName() {
-		return bizTypeName;
-	}
-	public void setBizTypeName(String bizTypeName) {
-		this.bizTypeName = bizTypeName;
-	}
-	public String getAccountTypeName() {
-		return accountTypeName;
-	}
-	public void setAccountTypeName(String accountTypeName) {
-		this.accountTypeName = accountTypeName;
-	}
-	public String getAccountType() {
-		return accountType;
-	}
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
-	public String getBizType() {
-		return bizType;
-	}
-	public void setBizType(String bizType) {
-		this.bizType = bizType;
-	}
-	public String getOrderStat2() {
-		return orderStat2;
-	}
-	public void setOrderStat2(String orderStat2) {
-		this.orderStat2 = orderStat2;
-	}
-	public String getOrderListId() {
-		return orderListId;
-	}
-	public void setOrderListId(String orderListId) {
-		this.orderListId = orderListId;
-	}
-	public String getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getPhoneNo() {
-		return phoneNo;
-	}
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
-	}
-	public String getUserCardNo() {
-		return userCardNo;
-	}
-	public void setUserCardNo(String userCardNo) {
-		this.userCardNo = userCardNo;
-	}
-	public BigDecimal getAmount() {
-		return amount;
-	}
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
-	public String getOrderStat() {
-		return orderStat;
-	}
-	public void setOrderStat(String orderStat) {
-		this.orderStat = orderStat;
-	}
-	public String getOrderDesc() {
-		return orderDesc;
-	}
-	public void setOrderDesc(String orderDesc) {
-		this.orderDesc = orderDesc;
-	}
-	public String getResv1() {
-		return resv1;
-	}
-	public void setResv1(String resv1) {
-		this.resv1 = resv1;
-	}
-	public String getResv2() {
-		return resv2;
-	}
-	public void setResv2(String resv2) {
-		this.resv2 = resv2;
-	}
-	public String getResv3() {
-		return resv3;
-	}
-	public void setResv3(String resv3) {
-		this.resv3 = resv3;
-	}
-	public String getResv4() {
-		return resv4;
-	}
-	public void setResv4(String resv4) {
-		this.resv4 = resv4;
-	}
-	public String getResv5() {
-		return resv5;
-	}
-	public void setResv5(String resv5) {
-		this.resv5 = resv5;
-	}
-	public String getResv6() {
-		return resv6;
-	}
-	public void setResv6(String resv6) {
-		this.resv6 = resv6;
-	}
-	public String getPuId() {
-		return puId;
-	}
-	public void setPuId(String puId) {
-		this.puId = puId;
-	}
 }

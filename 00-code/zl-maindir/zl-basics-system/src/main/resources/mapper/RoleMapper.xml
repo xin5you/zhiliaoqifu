@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebeijia.zl.basics.system.mapper.RoleMapper">
+	
+	<sql id="roleColumns">
+		 id,
+		 role_name,
+		 description,
+		 login_type,
+		 seq,
+		 data_stat,
+		 remarks,
+		 create_user,
+		 update_user,
+		 create_time,
+		 update_time,
+		 lock_version
+	</sql>
+
+	<select id="getRoleList" parameterType="Role" resultType="Role">
+		select
+			<include refid="roleColumns"/>
+			from tb_web_role
+			where data_stat='0' and login_type = #{loginType}
+	</select>
+	
+	<select id="getUserRoleByUserId" parameterType="java.lang.String" resultType="Role">
+		select
+			<include refid="roleColumns" />
+		from tb_web_role 
+		where id in (
+			select role_id from tb_web_user_role
+			where user_id = #{id}
+		)
+	</select>
+	
+	<select id="getRoleByName" parameterType="Role" resultType="Role">
+		select
+			<include refid="roleColumns" />
+		from tb_web_role 
+		where data_stat = '0' 
+			and login_type = #{loginType}
+			and role_name = #{roleName}
+	</select>
+	
+	<select id="getRoleBySeq" parameterType="Role" resultType="Role">
+		select
+			<include refid="roleColumns" />
+		from tb_web_role 
+		where data_stat = '0' 
+			and login_type = #{loginType}
+			and seq = #{seq}
+	</select>
+</mapper>

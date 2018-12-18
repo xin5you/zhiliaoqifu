@@ -4,17 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.sys.model.Resource;
-import com.ebeijia.zl.web.oms.sys.model.Role;
-import com.ebeijia.zl.web.oms.sys.model.User;
-import com.ebeijia.zl.web.oms.sys.service.ResourceService;
-import com.ebeijia.zl.web.oms.sys.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.web.oms.sys.model.ZTreeResource;
+import com.ebeijia.zl.basics.system.domain.Resource;
+import com.ebeijia.zl.basics.system.domain.Role;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.Constants.LoginType;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.oms.sys.model.ZTreeResource;
+import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 import com.github.pagehelper.PageInfo;
 
 import net.sf.json.JSONArray;
@@ -44,6 +45,9 @@ public class DiyRoleController {
 	@Autowired
 	private ResourceService resourceService;
 	
+	@Autowired
+	private UserRoleResourceService userRoleResourceService;
+	
 	/**
 	 * 商户角色列表
 	 * 
@@ -59,12 +63,11 @@ public class DiyRoleController {
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		
 		PageInfo<Role> pageList = null;
-		Role diyRole=new Role();
+		Role diyRole = new Role();
 		diyRole.setLoginType(LoginType.LoginType3.getCode());
 		try {
-			pageList=roleService.getRolePage(startNum, pageSize, diyRole);
+			pageList = roleService.getRolePage(startNum, pageSize, diyRole);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("查询角色列表信息出错", e);
 		}
 		mv.addObject("pageInfo", pageList);
@@ -95,24 +98,36 @@ public class DiyRoleController {
 	@ResponseBody
 	public Map<String, Object> addDiyRoleCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String roleName=req.getParameter("roleName");
-		String seq=req.getParameter("seq");
-		String description=req.getParameter("description");
+		resultMap.put("status", Boolean.TRUE);
+		
+		String roleName = req.getParameter("roleName");
+		String seq = req.getParameter("seq");
+		
 		try{
-			HttpSession session=req.getSession();
-			User user=(User)session.getAttribute(Constants.SESSION_USER);
-			Role role=new Role();
-			role.setId(UUID.randomUUID().toString());
-			role.setRoleName(roleName);
-			role.setSeq(Integer.parseInt(seq));
-			role.setDescription(description);
-			role.setLoginType(LoginType.LoginType3.getCode());
-			role.setCreateUser(user.getId());
-			role.setUpdateUser(user.getId());
-			role.setCreateTime(System.currentTimeMillis());
-			role.setUpdateTime(System.currentTimeMillis());
-			roleService.save(role);
-			resultMap.put("status", Boolean.TRUE);
+			Role rName = new Role();
+			rName.setRoleName(roleName);
+			rName.setLoginType(LoginType.LoginType3.getCode());
+			Role name = roleService.getRoleByName(rName);
+			if (name != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg","角色名称已存在，请重新输入");
+				return resultMap;
+			}
+			Role rSeq = new Role();
+			rSeq.setSeq(Integer.valueOf(seq));
+			rSeq.setLoginType(LoginType.LoginType3.getCode());
+			Role roleSeq = roleService.getRoleBySeq(rSeq);
+			if (roleSeq != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg","序号已存在，请重新输入");
+				return resultMap;
+			}
+			Role role = getRoleInfo(req);
+			if (!roleService.save(role)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg","添加失败，请稍微再试");
+				return resultMap;
+			}
 		}catch(Exception ex){
 			ex.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
@@ -131,8 +146,8 @@ public class DiyRoleController {
 	@RequestMapping(value = "/intoEditDiyRole")
 	public ModelAndView intoEditDiyRole(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("diy/diyRole/editDiyRole");
-		String id=req.getParameter("id");
-		Role diyRole=roleService.getById(id);
+		String id = req.getParameter("id");
+		Role diyRole = roleService.getById(id);
 		mv.addObject("diyRole", diyRole);
 		return mv;
 	}
@@ -148,31 +163,43 @@ public class DiyRoleController {
 	@ResponseBody
 	public Map<String, Object> editDiyRoleCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		
+		String roleId = req.getParameter("roleId");
+		String roleName = req.getParameter("roleName");
+		String seq = req.getParameter("seq");
 		try{
-			Role diyRole = null;
-			HttpSession session=req.getSession();
-			User user=(User)session.getAttribute(Constants.SESSION_USER);
-			String id = StringUtil.nullToString(req.getParameter("id"));
-			if(!StringUtil.isNullOrEmpty(id)){
-				diyRole = roleService.getById(id);
-			}else{
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg","添加失败，请稍微再试");
-				return resultMap;
+			Role rName = new Role();
+			rName.setRoleName(roleName);
+			rName.setLoginType(LoginType.LoginType3.getCode());
+			Role name = roleService.getRoleByName(rName);
+			if (name != null) {
+				if (!name.getId().equals(roleId)) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg","角色名称已存在，请重新输入");
+					return resultMap;
+				}
 			}
-			diyRole.setId(id);
-			diyRole.setRoleName(StringUtil.nullToString(req.getParameter("roleName")));
-			diyRole.setSeq(Integer.parseInt(StringUtil.nullToString(req.getParameter("seq"))));
-			diyRole.setDescription(StringUtil.nullToString(req.getParameter("description")));
-			diyRole.setLoginType(LoginType.LoginType3.getCode());
-			diyRole.setUpdateUser(user.getId().toString());
-			diyRole.setUpdateTime(System.currentTimeMillis());
-			roleService.updateById(diyRole);
-			resultMap.put("status", Boolean.TRUE);
+			Role rSeq = new Role();
+			rSeq.setSeq(Integer.valueOf(seq));
+			rSeq.setLoginType(LoginType.LoginType3.getCode());
+			Role roleSeq = roleService.getRoleBySeq(rSeq);
+			if (roleSeq != null) {
+				if (!roleSeq.getId().equals(roleId)) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg","序号已存在，请重新输入");
+					return resultMap;
+				}
+			}
+			Role role = getRoleInfo(req);
+			if (!roleService.updateById(role)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg","编辑失败，请稍微再试");
+			}
 		}catch(Exception ex){
-			ex.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg","添加失败，请稍微再试");
+			resultMap.put("msg","编辑失败，请稍微再试");
+			logger.error("## 编辑失败");
 		}
 		return resultMap;
 	}
@@ -189,13 +216,15 @@ public class DiyRoleController {
 	public Map<String, Object> deleteDiyRoleCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
-		String id=StringUtil.nullToString(req.getParameter("id"));
+		String id = StringUtil.nullToString(req.getParameter("id"));
 		try {
-			roleService.removeById(id);
+			if (!roleService.removeById(id)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "角色删除失败，请重试");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "角色授权失败，请重新选择权限");
+			resultMap.put("msg", "角色删除失败，请重试");
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		return resultMap;
@@ -211,7 +240,7 @@ public class DiyRoleController {
 	@RequestMapping(value = "/diyRoleAuthorization")
 	public ModelAndView diyRoleAuthorization(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("diy/diyRole/diyRoleAuthorization");
-		String id=req.getParameter("id");
+		String id = req.getParameter("id");
 		mv.addObject("roleId", id);
 		return mv;
 	}
@@ -227,23 +256,23 @@ public class DiyRoleController {
 	@ResponseBody
 	public Map<String, Object> getDiyRoleResources(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String roleId=req.getParameter("id");
+		String roleId = req.getParameter("id");
 		//所有的资源列表
 		Resource resource = new Resource();
 		resource.setLoginType(LoginType.LoginType3.getCode());
-		List<Resource> allResourceList=resourceService.getResourceList(resource); 
+		List<Resource> allResourceList = resourceService.getResourceList(resource); 
 		//根据角色的id查看对应的资源信息
-		List<Resource> roleResList=resourceService.getRoleResourceByRoleId(roleId); 
+		List<Resource> roleResList = resourceService.getRoleResourceByRoleId(roleId); 
 		
-		List<ZTreeResource> list=new ArrayList<ZTreeResource>();
-		ZTreeResource entity=null;
-		if(roleResList !=null && allResourceList.size()>0){
-			for(int i=0;i<allResourceList.size();i++){
-				entity=new ZTreeResource();
+		List<ZTreeResource> list = new ArrayList<ZTreeResource>();
+		ZTreeResource entity = null;
+		if(roleResList != null && allResourceList.size() > 0){
+			for(int i = 0; i < allResourceList.size(); i++){
+				entity = new ZTreeResource();
 				entity.setId(allResourceList.get(i).getId());
 				entity.setName(allResourceList.get(i).getResourceName());
 				entity.setpId(allResourceList.get(i).getPid());
-				for(int j=0;j<roleResList.size();j++){
+				for(int j=0; j < roleResList.size(); j++){
 					if(roleResList.get(j).getId().equals(allResourceList.get(i).getId())){
 						entity.setChecked(true);
 					}
@@ -271,14 +300,47 @@ public class DiyRoleController {
 		String roleId=req.getParameter("roleId");
 		resultMap.put("status", Boolean.TRUE);
 		try {
-			roleService.editRoleResource(roleId, resourceIds);
+			if (userRoleResourceService.updateRoleResource(roleId, resourceIds) < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "角色授权失败，请重新选择权限");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "角色授权失败，请重新选择权限");
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		return resultMap;
+	}
+	
+	private Role getRoleInfo (HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User u = (User)session.getAttribute(Constants.SESSION_USER);
+		
+		String roleId=req.getParameter("roleId");
+		String roleName=req.getParameter("roleName");
+		String seq=req.getParameter("seq");
+		String description=req.getParameter("description");
+		
+		Role role = null;
+		if(!StringUtil.isNullOrEmpty(roleId)){
+			role = roleService.getById(roleId);
+		}else{
+			role = new Role();
+			role.setId(IdUtil.getNextId());
+			role.setCreateUser(u.getId());
+			role.setCreateTime(System.currentTimeMillis());
+			role.setDataStat("0");
+			role.setLockVersion(0);
+		}
+		role.setRoleName(roleName);
+		if (!StringUtil.isNullOrEmpty(seq)) {
+			role.setSeq(Integer.valueOf(seq));
+		}
+		role.setDescription(description);
+		role.setLoginType(LoginType.LoginType1.getCode());
+		role.setUpdateUser(u.getId());
+		role.setUpdateTime(System.currentTimeMillis());
+		return role;
 	}
 	
 }

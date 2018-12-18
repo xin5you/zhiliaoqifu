@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
 
 @Mapper
-public interface BatchOrderListMapper {
+public interface BatchOrderListMapper extends BaseMapper<BatchOrderList> {
 	
 	int addBatchOrderList(BatchOrderList orderList);
 	
