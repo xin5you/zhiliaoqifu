@@ -12,32 +12,43 @@ var addCompany = {
 	},
 	addCompanySubmit: function(){
 		var name = $("#name").val();
+		var lawCode = $("#lawCode").val();
+		var address = $("#address").val();
+		var contacts = $("#contacts").val();
+		var phoneNo = $("#phoneNo").val();
+		var remarks = $("#remarks").val();
+		var transFlag = $("#transFlag").val();
 		if(name ==''){
     		Helper.alert("请输入企业名称");
     		return false;
     	}
-		var lawCode = $("#lawCode").val();
 		if(lawCode =='' || lawCode == null){
     		Helper.alert("请输入统一社会信用代码");
     		return false;
     	}
-		var address = $("#address").val();
 		if(address =='' || address == null){
     		Helper.alert("请输入地址");
     		return false;
     	}
-		var contacts = $("#contacts").val();
 		if(contacts =='' || contacts == null){
     		Helper.alert("请输入联系人");
     		return false;
     	}
-		var phoneNo = $("#phoneNo").val();
 		if(phoneNo =='' || phoneNo == null){
     		Helper.alert("请输入联系电话");
     		return false;
+    	} else {
+    		if (phoneNo.length < 11) {
+    			Helper.alert("手机号必须要是11位");
+    			return false;
+    		} else {
+    			var reg = /^1[3|4|5|7|8][0-9]{9}$/; //验证规则
+    			if (!(reg.test(phoneNo))) {
+    				Helper.alert("请输入正确的联系电话");
+    				return false;
+    			}
+    		}
     	}
-		var remarks = $("#remarks").val();
-		var transFlag = $("#transFlag").val();
 		if (transFlag == null || transFlag == "") {
 			Helper.alert("请选择交易开关");
     		return false;

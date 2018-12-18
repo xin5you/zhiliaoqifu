@@ -33,7 +33,7 @@
 								       <div class="control-group formSep">
 							             <label class="control-label">账户类型名称<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="bName" name="bName" value="${billingType.bName }"/>
+							                 <input type="text" class="span6" id="bName" name="bName" value="${billingType.bName }" maxlength="20"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>
@@ -51,27 +51,29 @@
 							     		<div class="control-group formSep">
 							             <label class="control-label">折损率<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="loseFee" name="loseFee" value="${billingType.loseFee }"/>
+							                 <input type="text" class="span6" id="loseFee" name="loseFee" value="${billingType.loseFee }" maxlength="6"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>
 							             <div class="control-group formSep">
 							             <label class="control-label">可购率<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="buyFee" name="buyFee" value="${billingType.buyFee }"/>
+							                 <input type="text" class="span6" id="buyFee" name="buyFee" value="${billingType.buyFee }" maxlength="6"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>
 							     		<div class="control-group">
 							             <label class="control-label">备注</label>
 							             <div class="controls">
-							                  <textarea  rows="6" class="span6" id="remarks" name="remarks">${billingType.remarks }</textarea>
+							                  <textarea  rows="6" class="span6" id="remarks" name="remarks" maxlength="255">${billingType.remarks }</textarea>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
 								        <div class="control-group">
 					                            <div class="controls">
+					                            <sec:authorize access="hasRole('ROLE_BILLING_TYPE_EDITCOMMIT')">
 					                                <button class="btn btn-primary btn-submit" type="button">保存</button>
+					                            </sec:authorize>
 					                                <button class="btn btn-inverse btn-reset" type="reset">重 置</button>
 					                            </div>
 					                  	</div>

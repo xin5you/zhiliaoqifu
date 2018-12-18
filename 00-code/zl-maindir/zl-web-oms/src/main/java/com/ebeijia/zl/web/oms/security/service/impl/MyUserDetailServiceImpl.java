@@ -71,7 +71,7 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 
 	// 取得用户的权限
 	private Set<GrantedAuthority> obtionGrantedAuthorities(com.ebeijia.zl.basics.system.domain.User user) {
-		List<Resource> resources = resourceService.getUserResourceByUserId(String.valueOf(user.getId()));
+		List<Resource> resources = resourceService.getUserResourceByUserId(user.getId());
 		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();
 		for (Resource res : resources) {
 			// TODO:ZZQ 用户可以访问的资源名称（或者说用户所拥有的权限） 注意：必须"ROLE_"开头

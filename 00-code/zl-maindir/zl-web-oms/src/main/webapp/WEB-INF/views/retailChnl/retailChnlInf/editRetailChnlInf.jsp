@@ -18,18 +18,18 @@
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>分销商管理</li>
 			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
-			                     <li>编辑分销商</li>
+			                     <li>编辑分销商信息</li>
 			                </ul>
 			            </div>
 			        </nav>
 					 <div class="row-fluid">
 					 	<div class="span12">
 							<form id="mainForm" action="${ctx}/retailChnl/retailChnlInf/editRetailChnlInfCommit.do" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
-								 <h3 class="heading">编辑分销商</h3>
+								 <h3 class="heading">编辑分销商信息</h3>
 							     		<input type="hidden" id="channelId" name="channelId" value="${retailChnlInf.channelId }" />
 							     		<input type="hidden" id="lockVersion" name="lockVersion" value="${retailChnlInf.lockVersion }" />
 							     		<div class="control-group">
-							             <label class="control-label">分销商名称</label>
+							             <label class="control-label">分销商名称<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelName" name="channelName" value="${retailChnlInf.channelName }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
@@ -37,7 +37,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">分销商编号</label>
+							             <label class="control-label">分销商编号<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelCode" name="channelCode" value="${retailChnlInf.channelCode }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
@@ -45,32 +45,32 @@
 							     		</div>
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">分销商KEY</label>
+							             <label class="control-label">分销商KEY<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelKey" name="channelKey" value="${retailChnlInf.channelKey }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
 							     		
-							     		<div class="control-group">
+							     		<%-- <div class="control-group">
 							             <label class="control-label">分销商备付金额(元)</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelReserveAmt" name="channelReserveAmt" onkeyup="checkPrice(this)" value="${retailChnlInf.channelReserveAmt }" maxlength="12"/>
 							                 <span class="help-block"></span>
 							             </div>
-							     		</div>
+							     		</div> --%>
 							     		
-							     		<div class="control-group">
+							     		<%-- <div class="control-group">
 							             <label class="control-label">分销商预警金额(元)</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelPrewarningAmt" name="channelPrewarningAmt" onkeyup="checkPrice(this)" value="${retailChnlInf.channelPrewarningAmt }" maxlength="12"/>
 							                 <span class="help-block"></span>
 							             </div>
-							     		</div>
+							     		</div> --%>
 							     		
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">管理员手机号</label>
+							             <label class="control-label">管理员手机号<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="phoneNo" name="phoneNo" value="${retailChnlInf.phoneNo }" onkeyup="this.value=this.value.replace(/\D/g,'')" maxlength="11"/>
 							                 <span class="help-block"></span>
@@ -95,9 +95,9 @@
 							     		
 							       <div class="control-group ">
 				                            <div class="controls">
-<%-- 				                            	<sec:authorize access="hasRole('ROLE_PHONE_RECHARGE_SHOP_ADDCOMMIT')"> --%>
+				                            <sec:authorize access="hasRole('ROLE_RETAIL_CHNL_EDITCOMMIT')">
 				                                <button class="btn btn-primary" type="button" id="addSubmitBtn" >保存</button>
-<%-- 				                                </sec:authorize> --%>
+				                            </sec:authorize>
 				                                <button class="btn btn-inverse btn-reset" type="reset">重 置</button>
 				                            </div>
 				                  	</div>

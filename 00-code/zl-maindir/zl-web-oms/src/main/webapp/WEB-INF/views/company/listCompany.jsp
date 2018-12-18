@@ -16,13 +16,13 @@
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>企业管理</li>
 			                    <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-			                    <li>企业列表</li>
+			                    <li>企业信息列表</li>
 			                </ul>
 			            </div>
 			        </nav>
 					<form id="searchForm" action="${ctx }/company/listCompany.do" class="form-inline" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
-						<h3 class="heading">企业列表</h3>
+						<h3 class="heading">企业信息列表</h3>
 						<div class="row-fluid" id="h_search">
 							 <div class="span10">
 		                       	<div class="input-prepend">
@@ -43,9 +43,9 @@
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
 								<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
-								<%-- <sec:authorize access="hasRole('ROLE_COMPANY_INFO_INTOADD')"> --%>
+								<sec:authorize access="hasRole('ROLE_COMPANY_INTOADD')">
 								<button type="button" class="btn btn-primary btn-add">新增企业</button>
-								<%-- </sec:authorize> --%>
+								</sec:authorize>
 							</div>
 						</div>
 						
@@ -83,10 +83,16 @@
 					                    <td>${company.remarks}</td>
 					                    <td>
 					                    	<c:if test="${company.isOpen=='0'}">
+					                    	<sec:authorize access="hasRole('ROLE_COMPANY_OPENACCOUNT')">
 												<a companyId="${company.companyId}" title="开户" class="btn-mini btn-open" href="#"><i class="icon-pencil"></i></a>
+					                    	</sec:authorize>
 					                    	</c:if>
+					                    	<sec:authorize access="hasRole('ROLE_COMPANY_INTOEDIT')">
 												<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+											</sec:authorize>
+											<sec:authorize access="hasRole('ROLE_COMPANY_DELETE')">	
 												<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+					                    	</sec:authorize>
 					                    	<%-- <c:if test="${company.isOpen=='1'}">
 												<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
 					                    	</if> --%>

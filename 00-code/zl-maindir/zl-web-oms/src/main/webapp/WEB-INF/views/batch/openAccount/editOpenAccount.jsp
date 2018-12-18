@@ -17,8 +17,8 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>订单管理</li>
-			                    <li><a href="${ctx }/batch/openAccount/listOpenAccount.do">批量开户</a></li>
+			                    <li>账户管理</li>
+			                    <li><a href="${ctx }/batch/openAccount/listOpenAccount.do">企业员工批量开户</a></li>
 			                     <li>订单编辑</li>
 			                </ul>
 			            </div>
@@ -28,7 +28,11 @@
 						<input type="hidden" id="companyId" name="companyId"  value="${order.companyId }"/>
 						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
 						<h3 class="heading">订单编辑</h3>
-						<div><button class="btn btn-primary btn-editAddAccount" type="button"> 添 加 </button></div><br/>
+						<div>
+						<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTADD')">
+						<button class="btn btn-primary btn-editAddAccount" type="button"> 添 加 </button>
+						</sec:authorize>
+						</div><br/>
 						<div class="row-fluid" >
 							 <div class="span12">
 							 <div class="control-group formSep">
@@ -57,17 +61,17 @@
 												<span class="fontBold">所属企业:</span>
 												<span class="fontColor">${order.companyName }</span>
 											</td>
-											<td>
+											<%-- <td>
 												<span class="fontBold">开户类型:</span>
 												<span class="fontColor">
 													<select multiple name="billingTypes" id="billingTypes" class="form-control span8">
 														<c:forEach var="bList" items="${billingTypeList}" varStatus="st">
-															<%-- <optgroup label="${bList }"></optgroup> --%>
+															<optgroup label="${bList }"></optgroup>
 															<option value="${bList.bId }">${bList.name }</option>
 														</c:forEach>
 													</select>
 												</span>
-											</td>
+											</td> --%>
 										</tr>
 									</table>
 								</div>
@@ -94,9 +98,9 @@
                                     <td>${entity.phoneNo}</td>
                                     <td>${entity.bizTypeName}</td>
 				                    <td>
-                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')"> --%>
+                                   <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')">
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                                  <%--  </sec:authorize> --%>
+                                   </sec:authorize>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -143,9 +147,9 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-               <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ORDERLISTCOMMIT')"> --%>
+                <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTADDCOMMIT')">
                 	<button class="btn btn-primary btn-submit">确 定  </button>
-               <%--  </sec:authorize> --%>
+                </sec:authorize>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>   

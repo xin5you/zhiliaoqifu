@@ -114,6 +114,7 @@ public class DiyUserController{
 
 		resultMap.put("status", Boolean.TRUE);
 		String roleId = StringUtil.nullToString(req.getParameter("roleId"));
+		
 		try {
 			User diyUser = getDiyUserInfo(req);
 			User phoneNoUser = userService.getUserByPhoneNo(diyUser);

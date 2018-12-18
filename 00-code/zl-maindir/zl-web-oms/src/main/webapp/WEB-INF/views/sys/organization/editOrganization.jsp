@@ -15,7 +15,7 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>系统信息</li>
+			                    <li>系统管理</li>
 			                    <li><a href="${ctx }/sys/organization/listOrganization.do">部门管理</a></li>
 			                     <li>编辑部门</li>
 			                </ul>
@@ -45,7 +45,7 @@
 						         <div class="control-group">
 						             <label class="control-label">排序</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="seq" name="seq" value="${organ.seq }"/>
+						                 <input type="text" class="span6" id="seq" name="seq" value="${organ.seq }" onkeyup="this.value=this.value.replace(/\D/g,'')/>
 						                 <span class="help-block" style="color: red;">请输入整数</span>
 						             </div>
 						         </div>

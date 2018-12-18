@@ -18,29 +18,38 @@
                              </li>
                          </ul>
                          <ul class="nav" id="mobile-nav">
+                         <sec:authorize access="hasRole('ROLE_RETAIL_CHNL_MANAGE')">
                              <li class="dropdown">
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>分销商管理<b class="caret"></b></a>
                                  <ul class="dropdown-menu">
+                                 <sec:authorize access="hasRole('ROLE_RETAIL_CHNL_INFO')">
                                      	<li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
+                                 </sec:authorize>
+                                 <sec:authorize access="hasRole('ROLE_RETAIL_CHNL_ORDER')">
+                                     	<li><a href="${ctx }/retailChnl/retailChnlOrder/listRetailChnlOrderInf.do">分销商订单</a></li>
+                                 </sec:authorize>
                                      	<%-- <li><a href="${ctx }/retailChnl/reserve/listRetailChnlReserve.do">分销商备付金管理</a></li> --%>
-										<li><a href="${ctx }/retailChnl/retailChnlOrder/listRetailChnlOrderInf.do">分销商订单</a></li>
 										<%-- <li><a href="${ctx }/retailChnl/retailChnlProduct/listRetailChnlProduct.do">分销商充值产品管理</a></li> --%>
 										<%-- <li><a href="${ctx }/retailChnl/areaInf/listRetailChnlAreaInf.do">分销商话费地区维护</a></li>
 										<li><a href="${ctx }/retailChnl/item/listRetailChnlItem.do">分销商产品折扣率管理</a></li> --%>
                                  </ul>
                              </li>
-                             
-                             <sec:authorize access="hasRole('ROLE_PHONE_RECHARGE')">
+                          </sec:authorize>  
+                             <sec:authorize access="hasRole('ROLE_PROVIDER_MANAGE')">
                              <li class="dropdown">
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>供应商管理<b class="caret"></b></a>
                                  <ul class="dropdown-menu">
+                                 <sec:authorize access="hasRole('ROLE_PROVIDER_INFO')">
                                    		<li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
+                                 </sec:authorize>
+                                 <sec:authorize access="hasRole('ROLE_PROVIDER_ORDER')">
 										<li><a href="${ctx }/provider/providerOrder/listProviderOrderInf.do">供应商订单</a></li>
+								 </sec:authorize>
                                  </ul>
                              </li>
                              </sec:authorize>
                              
-                             <sec:authorize access="hasRole('ROLE_SPECIAL_ACCOUNT_MANAGE')">
+                             <sec:authorize access="hasRole('ROLE_COMPANY_MANAGE')">
                              <li class="dropdown">
                              	<a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>企业管理 <b class="caret"></b></a>
                                  <ul class="dropdown-menu">
@@ -68,15 +77,17 @@
                              </li>
                              </sec:authorize>
                              
-                             <sec:authorize access="hasRole('ROLE_SPECIAL_ACCOUNT_MANAGE')">
+                             <sec:authorize access="hasRole('ROLE_ACCOUNT_MANAGE')">
                              <li class="dropdown">
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>账户管理 <b class="caret"></b></a>
                                  <ul class="dropdown-menu">
                                      <sec:authorize access="hasRole('ROLE_BILLING_TYPE')">
                                         <li><a href="${ctx }/billingType/listBillingType.do">账户类型管理</a></li>
                                      </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT')">
+                                     <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT')">
                                      	<li><a href="${ctx }/batch/openAccount/listOpenAccount.do">批量开户</a></li>
+                                     </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE')">
                                      	<li><a href="${ctx }/batch/recharge/listRecharge.do">批量充值</a></li>
                                      </sec:authorize>
                                      <!-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE')"> -->
@@ -102,7 +113,9 @@
                                      <sec:authorize access="hasRole('ROLE_SYS_ORGANIZATION')">
                                      	<li><a href="${ctx }/sys/organization/listOrganization.do">部门管理</a></li>
                                      </sec:authorize>
+                                     <sec:authorize access="hasRole('ROLE_SYS_BASE_DICT')">
                                      <li><a href="${ctx }/baseDict/listBaseDict.do">字典管理</a></li>
+                                     </sec:authorize>
                                  </ul>
                              </li>
                              </sec:authorize>

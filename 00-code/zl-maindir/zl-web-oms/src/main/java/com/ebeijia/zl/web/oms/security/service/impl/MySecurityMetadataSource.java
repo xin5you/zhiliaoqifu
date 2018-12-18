@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.ebeijia.zl.basics.system.domain.Resource;
 import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 
 @Service
@@ -43,10 +44,11 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
 	 */
 	@PostConstruct
 	private void loadResourceDefine() {
-		System.err.println("-----------MySecurityMetadataSource loadResourceDefine ----------- ");
 		if (resourceMap == null) {
 			resourceMap = new HashMap<String, Collection<ConfigAttribute>>();
-			List<Resource> resources = this.resourceService.getResourceList(new Resource());
+			Resource r = new Resource();
+			r.setLoginType(LoginType.LoginType1.getCode());
+			List<Resource> resources = this.resourceService.getResourceList(r);
 			for (Resource resource : resources) {
 				Collection<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
 				// TODO:ZZQ 通过资源名称来表示具体的权限 注意：必须"ROLE_"开头

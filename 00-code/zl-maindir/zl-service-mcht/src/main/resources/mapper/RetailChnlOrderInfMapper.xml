@@ -125,7 +125,6 @@
 		   and p.data_stat = '0'
 		   and c.data_stat = '0'
 		   and pr.data_stat = '0'
-		   and c.resv1 = #{mchntCode}
 		   <if test="channelOrderId != null and channelOrderId != '' ">
 		   and o.channel_order_id = #{channelOrderId}
 		   </if>

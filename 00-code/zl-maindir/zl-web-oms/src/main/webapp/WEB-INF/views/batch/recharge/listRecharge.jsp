@@ -57,9 +57,9 @@
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search"> 查 询 </button>
 								<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
-								<%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_INTOADD')"> --%>
+								<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_INTOADD')">
 									<button type="button" class="btn btn-primary btn-add">新增</button>
-								<%-- </sec:authorize> --%>
+								</sec:authorize>
 							</div>
 						  </div>
 						</div>
@@ -124,24 +124,24 @@
                                     </td>
                                     <td style = "text-align: left;">
                                     <c:if test="${entity.orderStat=='草稿' }">
-                                   <%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERCOMMIT')"> --%>
+                                   <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ADDCOMMIT')">
                                     	<a orderId="${entity.orderId }" title="提交" class="btn-mini btn-submit" href="#"><i class="icon-ok"></i></a>
-                                   <%-- </sec:authorize> --%>
-                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_INTOEDIT')"> --%>
+                                   </sec:authorize>
+                                   <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_INTOEDIT')">
                                     	<a orderId="${entity.orderId }" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-                                   <%-- </sec:authorize> --%>
-                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_DELETE')"> --%>
+                                   </sec:authorize>
+                                   <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_DELETE')">
                                    		<a orderId="${entity.orderId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                                   <%-- </sec:authorize> --%>
+                                   </sec:authorize>
                                     </c:if>
                                    <%--  <c:if test="${entity.orderStat=='部分成功' }">
                                    <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERAGAINCOMMIT')">
                                     	<a orderId="${entity.orderId }" title="重新提交" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
                                    </sec:authorize>
                                     </c:if> --%>
-                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_VIEW')"> --%>
+                                   <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_VIEW')">
                                     	<a orderId="${entity.orderId }" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-                                   <%-- </sec:authorize> --%>
+                                   </sec:authorize>
                                     </td>
                                  </tr>
                              </c:forEach>

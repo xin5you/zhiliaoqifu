@@ -63,7 +63,7 @@
 						<!-- <th>所属供应商</th> -->
 						<th>创建时间</th>
 						<th>是否默认</th>
-						<th>状态</th>
+						<!-- <th>状态</th> -->
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -81,16 +81,13 @@
 							</td>
 							<td><c:if test="${diyUser.isdefault == '0'}">是</c:if>
 								<c:if test="${diyUser.isdefault != '0'}">否</c:if></td>
-							<td><c:if test="${diyUser.dataStat == '0'}">正常</c:if>
-								<c:if test="${diyUser.dataStat != '0'}">停用</c:if></td>
-							<td><c:if
-									test="${diyUser.isdefault =='0' && diyUser.dataStat =='0'}">
-									<c:if test="${diyUser.roleCheckflag =='1'}">
+							<%-- <td><c:if test="${diyUser.dataStat == '0'}">正常</c:if>
+								<c:if test="${diyUser.dataStat != '0'}">停用</c:if></td> --%>
+							<td><c:if test="${diyUser.isdefault =='1' && diyUser.dataStat =='0'}">
 										<sec:authorize access="hasRole('ROLE_DIY_USER_INTOEDIT')">
 											<a userId="${diyUser.id}" title="编辑" class="btn-edit"
 												href="#"><i class="icon-edit"></i></a>
 										</sec:authorize>
-									</c:if>
 									<sec:authorize access="hasRole('ROLE_DIY_USER_DELETE')">
 										<a userId="${diyUser.id}" title="删除" class="btn-delete"
 											href="#"><i class="icon-remove"></i></a>

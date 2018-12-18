@@ -22,16 +22,16 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>手机充值</li>
-			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商管理</a></li>
-			                     <li>分销商详情</li>
+			                    <li>分销商管理</li>
+			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
+			                     <li>分销商信息详情</li>
 			                </ul>
 			            </div>
 			        </nav>
 					 <div class="row-fluid">
 					 	<div class="span12">
 							<form id="mainForm" action="" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
-								 <h3 class="heading">分销商详情</h3>
+								 <h3 class="heading">分销商信息详情</h3>
 							     		<div class="control-group">
 							             <label class="control-label">分销商名称</label>
 							             <div class="controls">
@@ -56,21 +56,21 @@
 							             </div>
 							     		</div>
 							     		
-							     		<div class="control-group">
+							     		<%-- <div class="control-group">
 							             <label class="control-label">分销商备付金额(元)</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelReserveAmt" name="channelReserveAmt" value="${retailChnlInf.channelReserveAmt }" readonly="readonly"/>
 							                 <span class="help-block"></span>
 							             </div>
-							     		</div>
+							     		</div> --%>
 							     		
-							     		<div class="control-group">
+							     		<%-- <div class="control-group">
 							             <label class="control-label">分销商预警金额(元)</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelPrewarningAmt" name="channelPrewarningAmt" value="${retailChnlInf.channelPrewarningAmt }" readonly="readonly"/>
 							                 <span class="help-block"></span>
 							             </div>
-							     		</div>
+							     		</div> --%>
 							     		
 							     		
 							     		<div class="control-group">
@@ -92,7 +92,7 @@
                                         <div class="control-group">
                                              <label class="control-label">是否开户</label>
                                              <div class="controls">
-                                                  <input type="text" class="span6" id="email" name="email" value="<c:if test="${retailChnlInf.isOpen == '0' }">未开户</c:if><c:if test="${retailChnlInf.isOpen == '0' }">已开户</c:if>" readonly="readonly"/>
+                                                  <input type="text" class="span6" id="email" name="email" value="<c:if test="${retailChnlInf.isOpen == '0' }">未开户</c:if><c:if test="${retailChnlInf.isOpen == '1' }">已开户</c:if>" readonly="readonly"/>
                                              </div>
                                         </div>
                                         

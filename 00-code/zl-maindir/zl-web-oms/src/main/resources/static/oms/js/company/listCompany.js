@@ -80,6 +80,7 @@ var listCompany = {
                 "companyId": companyId,
                 "orderName": "企业"+companyId+"开户"
             },
+            traditional:true,
             success: function (data) {
             	if(data.status){
             		location.href=Helper.getRootPath() + '/company/listCompany.do?operStatus=4';

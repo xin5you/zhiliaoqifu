@@ -27,14 +27,14 @@
 							<input type="hidden" name = "roleIdTmp" id="roleIdTmp" value="${roleIdTmp }"/>
 								 <h3 class="heading">新增商户用户</h3>
 						         <div class="control-group">
-						             <label class="control-label">用户名</label>
+						             <label class="control-label">用户名<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="userName" name="userName" maxlength="32" />
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">手机号码</label>
+						             <label class="control-label">手机号码<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="phoneNo" name="phoneNo" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						                 <span class="help-block"></span>
@@ -42,14 +42,14 @@
 						         </div>
 						
 						         <div class="control-group">
-						             <label class="control-label">密码</label>
+						             <label class="control-label">密码<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="password" class="span6" id="password" name="password" maxlength="16" onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">确认密码</label>
+						             <label class="control-label">确认密码<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="password" class="span6" id="upassword" name="upassword" maxlength="16" onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
 						                 <span class="help-block"></span>
@@ -68,7 +68,7 @@
 						             </div>
 						         </div> --%>
 						         <div class="control-group">
-						             <label class="control-label">角色</label> 
+						             <label class="control-label">角色<span style="color:red">*</span></label> 
 						             <div class="controls">
 						                  <select  class="form-control span6" id="roleIds" name="roleIds">
 											 <c:forEach var="role" items="${diyRoleList}" varStatus="st">

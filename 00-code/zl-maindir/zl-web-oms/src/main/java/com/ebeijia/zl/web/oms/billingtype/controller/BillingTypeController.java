@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
-import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
+import com.ebeijia.zl.basics.billingtype.domain.BillingType;
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
@@ -32,7 +32,7 @@ public class BillingTypeController {
 	Logger logger = LoggerFactory.getLogger(BillingTypeController.class);
 	
 	@Autowired
-	private BillingTypeInfService billingTypeInfService;
+	private BillingTypeService billingTypeInfService;
 
 	/**
 	 * 专用账户类型列表查询
@@ -45,8 +45,8 @@ public class BillingTypeController {
 	public ModelAndView listBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("billingType/listBillingType");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
-		PageInfo<BillingTypeInf> pageList = null;
-		BillingTypeInf billingTypeInf = new BillingTypeInf();
+		PageInfo<BillingType> pageList = null;
+		BillingType billingTypeInf = new BillingType();
 		billingTypeInf.setBName(StringUtil.nullToString(req.getParameter("bName")));//创建专用账户类型对象，并设置name属性
 		
 		try {
@@ -76,14 +76,14 @@ public class BillingTypeController {
 	public Map<String, Object> addBillingType(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String bName = StringUtil.nullToString(req.getParameter("bName"));
-		BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfByName(bName);
+		BillingType billingType = billingTypeInfService.getBillingTypeInfByName(bName);
 		if (!StringUtil.isNullOrEmpty(billingType)) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "账户类型已存在，请重新输入");
 			return resultMap;
 		}
 		
-		BillingTypeInf billingTypeInfo = getBillingTypeInf(req);
+		BillingType billingTypeInfo = getBillingTypeInf(req);
 		int i = billingTypeInfService.insertBillingTypeInf(billingTypeInfo);
 		resultMap.put("status", Boolean.TRUE);
 		if (i < 1) {
@@ -97,7 +97,7 @@ public class BillingTypeController {
 	public ModelAndView intoEditBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("billingType/editBillingType");
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
-		BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfById(bId);
+		BillingType billingType = billingTypeInfService.getBillingTypeInfById(bId);
 		mv.addObject("billingType", billingType);
 		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
 		return mv;
@@ -109,9 +109,9 @@ public class BillingTypeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		String bName = StringUtil.nullToString(req.getParameter("bName"));
-		BillingTypeInf billingTypeName = billingTypeInfService.getBillingTypeInfById(bId);
+		BillingType billingTypeName = billingTypeInfService.getBillingTypeInfById(bId);
 		if (!billingTypeName.getBName().equals(bName)) {
-			BillingTypeInf billingType = billingTypeInfService.getBillingTypeInfByName(bName);
+			BillingType billingType = billingTypeInfService.getBillingTypeInfByName(bName);
 			if (!StringUtil.isNullOrEmpty(billingType)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "账户类型已存在，请重新输入");
@@ -120,7 +120,7 @@ public class BillingTypeController {
 		}
 		
 		resultMap.put("status", Boolean.TRUE);
-		BillingTypeInf billingTypeInfo = getBillingTypeInf(req);
+		BillingType billingTypeInfo = getBillingTypeInf(req);
 		int i = billingTypeInfService.updateBillingTypeInf(billingTypeInfo);
 		if (i < 1) {
 			resultMap.put("status", Boolean.FALSE);
@@ -139,7 +139,7 @@ public class BillingTypeController {
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
-		BillingTypeInf billingType = new BillingTypeInf();
+		BillingType billingType = new BillingType();
 		billingType.setBId(bId);
 		billingType.setUpdateTime(System.currentTimeMillis());
 		billingType.setUpdateUser(user.getId());
@@ -152,7 +152,7 @@ public class BillingTypeController {
 		return resultMap;
 	}
 	
-	private BillingTypeInf getBillingTypeInf(HttpServletRequest req) {
+	private BillingType getBillingTypeInf(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		
@@ -163,11 +163,11 @@ public class BillingTypeController {
 		String loseFee = StringUtil.nullToString(req.getParameter("loseFee"));
 		String buyFee = StringUtil.nullToString(req.getParameter("buyFee"));
 		
-		BillingTypeInf billingType = null;
+		BillingType billingType = null;
 		if (!StringUtil.isNullOrEmpty(bId)) {
 			billingType = billingTypeInfService.getBillingTypeInfById(bId);
 		} else {
-			billingType = new BillingTypeInf();
+			billingType = new BillingType();
 			billingType.setBId(IdUtil.getNextId());
 			billingType.setCreateUser(user.getId());
 			billingType.setCreateTime(System.currentTimeMillis());

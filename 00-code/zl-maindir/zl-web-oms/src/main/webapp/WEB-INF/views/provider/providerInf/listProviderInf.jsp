@@ -32,7 +32,9 @@
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search"> 查 询 </button>
 								<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
+								<sec:authorize access="hasRole('ROLE_PROVIDER_INTOADD')">
 								<button type="button" class="btn btn-primary btn-add">新增供应商</button>
+								</sec:authorize>
 							</div>
 						</div>
 						
@@ -67,19 +69,23 @@
 				                    </td>
 				                    <td>
 				                    <c:if test="${entity.isOpen=='0'}">
+				                    <sec:authorize access="hasRole('ROLE_PROVIDER_OPENACCOUNT')">
 										<a providerId="${entity.providerId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
+				                    </sec:authorize>
 				                    </c:if>
-				                    <%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_INTOEDIT')"> --%>
+				                    <sec:authorize access="hasRole('ROLE_PROVIDER_INTOEDIT')">
 									<a providerId="${entity.providerId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<%-- </sec:authorize> --%>
-									<%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_DELETE')"> --%>
+									</sec:authorize>
+									<sec:authorize access="hasRole('ROLE_PROVIDER_DELETE')">
 									<a providerId="${entity.providerId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-									<%-- </sec:authorize> --%>
-									<%-- <sec:authorize access="hasRole('ROLE_TEL_PROVIDER_INF_VIEW')"> --%>
+									</sec:authorize>
+									<sec:authorize access="hasRole('ROLE_PROVIDER_VIEW')">
 									<a providerId="${entity.providerId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-									<%-- </sec:authorize> --%>
+									</sec:authorize>
 				                    <c:if test="${entity.isOpen=='1'}">
+				                    <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">
 										<a providerId="${entity.providerId}" title="转账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+				                    </sec:authorize>
 				                    </c:if>
 				                    </td>
 				                 </tr>

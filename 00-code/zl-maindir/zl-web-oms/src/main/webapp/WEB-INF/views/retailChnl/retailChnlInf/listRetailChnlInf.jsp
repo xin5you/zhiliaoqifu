@@ -33,10 +33,9 @@
 								
 								<button type="submit" class="btn btn-search"> 查 询 </button>
 								<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
-								 
-								<%--  <sec:authorize access="hasRole('ROLE_TEL_CHANNEL_INF_INTOADD')"> --%>
+								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_INTOADD')">
 								<button type="button" class="btn btn-primary btn-add">新增分销商</button>
-								<%-- </sec:authorize> --%>
+								</sec:authorize>
 							</div>
 						</div>
 				         </br >       
@@ -46,8 +45,8 @@
 				             	<th>分销商ID</th>
 				                <th>分销商名称</th>
 				               	<th>分销商编号</th>
-				               	<th>分销商备付金额(元)</th>
-				                <th>分销商预警金额(元)</th>
+				               	<!-- <th>分销商备付金额(元)</th>
+				                <th>分销商预警金额(元)</th> -->
 				                <th>管理员手机号</th>
 				                <th>邮箱</th>
 				                <th>是否开户</th>
@@ -60,8 +59,8 @@
 				                 	<td>${entity.channelId}</td>
 				                 	<td>${entity.channelName}</td>
 				                 	<td>${entity.channelCode}</td>
-									<td>${entity.channelReserveAmt}</td>
-				                    <td>${entity.channelPrewarningAmt}</td>
+									<%-- <td>${entity.channelReserveAmt}</td>
+				                    <td>${entity.channelPrewarningAmt}</td> --%>
 				                    <td>${entity.phoneNo}</td>
 				                    <td>${entity.email}</td>
 				                    <td>
@@ -71,11 +70,19 @@
 				                    <td>
 									<%-- <a channelId="${entity.channelId}" title="添加产品折扣率" class="btn-mini btn-edit a" href="#"><i class="icon-pencil"></i></a> 
 									<a channelId="${entity.channelId}" title="追加备付金" class="btn-grant-role"  href="#"><i class="icon-plus"></i></a>  --%>
+									<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_INTOEDIT')">
 									<a channelId="${entity.channelId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+									</sec:authorize>
+									<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_DELETE')">
 									<a channelId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									</sec:authorize>
+									<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_VIEW')">
 									<a channelId="${entity.channelId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+									</sec:authorize>
 									<c:if test="${entity.isOpen=='0'}">
+									<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">
 										<a channelId="${entity.channelId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
+				                    </sec:authorize>
 				                    </c:if>
 				                    </td>
 				                 </tr>

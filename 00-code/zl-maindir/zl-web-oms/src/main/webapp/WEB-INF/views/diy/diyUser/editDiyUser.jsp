@@ -29,16 +29,16 @@
 								<input type="hidden" id="roleIdBoss" name="roleIdBoss" value="${roleIdBoss}">
 								 <h3 class="heading">编辑用户</h3>
 						         <div class="control-group">
-						             <label class="control-label">用户名</label>
+						             <label class="control-label">用户名<span style="color:red">*</span></label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="userName" name="userName" value="${diyUser.userName }" maxlength="32" />
+						                 <input type="text" class="span6" id="userName" name="userName" value="${diyUser.userName }" maxlength="32" onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">手机号码</label>
+						             <label class="control-label">手机号码<span style="color:red">*</span></label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="phoneNo" name="phoneNo" value="${diyUser.phoneNo }" maxlength="11" readonly="readonly"/>
+						                 <input type="text" class="span6" id="phoneNo" name="phoneNo" value="${diyUser.phoneNo }" maxlength="11" onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
@@ -57,7 +57,7 @@
 						         </div> --%>
 						         
 						         <div class="control-group">
-						             <label class="control-label">角色</label> 
+						             <label class="control-label">角色<span style="color:red">*</span></label> 
 						             <div class="controls">
 						                  <select class="form-control span6" id="roleIds" name="roleIds">
 						                  	<option value="0" selected="selected">请选择</option>

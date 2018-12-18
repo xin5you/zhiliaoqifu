@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.system.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 	@Override
 	public int deleteUserRoleByUserId(String userId) {
 		return userRoleMapper.deleteUserRoleByUserId(userId);
+	}
+
+	@Override
+	public List<UserRole> getUserRoleByRoleId(String roleId) {
+		return userRoleMapper.getUserRoleByRoleId(roleId);
 	}
 
 }

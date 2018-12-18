@@ -12,6 +12,7 @@ var grantRole = {
 		$('.grant-role-submit').on('click', grantRole.grantRoleSubmit);
 	},
 	grantRoleSubmit : function() {
+		$(".grant-role-submit").attr('disabled',"true");
 		var roleId=$('#roleId').val();
 		var treeObj =$.fn.zTree.getZTreeObj("grantRoleZtreeId");
 		var nodes=treeObj.getCheckedNodes(true);
@@ -28,14 +29,17 @@ var grantRole = {
                   ids:ids
               },
               success: function (result) {
+            	  $(".grant-role-submit").removeAttr("disabled");
             	  if(result.status){
             		  Helper.stickySuccess("角色授权成功");
             	  }else{
             		  Helper.stickyError(result.msg);
+            		  return false;
             	  }
               },
               error:function(){
             	  Helper.stickyError("角色授权成功");
+            	  return false;
               }
         });
 	}

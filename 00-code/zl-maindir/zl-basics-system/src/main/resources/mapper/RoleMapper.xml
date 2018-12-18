@@ -7,6 +7,7 @@
 		 id,
 		 role_name,
 		 description,
+		 isdefault,
 		 login_type,
 		 seq,
 		 data_stat,

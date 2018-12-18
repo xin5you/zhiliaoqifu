@@ -17,8 +17,8 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>订单管理</li>
-			                    <li><a href="${ctx }/batch/recharge/listRecharge.do">批量充值</a></li>
+			                    <li>账户管理</li>
+			                    <li><a href="${ctx }/batch/recharge/listRecharge.do">企业员工批量充值</a></li>
 			                     <li>订单编辑</li>
 			                </ul>
 			            </div>
@@ -29,7 +29,11 @@
 						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
 						<input type="hidden" id="bizType" name="bizType"  value="${bizType }"/>
 						<h3 class="heading">订单编辑</h3>
-						<div><button class="btn btn-primary btn-editAddRecharge" type="button">添加</button></div><br/>
+						<div>
+						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTADD')">
+						<button class="btn btn-primary btn-editAddRecharge" type="button">添加</button>
+						</sec:authorize>
+						</div><br/>
 						<div class="row-fluid" >
 							 <div class="span12">
 		                       	<div style="display: flex;justify-content:left;">
@@ -91,9 +95,9 @@
                                     <td>${entity.phoneNo}</td>
                                     <td>${entity.amount}</td>
                                     <td>
-                                  <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERLISTDELETE')"> --%>
+                                    <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTDELETE')">
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                                   <%-- </sec:authorize> --%>
+                                   </sec:authorize>
                                     </td>
                                  </tr>
                              </c:forEach>
@@ -147,9 +151,9 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-            <%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ORDERLISTCOMMIT')"> --%>
+            <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTADDCOMMIT')">
                 <button class="btn btn-primary btn-submit">确 定  </button>
-            <%-- </sec:authorize> --%>
+            </sec:authorize>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>   

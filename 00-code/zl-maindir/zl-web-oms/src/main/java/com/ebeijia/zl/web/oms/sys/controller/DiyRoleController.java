@@ -20,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ebeijia.zl.basics.system.domain.Resource;
 import com.ebeijia.zl.basics.system.domain.Role;
 import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.domain.UserRole;
 import com.ebeijia.zl.basics.system.service.ResourceService;
 import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserRoleService;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.LoginType;
@@ -44,6 +46,9 @@ public class DiyRoleController {
 	
 	@Autowired
 	private ResourceService resourceService;
+	
+	@Autowired
+	private UserRoleService userRoleService;
 	
 	@Autowired
 	private UserRoleResourceService userRoleResourceService;
@@ -218,6 +223,13 @@ public class DiyRoleController {
 		resultMap.put("status", Boolean.TRUE);
 		String id = StringUtil.nullToString(req.getParameter("id"));
 		try {
+			List<UserRole> userRoleList = userRoleService.getUserRoleByRoleId(id);
+			if (userRoleList != null && userRoleList.size() >= 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "角色已被使用，不能删除");
+				return resultMap;
+			}
+			
 			if (!roleService.removeById(id)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "角色删除失败，请重试");

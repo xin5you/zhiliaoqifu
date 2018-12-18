@@ -40,6 +40,12 @@ public class Role extends Model<Role> {
      */
     @TableField("description")
     private String description;
+    
+    /**
+     * 是否默认（0：是，1：否）
+     */
+    @TableField("isdefault")
+    private String isdefault;
  
     /**
      * 1.oms(运营管理平台)

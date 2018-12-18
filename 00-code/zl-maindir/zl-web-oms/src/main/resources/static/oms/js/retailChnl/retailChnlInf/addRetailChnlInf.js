@@ -12,22 +12,25 @@ var addRetailChnlInf = {
 	},
 	addRetailChnlInfCommit:function(){
     	var channelName=$('#channelName').val();
+    	var channelCode=$('#channelCode').val();
+    	var channelKey=$('#channelKey').val();
+    	var phoneNo=$('#phoneNo').val();
+    	/*var channelReserveAmt=$('#channelReserveAmt').val();
+    	var channelPrewarningAmt=$('#channelPrewarningAmt').val();*/
+    	var email=$('#email').val();
+    	var remarks=$('#remarks').val();
     	if(channelName ==''){
     		Helper.alert("请输入分销商名称");
     		return false;
     	}
-    	var channelCode=$('#channelCode').val();
     	if(channelCode ==''){
     		Helper.alert("请输入分销商编号");
     		return false;
     	}
-    	
-    	var channelKey=$('#channelKey').val();
     	if(channelKey ==''){
     		Helper.alert("请输入分销商KEY");
     		return false;
     	}
-    	var phoneNo=$('#phoneNo').val();
     	if(phoneNo == ''){
     		Helper.alert("请输入管理员手机号");
     		return false;
@@ -43,10 +46,12 @@ var addRetailChnlInf = {
     			}
     		}
     	}
-    	var channelReserveAmt=$('#channelReserveAmt').val();
-    	var channelPrewarningAmt=$('#channelPrewarningAmt').val();
-    	var email=$('#email').val();
-    	var remarks=$('#remarks').val();
+    	var reMail = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+    	if (!reMail.test(email)) {
+    		Helper.alert("请输入正确的邮箱");
+			return false;
+    	}
+    	
     	Helper.confirm("确定提交吗？",function(){
 		    $.ajax({								  
 	            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/addRetailChnlInfCommit.do',
@@ -56,8 +61,8 @@ var addRetailChnlInf = {
 	                "channelName" : channelName,
 	                "channelCode" : channelCode,
 	                "channelKey" : channelKey,
-	                "channelReserveAmt" : channelReserveAmt,
-	                "channelPrewarningAmt" : channelPrewarningAmt,
+	               /* "channelReserveAmt" : channelReserveAmt,
+	                "channelPrewarningAmt" : channelPrewarningAmt,*/
 	                "phoneNo" : phoneNo,
 	                "email" : email,
 	                "remarks" : remarks

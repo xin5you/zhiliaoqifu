@@ -18,17 +18,17 @@
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>分销商管理</li>
 			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
-			                     <li>新增分销商</li>
+			                     <li>新增分销商信息</li>
 			                </ul>
 			            </div>
 			        </nav>
 					 <div class="row-fluid">
 					 	<div class="span12">
 							<form id="mainForm" action="${ctx}/retailChnl/retailChnlInf/addRetailChnlInfCommit.do" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
-								 <h3 class="heading">新增分销商</h3>
+								 <h3 class="heading">新增分销商信息</h3>
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">分销商名称</label>
+							             <label class="control-label">分销商名称<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelName" name="channelName" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="32"/>
 							                 <span class="help-block"></span>
@@ -36,7 +36,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">分销商编号</label>
+							             <label class="control-label">分销商编号<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelCode" name="channelCode" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="32"/>
 							                 <span class="help-block"></span>
@@ -44,32 +44,32 @@
 							     		</div>
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">分销商KEY</label>
+							             <label class="control-label">分销商KEY<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelKey" name="channelKey" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="64"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
 							     		
-							     		<div class="control-group">
+							     		<!-- <div class="control-group">
 							             <label class="control-label">分销商备付金额(元)</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelReserveAmt" name="channelReserveAmt" onkeyup="checkPrice(this)" value="0" maxlength="12"/>
 							                 <span class="help-block"></span>
 							             </div>
-							     		</div>
+							     		</div> -->
 							     		
-							     		<div class="control-group">
+							     		<!-- <div class="control-group">
 							             <label class="control-label">分销商预警金额(元)</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="channelPrewarningAmt" name="channelPrewarningAmt" onkeyup="checkPrice(this)" value="0" maxlength="12"/>
 							                 <span class="help-block"></span>
 							             </div>
-							     		</div>
+							     		</div> -->
 							     		
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">管理员手机号</label>
+							             <label class="control-label">管理员手机号<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="phoneNo" name="phoneNo" onkeyup="this.value=this.value.replace(/\D/g,'')" maxlength="11"/>
 							                 <span class="help-block"></span>
@@ -93,9 +93,9 @@
 							     		
 							       <div class="control-group ">
 				                            <div class="controls">
-<%-- 				                            	<sec:authorize access="hasRole('ROLE_PHONE_RECHARGE_SHOP_ADDCOMMIT')"> --%>
-				                                <button class="btn btn-primary" type="button" id="addSubmitBtn" >保存</button>
-<%-- 				                                </sec:authorize> --%>
+				                            	<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_ADDCOMMIT')">
+				                                	<button class="btn btn-primary" type="button" id="addSubmitBtn" >保存</button>
+				                                </sec:authorize>
 				                                <button class="btn btn-inverse btn-reset" type="reset">重 置</button>
 				                            </div>
 				                  	</div>

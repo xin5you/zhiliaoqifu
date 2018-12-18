@@ -98,7 +98,9 @@
                                 </div>
 						       <div class="control-group">
 			                            <div class="controls">
+			                            <sec:authorize access="hasRole('ROLE_PROVIDER_ADDCOMMIT')">
 			                                <button class="btn btn-primary"  type="submit" id="addSubmitBtn" >保存</button>
+			                            </sec:authorize>
 			                                <button class="btn btn-inverse btn-reset" type="reset">重 置</button>
 			                            </div>
 			                  	</div>

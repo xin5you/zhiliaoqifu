@@ -59,8 +59,10 @@
 		                	</select>
 	                	</span> --%>
 	                  	<div class="pull-right">
+	                  	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_FILE')">
 	                        <button class="btn btn-primary btn-recharge-list" type="button">文件导入</button>
 	                        <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
+	                    </sec:authorize>
 	                    </div>
 	           		</div>
 	  			</div>
@@ -85,7 +87,9 @@
 			</div>
          	</br >  
          	<div>
+         	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_USER_INTOADD')">
          		<button class="btn btn-primary btn-addRecharge" type="button">添加</button>
+         	</sec:authorize>
          	</div>
          	<br/>
          	<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
@@ -107,16 +111,20 @@
 						<td>${entity.userCardNo}</td>
 						<td>${entity.phoneNo}</td>
 						<td>${entity.amount}</td>
-						<td><a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a></td>
+						<td>
+						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_USER_DELETE')">
+						<a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+						</sec:authorize>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
          	</table>
          	<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
       		<br/>
-			<%-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE_ADDCOMMIT')"> --%>
+			<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ADDCOMMIT')">
 			<button class="btn btn-primary btn-sub" type="submit">保存</button> 
-			<%--  </sec:authorize> --%>
+			 </sec:authorize>
 			<a href="${ctx }/batch/recharge/listRecharge.do"><button class="btn btn-primary" type="button">返回</button></a>
       	</form>
    		</div>
@@ -188,7 +196,9 @@
 		    </div>
 		</form>
 		<div class="modal-footer" style="text-align: center;">
+		<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_USER_ADDCOMMIT')">
 		    <button class="btn btn-primary btn-submit">确 定  </button>
+		</sec:authorize>
 		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 		</div>
 	</div>        

@@ -20,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ebeijia.zl.basics.system.domain.Resource;
 import com.ebeijia.zl.basics.system.domain.Role;
 import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.domain.UserRole;
 import com.ebeijia.zl.basics.system.service.ResourceService;
 import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserRoleService;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.LoginType;
@@ -44,6 +46,9 @@ public class RoleController {
 	
 	@Autowired
 	private ResourceService resourceService;
+	
+	@Autowired
+	private UserRoleService userRoleService;
 	
 	@Autowired
 	private UserRoleResourceService userRoleResourceService;
@@ -274,6 +279,13 @@ public class RoleController {
 		
 		String roleId = req.getParameter("roleId");
 		try {
+			List<UserRole> userRoleList = userRoleService.getUserRoleByRoleId(roleId);
+			if (userRoleList != null && userRoleList.size() >= 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "角色已被使用，不能删除");
+				return resultMap;
+			}
+			
 			if (!roleService.removeById(roleId)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "角色删除失败，请重试");
@@ -304,6 +316,7 @@ public class RoleController {
 			role.setId(IdUtil.getNextId());
 			role.setCreateUser(u.getId());
 			role.setCreateTime(System.currentTimeMillis());
+			role.setIsdefault("1");
 			role.setDataStat("0");
 			role.setLockVersion(0);
 		}

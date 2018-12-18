@@ -6,7 +6,12 @@
 <c:set var="pageBarSize" value="${prefixLength + suffixLength + 1}" />
 <div class="page-div row-fluid" style="margin-top:10px;">
 	<div class="span6">
+	<c:if test="${p.pages == 0}">
+		<div id="dt_gal_info" class="dataTables_info">第0到0条  共有 0 条数据</div>
+	</c:if>
+	<c:if test="${p.pages > 0}">
 		<div id="dt_gal_info" class="dataTables_info">第${p.startRow }到${p.endRow }条  共有 ${p.total} 条数据</div>
+	</c:if>
 	</div>
 	<c:if test="${p.pages > 0}">
 		<c:set var="beginIndex" value="${(p.pageNum - prefixLength) > 1 ? (p.pageNum - prefixLength) : 1}" />

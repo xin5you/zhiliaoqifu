@@ -43,6 +43,7 @@
 				                    <td>${role.roleName}</td>
 				                    <td>${role.seq}</td>
 				                    <td>
+				                    <c:if test="${role.isdefault != '0' && role.dataStat != '1'}">
 				                    	<sec:authorize access="hasRole('ROLE_SYS_ROLE_INTOAUTHO')">
 				                    	<a orderId="${role.id}" title="授权" class="btn-grant-role" href="#"><i class="icon-plus"></i></a>&nbsp;
 				                    	</sec:authorize>
@@ -51,7 +52,8 @@
 										</sec:authorize>
 										<sec:authorize access="hasRole('ROLE_SYS_ROLE_DELETE')">  
 										<a orderId="${role.id}" title="删除" class="btn-delete" href="#"><i class="icon-remove"></i></a>
-										</sec:authorize>                            
+										</sec:authorize>   
+									</c:if>                         
 				                    </td>
 				                 </tr>
 				             </c:forEach>

@@ -17,7 +17,7 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>系统信息</li>
+			                    <li>系统管理</li>
 			                    <li><a href="${ctx }/sys/organization/listOrganization.do">部门管理</a></li>
 			                     <li>部门列表</li>
 			                </ul>

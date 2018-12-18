@@ -70,7 +70,7 @@
 						<td><c:if test="${user.isdefault == '0'}">是</c:if><c:if test="${user.isdefault != '0'}">否</c:if></td>
 						<td><c:if test="${user.dataStat == '0'}">正常</c:if><c:if test="${user.dataStat != '0'}">停用</c:if></td>
 	                    <td>
-	                    	<c:if test="${user.isdefault !='0' && user.dataStat !='1'}">
+	                    	<c:if test="${user.isdefault != '0' && user.dataStat != '1'}">
 	                    		<sec:authorize access="hasRole('ROLE_SYS_USER_INTOEDIT')">
 									<a userId="${user.id}" title="编辑" class="btn-edit" href="#"><i class="icon-edit"></i></a>
 								</sec:authorize>

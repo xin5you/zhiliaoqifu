@@ -105,10 +105,10 @@
 				                    <td>${entity.orderStat}</td>
 				                    <td>${entity.notifyStat}</td>
 				                    <td>
-				                    <c:if test="${entity.notifyStat=='处理失败' }">
+				                    <%-- <c:if test="${entity.notifyStat=='处理失败' }">
 									<a channelOrderId="${entity.channelOrderId}" title="回调通知分销商" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
 									</c:if>
-									<a eShopId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									<a eShopId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a> --%>
 									<a eShopId="${entity.channelId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 				                    </td>
 				                 </tr>

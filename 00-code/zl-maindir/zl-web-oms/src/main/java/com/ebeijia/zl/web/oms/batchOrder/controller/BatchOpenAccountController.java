@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-import com.ebeijia.zl.basics.billingtype.domain.BillingTypeInf;
-import com.ebeijia.zl.basics.billingtype.service.BillingTypeInfService;
+import com.ebeijia.zl.basics.billingtype.domain.BillingType;
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
@@ -63,7 +63,7 @@ public class BatchOpenAccountController {
 	private JedisClusterUtils jedisClusterUtils;
 	
 	@Autowired
-	private BillingTypeInfService billingTypeInfService;
+	private BillingTypeService billingTypeInfService;
 
 	@Autowired
 	private CompanyInfFacade companyInfFacade;
@@ -115,7 +115,7 @@ public class BatchOpenAccountController {
 		company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 		//查询所有账户类型
-		List<BillingTypeInf> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingTypeInf());
+		List<BillingType> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingType());
 		//从缓存中查询是否存在数据
 		LinkedList<BatchOrderList> orderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.openAccountSession);
 		//批量订单分页

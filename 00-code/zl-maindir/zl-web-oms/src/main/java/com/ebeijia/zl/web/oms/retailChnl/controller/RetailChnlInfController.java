@@ -400,6 +400,9 @@ public class RetailChnlInfController {
 		RetailChnlInf retailChnl = null;
 		if (!StringUtil.isNullOrEmpty(channelId)) {
 			retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
+			if (!StringUtil.isNullOrEmpty(lockVersion)) {
+				retailChnl.setLockVersion(Integer.valueOf(lockVersion) + 1);
+			}
 		} else {
 			retailChnl = new RetailChnlInf();
 			retailChnl.setChannelId(IdUtil.getNextId());
@@ -424,9 +427,6 @@ public class RetailChnlInfController {
 		retailChnl.setPhoneNo(phoneNo);
 		retailChnl.setEmail(email);
 		retailChnl.setRemarks(remarks);
-		if (!StringUtil.isNullOrEmpty(lockVersion)) {
-			retailChnl.setLockVersion(Integer.valueOf(lockVersion));
-		}
 		retailChnl.setUpdateUser(user.getId());
 		retailChnl.setUpdateTime(System.currentTimeMillis());
 		return retailChnl;

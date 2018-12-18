@@ -36,9 +36,6 @@
 						<div class="pull-right">
 							<button type="submit" class="btn btn-search">查 询</button>
 							<button type="button" class="btn btn-inverse btn-reset">重 置</button>
-							<!-- <button type="button" class="btn btn-primary btn-add">新 增</button> -->
-<%-- 							<sec:authorize access="hasRole('ROLE_BILLING_TYPE_INTOEDIT')">
-							</sec:authorize> --%>
 						</div>
 					</div>
 					</br>
@@ -67,7 +64,9 @@
 									</td>
 									<td>${b.remarks}</td>
 									<td>
+									<sec:authorize access="hasRole('ROLE_SYS_DICT_INTOEDIT')">
 										<a dictId="${b.dictId}" title="编辑" href="#" class="btn-mini btn-edit"><i class="icon-edit"></i></a>
+									</sec:authorize>
 										<%-- <a dictId="${b.dictId}" title="删除" href="#" class="btn-mini btn-delete"><i class="icon-remove"></i></a>  --%>
 									</td>
 								</tr>

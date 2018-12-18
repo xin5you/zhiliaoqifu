@@ -43,9 +43,11 @@
                                         </select>
 		                       	</span>
 		                       	<div class="pull-right">
+		                       	<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_FILE')">
 		                                    <button class="btn btn-primary btn-account-list" type="button">文件导入</button>
 		                                    <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
-	                            		</div>
+		                        </sec:authorize>
+	                           </div>
                             </div>
 						   </div>
 						  </div>
@@ -69,7 +71,9 @@
 						</div>
 				         </br >  
 				         <div>
-				         <button class="btn btn-primary btn-addAccount" type="button"> 添 加 </button>
+				         <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_USER_INTOADD')">
+				         	<button class="btn btn-primary btn-addAccount" type="button"> 添 加 </button>
+				         </sec:authorize>
 				         </div>
 				         <br/>
 				         
@@ -91,7 +95,9 @@
 									<td>${entity.userCardNo}</td>
 									<td>${entity.phoneNo}</td>
 				                    <td>
+				                    <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_USER_DELETE')">
 									<a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									</sec:authorize>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -100,9 +106,9 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                     <%--  <sec:authorize access="hasRole('ROLE_SPE_BATCH_OPEN_ACCOUNT_ADDCOMMIT')"> --%>
+                      <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ADDCOMMIT')">
                       	<button class="btn btn-primary btn-sub" type="submit">保 存</button> 
-                     <%--  </sec:authorize> --%>
+                      </sec:authorize>
                       <a href="${ctx }/batch/openAccount/listOpenAccount.do"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
@@ -166,7 +172,9 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
+            <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_USER_ADDCOMMIT')">
                 <button class="btn btn-primary btn-submit">确 定  </button>
+            </sec:authorize>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>

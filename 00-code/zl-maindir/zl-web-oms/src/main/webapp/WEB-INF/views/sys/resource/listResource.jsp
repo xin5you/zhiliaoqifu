@@ -62,13 +62,13 @@
 				                    	<sec:authorize access="hasRole('ROLE_SYS_RESOURCE_INTOADD')">
 											<a resourceId="${resource.id}" title="添加" class="btn-add" href="#"><i class="icon-plus"></i></a> 
 										</sec:authorize>
-										</c:if>
+									</c:if>
 				                    	<sec:authorize access="hasRole('ROLE_SYS_RESOURCE_INTOEDIT')">
 											<a resourceId="${resource.id}" title="编辑" class="btn-edit" href="#"><i class="icon-edit"></i></a> 
 										</sec:authorize>
-										<sec:authorize access="hasRole('ROLE_SYS_RESOURCE_DELETE')">  
+										<%-- <sec:authorize access="hasRole('ROLE_SYS_RESOURCE_DELETE')">   --%>
 											<a resourceId="${resource.id}" title="删除" class="btn-delete" href="#"><i class="icon-remove"></i></a>
-										</sec:authorize>
+										<%-- </sec:authorize> --%>
 				                    </td>
 				                 </tr>
 				             </c:forEach>

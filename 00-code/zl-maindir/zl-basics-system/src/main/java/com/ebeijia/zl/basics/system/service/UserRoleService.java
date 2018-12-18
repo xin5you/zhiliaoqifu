@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.system.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.basics.system.domain.UserRole;
 
@@ -14,4 +16,6 @@ import com.ebeijia.zl.basics.system.domain.UserRole;
 public interface UserRoleService extends IService<UserRole> {
 
 	int deleteUserRoleByUserId (String userId);
+	
+	List<UserRole> getUserRoleByRoleId(String roleId);
 }
