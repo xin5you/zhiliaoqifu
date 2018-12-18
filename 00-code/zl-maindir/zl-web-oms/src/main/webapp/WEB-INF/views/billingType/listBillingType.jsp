@@ -26,7 +26,7 @@
 						<div class="span10">
 							<div class="input-prepend">
 								<span class="add-on">账户类型名称</span> 
-								<input id="bName" name="bName" type="text" class="input-small" value="${billingTypeInf.bName }" />
+								<input id="bName" name="bName" type="text" class="input-small" value="${billingTypeInf.BName }" />
 							</div>
 						</div>
 						<div class="pull-right">
@@ -50,14 +50,14 @@
 						<tbody>
 							<c:forEach var="b" items="${pageInfo.list}" varStatus="st">
 								<tr>
-									<td>${b.bName}</td>
+									<td>${b.BName}</td>
 									<td>${b.code}类</td>
 									<td>${b.loseFee}</td>
 									<td>${b.buyFee}</td>
 									<td>${b.remarks}</td>
 									<td>
 									<sec:authorize access="hasRole('ROLE_BILLING_TYPE_INTOEDIT')">
-										<a bId="${b.bId}" title="编辑" href="#" class="btn-mini btn-edit"><i class="icon-edit"></i></a>
+										<a bId="${b.BId}" title="编辑" href="#" class="btn-mini btn-edit"><i class="icon-edit"></i></a>
 									</sec:authorize>
 										<%-- <a bId="${b.bId}" title="删除" href="#" class="btn-mini btn-delete"><i class="icon-remove"></i></a>  --%>
 									</td>

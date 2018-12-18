@@ -18,8 +18,8 @@
 			<div id="jCrumbs" class="breadCrumb module">
 				<ul>
 					<li><a href="#"><i class="icon-home"></i></a></li>
-					<li>订单管理</li>
-					<li><a href="${ctx }/batch/recharge/listRecharge.do">批量充值</a></li>
+					<li>账户管理</li>
+					<li><a href="${ctx }/batch/recharge/listRecharge.do">企业员工批量充值</a></li>
 					<li>录入订单</li>
 				</ul>
 			</div>
@@ -45,7 +45,7 @@
 		      	    		<span class="add-on">充值账户：</span>
 	       	    			<select name="billingType" id="billingType" class="input-medium" >
                                <c:forEach var="b" items="${billingTypeList}" varStatus="sta">
-                                   <option value="${b.bId}">${b.bName}</option>
+                                   <option value="${b.BId}">${b.BName}</option>
                                </c:forEach>
                              </select>
                      	</span>

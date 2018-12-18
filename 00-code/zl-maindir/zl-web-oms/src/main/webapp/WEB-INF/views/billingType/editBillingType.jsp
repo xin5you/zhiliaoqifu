@@ -33,7 +33,7 @@
 								       <div class="control-group formSep">
 							             <label class="control-label">账户类型名称<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="bName" name="bName" value="${billingType.bName }" maxlength="20"/>
+							                 <input type="text" class="span6" id="bName" name="bName" value="${billingType.BName }" maxlength="20"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>

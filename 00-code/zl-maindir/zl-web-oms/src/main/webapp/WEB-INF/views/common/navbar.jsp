@@ -85,10 +85,10 @@
                                         <li><a href="${ctx }/billingType/listBillingType.do">账户类型管理</a></li>
                                      </sec:authorize>
                                      <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT')">
-                                     	<li><a href="${ctx }/batch/openAccount/listOpenAccount.do">批量开户</a></li>
+                                     	<li><a href="${ctx }/batch/openAccount/listOpenAccount.do">企业员工批量开户</a></li>
                                      </sec:authorize>
                                      <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE')">
-                                     	<li><a href="${ctx }/batch/recharge/listRecharge.do">批量充值</a></li>
+                                     	<li><a href="${ctx }/batch/recharge/listRecharge.do">企业员工批量充值</a></li>
                                      </sec:authorize>
                                      <!-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE')"> -->
                                      	

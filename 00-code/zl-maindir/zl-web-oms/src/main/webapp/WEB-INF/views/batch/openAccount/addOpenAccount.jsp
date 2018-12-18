@@ -19,7 +19,7 @@
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>账户管理</li>
-			                    <li><a href="${ctx }/batch/openAccount/listOpenAccount.do">批量开户</a></li>
+			                    <li><a href="${ctx }/batch/openAccount/listOpenAccount.do">企业员工批量开户</a></li>
 			                     <li>录入订单</li>
 			                </ul>
 			            </div>
