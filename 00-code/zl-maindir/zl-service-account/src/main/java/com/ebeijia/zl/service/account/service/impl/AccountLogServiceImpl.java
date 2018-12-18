@@ -1,7 +1,9 @@
 package com.ebeijia.zl.service.account.service.impl;
 
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
-import com.ebeijia.zl.facade.account.vo.AccountLogVo;
+import com.ebeijia.zl.facade.account.vo.AccountLogVO;
+import com.ebeijia.zl.service.account.service.IAccountLogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,9 +17,10 @@ import com.ebeijia.zl.facade.account.dto.AccountLog;
 import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.service.account.mapper.AccountLogMapper;
-import com.ebeijia.zl.service.account.service.IAccountLogService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -28,8 +31,10 @@ import java.util.List;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
-public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, AccountLog> implements IAccountLogService{
+public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, AccountLog> implements IAccountLogService {
 
+    @Autowired
+    private AccountLogMapper accountLogMapper;
 	/**
 	 * 
 	* @Function: AccountLogServiceImpl.java
@@ -77,7 +82,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 	 * @param req
 	 * @return
 	 */
-	public List<AccountLogVo> getAccountLogVoList(AccountQueryReqVo req){
-		return null;
+	public List<AccountLogVO> getAccountLogVoList(AccountQueryReqVo req) {
+		return accountLogMapper.getAccountLogVoList(req);
 	}
 }

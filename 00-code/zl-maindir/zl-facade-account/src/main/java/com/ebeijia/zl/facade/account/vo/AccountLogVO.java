@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class AccountLogVo {
+public class AccountLogVO {
 
     /**
      * 交易流水主键
@@ -67,4 +67,10 @@ public class AccountLogVo {
      * 商户名称
      */
     private String mchntName;
+
+  /***
+  * 用户类型
+  */
+ private String userType;
+
 }

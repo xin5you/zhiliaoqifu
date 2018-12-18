@@ -4,8 +4,8 @@
 <configuration>
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
- 		<setting name="logImpl" value="SLF4J" />
-		<!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
+ 		<!--<setting name="logImpl" value="SLF4J" />-->
+		<setting name="logImpl" value="STDOUT_LOGGING" />
 	</settings>
 	<typeAliases>
 		<typeAlias alias="Integer" type="java.lang.Integer" />
@@ -14,13 +14,16 @@
         <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap" />
         <typeAlias alias="ArrayList" type="java.util.ArrayList" />
         <typeAlias alias="LinkedList" type="java.util.LinkedList" />
-        
-        <typeAlias type="com.ebeijia.zl.facade.account.dto.AccountInf" alias="AccountInf"/>
-        <typeAlias type="com.ebeijia.zl.facade.account.vo.AccountVO" alias="AccountVO"/>
+
+
         
        	<typeAlias type="com.ebeijia.zl.facade.user.vo.UserInf" alias="UserInf" />
 		<typeAlias type="com.ebeijia.zl.facade.user.vo.PersonInf" alias="PersonInf" />
 		<typeAlias type="com.ebeijia.zl.facade.user.vo.ChannelUserInf" alias="ChannelUserInf" />
+
+		<typeAlias type="com.ebeijia.zl.facade.account.req.AccountQueryReqVo" alias="AccountQueryReqVo" />
+		<package name="com.ebeijia.zl.facade.account.vo"/>
+		<package name="com.ebeijia.zl.facade.account.dto"/>
        
 	</typeAliases>
 

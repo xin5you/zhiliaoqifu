@@ -45,6 +45,10 @@ public class AccountQueryReqVo{
 	/** 账单查询业务字段 begin*/
 
 	/**
+	 *  账户日志主键
+	 */
+	private String actPrimaryKey;
+	/**
 	 * 专项账户Id
 	 */
 	private String bId;

@@ -3,25 +3,17 @@ package com.ebeijia.zl.service.account.facade;
 import java.util.List;
 
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
-import com.ebeijia.zl.facade.account.vo.AccountLogVo;
+import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import com.alibaba.fastjson.JSONArray;
-import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
-import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
-import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
-import com.ebeijia.zl.service.account.service.ITransLogService;
-import com.ebeijia.zl.service.user.service.IUserInfService;
 import com.github.pagehelper.PageInfo;
 
 
@@ -77,7 +69,7 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	 * 2018年12月14日     zhuqi           v1.0.0
 	 */
 	@Override
-	public PageInfo<AccountLogVo> getAccountLogPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException{
+	public PageInfo<AccountLogVO> getAccountLogPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException{
 		return null;
 	}
 
@@ -88,7 +80,7 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	 * @throws AccountBizException
 	 */
 	@Override
-	public AccountLogVo getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException{
+	public AccountLogVO getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException{
 		return null;
 	}
 }

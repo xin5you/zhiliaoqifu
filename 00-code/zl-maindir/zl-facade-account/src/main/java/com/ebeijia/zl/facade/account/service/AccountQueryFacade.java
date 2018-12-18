@@ -2,10 +2,9 @@ package com.ebeijia.zl.facade.account.service;
 
 import java.util.List;
 
-import com.ebeijia.zl.facade.account.dto.AccountLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
-import com.ebeijia.zl.facade.account.vo.AccountLogVo;
+import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.github.pagehelper.PageInfo;
 
@@ -73,7 +72,7 @@ public interface AccountQueryFacade {
 	 *-------------------------------------*
 	 * 2018年12月14日     zhuqi           v1.0.0
 	 */
-	PageInfo<AccountLogVo> getAccountLogPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException;
+	PageInfo<AccountLogVO> getAccountLogPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException;
 
 	/**
 	 * 当前交易记录明细
@@ -81,5 +80,5 @@ public interface AccountQueryFacade {
 	 * @return
 	 * @throws AccountBizException
 	 */
-	AccountLogVo getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException;
+	AccountLogVO getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException;
 }

@@ -3,24 +3,54 @@
 <mapper namespace="com.ebeijia.zl.service.account.mapper.AccountLogMapper">
 
 
-    <select id="getAccountLogVoList" parameterType="java.lang.String" resultType="AccountLogVO">
-          select
-		    al.txn_primary_key,
+    <select id="getAccountLogVoList" parameterType="AccountQueryReqVo" resultType="AccountLogVO">
+		select
+			al.txn_primary_key,
 			al.txn_date,
 			al.txn_time,
 			al.acc_type,
 			al.txn_amt,
 			al.acc_total_bal,
 			tl.trans_desc,
-		    tl.trans_number,
+			tl.trans_number,
 			tl.trans_id,
 			tl.pri_b_id,
-			tl.mchnt_code
-		from
-			        tb_account_log al
-		 LEFT JOIN tb_account_inf ai on al.account_no=ai.account_no
-		 LEFT JOIN tb_trans_log tl on al.txn_primary_key=tl.txn_primary_key
-		 LEFT JOIN tb_user_inf u on  u.user_id=ai.user_id
-		 LEFT JOIN tb_channel_user_inf ci on ci.user_id=u.user_id
+			tl.mchnt_code,
+			ui.user_type
+		from tb_account_log al
+		LEFT JOIN tb_account_inf ai on al.account_no=ai.account_no
+		LEFT JOIN tb_trans_log tl on al.txn_primary_key=tl.txn_primary_key
+		LEFT JOIN tb_user_inf ui on  ui.user_id=ai.user_id
+		LEFT JOIN tb_channel_user_inf cui on cui.user_id=ui.user_id
+
+		<where>
+			<if test="actPrimaryKey != null and actPrimaryKey !=''">
+				al.act_primary_key=#{actPrimaryKey}
+			</if>
+
+			<if test="userChnlId != null and userChnlId !=''">
+				and cui.external_id=#{userChnlId}
+			</if>
+
+			<if test="userChnl != null and userChnl != ''">
+				and cui.channel_code=#{userChnl}
+			</if>
+
+			<if test="userType != null and userType !=''">
+				and ui.user_type=#{userType}
+			</if>
+
+			<if test="sDate != null">
+				and al.create_time &gt;= #{sDate}
+			</if>
+
+			<if test="eDate != null">
+				and al.create_time &lt;= #{eDate}
+			</if>
+
+			<if test="bId != null and bId != ''">
+				and ai.b_id=#{bId}
+			</if>
+		</where>
 	</select>
 </mapper>

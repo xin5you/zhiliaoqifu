@@ -6,7 +6,7 @@ import com.ebeijia.zl.facade.account.dto.AccountLog;
 import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
-import com.ebeijia.zl.facade.account.vo.AccountLogVo;
+import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 
 import java.util.List;
 
@@ -27,5 +27,5 @@ public interface IAccountLogService extends IService<AccountLog> {
 	 * @param req
 	 * @return
 	 */
-	List<AccountLogVo> getAccountLogVoList(AccountQueryReqVo req);
+	List<AccountLogVO> getAccountLogVoList(AccountQueryReqVo req);
 }
