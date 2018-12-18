@@ -73,13 +73,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public TbEcomGoodsGallery getGallery(String goodsId) {
+    public List<TbEcomGoodsGallery> getGallery(String goodsId) {
         if (!vaildId(goodsId)) {
             return null;
         }
         TbEcomGoodsGallery gallery = new TbEcomGoodsGallery();
         gallery.setGoodsId(goodsId);
-        return galleryDao.getOne(new QueryWrapper<>(gallery));
+        return galleryDao.list(new QueryWrapper<>(gallery));
     }
 
     @Override

@@ -52,8 +52,8 @@ public class GoodsController {
 
     @ApiOperation("商品相册")
     @RequestMapping(value = "/gallery/get/{goods}",method = RequestMethod.GET)
-    public JsonResult<TbEcomGoodsGallery> goodsGallery(@PathVariable("goods") String goodsId){
-        TbEcomGoodsGallery goodsGallery = goodsService.getGallery(goodsId);
+    public JsonResult<List<TbEcomGoodsGallery>> goodsGallery(@PathVariable("goods") String goodsId){
+        List<TbEcomGoodsGallery> goodsGallery = goodsService.getGallery(goodsId);
         return new JsonResult<>(goodsGallery);
     }
 

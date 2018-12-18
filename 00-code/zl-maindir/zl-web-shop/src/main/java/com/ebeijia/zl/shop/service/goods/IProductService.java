@@ -14,7 +14,7 @@ public interface IProductService {
 
     TbEcomGoodsDetail getDetail(String goodsId);
 
-    TbEcomGoodsGallery getGallery(String goodsId);
+    List<TbEcomGoodsGallery> getGallery(String goodsId);
 
     List<TbEcomGoodsProduct> listSkuByGoodsId(String goodsId);
 
