@@ -9,8 +9,8 @@ import lombok.Data;
 import java.util.List;
 
 
-@ApiModel("订单详情信息")
 @Data
+@ApiModel("订单详情信息")
 public class EcomOrderDetailInfo {
 
 

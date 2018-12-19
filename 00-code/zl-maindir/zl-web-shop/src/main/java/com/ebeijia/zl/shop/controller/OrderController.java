@@ -10,8 +10,8 @@ import com.ebeijia.zl.shop.vo.EcomOrderDetailInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +36,7 @@ public class OrderController {
     @ShopTransactional
     @ApiOperation("商品直接下单")
     @RequestMapping(value = "/goods/create/",method = RequestMethod.POST)
-    @ApiImplicitParam(name = "order", value = "订单明细", required = true, dataType = "com.ebeijia.zl.shop.vo.EcomOrderDetailInfo")
-    public JsonResult<TbEcomOrderInf> createOrder(@RequestParam("order") EcomOrderDetailInfo order, @RequestParam("session") String session){
+    public JsonResult<TbEcomOrderInf> createOrder(@ApiParam(name = "order",type = "body") EcomOrderDetailInfo order, @RequestParam("session") String session){
         return new JsonResult<>(new TbEcomOrderInf());
     }
 

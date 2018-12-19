@@ -22,6 +22,9 @@ public class MemberService implements IMemberService {
     @Autowired
     ITbEcomMemberService memberService;
 
+//    @Autowired
+//    UserInfFacade userInfFacade;
+
     @Override
     public TbEcomMember createMember() {
         return null;
@@ -47,9 +50,10 @@ public class MemberService implements IMemberService {
         }
         //TODO 对接账务接口
 
+//        UserInf userInf = userInfFacade.getUserInfByUserId(one.getUserId());
+//        userInfFacade.getPersonInfByPhoneNo("","");
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setPersonalId(one.getPersonId());
-        memberInfo.setCompanyName("知了");
         memberInfo.setMobilePhoneNo("13812341234");
         memberInfo.setUserId(one.getUserId());
         memberInfo.setPersonalName("李狗子");
