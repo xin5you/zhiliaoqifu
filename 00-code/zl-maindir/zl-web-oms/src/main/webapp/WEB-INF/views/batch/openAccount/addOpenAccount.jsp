@@ -43,8 +43,10 @@
                                         </select>
 		                       	</span>
 		                       	<div class="pull-right">
-		                       	<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_FILE')">
+		                       	<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_UPLOAD_FILE')">
 		                                    <button class="btn btn-primary btn-account-list" type="button">文件导入</button>
+		                       </sec:authorize>
+		                       <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_DOWNLOAD_FILE')">
 		                                    <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
 		                        </sec:authorize>
 	                           </div>
@@ -118,7 +120,7 @@
                 <button class="close" data-dismiss="modal">&times;</button>
                 <h3>文件导入</h3>
             </div>
-            <form id="uploadMainForm" action="${ctx}/common/excelImport/excelImp.do "   method="post" enctype="multipart/form-data">
+            <form id="uploadMainForm" action="${ctx}/common/excelImport/excelImp.do"   method="post" enctype="multipart/form-data">
             <div class="modal-body">
                 <div class="control-group">
                               <div class="controls" style="text-align: center;">

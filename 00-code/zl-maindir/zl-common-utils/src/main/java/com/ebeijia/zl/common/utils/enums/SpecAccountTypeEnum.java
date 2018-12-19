@@ -1,5 +1,8 @@
 package com.ebeijia.zl.common.utils.enums;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public enum SpecAccountTypeEnum{
 	
 	A00("A00", "通用账户","A"), 
@@ -49,4 +52,11 @@ public enum SpecAccountTypeEnum{
 		return null;
 	}
 
+	public static Set<String>  getList() {
+		Set<String> set	=new HashSet<String>();
+			for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
+				set.add(t.bId);
+			}
+			return set;
+		}
 }

@@ -30,7 +30,7 @@
 						<input type="hidden" id="bizType" name="bizType"  value="${bizType }"/>
 						<h3 class="heading">订单编辑</h3>
 						<div>
-						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTADD')">
+						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTCOMMIT')">
 						<button class="btn btn-primary btn-editAddRecharge" type="button">添加</button>
 						</sec:authorize>
 						</div><br/>
@@ -151,7 +151,7 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-            <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTADDCOMMIT')">
+            <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERCOMMIT')">
                 <button class="btn btn-primary btn-submit">确 定  </button>
             </sec:authorize>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>

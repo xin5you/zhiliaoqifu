@@ -29,7 +29,7 @@
 					 	<div class="span12">
 							<form id="mainForm" class="form-horizontal form_validation_tip" method="post">
 								 <h3 class="heading">编辑账户类型</h3>
-								  <input type="hidden" name="bId" id="bId" value="${billingType.bId }">
+								  <input type="hidden" name="bId" id="bId" value="${billingType.BId }">
 								       <div class="control-group formSep">
 							             <label class="control-label">账户类型名称<span style="color:red">*</span></label>
 							             <div class="controls">
@@ -42,7 +42,7 @@
 							             <div class="controls">
 							                 <select id="code" name="code" class="chzn_a span6">
 								                 <c:forEach var="c" items="${billingTypeCodeList}" varStatus="st">
-													<option value="${c.bId}" <c:if test="${c.code==billingType.bId }">selected="selected"</c:if>>${c.code }类</option>
+													<option value="${c.bId}" <c:if test="${c.bId==billingType.BId }">selected="selected"</c:if>>${c.code }类</option>
 												 </c:forEach>
 							                 </select>
 							                 <span class="help-block"></span>

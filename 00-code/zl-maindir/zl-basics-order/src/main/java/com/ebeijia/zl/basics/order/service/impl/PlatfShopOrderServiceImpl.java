@@ -29,7 +29,6 @@ import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.SignUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.core.redis.constants.RedisConstants;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 
 @Service("platfShopOrderService")

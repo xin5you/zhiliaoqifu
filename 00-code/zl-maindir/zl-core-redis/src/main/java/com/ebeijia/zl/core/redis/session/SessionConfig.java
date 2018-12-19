@@ -9,13 +9,6 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds= 3600)
 public class SessionConfig {
 	
-	@Value("${server.session.cookie.name}")
-	private String cookieName;
-	
-	@Value("${server.session.cookie.domain}")
-	private String domainName;
-	
-	@Value("${server.session.cookie.path}")
-	private String cookiePath;
+
 	
 }

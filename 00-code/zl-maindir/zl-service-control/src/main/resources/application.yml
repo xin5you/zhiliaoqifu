@@ -1,6 +1,9 @@
 spring:
   profiles: 
     active: dev
-
 quartz:
-    cronExpression: 0/5 * * * * ?
+  cronExpression:
+    dictBiz: 0 0/5 * * * ?
+    jsToken: 0 0/5 * * * ?
+    accessToken: 0 0/5 * * * ?
+    teleRecharge: 0 0/5 * * * ?

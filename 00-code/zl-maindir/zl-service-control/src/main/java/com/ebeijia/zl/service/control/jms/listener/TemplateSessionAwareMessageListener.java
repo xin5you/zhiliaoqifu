@@ -3,6 +3,7 @@ package com.ebeijia.zl.service.control.jms.listener;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
-import com.ebeijia.zl.core.redis.constants.RedisConstants;
 import com.ebeijia.zl.core.wechat.process.MpAccount;
 import com.ebeijia.zl.core.wechat.process.WxApiClient;
 import com.ebeijia.zl.core.wechat.vo.TemplateMessage;

@@ -7,13 +7,13 @@
     <artifactId>zl-maindir</artifactId>
     <version>1.0.0.RELEASE</version>
   </parent>
-  <artifactId>zl-service-control</artifactId>
-  <name>zl-service-control</name>
+  <artifactId>zl-web-user</artifactId>
+  <name>zl-web-user</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
- <dependencies>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	  </properties>
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -25,6 +25,26 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-facade-account</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
+         <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-common-core</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
+
+         <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-wechat</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        
 		
 		<dependency>
 		    <groupId>org.aspectj</groupId>
@@ -39,9 +59,9 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>com.alibaba.spring.boot</groupId>
-		    <artifactId>dubbo-spring-boot-starter</artifactId>
-		    <version>1.0.1</version>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>dubbo</artifactId>
+		    <version>2.6.0</version>
 		</dependency>
 
         <dependency>
@@ -62,51 +82,12 @@
 	        <version>0.10</version>
 	    </dependency>
 	    
-	     <dependency> <!--quartz依赖-->
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
-            <version>2.2.3</version>
-		</dependency>
-		
-		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
-        
-         <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-wechat</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-activemq</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-		
-		<dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-facade-account</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
-        
-         <dependency>
-            <groupId>com.ebeijia</groupId>
-            <artifactId>zl-common-core</artifactId>
-            <version>${ebj.zl.version}</version>
-        </dependency>
 
-	 <dependency>
-		 <groupId>com.ebeijia</groupId>
-		 <artifactId>zl-basics-billingtype</artifactId>
-		 <version>${ebj.zl.version}</version>
-	 </dependency>
+		<dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>swagger-dubbo</artifactId>
+            <version>2.0.1</version>
+        </dependency>
 
 		 <dependency>  
 	        <groupId>org.springframework.boot</groupId>  
@@ -151,5 +132,6 @@
         	</plugin>
 		</plugins>
 	</build>
+	<packaging>war</packaging>
 </project>
 

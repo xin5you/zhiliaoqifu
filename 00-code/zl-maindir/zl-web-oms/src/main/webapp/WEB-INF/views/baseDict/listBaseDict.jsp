@@ -29,8 +29,8 @@
 								<input id="dictName" name="dictName" type="text" class="input-small" value="${baseDict.dictName }" />
 							</div>
 							<div class="input-prepend">
-								<span class="add-on">字典名称</span> 
-								<input id="dictName" name="dictName" type="text" class="input-small" value="${baseDict.dictName }" />
+								<span class="add-on">字典代码</span> 
+								<input id="dictCode" name="dictCode" type="text" class="input-small" value="${baseDict.dictCode }" />
 							</div>
 						</div>
 						<div class="pull-right">
