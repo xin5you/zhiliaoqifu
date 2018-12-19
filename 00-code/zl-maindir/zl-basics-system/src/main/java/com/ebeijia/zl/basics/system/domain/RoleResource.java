@@ -39,7 +39,7 @@ public class RoleResource extends Model<RoleResource> {
      * 主键
      */
     @TableId(value = "id" ,type = IdType.UUID)
-    private Integer id;
+    private String id;
 
 
     @Override

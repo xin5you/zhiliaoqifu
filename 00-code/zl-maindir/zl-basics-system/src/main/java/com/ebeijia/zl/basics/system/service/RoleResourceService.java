@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.system.service;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.basics.system.domain.RoleResource;
 
@@ -14,4 +16,6 @@ import com.ebeijia.zl.basics.system.domain.RoleResource;
 public interface RoleResourceService extends IService<RoleResource> {
 
 	int deleteRoleResourceByRoleId(String roleId);
+	
+	List<RoleResource> getRoleResourceByRoleId(String roleId);
 }

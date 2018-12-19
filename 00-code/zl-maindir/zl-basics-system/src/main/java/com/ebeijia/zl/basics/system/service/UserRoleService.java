@@ -18,4 +18,6 @@ public interface UserRoleService extends IService<UserRole> {
 	int deleteUserRoleByUserId (String userId);
 	
 	List<UserRole> getUserRoleByRoleId(String roleId);
+	
+	List<UserRole> getUserRoleByUserId(String userId);
 }

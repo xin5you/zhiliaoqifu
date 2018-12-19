@@ -107,13 +107,12 @@ public class UserController {
 		try {
 			User user = getUserInfo(req);
 			
-			User loginNameUser=userService.getUserByName("", user.getLoginName(), LoginType.LoginType1.getCode());
+			User loginNameUser = userService.getUserByName("", user.getLoginName(), LoginType.LoginType1.getCode());
 			if(loginNameUser != null){
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "当前登陆名已存在，请重新输入");
 				return resultMap;
 			}
-			user.setPassword(MD5Utils.MD5(user.getPassword()));
 			if(userRoleResourceService.insertUserRole(user, rolesIds) < 1){
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "新增用户失败，请重新添加");
@@ -267,7 +266,7 @@ public class UserController {
 		user.setUserName(StringUtil.nullToString(req.getParameter("userName")));
 		String password = StringUtil.nullToString(req.getParameter("password"));
 		if(!StringUtil.isNullOrEmpty(password)){
-			user.setPassword(password);
+			user.setPassword(MD5Utils.MD5(password));
 		}
 		user.setLoginType(LoginType.LoginType1.getCode());
 		user.setOrganizationId(StringUtil.nullToString(req.getParameter("organizationId")));
@@ -288,11 +287,13 @@ public class UserController {
 	public Map<String, Object> deleteUserCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
-		String userId=req.getParameter("userId");
+		String userId = req.getParameter("userId");
 		try {
-			userService.removeById(userId);
+			if (!userService.removeById(userId)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除用户失败，请重新操作");
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "删除用户失败，请重新操作");
 			logger.error(e.getLocalizedMessage(), e);

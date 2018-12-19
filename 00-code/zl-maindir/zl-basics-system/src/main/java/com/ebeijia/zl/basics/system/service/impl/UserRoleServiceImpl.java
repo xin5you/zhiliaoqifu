@@ -33,4 +33,9 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 		return userRoleMapper.getUserRoleByRoleId(roleId);
 	}
 
+	@Override
+	public List<UserRole> getUserRoleByUserId(String userId) {
+		return userRoleMapper.getUserRoleByUserId(userId);
+	}
+
 }

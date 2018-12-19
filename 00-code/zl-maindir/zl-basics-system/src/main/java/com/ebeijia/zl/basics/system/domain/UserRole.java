@@ -36,7 +36,7 @@ public class UserRole extends Model<UserRole> {
     private String roleId;
  
     @TableId(value = "id" ,type = IdType.UUID)
-    private Integer id;
+    private String id;
 
 
     @Override

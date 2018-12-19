@@ -115,11 +115,13 @@ var editUser = {
     	var name=$("#name").val();
     	var organizationId=$("#organizationId").val();
     	var roleIds=$("#roleIds").val();
+    	var password=$("#password").val();
 		$.ajax({
             type: 'POST',
             url: Helper.getRootPath() + '/sys/user/editUserCommit.do',
             data: {
             		"userId":userId,
+            		"password":password,
             		"loginName" :loginname,
             		"userName": name,
             		"organizationId":organizationId,

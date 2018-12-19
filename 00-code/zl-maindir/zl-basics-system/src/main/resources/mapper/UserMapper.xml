@@ -26,7 +26,8 @@
 		select 
 	  		<include refid="UserColumns" />
 		from tb_web_user m 
-		where m.login_type = #{loginType}
+		where m.data_stat = '0'
+			and m.login_type = #{loginType}
 		<if test="loginName !=null and loginName !='' ">
 			and m.login_name = #{loginName}
 		</if>

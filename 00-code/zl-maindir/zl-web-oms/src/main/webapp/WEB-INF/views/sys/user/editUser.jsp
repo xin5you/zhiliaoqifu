@@ -40,7 +40,13 @@
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
-						
+								<div class="control-group">
+						             <label class="control-label">密码</label>
+						             <div class="controls">
+						                 <input type="text" class="span6" id="password" name="password" value="${currUser.password }"/>
+						                 <span class="help-block"></span>
+						             </div>
+						         </div>
 <!-- 						         <div class="control-group"> -->
 <!-- 						             <label class="control-label">用户类型</label> -->
 <!-- 						             <div class="controls"> -->

@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.system.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -16,4 +18,6 @@ import com.ebeijia.zl.basics.system.domain.RoleResource;
 public interface RoleResourceMapper extends BaseMapper<RoleResource> {
 
 	int deleteRoleResourceByRoleId(String roleId);
+	
+	List<RoleResource> getRoleResourceByRoleId(String roleId);
 }

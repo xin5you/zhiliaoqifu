@@ -1,5 +1,7 @@
 package com.ebeijia.zl.basics.system.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,11 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
 	@Override
 	public int deleteRoleResourceByRoleId(String roleId) {
 		return roleResourceMapper.deleteRoleResourceByRoleId(roleId);
+	}
+
+	@Override
+	public List<RoleResource> getRoleResourceByRoleId(String roleId) {
+		return roleResourceMapper.getRoleResourceByRoleId(roleId);
 	}
 
 }

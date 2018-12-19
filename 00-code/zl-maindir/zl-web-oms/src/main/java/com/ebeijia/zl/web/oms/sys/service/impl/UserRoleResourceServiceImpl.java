@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 import com.ebeijia.zl.basics.system.domain.RoleResource;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.basics.system.domain.UserRole;
-import com.ebeijia.zl.basics.system.service.ResourceService;
 import com.ebeijia.zl.basics.system.service.RoleResourceService;
-import com.ebeijia.zl.basics.system.service.RoleService;
 import com.ebeijia.zl.basics.system.service.UserRoleService;
 import com.ebeijia.zl.basics.system.service.UserService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 
 @Service("userRoleResourceService")
@@ -21,12 +20,6 @@ public class UserRoleResourceServiceImpl implements UserRoleResourceService {
 
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private RoleService roleService;
-	
-	@Autowired
-	private ResourceService resourceService;
 	
 	@Autowired
 	private UserRoleService userRoleService;
@@ -39,12 +32,13 @@ public class UserRoleResourceServiceImpl implements UserRoleResourceService {
 		if (!userService.save(user)) {
 			return 0;
 		}
-		if (roleIds == null && roleIds.length < 1){
+		if (roleIds == null || roleIds.length < 1){
 			return 0;
 		}
 		List<UserRole> userRoleList = new ArrayList<>();
 		for (int i = 0; i < roleIds.length; i++){
 			UserRole userRole = new UserRole();
+			userRole.setId(IdUtil.getNextId());
 			userRole.setUserId(user.getId());
 			userRole.setRoleId(roleIds[i]);
 			userRoleList.add(userRole);
@@ -60,17 +54,19 @@ public class UserRoleResourceServiceImpl implements UserRoleResourceService {
 		if (!userService.updateById(user)) {
 			return 0;
 		}
-		
-		if (userRoleService.deleteUserRoleByUserId(user.getId()) < 1) {
-			return 0;
+		List<UserRole> urList = userRoleService.getUserRoleByUserId(user.getId());
+		if (urList != null && urList.size() >= 1) {
+			if (userRoleService.deleteUserRoleByUserId(user.getId()) < 1) {
+				return 0;
+			}
 		}
-		
-		if (roleIds == null && roleIds.length < 1){
+		if (roleIds == null || roleIds.length < 1){
 			return 0;
 		}
 		List<UserRole> userRoleList = new ArrayList<>();
 		for (int i = 0; i < roleIds.length; i++){
 			UserRole userRole = new UserRole();
+			userRole.setId(IdUtil.getNextId());
 			userRole.setUserId(user.getId());
 			userRole.setRoleId(roleIds[i]);
 			userRoleList.add(userRole);
@@ -83,15 +79,19 @@ public class UserRoleResourceServiceImpl implements UserRoleResourceService {
 
 	@Override
 	public int updateRoleResource(String roleId, String[] resourceIds) {
-		if (roleResourceService.deleteRoleResourceByRoleId(roleId) < 1) {
-    		return 0;
-    	}
-		if(resourceIds == null && resourceIds.length < 1){
+		List<RoleResource> roleResList = roleResourceService.getRoleResourceByRoleId(roleId);
+		if (roleResList != null && roleResList.size() >= 1) {
+			if (roleResourceService.deleteRoleResourceByRoleId(roleId) < 1) {
+	    		return 0;
+	    	}
+		}
+		if(resourceIds == null || resourceIds.length < 1){
     		return 0;
     	}
 		List<RoleResource> roleResourceList = new ArrayList<>();
 		for(int i = 0; i < resourceIds.length; i++){
 			RoleResource roleResource = new RoleResource();
+			roleResource.setId(IdUtil.getNextId());
 			roleResource.setRoleId(roleId);
 			roleResource.setResourceId(resourceIds[i]);
 			roleResourceList.add(roleResource);
