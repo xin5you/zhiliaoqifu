@@ -23,24 +23,26 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableAutoConfiguration
 @EnableJms
 @SpringBootApplication
-public class WxcApp extends SpringBootServletInitializer implements WebApplicationInitializer {
+public class ControlApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 
 	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(WxcApp.class);
+		return application.sources(ControlApp.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(WxcApp.class, args);
+		SpringApplication.run(ControlApp.class, args);
 	}
 
 	// 开发环境DataSource配置 使用druid数据源
+/*
 	@Bean("dataSource")
 	@ConfigurationProperties(prefix = "spring.datasource")
 	public DruidDataSource dataSource() {
 		return new DruidDataSource();
 	}
+*/
 
 
 	// 提供SqlSeesion
@@ -54,12 +56,12 @@ public class WxcApp extends SpringBootServletInitializer implements WebApplicati
 //	}
 
 	// 事务管理
-	@Bean
+/*	@Bean
 	@ConditionalOnMissingBean
 	public PlatformTransactionManager transactionManager() {
 			return new DataSourceTransactionManager(dataSource());
 	}
-	
+	*/
     @Bean
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();

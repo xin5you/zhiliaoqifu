@@ -31,9 +31,17 @@ public class QuartzConfigure {
     @Qualifier(value = "dataSource")
     private DataSource dataSource;
 	
-	@Value("${quartz.cronExpression}")
-	private String cronExpression;
+	@Value("${quartz.cronExpression.dictBiz}")
+	private String dictBizExpression;
 
+    @Value("${quartz.cronExpression.jsToken}")
+    private String jsTokenExpression;
+
+    @Value("${quartz.cronExpression.accessToken}")
+    private String accessTokenExpression;
+
+    @Value("${quartz.cronExpression.teleRecharge}")
+    private String teleRechargeExpression;
 	/**
 	 * 从quartz.properties文件中读取Quartz配置属性
 	 * @return
@@ -106,7 +114,7 @@ public class QuartzConfigure {
         CronTriggerFactoryBean tigger = new CronTriggerFactoryBean();
         tigger.setJobDetail(baseDictBizDetail);
         tigger.setStartDelay(2000);   //延迟启动
-        tigger.setCronExpression(cronExpression);  //从application.yml文件读取
+        tigger.setCronExpression(dictBizExpression);  //从application.yml文件读取
         return tigger;
     }
     
@@ -130,7 +138,7 @@ public class QuartzConfigure {
     
     /**
      * 配置具体执行规则
-     * @param bccessTokenBizDetail
+     * @param accessTokenBizDetail
      * @return
      */
     @Bean
@@ -138,7 +146,7 @@ public class QuartzConfigure {
         CronTriggerFactoryBean tigger = new CronTriggerFactoryBean();
         tigger.setJobDetail(accessTokenBizDetail);
         tigger.setStartDelay(2000);   //延迟启动
-        tigger.setCronExpression(cronExpression);  //从application.yml文件读取
+        tigger.setCronExpression(accessTokenExpression);  //从application.yml文件读取
         return tigger;
     }
 }
