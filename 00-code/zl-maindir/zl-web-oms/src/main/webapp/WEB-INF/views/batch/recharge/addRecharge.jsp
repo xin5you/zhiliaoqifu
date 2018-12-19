@@ -59,10 +59,12 @@
 		                	</select>
 	                	</span> --%>
 	                  	<div class="pull-right">
-	                  	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_FILE')">
-	                        <button class="btn btn-primary btn-recharge-list" type="button">文件导入</button>
-	                        <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
-	                    </sec:authorize>
+	                  	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_UPLOAD_FILE')">
+		                                    <button class="btn btn-primary btn-recharge-list" type="button">文件导入</button>
+		                       </sec:authorize>
+		                       <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_DOWNLOAD_FILE')">
+		                                    <button class="btn btn-primary btn-mould-download" type="button">模板下载</button>
+		                        </sec:authorize>
 	                    </div>
 	           		</div>
 	  			</div>
