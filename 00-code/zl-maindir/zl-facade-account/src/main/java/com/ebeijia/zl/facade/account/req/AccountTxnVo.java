@@ -24,13 +24,16 @@ public class AccountTxnVo implements java.io.Serializable {
      * 账户类型
      */
     private String txnBId;
-    
-    
+
     /**
      * 交易金额
      */
     private BigDecimal txnAmt;
-    
+
+	/**
+	 * 上送金额
+	 */
+	private BigDecimal upLoadAmt;
 
 	public String getTxnBId() {
 		return txnBId;
@@ -47,5 +50,12 @@ public class AccountTxnVo implements java.io.Serializable {
 	public void setTxnAmt(BigDecimal txnAmt) {
 		this.txnAmt = txnAmt;
 	}
-  
+
+	public BigDecimal getUpLoadAmt() {
+		return upLoadAmt;
+	}
+
+	public void setUpLoadAmt(BigDecimal upLoadAmt) {
+		this.upLoadAmt = upLoadAmt;
+	}
 }

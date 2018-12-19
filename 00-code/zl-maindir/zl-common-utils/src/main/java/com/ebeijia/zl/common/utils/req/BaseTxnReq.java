@@ -18,6 +18,7 @@ import java.util.Set;
 *-------------------------------------*
 * 2018年11月29日     zhuqi           v1.0.0
  */
+
 public class BaseTxnReq implements java.io.Serializable {
 
 
