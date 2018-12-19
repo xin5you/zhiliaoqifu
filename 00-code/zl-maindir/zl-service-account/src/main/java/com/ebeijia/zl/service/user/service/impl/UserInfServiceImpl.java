@@ -1,5 +1,9 @@
 package com.ebeijia.zl.service.user.service.impl;
 
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
+import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
+import com.ebeijia.zl.service.account.service.ITransLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -41,7 +45,13 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	
 	@Autowired
 	private IChannelUserInfService channelUserInfService;
-	
+
+
+	@Autowired
+	private IIntfaceTransLogService intfaceTransLogService;
+
+	@Autowired
+	private ITransLogService transLogService;
 	
 	/**
 	* 
@@ -120,7 +130,21 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			channelUserInf.setChannelCode(userChnl);
 			channelUserInfService.save(channelUserInf);
 		}
-		return personInf.getUserId();
+
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.newItfTransLog(personInf.getPersonalId(), user.getUserId(), transId, null, userType, transChnl,
+				userChnl,userChnlId,null);
+		intfaceTransLog.setTransDesc("开户");
+		intfaceTransLog.setMchntCode(companyId);
+		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
+		intfaceTransLog.setBIds(SpecAccountTypeEnum.getList());
+
+		//执行开户操作
+		boolean eflag=transLogService.execute(intfaceTransLog);
+		if(eflag){
+			return user.getUserId();
+		}else {
+			return "";
+		}
 	}
 	
 	/**

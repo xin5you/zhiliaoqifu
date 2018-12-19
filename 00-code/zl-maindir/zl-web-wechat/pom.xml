@@ -7,8 +7,8 @@
     <artifactId>zl-maindir</artifactId>
     <version>1.0.0.RELEASE</version>
   </parent>
-  <artifactId>zl-web-wechat</artifactId>
-  <name>zl-web-wechat</name>
+  <artifactId>zl-web-user</artifactId>
+  <name>zl-web-user</name>
   <url>http://maven.apache.org</url>
   <properties>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
