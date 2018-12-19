@@ -89,7 +89,7 @@
 			</div>
          	</br >  
          	<div>
-         	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_USER_INTOADD')">
+         	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTCOMMIT')">
          		<button class="btn btn-primary btn-addRecharge" type="button">添加</button>
          	</sec:authorize>
          	</div>
@@ -114,7 +114,7 @@
 						<td>${entity.phoneNo}</td>
 						<td>${entity.amount}</td>
 						<td>
-						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_USER_DELETE')">
+						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTDELETE')">
 						<a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 						</sec:authorize>
 						</td>
@@ -198,7 +198,7 @@
 		    </div>
 		</form>
 		<div class="modal-footer" style="text-align: center;">
-		<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_USER_ADDCOMMIT')">
+		<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERCOMMIT')">
 		    <button class="btn btn-primary btn-submit">确 定  </button>
 		</sec:authorize>
 		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>

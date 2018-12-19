@@ -29,7 +29,7 @@
 						<input type="hidden" id="accountType" name="accountType"  value="${accountType }"/>
 						<h3 class="heading">订单编辑</h3>
 						<div>
-						<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTADD')">
+						<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_USER_INTOADD')">
 						<button class="btn btn-primary btn-editAddAccount" type="button"> 添 加 </button>
 						</sec:authorize>
 						</div><br/>
