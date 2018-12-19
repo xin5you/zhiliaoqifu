@@ -39,7 +39,7 @@ import com.ebeijia.zl.web.wechat.model.wxapi.service.BizService;
  * 微信与开发者服务器交互接口
  */
 @RestController
-@RequestMapping("/wxapi")
+@RequestMapping("/wchat/wxapi")
 public class WxApiCtrl {
 
 	Logger logger = LoggerFactory.getLogger(getClass());

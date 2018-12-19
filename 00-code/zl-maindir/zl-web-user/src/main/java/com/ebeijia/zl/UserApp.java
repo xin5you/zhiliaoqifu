@@ -21,16 +21,16 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @SpringBootApplication
-public class WechatApp extends SpringBootServletInitializer implements WebApplicationInitializer {
+public class UserApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 
 	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(WechatApp.class);
+		return application.sources(UserApp.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(WechatApp.class, args);
+		SpringApplication.run(UserApp.class, args);
 	}
 
 	// 开发环境DataSource配置 使用druid数据源
