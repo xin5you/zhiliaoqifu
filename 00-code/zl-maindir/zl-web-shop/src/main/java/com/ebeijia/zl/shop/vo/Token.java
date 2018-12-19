@@ -1,19 +1,16 @@
 package com.ebeijia.zl.shop.vo;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import lombok.*;
 
 import java.io.Serializable;
 
 /**
  * 用于包装账户认证中心返回的令牌信息
  */
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@ApiModel("令牌信息")
+@Data
 public class Token implements Serializable {
 
     private static final long serialVersionUID = 1L;

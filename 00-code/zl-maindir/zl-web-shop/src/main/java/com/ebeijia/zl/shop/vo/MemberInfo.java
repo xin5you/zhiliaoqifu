@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.vo;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @User zhuqi
  * @Date 2018-11-30
  */
+@ApiModel
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class MemberInfo implements Serializable {

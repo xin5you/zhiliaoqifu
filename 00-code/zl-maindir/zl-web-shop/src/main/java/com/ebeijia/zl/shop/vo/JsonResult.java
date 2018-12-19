@@ -1,25 +1,27 @@
 package com.ebeijia.zl.shop.vo;
 
 import com.ebeijia.zl.shop.constants.ResultState;
+import io.swagger.annotations.ApiModel;
 
 import java.io.Serializable;
 
+@ApiModel("结果")
 public class JsonResult<T> implements Serializable {
 
     private static final long serialVersionUID = -62401379125965102L;
 
-    /*
+    /**
      * 响应状态码，默认ResponseCode.SUCCESS
      */
     private int code = ResultState.OK;
 
-    /*
+    /**
      * 响应详情说明
      */
     private String message = "";
 
-    /*
-     * 响应详情数据
+    /**
+     * 响应数据结果
      */
     private T result;
 

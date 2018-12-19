@@ -63,36 +63,19 @@ public class EcomOrderDetailInfo {
     @ApiModelProperty(value = "remarks")
     private String remarks;
 
-    @ApiModelProperty(value = "create_user")
-    private String createUser;
-
-    @ApiModelProperty(value = "update_user")
-    private String updateUser;
-
     @ApiModelProperty(value = "create_time")
     private Long createTime;
 
     @ApiModelProperty(value = "update_time")
     private Long updateTime;
 
-    @ApiModelProperty(value = "lock_version")
-    private Integer lockVersion;
-
     @ApiModelProperty(value = "order_channel")
     private String orderChannel;
-
-    @ApiModelProperty(value = "col1")
-    private String col1;
-
-    @ApiModelProperty(value = "col2")
-    private String col2;
-
-    @ApiModelProperty(value = "col3")
-    private String col3;
 
     @ApiModelProperty(value = "ship info")
     TbEcomOrderShip ship;
 
+    @ApiModelProperty(value = "订单的商品列表")
     List<TbEcomOrderProductItem> itemList;
 
 }
