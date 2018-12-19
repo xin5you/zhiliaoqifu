@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.model.wxapi.service.impl;
+package com.ebeijia.zl.web.user.model.wxapi.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import com.ebeijia.zl.core.wechat.vo.MsgRequest;
 import com.ebeijia.zl.core.wechat.vo.SemaphoreMap;
 import com.ebeijia.zl.facade.user.service.UserInfFacade;
 import com.ebeijia.zl.facade.user.vo.UserInf;
-import com.ebeijia.zl.web.wechat.model.wxapi.service.BizService;
+import com.ebeijia.zl.web.user.model.wxapi.service.BizService;
 
 
 /**

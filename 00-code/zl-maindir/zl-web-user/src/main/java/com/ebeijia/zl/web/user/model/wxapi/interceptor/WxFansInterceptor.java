@@ -1,8 +1,11 @@
-package com.ebeijia.zl.web.wechat.model.wxapi.interceptor;
+package com.ebeijia.zl.web.user.model.wxapi.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ebeijia.zl.web.user.model.utils.HttpRequestDeviceUtils;
+import com.ebeijia.zl.web.user.model.utils.HttpWebUtil;
+import com.ebeijia.zl.web.user.model.wxapi.service.BizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -12,9 +15,6 @@ import com.ebeijia.zl.basics.wechat.service.AccountFansService;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.wechat.process.MpAccount;
 import com.ebeijia.zl.core.wechat.process.WxMemoryCacheClient;
-import com.ebeijia.zl.web.wechat.model.utils.HttpRequestDeviceUtils;
-import com.ebeijia.zl.web.wechat.model.utils.HttpWebUtil;
-import com.ebeijia.zl.web.wechat.model.wxapi.service.BizService;
 
 /**
  * 微信客户端用户请求验证拦截器

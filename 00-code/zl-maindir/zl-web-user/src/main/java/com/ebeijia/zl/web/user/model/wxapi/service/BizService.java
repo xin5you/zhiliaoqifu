@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.model.wxapi.service;
+package com.ebeijia.zl.web.user.model.wxapi.service;
 
 import com.ebeijia.zl.basics.wechat.domain.AccountFans;
 import com.ebeijia.zl.core.wechat.process.MpAccount;

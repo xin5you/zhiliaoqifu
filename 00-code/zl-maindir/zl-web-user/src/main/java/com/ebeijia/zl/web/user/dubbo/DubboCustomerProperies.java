@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.dubbo;
+package com.ebeijia.zl.web.user.dubbo;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

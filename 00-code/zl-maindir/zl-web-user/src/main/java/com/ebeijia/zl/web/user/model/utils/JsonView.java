@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.model.utils;
+package com.ebeijia.zl.web.user.model.utils;
 
 import java.io.UnsupportedEncodingException;
 

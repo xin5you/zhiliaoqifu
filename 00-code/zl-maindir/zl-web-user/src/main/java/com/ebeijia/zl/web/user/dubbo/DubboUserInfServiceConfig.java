@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.dubbo;
+package com.ebeijia.zl.web.user.dubbo;
 
 import java.util.ArrayList;
 import java.util.List;

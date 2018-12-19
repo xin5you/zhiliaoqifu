@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.model.wxapi.interceptor;
+package com.ebeijia.zl.web.user.model.wxapi.interceptor;
 
 import java.util.HashMap;
 import java.util.Map;

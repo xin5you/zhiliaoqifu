@@ -1,4 +1,4 @@
-package com.ebeijia.zl.web.wechat.model.customer.ctrl;
+package com.ebeijia.zl.web.user.model.customer.ctrl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +7,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ebeijia.zl.web.user.model.utils.JsonView;
+import com.ebeijia.zl.web.user.model.utils.UploadUtil;
+import com.ebeijia.zl.web.user.model.wxapi.service.BizService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +34,6 @@ import com.ebeijia.zl.core.wechat.process.WxSign;
 import com.ebeijia.zl.core.wechat.util.WxSignUtil;
 import com.ebeijia.zl.core.wechat.vo.MsgRequest;
 import com.ebeijia.zl.core.wechat.vo.SemaphoreMap;
-import com.ebeijia.zl.web.wechat.model.utils.JsonView;
-import com.ebeijia.zl.web.wechat.model.wxapi.service.BizService;
 
 
 /**
@@ -207,7 +208,7 @@ public class WxApiCtrl {
 		MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
 		if (num != null) {
 			byte[] qrcode = wxApiClient.createQRCode(180, num, mpAccount);// 有效期180s
-			String url =com.ebeijia.zl.web.wechat.model.utils.UploadUtil.byteToImg(request.getServletContext().getRealPath("/"), qrcode);
+			String url =UploadUtil.byteToImg(request.getServletContext().getRealPath("/"), qrcode);
 			mv.addObject("qrcode", url);
 		}
 		mv.addObject("num", num);

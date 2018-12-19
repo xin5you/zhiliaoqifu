@@ -1,8 +1,9 @@
-package com.ebeijia.zl.web.wechat.model.wxapi.interceptor;
+package com.ebeijia.zl.web.user.model.wxapi.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ebeijia.zl.web.user.model.utils.HttpWebUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -13,7 +14,6 @@ import com.ebeijia.zl.core.wechat.process.OAuthScope;
 import com.ebeijia.zl.core.wechat.process.WxApi;
 import com.ebeijia.zl.core.wechat.process.WxApiClient;
 import com.ebeijia.zl.core.wechat.process.WxMemoryCacheClient;
-import com.ebeijia.zl.web.wechat.model.utils.HttpWebUtil;
 
 /**
  * 微信客户端用户请求验证拦截器
