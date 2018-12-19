@@ -36,6 +36,7 @@
 			<include refid="ResourceColumns" /> 
 		from tb_web_resource 
 		where find_in_set(id, getResourceChild('0'))
+			and data_stat = '0'
 			and login_type = #{loginType}
 		<if test="resourceType !=null and resourceType !='' ">
 			and resource_type = #{resourceType}

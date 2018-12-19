@@ -52,6 +52,13 @@
 							             </div>
 							             </div>
 							             <div class="control-group formSep">
+							             <label class="control-label">序号<span style="color:red">*</span></label>
+							             <div class="controls">
+							                 <input type="text" class="span6" id="seq" name="seq" value="${baseDict.seq }"/>
+							                 <span class="help-block"></span>
+							             </div>
+							             </div>
+							             <%-- <div class="control-group formSep">
 							             	<label class="control-label">是否默认</label>
 							             <div class="controls">
 							             	<select id="isdefault" name="isdefault" class="chzn_a span6">
@@ -60,7 +67,7 @@
 							                 </select>
 							                 <span class="help-block"></span>
 							             </div>
-							             </div>
+							             </div> --%>
 							     		<div class="control-group">
 							             <label class="control-label">备注</label>
 							             <div class="controls">

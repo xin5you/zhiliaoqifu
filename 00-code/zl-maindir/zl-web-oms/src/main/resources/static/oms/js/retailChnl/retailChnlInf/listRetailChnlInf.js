@@ -18,7 +18,8 @@ var listTelChannelInf = {
 		$('.btn-reset').on('click', listTelChannelInf.searchReset);
 		$('.btn-grant-role').on('click', listTelChannelInf.intoAddTelChannelReserve);
 		$('.a').on('click', listTelChannelInf.intoAddTelChannelRate);
-		$('.btn-openAccount').on('click', listTelChannelInf.telChannelOpenAccount);
+		$('.btn-openAccount').on('click', listTelChannelInf.intoTelChannelOpenAccount);
+		$('.btn-openAccount-submit').on('click', listTelChannelInf.telChannelOpenAccount);
 	},
 	searchData: function(){
 		document.forms['searchForm'].submit();
@@ -75,29 +76,39 @@ var listTelChannelInf = {
 	      });
 		});
 	},
+	intoTelChannelOpenAccount : function () {
+		var channelId = $(this).attr('channelId');
+		$('#channelId').val(channelId);
+		$('#addOpenAccountModal').modal({
+			backdrop : "static"
+		});
+	},
 	telChannelOpenAccount : function() {
 		var channelId = $(this).attr('channelId');
-		Helper.confirm("您是否对该分销商进行开户？",function(){
-		    $.ajax({								  
-	            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/retailChnlOpenAccount.do',
-	            type: 'post',
-	            dataType : "json",
-	            data: {
-	                "channelId": channelId
-	            },
-	            success: function (data) {
-	            	if(data.status){
-	            		location.href=Helper.getRootPath() + '/retailChnl/retailChnlInf/listRetailChnlInf.do?operStatus=4';
-	            	}else{
-	            		Helper.alter(data.msg);
-	            		return false;
-	            	}
-	            },
-	            error:function(){
-	            	Helper.alert("系统超时，请稍微再试试");
-	            	return false;
-	            }
-	      });
+		$('#msg').modal({
+			backdrop : "static"
 		});
+		$.ajax({								  
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/retailChnlOpenAccount.do',
+            type: 'post',
+            dataType : "json",
+            data: {
+            	"channelId": channelId
+            },
+            success: function (data) {
+            	if(data.status){
+            		location.href=Helper.getRootPath() + '/retailChnl/retailChnlInf/listRetailChnlInf.do?operStatus=1';
+            	}else{
+            		$('#msg').modal('hide');
+            		Helper.alter(data.msg);
+            		return false;
+            	}
+            },
+            error:function(){
+            	$('#msg').modal('hide');
+            	Helper.alert("系统超时，请稍微再试试");
+            	return false;
+            }
+      });
 	}
 }

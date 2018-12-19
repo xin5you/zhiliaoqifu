@@ -43,7 +43,7 @@
                                    		<li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
                                  </sec:authorize>
                                  <sec:authorize access="hasRole('ROLE_PROVIDER_ORDER')">
-										<li><a href="${ctx }/provider/providerOrder/listProviderOrderInf.do">供应商订单</a></li>
+										<li><a href="${ctx }/provider/providerOrderInf/listProviderOrderInf.do">供应商订单</a></li>
 								 </sec:authorize>
                                  </ul>
                              </li>

@@ -93,5 +93,31 @@
 				      </form>
 			   </div>
 	    </div>
+	    
+	    <div id="addOpenAccountModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<form class="form-horizontal">
+		    <div class="modal-header">
+		        <button class="close" data-dismiss="modal">&times;</button>
+		        <h3 id="commodityInfModal_h">开户</h3>
+		    </div>
+		    <div class="modal-body">
+		        <input type="hidden" id="channelId" name="channelId"/>
+		        <span>你确定对该分销商开户吗？</span>
+		    </div>
+		</form>
+		<div class="modal-footer" style="text-align: center;">
+		    <button class="btn btn-primary btn-openAccount-submit">确 定  </button>
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+		</div>
+	</div>
+	
+	    <div id="msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
+              <div class="modal-header">
+                    
+                    <h3 id="commodityInfModal_h">温馨提示</h3>
+                </div>
+                <br/><br/><br/>
+              <h3 align="center">信息正在处理......</h3>
+        </div>
 </body>
 </html>

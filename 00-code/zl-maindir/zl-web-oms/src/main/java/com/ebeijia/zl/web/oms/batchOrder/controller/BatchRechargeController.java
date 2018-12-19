@@ -1,7 +1,9 @@
 package com.ebeijia.zl.web.oms.batchOrder.controller;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,13 +86,25 @@ public class BatchRechargeController {
 		
 		BatchOrder order = new BatchOrder();
 		order.setOrderType(TransCode.MB50.getCode());
+
 		PageInfo<BatchOrder> pageList = null;
 		try {
 			pageList = batchOrderService.getBatchOrderPage(startNum, pageSize, order, req);
 		} catch (Exception e) {
 			logger.error("## 查询批量充值列表信息出错", e);
 		}
+		
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(new CompanyInf());
+		
+		/*SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if (!StringUtil.isNullOrEmpty(order.getStartTime())) {
+			String startTime = sdfLong.format(new Date(order.getStartTime()));
+			order.setStartTime(startTime);//开始时间
+		}
+		if (!StringUtil.isNullOrEmpty(order.getEndTime())) {
+			String endTime = sdfLong.format(new Date(order.getEndTime()));
+			order.setEndTime(endTime);//结束时间
+		}*/
 		mv.addObject("order", order);
 		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		mv.addObject("pageInfo", pageList);
@@ -191,7 +205,7 @@ public class BatchRechargeController {
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		
-		BatchOrder order = batchOrderService.getBatchOrderById(orderId);
+		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
@@ -215,8 +229,8 @@ public class BatchRechargeController {
 		
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
-		
-		BatchOrder order = batchOrderService.getBatchOrderById(orderId);
+
+		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);

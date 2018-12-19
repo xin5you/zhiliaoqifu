@@ -29,6 +29,7 @@ import com.ebeijia.zl.common.utils.enums.TransChnl;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
@@ -82,8 +83,16 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		order.setOrderName(StringUtil.nullToString(req.getParameter("orderName")));//订单名称
 		order.setCompanyId(StringUtil.nullToString(req.getParameter("companyId")));
 		order.setOrderStat(StringUtil.nullToString(req.getParameter("orderStat")));//订单状态
-		order.setStartTime(StringUtil.nullToString(req.getParameter("startTime")));//开始时间
-		order.setEndTime(StringUtil.nullToString(req.getParameter("endTime")));//结束时间
+		/*String startTime = StringUtil.nullToString(req.getParameter("startTime"));
+		String endTime = StringUtil.nullToString(req.getParameter("endTime"));
+		if (!StringUtil.isNullOrEmpty(startTime)) {
+			long startTimeLong = DateUtil.DateTimeToLongTime(startTime);
+			order.setStartTime(String.valueOf(startTimeLong));//开始时间
+		}
+		if (!StringUtil.isNullOrEmpty(endTime)) {
+			long endTimeLong = DateUtil.DateTimeToLongTime(endTime);
+			order.setEndTime(String.valueOf(endTimeLong));//结束时间
+		}*/
 		List<BatchOrder> list = batchOrderMapper.getBatchOrderList(order);
 		PageInfo<BatchOrder> page = null;
 		if(list != null){
@@ -94,6 +103,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				} else {
 					batchOrder.setSumAmount(NumberUtils.RMBCentToYuan(0));
 				}
+				
 			});
 			page = new PageInfo<BatchOrder>(list);
 		}
@@ -436,11 +446,11 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 					logger.error("## 远程调用批量充值接口出错{}", reqVoList, e);
 				}
 			} else {
-				try {
-					result = accountTransactionFacade.executeRechargeByOneBId(reqVoList.get(0));
+				/*try {
+					result = accountTransactionFacade.executeTransfer(reqVoList.get(0));
 				} catch (Exception e) {
 					logger.error("## 远程调用充值接口出错{}", reqVoList.get(0), e);
-				}
+				}*/
 			}
 			for (BatchOrderList oList : batchOrderList) {
 				if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {

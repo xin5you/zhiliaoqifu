@@ -73,7 +73,7 @@
 						             </div>
 						         </div>
 						         
-						         <div class="control-group">
+						         <!-- <div class="control-group">
 						             <label class="control-label">状态</label>
 						             <div class="controls">
 						                 <select class="form-control span6" id="state" name="state">
@@ -82,7 +82,7 @@
 						                 </select>
 						                 <span class="help-block"></span>
 						             </div>
-						         </div>
+						         </div> -->
 						         
 						         <div class="control-group">
 						             <label class="control-label">上级资源</label>

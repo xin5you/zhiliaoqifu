@@ -89,7 +89,7 @@ var listTelProviderInf = {
             },
             success: function (data) {
             	if(data.status){
-            		location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
+            		location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=1';
             	}else{
             		$('#msg').modal('hide');
             		Helper.alter(data.msg);
@@ -135,7 +135,7 @@ var listTelProviderInf = {
             },
             success: function (result) {
             	if(result.status) {
-                	location = Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
+                	location = Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=1';
                 } else {
                 	Helper.alert(result.msg);
                 	return false;

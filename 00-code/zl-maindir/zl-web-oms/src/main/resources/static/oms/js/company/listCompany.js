@@ -83,7 +83,7 @@ var listCompany = {
             traditional:true,
             success: function (data) {
             	if(data.status){
-            		location.href=Helper.getRootPath() + '/company/listCompany.do?operStatus=4';
+            		location.href=Helper.getRootPath() + '/company/listCompany.do?operStatus=1';
             	}else{
             		$('#msg').modal('hide');
             		Helper.alter(data.msg);

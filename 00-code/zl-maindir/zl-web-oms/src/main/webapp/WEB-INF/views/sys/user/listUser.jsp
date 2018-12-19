@@ -46,7 +46,7 @@
 	             <thead>
 	             <tr>
 	               <th>登录名</th>
-	               <th>姓名</th>
+	               <th>用户名</th>
 	               <th>所属部门</th>
 	               <th>角色名称</th>
 	               <th>创建时间</th>

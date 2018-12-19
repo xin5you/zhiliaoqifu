@@ -634,6 +634,18 @@ public class DateUtil {
 	}
 	
 	public static void main(String[] args) {
+		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_YYYY_MM_DD_HH_MM_SS);
+		 long longTime = 0;
+        try {
+			longTime = sdf.parse("2011-09-20 12:30:45").getTime();
+			longTime = longTime / 1000;
+		} catch (ParseException e) {
+			log.error("## 时间转换异常", e);
+		}
+		System.out.println(new Date(1316493045));
+		SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdfLong.format(new Date(1316493045));
+		System.out.println("========"+sdfLong.format(new Date(1316493045)));
 		System.out.println(DateUtil.COMMON_FULL.getDateText(new Date(System.currentTimeMillis())));
 	}
 
@@ -665,5 +677,16 @@ public class DateUtil {
 		}
 	}
 	
+	public static long DateTimeToLongTime(String time) {
+		 SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_YYYY_MM_DD_HH_MM_SS);
+		 long longTime = 0;
+         try {
+			longTime = sdf.parse("2011-09-20 12:30:45").getTime();
+			longTime = longTime / 1000;
+		} catch (ParseException e) {
+			log.error("## 时间转换异常", e);
+		}
+         return longTime;
+	}
 
 }

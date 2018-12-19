@@ -16,7 +16,7 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>手机充值</li>
+			                    <li>供应商管理</li>
 			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
 			                    <li>新增供应商信息</li>
 			                </ul>
