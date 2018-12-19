@@ -56,7 +56,7 @@
 				                    <td>${resource.url}</td>
 									<td>${resource.seq}</td>
 									<td>${resource.icon}</td>
-									<td><c:if test="${resource.dataStat =='0'}">正常</c:if><c:if test="${resource.dataStat !='0'}">停用</c:if></td>
+									<td><c:if test="${resource.dataStat !='0'}">正常</c:if><c:if test="${resource.dataStat =='0'}">停用</c:if></td>
 				                    <td>
 				                   	 <c:if test="${resource.resourceType=='0'}">
 				                    	<sec:authorize access="hasRole('ROLE_SYS_RESOURCE_INTOADD')">
