@@ -9,6 +9,7 @@
   </parent>
   <artifactId>zl-service-control</artifactId>
   <name>zl-service-control</name>
+	<packaging>war</packaging>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -124,6 +125,7 @@
 	</repositories>
 
 	<build>
+		<finalName>web-control</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
