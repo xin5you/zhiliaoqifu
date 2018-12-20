@@ -1,6 +1,5 @@
 package com.ebeijia.zl.service.control.quartz;
 
-import com.ebeijia.zl.basics.billingtype.domain.BaseDict;
 import com.ebeijia.zl.basics.billingtype.service.BaseDictService;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import org.quartz.DisallowConcurrentExecution;

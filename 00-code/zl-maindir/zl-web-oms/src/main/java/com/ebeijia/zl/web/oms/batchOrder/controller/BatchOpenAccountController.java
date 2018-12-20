@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-import com.ebeijia.zl.basics.billingtype.domain.BillingType;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;

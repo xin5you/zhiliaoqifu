@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ebeijia.zl.basics.billingtype.domain.BillingType;
 import com.ebeijia.zl.basics.billingtype.mapper.BillingTypeMapper;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;

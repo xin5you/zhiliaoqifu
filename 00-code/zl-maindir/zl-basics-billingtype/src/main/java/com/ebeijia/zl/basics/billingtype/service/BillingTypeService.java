@@ -3,7 +3,6 @@ package com.ebeijia.zl.basics.billingtype.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ebeijia.zl.basics.billingtype.domain.BillingType;
 import com.github.pagehelper.PageInfo;
 
 /**

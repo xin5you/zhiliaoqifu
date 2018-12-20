@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.common.core.domain.BillingType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-import com.ebeijia.zl.basics.billingtype.domain.BillingType;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;

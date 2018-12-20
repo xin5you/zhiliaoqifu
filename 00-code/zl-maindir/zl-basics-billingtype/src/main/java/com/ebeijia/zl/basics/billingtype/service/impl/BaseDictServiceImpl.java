@@ -2,11 +2,11 @@ package com.ebeijia.zl.basics.billingtype.service.impl;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.core.domain.BaseDict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ebeijia.zl.basics.billingtype.domain.BaseDict;
 import com.ebeijia.zl.basics.billingtype.mapper.BaseDictMapper;
 import com.ebeijia.zl.basics.billingtype.service.BaseDictService;
 import com.github.pagehelper.PageHelper;
