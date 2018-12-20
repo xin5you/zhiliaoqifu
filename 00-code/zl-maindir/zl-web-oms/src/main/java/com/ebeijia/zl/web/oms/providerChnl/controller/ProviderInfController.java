@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,12 @@ public class ProviderInfController {
 	
 	@Autowired
 	private CompanyInfFacade companyInfFacade;
+
+	@Autowired
+	private InaccountOrderService inaccountOrderService;
+
+	@Autowired
+	private InaccountOrderDetailService inaccountOrderDetailService;
 
 	/**
 	 * 供应商列表 信息
@@ -247,22 +256,55 @@ public class ProviderInfController {
 		}
 		return resultMap;
 	}
+
+	@RequestMapping(value = "intoAddProviderTransfer")
+	public ModelAndView intoAddProviderTransfer(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderInfTransfer");
+
+		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
+		InaccountOrder order = new InaccountOrder();
+		order.setProviderId(providerId);
+
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
+			mv.addObject("pageList", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询供应商信息详情异常", e);
+		}
+		return mv;
+	}
 	
-	@RequestMapping(value = "/addProviderTransferCommit")
+	@RequestMapping(value = "/addProviderTransfer")
 	@ResponseBody
-	public ModelMap addProviderTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+	public ModelMap addProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
 		ModelMap resultMap = new ModelMap();
 		resultMap.addAttribute("status", Boolean.TRUE);
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
 		try {
-			int i = providerInfService.addProviderTransferCommit(req);
+			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
+			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "上账失败，该供应商信息不存在或未开户");
+				return resultMap;
+			}
+			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "上账失败，企业识别码"+companyCode+"不存在或未开户");
+				return resultMap;
+			}
+			int i = providerInfService.addProviderTransfer(req);
 			if (i < 1) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "转账失败，请重新操作");
+				resultMap.put("msg", "上账失败，请稍后再试");
 			}
 		} catch (Exception e) {
-			logger.error(" ## 供应商转账出错 ", e);
+			logger.error(" ## 供应商上账出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "供应商转账失败，请重新操作");
+			resultMap.put("msg", "供应商上账失败，请稍后再试");
 		}
 		return resultMap;
 	}

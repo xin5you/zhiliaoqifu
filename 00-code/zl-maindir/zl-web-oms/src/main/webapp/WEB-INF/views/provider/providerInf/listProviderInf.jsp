@@ -84,7 +84,7 @@
 									</sec:authorize>
 				                    <c:if test="${entity.isOpen=='1'}">
 				                    <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">
-										<a providerId="${entity.providerId}" title="转账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+										<a providerId="${entity.providerId}" title="入账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
 				                    </sec:authorize>
 				                    </c:if>
 				                    </td>

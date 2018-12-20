@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebeijia.zl.web.oms.inaccount.mapper.InaccountOrderMapper">
+
+    <sql id="InaccountOrderColumns">
+        order_id,
+        order_type,
+        check_stat,
+        remit_amt,
+        inaccount_amt,
+        provider_id,
+        company_id,
+        remit_check,
+        inaccount_check,
+        platform_receiver_check,
+        company_receiver_check,
+        evidence_url,
+        remarks,
+        data_stat,
+        create_user,
+        update_user,
+        create_time,
+        update_time,
+        lock_version
+    </sql>
+
+    <sql id="tableName">
+        tb_inaccount_order
+    </sql>
+
+    <select id="getInaccountOrderByProviderId" parameterType="String" resultType="InaccountOrder">
+        select
+          <include refid="InaccountOrderColumns"/>
+        from
+          <include refid="tableName"/>
+        where data_stat = '0'
+          and provider_id = #{providerId}
+        order by create_time desc
+    </select>
+</mapper>

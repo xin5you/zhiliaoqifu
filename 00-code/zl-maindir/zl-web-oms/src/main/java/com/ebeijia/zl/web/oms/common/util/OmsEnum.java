@@ -1,7 +1,13 @@
 package com.ebeijia.zl.web.oms.common.util;
 
 public class OmsEnum {
-	
+
+	//字典表
+	public static final String TB_BASE_DICT = "TB_BASE_DICT";
+
+	//平台手续费
+	public static final String PLATFORM_FEE = "PLATFORM_FEE";
+
 	/**
 	 * 订单状态
 	 * @author Administrator
