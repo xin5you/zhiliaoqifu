@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import com.ebeijia.zl.service.control.quartz.SpecAccountTypeBizJob;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.spi.JobFactory;
@@ -42,6 +43,10 @@ public class QuartzConfigure {
 
     @Value("${quartz.cronExpression.teleRecharge}")
     private String teleRechargeExpression;
+
+    @Value("${quartz.cronExpression.billingType}")
+    private String billingTypeExpression;
+
 	/**
 	 * 从quartz.properties文件中读取Quartz配置属性
 	 * @return
@@ -147,6 +152,37 @@ public class QuartzConfigure {
         tigger.setJobDetail(accessTokenBizDetail);
         tigger.setStartDelay(2000);   //延迟启动
         tigger.setCronExpression(accessTokenExpression);  //从application.yml文件读取
+        return tigger;
+    }
+
+
+    /**
+     * 配置JobDetailFactory
+     * JobDetailFactoryBean与CronTriggerFactoryBean相互依赖,注意bean的名称
+     *
+     * @return
+     */
+    @Bean
+    public JobDetailFactoryBean specAccountTypeDetail() {
+        //集群模式下必须使用JobDetailFactoryBean，MethodInvokingJobDetailFactoryBean 类中的 methodInvoking 方法，是不支持序列化的
+        JobDetailFactoryBean jobDetail = new JobDetailFactoryBean();
+        jobDetail.setDurability(true);
+        jobDetail.setRequestsRecovery(true);
+        jobDetail.setJobClass(SpecAccountTypeBizJob.class);
+        return jobDetail;
+    }
+
+    /**
+     * 配置具体执行规则
+     * @param specAccountTypeDetail
+     * @return
+     */
+    @Bean
+    public CronTriggerFactoryBean specAccountTypeTrigger(JobDetail specAccountTypeDetail) {
+        CronTriggerFactoryBean tigger = new CronTriggerFactoryBean();
+        tigger.setJobDetail(specAccountTypeDetail);
+        tigger.setStartDelay(2000);   //延迟启动
+        tigger.setCronExpression(billingTypeExpression);  //从application.yml文件读取
         return tigger;
     }
 }
