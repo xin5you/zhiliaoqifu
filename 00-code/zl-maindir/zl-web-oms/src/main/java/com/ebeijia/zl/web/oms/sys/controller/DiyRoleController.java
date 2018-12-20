@@ -170,7 +170,7 @@ public class DiyRoleController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
-		String roleId = req.getParameter("roleId");
+		String roleId = req.getParameter("id");
 		String roleName = req.getParameter("roleName");
 		String seq = req.getParameter("seq");
 		try{
@@ -309,7 +309,7 @@ public class DiyRoleController {
 	public Map<String, Object> submitDiyRoleAuthorization(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String[] resourceIds=req.getParameterValues("ids[]");
-		String roleId=req.getParameter("roleId");
+		String roleId=req.getParameter("id");
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			if (userRoleResourceService.updateRoleResource(roleId, resourceIds) < 1) {
@@ -328,7 +328,7 @@ public class DiyRoleController {
 		HttpSession session = req.getSession();
 		User u = (User)session.getAttribute(Constants.SESSION_USER);
 		
-		String roleId=req.getParameter("roleId");
+		String roleId=req.getParameter("id");
 		String roleName=req.getParameter("roleName");
 		String seq=req.getParameter("seq");
 		String description=req.getParameter("description");
@@ -341,6 +341,7 @@ public class DiyRoleController {
 			role.setId(IdUtil.getNextId());
 			role.setCreateUser(u.getId());
 			role.setCreateTime(System.currentTimeMillis());
+			role.setIsdefault("1");
 			role.setDataStat("0");
 			role.setLockVersion(0);
 		}
@@ -349,7 +350,7 @@ public class DiyRoleController {
 			role.setSeq(Integer.valueOf(seq));
 		}
 		role.setDescription(description);
-		role.setLoginType(LoginType.LoginType1.getCode());
+		role.setLoginType(LoginType.LoginType3.getCode());
 		role.setUpdateUser(u.getId());
 		role.setUpdateTime(System.currentTimeMillis());
 		return role;

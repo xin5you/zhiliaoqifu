@@ -14,9 +14,10 @@ var editBaseDict = {
 		var dictName = $("#dictName").val();
 		var dictCode = $("#dictCode").val();
 		var dictValue = $("#dictValue").val();
-		var isdefault = $("#isdefault").val();
-		var dictType = $("#dictType").val();
+		/*var isdefault = $("#isdefault").val();*/
+		/*var dictType = $("#dictType").val();*/
 		var remarks = $("#remarks").val();
+		var seq = $("#seq").val();
 		
 		if (!dictName) {
 			Helper.alert("请输入字典名称");
@@ -40,8 +41,9 @@ var editBaseDict = {
 	                "dictName" : dictName,
 	                "dictCode" : dictCode,
 	                "dictValue" : dictValue,
-	                "isdefault" : isdefault,
-	                "dictType" : dictType,
+	                /*"isdefault" : isdefault,*/
+	                /*"dictType" : dictType,*/
+	                "seq" : seq,
 	                "remarks" : remarks
 	            },
 	            success: function (data) {

@@ -110,7 +110,8 @@ var addDiyRole = {
     		var reg = /^[\w\u4e00-\u9fa5\-_][\s\w\u4e00-\u9fa5\-_]*[\w\u4e00-\u9fa5\-_]$/; 
     		if (!(reg.test(roleName))) {
     			Helper.alert("请输入正确的角色名称:只能输入中文，英文数字空格下划线都行，首尾不能为空格，字符串中间可以为空格");
-            	return false;
+    			$(".btn-submit").removeAttr('disabled');
+    			return false;
 			} 
     	}
 		$.ajax({

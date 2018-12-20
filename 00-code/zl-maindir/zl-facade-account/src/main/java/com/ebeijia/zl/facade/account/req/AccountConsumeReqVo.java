@@ -28,48 +28,54 @@ public class AccountConsumeReqVo extends BaseTxnReq{
     /**
      * 实际交易金额
      */
-    private BigDecimal transAmt;
+    private BigDecimal transAmt; //必须填写 当前支付总金额
  
     /**
      * 上送金额
      */
-    private BigDecimal uploadAmt;
+    private BigDecimal uploadAmt; //必须填写
 
     
     /**
      * 专项账户交易列表
      */
-    private List<AccountTxnVo> transList;
+    private List<AccountTxnVo> transList;  //必须填写 专项支付的明细项
+
+	/**
+	 * 消费补充列表（第三方充值到专项）
+	 */
+	private List<AccountTxnVo> addList; //快捷支付填写
 
 
 	public BigDecimal getTransAmt() {
 		return transAmt;
 	}
 
-
 	public void setTransAmt(BigDecimal transAmt) {
 		this.transAmt = transAmt;
 	}
-
 
 	public BigDecimal getUploadAmt() {
 		return uploadAmt;
 	}
 
-
 	public void setUploadAmt(BigDecimal uploadAmt) {
 		this.uploadAmt = uploadAmt;
 	}
-
 
 	public List<AccountTxnVo> getTransList() {
 		return transList;
 	}
 
-
 	public void setTransList(List<AccountTxnVo> transList) {
 		this.transList = transList;
 	}
-	
-    
+
+	public List<AccountTxnVo> getAddList() {
+		return addList;
+	}
+
+	public void setAddList(List<AccountTxnVo> addList) {
+		this.addList = addList;
+	}
 }

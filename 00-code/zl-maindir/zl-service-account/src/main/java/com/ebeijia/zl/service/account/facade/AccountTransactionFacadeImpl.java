@@ -57,88 +57,76 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
 	@Autowired
 	private IIntfaceTransLogService intfaceTransLogService;
-	
+
 
 	/**
-	* 
-	* @Description: 账户充值（单一账户类型充值）
-	*
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月5日 上午11:52:48 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月5日     zhuqi           v1.0.0
+	 *
+	 * @Description: 账户充值
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月19日 上午11:00:28
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年11月30日     zhuqi           v1.0.0
 	 */
-	public BaseResult executeRechargeByOneBId(AccountRechargeReqVo req){
-		
-		log.info("==>  账户充值 mehtod=executeRechargeByOneBId and AccountRechargeReqVo={}",JSONArray.toJSON(req));
-		
+	public BaseResult executeRecharge(AccountRechargeReqVo req) throws Exception{
+		log.info("==>  账户充值 mehtod=executeRecharge and AccountRechargeReqVo={}",JSONArray.toJSON(req));
 		/**
 		 * 订单交易检验
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
 		if(intfaceTransLog!=null){
-			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
-
-		
 		/**
 		 * 商户充值
 		 */
 		if (TransCode.MB20.getCode().equals(req.getTransId())){
-			
 			UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
-			
 			if(toUserInf==null){
 				return ResultsUtil.error("99",String.format("当前企业{%s}所属渠渠道{%s}未开户", req.getTransChnl(),req.getUserChnl()));
 			}
-
 			/****实例化接口流水****/
 			intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(),req.getPriBId(),
-																  req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
+					req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
 			intfaceTransLogService.addBizItfTransLog(
-					intfaceTransLog, 
+					intfaceTransLog,
 					req.getTransAmt(),
-					req.getUploadAmt(), 
+					req.getUploadAmt(),
 					null,
-					null, 
-					null, 
-					toUserInf.getUserId(),
-					req.getPriBId(),
+					null,
+					null,
+					 toUserInf.getUserId(),
+					 req.getPriBId(),
 					null,
 					null,
 					null);
-			
 			//企业信息
 			intfaceTransLog.setMchntCode(req.getFromCompanyId());
 		}
-		
-		intfaceTransLog.setTransDesc(req.getTransDesc());
 
+		intfaceTransLog.setTransDesc(req.getTransDesc());
+		intfaceTransLog.setAdditionalInfo(req.getTransList() !=null ?JSONArray.toJSONString(req.getTransList()):"");
 		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
-		
+
 		//执行操作
-		boolean eflag=false; 
-	     try {  
-	    	 eflag=transLogService.execute(intfaceTransLog); 
-	      } catch (AccountBizException accountBizException) {  
-	           
-	           return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
-	      } 
-		
-		
+		boolean eflag=false;
+		try {
+			intfaceTransLog.setTransList(req.getTransList()); //多专项账户类型
+			eflag=transLogService.execute(intfaceTransLog);
+		} catch (AccountBizException accountBizException) {
+
+			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
+		}
 		//修改当前接口请求交易状态
 		intfaceTransLogService.updateById(intfaceTransLog,eflag);
-		
 		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
-
 	/**
-	* @Description: 消费接口
+	* @Description: 批量充值
 	*
 	* @version: v1.0.0
 	* @author: zhuqi
@@ -151,7 +139,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	 */
 	public BaseResult executeRecharge(List list) throws Exception {
 		
-		//TODO 批量用户充值
+
 		
 		return null;
 		
@@ -159,7 +147,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 
 	/**
 	* @Description: 消费接口
-	*
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年11月30日 上午11:08:55 
@@ -170,9 +157,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
 	public BaseResult executeConsume(AccountConsumeReqVo req) throws Exception{
-		
 		log.info("==>  账户消費 mehtod=executeConsume and AccountConsumeReqVo={}",JSONArray.toJSON(req));
-		
 		/**
 		 * 订单交易检验
 		 */
@@ -181,11 +166,8 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
-		
 		/**获取用户数据*/
 		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
-	
-		
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
 				req.getDmsRelatedKey(),
@@ -217,7 +199,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		
 		//执行操作
 		boolean eflag=false; 
-	     try {  
+	     try {
+			 intfaceTransLog.setTransList(req.getTransList());
+			 intfaceTransLog.setAddList(req.getAddList());
 	    	 eflag=transLogService.execute(intfaceTransLog); 
 	      } catch (AccountBizException accountBizException) {  
 	           
@@ -233,7 +217,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 
 	/**
 	* @Description: 转账操作
-	*
 	* @version: v1.0.0
 	* @author: zhuqi
 	* @date: 2018年11月30日 上午11:08:55 
@@ -310,7 +293,8 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
 	//执行操作
 	boolean eflag=false; 
-     try {  
+     try {
+		 intfaceTransLog.setTransList(req.getTransList());//多专项账户类型
     	 eflag=transLogService.execute(intfaceTransLog); 
       } catch (AccountBizException accountBizException) {  
            return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());

@@ -46,8 +46,7 @@ public class AccountTransferReqVo extends BaseTxnReq{
      * 转入账户类型
      */
     private String tfrInBId;
-    
- 
+
     /**
      * 转出账户
      */
@@ -57,7 +56,11 @@ public class AccountTransferReqVo extends BaseTxnReq{
      * 转出账户类型
      */
     private String tfrOutBId;
-    
+
+	/**
+	 * 专项账户交易列表
+	 */
+	private List<AccountTxnVo> transList;
     
 
 	public BigDecimal getTransAmt() {
@@ -106,5 +109,13 @@ public class AccountTransferReqVo extends BaseTxnReq{
 
 	public void setTfrOutBId(String tfrOutBId) {
 		this.tfrOutBId = tfrOutBId;
+	}
+
+	public List<AccountTxnVo> getTransList() {
+		return transList;
+	}
+
+	public void setTransList(List<AccountTxnVo> transList) {
+		this.transList = transList;
 	}
 }

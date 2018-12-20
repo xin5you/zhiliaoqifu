@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,8 +22,10 @@ import com.ebeijia.zl.basics.billingtype.service.BaseDictService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.github.pagehelper.PageInfo;
 
 @Controller
@@ -32,6 +35,10 @@ public class BaseDictController {
 	
 	@Autowired
 	private BaseDictService baseDictService;
+	
+	@Autowired
+	@Qualifier("jedisClusterUtils")
+	private JedisClusterUtils jedisClusterUtils;
 
 	@RequestMapping(value = "/listBaseDict")
 	public ModelAndView listBaseDict(HttpServletRequest req, HttpServletResponse response) {
@@ -96,6 +103,7 @@ public class BaseDictController {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑字典信息失败");
 		}
+		jedisClusterUtils.hset("TB_BASE_DICT_KV", "OMS_BATCH_OPEN_ACCOUNT_EXCEL_PATH", baseDict.getDictValue());
 		
 		resultMap.put("status", Boolean.TRUE);
 		return resultMap;
@@ -123,6 +131,9 @@ public class BaseDictController {
 			baseDict.setDictId(IdUtil.getNextId());
 			baseDict.setCreateUser(user.getId());
 			baseDict.setCreateTime(System.currentTimeMillis());
+			baseDict.setIsdefault("1");
+			baseDict.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			baseDict.setLockVersion(0);
 		}
 		baseDict.setDictCode(dictCode);
 		baseDict.setRemarks(remarks);

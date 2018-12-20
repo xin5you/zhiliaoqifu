@@ -5,4 +5,7 @@ public interface IValidCodeService {
 
     Integer sendPhoneValidCode(String phoneNum, String method);
 
+    void checkFrequency(String phoneNum, String method);
+
+    boolean checkValidCode(String method, String phone, String pwd);
 }

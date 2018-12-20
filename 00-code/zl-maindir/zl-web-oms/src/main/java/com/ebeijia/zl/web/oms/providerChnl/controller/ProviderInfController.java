@@ -7,9 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.common.utils.enums.CheckStatEnum;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
-import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
-import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,8 @@ import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.web.oms.providerChnl.service.ProviderInfService;
 import com.github.pagehelper.PageInfo;
+
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 
 @Controller
 @RequestMapping(value = "provider/providerInf")
@@ -261,6 +262,7 @@ public class ProviderInfController {
 	public ModelAndView intoAddProviderTransfer(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderInfTransfer");
 
+        String operStatus = StringUtil.nullToString(request.getParameter("operStatus"));
 		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
 		InaccountOrder order = new InaccountOrder();
 		order.setProviderId(providerId);
@@ -273,6 +275,8 @@ public class ProviderInfController {
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);
 		}
+        mv.addObject("operStatus", operStatus);
+		mv.addObject("providerId", providerId);
 		return mv;
 	}
 	
@@ -287,27 +291,70 @@ public class ProviderInfController {
 			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
 			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "上账失败，该供应商信息不存在或未开户");
+				resultMap.put("msg", "添加上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
 			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
 			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "上账失败，企业识别码"+companyCode+"不存在或未开户");
+				resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;
 			}
 			int i = providerInfService.addProviderTransfer(req);
 			if (i < 1) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "上账失败，请稍后再试");
+				resultMap.put("msg", "添加上账信息失败，请稍后再试");
 			}
 		} catch (Exception e) {
-			logger.error(" ## 供应商上账出错 ", e);
+			logger.error(" ## 添加供应商上账信息出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "供应商上账失败，请稍后再试");
+			resultMap.put("msg", "添加供应商上账信息失败，请稍后再试");
 		}
 		return resultMap;
 	}
+
+    @RequestMapping(value = "/addProviderTransferCommit")
+    @ResponseBody
+    public ModelMap addProviderTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+        ModelMap resultMap = new ModelMap();
+        resultMap.addAttribute("status", Boolean.TRUE);
+        try {
+            if (providerInfService.addProviderTransferCommit(req) < 1) {
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "供应商上账失败，请稍后再试");
+            }
+        } catch (Exception e) {
+            logger.error("## 供应商上账异常");
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "供应商上账失败，请稍后再试");
+            return resultMap;
+        }
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/updateProviderCheckStatCommit")
+    @ResponseBody
+    public ModelMap updateProviderCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
+        ModelMap resultMap = new ModelMap();
+        resultMap.addAttribute("status", Boolean.TRUE);
+
+        HttpSession session = req.getSession();
+        User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+        String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+
+        InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+        order.setCheckStat(CheckStatEnum.CHECK_TRUE.getCode());
+        order.setUpdateUser(user.getId());
+        order.setUpdateTime(System.currentTimeMillis());
+        order.setLockVersion(order.getLockVersion() + 1);
+
+        if (!inaccountOrderService.updateById(order)) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "更新上账信息审核状态失败，请稍后再试");
+        }
+        return resultMap;
+    }
 
 	/**
 	 * 封装供应商实体

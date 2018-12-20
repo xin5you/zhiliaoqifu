@@ -21,14 +21,14 @@
 			select 
   				<include refid="BillingTypeInfColumns" />
 	 			from tb_billing_type b 
-	 		where b.b_id = #{bId,jdbcType=VARCHAR} and b.data_stat  = '0'
+	 		where b.b_id = #{BId,jdbcType=VARCHAR} and b.data_stat  = '0'
 	</select>
 	
 	<select id="getBillingTypeInfByName" parameterType="java.lang.String" resultType="BillingType">
 			select 
   				<include refid="BillingTypeInfColumns" />
 	 			from tb_billing_type b 
-	 		where b.b_name = #{bName,jdbcType=VARCHAR} and b.data_stat  = '0'
+	 		where b.b_name = #{BName,jdbcType=VARCHAR} and b.data_stat  = '0'
 	</select>
 	
 	<insert id="insertBillingTypeInf" parameterType="BillingType">
@@ -46,8 +46,8 @@
 			update_time,
 			lock_version
 			)	values	( 
-		 		#{bId,jdbcType=VARCHAR},
-		 		#{bName,jdbcType=VARCHAR},
+		 		#{BId,jdbcType=VARCHAR},
+		 		#{BName,jdbcType=VARCHAR},
 		 		#{code,jdbcType=VARCHAR},
 		 		#{loseFee,jdbcType=DOUBLE},
 		 		#{buyFee,jdbcType=DOUBLE},
@@ -63,7 +63,7 @@
 	
 	<update id="updateBillingTypeInf" parameterType="BillingType">
 			update tb_billing_type set
-				b_name=#{bName,jdbcType=VARCHAR},
+				b_name=#{BName,jdbcType=VARCHAR},
 				code=#{code,jdbcType=VARCHAR},
 				lose_fee=#{loseFee,jdbcType=DOUBLE},
 				buy_fee=#{buyFee,jdbcType=DOUBLE},
@@ -71,17 +71,17 @@
 				lock_version = lock_version + 1,
 				update_time=#{updateTime,jdbcType=BIGINT},
 				update_user=#{updateUser,jdbcType=VARCHAR}
-			 where b_id = #{bId,jdbcType=VARCHAR}
+			 where b_id = #{BId,jdbcType=VARCHAR}
 	</update>
 	
 	
 	<select id="getBillingTypeInfList" parameterType="BillingType" resultType="BillingType">
 		select 
 		   <include refid="BillingTypeInfColumns" />
-		    from tb_billing_type b
+		from tb_billing_type b
 	    where b.data_stat  = '0'
-			 <if test="bName !=null and bName !='' ">
-			 	 and b.b_name like '%' || #{bName} || '%'
+			 <if test="BName !=null and BName !='' ">
+			 	 and b.b_name like '%' || #{BName} || '%'
 			 </if>
 			 <if test="code !=null and code !='' ">
 			 	 and b.code = #{code}
@@ -95,6 +95,6 @@
 		       lock_version = lock_version + 1,
 		       update_time  = #{updateTime,jdbcType=BIGINT},
 		       update_user=#{updateUser,jdbcType=VARCHAR}
-		    where b_id = #{bId,jdbcType=VARCHAR}
+		    where b_id = #{BId,jdbcType=VARCHAR}
 	</delete>
 </mapper>

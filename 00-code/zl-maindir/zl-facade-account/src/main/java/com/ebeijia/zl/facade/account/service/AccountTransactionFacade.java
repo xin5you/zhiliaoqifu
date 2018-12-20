@@ -22,21 +22,20 @@ import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 public interface AccountTransactionFacade {
 
 	/**
-	* 
-	* @Description: 账户充值(针对单一类型)
-	*
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年11月30日 上午11:00:28 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年11月30日     zhuqi           v1.0.0
+	 *
+	 * @Description: 账户充值
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年11月30日 上午11:00:28
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年11月30日     zhuqi           v1.0.0
 	 */
-	BaseResult executeRechargeByOneBId(AccountRechargeReqVo req) throws Exception;
-	
-	
+	BaseResult executeRecharge(AccountRechargeReqVo req) throws Exception;
+
 	/**
 	 * 
 	* @Description: 账户批量充值

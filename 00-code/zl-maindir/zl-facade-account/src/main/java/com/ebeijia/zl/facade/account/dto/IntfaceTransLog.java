@@ -2,6 +2,7 @@ package com.ebeijia.zl.facade.account.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
+import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -261,6 +263,13 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
      */
     @TableField(exist=false)
     private Set<String> bIds;
+
+
+    @TableField(exist=false)
+    private List<AccountTxnVo> transList;
+
+    @TableField(exist=false)
+    private List<AccountTxnVo> addList;
 
     @Override
     protected Serializable pkVal() { 

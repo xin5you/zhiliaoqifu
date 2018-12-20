@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -123,24 +124,24 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		List<TransLog> voList=new ArrayList<TransLog>();
 		
 		/**
-			MB10("B10", "商户消费"),
-			MB20("B20", "商户充值"),
-			MB80("B80", "商户开户"),
-			MB40("B40", "商户转账"),
-			MB50("B50", "企业员工充值"),
-			MB90("B90", "商户收款"), 
-		
-			CW80("W80", "企业员工开户"),
-			CW81("W81", "密码重置"),
-			CW10("W10", "商品消费"),
-			CW50("W50", "员工充值"),
-			CW71("W71", "微信支付"),
-			CW20("W20", "购买代金券"),
-			CW11("W11", "退款"),
-			CW74("W74", "退款（快捷）"),
-			CW40("W40", "员工转账"),
-			CW90("W90", "权益转让"),
-			CW91("W91", "商户收款");
+		 MB10("B10", "商户消费"),
+		 MB20("B20", "商户充值"),
+		 MB80("B80", "商户开户"),
+		 MB40("B40", "商户转账"),
+		 MB50("B50", "企业员工充值"),
+		 MB90("B90", "商户收款"),
+
+		 CW80("W80", "企业员工开户"),
+		 CW81("W81", "密码重置"),
+		 CW10("W10", "商品消费"),
+		 CW50("W50", "员工充值"),
+		 CW71("W71", "微信支付"),
+		 CW20("W20", "购买代金券"),
+		 CW11("W11", "退款"),
+		 CW74("W74", "微信退款"),
+		 CW40("W40", "员工转账"),
+		 CW90("W90", "权益转让"),
+		 CW91("W91", "商户收款");
 		 */
 		
 		if (TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){
@@ -161,18 +162,32 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				addToVoList(voList,transLog2,order);
 				order++;
 			}
-			
-			
 		}else if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
-			//商户充值
-			this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
+			List<AccountTxnVo> transList=intfaceTransLog.getTransList();
+			if(transList !=null && transList.size()>0){
+				//商户 多账户类型充值
+				for (AccountTxnVo accountTxnVo : transList) {
+					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt());
+				}
+			}else {
+				//商户充值
+				this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);
+			}
 			
-		}else if (TransCode.MB40.getCode().equals(intfaceTransLog.getTransId())){
-			
-			//商户转账
-			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
-			
-			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
+		}else if (TransCode.MB40.getCode().equals(intfaceTransLog.getTransId())) {
+			List<AccountTxnVo> transList = intfaceTransLog.getTransList();
+			if (transList != null && transList.size() > 0) {
+				//商户 多账户类型之间转账
+				for (AccountTxnVo accountTxnVo : transList) {
+					//商户转账
+					this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt());
+					this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt());
+				}
+			} else {
+				//商户转账
+				this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
+				this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
+			}
 		}
 		else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
@@ -187,14 +202,26 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			transLog2.setTransId(TransCode.CW50.getCode());
 			transLog2.setUserType(UserType.TYPE100.getCode());
 			addToVoList(voList,transLog2,1);
-		}else if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
-			//快捷支付 先充值到通卡账户，再从通卡账户扣除
-			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);
-			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.SUB.getValue(), 1);
-			
-		}else if (TransCode.CW10.getCode().equals(intfaceTransLog.getTransId())){
+		}else if( TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())
+				|| TransCode.CW10.getCode().equals(intfaceTransLog.getTransId())){
+
+			if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
+				//快捷消费，先充值
+				List<AccountTxnVo> addList = intfaceTransLog.getAddList();
+				if (addList != null && addList.size() > 0) {
+					for (AccountTxnVo accountTxnVo : addList) {
+						this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getTxnAmt());
+					}
+				}
+			}
 			//企业员工消费
-			this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.SUB.getValue(), 0);
+			List<AccountTxnVo> transList = intfaceTransLog.getTransList();
+			if (transList != null && transList.size() > 0) {
+				for (AccountTxnVo accountTxnVo : transList) {
+					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt());
+				}
+			}
+
 			
 		}else if (TransCode.CW80.getCode().equals(intfaceTransLog.getTransId()) || TransCode.MB80.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工开户，多个专项类型开户
@@ -234,14 +261,36 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		addToVoList(voList,transLog,order);
 	}
 
+	private void addToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,BigDecimal transAmt,BigDecimal upLoadAmt){
+		TransLog transLog=new TransLog();
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		this.newTransLog(intfaceTransLog, transLog);
+		if(StringUtil.isNotEmpty(userId)){
+			transLog.setUserId(userId);
+		}
+		if(StringUtil.isNotEmpty(bId)){
+			transLog.setPriBId(bId);
+		}
+		if(StringUtil.isNotEmpty(cardAttr)){
+			transLog.setCardAttr(cardAttr);
+		}
+		if(transAmt !=null){
+			transLog.setTransAmt(transAmt);
+		}
+		if(upLoadAmt !=null){
+			transLog.setUploadAmt(upLoadAmt);
+		}
+
+		addToVoList(voList,transLog,voList.size());
+	}
+
 	
 	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){
 		transLog.setOrder(order);
 		createTransLog(transLog);//基本信息
 		voList.add(transLog);
 	}
-	
-	
+
 	
 	private void newTransLog(IntfaceTransLog intfaceTransLog,TransLog transLog){
 		

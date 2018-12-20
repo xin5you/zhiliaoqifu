@@ -38,7 +38,7 @@ public class WebAdviceHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public JsonResult<Object> errorHandler(Exception ex) {
-        logger.error("Shop-E",ex);
+        logger.error("Shop_Advice_E",ex);
         JsonResult<Object> result = new JsonResult<>();
         result.setCode(500);
         result.setMessage("网络不稳定，请稍后再试");

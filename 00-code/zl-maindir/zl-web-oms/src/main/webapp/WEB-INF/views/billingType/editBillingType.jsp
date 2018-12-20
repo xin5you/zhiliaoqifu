@@ -42,7 +42,7 @@
 							             <div class="controls">
 							                 <select id="code" name="code" class="chzn_a span6">
 								                 <c:forEach var="c" items="${billingTypeCodeList}" varStatus="st">
-													<option value="${c.bId}" <c:if test="${c.bId==billingType.BId }">selected="selected"</c:if>>${c.code }类</option>
+													<option value="${c.code}" <c:if test="${c.BId==billingType.BId }">selected="selected"</c:if>>${c.code }类</option>
 												 </c:forEach>
 							                 </select>
 							                 <span class="help-block"></span>

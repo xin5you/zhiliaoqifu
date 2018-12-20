@@ -40,4 +40,9 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
         PageInfo<InaccountOrder> page = new PageInfo<InaccountOrder>(orderList);
         return page;
     }
+
+    @Override
+    public InaccountOrder getInaccountOrderByOrderId(String orderId) {
+        return inaccountOrderMapper.getInaccountOrderByOrderId(orderId);
+    }
 }

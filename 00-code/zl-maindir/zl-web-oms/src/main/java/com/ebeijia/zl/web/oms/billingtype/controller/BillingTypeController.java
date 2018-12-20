@@ -1,8 +1,13 @@
 package com.ebeijia.zl.web.oms.billingtype.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,9 +26,11 @@ import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.github.pagehelper.PageInfo;
 
 @Controller
@@ -98,8 +105,10 @@ public class BillingTypeController {
 		ModelAndView mv = new ModelAndView("billingType/editBillingType");
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		BillingType billingType = billingTypeInfService.getBillingTypeInfById(bId);
+		List<BillingType> speList = billingTypeInfService.getBillingTypeInfList(new BillingType());
+		speList = speList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(BillingType::getCode))), ArrayList::new));
 		mv.addObject("billingType", billingType);
-		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
+		mv.addObject("billingTypeCodeList", speList);
 		return mv;
 	}
 	
@@ -171,12 +180,14 @@ public class BillingTypeController {
 			billingType.setBId(IdUtil.getNextId());
 			billingType.setCreateUser(user.getId());
 			billingType.setCreateTime(System.currentTimeMillis());
+			billingType.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			billingType.setLockVersion(0);
 		}
 		billingType.setBName(bName);
 		billingType.setCode(code);
 		billingType.setRemarks(remarks);
-		billingType.setLoseFee(new BigDecimal(NumberUtils.RMBYuanToCent(loseFee)));
-		billingType.setBuyFee(new BigDecimal(NumberUtils.RMBYuanToCent(buyFee)));
+		billingType.setLoseFee(new BigDecimal(loseFee));
+		billingType.setBuyFee(new BigDecimal(buyFee));
 		billingType.setUpdateUser(user.getId());
 		billingType.setUpdateTime(System.currentTimeMillis());
 		return billingType;

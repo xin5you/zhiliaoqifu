@@ -88,13 +88,13 @@ var listTelProviderInf = {
                 "orderName": "供应商"+providerId+"开户"
             },
             success: function (data) {
-                if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
-                }else{
-                    $('#msg').modal('hide');
-                    Helper.alter(data.msg);
-                    return false;
-                }
+            	if(data.status){
+            		location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=1';
+            	}else{
+            		$('#msg').modal('hide');
+            		Helper.alter(data.msg);
+            		return false;
+            	}
             },
             error:function(){
                 $('#msg').modal('hide');
@@ -134,21 +134,22 @@ var listTelProviderInf = {
             type: 'post',
             dataType : "json",
             data: {
-                "amount" : amount,
-                "companyId" : companyId,
+                "amount" : amount, 
+                "companyId" : companyId, 
                 "providerId" : providerId
             },
             success: function (result) {
-                if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
+            	if(result.status) {
+                	location = Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
                 } else {
-                    Helper.alert(result.msg);
-                    return false;
+                	Helper.alert(result.msg);
+                	return false;
                 }
             },
             error:function(){
-                Helper.alert("系统故障，请稍后再试");
+            	Helper.alert("系统故障，请稍后再试");
             }
-        });
-    }*/
+		});
+	
+	}
 }
