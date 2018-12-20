@@ -51,5 +51,5 @@ public interface BillingTypeService extends IService<BillingType> {
 
 	public List<BillingType> getBillingTypeListForRedis();
 
-	public BillingType getBillingTypeForRedisByBId();
+	public BillingType getBillingTypeForRedisByBId(String bId);
 }

@@ -1,8 +1,16 @@
 package com.ebeijia.zl.basics.billingtype.service.impl;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.core.domain.BillingType;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,12 +79,20 @@ public class BillingTypeServiceImpl extends ServiceImpl<BillingTypeMapper, Billi
 	}
 
 	public List<BillingType> getBillingTypeListForRedis() {
-
-		return  null;
+		Map<String, String> m = jedisCluster.hgetAll(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE);
+		BillingType billingType=null;
+		List list = new ArrayList();
+		for (String key : m.keySet()) {
+			billingType=JSONObject.parseObject(m.get(key),BillingType.class);
+			list.add(billingType);
+		}
+		m.clear();
+		return  list;
 	}
 
-	public BillingType getBillingTypeForRedisByBId(){
-		return  null;
+	public BillingType getBillingTypeForRedisByBId(String bId){
+		String m = jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE,bId);
+		return JSONObject.parseObject(m,BillingType.class);
 	}
-	
+
 }
