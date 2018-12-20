@@ -273,7 +273,7 @@ public class ProviderInfController {
 			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
 			mv.addObject("pageList", pageList);
 		} catch (Exception e) {
-			logger.error("## 查询供应商信息详情异常", e);
+			logger.error("## 查询供应商上账信息详情异常", e);
 		}
         mv.addObject("operStatus", operStatus);
 		mv.addObject("providerId", providerId);

@@ -1,14 +1,19 @@
 package com.ebeijia.zl.web.oms.providerChnl.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.basics.billingtype.domain.BillingType;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
+import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTxnVo;
+import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
@@ -33,9 +38,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service("providerInfService")
 public class ProviderInfServiceImpl implements ProviderInfService {
@@ -61,6 +64,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 	@Autowired
 	private BillingTypeService billingTypeService;
+
+	@Autowired
+	private AccountTransactionFacade accountTransactionFacade;
 
 	@Autowired
 	@Qualifier("jedisClusterUtils")
@@ -289,6 +295,73 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		if (!inaccountOrderDetailService.saveBatch(orderDetailList)) {
 			logger.error("## 新增入账订单明细失败");
+			return 0;
+		}
+		return 1;
+	}
+
+	@Override
+	public int addProviderTransferCommit(HttpServletRequest req) {
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+
+		InaccountOrder order = inaccountOrderService.getById(orderId);
+		List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+
+		if (order == null || orderDetail == null || orderDetail.size() < 1) {
+			logger.error("## 查询供应商{}上账订单{}信息为空", providerId, orderId);
+			return 0;
+		}
+
+		List<AccountTxnVo> transList = new ArrayList<>();
+		Set<String> bIds = new TreeSet<>();
+		for (InaccountOrderDetail d : orderDetail) {
+			AccountTxnVo txnVo = new AccountTxnVo();
+			txnVo.setTxnBId(d.getBId());
+			txnVo.setTxnAmt(d.getTransAmt());
+			txnVo.setUpLoadAmt(d.getTransAmt());
+			transList.add(txnVo);
+			bIds.add(d.getBId());
+		}
+
+		AccountRechargeReqVo reqVo = new AccountRechargeReqVo();
+		reqVo.setFromCompanyId(providerId);
+		reqVo.setTransAmt(order.getInacccountAmt());
+		reqVo.setUploadAmt(order.getInacccountAmt());
+		reqVo.setTransList(transList);
+		reqVo.setTransId(TransCode.MB20.getCode());
+		reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
+		reqVo.setUserId(providerId);
+		reqVo.setbIds(bIds);
+		reqVo.setUserType(UserType.TYPE300.getCode());
+		reqVo.setDmsRelatedKey(orderId);
+		reqVo.setUserChnlId(providerId);
+		reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+		reqVo.setTransDesc(order.getRemarks());
+		reqVo.setTransNumber(1);
+
+		BaseResult result = new BaseResult();
+		try {
+			result = accountTransactionFacade.executeRecharge(reqVo);
+			logger.info("远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
+		} catch (Exception e) {
+			logger.error("## 远程调用充值接口异常", e);
+			return 0;
+		}
+
+		if (result == null) {
+			logger.error("## 远程调用充值接口失败，返回参数为空，orderId--->{},providerId--->{}", orderId, providerId);
+			return 0;
+		}
+
+		if (result.getCode().equals(Constants.SUCCESS_CODE)) {
+			order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_TRUE.getCode());
+		} else {
+			order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_FALSE.getCode());
+		}
+
+		if (!inaccountOrderService.updateById(order)) {
+			logger.error("## 远程调用充值接口，更新订单失败orderId--->{},providerId--->{}", orderId, providerId);
 			return 0;
 		}
 		return 1;

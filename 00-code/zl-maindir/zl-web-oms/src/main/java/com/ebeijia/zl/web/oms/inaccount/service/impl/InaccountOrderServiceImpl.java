@@ -1,7 +1,5 @@
 package com.ebeijia.zl.web.oms.inaccount.service.impl;
 
-import com.ebeijia.zl.basics.billingtype.domain.BillingType;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

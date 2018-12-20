@@ -18,4 +18,6 @@ import java.util.List;
 public interface InaccountOrderMapper extends BaseMapper<InaccountOrder> {
 
     List<InaccountOrder> getInaccountOrderByOrder(InaccountOrder inaccountOrder);
+
+    InaccountOrder getInaccountOrderByOrderId(String orderId);
 }

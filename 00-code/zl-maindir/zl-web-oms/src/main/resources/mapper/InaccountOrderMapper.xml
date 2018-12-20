@@ -28,13 +28,27 @@
         tb_inaccount_order
     </sql>
 
-    <select id="getInaccountOrderByProviderId" parameterType="String" resultType="InaccountOrder">
+    <select id="getInaccountOrderByOrder" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
           <include refid="InaccountOrderColumns"/>
         from
           <include refid="tableName"/>
         where data_stat = '0'
-          and provider_id = #{providerId}
+        <if test="providerId != null || providerId != ''">
+            and provider_id = #{providerId}
+        </if>
+        <if test="orderId != null || orderId != ''">
+            and order_id = #{orderId}
+        </if>
         order by create_time desc
+    </select>
+
+    <select id="getInaccountOrderByOrderId" parameterType="String" resultType="InaccountOrder">
+        select
+        <include refid="InaccountOrderColumns"/>
+        from
+        <include refid="tableName"/>
+        where data_stat = '0'
+          and order_id = #{orderId}
     </select>
 </mapper>

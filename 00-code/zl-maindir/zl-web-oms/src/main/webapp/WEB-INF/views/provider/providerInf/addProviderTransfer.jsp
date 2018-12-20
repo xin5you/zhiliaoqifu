@@ -27,6 +27,7 @@
 			        </nav>
 					<form id="pageMainForm" action="${ctx}/batch/openAccount/intoAddOpenAccount.do" class="form-inline form_validation_tip" method="post">
 						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+                        <input type="hidden" id="providerId"  value="${providerId }"/>
 						<h3 class="heading">入账信息列表</h3>
 						
 				         <div>
@@ -79,9 +80,14 @@
                                         </c:if>
                                      </td>
 				                    <td>
-                                        <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
-                                        <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-                                        <a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+                                        <c:if test="${entity.checkStat == '0'}">
+                                            <a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+                                            <a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
+                                        </c:if>
+                                        <c:if test="${entity.checkStat == '1'}">
+                                            <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
+                                        </c:if>
+                                         <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -96,13 +102,12 @@
 			   </div>
 
 	    <div id="addTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <form class="form-horizontal">
+            <form class="form-horizontal" enctype="multipart/form-data">
                 <div class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
                     <h3 id="commodityInfModal_h">添加入账信息</h3>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="providerId" />
                     <input type="hidden" id="orderId" />
                     <fieldset>
                         <div class="control-group">
@@ -113,9 +118,10 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">打款凭证：</label>
+                            <label class="control-label">请选择打款凭证：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="evidenceUrl"  name = "evidenceUrl"/>
+                                <input id="evidenceUrl" class="span3" readonly type="text">
+                                <input type="file" class="span3" id="evidenceUrlFile"  name = "evidenceUrlFile"/>
                                 <span class="help-block"></span>
                             </div>  
                         </div>
@@ -229,6 +235,22 @@
                 </div>
                 <br/><br/><br/>
               <h3 align="center">信息正在处理......</h3>
-        </div>         
+        </div>
+
+       <div id="updateCheckStatModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           <form class="form-horizontal">
+               <div class="modal-header">
+                   <button class="close" data-dismiss="modal">&times;</button>
+                   <h3 id="commodityInfModal_h3">审核</h3>
+               </div>
+               <div class="modal-body">
+                   <span>标记该条上账记录为已审核状态？</span>
+               </div>
+           </form>
+           <div class="modal-footer" style="text-align: center;">
+               <button class="btn btn-primary btn-checkStat-submit">确 定  </button>
+               <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+           </div>
+       </div>
 </body>
 </html>

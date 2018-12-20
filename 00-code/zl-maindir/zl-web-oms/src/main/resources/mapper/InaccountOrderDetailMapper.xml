@@ -2,4 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.web.oms.inaccount.mapper.InaccountOrderDetailMapper">
 
+    <sql id="InaccountOrderDetailColumns">
+        order_list_id,
+        order_id,
+        is_invoice,
+        trans_amt,
+        b_bid,
+        invoice_info,
+        platform_in_amt,
+        company_in_amt,
+        remarks,
+        data_stat,
+        create_user,
+        update_user,
+        create_time,
+        update_time,
+        lock_version
+    </sql>
+
+    <sql id="tableName">
+        tb_inaccount_order_detail
+    </sql>
+
+    <select id="getInaccountOrderDetailByOrderId" parameterType="InaccountOrderDetail" resultType="InaccountOrderDetail">
+      select
+        <include refid="InaccountOrderDetailColumns"/>
+      from
+        <include refid="tableName"/>
+      where data_stat = '0'
+        and order_id = #{orderId}
+    </select>
 </mapper>

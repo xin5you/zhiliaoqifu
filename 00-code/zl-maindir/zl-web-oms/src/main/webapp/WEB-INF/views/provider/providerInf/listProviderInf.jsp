@@ -101,7 +101,7 @@
 		<form class="form-horizontal">
 		    <div class="modal-header">
 		        <button class="close" data-dismiss="modal">&times;</button>
-		        <h3 id="commodityInfModal_h">开户</h3>
+		        <h3 id="commodityInfModal_h1">开户</h3>
 		    </div>
 		    <div class="modal-body">
 		        <input type="hidden" id="providerId" name="providerId"/>
@@ -118,7 +118,7 @@
 		<form class="form-horizontal">
 		    <div class="modal-header">
 		        <button class="close" data-dismiss="modal">&times;</button>
-		        <h3 id="commodityInfModal_h">转账</h3>
+		        <h3 id="commodityInfModal_h2">转账</h3>
 		    </div>
 		    <div class="modal-body">
 		        <input type="hidden" id="provider_id" name="provider_id"/>
@@ -154,7 +154,7 @@
 	<div id="msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
               <div class="modal-header">
                     
-                    <h3 id="commodityInfModal_h">温馨提示</h3>
+                    <h3 id="commodityInfModal_h3">温馨提示</h3>
                 </div>
                 <br/><br/><br/>
               <h3 align="center">信息正在处理......</h3>

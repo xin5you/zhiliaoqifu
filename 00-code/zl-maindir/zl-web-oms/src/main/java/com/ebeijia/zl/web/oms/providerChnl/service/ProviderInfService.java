@@ -7,4 +7,6 @@ public interface ProviderInfService {
 	int providerOpenAccount(HttpServletRequest req);
 	
 	int addProviderTransfer(HttpServletRequest req);
+
+	int addProviderTransferCommit(HttpServletRequest req);
 }

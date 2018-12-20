@@ -5,6 +5,8 @@ import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  *
  * tb_inaccount_order_detail Mapper 接口
@@ -15,4 +17,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface InaccountOrderDetailMapper extends BaseMapper<InaccountOrderDetail> {
 
+    List<InaccountOrderDetail> getInaccountOrderDetailByOrderId(String orderId);
 }
