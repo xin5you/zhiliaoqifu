@@ -2,6 +2,7 @@ package com.ebeijia.zl.service.control.quartz;
 
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
+import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
