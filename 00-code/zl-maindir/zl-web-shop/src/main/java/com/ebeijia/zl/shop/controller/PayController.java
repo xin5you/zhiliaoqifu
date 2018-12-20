@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
@@ -13,6 +14,9 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Api(value = "/pay", description = "用于定义支付、信用卡相关接口")
 @RequestMapping(value = "/pay")
@@ -42,6 +46,16 @@ public class PayController {
     public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {
             payService.payOrder(payInfo,session);
     }
+
+
+    @ApiOperation("列出所有专项账户类型的ID")
+    @RequestMapping(value = "/billingtype/list",method = RequestMethod.GET)
+    public JsonResult<List<SpecAccountTypeEnum>> listBillingType(@PathVariable(value = "type",required = false) String type) {
+        List<SpecAccountTypeEnum> list = Arrays.asList(SpecAccountTypeEnum.values());
+        return new JsonResult<>(list);
+    }
+
+
 
     @TokenCheck
     @ApiOperation("列出可用专项账户类型与余额")

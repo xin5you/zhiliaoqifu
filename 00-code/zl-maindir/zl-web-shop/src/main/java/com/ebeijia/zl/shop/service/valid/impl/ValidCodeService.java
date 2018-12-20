@@ -7,6 +7,8 @@ import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ public class ValidCodeService implements IValidCodeService {
 
     @Autowired
     JedisUtilsWithNamespace jedis;
+
+    Logger logger = LoggerFactory.getLogger(ValidCodeService.class);
 
     @Override
     public Double getSession() {
@@ -29,6 +33,7 @@ public class ValidCodeService implements IValidCodeService {
         //TODO MockData
         code = "1234";
         deliverAndSave(phoneNum,method,code);
+        logger.info("向手机号%s发送%s验证码成功",phoneNum,method);
         throw new AdviceMessenger(200, "发送成功");
     }
 

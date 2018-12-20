@@ -11,4 +11,5 @@ public interface ICategoryService {
     @Cacheable(cacheNames = ShopConfig.ID+"category"+"#p0")
     List<TbEcomGoodsCategory> listCategory(String type);
 
+    List<TbEcomGoodsCategory> listCategory(String billingType, String parent);
 }

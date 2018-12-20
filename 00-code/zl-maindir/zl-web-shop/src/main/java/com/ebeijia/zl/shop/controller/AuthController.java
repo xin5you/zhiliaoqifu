@@ -28,7 +28,6 @@ public class AuthController {
     @ApiOperation("常规登录")
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public JsonResult<Token> login(@RequestParam("phone") String phone,@RequestParam("pwd") String pwd) {
-        System.out.println("phone = [" + phone + "], pwd = [" + pwd + "]");
         return new JsonResult<>(authService.phoneLogin(phone,pwd));
     }
 

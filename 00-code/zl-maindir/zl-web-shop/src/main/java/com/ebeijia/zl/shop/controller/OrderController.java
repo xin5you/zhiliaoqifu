@@ -9,13 +9,12 @@ import com.ebeijia.zl.shop.vo.AddressInfo;
 import com.ebeijia.zl.shop.vo.EcomOrderDetailInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 /**
@@ -64,7 +63,7 @@ public class OrderController {
     @TokenCheck
     @ApiOperation("订单列表")
     @RequestMapping(value = "/goods/list/{stat}",method = RequestMethod.GET)
-    public JsonResult<List<TbEcomPlatfOrder>> goodsOrderList(@PathVariable("stat") String orderStat){
+    public JsonResult<PageInfo<TbEcomPlatfOrder>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
         return new JsonResult<>();
     }
 
