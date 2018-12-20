@@ -2,6 +2,7 @@ package com.ebeijia.zl.basics.billingtype.service.impl;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.core.domain.BillingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import redis.clients.jedis.JedisCluster;
 
 /**
  *
@@ -23,6 +25,9 @@ public class BillingTypeServiceImpl extends ServiceImpl<BillingTypeMapper, Billi
 
 	@Autowired
 	private BillingTypeMapper billingTypeMapper;
+
+	@Autowired
+	private JedisCluster jedisCluster;
 
 	@Override
 	public BillingType getBillingTypeInfById(String bId) {
@@ -65,5 +70,13 @@ public class BillingTypeServiceImpl extends ServiceImpl<BillingTypeMapper, Billi
 		return billingTypeMapper.insertBillingTypeInf(billingTypeInf);
 	}
 
+	public List<BillingType> getBillingTypeListForRedis() {
+
+		return  null;
+	}
+
+	public BillingType getBillingTypeForRedisByBId(){
+		return  null;
+	}
 	
 }

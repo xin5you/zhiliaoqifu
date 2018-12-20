@@ -48,4 +48,8 @@ public interface BillingTypeService extends IService<BillingType> {
 	public int deleteBillingTypeInf(BillingType billingTypeInf);
 	
 	public int insertBillingTypeInf(BillingType billingTypeInf);
+
+	public List<BillingType> getBillingTypeListForRedis();
+
+	public BillingType getBillingTypeForRedisByBId();
 }
