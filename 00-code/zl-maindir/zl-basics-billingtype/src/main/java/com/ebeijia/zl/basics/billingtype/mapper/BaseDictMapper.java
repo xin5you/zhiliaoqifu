@@ -2,10 +2,10 @@ package com.ebeijia.zl.basics.billingtype.mapper;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.core.domain.BaseDict;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ebeijia.zl.basics.billingtype.domain.BaseDict;
 
 /**
  * 字典信息

@@ -12,6 +12,8 @@ public class RedisConstants {
 	public static final String REDIS_HASH_TABLE_TB_BASE_DICT_KV = "TB_BASE_DICT_KV";
 
 	public static final String REDIS_HASH_TABLE_TB_BASE_DICT_KLIST = "TB_BASE_DICT_KLIST";
+
+	public static final String REDIS_HASH_TABLE_TB_BILLING_TYPE = "TB_BILLING_TYPE";
 	
 	
 }
