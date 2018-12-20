@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ebeijia.zl.core.activemq.service.MQProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.core.activemq.service.RechargeMobileProducerService;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
@@ -50,8 +50,8 @@ public class ApiRechangeMobileController {
 	private RetailChnlOrderInfFacade RetailChnlOrderInfFacade;
 
 	@Autowired
-	@Qualifier("rechargeMobileProducerService")
-	private RechargeMobileProducerService rechargeMobileProducerService;
+	@Qualifier("mqProducerService")
+	private MQProducerService mqProducerService;
 
 	@Autowired
 	@Qualifier("ProviderOrderInfFacade")

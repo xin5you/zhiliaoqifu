@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.control.jms.listener;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -7,13 +8,19 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.SmsVo;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.core.wechat.process.MpAccount;
 import com.ebeijia.zl.core.wechat.process.WxApiClient;
 import com.ebeijia.zl.core.wechat.vo.TemplateMessage;
 import com.ebeijia.zl.service.control.jms.enums.AliyunSMSTemplateCode;
+import com.ebeijia.zl.service.control.sms.domain.TbSmsDetails;
+import com.ebeijia.zl.service.control.sms.service.ITbSmsDetailsService;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +49,9 @@ public class SMSTemplateMessageListener implements MessageListener {
 	@Autowired
 	private IAcsClient acsClient;
 
+	@Autowired
+	private ITbSmsDetailsService smsDetailsService;
+
 	public synchronized void onMessage(Message message) {
 
 		try {
@@ -51,7 +61,22 @@ public class SMSTemplateMessageListener implements MessageListener {
 
 			SmsVo sms = JSONObject.parseObject(ms, SmsVo.class);
 
-			//可自助调整超时时间
+
+            TbSmsDetails tbSmsDetails = new TbSmsDetails();
+            tbSmsDetails.setMsgId(StringUtil.isNotEmpty(sms.getMsgId())? sms.getMsgId():IdUtil.getNextId());
+            tbSmsDetails.setPhoneNumber(sms.getPhoneNumber());
+            tbSmsDetails.setTemplateParam(JSONArray.toJSONString(sms));
+            tbSmsDetails.setSmsType(sms.getSmsType());
+            tbSmsDetails.setData(DataStatEnum.TRUE_STATUS.getCode());
+            tbSmsDetails.setCreateTime(System.currentTimeMillis());
+            tbSmsDetails.setCreateUser("99999999");
+            tbSmsDetails.setUpdateTime(System.currentTimeMillis());
+            tbSmsDetails.setUpdateUser("99999999");
+            tbSmsDetails.setLockVersion(0);
+
+            smsDetailsService.save(tbSmsDetails);
+
+            //可自助调整超时时间
 			System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
 			System.setProperty("sun.net.client.defaultReadTimeout", "10000");
 			//组装请求对象-具体描述见控制台-文档部分内容
@@ -70,9 +95,16 @@ public class SMSTemplateMessageListener implements MessageListener {
 			//hint 此处可能会抛出异常，注意catch
 			SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
 
+            tbSmsDetails.setRespId(sendSmsResponse.getRequestId());
+            tbSmsDetails.setRespCode(sendSmsResponse.getCode());
+            tbSmsDetails.setRespMsg(sendSmsResponse.getMessage());
+            tbSmsDetails.setUpdateTime(System.currentTimeMillis());
+            smsDetailsService.updateById(tbSmsDetails);
 			if("OK".equals(sendSmsResponse.getCode())){
 				message.acknowledge();
-			}
+			}else{
+			    logger.error("## 短信发送失败：[{}]",JSONObject.toJSONString(sendSmsResponse));
+            }
 		} catch (Exception e) {
 			logger.error("## 待发送的短信消息异常：", e);
 		}

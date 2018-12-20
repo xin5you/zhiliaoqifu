@@ -1,21 +1,21 @@
 package com.ebeijia.zl.core.activemq.service.impl;
 
-import java.util.TreeMap;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-
+import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.core.activemq.service.MQProducerService;
+import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
+import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ebeijia.zl.core.activemq.service.WechatMQProducerService;
-import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
-import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+import java.util.TreeMap;
 
 /**
  * 
@@ -23,11 +23,11 @@ import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
  * @description 队列消息生产者，发送消息到队列
  * 
  */
-@Service("wechatMQProducerService")
-public class WechatMQProducerServiceImpl implements WechatMQProducerService {
+@Service("mqProducerService")
+public class MQProducerServiceImpl implements MQProducerService {
 
-	// private static Logger logger =
-	// LoggerFactory.getLogger(WechatMQProducerServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(MQProducerServiceImpl.class);
+
 
 	/**
 	 * 微信客服消息
@@ -42,6 +42,10 @@ public class WechatMQProducerServiceImpl implements WechatMQProducerService {
 	@Autowired
 	@Qualifier("templateMsgJmsTemplate")
 	private JmsTemplate templateMsgJmsTemplate;
+
+	@Autowired
+	@Qualifier("rechargeMobileJmsTemplate")
+	private JmsTemplate rechargeMobileJmsTemplate;
 
 	/**
 	 * 发送微信客服消息
@@ -97,7 +101,7 @@ public class WechatMQProducerServiceImpl implements WechatMQProducerService {
 	 *            模板Id
 	 * @param url
 	 *            页面跳转url
-	 * @param Data
+	 * @param data
 	 *            消息模板数据
 	 */
 	public void sendTemplateMsg(String acountName, String touser, String template_id, String url,
@@ -123,12 +127,13 @@ public class WechatMQProducerServiceImpl implements WechatMQProducerService {
 			}
 		});
 	}
-	
+
 	/**
-	 * @param regOrderId 分销商话费充值订单号
+	 * @param channelOrderId 分销商话费充值订单号
 	 */
 	public void sendRechargeMobileMsg(final String channelOrderId){
-		templateMsgJmsTemplate.send(new MessageCreator() {
+		logger.info("channelOrderId={}",channelOrderId);
+		rechargeMobileJmsTemplate.send(new MessageCreator() {
 			public Message createMessage(Session session) throws JMSException {
 				return session.createTextMessage(channelOrderId);
 			}
