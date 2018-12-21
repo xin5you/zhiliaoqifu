@@ -122,11 +122,11 @@
         <!-- ZK服务依赖结束 -->
 
         <!-- ZK Facade -->
-        <!--<dependency>-->
-            <!--<groupId>com.ebeijia</groupId>-->
-            <!--<artifactId>zl-facade-account</artifactId>-->
-            <!--<version>1.0.0.RELEASE</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-facade-account</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
         <!-- ZK Facade -->
 
 

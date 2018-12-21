@@ -2,8 +2,10 @@ package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.service.pay.ICardService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
+import com.ebeijia.zl.shop.vo.CardInfo;
 import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
@@ -23,16 +25,28 @@ import java.util.List;
 @RestController
 public class PayController {
     @Autowired
-    IPayService payService;
+    private IPayService payService;
 
-    @TokenCheck
+    @Autowired
+    private ICardService cardService;
+
+    @TokenCheck(force = true)
     @ApiOperation("绑定银行卡")
     @RequestMapping(value = "/card/bind",method = RequestMethod.POST)
     public void bindBankCard() {
 
     }
 
-    @TokenCheck
+
+    @TokenCheck(force = true)
+    @ApiOperation("校验银行卡号")
+    @RequestMapping(value = "/card/valid",method = RequestMethod.POST)
+    public JsonResult<CardInfo> validBankCard(@RequestParam("cardnum") String cardNum) {
+       CardInfo cardInfo =  cardService.validCardNum(cardNum);
+       return new JsonResult<>(cardInfo);
+    }
+
+    @TokenCheck(force = true)
     @ApiOperation("列出银行卡")
     @RequestMapping(value = "/card/list",method = RequestMethod.GET)
     public void listAccountCard(@RequestParam("token") String token, @RequestParam("session") String session) {
