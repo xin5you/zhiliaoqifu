@@ -31,7 +31,7 @@ public class OrderController {
 
 
     //不经过购物车直接下单
-    @TokenCheck
+    @TokenCheck(force = true)
     @ShopTransactional
     @ApiOperation("商品直接下单")
     @RequestMapping(value = "/goods/create/",method = RequestMethod.POST)
@@ -39,28 +39,28 @@ public class OrderController {
         return new JsonResult<>(new TbEcomOrderInf());
     }
 
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("订单支付确认")
     @RequestMapping(value = "/goods/apply/{orderid}",method = RequestMethod.POST)
     public JsonResult<TbEcomOrderInf> orderNextState(@PathVariable("orderid") String orderId, AddressInfo address, PayInfo payInfo, @RequestParam("session") String session){
         return new JsonResult<>(new TbEcomOrderInf());
     }
 
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("订单状态修改")
     @RequestMapping(value = "/goods/update/{orderid}",method = RequestMethod.POST)
     public JsonResult<Object> orderReplaceState(@PathVariable("orderid") String orderId){
         return new JsonResult<>().setCode(200);
     }
 
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
     public JsonResult<EcomOrderDetailInfo> goodsOrderDetail(@PathVariable("orderid") String orderId){
         return new JsonResult<>();
     }
 
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("订单列表")
     @RequestMapping(value = "/goods/list/{stat}",method = RequestMethod.GET)
     public JsonResult<PageInfo<TbEcomPlatfOrder>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){

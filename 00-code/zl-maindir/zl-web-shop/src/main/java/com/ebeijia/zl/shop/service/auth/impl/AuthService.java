@@ -14,7 +14,6 @@ import com.ebeijia.zl.facade.user.req.OpenUserInfReqVo;
 import com.ebeijia.zl.facade.user.service.UserInfFacade;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
-import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import com.ebeijia.zl.shop.service.auth.IAuthService;
@@ -58,23 +57,23 @@ public class AuthService implements IAuthService {
         TbEcomMember member = new TbEcomMember();
         member.setPersonId(phone);
         member = memberDao.getOne(new QueryWrapper<>(member));
-        if (member == null) {
-            //注册流程
-            remoteRegister(phone);
-            localRegister(phone);
-        }
-        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, TransChnl.CHANNEL6.toString());
-        if (userInf == null) {
-            throw new AdviceMessenger(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
-        }
+//        if (member == null) {
+//            //注册流程
+//            remoteRegister(phone);
+//            localRegister(phone);
+//        }
+//        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, TransChnl.CHANNEL6.toString());
+//        if (userInf == null) {
+//            throw new AdviceMessenger(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
+//        }
         //测试用
         HashMap<String, String> token = new HashMap<>();
-        token.put("userid", "TT233");
+        token.put("memberId", "TT233");
         token.put("token", "testToken");
 
 
         //将获取到的token存入redis缓存;
-        jedis2.set(token.get("token"), token.get("userid"), 3600 * 24);
+        jedis2.set(token.get("token"), token.get("memberId"), 3600 * 24);
         //前端测试用
         return new Token(token.get("token"));
     }

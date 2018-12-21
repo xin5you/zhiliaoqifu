@@ -54,7 +54,7 @@ public class PayController {
     }
 
     //支付接口
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("支付订单")
     @RequestMapping(value = "/deal/order/{orderid}",method = RequestMethod.POST)
     public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {

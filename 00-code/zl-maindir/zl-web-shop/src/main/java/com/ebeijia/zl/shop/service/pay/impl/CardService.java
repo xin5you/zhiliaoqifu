@@ -21,6 +21,7 @@ public class CardService implements ICardService {
         try {
             bankMap = new ObjectMapper().readValue(bankKv, bankMap.getClass());
             bankKv = null;
+            System.out.println(bankMap.size());
         } catch (IOException e) {
             e.printStackTrace();
         }

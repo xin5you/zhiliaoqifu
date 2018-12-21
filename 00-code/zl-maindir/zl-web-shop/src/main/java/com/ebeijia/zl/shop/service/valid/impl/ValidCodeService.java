@@ -50,7 +50,7 @@ public class ValidCodeService implements IValidCodeService {
         int v = (int) (Math.random() * 10000);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(v);
-        stringBuffer.append(0000);
+        stringBuffer.append("0000");
         return stringBuffer.substring(0, 4);
     }
 
