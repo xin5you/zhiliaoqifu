@@ -1,12 +1,12 @@
 package com.ebeijia.zl.shop.controller;
 
 
+import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.service.member.IMemberService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.AddressInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
-import com.ebeijia.zl.shop.vo.MemberInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -38,16 +38,17 @@ public class MemberController {
         return new JsonResult<>(member);
     }
 
+    @ApiImplicitParam(name = "Authorization",value = "Authorization",paramType ="header")
     @TokenCheck(force = true)
     @ApiOperation("用户信息查询")
     @RequestMapping(value = "/get",method = RequestMethod.GET)
-    public JsonResult<MemberInfo> findUser(){
+    public JsonResult<PersonInf> findUser(){
 
         //获取手机号
         //获取对应id
         //生产账户
-        MemberInfo member =  memberService.getMemberInfo();
-        return new JsonResult<>(member);
+        PersonInf personInf = memberService.getMemberInfo();
+        return new JsonResult<>(personInf);
     }
 
     @ApiImplicitParam(name = "Authorization",value = "Authorization",paramType ="header")

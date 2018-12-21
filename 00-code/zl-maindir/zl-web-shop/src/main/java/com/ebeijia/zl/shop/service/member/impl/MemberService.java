@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
+import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMemberAddress;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberAddressService;
@@ -11,7 +12,6 @@ import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import com.ebeijia.zl.shop.service.member.IMemberService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.vo.AddressInfo;
-import com.ebeijia.zl.shop.vo.MemberInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +68,7 @@ public class MemberService implements IMemberService {
     }
 
     @Override
-    public MemberInfo getMemberInfo() {
+    public PersonInf getMemberInfo() {
         String memberId = (String) session.getAttribute("memberId");
         if (StringUtils.isEmpty(memberId)) {
             throw new BizException(401, "超时了，请重新登录");
@@ -84,12 +84,13 @@ public class MemberService implements IMemberService {
 
 //        UserInf userInf = userInfFacade.getUserInfByUserId(one.getUserId());
 //        userInfFacade.getPersonInfByPhoneNo("","");
-        MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setPersonalId(one.getPersonId());
-        memberInfo.setMobilePhoneNo("13812341234");
-        memberInfo.setUserId(one.getUserId());
-        memberInfo.setPersonalName("李狗子");
-        return memberInfo;
+        PersonInf personInf = new PersonInf();
+        personInf.setPersonalId(one.getPersonId());
+        personInf.setMobilePhoneNo("13812341234");
+        personInf.setUserId(one.getMemberId());
+        personInf.setPersonalName("李狗子");
+        personInf.setPersonalCardNo("NO DATA");
+        return personInf;
     }
 
     @Override

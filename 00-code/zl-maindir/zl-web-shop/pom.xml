@@ -95,6 +95,12 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-activemq</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+
         <!-- ZK服务依赖 -->
         <dependency>
             <groupId>com.alibaba</groupId>
