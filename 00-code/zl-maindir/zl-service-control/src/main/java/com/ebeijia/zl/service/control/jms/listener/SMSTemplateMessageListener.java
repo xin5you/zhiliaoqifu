@@ -50,7 +50,7 @@ public class SMSTemplateMessageListener implements MessageListener {
 	private IAcsClient acsClient;
 
 	@Autowired
-	private ITbSmsDetailsService smsDetailsService;
+	private ITbSmsDetailsService iTbSmsDetailsService;
 
 	public synchronized void onMessage(Message message) {
 
@@ -67,14 +67,14 @@ public class SMSTemplateMessageListener implements MessageListener {
             tbSmsDetails.setPhoneNumber(sms.getPhoneNumber());
             tbSmsDetails.setTemplateParam(JSONArray.toJSONString(sms));
             tbSmsDetails.setSmsType(sms.getSmsType());
-            tbSmsDetails.setData(DataStatEnum.TRUE_STATUS.getCode());
+            tbSmsDetails.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             tbSmsDetails.setCreateTime(System.currentTimeMillis());
             tbSmsDetails.setCreateUser("99999999");
             tbSmsDetails.setUpdateTime(System.currentTimeMillis());
             tbSmsDetails.setUpdateUser("99999999");
             tbSmsDetails.setLockVersion(0);
 
-            smsDetailsService.save(tbSmsDetails);
+			iTbSmsDetailsService.save(tbSmsDetails);
 
             //可自助调整超时时间
 			System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -99,7 +99,7 @@ public class SMSTemplateMessageListener implements MessageListener {
             tbSmsDetails.setRespCode(sendSmsResponse.getCode());
             tbSmsDetails.setRespMsg(sendSmsResponse.getMessage());
             tbSmsDetails.setUpdateTime(System.currentTimeMillis());
-            smsDetailsService.updateById(tbSmsDetails);
+			iTbSmsDetailsService.updateById(tbSmsDetails);
 			if("OK".equals(sendSmsResponse.getCode())){
 				message.acknowledge();
 			}else{

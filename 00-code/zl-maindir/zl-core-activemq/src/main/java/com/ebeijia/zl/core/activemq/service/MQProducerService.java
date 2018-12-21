@@ -1,5 +1,6 @@
 package com.ebeijia.zl.core.activemq.service;
 
+import com.ebeijia.zl.common.utils.domain.SmsVo;
 import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
 import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
 
@@ -51,4 +52,10 @@ public interface MQProducerService {
 	 * @param regOrderId 分销商话费充值订单号
 	 */
 	void sendRechargeMobileMsg(final String channelOrderId);
+
+	/**
+	 * 短信发送
+	 * @param smsVo
+	 */
+	void sendSMS(final SmsVo smsVo);
 }

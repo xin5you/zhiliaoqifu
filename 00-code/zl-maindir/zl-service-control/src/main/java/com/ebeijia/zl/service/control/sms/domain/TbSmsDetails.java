@@ -75,7 +75,7 @@ public class TbSmsDetails extends Model<TbSmsDetails> {
      * 数据状态
      */
     @TableField("data_stat")
-    private String data;
+    private String dataStat;
  
     /**
      * 备注

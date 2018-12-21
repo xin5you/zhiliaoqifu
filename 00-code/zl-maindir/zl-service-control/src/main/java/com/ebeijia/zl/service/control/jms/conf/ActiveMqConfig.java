@@ -22,6 +22,13 @@ public class ActiveMqConfig {
 	@Autowired
 	@Qualifier("consumerMsgSessionAwareQueue")
 	private ActiveMQQueue consumerMsgSessionAwareQueue;
+
+	@Autowired
+	@Qualifier("smsMsgSessionAwareQueue")
+	private ActiveMQQueue smsMsgSessionAwareQueue;
+
+	@Autowired
+	private SMSTemplateMessageListener smsTemplateMessageListener;
 	
 	@Bean("consumerSessionAwareMessageListener")
 	public	DefaultMessageListenerContainer consumerSessionAwareMessageListener(){
@@ -37,8 +44,8 @@ public class ActiveMqConfig {
 	public	DefaultMessageListenerContainer smsSessionAwareMessageListener(){
 		DefaultMessageListenerContainer factory = new DefaultMessageListenerContainer();
 		factory.setConnectionFactory((ConnectionFactory)connectionFactory);
-		factory.setDestination(consumerMsgSessionAwareQueue);
-		factory.setMessageListener(new SMSTemplateMessageListener());
+		factory.setDestination(smsMsgSessionAwareQueue);
+		factory.setMessageListener(smsTemplateMessageListener);
 		return factory;
 	}
 }

@@ -8,13 +8,13 @@ public class SmsVo implements  java.io.Serializable {
     /**
      * 消息主键
      */
-    private String msgId;
+    private String msgId;  //必须填写
 
-    private String smsType; // com.ebeijia.zl.common.utils.enums.SMSType
+    private String smsType; // 必须填写 com.ebeijia.zl.common.utils.enums.SMSType
     /**
      * 手机号
      */
-    private String phoneNumber;
+    private String phoneNumber; //必须填写
 
     /***
      * 企业名称

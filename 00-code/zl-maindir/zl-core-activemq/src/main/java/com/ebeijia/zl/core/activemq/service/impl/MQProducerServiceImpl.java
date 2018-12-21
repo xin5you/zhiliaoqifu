@@ -1,6 +1,8 @@
 package com.ebeijia.zl.core.activemq.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.common.utils.domain.SmsVo;
 import com.ebeijia.zl.core.activemq.service.MQProducerService;
 import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
 import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
@@ -46,6 +48,10 @@ public class MQProducerServiceImpl implements MQProducerService {
 	@Autowired
 	@Qualifier("rechargeMobileJmsTemplate")
 	private JmsTemplate rechargeMobileJmsTemplate;
+
+	@Autowired
+	@Qualifier("smsMsgJmsTemplate")
+	private JmsTemplate smsMsgJmsTemplate;
 
 	/**
 	 * 发送微信客服消息
@@ -136,6 +142,20 @@ public class MQProducerServiceImpl implements MQProducerService {
 		rechargeMobileJmsTemplate.send(new MessageCreator() {
 			public Message createMessage(Session session) throws JMSException {
 				return session.createTextMessage(channelOrderId);
+			}
+		});
+	}
+
+	/**
+	 * 短信发送
+	 * @param smsVo
+	 */
+	public void sendSMS(final SmsVo smsVo){
+		String msg=JSONArray.toJSONString(smsVo);
+		logger.info("sendSMS={}",msg);
+		smsMsgJmsTemplate.send(new MessageCreator() {
+			public Message createMessage(Session session) throws JMSException {
+				return session.createTextMessage(msg);
 			}
 		});
 	}
