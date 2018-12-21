@@ -146,6 +146,7 @@ public class MD5SignUtils {
 		}else{
 			forSign.append(keyName).append("=").append(keyValue);
 		}
+		System.out.println("params-->"+forSign.toString());
 		String result = MD5Encode(forSign.toString());
 		return result.toUpperCase();
 	}

@@ -35,7 +35,7 @@ public class BMOrderServiceImpl implements BMOrderService {
 				return ResultsUtil.error(ExceptionEnum.ERROR_CODE, getItemInfoResp.getMsg());
 			} 
 		} catch (Exception e) {
-			logger.error(" ## 查询单个话费直充商品是否有效异常-->",e);
+			logger.error(" ## 查询单个话费直充商品是否有效异常-->[{}]",e);
 		}
 		PayBillReq payBillReq = new PayBillReq();
 		payBillReq.setMobileNo(mobileNo);

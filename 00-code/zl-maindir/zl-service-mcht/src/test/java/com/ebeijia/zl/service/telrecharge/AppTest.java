@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ebeijia.zl.TelrechargeApp;
+import com.ebeijia.zl.MchntApp;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
@@ -17,7 +17,7 @@ import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlProductInfFacade;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TelrechargeApp.class)
+@SpringBootTest(classes = MchntApp.class)
 public class AppTest {
 
 	@Autowired

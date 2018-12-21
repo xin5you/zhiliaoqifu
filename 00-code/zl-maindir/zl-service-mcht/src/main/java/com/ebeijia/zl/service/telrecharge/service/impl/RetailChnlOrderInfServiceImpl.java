@@ -18,7 +18,6 @@ import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
-import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
 import com.ebeijia.zl.service.telrecharge.mapper.RetailChnlOrderInfMapper;
@@ -70,8 +69,8 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		//获取分销商的产品 & 折扣率
 		Map maps=new HashMap<>();
 		maps.put("productId", retailChnlOrderInf.getProductId());
-		maps.put("operId", operId);
-//		maps.put("areaName", areaName);
+		//maps.put("operId", operId);
+		//maps.put("areaName", areaName);
 		maps.put("channelId", retailChnlInf.getChannelId()); //分销商ID
 		maps.put("productAmt", retailChnlOrderInf.getRechargeValue());
 		maps.put("productType", retailChnlOrderInf.getRechargeType());

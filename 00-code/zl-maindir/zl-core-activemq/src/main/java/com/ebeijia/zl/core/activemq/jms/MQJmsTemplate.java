@@ -14,6 +14,7 @@ public class MQJmsTemplate {
 	
 	private final String consumerMsgSessionQueue="zlqf.activemq.send.wechat.msg.v1";
 	private final String smsMsgSessionQueue="zlqf.activemq.send.sms.msg.v1";
+	private final String rechargeMsgSessionQueue="zlqf.activemq.send.recharge.mobile.v1";
 
 	@Autowired
 	@Qualifier("activemqConnectionFactory")
@@ -30,6 +31,12 @@ public class MQJmsTemplate {
 	@Bean("smsMsgSessionAwareQueue")
 	public ActiveMQQueue smsMsgSessionAwareQueue(){
 		ActiveMQQueue queue=new ActiveMQQueue(smsMsgSessionQueue);
+		return queue;
+	}
+
+	@Bean("rechargeMobileMsgSessionAwareQueue")
+	public ActiveMQQueue rechargeMobileMsgSessionAwareQueue(){
+		ActiveMQQueue queue=new ActiveMQQueue(rechargeMsgSessionQueue);
 		return queue;
 	}
 	
@@ -58,7 +65,7 @@ public class MQJmsTemplate {
 	@Bean(name="rechargeMobileJmsTemplate")
 	public JmsTemplate getRechargeMobileJmsTemplate(){
 		JmsTemplate jmsTemplate=new JmsTemplate(connectionFactory);
-		jmsTemplate.setDefaultDestinationName("zlqf.activemq.send.recharge.mobile.v1");
+		jmsTemplate.setDefaultDestinationName(rechargeMsgSessionQueue);
 		return jmsTemplate;
 	}
 

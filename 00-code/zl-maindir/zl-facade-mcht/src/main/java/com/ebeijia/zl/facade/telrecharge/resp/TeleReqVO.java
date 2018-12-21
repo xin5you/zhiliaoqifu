@@ -1,11 +1,16 @@
 package com.ebeijia.zl.facade.telrecharge.resp;
 
+import com.ebeijia.zl.common.utils.IdUtil;
+import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
+import lombok.Data;
+
 /**
  * 话费充值 业务
  * 
  * @author zhuqiuyou
  *
  */
+@Data
 public class TeleReqVO extends TeleBaseDomain {
 
 	private static final long serialVersionUID = -1005301884642435185L;
@@ -22,59 +27,17 @@ public class TeleReqVO extends TeleBaseDomain {
 
 	private String channelOrderId; // 平台订单号
 
-	public String getRechargePhone() {
-		return rechargePhone;
-	}
-
-	public void setRechargePhone(String rechargePhone) {
-		this.rechargePhone = rechargePhone;
-	}
-
-	public String getRechargeAmount() {
-		return rechargeAmount;
-	}
-
-	public void setRechargeAmount(String rechargeAmount) {
-		this.rechargeAmount = rechargeAmount;
-	}
-
-	public String getOuterTid() {
-		return outerTid;
-	}
-
-	public void setOuterTid(String outerTid) {
-		this.outerTid = outerTid;
-	}
-
-	public String getCallback() {
-		return callback;
-	}
-
-	public void setCallback(String callback) {
-		this.callback = callback;
-	}
-
-	public String getProductId() {
-		return productId;
-	}
-
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-
-	public String getChannelOrderId() {
-		return channelOrderId;
-	}
-
-	public void setChannelOrderId(String channelOrderId) {
-		this.channelOrderId = channelOrderId;
-	}
-
-	@Override
-	public String toString() {
-		return "TeleReqVO [rechargePhone=" + rechargePhone + ", rechargeAmount=" + rechargeAmount + ", outerTid="
-				+ outerTid + ", callback=" + callback + ", productId=" + productId + ", channelOrderId="
-				+ channelOrderId + "]";
-	}
-
+    public static void main(String[] args) {
+            TeleReqVO t = new TeleReqVO();
+            t.setChannelId("0e04cf948e2af629a334c7c71fa3f8888");
+            t.setChannelToken("0e04cf948e2af629a334c7c71fa3f8888");
+            t.setMethod("hkb.api.mobile.charge");
+            t.setV("1.0");
+            t.setTimestamp("2018-12-21 19:50:14");
+            t.setRechargePhone("13501755206");
+            t.setRechargeAmount("50.000");
+            t.setOuterTid(IdUtil.getNextId());
+            t.setCallback("http://19662nx311.iok.la:10066/recharge/hkbnotify&productId=2018070505141610000001");
+            System.out.println(MD5SignUtils.genSign(t, "key", "0e04cf948e2af629a334c7c71fa3f8888", new String[] { "sign", "serialVersionUID" }, null));
+    }
 }

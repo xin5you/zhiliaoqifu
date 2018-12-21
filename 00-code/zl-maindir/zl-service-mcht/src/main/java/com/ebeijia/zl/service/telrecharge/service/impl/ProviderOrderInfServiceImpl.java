@@ -18,7 +18,7 @@ import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
  * @User zhuqi
  * @Date 2018-12-10
  */
-@Service
+@Service()
 public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMapper, ProviderOrderInf> implements ProviderOrderInfService{
 
 	@Autowired
@@ -32,7 +32,7 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 	
 	/**
 	 * 查找updateTime 10分钟以内，1分钟以上的订单
-	 * @param ProviderOrderInf
+	 * @param providerOrderInf
 	 * @return
 	 */
 	public List<ProviderOrderInf> getListByTimer(ProviderOrderInf providerOrderInf){

@@ -10,6 +10,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
@@ -20,15 +21,16 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableCaching
 @EnableTransactionManagement
 @EnableAutoConfiguration
+@EnableJms
 @SpringBootApplication
-public class TelrechargeApp extends SpringBootServletInitializer implements WebApplicationInitializer {
+public class MchntApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(TelrechargeApp.class);
+		return application.sources(MchntApp.class);
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(TelrechargeApp.class, args);
+		SpringApplication.run(MchntApp.class, args);
 	}
 
 	// 开发环境DataSource配置 使用druid数据源

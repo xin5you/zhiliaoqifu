@@ -1,6 +1,7 @@
 package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,13 +53,13 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	
 	/**
 	 * 
-	 * @param RetailChnlOrderInf 分销商订单
+	 * @param retailChnlOrderInf 分销商订单
 	 * @param operId 运营商
 	 * @param areaName 地区名称
 	 * @return
 	 * @throws Exception
 	 */
-	public TeleRespDomain proChannelOrder(RetailChnlOrderInf retailChnlOrderInf,String operId,String areaName) throws Exception{
+	public BaseResult proChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception{
 		return retailChnlOrderInfService.proChannelOrder(retailChnlOrderInf, operId, areaName);
 	}
 	

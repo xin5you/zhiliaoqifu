@@ -35,7 +35,6 @@ import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlItemListFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;

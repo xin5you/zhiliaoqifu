@@ -117,7 +117,9 @@
         and a.data_stat='0'
         and p.product_id=l.product_id
         and l.channel_id=a.channel_id
-        and p.oper_id=#{operId}
+		<if test="operId != null and operId != ''">
+        	and p.oper_id=#{operId}
+		</if>
         and p.product_type=#{productType}
         and p.product_amt=#{productAmt}
         and a.channel_id=#{channelId}
