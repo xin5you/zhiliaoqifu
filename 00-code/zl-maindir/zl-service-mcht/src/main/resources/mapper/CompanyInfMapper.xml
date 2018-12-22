@@ -11,6 +11,7 @@
 		c.address,
 		c.phone_no,
 		c.is_open,
+		c.is_platform,
 		c.contacts,
 		c.remarks,
 		c.create_user,
