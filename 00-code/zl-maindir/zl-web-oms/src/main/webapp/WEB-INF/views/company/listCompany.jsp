@@ -58,6 +58,7 @@
 				               <th>地址</th>
 				               <th>联系人</th>
 				               <th>联系电话</th>
+								<th>平台标识</th>
 				               <th>交易开关状态</th>
 				               <th>开户状态</th>
 				               <th>备注</th>
@@ -72,7 +73,11 @@
 					                    <td>${company.address}</td>
 					                    <td>${company.contacts}</td>
 					                    <td>${company.phoneNo}</td>
-					                    <td>
+										 <td>
+											 <c:if test="${company.isPlatform=='1'}">是</c:if>
+											 <c:if test="${company.isPlatform=='0'}">否</c:if>
+										 </td>
+										 <td>
 					                    	<c:if test="${company.transFlag=='1'}">关</c:if>
 					                    	<c:if test="${company.transFlag=='0'}">开</c:if>
 					                    </td>	
@@ -93,9 +98,9 @@
 											<sec:authorize access="hasRole('ROLE_COMPANY_DELETE')">	
 												<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 					                    	</sec:authorize>
-					                    	<%-- <c:if test="${company.isOpen=='1'}">
-												<a companyId="${company.companyId}" title="转账" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
-					                    	</if> --%>
+											<c:if test="${company.isOpen=='1'} && ${company.isPlatform=='1'}">
+												<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
+											</c:if>
 					                    </td>
 					                 </tr>
 					             </c:forEach>
@@ -126,7 +131,7 @@
 	<div id="msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
               <div class="modal-header">
                     
-                    <h3 id="commodityInfModal_h">温馨提示</h3>
+                    <h3 id="commodityInfModal_h2">温馨提示</h3>
                 </div>
                 <br/><br/><br/>
               <h3 align="center">信息正在处理......</h3>

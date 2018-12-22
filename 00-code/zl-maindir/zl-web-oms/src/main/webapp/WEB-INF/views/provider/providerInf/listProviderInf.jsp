@@ -83,9 +83,9 @@
 									<a providerId="${entity.providerId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 									</sec:authorize>
 				                    <c:if test="${entity.isOpen=='1'}">
-				                    <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">
+				                    <%--<sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">--%>
 										<a providerId="${entity.providerId}" title="入账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
-				                    </sec:authorize>
+				                    <%--</sec:authorize>--%>
 				                    </c:if>
 				                    </td>
 				                 </tr>

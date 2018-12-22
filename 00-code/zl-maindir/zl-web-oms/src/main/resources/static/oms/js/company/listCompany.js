@@ -18,7 +18,7 @@ var listCompany = {
 		$('.btn-reset').on('click', listCompany.searchReset);
 		$('.btn-open').on('click', listCompany.loadAddOpenAccountModal);
 		$('.btn-open-submit').on('click', listCompany.companyOpenAccount);
-//		$('.btn-tansfer').on('click', listCompany.intoAddTransferAccount);
+		$('.btn-tansfer').on('click', listCompany.intoAddCompanyTransfer);
 		
 	},
 	searchReset:function(){
@@ -97,9 +97,9 @@ var listCompany = {
             }
       });
 	},
-	intoAddTransferAccount:function(){
+    intoAddCompanyTransfer:function(){
 		var companyId = $(this).attr('companyId');
-		var url = Helper.getRootPath()+"/company/intoAddTransferAccount.do?companyId="+companyId;
+		var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId;
 		location.href=url;
 	}
 }

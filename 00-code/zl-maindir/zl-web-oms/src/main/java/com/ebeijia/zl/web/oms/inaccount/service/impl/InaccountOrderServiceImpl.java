@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.inaccount.service.impl;
 
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.ebeijia.zl.web.oms.inaccount.mapper.InaccountOrderMapper;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -35,6 +37,10 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
     public PageInfo<InaccountOrder> getInaccountOrderByOrderPage(int startNum, int pageSize, InaccountOrder inaccountOrder) {
         PageHelper.startPage(startNum, pageSize);
         List<InaccountOrder> orderList = inaccountOrderMapper.getInaccountOrderByOrder(inaccountOrder);
+        for (InaccountOrder o : orderList) {
+            o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
+            o.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInacccountAmt().toString())));
+        }
         PageInfo<InaccountOrder> page = new PageInfo<InaccountOrder>(orderList);
         return page;
     }
@@ -42,5 +48,10 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
     @Override
     public InaccountOrder getInaccountOrderByOrderId(String orderId) {
         return inaccountOrderMapper.getInaccountOrderByOrderId(orderId);
+    }
+
+    @Override
+    public InaccountOrder getInaccountOrderByOrderIdAndCompanyId(InaccountOrder inaccountOrder) {
+        return inaccountOrderMapper.getInaccountOrderByOrderIdAndCompanyId(inaccountOrder);
     }
 }

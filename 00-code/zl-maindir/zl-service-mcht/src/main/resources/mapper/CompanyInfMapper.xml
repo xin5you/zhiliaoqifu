@@ -47,5 +47,11 @@
 		where c.data_stat = '0' and c.law_code = #{lawCode,jdbcType=VARCHAR}
 	</select>
 
+	<select id="getCompanyInfByIsPlatform" parameterType="java.lang.String" resultType="CompanyInf">
+		select
+		<include refid="CompanyInfColumns" />
+		from tb_company_inf c
+		where c.data_stat = '0' and c.is_platform = #{isPlatform,jdbcType=VARCHAR}
+	</select>
 
 </mapper>

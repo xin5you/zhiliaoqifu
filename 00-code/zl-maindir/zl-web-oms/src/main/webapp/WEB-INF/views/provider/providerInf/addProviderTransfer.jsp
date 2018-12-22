@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="${ctx}/static/oms/js/provider/providerInf/addProviderTransfer.js"></script>
+    <script src="${ctx}/static/oms/js/provider/providerInf/addProviderInfTransfer.js"></script>
     <script src="${ctx}/static/jquery/jquery.form.js"></script>
 </head>
 <body>
@@ -20,14 +20,12 @@
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>供应商管理</li>
 			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
-                                <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息列表</a></li>
+                                <li>供应商信息列表</li>
                                 <li>入账管理</li>
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="pageMainForm" action="${ctx}/batch/openAccount/intoAddOpenAccount.do" class="form-inline form_validation_tip" method="post">
-						<input type="hidden" id="operStatus"  value="${operStatus }"/>
-                        <input type="hidden" id="providerId"  value="${providerId }"/>
+					<form id="pageMainForm" action="${ctx}/provider/providerInf/intoAddProviderTransfer.do" class="form-inline form_validation_tip" method="post">
 						<h3 class="heading">入账信息列表</h3>
 						
 				         <div>
@@ -62,7 +60,7 @@
                                     </td>
 									<td>${entity.remit_amt}</td>
                                      <td>${entity.inaccount_amt}</td>
-                                     <td>${entity.companyId}</td>
+                                     <td>${entity.companyName}</td>
                                      <td>
                                          <c:if test="${entity.inaccountStat == '0'}">未上账</c:if>
                                          <c:if test="${entity.inaccountStat == '1'}">已上账</c:if>
@@ -88,6 +86,9 @@
                                             <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
                                         </c:if>
                                          <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+                                        <c:if test="${entity.inaccountCheck == '1'}">
+                                         <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
+                                        </c:if>
 				                    </td>
 				                 </tr>
 				             </c:forEach>
@@ -96,32 +97,33 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                      <a href="${ctx }/batch/openAccount/listOpenAccount.do"><button class="btn btn-primary" type="button">返 回</button></a>
+                      <a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${providerId }"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
 			   </div>
 
 	    <div id="addTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <form class="form-horizontal" enctype="multipart/form-data">
+            <form id="addTransferFrom" class="form-horizontal" enctype="multipart/form-data" action="${ctx }/provider/providerInf/addProviderTransfer.do" method="post">
                 <div class="modal-header">
                     <button class="close" data-dismiss="modal">&times;</button>
                     <h3 id="commodityInfModal_h">添加入账信息</h3>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="orderId" />
+                    <input type="hidden" id="orderId" name="orderId"/>
+                    <input type="hidden" id="providerId" name="providerId"  value="${providerId }"/>
                     <fieldset>
                         <div class="control-group">
                             <label class="control-label">打款金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="remitAmt" name="remitAmt"/>
+                                <input type="text" class="span3" id="remitAmt" name="remitAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">请选择打款凭证：</label>
                             <div class="controls">
-                                <input id="evidenceUrl" class="span3" readonly type="text">
-                                <input type="file" class="span3" id="evidenceUrlFile"  name = "evidenceUrlFile"/>
+                                <input id="evidenceUrl" name="evidenceUrl" class="span3" readonly type="text">
+                                <input type="file" class="span3" id="evidenceUrlFile"  name="evidenceUrlFile" multiple/>
                                 <span class="help-block"></span>
                             </div>  
                         </div>
@@ -135,70 +137,70 @@
                         <div class="control-group">
                             <label class="control-label">上账金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" />
+                                <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">通用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="A00" name ="A00" />
+                                <input type="text" class="span3" id="A00" name ="A00" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">办公用品账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B01" name ="B01" />
+                                <input type="text" class="span3" id="B01" name ="B01" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">差旅专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B02" name ="B02" />
+                                <input type="text" class="span3" id="B02" name ="B02" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">体检专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B03" name ="B03" />
+                                <input type="text" class="span3" id="B03" name ="B03" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">培训专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B04" name ="B04" />
+                                <input type="text" class="span3" id="B04" name ="B04" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">食品专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B05" name ="B05" />
+                                <input type="text" class="span3" id="B05" name ="B05" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">通讯专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B06" name ="B06" />
+                                <input type="text" class="span3" id="B06" name ="B06" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">保险专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B07" name ="B07" />
+                                <input type="text" class="span3" id="B07" name ="B07" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">交通专用账户金额：</label>
                             <div class="controls">
-                                <input type="text" class="span3" id="B08" name ="B08" />
+                                <input type="text" class="span3" id="B08" name ="B08" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -213,9 +215,7 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-
-                <button class="btn btn-primary btn-submit">确 定  </button>
-
+                <button id="btn-submit" class="btn btn-primary btn-submit">确 定  </button>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>
@@ -249,6 +249,24 @@
            </form>
            <div class="modal-footer" style="text-align: center;">
                <button class="btn btn-primary btn-checkStat-submit">确 定  </button>
+               <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+           </div>
+       </div>
+
+       <div id="addRemitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           <form class="form-horizontal">
+               <input type="hidden" id="order_id" name="order_id"/>
+               <input type="hidden" id="company_id" name="company_id"/>
+               <div class="modal-header">
+                   <button class="close" data-dismiss="modal">&times;</button>
+                   <h3 id="commodityInfModal_h4">打款至企业</h3>
+               </div>
+               <div class="modal-body">
+                   <span id="company_name">确认打款至企业账户吗？</span>
+               </div>
+           </form>
+           <div class="modal-footer" style="text-align: center;">
+               <button class="btn btn-primary btn-remit-submit">确 定  </button>
                <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
            </div>
        </div>

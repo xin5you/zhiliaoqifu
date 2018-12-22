@@ -1,28 +1,32 @@
 package com.ebeijia.zl.web.oms.providerChnl.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.common.utils.enums.CheckStatEnum;
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.providerDefaultRoute;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -260,9 +264,8 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "intoAddProviderTransfer")
 	public ModelAndView intoAddProviderTransfer(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderInfTransfer");
+		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderTransfer");
 
-        String operStatus = StringUtil.nullToString(request.getParameter("operStatus"));
 		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
 		InaccountOrder order = new InaccountOrder();
 		order.setProviderId(providerId);
@@ -275,14 +278,40 @@ public class ProviderInfController {
 		} catch (Exception e) {
 			logger.error("## 查询供应商上账信息详情异常", e);
 		}
-        mv.addObject("operStatus", operStatus);
 		mv.addObject("providerId", providerId);
 		return mv;
 	}
-	
+
+	/*@RequestMapping(value = "/addProviderTransfer")
+	public ModelAndView addProviderTransfer(HttpServletRequest req, HttpServletResponse response,
+										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderTransfer");
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
+		try {
+			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
+			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+
+			}
+			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+
+			}
+			int i = providerInfService.addProviderTransfer(req, evidenceUrlFile);
+			if (i < 1) {
+
+			}
+		} catch (Exception e) {
+			logger.error(" ## 添加供应商上账信息出错 ", e);
+
+		}
+		return mv;
+	}*/
+
 	@RequestMapping(value = "/addProviderTransfer")
 	@ResponseBody
-	public ModelMap addProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
+	public ModelMap addProviderTransfer(HttpServletRequest req, HttpServletResponse response,
+										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
 		ModelMap resultMap = new ModelMap();
 		resultMap.addAttribute("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
@@ -300,7 +329,7 @@ public class ProviderInfController {
 				resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;
 			}
-			int i = providerInfService.addProviderTransfer(req);
+			int i = providerInfService.addProviderTransfer(req, evidenceUrlFile);
 			if (i < 1) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加上账信息失败，请稍后再试");
@@ -355,6 +384,141 @@ public class ProviderInfController {
         }
         return resultMap;
     }
+
+	@RequestMapping(value = "/getProviderByOrderId")
+	@ResponseBody
+	public ModelMap getProviderByOrderId(HttpServletRequest req, HttpServletResponse response) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		try {
+			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			if (order != null) {
+				resultMap.put("msg", order);
+			}
+		} catch (Exception e) {
+			logger.error("## 查询供应商订单异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "/updateProviderRemitStatCommit")
+	@ResponseBody
+	public ModelMap updateProviderRemitStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		try {
+			resultMap = providerInfService.updateProviderRemitStatCommit(req);
+		} catch (Exception e) {
+			logger.error("## 供应商{}转账至企业{}发生异常", providerId, companyId, e);
+			resultMap.addAttribute("status", Boolean.FALSE);
+			resultMap.addAttribute("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "viewProviderTransferDetail")
+	public ModelAndView viewProviderTransferDetail(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("provider/providerInf/viewProviderTransferDetail");
+
+		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		if (order != null) {
+			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
+			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
+			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
+			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
+			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+			order.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInacccountAmt().toString())));
+		}
+
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+			orderDetail.setOrderId(orderId);
+			PageInfo<InaccountOrderDetail> pageList = inaccountOrderDetailService.getInaccountOrderDetailByOrderPage(startNum, pageSize, orderDetail);
+			mv.addObject("pageList", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询供应商上账订单明细信息详情异常", e);
+		}
+		mv.addObject("order", order);
+		return mv;
+	}
+
+	@RequestMapping(value = "/intoEditProviderTransfer")
+	@ResponseBody
+	public ModelMap intoEditProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		try {
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			CompanyInf company = companyInfFacade.getCompanyInfById(order.getCompanyId());
+			if (order != null) {
+				order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+				order.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInacccountAmt().toString())));
+				order.setCompanyCode(company.getLawCode());
+			}
+			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+			if (orderDetail != null && orderDetail.size() >= 1) {
+				for (InaccountOrderDetail d : orderDetail) {
+					d.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getTransAmt().toString())));
+				}
+			}
+			resultMap.addAttribute("order", order);
+			resultMap.addAttribute("orderDetail", orderDetail);
+		} catch (Exception e) {
+			logger.error("## 编辑---》查询供应商上账信息异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询供应商上账信息异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "/editProviderTransfer")
+	@ResponseBody
+	public ModelMap editProviderTransfer(HttpServletRequest req, HttpServletResponse response,
+										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
+		try {
+			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
+			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，该供应商信息不存在或未开户");
+				return resultMap;
+			}
+			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
+				return resultMap;
+			}
+			int i = providerInfService.editProviderTransfer(req, evidenceUrlFile);
+			if (i < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error(" ## 编辑供应商上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑供应商上账信息失败，请稍后再试");
+		}
+		return resultMap;
+	}
 
 	/**
 	 * 封装供应商实体

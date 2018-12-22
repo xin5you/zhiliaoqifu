@@ -90,6 +90,9 @@ public class InaccountOrderDetail extends Model<InaccountOrderDetail> {
     @ApiModelProperty(value = "lock_version")
     private Integer lockVersion;
 
+    @TableField(exist = false)
+    private String bNamae;
+
     @Override
     protected Serializable pkVal() { 
         return this.orderListId;

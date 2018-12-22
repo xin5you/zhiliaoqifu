@@ -52,5 +52,10 @@ public class CompanyInfFacadeImpl implements CompanyInfFacade {
 		return companyInfService.getCompanyInfByLawCode(lawCode);
 	}
 
+	@Override
+	public CompanyInf getCompanyInfByIsPlatform(String isPlatform) {
+		return companyInfService.getCompanyInfByIsPlatform(isPlatform);
+	}
+
 
 }

@@ -35,7 +35,7 @@
 		           			 	<span class="add-on">订单名称：</span><input id="orderName" name="orderName" type="text" class="input-medium" value="${orderName}"/>
 		                       	<span style="padding-left:  150px">
 		                       		<span class="add-on">所属企业：</span>
-                                        <select name="companyId" id="companyId" class="input-medium" style="width: 180px">
+                                        <select name="companyId" id="companyId" class="chzn_a span6" style="width: 180px">
                                         <option value="">--请选择--</option>
                                         <c:forEach var="c" items="${companyList}" varStatus="st">
 											<option value="${c.companyId}">${c.name }</option>

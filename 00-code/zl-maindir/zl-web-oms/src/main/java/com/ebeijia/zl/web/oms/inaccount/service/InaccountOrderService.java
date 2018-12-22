@@ -20,4 +20,7 @@ public interface InaccountOrderService extends IService<InaccountOrder> {
     public PageInfo<InaccountOrder> getInaccountOrderByOrderPage(int startNum, int pageSize, InaccountOrder inaccountOrder);
 
     InaccountOrder getInaccountOrderByOrderId(String orderId);
+
+    InaccountOrder getInaccountOrderByOrderIdAndCompanyId(InaccountOrder inaccountOrder);
+
 }

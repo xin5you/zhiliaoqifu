@@ -20,4 +20,6 @@ public interface InaccountOrderMapper extends BaseMapper<InaccountOrder> {
     List<InaccountOrder> getInaccountOrderByOrder(InaccountOrder inaccountOrder);
 
     InaccountOrder getInaccountOrderByOrderId(String orderId);
+
+    InaccountOrder getInaccountOrderByOrderIdAndCompanyId(InaccountOrder inaccountOrder);
 }

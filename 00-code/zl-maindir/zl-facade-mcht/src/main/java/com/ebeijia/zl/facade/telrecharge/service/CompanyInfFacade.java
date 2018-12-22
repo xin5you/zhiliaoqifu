@@ -12,7 +12,6 @@ import com.github.pagehelper.PageInfo;
  */						 
 public interface CompanyInfFacade {
 
-
 	public CompanyInf getCompanyInfById(String companyId);
 	
 	public boolean insertCompanyInf(CompanyInf companyInf);
@@ -26,5 +25,7 @@ public interface CompanyInfFacade {
 	public PageInfo<CompanyInf> getCompanyInfList(int startNum, int pageSize,CompanyInf companyInf);
 	
 	public CompanyInf getCompanyInfByLawCode(String lawCode);
+
+	public CompanyInf getCompanyInfByIsPlatform(String isPlatform);
 	
 }
