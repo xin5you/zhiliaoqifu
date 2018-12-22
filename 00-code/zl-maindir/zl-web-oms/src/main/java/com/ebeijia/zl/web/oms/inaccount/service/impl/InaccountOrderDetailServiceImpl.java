@@ -40,7 +40,7 @@ public class InaccountOrderDetailServiceImpl extends ServiceImpl<InaccountOrderD
         List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailMapper.getInaccountOrderDetailByOrderId(inaccountOrderDetail.getOrderId());
         for (InaccountOrderDetail o : orderDetailList) {
             o.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getTransAmt().toString())));
-            o.setBNamae(SpecAccountTypeEnum.findByBId(o.getBId()).getName());
+            o.setBName(SpecAccountTypeEnum.findByBId(o.getBId()).getName());
             o.setPlatformInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getPlatformInAmt().toString())));
             o.setCompanyInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getCompanyInAmt().toString())));
         }

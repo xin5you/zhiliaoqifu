@@ -10,12 +10,12 @@ import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.CompanyInfService;
 import com.github.pagehelper.PageInfo;
 
-@Configuration  
+@Configuration
 @com.alibaba.dubbo.config.annotation.Service(interfaceName="companyInfFacade")
 public class CompanyInfFacadeImpl implements CompanyInfFacade {
 
 	@Autowired
-	private  CompanyInfService companyInfService;
+	private CompanyInfService companyInfService;
 
 	@Override
 	public CompanyInf getCompanyInfById(String companyId) {

@@ -36,11 +36,11 @@
 										<label style="color: red;">${order.checkStat }</label>
 									</td>
 									<td>
-										<label class="control-label" style="font-weight: bold;">打款总金额：</label>
+										<label class="control-label" style="font-weight: bold;">打款总金额(元)：</label>
 										<label style="color: red;">${order.remitAmt }</label>
 									</td>
 									<td>
-										<label class="control-label" style="font-weight: bold;">上账总金额：</label>
+										<label class="control-label" style="font-weight: bold;">上账总金额(元)：</label>
 										<label style="color: red;">${order.inaccountAmt }</label>
 									</td>
 									<td>
@@ -71,9 +71,9 @@
 				               <th>序号</th>
 				               <th>订单明细号</th>
                                  <th>账户名称</th>
-				               <th>交易金额</th>
-                                 <th>平台收入金额</th>
-                                 <th>企业收入金额</th>
+				               <th>交易金额(元)</th>
+                                 <th>平台收入金额(元)</th>
+                                 <th>企业收入金额(元)</th>
                                  <th>开票状态</th>
                                  <th>开票信息</th>
 								 <th>操作</th>
@@ -84,7 +84,7 @@
 				                 <tr>
 				                 	<td>${st.index+1 }</td>
 				                 	<td>${entity.orderListId}</td>
-									<td>${entity.bName}</td>
+									<td>${entity.BName}</td>
 									<td>${entity.transAmt}</td>
                                      <td>${entity.platformInAmt}</td>
                                      <td>${entity.companyInAmt}</td>
@@ -136,7 +136,7 @@
 						   </div>
 					   </div>
 					   <div class="control-group">
-						   <label class="control-label">开票金额：</label>
+						   <label class="control-label">开票金额(元)：</label>
 						   <div class="controls">
 							   <input type="text" class="span3" id="companyInAmt" name="companyInAmt" readonly="readonly"/>
 							   <span class="help-block"></span>

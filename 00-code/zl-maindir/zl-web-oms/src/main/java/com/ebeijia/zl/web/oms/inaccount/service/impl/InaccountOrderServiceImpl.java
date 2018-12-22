@@ -37,9 +37,11 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
     public PageInfo<InaccountOrder> getInaccountOrderByOrderPage(int startNum, int pageSize, InaccountOrder inaccountOrder) {
         PageHelper.startPage(startNum, pageSize);
         List<InaccountOrder> orderList = inaccountOrderMapper.getInaccountOrderByOrder(inaccountOrder);
-        for (InaccountOrder o : orderList) {
-            o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
-            o.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInacccountAmt().toString())));
+        if (orderList != null && orderList.size() >= 1) {
+            for (InaccountOrder o : orderList) {
+                o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
+                o.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInaccountAmt().toString())));
+            }
         }
         PageInfo<InaccountOrder> page = new PageInfo<InaccountOrder>(orderList);
         return page;

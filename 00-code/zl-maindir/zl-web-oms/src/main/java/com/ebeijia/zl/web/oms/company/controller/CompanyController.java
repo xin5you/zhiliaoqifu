@@ -305,7 +305,7 @@ public class CompanyController {
 			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
 			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
-			order.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInacccountAmt().toString())));
+			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 		}
 		try {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);

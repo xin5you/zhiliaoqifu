@@ -143,15 +143,20 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
 
 		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
+		platformFee = "0.9";
+		if (StringUtil.isNullOrEmpty(platformFee)) {
+			logger.error("## 获取平台手续费失败");
+			return 0;
+		}
 
 		InaccountOrder order = new InaccountOrder();
 		order.setOrderId(IdUtil.getNextId());
 		order.setOrderType(TransCode.MB20.getCode());
 		order.setCheckStat(CheckStatEnum.CHECK_FALSE.getCode());
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
-		order.setInacccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
-		order.setPlatformInSumAmt(order.getInacccountAmt());
-		order.setCompanyInSumAmt(order.getInacccountAmt().multiply(new BigDecimal(platformFee)));
+		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setPlatformInSumAmt(order.getInaccountAmt());
+		order.setCompanyInSumAmt(order.getInaccountAmt().multiply(new BigDecimal(platformFee)));
 		order.setProviderId(providerId);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
@@ -367,8 +372,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		AccountRechargeReqVo reqVo = new AccountRechargeReqVo();
 		reqVo.setFromCompanyId(providerId);
-		reqVo.setTransAmt(order.getInacccountAmt());
-		reqVo.setUploadAmt(order.getInacccountAmt());
+		reqVo.setTransAmt(order.getInaccountAmt());
+		reqVo.setUploadAmt(order.getInaccountAmt());
 		reqVo.setTransList(transList);
 		reqVo.setTransId(TransCode.MB20.getCode());
 		reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
@@ -435,8 +440,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		}
 
 		AccountTransferReqVo reqVo = new AccountTransferReqVo();
-		reqVo.setTransAmt(order.getInacccountAmt());
-		reqVo.setUploadAmt(order.getInacccountAmt());
+		reqVo.setTransAmt(order.getInaccountAmt());
+		reqVo.setUploadAmt(order.getInaccountAmt());
 		reqVo.setTfrInUserId(companyInf.getCompanyId());
 		reqVo.setTfrOutUserId(providerId);
 
@@ -522,9 +527,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return 0;
 		}
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
-		order.setInacccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
-		order.setPlatformInSumAmt(order.getInacccountAmt());
-		order.setCompanyInSumAmt(order.getInacccountAmt().multiply(new BigDecimal(platformFee)));
+		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setPlatformInSumAmt(order.getInaccountAmt());
+		order.setCompanyInSumAmt(order.getInaccountAmt().multiply(new BigDecimal(platformFee)));
 		order.setCompanyId(company.getCompanyId());
 		order.setRemarks(remarks);
 		order.setUpdateUser(user.getId());
@@ -897,7 +902,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
                 return resultMap;
             }
             // 文件保存路径
-			String filePath = request.getSession().getServletContext().getRealPath("webapp/");//本地项目路径
+			String filePath = request.getSession().getServletContext().getRealPath("images/");//本地项目路径
 
 			File targetFile = new File(filePath);
 			if(!targetFile.exists()){

@@ -7,7 +7,7 @@
         order_id,
         is_invoice,
         trans_amt,
-        b_bid,
+        b_id,
         invoice_info,
         platform_in_amt,
         company_in_amt,

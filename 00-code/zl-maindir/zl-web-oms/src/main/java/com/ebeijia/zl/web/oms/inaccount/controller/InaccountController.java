@@ -79,7 +79,7 @@ public class InaccountController {
 		try {
 			orderDetail = inaccountOrderDetailService.getById(orderListId);
 			if (orderDetail != null) {
-				orderDetail.setBNamae(SpecAccountTypeEnum.findByBId(orderDetail.getBId()).getName());
+				orderDetail.setBName(SpecAccountTypeEnum.findByBId(orderDetail.getBId()).getName());
 				orderDetail.setCompanyInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(orderDetail.getCompanyInAmt().toString())));
 				resultMap.put("msg", orderDetail);
 			}

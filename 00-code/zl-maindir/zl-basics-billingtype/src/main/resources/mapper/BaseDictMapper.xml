@@ -26,7 +26,7 @@
 		   <include refid="BaseDictColumns" />
 		    from tb_base_dict
 	    where data_stat  = '0'
-			 <if test="dictName !=null and dictName !='' ">
+			 <if test="dictName != null and dictName !='' ">
 			 	 and dict_name like '%' || #{dictName} || '%'
 			 </if>
 			     order by update_time desc

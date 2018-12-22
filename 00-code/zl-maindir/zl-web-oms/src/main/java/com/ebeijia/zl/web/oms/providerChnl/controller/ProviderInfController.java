@@ -274,39 +274,13 @@ public class ProviderInfController {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
-			mv.addObject("pageList", pageList);
+			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 查询供应商上账信息详情异常", e);
 		}
 		mv.addObject("providerId", providerId);
 		return mv;
 	}
-
-	/*@RequestMapping(value = "/addProviderTransfer")
-	public ModelAndView addProviderTransfer(HttpServletRequest req, HttpServletResponse response,
-										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
-		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderTransfer");
-		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
-		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
-		try {
-			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
-			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
-
-			}
-			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
-
-			}
-			int i = providerInfService.addProviderTransfer(req, evidenceUrlFile);
-			if (i < 1) {
-
-			}
-		} catch (Exception e) {
-			logger.error(" ## 添加供应商上账信息出错 ", e);
-
-		}
-		return mv;
-	}*/
 
 	@RequestMapping(value = "/addProviderTransfer")
 	@ResponseBody
@@ -338,6 +312,7 @@ public class ProviderInfController {
 			logger.error(" ## 添加供应商上账信息出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "添加供应商上账信息失败，请稍后再试");
+			return resultMap;
 		}
 		return resultMap;
 	}
@@ -426,7 +401,7 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "viewProviderTransferDetail")
 	public ModelAndView viewProviderTransferDetail(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("provider/providerInf/viewProviderTransferDetail");
+		ModelAndView mv = new ModelAndView("provider/providerInf/viewProviderTransfer");
 
 		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
 		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
@@ -438,7 +413,7 @@ public class ProviderInfController {
 			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
 			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
-			order.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInacccountAmt().toString())));
+			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 		}
 
 		try {
@@ -447,7 +422,7 @@ public class ProviderInfController {
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderId(orderId);
 			PageInfo<InaccountOrderDetail> pageList = inaccountOrderDetailService.getInaccountOrderDetailByOrderPage(startNum, pageSize, orderDetail);
-			mv.addObject("pageList", pageList);
+			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 查询供应商上账订单明细信息详情异常", e);
 		}
@@ -466,7 +441,7 @@ public class ProviderInfController {
 			CompanyInf company = companyInfFacade.getCompanyInfById(order.getCompanyId());
 			if (order != null) {
 				order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
-				order.setInacccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInacccountAmt().toString())));
+				order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 				order.setCompanyCode(company.getLawCode());
 			}
 			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);

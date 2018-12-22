@@ -39,8 +39,8 @@
 				               <th>序号</th>
 				               <th>订单号</th>
 				               <th>审核状态</th>
-				               <th>打款金额</th>
-                               <th>上账金额</th>
+				               <th>打款金额(元)</th>
+                               <th>上账金额(元)</th>
                                <th>收款企业</th>
                                  <th>上账状态</th>
                                  <th>平台收款状态</th>
@@ -58,12 +58,12 @@
                                         <c:if test="${entity.checkStat == '0'}">未审核</c:if>
                                         <c:if test="${entity.checkStat == '1'}">已审核</c:if>
                                     </td>
-									<td>${entity.remit_amt}</td>
-                                     <td>${entity.inaccount_amt}</td>
+									<td>${entity.remitAmt}</td>
+                                     <td>${entity.inaccountAmt}</td>
                                      <td>${entity.companyName}</td>
                                      <td>
-                                         <c:if test="${entity.inaccountStat == '0'}">未上账</c:if>
-                                         <c:if test="${entity.inaccountStat == '1'}">已上账</c:if>
+                                         <c:if test="${entity.inaccountCheck == '0'}">未上账</c:if>
+                                         <c:if test="${entity.inaccountCheck == '1'}">已上账</c:if>
                                      </td>
                                      <td>
                                          <c:if test="${entity.platformReceiverCheck == '0'}">未收款</c:if>
@@ -113,7 +113,7 @@
                     <input type="hidden" id="providerId" name="providerId"  value="${providerId }"/>
                     <fieldset>
                         <div class="control-group">
-                            <label class="control-label">打款金额：</label>
+                            <label class="control-label">打款金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="remitAmt" name="remitAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
@@ -135,70 +135,70 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">上账金额：</label>
+                            <label class="control-label">上账金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">通用账户金额：</label>
+                            <label class="control-label">通用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="A00" name ="A00" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">办公用品账户金额：</label>
+                            <label class="control-label">办公用品账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B01" name ="B01" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">差旅专用账户金额：</label>
+                            <label class="control-label">差旅专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B02" name ="B02" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">体检专用账户金额：</label>
+                            <label class="control-label">体检专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B03" name ="B03" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">培训专用账户金额：</label>
+                            <label class="control-label">培训专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B04" name ="B04" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">食品专用账户金额：</label>
+                            <label class="control-label">食品专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B05" name ="B05" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">通讯专用账户金额：</label>
+                            <label class="control-label">通讯专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B06" name ="B06" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">保险专用账户金额：</label>
+                            <label class="control-label">保险专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B07" name ="B07" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">交通专用账户金额：</label>
+                            <label class="control-label">交通专用账户金额(元)：</label>
                             <div class="controls">
                                 <input type="text" class="span3" id="B08" name ="B08" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
                                 <span class="help-block"></span>
@@ -241,6 +241,7 @@
            <form class="form-horizontal">
                <div class="modal-header">
                    <button class="close" data-dismiss="modal">&times;</button>
+                   <input type="hidden" id="checkStatOrderId" name="checkStatOrderId"/>
                    <h3 id="commodityInfModal_h3">审核</h3>
                </div>
                <div class="modal-body">

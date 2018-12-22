@@ -8,10 +8,13 @@
         o.check_stat,
         o.remit_amt,
         o.inaccount_amt,
+        o.platform_in_sum_amt,
+        o.company_in_sum_amt,
         o.provider_id,
         o.company_id,
         o.remit_check,
         o.inaccount_check,
+        o.transfer_check,
         o.platform_receiver_check,
         o.company_receiver_check,
         o.evidence_url,
@@ -36,16 +39,16 @@
           <include refid="tableName"/>
         left join tb_company_inf c on o.company_id = c.company_id
         where o.data_stat = '0'
-        <if test="providerId != null || providerId != ''">
+        <if test="providerId != null and providerId != ''">
             and o.provider_id = #{providerId}
         </if>
-        <if test="orderId != null || orderId != ''">
+        <if test="orderId != null and orderId != ''">
             and o.order_id = #{orderId}
         </if>
-        <if test="transferCheck != null || transferCheck != ''">
+        <if test="transferCheck != null and transferCheck != ''">
             and o.transfer_check = #{transferCheck}
         </if>
-        <if test="companyId != null || companyId != ''">
+        <if test="companyId != null and companyId != ''">
             and o.company_id = #{companyId}
         </if>
         order by o.create_time desc
@@ -53,10 +56,10 @@
 
     <select id="getInaccountOrderByOrderId" parameterType="String" resultType="InaccountOrder">
         select
-        <include refid="InaccountOrderColumns"/>,
+          <include refid="InaccountOrderColumns"/>,
         c.name as companyName
         from
-        <include refid="tableName"/>
+          <include refid="tableName"/>
         left join tb_company_inf c on o.company_id = c.company_id
         where o.data_stat = '0'
           and o.order_id = #{orderId}

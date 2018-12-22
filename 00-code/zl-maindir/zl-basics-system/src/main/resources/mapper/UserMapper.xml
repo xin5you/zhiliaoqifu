@@ -28,10 +28,10 @@
 		from tb_web_user m 
 		where m.data_stat = '0'
 			and m.login_type = #{loginType}
-		<if test="loginName !=null and loginName !='' ">
+		<if test="loginName != null and loginName != '' ">
 			and m.login_name = #{loginName}
 		</if>
-		<if test="userName !=null and userName !='' ">
+		<if test="userName != null and userName != '' ">
 			and m.user_name = #{userName}
 		</if>
 	</select>

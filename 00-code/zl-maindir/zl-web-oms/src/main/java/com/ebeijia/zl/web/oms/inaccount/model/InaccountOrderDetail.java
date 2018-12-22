@@ -91,7 +91,7 @@ public class InaccountOrderDetail extends Model<InaccountOrderDetail> {
     private Integer lockVersion;
 
     @TableField(exist = false)
-    private String bNamae;
+    private String bName;
 
     @Override
     protected Serializable pkVal() { 

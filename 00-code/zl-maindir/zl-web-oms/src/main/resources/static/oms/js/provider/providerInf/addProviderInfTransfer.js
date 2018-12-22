@@ -20,12 +20,13 @@ var addTelProviderInfTransfer = {
         $('.btn-view').on('click', addTelProviderInfTransfer.viewProviderTransferDetail);
         $('.btn-edit').on('click', addTelProviderInfTransfer.intoEditProviderTransfer);
         $('.btn-edit-submit').on('click', addTelProviderInfTransfer.editProviderTransferCommit);
-        $('#btn-submit').on('click', addTelProviderInfTransfer.providerTransfer);
+        /*$('#btn-submit').on('click', addTelProviderInfTransfer.providerTransfer);*/
     },
     intoAddProviderTransfer : function() {
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $("#btn-submit").addClass("btn-add-submit");
+        $(".btn-add-submit").attr("onclick","addTelProviderInfTransfer.addProviderTransfer();");
         $("#commodityInfModal_h").text("添加入账信息");
         $('#addTransferModal').modal({
             backdrop : "static"
@@ -35,17 +36,17 @@ var addTelProviderInfTransfer = {
         var imgUrl = $("#evidenceUrlFile").val();
         $("#evidenceUrl").val(imgUrl);
     },
-    providerTransfer : function () {
+    /*providerTransfer : function () {
         if($("#btn-submit").hasClass('btn-add-submit')){
-            /*$(".btn-add-submit").attr("onclick","addTelProviderInfTransfer.addProviderTransfer();");*/
+            /!*$(".btn-add-submit").attr("onclick","addTelProviderInfTransfer.addProviderTransfer();");*!/
             $('.btn-add-submit').trigger('onclick');
 
         } else {
-           /* $(".btn-edit-submit").attr("onclick","addTelProviderInfTransfer.editProviderTransferCommit();");*/
+           /!* $(".btn-edit-submit").attr("onclick","addTelProviderInfTransfer.editProviderTransferCommit();");*!/
             $('.btn-edit-submit').trigger('click');
 
         }
-    },
+    },*/
     addProviderTransfer:function(){
         var providerId = $("#providerId").val();
         var remitAmt = $("#remitAmt").val();
@@ -82,12 +83,15 @@ var addTelProviderInfTransfer = {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
         }
+        if ((inaccountAmt - 0) - (remitAmt - 0)) {
+            Helper.alert("上账金额不能大于打款金额");
+            return false;
+        }
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
         if ((sum - 0) - (inaccountAmt - 0)  > 0) {
             Helper.alert("所有专项金额总和不能大于上账金额");
             return false;
         }
-
         $.ajax({
             url: Helper.getRootPath() + '/provider/providerInf/addProviderTransfer.do',
             type: 'post',
@@ -97,7 +101,6 @@ var addTelProviderInfTransfer = {
             async: false,
             cache: false,
             dataType : "text",
-
             success: function (result) {
                 if(result.status) {
                     location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
@@ -142,12 +145,14 @@ var addTelProviderInfTransfer = {
         });
     },
     intoUpdateProviderCheckStat : function () {
+        var orderId = $(this).attr("orderId");
+        $("#checkStatOrderId").val(orderId);
         $('#updateCheckStatModal').modal({
             backdrop : "static"
         });
     },
     updateProviderCheckStatCommit : function () {
-        var orderId = $(this).attr("orderId");
+        var orderId = $("#checkStatOrderId").val();
         var providerId = $('#providerId').val();
         $('#msg').modal({
             backdrop : "static"
@@ -256,9 +261,8 @@ var addTelProviderInfTransfer = {
                     $("#inaccountAmt").val(data.order.inaccountAmt);
                     $("#companyCode").val(data.order.companyCode);
                     $("#evidenceUrl").val(data.order.evidenceUrl);
-                    var detailList = data.orderDetail;
-                    $.each(detailList, function (i, item) {
-                        $('.span3[id=' + item.bId + ']').attr('value',item.transAmt);
+                    $.each(data.orderDetail, function (i, item) {
+                        $('.span3[id=' + item.BId + ']').attr('value',item.transAmt);
                     });
                 }else{
                     Helper.alter(data.msg);
@@ -266,12 +270,12 @@ var addTelProviderInfTransfer = {
                 }
             },
             error:function(){
-                $('#msg').modal('hide');
                 Helper.alert("系统超时，请稍后再试");
                 return false;
             }
         });
         $("#btn-submit").addClass("btn-edit-submit");
+        $(".btn-edit-submit").attr("onclick","addTelProviderInfTransfer.editProviderTransferCommit();");
         $("#commodityInfModal_h").text("编辑入账信息");
         $('#addTransferModal').modal({
             backdrop : "static"

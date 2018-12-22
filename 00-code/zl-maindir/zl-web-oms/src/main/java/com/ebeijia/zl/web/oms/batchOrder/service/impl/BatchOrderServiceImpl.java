@@ -446,11 +446,11 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 					logger.error("## 远程调用批量充值接口出错{}", reqVoList, e);
 				}
 			} else {
-				/*try {
-					result = accountTransactionFacade.executeTransfer(reqVoList.get(0));
+				try {
+					result = accountTransactionFacade.executeRecharge(reqVoList.get(0));
 				} catch (Exception e) {
 					logger.error("## 远程调用充值接口出错{}", reqVoList.get(0), e);
-				}*/
+				}
 			}
 			for (BatchOrderList oList : batchOrderList) {
 				if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
