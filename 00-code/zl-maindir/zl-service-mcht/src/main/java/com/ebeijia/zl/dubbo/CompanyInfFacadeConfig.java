@@ -75,7 +75,7 @@ public class CompanyInfFacadeConfig extends DubboProviderConfig {
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
-		methodConfig.setName("getCompanyInfByIsplatform");
+		methodConfig.setName("getCompanyInfByIsPlatform");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
