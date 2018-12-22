@@ -4,6 +4,10 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.core.activemq.service.RechargeMobileProducerService;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
@@ -27,10 +30,10 @@ import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.web.api.model.telephone.service.ApiRechargeMobileService;
 import com.ebeijia.zl.web.api.model.telephone.valid.ApiRechangeMobileValid;
 
+@Api(value = "/api/recharge/mobile", description = "话费充值接口")
 @RestController
 @RequestMapping("/api/recharge/mobile")
 public class ApiRechangeMobileController {
@@ -42,20 +45,18 @@ public class ApiRechangeMobileController {
 	private ApiRechargeMobileService apiRechargeMobileService;
 
 	@Autowired
-	@Qualifier("RetailChnlInfFacade")
-	private RetailChnlInfFacade RetailChnlInfFacade;
+	@Qualifier("retailChnlInfFacade")
+	private RetailChnlInfFacade retailChnlInfFacade;
 
 	@Autowired
-	@Qualifier("RetailChnlOrderInfFacade")
-	private RetailChnlOrderInfFacade RetailChnlOrderInfFacade;
+	@Qualifier("retailChnlOrderInfFacade")
+	private RetailChnlOrderInfFacade retailChnlOrderInfFacade;
+
+
 
 	@Autowired
-	@Qualifier("rechargeMobileProducerService")
-	private RechargeMobileProducerService rechargeMobileProducerService;
-
-	@Autowired
-	@Qualifier("ProviderOrderInfFacade")
-	private ProviderOrderInfFacade ProviderOrderInfFacade;
+	@Qualifier("providerOrderInfFacade")
+	private ProviderOrderInfFacade providerOrderInfFacade;
 	
 	@Autowired
 	private ApiRechangeMobileValid apiRechangeMobileValid;
@@ -68,9 +69,10 @@ public class ApiRechangeMobileController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
+	@ApiOperation("手机充值")
 	@RequestMapping(value = "/payment", method = RequestMethod.POST)
 	@ResponseBody
-	public TeleRespDomain payment(HttpServletRequest request, TeleReqVO reqVo) {
+	public BaseResult payment(HttpServletRequest request, TeleReqVO reqVo) {
 		logger.info("分销商手机充值参数-->{}",JSONObject.toJSON(reqVo));
 		try {
 			return apiRechargeMobileService.payment(reqVo);
@@ -88,25 +90,26 @@ public class ApiRechangeMobileController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("rawtypes")
+	@ApiOperation("充值订单查询")
 	@RequestMapping(value = "/getOrder", method = RequestMethod.POST)
 	@ResponseBody
-	public TeleRespDomain getOrder(HttpServletRequest request, TeleReqVO reqVo) {
+	public BaseResult<Object> getOrder(HttpServletRequest request, TeleReqVO reqVo) {
 
 		try {
-			RetailChnlInf retailChnlInf = RetailChnlInfFacade.getRetailChnlInfById(reqVo.getChannelId());
+			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(reqVo.getChannelId());
 			if (!apiRechangeMobileValid.rechargeSignValid(reqVo, retailChnlInf.getChannelKey())) {
 				return ResultsUtil.error("110102", "token验证失败");
 			}
 			RetailChnlOrderInf retailChnlOrderInf = null;
 			if (StringUtil.isNotEmpty(reqVo.getChannelOrderId())) {
-				retailChnlOrderInf = RetailChnlOrderInfFacade.getRetailChnlOrderInfById(reqVo.getChannelOrderId());
+				retailChnlOrderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfById(reqVo.getChannelOrderId());
 			} else {
-				retailChnlOrderInf = RetailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(),
+				retailChnlOrderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(),
 						reqVo.getChannelId());
 			}
 
 			if (retailChnlOrderInf != null) {
-				ProviderOrderInf providerOrderInf = ProviderOrderInfFacade.getTelOrderInfByChannelOrderId(retailChnlOrderInf.getChannelOrderId());
+				ProviderOrderInf providerOrderInf = providerOrderInfFacade.getTelOrderInfByChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 				TeleRespVO respVo = new TeleRespVO();
 				respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
 				respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());

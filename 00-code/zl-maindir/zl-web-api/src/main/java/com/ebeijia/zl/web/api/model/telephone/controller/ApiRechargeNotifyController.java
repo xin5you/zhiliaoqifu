@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
-import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants.ReqMethodCode;
 import com.ebeijia.zl.web.api.model.telephone.vo.HKbCallBackResult;

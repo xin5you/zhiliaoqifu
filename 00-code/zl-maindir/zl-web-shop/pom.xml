@@ -95,7 +95,45 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-activemq</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
 
+        <!-- ZK服务依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.10</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.10</version>
+        </dependency>
+        <!-- ZK服务依赖结束 -->
+
+        <!-- ZK Facade -->
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-facade-account</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+        <!-- ZK Facade -->
 
 
     </dependencies>

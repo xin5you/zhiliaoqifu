@@ -9,57 +9,63 @@ import org.springframework.jms.connection.SingleConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
-public class WechatMQJmsTemplate {
+public class MQJmsTemplate {
 	
 	
-	private final String consumerMsgSessionQueue="wecard.activemq.send.wechat.msg.v1";
-	
+	private final String consumerMsgSessionQueue="zlqf.activemq.send.wechat.msg.v1";
+	private final String smsMsgSessionQueue="zlqf.activemq.send.sms.msg.v1";
+	private final String rechargeMsgSessionQueue="zlqf.activemq.send.recharge.mobile.v1";
+
 	@Autowired
 	@Qualifier("activemqConnectionFactory")
 	private SingleConnectionFactory connectionFactory;
 	
 	
 	
-	@Bean
+	@Bean("consumerMsgSessionAwareQueue")
 	public ActiveMQQueue consumerMsgSessionAwareQueue(){
 		ActiveMQQueue queue=new ActiveMQQueue(consumerMsgSessionQueue);
 		return queue;
-		
+	}
+
+	@Bean("smsMsgSessionAwareQueue")
+	public ActiveMQQueue smsMsgSessionAwareQueue(){
+		ActiveMQQueue queue=new ActiveMQQueue(smsMsgSessionQueue);
+		return queue;
+	}
+
+	@Bean("rechargeMobileMsgSessionAwareQueue")
+	public ActiveMQQueue rechargeMobileMsgSessionAwareQueue(){
+		ActiveMQQueue queue=new ActiveMQQueue(rechargeMsgSessionQueue);
+		return queue;
 	}
 	
-	/**
-	 * 
-	* @Description: 微信开户消息
-	*
-	* @param:描述1描述
-	*
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月7日 下午3:23:15 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月7日     zhuqi           v1.0.0
-	 */
+
 	@Bean(name="consumerMsgJmsTemplate")
-	public JmsTemplate getConsumerMsgJmsTemplate(){
+	public JmsTemplate consumerMsgJmsTemplate(){
 		JmsTemplate jmsTemplate=new JmsTemplate(connectionFactory);
 		jmsTemplate.setDefaultDestinationName(consumerMsgSessionQueue);
+		return jmsTemplate;
+	}
+
+	@Bean(name="smsMsgJmsTemplate")
+	public JmsTemplate smsMsgJmsTemplate(){
+		JmsTemplate jmsTemplate=new JmsTemplate(connectionFactory);
+		jmsTemplate.setDefaultDestinationName(smsMsgSessionQueue);
 		return jmsTemplate;
 	}
 	
 	@Bean(name="templateMsgJmsTemplate")
 	public JmsTemplate getTemplateMsgJmsTemplate(){
 		JmsTemplate jmsTemplate=new JmsTemplate(connectionFactory);
-		jmsTemplate.setDefaultDestinationName("wecard.wechat.mcht.collection.bill.template.msg.v1");
+		jmsTemplate.setDefaultDestinationName("zlqf.activemq.send.template.msg.v1");
 		return jmsTemplate;
 	}
 	
 	@Bean(name="rechargeMobileJmsTemplate")
 	public JmsTemplate getRechargeMobileJmsTemplate(){
 		JmsTemplate jmsTemplate=new JmsTemplate(connectionFactory);
-		jmsTemplate.setDefaultDestinationName("hkb.api.jms.template.recharge.mobile.v1");
+		jmsTemplate.setDefaultDestinationName(rechargeMsgSessionQueue);
 		return jmsTemplate;
 	}
 

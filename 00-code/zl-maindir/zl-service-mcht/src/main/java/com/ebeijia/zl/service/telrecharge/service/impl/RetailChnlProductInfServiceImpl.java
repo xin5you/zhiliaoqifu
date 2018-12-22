@@ -3,6 +3,9 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,19 +33,31 @@ public class RetailChnlProductInfServiceImpl extends ServiceImpl<RetailChnlProdu
 	@Autowired
 	private RetailChnlProductInfMapper retailChnlProductInfMapper;
 
+	@Override
+	public boolean save(RetailChnlProductInf entity) {
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
 
-
+	@Override
+	public boolean updateById(RetailChnlProductInf entity){
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
+	}
 	/**
 	 * 保存对象返回ID
 	 * 
-	 * @param RetailChnlProductInf
+	 * @param retailChnlProductInf
 	 * @return
 	 * @throws Exception
 	 */
-	public String saveRetailChnlProductForId(RetailChnlProductInf RetailChnlProductInf) throws Exception {
-		int oper = retailChnlProductInfMapper.insert(RetailChnlProductInf);
+	public String saveRetailChnlProductForId(RetailChnlProductInf retailChnlProductInf) throws Exception {
+		int oper = retailChnlProductInfMapper.insert(retailChnlProductInf);
 		if (oper > 0) {
-			return RetailChnlProductInf.getProductId();
+			return retailChnlProductInf.getProductId();
 		} else {
 			return "";
 		}

@@ -1,10 +1,10 @@
 package com.ebeijia.zl.core.activemq.service;
 
-import java.util.Map;
-import java.util.TreeMap;
-
+import com.ebeijia.zl.common.utils.domain.SmsVo;
 import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
 import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
+
+import java.util.TreeMap;
 
 /**
  * 
@@ -13,33 +13,33 @@ import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
  * 
  */
 
-public interface WechatMQProducerService {
-	
-	
+public interface MQProducerService {
+
+
 	/**
 	 * 发送微信客服消息
-	 * @param param 
+	 * @param param
 	 */
 	 void sendMessage(final WechatCustomerParam param);
 
-	 
+
 	/**
 	 * 发送微信客服消息
 	 * @param acountName 公众号
 	 * @param notice 消息内容
 	 * @param toOpenId 用户openId
 	 */
-	 void sendWechatMessage(String acountName,String notice,String toOpenId);
-	 
+	 void sendWechatMessage(String acountName, String notice, String toOpenId);
+
 	 /**
 	  * 微信公众号 模板消息推送
 	  * @param acountName 微信公众号
 	  * @param touser 目标用户openId
 	  * @param template_id 模板Id
 	  * @param url 页面跳转url
-	  * @param Data 消息模板数据
+	  * @param data 消息模板数据
 	  */
-	 void sendTemplateMsg(String acountName,String touser,String template_id,String url,TreeMap<String, TreeMap<String, String>> data);
+	 void sendTemplateMsg(String acountName, String touser, String template_id, String url, TreeMap<String, TreeMap<String, String>> data);
 	 
 	/**
 	 * 微信公众号 模板消息推送
@@ -52,4 +52,10 @@ public interface WechatMQProducerService {
 	 * @param regOrderId 分销商话费充值订单号
 	 */
 	void sendRechargeMobileMsg(final String channelOrderId);
+
+	/**
+	 * 短信发送
+	 * @param smsVo
+	 */
+	void sendSMS(final SmsVo smsVo);
 }

@@ -1,8 +1,8 @@
 package com.ebeijia.zl.shop.dao.goods.mapper;
 
-	import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsCategory;
-	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-	import org.apache.ibatis.annotations.Mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsCategory;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  *
@@ -13,5 +13,5 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
  */
 @Mapper
 public interface TbEcomGoodsCategoryMapper extends BaseMapper<TbEcomGoodsCategory> {
-	
+
 }

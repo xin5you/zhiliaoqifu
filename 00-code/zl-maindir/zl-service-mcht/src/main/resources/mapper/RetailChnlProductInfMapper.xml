@@ -9,7 +9,7 @@
 	
 	<sql id="ColumnResult">
 		product_id, 
-		oper_name, 
+		product_name,
 		oper_id, 
 		area_flag, 
 		product_amt, 
@@ -36,8 +36,8 @@
 	  		<include refid="ColumnResult" />
 		from <include refid="TableName" /> m
 		where m.data_stat='0'
-		<if test="operName !=null and operName !='' ">
-			and m.oper_name like '%' || #{operName} || '%'
+		<if test="productName !=null and productName !='' ">
+			and m.product_name like '%' || #{productName} || '%'
 		</if>
 		<if test="operId !=null and operId !='' ">
 			and m.oper_id = #{operId}
@@ -50,22 +50,22 @@
 		</if>
 		order by m.update_time desc
 	</select>
-	
+
 	<select id="getChannelProductByItemId" parameterType="String" resultType="RetailChnlProductInf">
 		select
-			l.id, 
+			l.chnl_item_id,
 			l.channel_id,
-		    p.product_id, 
-		    p.oper_name, 
-		    p.oper_id, 
-		    p.area_flag, 
-		    p.product_amt, 
+		    p.product_id,
+		    p.product_name,
+		    p.oper_id,
+		    p.area_flag,
+		    p.product_amt,
 		    p.product_price,
 		    p.product_type,
 		    l.channel_rate
         from tb_retail_chnl_product_inf p,
          tb_retail_chnl_item_list l,
-         tb_retail_chnl_inf a  
+         tb_retail_chnl_inf a
          where  p.data_stat='0'
         and l.data_stat='0'
         and a.data_stat='0'
@@ -77,7 +77,7 @@
 	<select id="getChannelProductListByChannelId" parameterType="String" resultType="RetailChnlProductInf">
 		select 
 			cp.product_id, 
-			cp.oper_name, 
+			cp.product_name,
 			cp.oper_id, 
 			cp.area_flag, 
 			cp.product_amt, 
@@ -102,7 +102,7 @@
 	<select id="getProductRateByMaps" parameterType="java.util.Map" resultType="RetailChnlProductInf">
     	select 
 		p.product_id, 
-		p.oper_name, 
+		p.product_name,
 		p.oper_id, 
 		p.area_flag, 
 		p.product_amt, 
@@ -112,18 +112,18 @@
     from tb_retail_chnl_product_inf p,
          tb_retail_chnl_item_list l,
          tb_retail_chnl_inf a
-        where  p.data_stat='0'
-        and l.data_stat='0'
-        and a.data_stat='0'
-        and p.product_id=l.product_id
+        where
+        	 p.product_id=l.product_id
         and l.channel_id=a.channel_id
-        and p.oper_id=#{operId}
-        and p.product_type=#{productType}
-        and p.product_amt=#{productAmt}
-        and a.channel_id=#{channelId}
         <if test="productId != null and productId != ''">
         	and  p.product_id=#{productId}
         </if>
+		<if test="operId != null and operId != ''">
+			and p.oper_id=#{operId}
+		</if>
+		and a.channel_id=#{channelId}
+		and p.product_amt=#{productAmt}
+		and p.product_type=#{productType}
 	</select>
 
 </mapper>

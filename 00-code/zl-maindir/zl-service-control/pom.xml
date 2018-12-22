@@ -105,6 +105,18 @@
 
 	 <dependency>
 		 <groupId>com.ebeijia</groupId>
+		 <artifactId>zl-common-utils</artifactId>
+		 <version>${ebj.zl.version}</version>
+	 </dependency>
+
+	 <dependency>
+		 <groupId>com.ebeijia</groupId>
+		 <artifactId>zl-core-redis</artifactId>
+		 <version>${ebj.zl.version}</version>
+	 </dependency>
+
+	 <dependency>
+		 <groupId>com.ebeijia</groupId>
 		 <artifactId>zl-basics-billingtype</artifactId>
 		 <version>${ebj.zl.version}</version>
 	 </dependency>
@@ -114,6 +126,18 @@
 	        <artifactId>spring-boot-starter-test</artifactId>  
 	        <scope>test</scope>  
 	    </dependency>
+
+	 <dependency>
+		 <groupId>com.aliyuncs</groupId>
+		 <artifactId>aliyun-java-sdk-core</artifactId>
+		 <version>3.3.1</version>
+	 </dependency>
+
+	 <dependency>
+		 <groupId>com.aliyuncs</groupId>
+		 <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+		 <version>1.0.0</version>
+	 </dependency>
 	    
   </dependencies>
   

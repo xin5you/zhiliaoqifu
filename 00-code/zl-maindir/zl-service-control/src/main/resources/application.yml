@@ -1,10 +1,10 @@
 spring:
   profiles: 
-    active: dev
+    active: test
 quartz:
   cronExpression:
     dictBiz: 0 0/5 * * * ?
     jsToken: 0 0/5 * * * ?
     accessToken: 0 0/5 * * * ?
     teleRecharge: 0 0/5 * * * ?
-    billingType: 0 0/1 * * * ?
+    billingType: 0 0/5 * * * ?

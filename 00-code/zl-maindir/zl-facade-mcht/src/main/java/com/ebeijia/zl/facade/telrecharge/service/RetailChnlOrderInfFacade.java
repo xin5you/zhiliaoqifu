@@ -2,6 +2,7 @@ package com.ebeijia.zl.facade.telrecharge.service;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
@@ -20,13 +21,13 @@ public interface RetailChnlOrderInfFacade {
 	
 	/**
 	 * 分销商话费充值扣款
-	 * @param RetailChnlOrderInf
+	 * @param retailChnlOrderInf
 	 * @param operId
 	 * @param areaName
 	 * @return
 	 * @throws Exception
 	 */
-	TeleRespDomain<TeleRespVO> proChannelOrder(RetailChnlOrderInf retailChnlOrderInf,String operId,String areaName) throws Exception;
+	BaseResult<TeleRespVO> proChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception;
 	
 	List<RetailChnlOrderInf> getRetailChnlOrderInfList(RetailChnlOrderInf  retailChnlOrderInf) throws Exception;
 	

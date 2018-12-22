@@ -1,7 +1,7 @@
 package com.ebeijia.zl.shop.dao.goods.service;
 
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsCategory;
 
 /**
  *
@@ -12,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbEcomGoodsCategoryService extends IService<TbEcomGoodsCategory> {
 
+//    List<TbEcomGoodsCategory> getCatagory(QueryWrapper<TbEcomGoodsCategory> query, String billingType);
 }

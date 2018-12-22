@@ -62,7 +62,7 @@ public class AccountTransTest {
     	req.setPriBId(SpecAccountTypeEnum.A00.getbId());
     	req.setTransDesc("供应商上账");
     	
-    	accountTransactionFacade.executeRechargeByOneBId(req);
+    	accountTransactionFacade.executeRecharge(req);
    }
 	
 	

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IProductService {
 
-    PageInfo<TbEcomGoods> listGoods(Integer catid, String orderby, Integer start, Integer limit);
+    PageInfo<TbEcomGoods> listGoods(String billingType, Integer catid, String orderby, Integer start, Integer limit);
 
     TbEcomGoodsDetail getDetail(String goodsId);
 
@@ -18,4 +18,5 @@ public interface IProductService {
 
     List<TbEcomGoodsProduct> listSkuByGoodsId(String goodsId);
 
+    PageInfo<TbEcomGoods> listGoods(String billingType, String orderby, Integer start, Integer limit);
 }

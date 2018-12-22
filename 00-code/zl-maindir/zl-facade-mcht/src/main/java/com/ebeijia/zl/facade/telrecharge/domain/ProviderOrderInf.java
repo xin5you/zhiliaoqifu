@@ -3,10 +3,7 @@ package com.ebeijia.zl.facade.telrecharge.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import lombok.Data;
@@ -177,6 +174,7 @@ public class ProviderOrderInf extends Model<ProviderOrderInf> {
     /**
      * 乐观锁版本
      */
+    @Version
     @TableField("lock_version")
     private Integer lockVersion;
 

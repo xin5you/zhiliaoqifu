@@ -1,8 +1,11 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.service.pay.ICardService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
+import com.ebeijia.zl.shop.vo.CardInfo;
 import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
@@ -14,21 +17,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Api(value = "/pay", description = "用于定义支付、信用卡相关接口")
 @RequestMapping(value = "/pay")
 @RestController
 public class PayController {
     @Autowired
-    IPayService payService;
+    private IPayService payService;
 
-    @TokenCheck
+    @Autowired
+    private ICardService cardService;
+
+    @TokenCheck(force = true)
     @ApiOperation("绑定银行卡")
     @RequestMapping(value = "/card/bind",method = RequestMethod.POST)
     public void bindBankCard() {
 
     }
 
-    @TokenCheck
+
+    @TokenCheck(force = true)
+    @ApiOperation("校验银行卡号")
+    @RequestMapping(value = "/card/valid",method = RequestMethod.POST)
+    public JsonResult<CardInfo> validBankCard(@RequestParam("cardnum") String cardNum) {
+       CardInfo cardInfo =  cardService.validCardNum(cardNum);
+       return new JsonResult<>(cardInfo);
+    }
+
+    @TokenCheck(force = true)
     @ApiOperation("列出银行卡")
     @RequestMapping(value = "/card/list",method = RequestMethod.GET)
     public void listAccountCard(@RequestParam("token") String token, @RequestParam("session") String session) {
@@ -36,12 +54,22 @@ public class PayController {
     }
 
     //支付接口
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("支付订单")
     @RequestMapping(value = "/deal/order/{orderid}",method = RequestMethod.POST)
     public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {
             payService.payOrder(payInfo,session);
     }
+
+
+    @ApiOperation("列出所有专项账户类型的ID")
+    @RequestMapping(value = "/billingtype/list",method = RequestMethod.GET)
+    public JsonResult<List<SpecAccountTypeEnum>> listBillingType(@PathVariable(value = "type",required = false) String type) {
+        List<SpecAccountTypeEnum> list = Arrays.asList(SpecAccountTypeEnum.values());
+        return new JsonResult<>(list);
+    }
+
+
 
     @TokenCheck
     @ApiOperation("列出可用专项账户类型与余额")

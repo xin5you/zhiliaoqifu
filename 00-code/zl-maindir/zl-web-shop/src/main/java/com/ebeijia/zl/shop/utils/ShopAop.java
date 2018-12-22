@@ -1,6 +1,7 @@
 package com.ebeijia.zl.shop.utils;
 
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -44,11 +45,15 @@ public class ShopAop {
         doLog(pj);
         String token = getToken();
         logger.info(token);
+
         if (token != null) {
             String s = jedis.get(token);
             logger.info("[user:" + s + "]");
             //TODO fake login user
             session.setAttribute("userId", s);
+        }else if(isForceLogin(pj)){
+            session.setAttribute("userId", null);
+            throw new AdviceMessenger(ResultState.UNAUTHORIZED,"请登录后再试");
         }
         Object proceed = pj.proceed();
         return proceed;
@@ -116,6 +121,15 @@ public class ShopAop {
             return annotation.cache();
         }
         return false;
+    }
+
+    private boolean isForceLogin(ProceedingJoinPoint pj) {
+        MethodSignature signature = (MethodSignature) pj.getSignature();
+        TokenCheck annotation = signature.getMethod().getAnnotation(TokenCheck.class);
+        if (annotation != null) {
+            return annotation.force();
+        }
+        return true;
     }
 
     private String getToken() {

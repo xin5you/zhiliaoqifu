@@ -12,8 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
 import com.ebeijia.zl.core.wechat.process.MpAccount;
 import com.ebeijia.zl.core.wechat.process.WxApiClient;
-
-
+import org.springframework.context.annotation.Configuration;
 
 
 /**
@@ -30,6 +29,7 @@ import com.ebeijia.zl.core.wechat.process.WxApiClient;
 *-------------------------------------*
 * 2018年12月7日     zhuqi           v1.0.0
  */
+@Configuration
 public class ConsumerSessionAwareMessageListener implements MessageListener {
 	private Logger logger = LoggerFactory.getLogger(ConsumerSessionAwareMessageListener.class);
 

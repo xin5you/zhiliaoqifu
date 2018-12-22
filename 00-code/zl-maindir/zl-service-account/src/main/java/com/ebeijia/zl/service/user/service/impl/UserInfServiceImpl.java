@@ -62,7 +62,7 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 	* @param:cardType 证件类型
 	* @param:cardNo  证件号
 	* @param:transId 交易类型
-	* @param:transChnl 交易渠道
+	* @param:nl 交易渠道
 	* @param:userChnl 用户渠道
 	* @param:userChnlId 用户渠道Id
 	* 

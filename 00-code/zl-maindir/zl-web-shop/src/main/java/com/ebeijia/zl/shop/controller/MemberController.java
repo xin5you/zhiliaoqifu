@@ -1,14 +1,14 @@
 package com.ebeijia.zl.shop.controller;
 
 
+import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
-import com.ebeijia.zl.shop.dao.member.domain.TbEcomMemberAddress;
 import com.ebeijia.zl.shop.service.member.IMemberService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.AddressInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
-import com.ebeijia.zl.shop.vo.MemberInfo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +27,7 @@ public class MemberController {
     @Autowired
     private IMemberService memberService;
 
+
     @ApiOperation("注册")
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
     public JsonResult<TbEcomMember> signUp(){
@@ -37,19 +38,21 @@ public class MemberController {
         return new JsonResult<>(member);
     }
 
-    @TokenCheck
+    @ApiImplicitParam(name = "Authorization",value = "Authorization",paramType ="header")
+    @TokenCheck(force = true)
     @ApiOperation("用户信息查询")
     @RequestMapping(value = "/get",method = RequestMethod.GET)
-    public JsonResult<MemberInfo> findUser(){
+    public JsonResult<PersonInf> findUser(){
 
         //获取手机号
         //获取对应id
         //生产账户
-        MemberInfo member =  memberService.getMemberInfo();
-        return new JsonResult<>(member);
+        PersonInf personInf = memberService.getMemberInfo();
+        return new JsonResult<>(personInf);
     }
 
-    @TokenCheck
+    @ApiImplicitParam(name = "Authorization",value = "Authorization",paramType ="header")
+    @TokenCheck(force = true)
     @ApiOperation("新增地址，目前修改也一样调用这个接口")
     @RequestMapping(value = "/address/create",method = RequestMethod.POST)
     public JsonResult newAddress(AddressInfo address, Integer pos){
@@ -59,13 +62,13 @@ public class MemberController {
         return result;
     }
 
-    @TokenCheck
+    @ApiImplicitParam(name = "Authorization",value = "Authorization",paramType ="header")
+    @TokenCheck(force = true)
     @ApiOperation("查询收货地址")
     @RequestMapping(value = "/address/list",method = RequestMethod.GET)
     public JsonResult<AddressInfo> listAddress(){
-        TbEcomMemberAddress address = memberService.listAddress();
-        JsonResult<AddressInfo> result = new JsonResult();
-        return result;
+        AddressInfo address = memberService.listAddress();
+        return new JsonResult(address);
     }
 
 

@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
  * @User zhuqi
  * @Date 2018-12-10
  */
-@Service
+@Service()
 public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMapper, ProviderOrderInf> implements ProviderOrderInfService{
 
 	@Autowired
@@ -29,16 +31,31 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 		QueryWrapper<ProviderOrderInf> queryWrapper=new QueryWrapper<ProviderOrderInf>(providerOrderInf);
 		return this.list(queryWrapper);
 	}
-	
+
+	@Override
+	public boolean save(ProviderOrderInf entity) {
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
+
+	@Override
+	public boolean updateById(ProviderOrderInf entity){
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
+	}
+
+
 	/**
 	 * 查找updateTime 10分钟以内，1分钟以上的订单
-	 * @param ProviderOrderInf
+	 * @param providerOrderInf
 	 * @return
 	 */
 	public List<ProviderOrderInf> getListByTimer(ProviderOrderInf providerOrderInf){
 		return providerOrderInfMapper.getListByTimer(providerOrderInf);
 	}
-
 
 	@Override
 	public ProviderOrderInf getTelOrderInfByChannelOrderId(String OrderId) {

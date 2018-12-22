@@ -10,10 +10,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,18 +25,26 @@ public class GoodsController {
     @Autowired
     IProductService goodsService;
 
-    @ApiOperation("商品列表，分页")
+    @ApiOperation("所有商品列表，分页")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public JsonResult<PageInfo<TbEcomGoods>> listGoods(String orderby, Integer start, Integer limit){
         //TODO change VO design, vaild variable;
-        PageInfo<TbEcomGoods> list = goodsService.listGoods(null,orderby,start,limit);
+        PageInfo<TbEcomGoods> list = goodsService.listGoods(null, null,orderby,start,limit);
         return new JsonResult<PageInfo<TbEcomGoods>>(list);
     }
 
-    @ApiOperation("按类型的商品列表")
+    @ApiOperation("按专项类型的商品列表")
+    @RequestMapping(value = "/list/{billingtype}",method = RequestMethod.GET)
+    public JsonResult<PageInfo<TbEcomGoods>> listGoods(@PathVariable("billingtype") String billingType, String orderby, Integer start, Integer limit){
+        PageInfo<TbEcomGoods> list = goodsService.listGoods(billingType,orderby,start,limit);
+
+        return new JsonResult<PageInfo<TbEcomGoods>>(list);
+    }
+
+    @ApiOperation("查找特定的商品列表（一期不用）")
     @RequestMapping(value = "/list/cat{catid}",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbEcomGoods>> listGoods(@PathVariable Integer catid, String orderby, Integer start, Integer limit){
-        PageInfo<TbEcomGoods> list = goodsService.listGoods(catid,orderby,start,limit);
+    public JsonResult<PageInfo<TbEcomGoods>> listGoods(@PathVariable Integer catid,@RequestParam("billingtype") String billingType,  String orderby, Integer start, Integer limit){
+        PageInfo<TbEcomGoods> list = goodsService.listGoods(billingType,catid,orderby,start,limit);
         return new JsonResult<PageInfo<TbEcomGoods>>(list);
     }
 
