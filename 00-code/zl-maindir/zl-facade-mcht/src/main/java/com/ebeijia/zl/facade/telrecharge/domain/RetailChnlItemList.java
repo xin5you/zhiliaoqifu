@@ -3,10 +3,7 @@ package com.ebeijia.zl.facade.telrecharge.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import lombok.Data;
@@ -34,13 +31,19 @@ public class RetailChnlItemList extends Model<RetailChnlItemList> {
      */
     @TableId(value = "chnl_item_id" ,type = IdType.UUID)
     private String chnlItemId;
+
+    /**
+     * channel_id
+     */
+    @TableField("channel_id")
+    private String channelId;
  
     /**
      * product_id
      */
     @TableField("product_id")
     private String productId;
- 
+
     /**
      * area_id
      */
@@ -128,6 +131,7 @@ public class RetailChnlItemList extends Model<RetailChnlItemList> {
     /**
      * 乐观锁版本
      */
+    @Version
     @TableField("lock_version")
     private Integer lockVersion;
     

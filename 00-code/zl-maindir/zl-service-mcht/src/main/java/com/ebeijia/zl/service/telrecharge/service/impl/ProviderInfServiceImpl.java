@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,21 @@ public class ProviderInfServiceImpl extends ServiceImpl<ProviderInfMapper, Provi
 	
 	@Autowired
 	private ProviderInfMapper providerInfMapper;
+
+	@Override
+	public boolean save(ProviderInf entity) {
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
+
+	@Override
+	public boolean updateById(ProviderInf entity){
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
+	}
 
 	public int updateByDefaultRoute(){
 		return providerInfMapper.updateByDefaultRoute();

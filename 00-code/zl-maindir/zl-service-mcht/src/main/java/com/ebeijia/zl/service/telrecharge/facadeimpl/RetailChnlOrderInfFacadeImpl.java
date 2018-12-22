@@ -2,6 +2,7 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.core.activemq.service.MQProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,9 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	@Autowired
 	private RetailChnlOrderInfService retailChnlOrderInfService;
 	
-//	@Autowired
-//	private RetailChnlInfService retailChnlInfService;
-//	
-//	@Autowired
-//	private RetailChnlProductInfService retailChnlProductInfService;
-//
-//	@Autowired
-//	private WechatMQProducerService rechargeMobileProducerService;
+
+	@Autowired
+	private MQProducerService mqProducerService;
 	
 	@Override
 	public RetailChnlOrderInf getRetailChnlOrderInfById(String channelOrderId) throws Exception {
@@ -68,7 +64,7 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	}
 	
 	public void doRechargeMobileMsg(String channelOrderId){
-//		retailChnlOrderInfService.sendRechargeMobileMsg(channelOrderId);
+		mqProducerService.sendRechargeMobileMsg(channelOrderId);
 	}
 	/**
 	 *  分销商 根据外部订单查询

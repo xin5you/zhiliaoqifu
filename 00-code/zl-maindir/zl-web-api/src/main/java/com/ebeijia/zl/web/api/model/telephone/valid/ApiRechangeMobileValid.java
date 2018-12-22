@@ -97,29 +97,29 @@ public class ApiRechangeMobileValid {
 			return false;
 		}
 
-		// 是否有5s内的重复
+		// 是否有2s内的重复
 		String tokenV = jedisCluster.get("api.recharge.mobile.token:" + sginfor);
 		if (StringUtil.isNotEmpty(tokenV)) {
 			return false;
 		} else {
 			String key="api.recharge.mobile.token:" + sginfor;
 			jedisCluster.set(key, sginfor);
-			jedisCluster.expire(key, 5);
+			jedisCluster.expire(key, 2);
 		}
 		return true;
 	}
 
-	public  void main(String[] args) {
+	public  static void main(String[] args) {
 		TeleReqVO t = new TeleReqVO();
 		t.setChannelId("0e04cf948e2af629a334c7c71fa3f8888");
 		t.setChannelToken("0e04cf948e2af629a334c7c71fa3f8888");
 		t.setMethod("hkb.api.mobile.charge");
 		t.setV("1.0");
-		t.setTimestamp("2018-12-21 19:50:14");
+		t.setTimestamp("2018-12-21 20:50:14");
 		t.setRechargePhone("13501755206");
-		t.setRechargeAmount("50.000");
+		t.setRechargeAmount("50");
 		t.setOuterTid(IdUtil.getNextId());
-		t.setCallback("http://19662nx311.iok.la:10066/recharge/hkbnotify&productId=2018070505141610000001");
+		t.setCallback("http://19662nx311.iok.la:10066/recharge/hkbnotify");
 		System.out.println(MD5SignUtils.genSign(t, "key", "0e04cf948e2af629a334c7c71fa3f8888", new String[] { "sign", "serialVersionUID" }, null));
 	}
 

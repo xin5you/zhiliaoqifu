@@ -94,28 +94,32 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 				if(telProviderOrderInf !=null && TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode().equals( (telProviderOrderInf.getRechargeState()))){
 
 					PayBillReq payBillReq=new PayBillReq();
-					payBillReq.setMobileNo(retailChnlOrderInf.getPhoneNo()); //手机号
+					payBillReq.setMobileNo(retailChnlOrderInf.getRechargePhone()); //手机号
 					payBillReq.setRechargeAmount(retailChnlOrderInf.getRechargeValue().toString());
 					payBillReq.setOuterTid(telProviderOrderInf.getRegOrderId());
-					logger.info("手机充值--->流量充值接口，提交请求链接参数{}", payBillReq);
+					logger.info("手机充值--->立方话费充值接口，提交请求链接参数{}", JSONObject.toJSONString(payBillReq));
 
 					try {
 						BmRechargeMobilePayBillResponse response=bmOpenApiService.handlePayBill(payBillReq,retailChnlInf.getChannelCode());
+						logger.info("BmRechargeMobilePayBillResponse respon -->{}",JSONObject.toJSONString(response));
 						OrderDetailInfo orderDetailInfo=null;
 						boolean success=false;
 						if (response != null) {
 							success=response.isSuccess();
 							orderDetailInfo=response.getOrderDetailInfo();
-						}else{
+						}
+						if(!success){
 							//重新反向查询订单状态
 							BmOrderCustomGetResponse customOrderResp = bmOpenApiService.handleGetCustomOrder(payBillReq.getOuterTid(), retailChnlInf.getChannelCode());
+							logger.info("BmOrderCustomGetResponse customOrderResp -->{}",JSONObject.toJSONString(customOrderResp));
 							orderDetailInfo=customOrderResp.getOrderDetailInfo();
 						}
 						if(orderDetailInfo==null){
 							orderDetailInfo=new OrderDetailInfo();
 						}
 						//订单充值状态 0充值中 1成功 9撤销
-						switch (orderDetailInfo.getRechargeState()){
+						String rechargeState= StringUtils.isNotEmpty(orderDetailInfo.getRechargeState())? orderDetailInfo.getRechargeState():"";
+						switch (rechargeState){
 							case "0":
 								telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode());
 								break;
@@ -131,6 +135,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 						//订单付款状态 0 未付款1 已付款
 						telProviderOrderInf.setPayState(StringUtils.isEmpty(orderDetailInfo.getPayState()) ? "0": orderDetailInfo.getPayState());
 				        telProviderOrderInf.setResv1(response.getErrorCode()); //记录充值渠道返回的结果信息
+						telProviderOrderInf.setOperateTime(System.currentTimeMillis());
 				        providerOrderInfService.updateById(telProviderOrderInf);
 					} catch (Exception e) {
 						logger.error("##请求话费充值异常-->{}", e);

@@ -3,10 +3,7 @@ package com.ebeijia.zl.facade.telrecharge.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import lombok.Data;
@@ -36,10 +33,10 @@ public class RetailChnlProductInf extends Model<RetailChnlProductInf> {
     private String productId;
  
     /**
-     * 运营商名称
+     * 产品名称
      */
-    @TableField("oper_name")
-    private String operName;
+    @TableField("product_name")
+    private String productName;
  
     /**
      * 1:移动
@@ -60,7 +57,7 @@ public class RetailChnlProductInf extends Model<RetailChnlProductInf> {
      * 产品面额
      */
     @TableField("product_amt")
-    private BigDecimal productAmt;
+    private String productAmt;
  
     /**
      * 产品售价单位元
@@ -151,6 +148,7 @@ public class RetailChnlProductInf extends Model<RetailChnlProductInf> {
     /**
      * 乐观锁版本
      */
+    @Version
     @TableField("lock_version")
     private Integer lockVersion;
     

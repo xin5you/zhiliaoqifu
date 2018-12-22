@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,21 @@ public class CompanyInfServiceImpl extends ServiceImpl<CompanyInfMapper, Company
 	
 	@Autowired
 	private CompanyInfMapper companyInfMapper;
+
+	@Override
+	public boolean save(CompanyInf entity) {
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
+
+	@Override
+	public boolean updateById(CompanyInf entity){
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
+	}
 
 	/**
 	 * 查询所有企业
