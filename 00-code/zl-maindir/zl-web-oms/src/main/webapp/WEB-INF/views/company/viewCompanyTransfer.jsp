@@ -8,6 +8,7 @@
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="${ctx}/static/jquery/jquery.form.js"></script>
+	<script src="${ctx}/static/oms/js/company/viewCompanyTransfer.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -59,7 +60,7 @@
 									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">企业收款状态：</label>
-										<label style="color: red;">${order.companyReceiverCheck }</label>
+										<label style="color: red;">${order.companyReceiverCheckName }</label>
 									</td>
 								</tr>
 							</table>
@@ -94,7 +95,7 @@
                                      </td>
                                      <td>${entity.invoiceInfo}</td>
 									 <td>
-										<c:if test="${order.companyReceiverCheck == '1'} && ${company.isPlatform == '0'} && ${entity.isInvoice == '0'}">
+										<c:if test="${order.companyReceiverCheck == '1' && company.isPlatform == '0' && entity.isInvoice == '0'}">
                                     		<a orderListId="${entity.orderListId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>
                                     	</c:if>
 									 </td>

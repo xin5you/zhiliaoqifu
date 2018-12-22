@@ -157,6 +157,9 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @TableField(exist = false)
     private String companyName;
 
+    @TableField(exist = false)
+    private String companyReceiverCheckName;
+
     @Override
     protected Serializable pkVal() { 
         return this.orderId;

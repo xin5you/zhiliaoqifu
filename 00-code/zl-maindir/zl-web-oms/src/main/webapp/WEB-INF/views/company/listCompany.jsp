@@ -91,16 +91,16 @@
 					                    	<sec:authorize access="hasRole('ROLE_COMPANY_OPENACCOUNT')">
 												<a companyId="${company.companyId}" title="开户" class="btn-mini btn-open" href="#"><i class="icon-pencil"></i></a>
 					                    	</sec:authorize>
-					                    	</c:if>
 					                    	<sec:authorize access="hasRole('ROLE_COMPANY_INTOEDIT')">
 												<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 											</sec:authorize>
-											<sec:authorize access="hasRole('ROLE_COMPANY_DELETE')">	
+											<sec:authorize access="hasRole('ROLE_COMPANY_DELETE')">
 												<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-					                    	</sec:authorize>
-											<c:if test="${company.isOpen=='1'} && ${company.isPlatform=='1'}">
-												<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
+											</sec:authorize>
 											</c:if>
+											<%--<c:if test="${company.isOpen=='1'} && ${company.isPlatform=='1'}">--%>
+												<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
+											<%--</c:if>--%>
 					                    </td>
 					                 </tr>
 					             </c:forEach>

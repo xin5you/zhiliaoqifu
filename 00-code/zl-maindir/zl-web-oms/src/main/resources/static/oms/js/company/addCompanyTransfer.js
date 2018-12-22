@@ -7,17 +7,25 @@ var addCompanyTransfer = {
         addCompanyTransfer.initEvent();
     },
     initEvent:function(){
-		$('.btn-ok').on('click', addCompanyTransfer.intoAddCompanyTransfer);
+		$('.btn-platform-ok').on('click', addCompanyTransfer.intoAddCompanyPlatformTransfer);
+        $('.btn-company-ok').on('click', addCompanyTransfer.intoAddCompanyTransfer);
         $('.btn-remit-submit').on('click', addCompanyTransfer.addCompanyTransferCommit);
         $('.btn-view').on('click', addCompanyTransfer.viewCompanyTransferDetail);
+	},
+    intoAddCompanyPlatformTransfer: function(){
+        var orderId = $(this).attr("orderId");
+        $('#order_id').val(orderId);
+        $('#addRemitModal').modal({
+            backdrop : "static"
+        });
 	},
     intoAddCompanyTransfer: function(){
         var orderId = $(this).attr("orderId");
         $('#order_id').val(orderId);
-        $('#addPlatformRemitModal').modal({
+        $('#addRemitModal').modal({
             backdrop : "static"
         });
-	},
+    },
     addCompanyTransferCommit : function () {
        var orderId = $('#order_id').val();
        var companyId = $('#companyId').val();

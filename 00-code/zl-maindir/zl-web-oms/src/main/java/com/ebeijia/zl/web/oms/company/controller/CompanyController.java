@@ -253,7 +253,7 @@ public class CompanyController {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
-			mv.addObject("pageList", pageList);
+			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 查询打款订单信息详情异常", e);
 		}
@@ -296,14 +296,14 @@ public class CompanyController {
 		if (IsPlatformEnum.ISOPEN_FALSE.getCode().equals(company.getIsPlatform())) {
 			inaccountOrder.setCompanyId(company.getCompanyId());
 		}
-		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderIdAndCompanyId(inaccountOrder);
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
 		if (order != null) {
 			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
 			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
 			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
 			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
 			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
-			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 		}
@@ -313,7 +313,7 @@ public class CompanyController {
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderId(orderId);
 			PageInfo<InaccountOrderDetail> pageList = inaccountOrderDetailService.getInaccountOrderDetailByOrderPage(startNum, pageSize, orderDetail);
-			mv.addObject("pageList", pageList);
+			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 查询企业订单明细信息详情异常", e);
 		}

@@ -82,11 +82,11 @@
                                             <a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
                                             <a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
                                         </c:if>
-                                        <c:if test="${entity.checkStat == '1'}">
+                                        <c:if test="${entity.checkStat == '1'&& entity.inaccountCheck == '0'}">
                                             <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
                                         </c:if>
                                          <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-                                        <c:if test="${entity.inaccountCheck == '1'}">
+                                        <c:if test="${entity.inaccountCheck == '1'&& entity.transferCheck == '0'}">
                                          <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
                                         </c:if>
 				                    </td>

@@ -22,7 +22,7 @@ var viewCompanyTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    $("#bName").val(data.msg.BName);
+                    $("#bName").val(data.msg.bName);
                     $("#companyInAmt").val(data.msg.companyInAmt);
                     $('#addInvoiceModal').modal({
                         backdrop : "static"

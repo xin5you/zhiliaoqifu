@@ -162,7 +162,7 @@ public class RetailChnlProductController {
 			if (user != null) {
 				telCPInf.setUpdateUser(user.getId().toString());
 			}
-			telCPInf.setOperName(retailChnlProductInf.getOperName());
+			/*telCPInf.setOperName(retailChnlProductInf.getOperName());*/
 			telCPInf.setOperId(retailChnlProductInf.getOperId());
 			telCPInf.setAreaFlag(retailChnlProductInf.getAreaFlag());
 			telCPInf.setProductAmt(retailChnlProductInf.getProductAmt());
@@ -234,11 +234,11 @@ public class RetailChnlProductController {
 		String productAmt = StringUtil.nullToString(req.getParameter("productAmt"));
 		String productPrice = StringUtil.nullToString(req.getParameter("productPrice"));
 		RetailChnlProductInf product = new RetailChnlProductInf();
-		product.setOperName(StringUtil.nullToString(req.getParameter("operName")));
+		/*product.setOperName(StringUtil.nullToString(req.getParameter("operName")));*/
 		product.setOperId(StringUtil.nullToString(req.getParameter("operId")));
 		product.setAreaFlag(StringUtil.nullToString(req.getParameter("areaFlag")));
 		if (!StringUtil.isNullOrEmpty(productAmt))
-			product.setProductAmt(new BigDecimal(productAmt));
+			/*product.setProductAmt(new BigDecimal(productAmt));*/
 		if (!StringUtil.isNullOrEmpty(productPrice))
 			product.setProductPrice(new BigDecimal(productPrice));
 		product.setProductType(StringUtil.nullToString(req.getParameter("productType")));

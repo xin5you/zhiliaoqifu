@@ -179,6 +179,7 @@ public class CompanyServiceImpl implements CompanyService{
 				resultMap.addAttribute("msg", "网络异常，请稍后再试");
 				return resultMap;
 			}
+			System.out.println("============================================================"+JSONArray.toJSONString(result));
 			logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 			if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {
 				order.setPlatformReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());

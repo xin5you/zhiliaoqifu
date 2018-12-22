@@ -20,7 +20,7 @@
 			                    <li>供应商管理</li>
 			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
                                 <li>供应商信息列表</li>
-                                <li><a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${providerId }">入账信息列表</a></li>
+                                <li><a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${order.providerId }">入账信息列表</a></li>
                                 <li>入账明细列表</li>
 			                </ul>
 			            </div>
@@ -99,7 +99,7 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                      <a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${providerId }"><button class="btn btn-primary" type="button">返 回</button></a>
+                      <a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${order.providerId }"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
 			   </div>

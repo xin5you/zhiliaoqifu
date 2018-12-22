@@ -53,12 +53,12 @@
                                         <c:if test="${entity.checkStat == '0'}">未审核</c:if>
                                         <c:if test="${entity.checkStat == '1'}">已审核</c:if>
                                     </td>
-									<td>${entity.remit_amt}</td>
-                                     <td>${entity.inaccount_amt}</td>
+									<td>${entity.remitAmt}</td>
+                                     <td>${entity.inaccountAmt}</td>
                                      <td>${entity.companyName}</td>
                                      <td>
-                                         <c:if test="${entity.inaccountStat == '0'}">未上账</c:if>
-                                         <c:if test="${entity.inaccountStat == '1'}">已上账</c:if>
+                                         <c:if test="${entity.inaccountCheck == '0'}">未上账</c:if>
+                                         <c:if test="${entity.inaccountCheck == '1'}">已上账</c:if>
                                      </td>
                                      <td>
                                          <c:if test="${entity.platformReceiverCheck == '0'}">未收款</c:if>
@@ -74,11 +74,11 @@
                                      </td>
 				                    <td>
                                         <a orderId="${entity.orderId}" title="订单明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-                                        <c:if test="${entity.transferCheck == '1'} && ${entity.platformReceiverCheck == '0'} && ${company.isPlatform == '1'}">
-                                         <a orderId="${entity.orderId}" title="确认收款" class="btn-mini btn-ok" href="#"><i class="icon-ok"></i></a>
+                                        <c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '0' && company.isPlatform == '1'}">
+                                         <a orderId="${entity.orderId}" title="平台收款" class="btn-mini btn-platform-ok" href="#"><i class="icon-ok"></i></a>
                                         </c:if>
-                                        <c:if test="${entity.platformReceiverCheck == '1'} && ${company.isPlatform == '0'}">
-                                            <a orderId="${entity.orderId}" title="确认收款" class="btn-mini btn-ok" href="#"><i class="icon-ok"></i></a>
+                                        <c:if test="${entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '0' && company.isPlatform == '0'}">
+                                            <a orderId="${entity.orderId}" title="企业收款" class="btn-mini btn-company-ok" href="#"><i class="icon-ok"></i></a>
                                         </c:if>
 				                    </td>
 				                 </tr>

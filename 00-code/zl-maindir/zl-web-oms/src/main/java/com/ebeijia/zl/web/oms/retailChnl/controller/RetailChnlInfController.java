@@ -225,8 +225,8 @@ public class RetailChnlInfController {
 					check.setChannelRate(channelProductAll.getChannelRate());
 					check.setOperId(OperatorType.findByCode(channelProductAll.getOperId()));
 					check.setProductType(ChannelProductProType.findByCode(channelProductAll.getProductType()));
-					check.setOperName(channelProductAll.getOperName());
-					check.setProductAmt(channelProductAll.getProductAmt());
+					/*check.setOperName(channelProductAll.getOperName());*/
+					/*check.setProductAmt(channelProductAll.getProductAmt());*/
 					check.setProductPrice(channelProductAll.getProductPrice());
 					check.setCreateTime(channelProductAll.getCreateTime());
 					check.setUpdateTime(channelProductAll.getUpdateTime());

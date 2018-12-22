@@ -192,7 +192,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    $('#company_name').text("确认打款至" + data.companyName + "？");
+                    $('#company_name').text("确认打款至" + data.msg.companyName + "？");
                     $('#order_id').val(orderId);
                     $('#addRemitModal').modal({
                         backdrop : "static"
