@@ -22,13 +22,13 @@ public interface ProviderOrderInfFacade {
 	
 	List<ProviderOrderInf> getProviderOrderInfList(ProviderOrderInf  providerOrderInf) throws Exception;
 	
-	ProviderOrderInf getTelOrderInfByChannelOrderId(String channelOrderId) throws Exception;
+	ProviderOrderInf getOrderInfByChannelOrderId(String channelOrderId) throws Exception;
 	
 	PageInfo<ProviderOrderInf> getProviderOrderInfPage(int startNum, int pageSize, ProviderOrderInf providerOrderInf) throws Exception;
 	
 	/**
 	 * 查找updateTime 10分钟以内，1分钟以上的订单
-	 * @param ProviderOrderInf
+	 * @param providerOrderInf
 	 * @return
 	 */
 	List<ProviderOrderInf> getListByTimer(ProviderOrderInf providerOrderInf);

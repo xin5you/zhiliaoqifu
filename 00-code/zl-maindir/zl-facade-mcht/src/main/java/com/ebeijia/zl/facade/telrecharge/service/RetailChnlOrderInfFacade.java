@@ -27,7 +27,7 @@ public interface RetailChnlOrderInfFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	BaseResult<TeleRespVO> proChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception;
+	BaseResult<TeleRespVO> proTelChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception;
 	
 	List<RetailChnlOrderInf> getRetailChnlOrderInfList(RetailChnlOrderInf  retailChnlOrderInf) throws Exception;
 	

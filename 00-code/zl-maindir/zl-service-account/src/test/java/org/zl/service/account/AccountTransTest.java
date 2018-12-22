@@ -3,6 +3,7 @@ package org.zl.service.account;
 
 import java.math.BigDecimal;
 
+import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class AccountTransTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-    @Test
+/*    @Test
    public void executeRechargeToPrivoder() throws Exception{
     	AccountRechargeReqVo req=new AccountRechargeReqVo();
     	
@@ -63,7 +64,29 @@ public class AccountTransTest {
     	req.setTransDesc("供应商上账");
     	
     	accountTransactionFacade.executeRecharge(req);
-   }
+   }*/
+
+	/**
+	 * 分销商充值
+	 * @throws Exception
+	 */
+ /*   @Test
+   public void executeRechargeToRetail() throws Exception{
+
+    	AccountRechargeReqVo req=new AccountRechargeReqVo();
+    	req.setTransId(TransCode.MB20.getCode());
+    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+    	req.setUserChnlId("0e04cf948e2af629a334c7c71fa3f8888");
+    	req.setUserType(UserType.TYPE400.getCode());
+    	req.setFromCompanyId("0e04cf948e2af629a334c7c71fa3f8888");
+    	req.setTransAmt(new BigDecimal(50000000));
+    	req.setUploadAmt(new BigDecimal(5000000));
+    	req.setDmsRelatedKey(IdUtil.getNextId());
+    	req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+    	req.setTransDesc("分销商充值");
+    	accountTransactionFacade.executeRecharge(req);
+   }*/
 	
 	
 	
@@ -166,5 +189,24 @@ public class AccountTransTest {
 //	
 //	System.out.println(JSONArray.toJSONString(result));
 // }
+
+
+   @Test
+   public void executeConsumeToRetail() throws Exception{
+
+	   AccountConsumeReqVo req=new AccountConsumeReqVo();
+    	req.setTransId(TransCode.MB10.getCode());
+    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+    	req.setUserChnlId("0e04cf948e2af629a334c7c71fa3f8888");
+    	req.setUserType(UserType.TYPE400.getCode());
+    	req.setTransAmt(new BigDecimal(1000));
+    	req.setUploadAmt(new BigDecimal(1000));
+    	req.setDmsRelatedKey(IdUtil.getNextId());
+    	req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+    	req.setTransDesc("分销商消费");
+	   BaseResult result=accountTransactionFacade.executeConsume(req);
+	   System.out.println(JSONArray.toJSONString(result));
+   }
 	
 }

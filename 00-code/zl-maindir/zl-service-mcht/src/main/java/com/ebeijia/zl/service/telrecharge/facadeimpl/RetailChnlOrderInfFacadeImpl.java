@@ -49,14 +49,14 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	
 	/**
 	 * 
-	 * @param retailChnlOrderInf 分销商订单
+	 * @param retailChnlOrderInf 分销商话费充值
 	 * @param operId 运营商
 	 * @param areaName 地区名称
 	 * @return
 	 * @throws Exception
 	 */
-	public BaseResult proChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception{
-		return retailChnlOrderInfService.proChannelOrder(retailChnlOrderInf, operId, areaName);
+	public BaseResult proTelChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception{
+		return retailChnlOrderInfService.proTelChannelOrder(retailChnlOrderInf, operId, areaName);
 	}
 	
 	public List<RetailChnlOrderInf> getRetailChnlOrderInfList(RetailChnlOrderInf RetailChnlOrderInf) throws Exception {

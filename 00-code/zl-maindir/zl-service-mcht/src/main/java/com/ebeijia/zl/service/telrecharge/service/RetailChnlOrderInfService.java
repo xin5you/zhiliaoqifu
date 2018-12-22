@@ -22,13 +22,13 @@ public interface RetailChnlOrderInfService extends IService<RetailChnlOrderInf> 
 
 	/**
 	 * 分销商话费充值扣款
-	 * @param RetailChnlOrderInf
+	 * @param retailChnlOrderInf
 	 * @param operId
 	 * @param areaName
 	 * @return
 	 * @throws Exception
 	 */
-	BaseResult<TeleRespVO> proChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception;
+	BaseResult<TeleRespVO> proTelChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception;
 	
 	List<RetailChnlOrderInf> getRetailChnlOrderInfList(RetailChnlOrderInf  retailChnlOrderInf) throws Exception;
 	

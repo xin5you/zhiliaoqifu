@@ -58,7 +58,7 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 	}
 
 	@Override
-	public ProviderOrderInf getTelOrderInfByChannelOrderId(String OrderId) {
+	public ProviderOrderInf getOrderInfByChannelOrderId(String OrderId) {
 		return providerOrderInfMapper.getOrderInfByChannelOrderId(OrderId);
 	}
 

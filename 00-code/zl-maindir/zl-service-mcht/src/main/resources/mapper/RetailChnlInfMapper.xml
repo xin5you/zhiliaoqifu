@@ -9,6 +9,7 @@
 	
 	<sql id="ColumnResult">
 		channel_id,
+		law_code,
 		channel_name,
 		channel_code,
 		channel_key,

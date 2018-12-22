@@ -108,7 +108,7 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 		// step5:return 创建订单
 		BaseResult<TeleRespVO> respTxn = null;
 		try {
-			respTxn = retailChnlOrderInfFacade.proChannelOrder(retailChnlOrderInf, null, "ALL");
+			respTxn = retailChnlOrderInfFacade.proTelChannelOrder(retailChnlOrderInf, null, "ALL");
 		} catch (Exception ex) {
 			logger.error("## 创建充值订单{}异常", retailChnlOrderInf.toString(), ex);
 		}
@@ -150,14 +150,14 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 			respTxn.setObject(voResp);
 		}
 
-		// 发送消息
-		try {
-			retailChnlOrderInfFacade.doRechargeMobileMsg(respTxn.getObject().getChannelOrderId());
-		} catch (Exception ex) {
-			logger.error("## 订单[{}]发送充值队列消息异常{},error :{}", respTxn.getObject().getChannelOrderId(), ex);
-		}
-		
-		return respTxn;
+        // 发送消息
+        try {
+            retailChnlOrderInfFacade.doRechargeMobileMsg(respTxn.getObject().getChannelOrderId());
+        } catch (Exception ex) {
+            logger.error("## 订单[{}]发送充值队列消息异常{},error :{}", respTxn.getObject().getChannelOrderId(), ex);
+        }
+
+        return respTxn;
 	}
 
 }

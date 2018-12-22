@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.telrecharge.listener;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.jms.JMSException;
@@ -73,7 +74,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 				 logger.info("待发起分销商充值的订单号-->{}", channelOrderId);
 				 retailChnlOrderInf=retailChnlOrderInfService.getById(channelOrderId);
 				 if(retailChnlOrderInf !=null){
-					 telProviderOrderInf=providerOrderInfService.getTelOrderInfByChannelOrderId(channelOrderId);
+					 telProviderOrderInf=providerOrderInfService.getOrderInfByChannelOrderId(channelOrderId);
 				  }
 			} catch (Exception e) {
 				logger.error("## 查询话费充值订单异常-->{}", e);
@@ -85,7 +86,6 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 			} catch (Exception e) {
 				logger.error("## 查询渠道信息异常-->{}", e);
 			}
-			boolean notifyFlag=false; //是否回调分销商
 
 			//10分钟以后的数据订单不出来
 //			Date currDate=new Date();
@@ -124,6 +124,8 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 								telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode());
 								break;
 							case  "1":
+								telProviderOrderInf.setItemCost(new BigDecimal(orderDetailInfo.getItemCost()));  //商品成本价(进价)，单位元，保留3位小数
+								telProviderOrderInf.setTransCost(new BigDecimal(orderDetailInfo.getOrderCost())); //订单成本(进价)，单位元，保留3位小数，orderCost=itemCost*itemNum
 								telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode());
 								break;
 							default:
@@ -135,6 +137,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 						//订单付款状态 0 未付款1 已付款
 						telProviderOrderInf.setPayState(StringUtils.isEmpty(orderDetailInfo.getPayState()) ? "0": orderDetailInfo.getPayState());
 				        telProviderOrderInf.setResv1(response.getErrorCode()); //记录充值渠道返回的结果信息
+
 						telProviderOrderInf.setOperateTime(System.currentTimeMillis());
 				        providerOrderInfService.updateById(telProviderOrderInf);
 					} catch (Exception e) {
@@ -146,13 +149,11 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 				try {
 				 telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_9.getCode());
 				 providerOrderInfService.updateById(telProviderOrderInf);
-				 notifyFlag=true; //回调分销商
 				} catch (Exception e) {
 					logger.error("##取消话费充值异常-->{}", e);
 				}
 		 }
-			
-		if(notifyFlag &&  "0".equals(retailChnlOrderInf.getNotifyFlag())){
+		if( "0".equals(retailChnlOrderInf.getNotifyFlag())){
 			try{
 				//异步通知供应商
 				TeleRespVO respVo=new TeleRespVO();

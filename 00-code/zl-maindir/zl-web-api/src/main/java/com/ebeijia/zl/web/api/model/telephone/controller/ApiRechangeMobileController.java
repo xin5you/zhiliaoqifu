@@ -109,7 +109,7 @@ public class ApiRechangeMobileController {
 			}
 
 			if (retailChnlOrderInf != null) {
-				ProviderOrderInf providerOrderInf = providerOrderInfFacade.getTelOrderInfByChannelOrderId(retailChnlOrderInf.getChannelOrderId());
+				ProviderOrderInf providerOrderInf = providerOrderInfFacade.getOrderInfByChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 				TeleRespVO respVo = new TeleRespVO();
 				respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
 				respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());

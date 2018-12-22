@@ -32,6 +32,12 @@ public class ProviderInf extends Model<ProviderInf> {
      */
     @TableField("provider_name")
     private String providerName;
+
+    /**
+     * 企业信用标识
+     */
+    @TableField("law_code")
+    private String lawCode;
  
     /**
      * app_url

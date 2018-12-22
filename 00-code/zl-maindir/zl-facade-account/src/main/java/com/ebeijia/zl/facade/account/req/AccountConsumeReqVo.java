@@ -24,7 +24,7 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 
 	private static final long serialVersionUID = 6157195921555421701L;
 
-
+	private String priBId;
     /**
      * 实际交易金额
      */
@@ -46,7 +46,13 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 	 */
 	private List<AccountTxnVo> addList; //快捷支付填写
 
+	public String getPriBId() {
+		return priBId;
+	}
 
+	public void setPriBId(String priBId) {
+		this.priBId = priBId;
+	}
 	public BigDecimal getTransAmt() {
 		return transAmt;
 	}
