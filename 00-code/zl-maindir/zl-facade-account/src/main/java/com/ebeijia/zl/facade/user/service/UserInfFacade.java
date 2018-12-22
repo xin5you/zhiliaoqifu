@@ -77,22 +77,26 @@ public interface UserInfFacade {
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
 	UserInf getUserInfByExternalId(String externalId,String channel);
-	
-	
+
 	/**
 	 * 根据手机号查找个人信息 适用于用户注册绑定
 	 * @param phoneNo
-	 * @param channel 渠道标识
 	 * @return
 	 */
-	PersonInf getPersonInfByPhoneNo(String phoneNo,String channel);
-	
-	
+	PersonInf getPersonInfByPhoneNo(String phoneNo);
+
 	/**
-	 * 根据手机号查找用户信息 适用于用户注册绑定
+	 * 查找用户手机号是否在当前渠道注册
 	 * @param phoneNo
-	 * @param userName
+	 * @param channel
 	 * @return
 	 */
 	UserInf getUserInfByPhoneNo(String phoneNo,String channel);
+
+	/**
+	 * 通过手机号查询用户信息
+	 * @param phoneNo
+	 * @return
+	 */
+	UserInf getUserInfByMobilePhone(String phoneNo);
 }

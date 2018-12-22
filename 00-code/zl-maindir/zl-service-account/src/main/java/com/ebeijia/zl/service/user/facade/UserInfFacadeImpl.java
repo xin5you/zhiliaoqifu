@@ -66,29 +66,26 @@ public class UserInfFacadeImpl implements UserInfFacade {
 
 	@Override
 	public UserInf getUserInfByUserId(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return userInfService.getById(userId);
 	}
 
 	@Override
 	public UserInf getUserInfByExternalId(String externalId, String channel) {
-		// TODO Auto-generated method stub
-		return null;
+		return userInfService.getUserInfByExternalId(externalId,channel);
 	}
 
 	@Override
-	public PersonInf getPersonInfByPhoneNo(String phoneNo, String channel) {
-		// TODO Auto-generated method stub
-		return null;
+	public PersonInf getPersonInfByPhoneNo(String phoneNo) {
+		return personInfService.getPersonInfByPhoneNo(phoneNo);
 	}
 
 	@Override
 	public UserInf getUserInfByPhoneNo(String phoneNo, String channel) {
-		// TODO Auto-generated method stub
-		return null;
+		return userInfService.getUserInfByPhoneNo(phoneNo,channel);
 	}
 
-
-	
+	public UserInf getUserInfByMobilePhone(String phoneNo){
+		return userInfService.getUserInfByMobilePhone(phoneNo);
+	}
 
 }
