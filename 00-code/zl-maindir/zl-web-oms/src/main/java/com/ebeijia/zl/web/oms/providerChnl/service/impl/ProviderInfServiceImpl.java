@@ -1,8 +1,6 @@
 package com.ebeijia.zl.web.oms.providerChnl.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
-import com.ebeijia.zl.basics.billingtype.domain.BillingType;
-import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
@@ -12,6 +10,7 @@ import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -19,7 +18,6 @@ import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
-import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderListService;
 import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
@@ -34,9 +32,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -51,9 +53,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 	private BatchOrderService batchOrderService;
 	
 	@Autowired
-	private BatchOrderListService batchOrderListService;
-
-	@Autowired
 	private InaccountOrderService inaccountOrderService;
 
 	@Autowired
@@ -61,9 +60,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 	@Autowired
 	private CompanyInfFacade companyInfFacade;
-
-	@Autowired
-	private BillingTypeService billingTypeService;
 
 	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
@@ -124,11 +120,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 	}
 
 	@Override
-	public int addProviderTransfer(HttpServletRequest req) {
+	public int addProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-
-		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
 
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
@@ -142,23 +136,34 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		String B04 = StringUtil.nullToString(req.getParameter("B04"));
 		String B05 = StringUtil.nullToString(req.getParameter("B05"));
 		String B06 = StringUtil.nullToString(req.getParameter("B06"));
+		String B07 = StringUtil.nullToString(req.getParameter("B07"));
+		String B08 = StringUtil.nullToString(req.getParameter("B08"));
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
 
 		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+
+		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
+		platformFee = "0.9";
+		if (StringUtil.isNullOrEmpty(platformFee)) {
+			logger.error("## 获取平台手续费失败");
+			return 0;
+		}
 
 		InaccountOrder order = new InaccountOrder();
 		order.setOrderId(IdUtil.getNextId());
 		order.setOrderType(TransCode.MB20.getCode());
 		order.setCheckStat(CheckStatEnum.CHECK_FALSE.getCode());
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
-		order.setInacccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setPlatformInSumAmt(order.getInaccountAmt());
+		order.setCompanyInSumAmt(order.getInaccountAmt().multiply(new BigDecimal(platformFee)));
 		order.setProviderId(providerId);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
 		order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_FALSE.getCode());
+		order.setTransferCheck(TransferCheckEnum.INACCOUNT_FALSE.getCode());
 		order.setPlatformReceiverCheck(ReceiverEnum.RECEIVER_FALSE.getCode());
 		order.setCompanyReceiverCheck(ReceiverEnum.RECEIVER_FALSE.getCode());
-		order.setEvidenceUrl(evidenceUrl);
 		order.setRemarks(remarks);
 		order.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 		order.setCreateUser(user.getId());
@@ -166,6 +171,13 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setCreateTime(System.currentTimeMillis());
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(0);
+
+		ModelMap resultMap = saveFile(evidenceUrlFile, req, order.getOrderId());
+		if (resultMap.get("status").equals(false)) {
+			logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+			return 0;
+		}
+		order.setEvidenceUrl(resultMap.get("msg").toString());
 
 		List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
 		if (!StringUtil.isNullOrEmpty(A00)) {
@@ -287,6 +299,40 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setLockVersion(0);
 			orderDetailList.add(orderDetail);
 		}
+		if (!StringUtil.isNullOrEmpty(B07)) {
+			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+			orderDetail.setOrderListId(IdUtil.getNextId());
+			orderDetail.setOrderId(order.getOrderId());
+			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
+			orderDetail.setBId("B07");
+			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
+			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee)));
+			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			orderDetail.setCreateUser(user.getId());
+			orderDetail.setUpdateUser(user.getId());
+			orderDetail.setCreateTime(System.currentTimeMillis());
+			orderDetail.setUpdateTime(System.currentTimeMillis());
+			orderDetail.setLockVersion(0);
+			orderDetailList.add(orderDetail);
+		}
+		if (!StringUtil.isNullOrEmpty(B08)) {
+			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+			orderDetail.setOrderListId(IdUtil.getNextId());
+			orderDetail.setOrderId(order.getOrderId());
+			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
+			orderDetail.setBId("B08");
+			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
+			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee)));
+			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			orderDetail.setCreateUser(user.getId());
+			orderDetail.setUpdateUser(user.getId());
+			orderDetail.setCreateTime(System.currentTimeMillis());
+			orderDetail.setUpdateTime(System.currentTimeMillis());
+			orderDetail.setLockVersion(0);
+			orderDetailList.add(orderDetail);
+		}
 
 		if (!inaccountOrderService.save(order)) {
 			logger.error("## 新增入账订单信息失败");
@@ -326,8 +372,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		AccountRechargeReqVo reqVo = new AccountRechargeReqVo();
 		reqVo.setFromCompanyId(providerId);
-		reqVo.setTransAmt(order.getInacccountAmt());
-		reqVo.setUploadAmt(order.getInacccountAmt());
+		reqVo.setTransAmt(order.getInaccountAmt());
+		reqVo.setUploadAmt(order.getInaccountAmt());
 		reqVo.setTransList(transList);
 		reqVo.setTransId(TransCode.MB20.getCode());
 		reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
@@ -365,6 +411,515 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return 0;
 		}
 		return 1;
+	}
+
+	@Override
+	public ModelMap updateProviderRemitStatCommit(HttpServletRequest req) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+
+		InaccountOrder order = inaccountOrderService.getById(orderId);
+		List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+
+		if (order == null || orderDetailList == null || orderDetailList.size() < 1) {
+			logger.error("## 查询供应商{}订单{}信息为空", providerId, orderId);
+			resultMap.addAttribute("status", Boolean.FALSE);
+			resultMap.addAttribute("status", "暂无可打款订单，请重新查看订单信息");
+			return resultMap;
+		}
+
+		CompanyInf companyInf = companyInfFacade.getCompanyInfByIsPlatform(IsPlatformEnum.ISOPEN_TRUE.getCode());
+		if (companyInf == null) {
+			logger.error("## 查询平台企业账户信息为空");
+			resultMap.addAttribute("status", Boolean.FALSE);
+			resultMap.addAttribute("status", "系统异常，请联系管理员");
+			return resultMap;
+		}
+
+		AccountTransferReqVo reqVo = new AccountTransferReqVo();
+		reqVo.setTransAmt(order.getInaccountAmt());
+		reqVo.setUploadAmt(order.getInaccountAmt());
+		reqVo.setTfrInUserId(companyInf.getCompanyId());
+		reqVo.setTfrOutUserId(providerId);
+
+		List<AccountTxnVo> transList = new ArrayList<>();
+		Set<String> bIds = new TreeSet<>();
+		for (InaccountOrderDetail orderDetail :orderDetailList ) {
+			AccountTxnVo txnVo = new AccountTxnVo();
+			txnVo.setTxnBId(orderDetail.getBId());
+			txnVo.setTxnAmt(orderDetail.getPlatformInAmt());
+			txnVo.setUpLoadAmt(orderDetail.getPlatformInAmt());
+			transList.add(txnVo);
+			bIds.add(orderDetail.getBId());
+		}
+
+		reqVo.setTransList(transList);
+		reqVo.setTransId(TransCode.MB40.getCode());
+		reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
+		reqVo.setUserId(providerId);
+		reqVo.setbIds(bIds);
+		reqVo.setUserType(UserType.TYPE300.getCode());
+		reqVo.setDmsRelatedKey(orderId);
+		reqVo.setUserChnlId(providerId);
+		reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+		reqVo.setTransDesc(order.getRemarks());
+		reqVo.setTransNumber(1);
+
+		BaseResult result = new BaseResult();
+		try {
+			result = accountTransactionFacade.executeTransfer(reqVo);
+		} catch (Exception e) {
+			logger.error("## 远程调用转账接口异常", e);
+			resultMap.addAttribute("status", Boolean.FALSE);
+			resultMap.addAttribute("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
+		if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {
+			order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
+		}
+
+		if (!inaccountOrderService.updateById(order)) {
+			logger.error("## 更新供应商{}转账至平台订单{}状态{}失败", providerId, orderId, order.getTransferCheck());
+			resultMap.addAttribute("status", Boolean.FALSE);
+			resultMap.addAttribute("msg", "系统异常，请联系管理员");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@Override
+	public int editProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile) {
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
+		String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));
+		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
+		String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
+		String A00 = StringUtil.nullToString(req.getParameter("A00"));
+		String B01 = StringUtil.nullToString(req.getParameter("B01"));
+		String B02 = StringUtil.nullToString(req.getParameter("B02"));
+		String B03 = StringUtil.nullToString(req.getParameter("B03"));
+		String B04 = StringUtil.nullToString(req.getParameter("B04"));
+		String B05 = StringUtil.nullToString(req.getParameter("B05"));
+		String B06 = StringUtil.nullToString(req.getParameter("B06"));
+		String B07 = StringUtil.nullToString(req.getParameter("B07"));
+		String B08 = StringUtil.nullToString(req.getParameter("B08"));
+		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
+
+		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+		if (company == null) {
+			logger.error("## 根据企业代码{}查询企业信息为空", companyCode);
+			return 0;
+		}
+
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		if (order == null) {
+			logger.error("## 根据上账订单号{}查询订单信息为空", orderId);
+			return 0;
+		}
+		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
+		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setPlatformInSumAmt(order.getInaccountAmt());
+		order.setCompanyInSumAmt(order.getInaccountAmt().multiply(new BigDecimal(platformFee)));
+		order.setCompanyId(company.getCompanyId());
+		order.setRemarks(remarks);
+		order.setUpdateUser(user.getId());
+		order.setUpdateTime(System.currentTimeMillis());
+		order.setLockVersion(order.getLockVersion() + 1);
+
+		ModelMap resultMap = saveFile(evidenceUrlFile, req, order.getOrderId());
+		if (resultMap.get("status").equals(false)) {
+			logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+			return 0;
+		}
+		order.setEvidenceUrl(resultMap.get("msg").toString());
+
+		List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
+		List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();
+		List<InaccountOrderDetail> delOrderDetailList = new ArrayList<>();
+		InaccountOrderDetail detailA00 = new InaccountOrderDetail();
+		detailA00.setBId("A00");
+		detailA00.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailA00 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailA00);
+		if (orderDetailA00 == null) {
+			if (!StringUtil.isNullOrEmpty(A00)) {
+				orderDetailA00 = new InaccountOrderDetail();
+				orderDetailA00.setOrderListId(IdUtil.getNextId());
+				orderDetailA00.setOrderId(order.getOrderId());
+				orderDetailA00.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
+				orderDetailA00.setBId("A00");
+				orderDetailA00.setPlatformInAmt(orderDetailA00.getTransAmt());
+				orderDetailA00.setCompanyInAmt(orderDetailA00.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailA00.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailA00.setCreateUser(user.getId());
+				orderDetailA00.setUpdateUser(user.getId());
+				orderDetailA00.setCreateTime(System.currentTimeMillis());
+				orderDetailA00.setUpdateTime(System.currentTimeMillis());
+				orderDetailA00.setLockVersion(0);
+				addOrderDetailList.add(orderDetailA00);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(A00)) {
+				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
+				orderDetailA00.setPlatformInAmt(orderDetailA00.getTransAmt());
+				orderDetailA00.setCompanyInAmt(orderDetailA00.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailA00.setUpdateUser(user.getId());
+				orderDetailA00.setUpdateTime(System.currentTimeMillis());
+				orderDetailA00.setLockVersion(orderDetailA00.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailA00);
+			} else {
+				delOrderDetailList.add(orderDetailA00);
+			}
+		}
+		InaccountOrderDetail detailB01 = new InaccountOrderDetail();
+		detailB01.setBId("B01");
+		detailB01.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB01 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB01);
+		if (orderDetailB01 == null) {
+			if (!StringUtil.isNullOrEmpty(B01)) {
+				orderDetailB01 = new InaccountOrderDetail();
+				orderDetailB01.setOrderListId(IdUtil.getNextId());
+				orderDetailB01.setOrderId(order.getOrderId());
+				orderDetailB01.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
+				orderDetailB01.setBId("B01");
+				orderDetailB01.setPlatformInAmt(orderDetailB01.getTransAmt());
+				orderDetailB01.setCompanyInAmt(orderDetailB01.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB01.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB01.setCreateUser(user.getId());
+				orderDetailB01.setUpdateUser(user.getId());
+				orderDetailB01.setCreateTime(System.currentTimeMillis());
+				orderDetailB01.setUpdateTime(System.currentTimeMillis());
+				orderDetailB01.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB01);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B01)) {
+				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
+				orderDetailB01.setPlatformInAmt(orderDetailB01.getTransAmt());
+				orderDetailB01.setCompanyInAmt(orderDetailB01.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB01.setUpdateUser(user.getId());
+				orderDetailB01.setUpdateTime(System.currentTimeMillis());
+				orderDetailB01.setLockVersion(orderDetailB01.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB01);
+			} else {
+				delOrderDetailList.add(orderDetailB01);
+			}
+		}
+		InaccountOrderDetail detailB02 = new InaccountOrderDetail();
+		detailB02.setBId("B02");
+		detailB02.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB02 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB02);
+		if (orderDetailB02 == null) {
+			if (!StringUtil.isNullOrEmpty(B02)) {
+				orderDetailB02 = new InaccountOrderDetail();
+				orderDetailB02.setOrderListId(IdUtil.getNextId());
+				orderDetailB02.setOrderId(order.getOrderId());
+				orderDetailB02.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
+				orderDetailB02.setBId("B02");
+				orderDetailB02.setPlatformInAmt(orderDetailB02.getTransAmt());
+				orderDetailB02.setCompanyInAmt(orderDetailB02.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB02.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB02.setCreateUser(user.getId());
+				orderDetailB02.setUpdateUser(user.getId());
+				orderDetailB02.setCreateTime(System.currentTimeMillis());
+				orderDetailB02.setUpdateTime(System.currentTimeMillis());
+				orderDetailB02.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB02);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B02)) {
+				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
+				orderDetailB02.setPlatformInAmt(orderDetailB02.getTransAmt());
+				orderDetailB02.setCompanyInAmt(orderDetailB02.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB02.setUpdateUser(user.getId());
+				orderDetailB02.setUpdateTime(System.currentTimeMillis());
+				orderDetailB02.setLockVersion(orderDetailB02.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB02);
+			} else {
+				delOrderDetailList.add(orderDetailB02);
+			}
+		}
+		InaccountOrderDetail detailB03 = new InaccountOrderDetail();
+		detailB03.setBId("B03");
+		detailB03.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB03 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB03);
+		if (orderDetailB03 == null) {
+			if (!StringUtil.isNullOrEmpty(B03)) {
+				orderDetailB03 = new InaccountOrderDetail();
+				orderDetailB03.setOrderListId(IdUtil.getNextId());
+				orderDetailB03.setOrderId(order.getOrderId());
+				orderDetailB03.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
+				orderDetailB03.setBId("B03");
+				orderDetailB03.setPlatformInAmt(orderDetailB03.getTransAmt());
+				orderDetailB03.setCompanyInAmt(orderDetailB03.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB03.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB03.setCreateUser(user.getId());
+				orderDetailB03.setUpdateUser(user.getId());
+				orderDetailB03.setCreateTime(System.currentTimeMillis());
+				orderDetailB03.setUpdateTime(System.currentTimeMillis());
+				orderDetailB03.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB03);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B03)) {
+				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
+				orderDetailB03.setPlatformInAmt(orderDetailB03.getTransAmt());
+				orderDetailB03.setCompanyInAmt(orderDetailB03.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB03.setUpdateUser(user.getId());
+				orderDetailB03.setUpdateTime(System.currentTimeMillis());
+				orderDetailB03.setLockVersion(orderDetailB03.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB03);
+			} else {
+				delOrderDetailList.add(orderDetailB03);
+			}
+		}
+		InaccountOrderDetail detailB04 = new InaccountOrderDetail();
+		detailB04.setBId("B04");
+		detailB04.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB04 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB04);
+		if (orderDetailB04 == null) {
+			if (!StringUtil.isNullOrEmpty(B04)) {
+				orderDetailB04 = new InaccountOrderDetail();
+				orderDetailB04.setOrderListId(IdUtil.getNextId());
+				orderDetailB04.setOrderId(order.getOrderId());
+				orderDetailB04.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
+				orderDetailB04.setBId("B04");
+				orderDetailB04.setPlatformInAmt(orderDetailB04.getTransAmt());
+				orderDetailB04.setCompanyInAmt(orderDetailB04.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB04.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB04.setCreateUser(user.getId());
+				orderDetailB04.setUpdateUser(user.getId());
+				orderDetailB04.setCreateTime(System.currentTimeMillis());
+				orderDetailB04.setUpdateTime(System.currentTimeMillis());
+				orderDetailB04.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB04);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B04)) {
+				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
+				orderDetailB04.setPlatformInAmt(orderDetailB04.getTransAmt());
+				orderDetailB04.setCompanyInAmt(orderDetailB04.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB04.setUpdateUser(user.getId());
+				orderDetailB04.setUpdateTime(System.currentTimeMillis());
+				orderDetailB04.setLockVersion(orderDetailB04.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB04);
+			} else {
+				delOrderDetailList.add(orderDetailB04);
+			}
+		}
+		InaccountOrderDetail detailB05 = new InaccountOrderDetail();
+		detailB05.setBId("A00");
+		detailB05.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB05 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB05);
+		if (orderDetailB05 == null) {
+			if (!StringUtil.isNullOrEmpty(B05)) {
+				orderDetailB05 = new InaccountOrderDetail();
+				orderDetailB05.setOrderListId(IdUtil.getNextId());
+				orderDetailB05.setOrderId(order.getOrderId());
+				orderDetailB05.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
+				orderDetailB05.setBId("B05");
+				orderDetailB05.setPlatformInAmt(orderDetailB05.getTransAmt());
+				orderDetailB05.setCompanyInAmt(orderDetailB05.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB05.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB05.setCreateUser(user.getId());
+				orderDetailB05.setUpdateUser(user.getId());
+				orderDetailB05.setCreateTime(System.currentTimeMillis());
+				orderDetailB05.setUpdateTime(System.currentTimeMillis());
+				orderDetailB05.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB05);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B05)) {
+				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
+				orderDetailB05.setPlatformInAmt(orderDetailB05.getTransAmt());
+				orderDetailB05.setCompanyInAmt(orderDetailB05.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB05.setUpdateUser(user.getId());
+				orderDetailB05.setUpdateTime(System.currentTimeMillis());
+				orderDetailB05.setLockVersion(orderDetailB05.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB05);
+			} else {
+				delOrderDetailList.add(orderDetailB05);
+			}
+		}
+		InaccountOrderDetail detailB06 = new InaccountOrderDetail();
+		detailB06.setBId("B06");
+		detailB06.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB06 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB06);
+		if (orderDetailA00 == null) {
+			if (!StringUtil.isNullOrEmpty(B06)) {
+				orderDetailB06 = new InaccountOrderDetail();
+				orderDetailB06.setOrderListId(IdUtil.getNextId());
+				orderDetailB06.setOrderId(order.getOrderId());
+				orderDetailB06.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
+				orderDetailB06.setBId("B06");
+				orderDetailB06.setPlatformInAmt(orderDetailB06.getTransAmt());
+				orderDetailB06.setCompanyInAmt(orderDetailB06.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB06.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB06.setCreateUser(user.getId());
+				orderDetailB06.setUpdateUser(user.getId());
+				orderDetailB06.setCreateTime(System.currentTimeMillis());
+				orderDetailB06.setUpdateTime(System.currentTimeMillis());
+				orderDetailB06.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB06);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B06)) {
+				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
+				orderDetailB06.setPlatformInAmt(orderDetailB06.getTransAmt());
+				orderDetailB06.setCompanyInAmt(orderDetailB06.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB06.setUpdateUser(user.getId());
+				orderDetailB06.setUpdateTime(System.currentTimeMillis());
+				orderDetailB06.setLockVersion(orderDetailB06.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB06);
+			} else {
+				delOrderDetailList.add(orderDetailB06);
+			}
+		}
+		InaccountOrderDetail detailB07 = new InaccountOrderDetail();
+		detailB07.setBId("B07");
+		detailB07.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB07 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB07);
+		if (orderDetailB07 == null) {
+			if (!StringUtil.isNullOrEmpty(B07)) {
+				orderDetailB07 = new InaccountOrderDetail();
+				orderDetailB07.setOrderListId(IdUtil.getNextId());
+				orderDetailB07.setOrderId(order.getOrderId());
+				orderDetailB07.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
+				orderDetailB07.setBId("B07");
+				orderDetailB07.setPlatformInAmt(orderDetailB07.getTransAmt());
+				orderDetailB07.setCompanyInAmt(orderDetailB07.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB07.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB07.setCreateUser(user.getId());
+				orderDetailB07.setUpdateUser(user.getId());
+				orderDetailB07.setCreateTime(System.currentTimeMillis());
+				orderDetailB07.setUpdateTime(System.currentTimeMillis());
+				orderDetailB07.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB07);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B07)) {
+				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
+				orderDetailB07.setPlatformInAmt(orderDetailB07.getTransAmt());
+				orderDetailB07.setCompanyInAmt(orderDetailB07.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB07.setUpdateUser(user.getId());
+				orderDetailB07.setUpdateTime(System.currentTimeMillis());
+				orderDetailB07.setLockVersion(orderDetailB07.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB07);
+			} else {
+				delOrderDetailList.add(orderDetailB07);
+			}
+		}
+		InaccountOrderDetail detailB08 = new InaccountOrderDetail();
+		detailB08.setBId("B08");
+		detailB08.setOrderId(order.getOrderId());
+		InaccountOrderDetail orderDetailB08 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB08);
+		if (orderDetailB08 == null) {
+			if (!StringUtil.isNullOrEmpty(B08)) {
+				orderDetailB08 = new InaccountOrderDetail();
+				orderDetailB08.setOrderListId(IdUtil.getNextId());
+				orderDetailB08.setOrderId(order.getOrderId());
+				orderDetailB08.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
+				orderDetailB08.setBId("B08");
+				orderDetailB08.setPlatformInAmt(orderDetailB08.getTransAmt());
+				orderDetailB08.setCompanyInAmt(orderDetailB08.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB08.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetailB08.setCreateUser(user.getId());
+				orderDetailB08.setUpdateUser(user.getId());
+				orderDetailB08.setCreateTime(System.currentTimeMillis());
+				orderDetailB08.setUpdateTime(System.currentTimeMillis());
+				orderDetailB08.setLockVersion(0);
+				addOrderDetailList.add(orderDetailB08);
+			}
+		} else {
+			if (!StringUtil.isNullOrEmpty(B08)) {
+				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
+				orderDetailB08.setPlatformInAmt(orderDetailB08.getTransAmt());
+				orderDetailB08.setCompanyInAmt(orderDetailB08.getTransAmt().multiply(new BigDecimal(platformFee)));
+				orderDetailB08.setUpdateUser(user.getId());
+				orderDetailB08.setUpdateTime(System.currentTimeMillis());
+				orderDetailB08.setLockVersion(orderDetailB08.getLockVersion() + 1);
+				editOrderDetailList.add(orderDetailB08);
+			} else {
+				delOrderDetailList.add(orderDetailB08);
+			}
+		}
+
+		if (!inaccountOrderService.updateById(order)) {
+			logger.error("## 更新入账订单信息失败");
+			return 0;
+		}
+
+		if (addOrderDetailList != null && addOrderDetailList.size() >= 1) {
+			if (!inaccountOrderDetailService.saveBatch(addOrderDetailList)) {
+				logger.error("## 新增入账订单明细失败");
+				return 0;
+			}
+		}
+
+		if (editOrderDetailList != null && editOrderDetailList.size() >= 1) {
+			if (!inaccountOrderDetailService.updateBatchById(editOrderDetailList)) {
+				logger.error("## 编辑入账订单明细失败");
+				return 0;
+			}
+		}
+
+		if (delOrderDetailList != null && delOrderDetailList.size() >= 1) {
+			if (!inaccountOrderDetailService.removeByIds(delOrderDetailList)) {
+				logger.error("## 删除入账订单明细失败");
+				return 0;
+			}
+		}
+		return 1;
+	}
+
+	private ModelMap saveFile(MultipartFile file, HttpServletRequest request, String orderId) {
+        ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("status", Boolean.TRUE);
+		try {
+            String fileName = file.getOriginalFilename();//获取file图片名称
+			String endFileName = fileName.substring(fileName.lastIndexOf("."));
+            if (!endFileName.equalsIgnoreCase(".jpg") && !endFileName.equalsIgnoreCase(".jpeg") && !endFileName.equalsIgnoreCase(".bmp") && !endFileName.equalsIgnoreCase(".gif") && !endFileName.equalsIgnoreCase(".png")){
+				resultMap.addAttribute("status", Boolean.FALSE);
+            	resultMap.addAttribute("msg", "文件类型不正确");
+                return resultMap;
+            }
+            // 文件保存路径
+			String filePath = request.getSession().getServletContext().getRealPath("images/");//本地项目路径
+
+			File targetFile = new File(filePath);
+			if(!targetFile.exists()){
+				targetFile.mkdirs();
+			}
+			FileOutputStream out = new FileOutputStream(filePath + orderId + endFileName);
+			out.write(file.getBytes());
+			out.flush();
+			out.close();
+			resultMap.addAttribute("msg", filePath + orderId + endFileName);
+		} catch (Exception e) {
+			logger.error("## 文件上传异常");
+			resultMap.addAttribute("status", Boolean.FALSE);
+			resultMap.addAttribute("msg", "文件上传异常");
+			return resultMap;
+		}
+		return resultMap;
 	}
 
 }

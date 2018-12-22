@@ -7,7 +7,7 @@
         order_id,
         is_invoice,
         trans_amt,
-        b_bid,
+        b_id,
         invoice_info,
         platform_in_amt,
         company_in_amt,
@@ -32,4 +32,15 @@
       where data_stat = '0'
         and order_id = #{orderId}
     </select>
+
+    <select id="getInaccountOrderDetailByOrderIdAndBid" parameterType="InaccountOrderDetail" resultType="InaccountOrderDetail">
+        select
+          <include refid="InaccountOrderDetailColumns"/>
+        from
+          <include refid="tableName"/>
+        where data_stat = '0'
+        and b_id = #{bId}
+        and order_id = #{orderId}
+    </select>
+
 </mapper>

@@ -19,6 +19,7 @@ var editCompany = {
 		var phoneNo = $("#phoneNo").val();
 		var remarks = $("#remarks").val();
 		var transFlag = $("#transFlag").val();
+        var isPlatform = $("#isPlatform").val();
 		if(name ==''){
     		Helper.alert("请输入企业名称");
     		return false;
@@ -54,6 +55,10 @@ var editCompany = {
 			Helper.alert("请选择交易开关");
     		return false;
 		}
+        if (isPlatform == null || isPlatform == "") {
+            Helper.alert("请选择平台标识");
+            return false;
+        }
 		$.ajax({								  
 	            url: Helper.getRootPath() + '/company/editCompany.do',
 	            type: 'post',
@@ -66,6 +71,7 @@ var editCompany = {
 	                "contacts" : contacts,
 	                "phoneNo" : phoneNo,
 	                "transFlag" : transFlag,
+                    "isPlatform" : isPlatform,
 	                "remarks" : remarks
 	            },
 	            traditional:true,

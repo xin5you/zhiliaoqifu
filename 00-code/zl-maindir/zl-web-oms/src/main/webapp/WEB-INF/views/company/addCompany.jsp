@@ -72,6 +72,18 @@
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
+
+										<div class="control-group formSep">
+											<label class="control-label">平台标识<span style="color:red">*</span></label>
+											<div class="controls">
+												<select id="isPlatform" name="isPlatform" class="chzn_a span6">
+													<option value="" >---请选择---</option>
+													<option value="0" >否</option>
+													<option value="1" >是</option>
+												</select>
+												<span class="help-block"></span>
+											</div>
+										</div>
 							     		
 							     		<div class="control-group formSep">
 							             <label class="control-label">交易开关<span style="color:red">*</span></label>

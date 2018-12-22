@@ -72,6 +72,12 @@ public class CompanyInf extends Model<CompanyInf> {
      */
     @TableField("is_open")
     private String isOpen;
+
+    /**
+     * 0:否，1：是
+     */
+    @TableField("is_platform")
+    private String isPlatform;
  
     /**
      * 状态

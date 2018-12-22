@@ -73,4 +73,9 @@ public class CompanyInfServiceImpl extends ServiceImpl<CompanyInfMapper, Company
 	public CompanyInf getCompanyInfByLawCode(String lawCode) {
 		return companyInfMapper.getCompanyInfByLawCode(lawCode);
 	}
+
+	@Override
+	public CompanyInf getCompanyInfByIsPlatform(String isPlatform) {
+		return companyInfMapper.getCompanyInfByIsPlatform(isPlatform);
+	}
 }

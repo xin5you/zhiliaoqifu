@@ -5,8 +5,6 @@ $(document).ready(function() {
 var listTelProviderInf = {
     init : function() {
         listTelProviderInf.initEvent();
-        var operStatus=$("#operStatus").val();
-        Helper.operTip(operStatus);
     },
 
     initEvent:function(){
@@ -53,6 +51,7 @@ var listTelProviderInf = {
                 },
                 success: function (result) {
                     if(result.status){
+                        Helper.operTip(operStatus);
                         location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
                     }else{
                         Helper.alter(result.msg);
@@ -89,6 +88,7 @@ var listTelProviderInf = {
             },
             success: function (data) {
             	if(data.status){
+                    Helper.operTip(operStatus);
             		location.href=Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=1';
             	}else{
             		$('#msg').modal('hide');
@@ -104,52 +104,8 @@ var listTelProviderInf = {
         });
     },
     intoAddProviderTransfer : function () {
-        var providerId = this.attr("providerId");
-        var url = Helper.getRootPath()+"/provider/providerInf/intoAddProviderInf.do?operStatus=1&providerId=" + providerId;
+        var providerId = $(this).attr('providerId');
+        var url = Helper.getRootPath()+"/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId=" + providerId;
         location.href = url;
     }
-    /*loadAddProviderTransferModal:function(){
-        $('#addTransferModal').modal({
-            backdrop : "static"
-        });
-    },
-    addProviderTransferCommit:function(){
-        var amount = $("#amount").val();
-        var companyId = $("#companyId").val();
-        var providerId = $(this).attr('providerId');
-        if(amount==''){
-            Helper.alert("请输入转账金额");
-            return false;
-        }
-        if(companyId==''){
-            Helper.alert("请选择转账至企业");
-            return false;
-        }
-        if(!/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test(amount)){
-            Helper.alert("请输入正确的转账金额");
-            return false;
-        }
-        $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/addProviderTransferCommit.do',
-            type: 'post',
-            dataType : "json",
-            data: {
-                "amount" : amount, 
-                "companyId" : companyId, 
-                "providerId" : providerId
-            },
-            success: function (result) {
-            	if(result.status) {
-                	location = Helper.getRootPath() + '/provider/providerInf/listProviderInf.do?operStatus=4';
-                } else {
-                	Helper.alert(result.msg);
-                	return false;
-                }
-            },
-            error:function(){
-            	Helper.alert("系统故障，请稍后再试");
-            }
-		});
-	
-	}
 }

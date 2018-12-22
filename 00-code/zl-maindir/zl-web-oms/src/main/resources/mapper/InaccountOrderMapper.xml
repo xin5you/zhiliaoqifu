@@ -3,52 +3,77 @@
 <mapper namespace="com.ebeijia.zl.web.oms.inaccount.mapper.InaccountOrderMapper">
 
     <sql id="InaccountOrderColumns">
-        order_id,
-        order_type,
-        check_stat,
-        remit_amt,
-        inaccount_amt,
-        provider_id,
-        company_id,
-        remit_check,
-        inaccount_check,
-        platform_receiver_check,
-        company_receiver_check,
-        evidence_url,
-        remarks,
-        data_stat,
-        create_user,
-        update_user,
-        create_time,
-        update_time,
-        lock_version
+        o.order_id,
+        o.order_type,
+        o.check_stat,
+        o.remit_amt,
+        o.inaccount_amt,
+        o.platform_in_sum_amt,
+        o.company_in_sum_amt,
+        o.provider_id,
+        o.company_id,
+        o.remit_check,
+        o.inaccount_check,
+        o.transfer_check,
+        o.platform_receiver_check,
+        o.company_receiver_check,
+        o.evidence_url,
+        o.remarks,
+        o.data_stat,
+        o.create_user,
+        o.update_user,
+        o.create_time,
+        o.update_time,
+        o.lock_version
     </sql>
 
     <sql id="tableName">
-        tb_inaccount_order
+        tb_inaccount_order o
     </sql>
 
     <select id="getInaccountOrderByOrder" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
-          <include refid="InaccountOrderColumns"/>
+          <include refid="InaccountOrderColumns"/>,
+          c.name as companyName
         from
           <include refid="tableName"/>
-        where data_stat = '0'
-        <if test="providerId != null || providerId != ''">
-            and provider_id = #{providerId}
+        left join tb_company_inf c on o.company_id = c.company_id
+        where o.data_stat = '0'
+        <if test="providerId != null and providerId != ''">
+            and o.provider_id = #{providerId}
         </if>
-        <if test="orderId != null || orderId != ''">
-            and order_id = #{orderId}
+        <if test="orderId != null and orderId != ''">
+            and o.order_id = #{orderId}
         </if>
-        order by create_time desc
+        <if test="transferCheck != null and transferCheck != ''">
+            and o.transfer_check = #{transferCheck}
+        </if>
+        <if test="companyId != null and companyId != ''">
+            and o.company_id = #{companyId}
+        </if>
+        order by o.create_time desc
     </select>
 
     <select id="getInaccountOrderByOrderId" parameterType="String" resultType="InaccountOrder">
         select
-        <include refid="InaccountOrderColumns"/>
+          <include refid="InaccountOrderColumns"/>,
+        c.name as companyName
         from
-        <include refid="tableName"/>
-        where data_stat = '0'
-          and order_id = #{orderId}
+          <include refid="tableName"/>
+        left join tb_company_inf c on o.company_id = c.company_id
+        where o.data_stat = '0'
+          and o.order_id = #{orderId}
+    </select>
+
+    <select id="getInaccountOrderByOrderIdAndCompanyId" parameterType="InaccountOrder" resultType="InaccountOrder">
+        select
+          <include refid="InaccountOrderColumns"/>,
+        c.name as companyName
+        from
+          <include refid="tableName"/>
+        left join tb_company_inf c on o.company_id = c.company_id
+        where o.data_stat = '0'
+        and o.order_id = #{orderId}
+        and o.company_id = #{companyId}
     </select>
 </mapper>

@@ -23,5 +23,7 @@ public interface CompanyInfService extends IService<CompanyInf> {
 	public PageInfo<CompanyInf> getCompanyInfList(int startNum, int pageSize,CompanyInf companyInf);
 	
 	public CompanyInf getCompanyInfByLawCode(@Param("lawCode")String lawCode);
+
+	public CompanyInf getCompanyInfByIsPlatform(String isPlatform);
 	
 }
