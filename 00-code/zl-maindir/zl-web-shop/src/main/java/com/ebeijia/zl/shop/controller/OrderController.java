@@ -2,6 +2,7 @@ package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderInf;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.TokenCheck;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderController {
     @Autowired
-    IOrderService iOrderService;
+    IOrderService orderService;
     //订单状态机：    下单-支付中-A类支付完成-B类支付完成-发货-评价
     //                     取消  -A类退款       -B类退款 -退货-退货申请
 
@@ -35,7 +36,8 @@ public class OrderController {
     @ShopTransactional
     @ApiOperation("商品直接下单")
     @RequestMapping(value = "/goods/create/",method = RequestMethod.POST)
-    public JsonResult<TbEcomOrderInf> createOrder(@ApiParam(name = "order",type = "body") EcomOrderDetailInfo order, @RequestParam("session") String session){
+    public JsonResult<TbEcomOrderInf> createOrder(@ApiParam(name = "productId",value = "货品ID") String productId,@ApiParam(name = "amounts",value = "数量") Integer amounts,AddressInfo address, @RequestParam("session") String session){
+        TbEcomPlatfShopOrder order = orderService.createSimpleOrder(productId,amounts,address);
         return new JsonResult<>(new TbEcomOrderInf());
     }
 
