@@ -12,7 +12,7 @@ import java.util.Map;
 public interface ProviderInfService {
 
 	int providerOpenAccount(HttpServletRequest req);
-	
+
 	int addProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
 	int addProviderTransferCommit(HttpServletRequest req);

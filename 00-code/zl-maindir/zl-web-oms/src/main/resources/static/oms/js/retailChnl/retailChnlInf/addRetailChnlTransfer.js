@@ -107,7 +107,7 @@ var addRetailChnlInfTransfer = {
             dataType : "json",
             data: {
                 "orderId": orderId,
-                "providerId": providerId
+                "channelId": channelId
             },
             success: function (data) {
                 if(data.status){
@@ -182,8 +182,9 @@ var addRetailChnlInfTransfer = {
                     $("#remitAmt").val(data.order.remitAmt);
                     $("#inaccountAmt").val(data.order.inaccountAmt);
                     $("#evidenceUrl").val(data.order.evidenceUrl);
+                    $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
-                        $('.span3[id=' + item.BId + ']').attr('value',item.transAmt);
+                        $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
                     });
                 }else{
                     Helper.alter(data.msg);

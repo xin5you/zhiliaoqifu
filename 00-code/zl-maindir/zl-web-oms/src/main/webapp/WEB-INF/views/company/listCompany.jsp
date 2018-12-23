@@ -98,12 +98,14 @@
 									<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 								</sec:authorize>
 							</c:if>
+							<c:if test="${company.isOpen=='1'}">
 								<%--<c:if test="${company.isOpen=='1'} && ${company.isPlatform=='1'}">--%>
 							<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
 								<%--</c:if>--%>
 								<%--<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">--%>
 							<a companyId="${entity.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
 								<%--</sec:authorize>	--%>
+							</c:if>
 						</td>
 					</tr>
 				</c:forEach>

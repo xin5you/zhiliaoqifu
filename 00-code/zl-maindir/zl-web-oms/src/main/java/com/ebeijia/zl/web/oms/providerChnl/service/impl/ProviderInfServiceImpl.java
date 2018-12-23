@@ -8,6 +8,7 @@ import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
@@ -500,6 +501,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 
 		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
+		if (StringUtil.isNullOrEmpty(platformFee)) {
+			platformFee = "0.4";
+		}
 
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
@@ -539,12 +543,14 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(order.getLockVersion() + 1);
 
-		Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
-		if (resultMap.get("status").equals(Boolean.FALSE)) {
-			logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
-			return 0;
+		if (StringUtils.isNotBlank(evidenceUrlFile.getOriginalFilename())) {
+			Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
+			if (resultMap.get("status").equals(Boolean.FALSE)) {
+				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+				return 0;
+			}
+			order.setEvidenceUrl(resultMap.get("msg").toString());
 		}
-		order.setEvidenceUrl(resultMap.get("msg").toString());
 
 		List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();

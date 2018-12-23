@@ -46,7 +46,7 @@ import com.github.pagehelper.PageInfo;
 @Controller
 @RequestMapping(value = "retailChnl/retailChnlInf")
 public class RetailChnlInfController {
-	
+
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -60,7 +60,7 @@ public class RetailChnlInfController {
 
 	@Autowired
 	private CommonService commonService;
-	
+
 	@Autowired
 	private RetailChnlItemListFacade retailChnlItemListFacade;
 
@@ -72,7 +72,7 @@ public class RetailChnlInfController {
 
 	/**
 	 * 分销商信息列表
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -200,7 +200,7 @@ public class RetailChnlInfController {
 
 	/**
 	 * 进入分销商添加折扣率
-	 * 
+	 *
 	 * @param req
 	 * @param resp
 	 * @return
@@ -271,7 +271,7 @@ public class RetailChnlInfController {
 
 	/**
 	 * 添加分销商添加折扣率
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return
@@ -309,7 +309,7 @@ public class RetailChnlInfController {
 
 	/**
 	 * 进入分销商折扣率编辑页面
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return
@@ -340,10 +340,10 @@ public class RetailChnlInfController {
 		mv.addObject("operIdList", OperatorType.values());
 		return mv;
 	}
-	
+
 	/**
 	 * 分销商折扣率编辑提交
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return
@@ -376,7 +376,7 @@ public class RetailChnlInfController {
 		}
 		return resultMap;
 	}
-	
+
 	@RequestMapping(value = "/retailChnlOpenAccount")
 	@ResponseBody
 	public Map<String, Object> retailChnlOpenAccount(HttpServletRequest req, HttpServletResponse response) {
@@ -431,7 +431,7 @@ public class RetailChnlInfController {
 	@RequestMapping(value = "/addRetailChnlTransfer")
 	@ResponseBody
 	public Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
-										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+													 @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
@@ -530,8 +530,6 @@ public class RetailChnlInfController {
 			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
 			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
 			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
-			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
-			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 		}
@@ -578,7 +576,7 @@ public class RetailChnlInfController {
 	@RequestMapping(value = "/editRetailChnlTransfer")
 	@ResponseBody
 	public Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
-										 @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+													  @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
@@ -601,11 +599,11 @@ public class RetailChnlInfController {
 		}
 		return resultMap;
 	}
-	
+
 	private RetailChnlInf getRetailChnlInf(HttpServletRequest req) throws Exception {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
+
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 		String channelName = StringUtil.nullToString(req.getParameter("channelName"));
 		String channelCode = StringUtil.nullToString(req.getParameter("channelCode"));
@@ -651,5 +649,5 @@ public class RetailChnlInfController {
 		retailChnl.setUpdateTime(System.currentTimeMillis());
 		return retailChnl;
 	}
-	
+
 }
