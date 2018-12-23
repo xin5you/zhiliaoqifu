@@ -49,8 +49,8 @@ public class ProviderOrderInfFacadeImpl implements ProviderOrderInfFacade {
 	}
 
 	@Override
-	public ProviderOrderInf getTelOrderInfByChannelOrderId(String channelOrderId) throws Exception {
-		return providerOrderInfService.getTelOrderInfByChannelOrderId(channelOrderId);
+	public ProviderOrderInf getOrderInfByChannelOrderId(String channelOrderId) throws Exception {
+		return providerOrderInfService.getOrderInfByChannelOrderId(channelOrderId);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class ProviderOrderInfFacadeImpl implements ProviderOrderInfFacade {
 	
 	/**
 	 * 查找updateTime 10分钟以内，1分钟以上的订单
-	 * @param ProviderOrderInf
+	 * @param providerOrderInf
 	 * @return
 	 */
 	public List<ProviderOrderInf> getListByTimer(ProviderOrderInf providerOrderInf){

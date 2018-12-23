@@ -9,6 +9,7 @@
 	
 	<sql id="ColumnResult">
 	 	provider_id,
+	 	law_code,
 	  	provider_name,
 	    app_url, 
 	    app_secret,

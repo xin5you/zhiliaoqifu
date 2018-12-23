@@ -1,5 +1,7 @@
 package com.ebeijia.zl.api.bm001.api.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.api.bm001.api.constants.BMConstants;
 import com.ebeijia.zl.api.bm001.api.req.PayBillReq;
 import com.ebeijia.zl.api.bm001.api.service.BMOpenApiService;
-import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.qianmi.open.api.ApiException;
@@ -60,13 +61,13 @@ public class BMOpenApiServiceImpl implements BMOpenApiService {
 		req.setMobileNo(payBillReq.getMobileNo());
 		req.setRechargeAmount(payBillReq.getRechargeAmount());
 		
-		if(!StringUtil.isNullOrEmpty(payBillReq.getOuterTid())){
+		if(StringUtils.isNotEmpty(payBillReq.getOuterTid())){
 			req.setOuterTid(payBillReq.getOuterTid());
 		}
-		if(!StringUtil.isNullOrEmpty(payBillReq.getCallback())){
+		if(StringUtils.isNotEmpty(payBillReq.getCallback())){
 			req.setCallback(payBillReq.getCallback());
 		}
-		if(!StringUtil.isNullOrEmpty(payBillReq.getItemId())){
+		if(StringUtils.isNotEmpty(payBillReq.getItemId())){
 			req.setItemId(payBillReq.getItemId());
 		}
 		
@@ -145,6 +146,4 @@ public class BMOpenApiServiceImpl implements BMOpenApiService {
 			return null;
 		}
 	}
-
-	 
 }

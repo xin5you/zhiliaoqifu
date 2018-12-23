@@ -42,7 +42,7 @@ public class AccountTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-    @Test
+   /* @Test
    public void createAccountForProvider() throws Exception{
     	AccountOpenReqVo req=new AccountOpenReqVo();
     	req.setTransId(TransCode.MB80.getCode());
@@ -63,7 +63,7 @@ public class AccountTest {
     	
     	req.setbIds(bids);
     	txnAccountInfFacade.createAccount(req);
-   }
+   }*/
     
     
     /**
@@ -81,7 +81,7 @@ public class AccountTest {
     *-------------------------------------*
     * 2018年12月14日     zhuqi           v1.0.0
      */
-    @Test
+/*    @Test
    public void createAccountForZL() throws Exception{
     	AccountOpenReqVo req=new AccountOpenReqVo();
     	req.setTransId(TransCode.MB80.getCode());
@@ -102,7 +102,7 @@ public class AccountTest {
     	
     	req.setbIds(bids);
     	txnAccountInfFacade.createAccount(req);
-   }
+   }*/
 	
 	
 	
@@ -121,7 +121,7 @@ public class AccountTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-    @Test
+/*    @Test
    public void createAccountForZLCompany() throws Exception{
     	AccountOpenReqVo req=new AccountOpenReqVo();
     	req.setTransId(TransCode.MB80.getCode());
@@ -141,9 +141,39 @@ public class AccountTest {
     	
     	req.setbIds(bids);
     	txnAccountInfFacade.createAccount(req);
-   }
-    
-    
+   }*/
+
+
+	/**
+	 *
+	 * @Description: 分销商开户
+	 *
+	 * @param:描述1描述
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月14日 上午9:23:48
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月14日     zhuqi           v1.0.0
+	 */
+	@Test
+	public void createAccountForZLRetail() throws Exception{
+		AccountOpenReqVo req=new AccountOpenReqVo();
+		req.setTransId(TransCode.MB80.getCode());
+		req.setTransChnl(TransChnl.CHANNEL0.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+		req.setUserChnlId("0e04cf948e2af629a334c7c71fa3f8888");
+		req.setUserName("测试分销商（勿删）");
+		req.setUserType(UserType.TYPE400.getCode());
+		req.setCompanyId("0e04cf948e2af629a334c7c71fa3f8888");
+		req.setDmsRelatedKey(IdUtil.getNextId());
+		req.setbIds(SpecAccountTypeEnum.getList());
+		txnAccountInfFacade.createAccount(req);
+	}
+
 	/**
 	 * 
 	* @Description: 企业员工开户
@@ -159,7 +189,7 @@ public class AccountTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-    @Test
+  /*  @Test
    public void createAccountForUser() throws Exception{
     	AccountOpenReqVo req=new AccountOpenReqVo();
     	req.setTransId(TransCode.CW80.getCode());
@@ -180,5 +210,5 @@ public class AccountTest {
     	
     	req.setbIds(bids);
     	txnAccountInfFacade.createAccount(req);
-   }
+   }*/
 }

@@ -1,6 +1,7 @@
 package com.ebeijia.zl.web.oms.company.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,10 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.web.oms.common.service.CommonService;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,8 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -39,6 +45,15 @@ public class CompanyController {
 	
 	@Autowired
 	private CompanyService companyService;
+
+	@Autowired
+	private CommonService commonService;
+
+	@Autowired
+	private InaccountOrderService inaccountOrderService;
+
+	@Autowired
+	private InaccountOrderDetailService inaccountOrderDetailService;
 	
 	/**
 	 * 企业信息列表查询
@@ -186,6 +201,7 @@ public class CompanyController {
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		if (!StringUtil.isNullOrEmpty(companyId)) {
 			companyInf = companyInfFacade.getCompanyInfById(companyId);
+			companyInf.setLockVersion(companyInf.getLockVersion() + 1);
 		} else {
 			companyInf = new CompanyInf();
 			companyInf.setCompanyId(IdUtil.getNextId());
@@ -202,9 +218,9 @@ public class CompanyController {
 		companyInf.setRemarks(StringUtil.nullToString(req.getParameter("remarks")));
 		companyInf.setPhoneNo(StringUtil.nullToString(req.getParameter("phoneNo")));
 		companyInf.setContacts(StringUtil.nullToString(req.getParameter("contacts")));
+		companyInf.setIsPlatform(StringUtil.nullToString(req.getParameter("isPlatform")));
 		companyInf.setUpdateUser(user.getId());
 		companyInf.setUpdateTime(System.currentTimeMillis());
-		companyInf.setLockVersion(0);
 		return companyInf;
 	}
 	
@@ -226,6 +242,124 @@ public class CompanyController {
 			return resultMap;
 		}
 		return resultMap;
+	}
+
+	@RequestMapping(value = "/intoAddCompanyTransfer")
+	public ModelAndView intoAddCompanyTransfer(HttpServletRequest req, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("company/addCompanyTransfer");
+		String companyId = req.getParameter("companyId");
+		CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+
+		InaccountOrder order = new InaccountOrder();
+		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
+		try {
+			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
+			mv.addObject("pageInfo", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询打款订单信息详情异常", e);
+		}
+
+		mv.addObject("company", company);
+		return mv;
+	}
+
+	@RequestMapping(value = "/addCompanyTransferCommit")
+	@ResponseBody
+	public Map<String, Object> addCompanyTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		try {
+			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+			if (IsPlatformEnum.ISOPEN_TRUE.getCode().equals(company.getIsPlatform())) {
+				resultMap = companyService.addCompanyTransferCommit(req);
+			} else {
+				resultMap = companyService.updateCompanyTransferStat(req);
+			}
+		} catch (Exception e) {
+			logger.error(" ## 企业{}收款异常 ", companyId, e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "企业收款失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "viewCompanyTransferDetail")
+	public ModelAndView viewCompanyTransferDetail(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("company/viewCompanyTransfer");
+
+		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
+		String companyId = StringUtil.nullToString(request.getParameter("companyId"));
+		InaccountOrder inaccountOrder = new InaccountOrder();
+		inaccountOrder.setOrderId(orderId);
+		CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+		if (IsPlatformEnum.ISOPEN_FALSE.getCode().equals(company.getIsPlatform())) {
+			inaccountOrder.setCompanyId(company.getCompanyId());
+		}
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		if (order != null) {
+			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
+			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
+			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
+			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
+			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
+		}
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+			orderDetail.setOrderId(orderId);
+			PageInfo<InaccountOrderDetail> pageList = inaccountOrderDetailService.getInaccountOrderDetailByOrderPage(startNum, pageSize, orderDetail);
+			mv.addObject("pageInfo", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询企业订单明细信息详情异常", e);
+		}
+		mv.addObject("order", order);
+		mv.addObject("company", company);
+		return mv;
+	}
+
+	@RequestMapping(value = "/addCompanyInvoiceCommit")
+	@ResponseBody
+	public Map<String, Object> addCompanyInvoiceCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderListId = StringUtil.nullToString(req.getParameter("orderListId"));
+		try {
+			InaccountOrderDetail orderDetail = inaccountOrderDetailService.getById(orderListId);
+			if (orderDetail != null) {
+				orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_TRUE.getCode());
+				if (!inaccountOrderDetailService.updateById(orderDetail)) {
+					logger.error(" ## 更新订单{}开票失败 ", orderListId);
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "开票异常，请稍后再试");
+				}
+			}
+		} catch (Exception e) {
+			logger.error(" ## 订单{}开票异常 ", orderListId, e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "开票失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping("/listCompanyAccBal")
+	public ModelAndView listCompanyAccBal(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("company/listCompanyAccBal");
+		try {
+			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
+			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+		} catch (Exception e) {
+			logger.error("## 企业账户列表查询异常", e);
+		}
+		return mv;
 	}
 	
 }

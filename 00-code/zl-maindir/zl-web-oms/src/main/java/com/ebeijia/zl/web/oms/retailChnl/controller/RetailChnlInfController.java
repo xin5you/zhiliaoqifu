@@ -10,27 +10,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.facade.telrecharge.domain.*;
+import com.ebeijia.zl.web.oms.common.service.CommonService;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductAreaFlag;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelProductProType;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.OperatorType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlItemList;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlItemListFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlProductInfFacade;
@@ -52,9 +57,18 @@ public class RetailChnlInfController {
 
 	@Autowired
 	private RetailChnlInfService retailChnlInfService;
+
+	@Autowired
+	private CommonService commonService;
 	
 	@Autowired
 	private RetailChnlItemListFacade retailChnlItemListFacade;
+
+	@Autowired
+	private InaccountOrderService inaccountOrderService;
+
+	@Autowired
+	private InaccountOrderDetailService inaccountOrderDetailService;
 
 	/**
 	 * 分销商信息列表
@@ -166,9 +180,9 @@ public class RetailChnlInfController {
 
 	@RequestMapping(value = "/deleteRetailChnlInfCommit")
 	@ResponseBody
-	public ModelMap deleteRetailChnlInfCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> deleteRetailChnlInfCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 
 		try {
@@ -225,8 +239,8 @@ public class RetailChnlInfController {
 					check.setChannelRate(channelProductAll.getChannelRate());
 					check.setOperId(OperatorType.findByCode(channelProductAll.getOperId()));
 					check.setProductType(ChannelProductProType.findByCode(channelProductAll.getProductType()));
-					check.setOperName(channelProductAll.getOperName());
-					check.setProductAmt(channelProductAll.getProductAmt());
+					/*check.setOperName(channelProductAll.getOperName());*/
+					/*check.setProductAmt(channelProductAll.getProductAmt());*/
 					check.setProductPrice(channelProductAll.getProductPrice());
 					check.setCreateTime(channelProductAll.getCreateTime());
 					check.setUpdateTime(channelProductAll.getUpdateTime());
@@ -264,9 +278,9 @@ public class RetailChnlInfController {
 	 */
 	@RequestMapping(value = "/addRetailChnlRateCommit")
 	@ResponseBody
-	public ModelMap addRetailChnlRateCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> addRetailChnlRateCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 		String channelRate = StringUtil.nullToString(req.getParameter("channelRate"));
 		String ids = req.getParameter("ids");
@@ -336,14 +350,14 @@ public class RetailChnlInfController {
 	 */
 	@RequestMapping(value = "/editRetailChnlProductRateCommit")
 	@ResponseBody
-	public ModelMap editRetailChnlProductRateCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> editRetailChnlProductRateCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String itemId = StringUtil.nullToString(req.getParameter("itemId"));
 		try {
 			if (StringUtil.isNullOrEmpty(itemId)) {
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "编辑失败,分销商产品折扣率id为空");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑失败,分销商产品折扣率id为空");
 				logger.error("## 编辑分销商产品信息折扣率异常,分销商产品折扣率id:[{}]为空", itemId);
 			}
 			RetailChnlItemList retailChnlItemList = retailChnlItemListFacade.getRetailChnlItemListById(itemId);
@@ -356,8 +370,8 @@ public class RetailChnlInfController {
 				retailChnlItemList.setChannelRate(new BigDecimal(req.getParameter("channelRate")));
 			retailChnlItemListFacade.updateRetailChnlItemList(retailChnlItemList);
 		} catch (Exception e) {
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "编辑失败，请联系管理员");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑失败，请联系管理员");
 			logger.error("## 编辑分销商产品信息异常", e);
 		}
 		return resultMap;
@@ -365,9 +379,9 @@ public class RetailChnlInfController {
 	
 	@RequestMapping(value = "/retailChnlOpenAccount")
 	@ResponseBody
-	public ModelMap retailChnlOpenAccount(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> retailChnlOpenAccount(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		try {
 			int i = retailChnlInfService.retailChnlOpenAccount(req);
 			if (i < 1) {
@@ -378,6 +392,212 @@ public class RetailChnlInfController {
 			logger.error(" ## 分销商开户出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "分销商开户失败，请重新操作");
+		}
+		return resultMap;
+	}
+
+	@RequestMapping("/listRetailChnlAccBal")
+	public ModelAndView listRetailChnlAccBal(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlAccBal");
+		try {
+			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
+			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+		} catch (Exception e) {
+			logger.error("## 分销商账户列表查询异常", e);
+		}
+		return mv;
+	}
+
+	@RequestMapping(value = "intoAddRetailChnlTransfer")
+	public ModelAndView intoAddRetailChnlTransfer(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/addRetailChnlTransfer");
+
+		String channelId = StringUtil.nullToString(request.getParameter("channelId"));
+		InaccountOrder order = new InaccountOrder();
+		order.setProviderId(channelId);
+		order.setOrderType(UserType.TYPE400.getCode());
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
+			mv.addObject("pageInfo", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询分销商上账信息详情异常", e);
+		}
+		mv.addObject("channelId", channelId);
+		return mv;
+	}
+
+	@RequestMapping(value = "/addRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
+										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		try {
+			RetailChnlInf retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
+			if (retailChnl == null || retailChnl.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，该分销商信息不存在或未开户");
+				return resultMap;
+			}
+			int i = retailChnlInfService.addRetailChnlTransfer(req, evidenceUrlFile);
+			if (i < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error(" ## 添加分销商上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "添加分销商上账信息失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "/addRetailChnlTransferCommit")
+	@ResponseBody
+	public Map<String, Object> addRetailChnlTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		try {
+			if (retailChnlInfService.addRetailChnlTransferCommit(req) < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "分销商上账失败，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error("## 分销商上账异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "分销商上账失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "/updateRetailChnlCheckStatCommit")
+	@ResponseBody
+	public Map<String, Object> updateRetailChnlCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		order.setCheckStat(CheckStatEnum.CHECK_TRUE.getCode());
+		order.setUpdateUser(user.getId());
+		order.setUpdateTime(System.currentTimeMillis());
+		order.setLockVersion(order.getLockVersion() + 1);
+
+		if (!inaccountOrderService.updateById(order)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "更新上账信息审核状态失败，请稍后再试");
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "/getRetailChnlByOrderId")
+	@ResponseBody
+	public Map<String, Object> getRetailChnlByOrderId(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		try {
+			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			if (order != null) {
+				resultMap.put("msg", order);
+			}
+		} catch (Exception e) {
+			logger.error("## 查询分销商订单异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "viewRetailChnlTransferDetail")
+	public ModelAndView viewRetailChnlTransferDetail(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/viewRetailChnlTransfer");
+
+		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		if (order != null) {
+			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
+			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
+			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
+			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
+			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
+		}
+
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+			orderDetail.setOrderId(orderId);
+			PageInfo<InaccountOrderDetail> pageList = inaccountOrderDetailService.getInaccountOrderDetailByOrderPage(startNum, pageSize, orderDetail);
+			mv.addObject("pageInfo", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询分销商上账订单明细信息详情异常", e);
+		}
+		mv.addObject("order", order);
+		return mv;
+	}
+
+	@RequestMapping(value = "/intoEditRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> intoEditRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		try {
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+			if (orderDetail != null && orderDetail.size() >= 1) {
+				for (InaccountOrderDetail d : orderDetail) {
+					d.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getTransAmt().toString())));
+				}
+			}
+			resultMap.put("order", order);
+			resultMap.put("orderDetail", orderDetail);
+		} catch (Exception e) {
+			logger.error("## 编辑---》查询分销商上账信息异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询分销商上账信息异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@RequestMapping(value = "/editRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
+										 @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		try {
+			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
+			if (retailChnlInf == null || retailChnlInf.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，该分销商信息不存在或未开户");
+				return resultMap;
+			}
+			int i = retailChnlInfService.editRetailChnlTransfer(req, evidenceUrlFile);
+			if (i < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error(" ## 编辑分销商上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑分销商上账信息失败，请稍后再试");
 		}
 		return resultMap;
 	}

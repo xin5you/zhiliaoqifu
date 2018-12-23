@@ -93,7 +93,8 @@
         <module>zl-web-diy</module>
 	    <module>zl-web-cms</module>
     	<module>zl-web-user</module>
-  </modules>
+        <module>zl-core-dubbo</module>
+    </modules>
 
     <build>
         <plugins>

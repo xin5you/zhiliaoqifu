@@ -2,10 +2,7 @@ package com.ebeijia.zl.web.oms.batchOrder.controller;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -168,14 +165,14 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/addRechargeCommit")
 	@ResponseBody
-	public ModelMap addRechargeCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> addRechargeCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		
 		LinkedList<BatchOrderList> orderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.rechargeSession);
 		if (orderList == null || orderList.size() < 1) {
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "没有添加任何数据！！！");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "没有添加任何数据！！！");
 			return resultMap;
 		}
 		
@@ -186,8 +183,8 @@ public class BatchRechargeController {
 			}
 		} catch (Exception e) {
 			logger.error("## 新增批量充值订单出错----->>[{}]", e.getMessage());
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "新增批量充值失败，请重新添加");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增批量充值失败，请重新添加");
 		}
 		return resultMap;
 	}
@@ -259,8 +256,8 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/deleteRechargeCommit")
 	@ResponseBody
-	public ModelMap deleteRechargeCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> deleteRechargeCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
@@ -291,8 +288,8 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/addOrderCommit")
 	@ResponseBody
-	public ModelMap addOrderCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addOrderCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		HttpSession session = req.getSession();
@@ -328,8 +325,8 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/addOrderListCommit")
 	@ResponseBody
-	public ModelMap addOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
@@ -381,8 +378,8 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/deleteOrderListCommit")
 	@ResponseBody
-	public ModelMap deleteOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> deleteOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			int i = batchOrderListService.deleteBatchOrderList(req);
@@ -407,8 +404,8 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/addAccountInf")
 	@ResponseBody
-	public ModelMap addAccountInf(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addAccountInf(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			String phone = StringUtil.nullToString(req.getParameter("phone"));
@@ -459,8 +456,8 @@ public class BatchRechargeController {
 	 */
 	@RequestMapping(value = "/deleteAccountInf")
 	@ResponseBody
-	public ModelMap deleteAccountInf(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> deleteAccountInf(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			String puId = req.getParameter("puId");

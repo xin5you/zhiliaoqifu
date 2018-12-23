@@ -18,4 +18,6 @@ import java.util.List;
 public interface InaccountOrderDetailMapper extends BaseMapper<InaccountOrderDetail> {
 
     List<InaccountOrderDetail> getInaccountOrderDetailByOrderId(String orderId);
+
+    InaccountOrderDetail getInaccountOrderDetailByOrderIdAndBid(InaccountOrderDetail inaccountOrderDetail);
 }

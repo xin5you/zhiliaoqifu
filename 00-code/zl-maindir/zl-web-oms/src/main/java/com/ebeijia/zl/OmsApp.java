@@ -30,8 +30,6 @@ import com.alibaba.druid.support.http.WebStatFilter;
 @SpringBootApplication
 public class OmsApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
-
-	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(OmsApp.class);
 	}
@@ -39,7 +37,6 @@ public class OmsApp extends SpringBootServletInitializer implements WebApplicati
 	public static void main(String[] args) {
 		SpringApplication.run(OmsApp.class, args);
 	}
-
 
 	// 显示声明CommonsMultipartResolver为mutipartResolver
 	@Bean(name = "multipartResolver")

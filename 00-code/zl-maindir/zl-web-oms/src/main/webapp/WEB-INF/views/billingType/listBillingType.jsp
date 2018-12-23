@@ -39,6 +39,7 @@
 					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
 						<thead>
 							<tr>
+								<th>账户类型ID</th>
 								<th>账户类型名称</th>
 								<th>账户类型代码</th>
 								<th>折损率</th>
@@ -50,6 +51,7 @@
 						<tbody>
 							<c:forEach var="b" items="${pageInfo.list}" varStatus="st">
 								<tr>
+									<td>${b.BId}</td>
 									<td>${b.BName}</td>
 									<td>${b.code}类</td>
 									<td>${b.loseFee}</td>

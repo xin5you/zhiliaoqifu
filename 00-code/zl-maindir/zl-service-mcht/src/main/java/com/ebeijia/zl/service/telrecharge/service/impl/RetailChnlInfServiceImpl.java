@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlAreaInf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,22 @@ public class RetailChnlInfServiceImpl extends ServiceImpl<RetailChnlInfMapper, R
 
 	@Autowired
 	private RetailChnlInfMapper retailChnlInfMapper;
+
+
+	@Override
+	public boolean save(RetailChnlInf entity) {
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
+
+	@Override
+	public boolean updateById(RetailChnlInf entity){
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
+	}
 	
 	public List<RetailChnlInf> getList(RetailChnlInf retailChnlInf){
 		return retailChnlInfMapper.getList(retailChnlInf);

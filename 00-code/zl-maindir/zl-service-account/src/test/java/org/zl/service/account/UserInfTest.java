@@ -35,10 +35,10 @@ public class UserInfTest {
     	req.setCompanyId("100000000000000000000000");
     	req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
     	req.setUserChnlId(IdUtil.getNextId());
-    	
-    	
+
+
 //    	req.setCardType(UserType.TYPE100.getCode());
-    	
+
     	userInfFacade.registerUserInf(req);
 
     }

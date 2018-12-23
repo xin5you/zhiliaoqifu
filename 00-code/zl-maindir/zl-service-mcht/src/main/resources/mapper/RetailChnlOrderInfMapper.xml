@@ -95,10 +95,8 @@
 	</select>
 	
 
-		
-
 	
-	<select id="getRetailChnlProductInfByOuterId" parameterType="java.lang.String" resultType="RetailChnlProductInf">
+	<select id="getRetailChnlOrderInfByOuterId" parameterType="java.lang.String" resultType="RetailChnlProductInf">
 		SELECT 
 	  		<include refid="ColumnResult" />
 		 		     FROM 	<include refid="TableName" /> m
@@ -117,7 +115,7 @@
 		  from tb_retail_chnl_order_inf   o,
 		       tb_retail_chnl_product_inf p,
 		       tb_retail_chnl_inf         c,
-		       tb_tel_provider_order_inf  pr
+		       tb_provider_order_inf  pr
 		 where o.product_id = p.product_id
 		   and o.channel_id = c.channel_id
 		   and o.channel_order_id = pr.channel_order_id

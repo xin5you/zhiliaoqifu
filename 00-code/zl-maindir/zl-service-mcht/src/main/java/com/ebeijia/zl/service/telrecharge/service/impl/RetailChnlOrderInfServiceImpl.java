@@ -6,19 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.facade.telrecharge.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
-import com.ebeijia.zl.facade.telrecharge.utils.ResultsUtil;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
 import com.ebeijia.zl.service.telrecharge.mapper.RetailChnlOrderInfMapper;
@@ -50,16 +49,31 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	
 	@Autowired
 	private ProviderOrderInfService providerOrderInfService;
+
+	@Override
+	public boolean save(RetailChnlOrderInf entity) {
+		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		entity.setCreateTime(System.currentTimeMillis());
+		entity.setUpdateTime(System.currentTimeMillis());
+		entity.setLockVersion(0);
+		return super.save(entity);
+	}
+
+	@Override
+	public boolean updateById(RetailChnlOrderInf entity){
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
+	}
 	
 	/**
 	 * 
-	 * @param RetailChnlOrderInf 分销商订单
+	 * @param retailChnlOrderInf 分销商话费充值
 	 * @param operId 运营商
 	 * @param areaName 地区名称
 	 * @return
 	 * @throws Exception
 	 */
-	public TeleRespDomain proChannelOrder(RetailChnlOrderInf retailChnlOrderInf,String operId,String areaName) throws Exception{
+	public BaseResult proTelChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception{
 		
 		//获取分销商信息
 		RetailChnlInf retailChnlInf= retailChnlInfService.getById(retailChnlOrderInf.getChannelId());
@@ -70,8 +84,8 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		//获取分销商的产品 & 折扣率
 		Map maps=new HashMap<>();
 		maps.put("productId", retailChnlOrderInf.getProductId());
-		maps.put("operId", operId);
-//		maps.put("areaName", areaName);
+		//maps.put("operId", operId);
+		//maps.put("areaName", areaName);
 		maps.put("channelId", retailChnlInf.getChannelId()); //分销商ID
 		maps.put("productAmt", retailChnlOrderInf.getRechargeValue());
 		maps.put("productType", retailChnlOrderInf.getRechargeType());
@@ -100,24 +114,29 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		retailChnlOrderInf.setItemNum(1);//产品数量
 		retailChnlOrderInf.setChannelRate(telChannelProductInf.getChannelRate()); //折扣率
 		retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_1.getCode());  //处理中
-			if(telChannelProductInf !=null){
-				retailChnlOrderInf.setProductId(telChannelProductInf.getProductId());
-			}
-			if(StringUtil.isNotEmpty(retailChnlOrderInf.getNotifyUrl())){
-				retailChnlOrderInf.setNotifyFlag("0");
-			}else{
-				retailChnlOrderInf.setNotifyFlag("1");
-			}
-			boolean resOper=this.save(retailChnlOrderInf); //保存分销商订单
-			
-			ProviderOrderInf providerOrderInf=null;
+		if(telChannelProductInf !=null){
+			retailChnlOrderInf.setProductId(telChannelProductInf.getProductId());
+		}
+		if(StringUtil.isNotEmpty(retailChnlOrderInf.getNotifyUrl())){
+			retailChnlOrderInf.setNotifyFlag("0");
+		}else{
+			retailChnlOrderInf.setNotifyFlag("1");
+		}
+		boolean resOper=this.save(retailChnlOrderInf); //保存分销商订单
+
+		ProviderOrderInf providerOrderInf=null;
+		if(resOper){
+			providerOrderInf=new ProviderOrderInf();
+			providerOrderInf.setRegOrderAmt(retailChnlOrderInf.getRechargeValue()); //充值面额
+			providerOrderInf.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
+			providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
+			providerOrderInf.setDataStat("0");
+			resOper=providerOrderInfService.save(providerOrderInf); //保存供应商订单
+
 			if(resOper){
-				providerOrderInf=new ProviderOrderInf();
-				providerOrderInf.setRegOrderAmt(retailChnlOrderInf.getRechargeValue()); //充值面额
-				providerOrderInf.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
-				providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
-				providerOrderInf.setDataStat("0");
-				resOper=providerOrderInfService.save(providerOrderInf); //保存供应商订单
+
+			}
+
 		}
 		if(!resOper){
 			//操作不同步，则回退事物

@@ -56,7 +56,7 @@
 	</select>
 	
 		
-	<select id="getTelOrderInfByChannelOrderId" parameterType="java.lang.String" resultType="ProviderOrderInf">
+	<select id="getOrderInfByChannelOrderId" parameterType="java.lang.String" resultType="ProviderOrderInf">
 		select 
 	  		<include refid="ColumnResult" />
 		 		     from 	<include refid="TableName" /> m

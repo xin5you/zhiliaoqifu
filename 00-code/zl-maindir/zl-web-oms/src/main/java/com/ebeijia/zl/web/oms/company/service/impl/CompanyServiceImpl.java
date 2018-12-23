@@ -1,10 +1,25 @@
 package com.ebeijia.zl.web.oms.company.service.impl;
 
-import java.util.LinkedList;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSONArray;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTxnVo;
+import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
+import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
+import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
+import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +28,6 @@ import org.springframework.stereotype.Service;
 
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
-import com.ebeijia.zl.common.utils.enums.TransCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -26,6 +38,7 @@ import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
 import com.ebeijia.zl.web.oms.company.service.CompanyService;
 import com.ebeijia.zl.web.oms.utils.OrderConstants;
+import org.springframework.ui.ModelMap;
 
 @Service("companyService")
 public class CompanyServiceImpl implements CompanyService{
@@ -39,12 +52,21 @@ public class CompanyServiceImpl implements CompanyService{
 	private BatchOrderService batchOrderService;
 	
 	@Autowired
-	private BatchOrderListService batchOrderListService;
-	
-	@Autowired
 	@Qualifier("jedisClusterUtils")
 	private JedisClusterUtils jedisClusterUtils;
-	
+
+	@Autowired
+	private InaccountOrderService inaccountOrderService;
+
+	@Autowired
+	private InaccountOrderDetailService inaccountOrderDetailService;
+
+	@Autowired
+	private AccountTransactionFacade accountTransactionFacade;
+
+	@Autowired
+	private AccountQueryFacade accountQueryFacade;
+
 	@Override
 	public int openAccountCompany(HttpServletRequest req) {
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
@@ -103,5 +125,109 @@ public class CompanyServiceImpl implements CompanyService{
 		return 1;
 	}
 
-	
+	@Override
+	public Map<String, Object> addCompanyTransferCommit(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		try {
+			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "收款失败，该企业不存在或未开户");
+				return resultMap;
+			}
+
+			InaccountOrder order = inaccountOrderService.getById(orderId);
+			List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+			if (order == null || orderDetailList == null || orderDetailList.size() < 1) {
+				logger.error("## 查询企业{}收款订单{}信息为空", companyId, orderId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("status", "暂无可收款订单，请重新查看订单信息");
+				return resultMap;
+			}
+
+			AccountTransferReqVo reqVo = new AccountTransferReqVo();
+			reqVo.setTransAmt(order.getCompanyInSumAmt());
+			reqVo.setUploadAmt(order.getCompanyInSumAmt());
+			reqVo.setTfrInUserId(order.getCompanyId());
+			reqVo.setTfrOutUserId(companyId);
+
+			List<AccountTxnVo> transList = new ArrayList<>();
+			Set<String> bIds = new TreeSet<>();
+			for (InaccountOrderDetail orderDetail :orderDetailList ) {
+				AccountTxnVo txnVo = new AccountTxnVo();
+				txnVo.setTxnBId(orderDetail.getBId());
+				txnVo.setTxnAmt(orderDetail.getCompanyInAmt());
+				txnVo.setUpLoadAmt(orderDetail.getCompanyInAmt());
+				transList.add(txnVo);
+				bIds.add(orderDetail.getBId());
+			}
+
+			reqVo.setTransList(transList);
+			reqVo.setTransId(TransCode.MB40.getCode());
+			reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
+			reqVo.setUserId(companyId);
+			reqVo.setbIds(bIds);
+			reqVo.setUserType(UserType.TYPE200.getCode());
+			reqVo.setDmsRelatedKey(orderId);
+			reqVo.setUserChnlId(companyId);
+			reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+			reqVo.setTransDesc(order.getRemarks());
+			reqVo.setTransNumber(1);
+
+			BaseResult result = new BaseResult();
+			try {
+				result = accountTransactionFacade.executeTransfer(reqVo);
+			} catch (Exception e) {
+				logger.error("## 远程调用转账接口异常", e);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "网络异常，请稍后再试");
+				return resultMap;
+			}
+			logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
+			if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {
+				order.setPlatformReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
+			}
+
+			if (!inaccountOrderService.saveOrUpdate(order)) {
+				logger.error("## 更新平台{}收款状态{}失败", companyId, order.getPlatformReceiverCheck());
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "系统异常，请联系管理员");
+				return resultMap;
+			}
+
+		} catch (Exception e) {
+			logger.error(" ## 企业平台{}收款异常", companyId, e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "企业平台收款失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@Override
+	public Map<String, Object> updateCompanyTransferStat(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		try {
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			order.setCompanyReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
+			if (!inaccountOrderService.saveOrUpdate(order)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("status", "网络异常，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error("## 企业{}收款异常", companyId, e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("status", "系统异常，请联系管理员");
+		}
+		return resultMap;
+	}
+
 }

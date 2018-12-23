@@ -1,6 +1,8 @@
 package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.core.activemq.service.MQProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,9 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	@Autowired
 	private RetailChnlOrderInfService retailChnlOrderInfService;
 	
-//	@Autowired
-//	private RetailChnlInfService retailChnlInfService;
-//	
-//	@Autowired
-//	private RetailChnlProductInfService retailChnlProductInfService;
-//
-//	@Autowired
-//	private WechatMQProducerService rechargeMobileProducerService;
+
+	@Autowired
+	private MQProducerService mqProducerService;
 	
 	@Override
 	public RetailChnlOrderInf getRetailChnlOrderInfById(String channelOrderId) throws Exception {
@@ -52,14 +49,14 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	
 	/**
 	 * 
-	 * @param RetailChnlOrderInf 分销商订单
+	 * @param retailChnlOrderInf 分销商话费充值
 	 * @param operId 运营商
 	 * @param areaName 地区名称
 	 * @return
 	 * @throws Exception
 	 */
-	public TeleRespDomain proChannelOrder(RetailChnlOrderInf retailChnlOrderInf,String operId,String areaName) throws Exception{
-		return retailChnlOrderInfService.proChannelOrder(retailChnlOrderInf, operId, areaName);
+	public BaseResult proTelChannelOrder(RetailChnlOrderInf retailChnlOrderInf, String operId, String areaName) throws Exception{
+		return retailChnlOrderInfService.proTelChannelOrder(retailChnlOrderInf, operId, areaName);
 	}
 	
 	public List<RetailChnlOrderInf> getRetailChnlOrderInfList(RetailChnlOrderInf RetailChnlOrderInf) throws Exception {
@@ -67,7 +64,7 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	}
 	
 	public void doRechargeMobileMsg(String channelOrderId){
-//		retailChnlOrderInfService.sendRechargeMobileMsg(channelOrderId);
+		mqProducerService.sendRechargeMobileMsg(channelOrderId);
 	}
 	/**
 	 *  分销商 根据外部订单查询

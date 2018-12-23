@@ -21,4 +21,6 @@ public interface CompanyInfMapper extends BaseMapper<CompanyInf> {
 	CompanyInf getCompanyInfByLawCode(@Param("lawCode") String lawCode);
 	
 	public List<CompanyInf> getCompanyInfList(CompanyInf companyInf);
+
+	public CompanyInf getCompanyInfByIsPlatform(String isPlatform);
 }

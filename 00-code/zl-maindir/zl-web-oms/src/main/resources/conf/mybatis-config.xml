@@ -4,10 +4,8 @@
 <configuration>
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
-		<!--<setting name="logImpl" value="SLF4J" />-->
-<!--
+		<setting name="logImpl" value="SLF4J" />
 		 <setting name="logImpl" value="STDOUT_LOGGING" />
--->
 	</settings>
 	<typeAliases>
 		<typeAlias alias="Integer" type="java.lang.Integer" />
@@ -25,7 +23,7 @@
 		<typeAlias type="com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail" alias="InaccountOrderDetail" />
 	 	
 	 	<package name="com.ebeijia.zl.shop.dao.member.domain"/>
-		<package name="com.ebeijia.zl.basics.billingtype.domain"/>
+		<package name="com.ebeijia.zl.common.core.domain"/>
 		<package name="com.ebeijia.zl.basics.system.domain"/>
 
 	</typeAliases>

@@ -41,14 +41,34 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @TableField("check_stat")
     @ApiModelProperty(value = "0：未审核，1：已审核")
     private String checkStat;
- 
+
+    /**
+     * 打款金额
+     */
     @TableField("remit_amt")
     @ApiModelProperty(value = "remit_amt")
     private BigDecimal remitAmt;
- 
-    @TableField("inacccount_amt")
-    @ApiModelProperty(value = "inacccount_amt")
-    private BigDecimal inacccountAmt;
+
+    /**
+     * 上账金额
+     */
+    @TableField("inaccount_amt")
+    @ApiModelProperty(value = "inaccount_amt")
+    private BigDecimal inaccountAmt;
+
+    /**
+     * 平台收款金额
+     */
+    @TableField("platform_in_sum_amt")
+    @ApiModelProperty(value = "platform_in_sum_amt")
+    private BigDecimal platformInSumAmt;
+
+    /**
+     * 企业收款金额
+     */
+    @TableField("company_in_sum_amt")
+    @ApiModelProperty(value = "company_in_sum_amt")
+    private BigDecimal companyInSumAmt;
  
     /**
      * 供应商ID
@@ -77,7 +97,14 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @TableField("inaccount_check")
     @ApiModelProperty(value = "0:未上账，1:已上账")
     private String inaccountCheck;
- 
+
+    /**
+     * 0:未转账，1:已转账
+     */
+    @TableField("transfer_check")
+    @ApiModelProperty(value = "0:未转账，1:已转账")
+    private String transferCheck;
+
     /**
      * 0：未收款，1：已收款
      */
@@ -124,6 +151,14 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @ApiModelProperty(value = "lock_version")
     private Integer lockVersion;
 
+    @TableField(exist = false)
+    private String companyCode;
+
+    @TableField(exist = false)
+    private String companyName;
+
+    @TableField(exist = false)
+    private String companyReceiverCheckName;
 
     @Override
     protected Serializable pkVal() { 

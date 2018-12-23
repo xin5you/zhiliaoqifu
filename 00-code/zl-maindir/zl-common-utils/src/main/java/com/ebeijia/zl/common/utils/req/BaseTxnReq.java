@@ -21,9 +21,7 @@ import java.util.Set;
 
 public class BaseTxnReq implements java.io.Serializable {
 
-
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 5539906702603802177L;
 	/**
 	 * 交易类型
 	 */
