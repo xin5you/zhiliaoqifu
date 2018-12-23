@@ -49,8 +49,8 @@ public class ProviderOrderInfFacadeImpl implements ProviderOrderInfFacade {
 	}
 
 	@Override
-	public ProviderOrderInf getTelOrderInfByChannelOrderId(String channelOrderId) throws Exception {
-		return providerOrderInfService.getTelOrderInfByChannelOrderId(channelOrderId);
+	public ProviderOrderInf getOrderInfByChannelOrderId(String channelOrderId) throws Exception {
+		return providerOrderInfService.getOrderInfByChannelOrderId(channelOrderId);
 	}
 
 	/**

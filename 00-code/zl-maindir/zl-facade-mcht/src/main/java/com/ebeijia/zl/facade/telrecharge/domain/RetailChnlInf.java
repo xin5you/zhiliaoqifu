@@ -37,9 +37,15 @@ public class RetailChnlInf extends Model<RetailChnlInf> {
      */
     @TableField("channel_name")
     private String channelName;
+
+    /**
+     * 企业信用标识
+     */
+    @TableField("law_code")
+    private String lawCode;
  
     /**
-     * 分销商编号
+     * 分配给分销商TokenCode
      */
     @TableField("channel_code")
     private String channelCode;

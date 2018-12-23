@@ -19,10 +19,10 @@ public interface ProviderOrderInfService extends IService<ProviderOrderInf> {
 	
 	/**
 	 * 查找updateTime 10分钟以内，1分钟以上的订单
-	 * @param ProviderOrderInf
+	 * @param providerOrderInf
 	 * @return
 	 */
 	List<ProviderOrderInf> getListByTimer(ProviderOrderInf providerOrderInf);
 	
-	ProviderOrderInf getTelOrderInfByChannelOrderId(String OrderId);
+	ProviderOrderInf getOrderInfByChannelOrderId(String OrderId);
 }
