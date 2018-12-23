@@ -3,6 +3,7 @@ package com.ebeijia.zl.web.oms.retailChnl.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.ModelMap;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface RetailChnlInfService {
 
@@ -24,4 +25,11 @@ public interface RetailChnlInfService {
 	boolean addRetailChnlRate(HttpServletRequest req, String channelId, String channelRate, String ids);
 	
 	int retailChnlOpenAccount(HttpServletRequest req);
+
+	int addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+
+	int addRetailChnlTransferCommit(HttpServletRequest req);
+
+	int editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+
 }

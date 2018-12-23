@@ -1,32 +1,29 @@
 $(document).ready(function () {
-    addTelProviderInfTransfer.init();
+    addRetailChnlInfTransfer.init();
 })
 
-var addTelProviderInfTransfer = {
+var addRetailChnlInfTransfer = {
 
     init : function() {
-        addTelProviderInfTransfer.initEvent();
+        addRetailChnlInfTransfer.initEvent();
     },
 
     initEvent:function(){
-        $('.btn-addTransfer').on('click', addTelProviderInfTransfer.intoAddProviderTransfer);
-        $('.btn-add-submit').on('click', addTelProviderInfTransfer.addProviderTransfer);
-        $('#evidenceUrlFile').on('change', addTelProviderInfTransfer.fileUpload);
-        $('.btn-addTransferSubmit').on('click', addTelProviderInfTransfer.addProviderTransferCommit);
-        $('.btn-check').on('click', addTelProviderInfTransfer.intoUpdateProviderCheckStat);
-        $('.btn-checkStat-submit').on('click', addTelProviderInfTransfer.updateProviderCheckStatCommit);
-        $('.btn-remit').on('click', addTelProviderInfTransfer.intoAddProviderRemit);
-        $('.btn-remit-submit').on('click', addTelProviderInfTransfer.addProviderRemitCommit);
-        $('.btn-view').on('click', addTelProviderInfTransfer.viewProviderTransferDetail);
-        $('.btn-edit').on('click', addTelProviderInfTransfer.intoEditProviderTransfer);
-        $('.btn-edit-submit').on('click', addTelProviderInfTransfer.editProviderTransferCommit);
-        /*$('#btn-submit').on('click', addTelProviderInfTransfer.providerTransfer);*/
+        $('.btn-addTransfer').on('click', addRetailChnlInfTransfer.intoAddRetailChnlTransfer);
+        $('.btn-add-submit').on('click', addRetailChnlInfTransfer.addRetailChnlTransfer);
+        $('#evidenceUrlFile').on('change', addRetailChnlInfTransfer.fileUpload);
+        $('.btn-addTransferSubmit').on('click', addRetailChnlInfTransfer.addRetailChnlTransferCommit);
+        $('.btn-check').on('click', addRetailChnlInfTransfer.intoUpdateRetailChnlCheckStat);
+        $('.btn-checkStat-submit').on('click', addRetailChnlInfTransfer.updateRetailChnlCheckStatCommit);
+        $('.btn-view').on('click', addRetailChnlInfTransfer.viewRetailChnlTransferDetail);
+        $('.btn-edit').on('click', addRetailChnlInfTransfer.intoEditRetailChnlTransfer);
+        $('.btn-edit-submit').on('click', addRetailChnlInfTransfer.editRetailChnlTransferCommit);
     },
-    intoAddProviderTransfer : function() {
+    intoAddRetailChnlTransfer : function() {
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $("#btn-submit").addClass("btn-add-submit");
-        $(".btn-add-submit").attr("onclick","addTelProviderInfTransfer.addProviderTransfer();");
+        $(".btn-add-submit").attr("onclick","addRetailChnlInfTransfer.addRetailChnlTransfer();");
         $("#commodityInfModal_h").text("添加入账信息");
         $('#addTransferModal').modal({
             backdrop : "static"
@@ -36,11 +33,10 @@ var addTelProviderInfTransfer = {
         var imgUrl = $("#evidenceUrlFile").val();
         $("#evidenceUrl").val(imgUrl);
     },
-    addProviderTransfer:function(){
-        var providerId = $("#providerId").val();
+    addRetailChnlTransfer:function(){
+        var channelId = $("#channelId").val();
         var remitAmt = $("#remitAmt").val();
         var evidenceUrl = $("#evidenceUrl").val();
-        var companyCode = $("#companyCode").val();
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
         var A00 = $("#A00").val();
@@ -60,10 +56,6 @@ var addTelProviderInfTransfer = {
             Helper.alert("打款凭证不能为空");
             return false;
         }
-        if(companyCode=='' || companyCode == '0'){
-            Helper.alert("企业识别为空");
-            return false;
-        }
         if(inaccountAmt=='' || inaccountAmt == '0'){
             Helper.alert("上账金额不能为空");
             return false;
@@ -82,7 +74,7 @@ var addTelProviderInfTransfer = {
             return false;
         }
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/addProviderTransfer.do',
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/addRetailChnlTransfer.do',
             type: 'post',
             data: new FormData($("#addTransferFrom")[0]),
             processData: false,
@@ -92,7 +84,7 @@ var addTelProviderInfTransfer = {
             dataType : "json",
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location = Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
                 } else {
                     Helper.alert(result.msg);
                     return false;
@@ -103,14 +95,14 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    addProviderTransferCommit : function () {
+    addRetailChnlTransferCommit : function () {
         var orderId = $(this).attr("orderId");
-        var providerId = $('#providerId').val();
+        var channelId = $('#channelId').val();
         $('#msg').modal({
             backdrop : "static"
         });
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/addProviderTransferCommit.do',
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/addRetailChnlTransferCommit.do',
             type: 'post',
             dataType : "json",
             data: {
@@ -119,7 +111,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location.href=Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -133,30 +125,30 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    intoUpdateProviderCheckStat : function () {
+    intoUpdateRetailChnlCheckStat : function () {
         var orderId = $(this).attr("orderId");
         $("#checkStatOrderId").val(orderId);
         $('#updateCheckStatModal').modal({
             backdrop : "static"
         });
     },
-    updateProviderCheckStatCommit : function () {
+    updateRetailChnlCheckStatCommit : function () {
         var orderId = $("#checkStatOrderId").val();
-        var providerId = $('#providerId').val();
+        var channelId = $('#channelId').val();
         $('#msg').modal({
             backdrop : "static"
         });
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/updateProviderCheckStatCommit.do',
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/updateRetailChnlCheckStatCommit.do',
             type: 'post',
             dataType : "json",
             data: {
                 "orderId": orderId,
-                "providerId": providerId
+                "channelId": channelId
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location.href=Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -170,75 +162,16 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    intoAddProviderRemit : function () {
+    viewRetailChnlTransferDetail : function () {
         var orderId = $(this).attr("orderId");
-        $.ajax({
-            url: Helper.getRootPath() + '/inaccount/getInaccountByOrderId.do',
-            type: 'post',
-            dataType : "json",
-            data: {
-                "orderId": orderId
-            },
-            success: function (data) {
-                if(data.status){
-                    $('#company_name').text("确认打款至" + data.msg.companyName + "？");
-                    $('#order_id').val(orderId);
-                    $('#addRemitModal').modal({
-                        backdrop : "static"
-                    });
-                }else{
-                    Helper.alert("网络异常，请稍后再试");
-                    return false;
-                }
-            },
-            error:function(){
-                Helper.alert("网络异常，请稍后再试");
-                return false;
-            }
-        });
-    },
-    addProviderRemitCommit : function () {
-        var orderId = $('#order_id').val();
-        var companyId = $('#company_id').val();
-        var providerId = $('#providerId').val();
-        $('#msg').modal({
-            backdrop : "static"
-        });
-        $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/updateProviderRemitStatCommit.do',
-            type: 'post',
-            dataType : "json",
-            data: {
-                "orderId": orderId,
-                "providerId": providerId,
-                "companyId": companyId
-            },
-            success: function (data) {
-                if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
-                }else{
-                    $('#msg').modal('hide');
-                    Helper.alter(data.msg);
-                    return false;
-                }
-            },
-            error:function(){
-                $('#msg').modal('hide');
-                Helper.alert("系统超时，请稍后再试");
-                return false;
-            }
-        });
-    },
-    viewProviderTransferDetail : function () {
-        var orderId = $(this).attr("orderId");
-        var url = Helper.getRootPath()+"/provider/providerInf/viewProviderTransferDetail.do?orderId="+orderId;
+        var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/viewRetailChnlTransferDetail.do?orderId="+orderId;
         location.href=url;
     },
-    intoEditProviderTransfer : function () {
+    intoEditRetailChnlransfer : function () {
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/intoEditProviderTransfer.do',
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/intoEditRetailChnlTransfer.do',
             type: 'post',
             dataType : "json",
             data: {
@@ -248,11 +181,9 @@ var addTelProviderInfTransfer = {
                 if(data.status){
                     $("#remitAmt").val(data.order.remitAmt);
                     $("#inaccountAmt").val(data.order.inaccountAmt);
-                    $("#companyCode").val(data.order.companyCode);
                     $("#evidenceUrl").val(data.order.evidenceUrl);
-                    $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
-                        $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
+                        $('.span3[id=' + item.BId + ']').attr('value',item.transAmt);
                     });
                 }else{
                     Helper.alter(data.msg);
@@ -265,18 +196,17 @@ var addTelProviderInfTransfer = {
             }
         });
         $("#btn-submit").addClass("btn-edit-submit");
-        $(".btn-edit-submit").attr("onclick","addTelProviderInfTransfer.editProviderTransferCommit();");
+        $(".btn-edit-submit").attr("onclick","addRetailChnlInfTransfer.editRetailChnlTransferCommit();");
         $("#commodityInfModal_h").text("编辑入账信息");
         $('#addTransferModal').modal({
             backdrop : "static"
         });
     },
-    editProviderTransferCommit : function () {
+    editRetailChnlTransferCommit : function () {
         var orderId = $("#orderId").val();
-        var providerId = $("#providerId").val();
+        var chnannelId = $("#chnannelId").val();
         var remitAmt = $("#remitAmt").val();
         var evidenceUrl = $("#evidenceUrl").val();
-        var companyCode = $("#companyCode").val();
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
         var A00 = $("#A00").val();
@@ -296,10 +226,6 @@ var addTelProviderInfTransfer = {
             Helper.alert("打款凭证不能为空");
             return false;
         }
-        if(companyCode==''){
-            Helper.alert("企业识别为空");
-            return false;
-        }
         if(inaccountAmt=='' || inaccountAmt == '0'){
             Helper.alert("上账金额不能为空");
             return false;
@@ -318,7 +244,7 @@ var addTelProviderInfTransfer = {
             return false;
         }
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/editProviderTransfer.do',
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/editRetailChnlTransfer.do',
             type: 'post',
             data: new FormData($("#addTransferFrom")[0]),
             processData: false,
@@ -329,7 +255,7 @@ var addTelProviderInfTransfer = {
 
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location = Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
                 } else {
                     Helper.alert(result.msg);
                     return false;

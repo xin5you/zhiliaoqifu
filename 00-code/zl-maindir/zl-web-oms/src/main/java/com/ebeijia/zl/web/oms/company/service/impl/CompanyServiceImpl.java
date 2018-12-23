@@ -8,13 +8,18 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
+import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
+import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +63,10 @@ public class CompanyServiceImpl implements CompanyService{
 
 	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
-	
+
+	@Autowired
+	private AccountQueryFacade accountQueryFacade;
+
 	@Override
 	public int openAccountCompany(HttpServletRequest req) {
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
@@ -118,9 +126,9 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	@Override
-	public ModelMap addCompanyTransferCommit(HttpServletRequest req) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> addCompanyTransferCommit(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
@@ -136,8 +144,8 @@ public class CompanyServiceImpl implements CompanyService{
 			List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
 			if (order == null || orderDetailList == null || orderDetailList.size() < 1) {
 				logger.error("## 查询企业{}收款订单{}信息为空", companyId, orderId);
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("status", "暂无可收款订单，请重新查看订单信息");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("status", "暂无可收款订单，请重新查看订单信息");
 				return resultMap;
 			}
 
@@ -175,20 +183,19 @@ public class CompanyServiceImpl implements CompanyService{
 				result = accountTransactionFacade.executeTransfer(reqVo);
 			} catch (Exception e) {
 				logger.error("## 远程调用转账接口异常", e);
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "网络异常，请稍后再试");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "网络异常，请稍后再试");
 				return resultMap;
 			}
-			System.out.println("============================================================"+JSONArray.toJSONString(result));
 			logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 			if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {
 				order.setPlatformReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
 			}
 
-			if (!inaccountOrderService.updateById(order)) {
+			if (!inaccountOrderService.saveOrUpdate(order)) {
 				logger.error("## 更新平台{}收款状态{}失败", companyId, order.getPlatformReceiverCheck());
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "系统异常，请联系管理员");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "系统异常，请联系管理员");
 				return resultMap;
 			}
 
@@ -202,26 +209,25 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	@Override
-	public ModelMap updateCompanyTransferStat(HttpServletRequest req) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> updateCompanyTransferStat(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		try {
 			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
 			order.setCompanyReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
-			if (!inaccountOrderService.updateById(order)) {
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("status", "网络异常，请稍后再试");
+			if (!inaccountOrderService.saveOrUpdate(order)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("status", "网络异常，请稍后再试");
 			}
 		} catch (Exception e) {
 			logger.error("## 企业{}收款异常", companyId, e);
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("status", "系统异常，请联系管理员");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("status", "系统异常，请联系管理员");
 		}
 		return resultMap;
 	}
-
 
 }

@@ -17,7 +17,7 @@ var listTelProviderInf = {
         $('.btn-openAccount').on('click', listTelProviderInf.loadAddOpenAccountModal);
         $('.btn-openAccount-submit').on('click', listTelProviderInf.telProviderOpenAccount);
         $('.btn-transfer').on('click', listTelProviderInf.intoAddProviderTransfer);
-        /*$('.btn-submit').on('click', listTelProviderInf.addProviderTransferCommit);*/
+        $('.btn-accbal').on('click', listTelProviderInf.listProviderAccBal);
     },
     searchData: function(){
         document.forms['searchForm'].submit();
@@ -106,6 +106,11 @@ var listTelProviderInf = {
     intoAddProviderTransfer : function () {
         var providerId = $(this).attr('providerId');
         var url = Helper.getRootPath()+"/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId=" + providerId;
+        location.href = url;
+    },
+    listProviderAccBal : function () {
+        var providerId = $(this).attr('providerId');
+        var url = Helper.getRootPath()+"/provider/providerInf/listProviderAccBal.do?providerId=" + providerId;
         location.href = url;
     }
 }

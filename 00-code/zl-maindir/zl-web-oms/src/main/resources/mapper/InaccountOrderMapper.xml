@@ -51,6 +51,9 @@
         <if test="companyId != null and companyId != ''">
             and o.company_id = #{companyId}
         </if>
+        <if test="orderType != null and orderType != ''">
+            and o.order_type = #{orderType}
+        </if>
         order by o.create_time desc
     </select>
 

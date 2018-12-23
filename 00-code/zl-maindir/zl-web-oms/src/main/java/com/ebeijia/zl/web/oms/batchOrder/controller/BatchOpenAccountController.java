@@ -1,12 +1,7 @@
 package com.ebeijia.zl.web.oms.batchOrder.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -163,13 +158,13 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/addOpenAccountCommit")
 	@ResponseBody
-	public ModelMap addOpenAccountCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> addOpenAccountCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		LinkedList<BatchOrderList> orderLists = batchOrderListService.getRedisBatchOrderList(OrderConstants.openAccountSession);
 		if (orderLists == null || orderLists.size() < 1) {
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "没有添加任何数据！！！");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "没有添加任何数据！！！");
 			return resultMap;
 		}
 		try {
@@ -179,8 +174,8 @@ public class BatchOpenAccountController {
 			}
 		} catch (Exception e) {
 			logger.error("新增批量开户信息出错---->>[{}]", e.getMessage());
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "新增开户信息失败，请重新添加");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增开户信息失败，请重新添加");
 		}
 		return resultMap;
 	}
@@ -251,8 +246,8 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/deleteOpenAccountCommit")
 	@ResponseBody
-	public ModelMap deleteOpenAccountCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> deleteOpenAccountCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
@@ -281,8 +276,8 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/addOrderCommit")
 	@ResponseBody
-	public ModelMap addOrderCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addOrderCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
@@ -321,8 +316,8 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/addOrderListCommit")
 	@ResponseBody
-	public ModelMap addOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
@@ -377,8 +372,8 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/deleteOrderListCommit")
 	@ResponseBody
-	public ModelMap deleteOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> deleteOrderListCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			int i = batchOrderListService.deleteBatchOrderList(req);
@@ -403,8 +398,8 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/addAccountInf")
 	@ResponseBody
-	public ModelMap addAccountInf(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addAccountInf(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		
 		String phone = StringUtil.nullToString(req.getParameter("phone"));
@@ -454,8 +449,8 @@ public class BatchOpenAccountController {
 	 */
 	@RequestMapping(value = "/deleteAccountInf")
 	@ResponseBody
-	public ModelMap deleteAccountInf(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> deleteAccountInf(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			String puId = req.getParameter("puId");

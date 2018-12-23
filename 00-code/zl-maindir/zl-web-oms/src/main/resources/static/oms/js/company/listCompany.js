@@ -19,7 +19,7 @@ var listCompany = {
 		$('.btn-open').on('click', listCompany.loadAddOpenAccountModal);
 		$('.btn-open-submit').on('click', listCompany.companyOpenAccount);
 		$('.btn-tansfer').on('click', listCompany.intoAddCompanyTransfer);
-		
+        $('.btn-accbal').on('click', listCompany.listCompanyAccBal);
 	},
 	searchReset:function(){
 		location = Helper.getRootPath() + '/company/listCompany.do';
@@ -101,5 +101,10 @@ var listCompany = {
 		var companyId = $(this).attr('companyId');
 		var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId;
 		location.href=url;
-	}
+	},
+    listCompanyAccBal : function () {
+        var companyId = $(this).attr('companyId');
+        var url = Helper.getRootPath()+"/company/listCompanyAccBal.do?companyId="+companyId;
+        location.href=url;
+    }
 }

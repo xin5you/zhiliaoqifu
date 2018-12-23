@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -393,7 +394,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 	@Override
 	public int batchRechargeITF(String orderId, User user, String orderStat) {
 		BatchOrder order = batchOrderMapper.getBatchOrderById(orderId);
-		
+
 		BatchOrderList orderList = new BatchOrderList();
 		orderList.setOrderId(orderId);
 		orderList.setOrderStat(orderStat);
@@ -402,7 +403,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			logger.error("## 批量充值名单为空");
 			return 0;
 		}
-		
+
 		if (batchOrderList != null && batchOrderList.size() > 0) {
 			List<AccountRechargeReqVo> reqVoList = new ArrayList<>();
 			for (BatchOrderList batchOrder : batchOrderList) {
@@ -426,7 +427,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 					reqVo.setTransId(TransCode.MB20.getCode());
 					reqVo.setUserId(batchOrder.getCompanyId());
 				}
-				
+
 				reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
 
 				Set<String> bIds = new TreeSet<>();
@@ -493,9 +494,6 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			logger.error("## 批量充值名单为空");
 			return 0;
 		}
-		
-		if (batchOrderList != null && batchOrderList.size() > 0) {
-			List<AccountTransferReqVo> reqVoList = new ArrayList<>();
 			for (BatchOrderList batchOrder : batchOrderList) {
 				AccountTransferReqVo reqVo = new AccountTransferReqVo();
 				reqVo.setTransAmt(batchOrder.getAmount());
@@ -511,44 +509,26 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				reqVo.setDmsRelatedKey(batchOrder.getOrderListId());
 				reqVo.setUserChnlId(order.getCompanyId());
 				reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-
-				Set<String> bIds = new TreeSet<>();
-				bIds.add(batchOrder.getBizType());
-				reqVo.setbIds(bIds);
-
-				reqVoList.add(reqVo);
-			}
-			BaseResult result = new BaseResult();
-			if (batchOrderList.size() > 1) {
+				BaseResult result = new BaseResult();
 				try {
-					
+					result = accountTransactionFacade.executeTransfer(reqVo);
 				} catch (Exception e) {
-					logger.error("## 远程调用批量转账接口出错{}", reqVoList, e);
+					logger.error("## 远程调用转账接口出错,入参--->{}", JSONArray.toJSONString(reqVo), e);
 				}
-			} else {
-				try {
-					result = accountTransactionFacade.executeTransfer(reqVoList.get(0));
-				} catch (Exception e) {
-					logger.error("## 远程调用转账接口出错{}", reqVoList.get(0), e);
-					
-				}
-			}
-			for (BatchOrderList oList : batchOrderList) {
 				if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
-					oList.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
 					order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
 				} else {
-					oList.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
 					order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
 				}
+				int orderListResult = batchOrderListMapper.updateBatchOrderListByList(batchOrderList);
+				int orderRsult = batchOrderMapper.updateBatchOrder(order);
+				if (orderListResult < 0 || orderRsult < 0) {
+					logger.error("## 更新批量充值订单状态失败，batchOrder--->{},batchOrderList--->{}", JSONArray.toJSONString(order), JSONArray.toJSONString(batchOrderList));
+					return 0;
+				}
 			}
-			int orderListResult = batchOrderListMapper.updateBatchOrderListByList(batchOrderList);
-			int orderRsult = batchOrderMapper.updateBatchOrder(order);
-			if (orderListResult < 0 || orderRsult < 0) {
-				logger.error("## 更新批量充值后的订单状态信息失败，batchOrder--->{},batchOrderList--->{}", JSONArray.toJSONString(order), JSONArray.toJSONString(batchOrderList));
-				return 0;
-			}
-		}
 		return 1;
 	}
 

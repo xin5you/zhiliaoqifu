@@ -35,7 +35,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "inaccount")
@@ -51,9 +53,9 @@ public class InaccountController {
 
 	@RequestMapping(value = "/getInaccountByOrderId")
 	@ResponseBody
-	public ModelMap getInaccountByOrderId(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> getInaccountByOrderId(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		try {
 			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderId);
@@ -71,9 +73,9 @@ public class InaccountController {
 
 	@RequestMapping(value = "/getInaccountByOrderListId")
 	@ResponseBody
-	public ModelMap getInaccountByOrderListId(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> getInaccountByOrderListId(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String orderListId = StringUtil.nullToString(req.getParameter("orderListId"));
 		InaccountOrderDetail orderDetail  = null;
 		try {

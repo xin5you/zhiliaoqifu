@@ -1,15 +1,16 @@
 package com.ebeijia.zl.web.oms.providerChnl.controller;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
@@ -50,6 +51,9 @@ public class ProviderInfController {
 	
 	@Autowired
 	private ProviderInfService providerInfService;
+
+	@Autowired
+	private CommonService commonService;
 	
 	@Autowired
 	private CompanyInfFacade companyInfFacade;
@@ -169,25 +173,25 @@ public class ProviderInfController {
 	 */
 	@RequestMapping(value = "/editProviderInfCommit")
 	@ResponseBody
-	public ModelMap editProviderInfCommit(HttpServletRequest req) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> editProviderInfCommit(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			if (StringUtil.isNullOrEmpty(providerId)) {
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "编辑失败,供应商id为空");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑失败,供应商id为空");
 				logger.error("## 编辑供应商信息异常,供应商providerId:[{}]为空", providerId);
 			}
 			
 			ProviderInf providerInf = this.getProviderInf(req);
 			if (!providerInfFacade.updateProviderInf(providerInf)) {
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "编辑失败，请联系管理员");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑失败，请联系管理员");
 			}
 		} catch (Exception e) {
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "编辑失败，请联系管理员");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑失败，请联系管理员");
 			logger.error("## 编辑供应商信息异常", e);
 			return resultMap;
 		}
@@ -223,20 +227,20 @@ public class ProviderInfController {
 	 */
 	@RequestMapping(value = "/deleteProviderInfCommit")
 	@ResponseBody
-	public ModelMap deleteProviderInfCommit(HttpServletRequest req) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> deleteProviderInfCommit(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			if (StringUtil.isNullOrEmpty(providerId)) {
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "删除失败,供应商id为空");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除失败,供应商id为空");
 				logger.error("## 删除供应商信息异常,供应商providerId:[{}]为空", providerId);
 			}
 			providerInfFacade.deleteProviderInfById(providerId);
 		} catch (Exception e) {
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "删除失败，请联系管理员");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "删除失败，请联系管理员");
 			logger.error("## 删除供应商信息异常", e);
 		}
 		return resultMap;
@@ -244,9 +248,9 @@ public class ProviderInfController {
 	
 	@RequestMapping(value = "/providerOpenAccount")
 	@ResponseBody
-	public ModelMap providerOpenAccount(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> providerOpenAccount(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		try {
 			int i = providerInfService.providerOpenAccount(req);
 			if (i < 1) {
@@ -269,7 +273,7 @@ public class ProviderInfController {
 		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
 		InaccountOrder order = new InaccountOrder();
 		order.setProviderId(providerId);
-
+		order.setOrderType(UserType.TYPE300.getCode());
 		try {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
@@ -284,10 +288,10 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "/addProviderTransfer")
 	@ResponseBody
-	public ModelMap addProviderTransfer(HttpServletRequest req, HttpServletResponse response,
+	public Map<String, Object> addProviderTransfer(HttpServletRequest req, HttpServletResponse response,
 										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
 		try {
@@ -319,9 +323,9 @@ public class ProviderInfController {
 
     @RequestMapping(value = "/addProviderTransferCommit")
     @ResponseBody
-    public ModelMap addProviderTransferCommit(HttpServletRequest req, HttpServletResponse response) {
-        ModelMap resultMap = new ModelMap();
-        resultMap.addAttribute("status", Boolean.TRUE);
+    public Map<String, Object> addProviderTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
         try {
             if (providerInfService.addProviderTransferCommit(req) < 1) {
                 resultMap.put("status", Boolean.FALSE);
@@ -338,9 +342,9 @@ public class ProviderInfController {
 
     @RequestMapping(value = "/updateProviderCheckStatCommit")
     @ResponseBody
-    public ModelMap updateProviderCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
-        ModelMap resultMap = new ModelMap();
-        resultMap.addAttribute("status", Boolean.TRUE);
+    public Map<String, Object> updateProviderCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
 
         HttpSession session = req.getSession();
         User user = (User)session.getAttribute(Constants.SESSION_USER);
@@ -362,9 +366,9 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "/getProviderByOrderId")
 	@ResponseBody
-	public ModelMap getProviderByOrderId(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> getProviderByOrderId(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		try {
 			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderId);
@@ -382,9 +386,9 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "/updateProviderRemitStatCommit")
 	@ResponseBody
-	public ModelMap updateProviderRemitStatCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> updateProviderRemitStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
@@ -392,8 +396,8 @@ public class ProviderInfController {
 			resultMap = providerInfService.updateProviderRemitStatCommit(req);
 		} catch (Exception e) {
 			logger.error("## 供应商{}转账至企业{}发生异常", providerId, companyId, e);
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "网络异常，请稍后再试");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
 			return resultMap;
 		}
 		return resultMap;
@@ -432,9 +436,9 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "/intoEditProviderTransfer")
 	@ResponseBody
-	public ModelMap intoEditProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+	public Map<String, Object> intoEditProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		try {
 			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
@@ -450,8 +454,8 @@ public class ProviderInfController {
 					d.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getTransAmt().toString())));
 				}
 			}
-			resultMap.addAttribute("order", order);
-			resultMap.addAttribute("orderDetail", orderDetail);
+			resultMap.put("order", order);
+			resultMap.put("orderDetail", orderDetail);
 		} catch (Exception e) {
 			logger.error("## 编辑---》查询供应商上账信息异常");
 			resultMap.put("status", Boolean.FALSE);
@@ -463,10 +467,10 @@ public class ProviderInfController {
 
 	@RequestMapping(value = "/editProviderTransfer")
 	@ResponseBody
-	public ModelMap editProviderTransfer(HttpServletRequest req, HttpServletResponse response,
+	public Map<String, Object> editProviderTransfer(HttpServletRequest req, HttpServletResponse response,
 										@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("status", Boolean.TRUE);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
 		try {
@@ -493,6 +497,18 @@ public class ProviderInfController {
 			resultMap.put("msg", "编辑供应商上账信息失败，请稍后再试");
 		}
 		return resultMap;
+	}
+
+	@RequestMapping("/listProviderAccBal")
+	public ModelAndView listProviderAccBal(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("provider/providerInf/listProviderAccBal");
+		try {
+			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
+			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+		} catch (Exception e) {
+			logger.error("## 供应商账户列表查询异常", e);
+		}
+		return mv;
 	}
 
 	/**

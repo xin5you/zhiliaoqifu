@@ -3,7 +3,6 @@ package com.ebeijia.zl.web.oms.company.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
@@ -45,6 +45,9 @@ public class CompanyController {
 	
 	@Autowired
 	private CompanyService companyService;
+
+	@Autowired
+	private CommonService commonService;
 
 	@Autowired
 	private InaccountOrderService inaccountOrderService;
@@ -264,8 +267,8 @@ public class CompanyController {
 
 	@RequestMapping(value = "/addCompanyTransferCommit")
 	@ResponseBody
-	public ModelMap addCompanyTransferCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addCompanyTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		try {
@@ -324,8 +327,8 @@ public class CompanyController {
 
 	@RequestMapping(value = "/addCompanyInvoiceCommit")
 	@ResponseBody
-	public ModelMap addCompanyInvoiceCommit(HttpServletRequest req, HttpServletResponse response) {
-		ModelMap resultMap = new ModelMap();
+	public Map<String, Object> addCompanyInvoiceCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String orderListId = StringUtil.nullToString(req.getParameter("orderListId"));
 		try {
@@ -345,6 +348,18 @@ public class CompanyController {
 			return resultMap;
 		}
 		return resultMap;
+	}
+
+	@RequestMapping("/listCompanyAccBal")
+	public ModelAndView listCompanyAccBal(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("company/listCompanyAccBal");
+		try {
+			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
+			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+		} catch (Exception e) {
+			logger.error("## 企业账户列表查询异常", e);
+		}
+		return mv;
 	}
 	
 }
