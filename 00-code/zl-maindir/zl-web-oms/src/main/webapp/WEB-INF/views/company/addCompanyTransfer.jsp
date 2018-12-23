@@ -22,6 +22,7 @@
                                 <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
                                 <li>企业信息列表</li>
                                 <li>转账管理</li>
+                                <li>转账信息列表</li>
 			                </ul>
 			            </div>
 			        </nav>

@@ -21,12 +21,13 @@
 			                    <li>供应商管理</li>
 			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
                                 <li>供应商信息列表</li>
-                                <li>入账管理</li>
+                                <li>上账管理</li>
+                                <li>上账信息列表</li>
 			                </ul>
 			            </div>
 			        </nav>
 					<form id="pageMainForm" action="${ctx}/provider/providerInf/intoAddProviderTransfer.do" class="form-inline form_validation_tip" method="post">
-						<h3 class="heading">入账信息列表</h3>
+						<h3 class="heading">上账信息列表</h3>
 						
 				         <div>
 				         	<button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
@@ -97,7 +98,7 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                      <a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${providerId }"><button class="btn btn-primary" type="button">返 回</button></a>
+                      <a href="${ctx }/provider/providerInf/listProviderInf.do"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
 			   </div>

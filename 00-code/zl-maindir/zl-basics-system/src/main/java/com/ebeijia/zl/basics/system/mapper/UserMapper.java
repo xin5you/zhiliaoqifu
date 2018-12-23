@@ -29,4 +29,6 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
     User getUserByPhoneNo(User user);
+
+    User getUserByOrganId(User user);
 }

@@ -27,12 +27,12 @@ var addRecharge = {
                 $(element).closest('div').removeClass("f_error");
             },
             rules: {
-            	companyName:{ required: true },
+                companyId:{ required: true },
             	orderName: { required: true },
             	bizType:{required: true }
             },
             messages: {
-            	companyName: {
+                companyId: {
                     required: "请选择公司名称"
                 },
             	orderName: {
@@ -136,9 +136,6 @@ var addRecharge = {
 		location.href=url;
 	},
 	addRechargeCommit:function(){
-		$('#msg').modal({
-			backdrop : "static"
-		});
 		var companyId = $("#companyId").val();
 		var accountType = $("#accountType").val();
 		var billingType = $("#billingType").val();
@@ -150,6 +147,9 @@ var addRecharge = {
 			Helper.alert("请选择充值类型");
 			return false;
 		}
+        $('#msg').modal({
+            backdrop : "static"
+        });
 		$("#pageMainForm").ajaxSubmit({
 			type:'post', // 提交方式 get/post
             url: Helper.getRootPath() + '/batch/recharge/addRechargeCommit.do', // 需要提交的 url

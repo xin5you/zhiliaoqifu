@@ -20,6 +20,10 @@ spring:
     static-path-pattern: /static/**
   resources:
     static-locations: classpath:/static/
+  http:
+      multipart:
+        maxFileSize: 300MB
+        maxRequestSize: 300MB
   datasource:
 #   jndi-name: JDBC
     #name: mySpringBoot
@@ -28,16 +32,7 @@ spring:
     password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    minActive: 1
-    maxActive: 20
-    initialSize: 1
-    timeBetweenEvictionRunsMillis: 3000
-    minEvictableIdleTimeMillis: 300000
-    #validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-  redis: 
+  redis:
     timeout: 3000
     cluster:
        nodes: 192.168.2.110:7111,192.168.2.110:7112,192.168.2.110:7113,192.168.2.110:7114,192.168.2.110:7115,192.168.2.110:7116

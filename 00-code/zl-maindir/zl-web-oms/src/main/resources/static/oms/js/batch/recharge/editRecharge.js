@@ -53,8 +53,8 @@ var editRecharge = {
 			Helper.alert("请输入有效的身份证");
     		return false;
 		}
-		if(companydCode==''){
-			Helper.alert("请输入企业代码");
+		if(companyId==''){
+			Helper.alert("企业名称不正确");
     		return false;
 		}
 		if(money==''){

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.system.service.UserService;
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class OrganizationController {
 	
 	@Autowired
 	private OrganizationService organizationService;
+
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(value = "/listOrganization")
 	public ModelAndView listorganization(HttpServletRequest req, HttpServletResponse response) {
@@ -186,7 +191,17 @@ public class OrganizationController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String organId = req.getParameter("organId");
+		User user = new User();
+		user.setOrganizationId(organId);
+		user.setLoginType(LoginType.LoginType1.getCode());
+
 		try {
+			User u = userService.getUserByOrganId(user);
+			if (u != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除部门失败，该部门下已有用户");
+				return resultMap;
+			}
 			if (!organizationService.removeById(organId)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "删除部门失败，请重新操作");

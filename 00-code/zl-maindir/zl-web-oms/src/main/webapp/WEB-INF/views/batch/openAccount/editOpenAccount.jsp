@@ -85,10 +85,10 @@
 				               <th>序号</th>
 				               <th>姓名</th>
 				               <th>身份证号码</th>
-				               <td>账户类型</td>
+				               <th>账户类型</th>
 				               <th>手机号</th>
 				               <th>操作</th>
-				             </tr>
+							 </tr>
 				             </thead>
 				             <tbody>
 				             <c:forEach var="entity" items="${pageInfo.list}" varStatus="st">
@@ -96,8 +96,8 @@
 				                 	<td>${st.index +1}</td>
                                     <td>${entity.userName}</td>
                                     <td>${entity.userCardNo}</td>
-                                    <td>${entity.phoneNo}</td>
                                     <td>${entity.bizTypeName}</td>
+									 <td>${entity.phoneNo}</td>
 				                    <td>
                                    <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')">
                                     	<a orderListId="${entity.orderListId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
@@ -148,7 +148,7 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
-                <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTADDCOMMIT')">
+                <sec:authorize access="hasRole('BATCH_OPEN_ACCOUNT_ADDCOMMIT')">
                 	<button class="btn btn-primary btn-submit">确 定  </button>
                 </sec:authorize>
                 <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>

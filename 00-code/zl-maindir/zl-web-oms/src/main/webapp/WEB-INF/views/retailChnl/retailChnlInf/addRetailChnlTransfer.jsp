@@ -21,12 +21,13 @@
 					<li>分销商管理</li>
 					<li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
 					<li>分销商信息列表</li>
-					<li>入账管理</li>
+					<li>上账管理</li>
+					<li>上账信息列表</li>
 				</ul>
 			</div>
 		</nav>
 		<form id="pageMainForm" action="${ctx}/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?channelId=${channelId }" class="form-inline form_validation_tip" method="post">
-			<h3 class="heading">入账信息列表</h3>
+			<h3 class="heading">上账信息列表</h3>
 
 			<div>
 				<button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
@@ -95,7 +96,7 @@
 			<%@ include file="/WEB-INF/views/common/pagination.jsp"%>
 
 			<br/>
-			<a href="${ctx }/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?channelId=${channelId }"><button class="btn btn-primary" type="button">返 回</button></a>
+			<a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do"><button class="btn btn-primary" type="button">返 回</button></a>
 		</form>
 	</div>
 </div>

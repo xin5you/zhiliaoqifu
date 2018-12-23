@@ -20,6 +20,7 @@
 								<li>分销商管理</li>
 								<li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
 								<li>分销商信息列表</li>
+								<li>入账管理</li>
                                 <li><a href="${ctx }/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?channelId=${order.providerId }">入账信息列表</a></li>
                                 <li>入账明细列表</li>
 			                </ul>

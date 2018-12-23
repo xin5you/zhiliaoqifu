@@ -29,11 +29,11 @@ var addOpenAccount = {
             },
             rules: {
             	orderName: { required: true },
-            	accountType: { required: true}
+                companyId: { required: true}
             },
             messages: {
             	orderName: {required: "请输入订单名称"},
-            	accountType: { required: "请选择账户类型"}
+                companyId: { required: "请选择所属企业"}
             	
             },
             invalidHandler: function (form, validator) {
@@ -116,9 +116,6 @@ var addOpenAccount = {
 	},
 	
 	addOpenAccountCommit:function(){
-		$('#msg').modal({
-			backdrop : "static"
-		});
 		var orderName = $("#orderName").val();
 		var companyId = $("#companyId").val();
 		var accountType = $("#accountType").val();
@@ -127,11 +124,13 @@ var addOpenAccount = {
 			Helper.alert("请选择所属企业");
 			return false;
 		}
-		if(billingTypes==''){
+		/*if(billingTypes==''){
 			Helper.alert("请选择开户类型");
 			return false;
-		}
-		
+		}*/
+        $('#msg').modal({
+            backdrop : "static"
+        });
 		$("#pageMainForm").ajaxSubmit({
 			type:'post', // 提交方式 get/post
             url: Helper.getRootPath() + '/batch/openAccount/addOpenAccountCommit.do', // 需要提交的 url

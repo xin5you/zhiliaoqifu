@@ -198,7 +198,7 @@ public class RoleController {
 		}catch(Exception ex){
 			ex.printStackTrace();
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg","添加失败，请稍微再试");
+			resultMap.put("msg","系统异常，请稍后再试");
 		}
 		return resultMap;
 	}

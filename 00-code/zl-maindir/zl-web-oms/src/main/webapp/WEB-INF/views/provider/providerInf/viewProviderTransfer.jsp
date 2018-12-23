@@ -20,6 +20,7 @@
 			                    <li>供应商管理</li>
 			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
                                 <li>供应商信息列表</li>
+								<li>入账管理</li>
                                 <li><a href="${ctx }/provider/providerInf/intoAddProviderTransfer.do?providerId=${order.providerId }">入账信息列表</a></li>
                                 <li>入账明细列表</li>
 			                </ul>
