@@ -64,11 +64,10 @@ public class PayController {
 
     @ApiOperation("列出所有专项账户类型的ID")
     @RequestMapping(value = "/billingtype/list",method = RequestMethod.GET)
-    public JsonResult<List<SpecAccountTypeEnum>> listBillingType(@PathVariable(value = "type",required = false) String type) {
+    public JsonResult<List<SpecAccountTypeEnum>> listBillingType() {
         List<SpecAccountTypeEnum> list = Arrays.asList(SpecAccountTypeEnum.values());
         return new JsonResult<>(list);
     }
-
 
 
     @TokenCheck
