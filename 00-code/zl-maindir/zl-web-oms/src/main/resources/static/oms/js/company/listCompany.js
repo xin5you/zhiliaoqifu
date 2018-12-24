@@ -18,7 +18,8 @@ var listCompany = {
         $('.btn-reset').on('click', listCompany.searchReset);
         $('.btn-open').on('click', listCompany.loadAddOpenAccountModal);
         $('.btn-open-submit').on('click', listCompany.companyOpenAccount);
-        $('.btn-tansfer').on('click', listCompany.intoAddCompanyTransfer);
+        $('.btn-platform-tansfer').on('click', listCompany.intoAddCompanyTransfer);
+        $('.btn-company-tansfer').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-accbal').on('click', listCompany.listCompanyAccBal);
     },
     searchReset:function(){

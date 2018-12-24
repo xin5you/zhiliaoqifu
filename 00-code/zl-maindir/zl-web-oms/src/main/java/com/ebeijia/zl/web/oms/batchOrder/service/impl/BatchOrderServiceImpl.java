@@ -523,8 +523,10 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		for (BatchOrderList batchOrder : batchOrderList) {
 			reqVo.setTransAmt(batchOrder.getAmount());
 			reqVo.setUploadAmt(batchOrder.getAmount());
+			reqVo.setTfrInBId(batchOrder.getTfrInBid());
 			reqVo.setTfrInUserId(batchOrder.getTfrInId());
 			reqVo.setTfrOutUserId(batchOrder.getTfrOutId());
+			reqVo.setTfrOutBId(batchOrder.getTfrOutBid());
 			reqVo.setTransId(TransCode.MB50.getCode());
 			reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
 			reqVo.setUserId(batchOrder.getTfrInId());
