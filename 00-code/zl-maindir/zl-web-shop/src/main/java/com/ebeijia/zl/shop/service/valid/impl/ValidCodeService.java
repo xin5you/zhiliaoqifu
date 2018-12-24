@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static com.ebeijia.zl.shop.constants.ResultState.*;
+
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
+import static com.ebeijia.zl.shop.constants.ResultState.OK;
 
 @Service
 public class ValidCodeService implements IValidCodeService {
@@ -38,7 +40,6 @@ public class ValidCodeService implements IValidCodeService {
         validPhoneNumber(phoneNum);
         String code = generateCode();
         //TODO MockData
-        code = "1234";
         deliverAndSave(phoneNum, method, code);
         logger.info("向手机号%s发送%s验证码成功", phoneNum, method);
         throw new AdviceMessenger(OK, "发送成功");
@@ -49,9 +50,10 @@ public class ValidCodeService implements IValidCodeService {
         vo.setMsgId(IdUtil.getNextId());
         if (PhoneValidMethod.LOGIN.equals(method)) {
             vo.setSmsType(SMSType.SMSType1000.getCode());
+            System.out.println(code);
         } else {
             //TODO Fix SNSType
-            vo.setSmsType(SMSType.SMSType1000.getCode());
+//            vo.setSmsType(SMSType.SMSType1005.getCode());
         }
         vo.setPhoneNumber(phoneNum);
         vo.setCode(code);

@@ -3,32 +3,35 @@ package com.ebeijia.zl.shop.service.member.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
-import com.ebeijia.zl.common.utils.tools.StringUtils;
+import com.ebeijia.zl.facade.user.service.UserInfFacade;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMemberAddress;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberAddressService;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import com.ebeijia.zl.shop.service.member.IMemberService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
+import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.AddressInfo;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
-
 @Service
 public class MemberService implements IMemberService {
+
     @Autowired
-    HttpSession session;
+    ShopUtils shopUtils;
 
     @Autowired
     ITbEcomMemberService memberDao;
 
     @Autowired
     ITbEcomMemberAddressService addressDao;
-//    @Autowired
-//    UserInfFacade userInfFacade;
+
+    @Autowired
+    UserInfFacade userInfFacade;
 
     @Override
     public TbEcomMember createMember() {
@@ -37,7 +40,9 @@ public class MemberService implements IMemberService {
 
     @Override
     public Integer newAddress(AddressInfo address, Integer pos) {
-        String memberId = (String) session.getAttribute("memberId");
+        MemberInfo memberInfo = shopUtils.getSession();
+        String memberId = memberInfo.getMemberId();
+
         TbEcomMemberAddress temp = new TbEcomMemberAddress();
         temp.setMemberId(memberId);
         //检查是否存在地址
@@ -49,11 +54,13 @@ public class MemberService implements IMemberService {
         temp.setCity(address.getCity());
         temp.setProvince(address.getProvince());
         temp.setAddrDetail(address.getAddress());
+
+        //如果没有则添加
         if (memberAddress == null) {
             memberAddress = temp;
             memberAddress.setAddrId(IdUtil.getNextId());
             //TODO Get UserName
-            memberAddress.setUserName("");
+//            memberAddress.setUserName();
             boolean save = addressDao.save(memberAddress);
             if (!save) {
                 throw new AdviceMessenger(500, "数据插入失败，请重试");
@@ -69,10 +76,9 @@ public class MemberService implements IMemberService {
 
     @Override
     public PersonInf getMemberInfo() {
-        String memberId = (String) session.getAttribute("memberId");
-        if (StringUtils.isEmpty(memberId)) {
-            throw new BizException(401, "超时了，请重新登录");
-        }
+        MemberInfo memberInfo = shopUtils.getSession();
+        String memberId = memberInfo.getMemberId();
+
         TbEcomMember m = new TbEcomMember();
         m.setMemberId(memberId);
         m.setDataStat("0");
@@ -80,26 +86,30 @@ public class MemberService implements IMemberService {
         if (one == null) {
             throw new BizException(404, "用户不存在");
         }
-        //TODO 对接账务接口
-
-//        UserInf userInf = userInfFacade.getUserInfByUserId(one.getUserId());
-//        userInfFacade.getPersonInfByPhoneNo("","");
-        PersonInf personInf = new PersonInf();
-        personInf.setPersonalId(one.getPersonId());
-        personInf.setMobilePhoneNo("13812341234");
-        personInf.setUserId(one.getMemberId());
-        personInf.setPersonalName("李狗子");
-        personInf.setPersonalCardNo("NO DATA");
+        //对接账务接口
+        PersonInf personInf = userInfFacade.getPersonInfByPhoneNo(memberInfo.getMobilePhoneNo());
+        if (personInf==null){
+            throw new BizException(500, "通讯故障");
+        }
         return personInf;
     }
 
     @Override
     public AddressInfo listAddress() {
-        String memberId = (String) session.getAttribute("memberId");
+        MemberInfo memberInfo = shopUtils.getSession();
+        String memberId = memberInfo.getMemberId();
+
         TbEcomMemberAddress temp = new TbEcomMemberAddress();
         temp.setMemberId(memberId);
         //检查是否存在地址
         TbEcomMemberAddress memberAddress = addressDao.getOne(new QueryWrapper<>(temp));
+        if (memberAddress==null){
+            throw new AdviceMessenger(ResultState.NOT_FOUND,"请输入收货地址");
+        }
         return new AddressInfo(memberAddress);
     }
+
+
+
+
 }

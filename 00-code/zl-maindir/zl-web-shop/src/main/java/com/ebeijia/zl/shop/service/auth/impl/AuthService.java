@@ -14,18 +14,20 @@ import com.ebeijia.zl.facade.user.req.OpenUserInfReqVo;
 import com.ebeijia.zl.facade.user.service.UserInfFacade;
 import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import com.ebeijia.zl.shop.service.auth.IAuthService;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
+import com.ebeijia.zl.shop.utils.ShopUtils;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.Token;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 public class AuthService implements IAuthService {
@@ -57,39 +59,51 @@ public class AuthService implements IAuthService {
         TbEcomMember member = new TbEcomMember();
         member.setPersonId(phone);
         member = memberDao.getOne(new QueryWrapper<>(member));
-//        if (member == null) {
-//            //注册流程
-//            remoteRegister(phone);
-//            localRegister(phone);
-//        }
-//        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, TransChnl.CHANNEL6.toString());
-//        if (userInf == null) {
-//            throw new AdviceMessenger(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
-//        }
-        //测试用
-        HashMap<String, String> token = new HashMap<>();
-        token.put("memberId", "TT233");
-        token.put("token", "testToken");
+        String memberId = null;
+        if (member == null) {
+            //注册流程
+            remoteRegister(phone);
+            memberId = localRegister(phone);
+        }else {
+            memberId = member.getMemberId();
+        }
 
+        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
+        if (userInf == null) {
+            throw new AdviceMessenger(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
+        }
 
+        String token = memberId+":"+IdUtil.getNextId();
+        jedis2.del(memberId+":*");
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setUserId(userInf.getUserId());
+        memberInfo.setMemberId(memberId);
+        memberInfo.setMobilePhoneNo(phone);
         //将获取到的token存入redis缓存;
-        jedis2.set(token.get("token"), token.get("memberId"), 3600 * 24);
+
+        try {
+            jedis2.set(token,ShopUtils.MAPPER.writeValueAsString(memberInfo) , 3600 * 24);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         //前端测试用
-        return new Token(token.get("token"));
+        return new Token(token);
     }
 
-    private void localRegister(String phone) {
-        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, TransChnl.CHANNEL6.toString());
+    private String localRegister(String phone) {
+        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         TbEcomMember member = new TbEcomMember();
         //TODO 测试用
+        String memberId = IdUtil.getNextId();
         member.setPersonId(phone);
-        member.setMemberId(IdUtil.getNextId());
+        member.setMemberId(memberId);
         member.setUserId(userInf.getUserId());
         member.setCreateTime(System.currentTimeMillis());
         boolean save = memberDao.save(member);
-        if (!save){
-            throw new AdviceMessenger(500,"本地注册失败");
+        if (!save) {
+            throw new AdviceMessenger(500, "本地注册失败");
         }
+        return memberId;
     }
 
     private String remoteRegister(String phone) {
@@ -98,7 +112,7 @@ public class AuthService implements IAuthService {
         req.setMobilePhone(phone);
 
         req.setTransId(TransCode.CW80.getCode());
-        req.setTransChnl("40001001");
+        req.setTransChnl(TransChnl.CHANNEL6.toString());
         //TODO 获取用户ID
         req.setUserName("用户");
         req.setUserType(UserType.TYPE100.getCode());
@@ -109,8 +123,8 @@ public class AuthService implements IAuthService {
         BaseResult result = userInfFacade.registerUserInf(req);
         checkResult(result);
         userId = (String) result.getObject();
-        if (StringUtils.isEmpty(userId)){
-            throw new AdviceMessenger(500,"注册失败，请核对您的信息");
+        if (StringUtils.isEmpty(userId)) {
+            throw new AdviceMessenger(500, "注册失败，请核对您的信息");
         }
         return userId;
     }

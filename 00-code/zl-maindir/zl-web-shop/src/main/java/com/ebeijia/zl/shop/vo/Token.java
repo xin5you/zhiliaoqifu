@@ -1,8 +1,7 @@
 package com.ebeijia.zl.shop.vo;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
-import lombok.*;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -20,6 +19,5 @@ public class Token implements Serializable {
 
     public Token(String token) {
         this.token = token;
-//        this.userId = userId;
     }
 }
