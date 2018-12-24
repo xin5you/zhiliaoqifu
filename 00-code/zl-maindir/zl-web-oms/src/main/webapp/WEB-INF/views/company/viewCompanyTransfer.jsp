@@ -97,8 +97,10 @@
                                      <td>${entity.invoiceInfo}</td>
 									 <td>
 										<c:if test="${order.companyReceiverCheck == '1' && company.isPlatform == '0' && entity.isInvoice == '0'}">
-                                    		<a orderListId="${entity.orderListId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>
-                                    	</c:if>
+											<sec:authorize access="hasRole('ROLE_COMPANY_INVOICE_INTO')">
+												<a orderListId="${entity.orderListId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>
+											</sec:authorize>
+										</c:if>
 									 </td>
 				                 </tr>
 				             </c:forEach>
@@ -155,7 +157,9 @@
 			   </div>
 		   </form>
 		   <div class="modal-footer" style="text-align: center;">
+			<sec:authorize access="hasRole('ROLE_COMPANY_INVOICE_COMMIT')">
 			   <button class="btn btn-primary btn-invoice-submit">确 定  </button>
+			</sec:authorize>
 			   <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 		   </div>
 	   </div>

@@ -7,6 +7,7 @@ import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
+import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -56,13 +57,12 @@ public class CommonServiceImpl implements CommonService {
             return resultMap;
         }
         try {
-            PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
+            PageInfo<AccountVO> pageList = accountQueryFacade.getAccountInfPage(startNum, pageSize, reqVo);
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额列表异常");
             resultMap.put("status", Boolean.FALSE);
             resultMap.put("msg", "查询账户余额列表异常");
-            return resultMap;
         }
         return resultMap;
     }

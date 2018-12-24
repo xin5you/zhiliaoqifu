@@ -20,7 +20,7 @@
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="searchForm" action="${ctx }/retailChnl/retailChnlInf/listRetailChnlAccBal.do" class="form-inline" method="post">
+					<form id="searchForm" class="form-inline" method="post">
 						<h3 class="heading">分销商账户余额列表</h3>
 						<%--<div class="row-fluid" id="h_search">
 							 <div class="span10">

@@ -83,12 +83,12 @@
 								<a providerId="${entity.providerId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 							</sec:authorize>
 							<c:if test="${entity.isOpen=='1'}">
-								<%--<sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">--%>
-								<a providerId="${entity.providerId}" title="入账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
-								<%--</sec:authorize>--%>
-								<%--<sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">--%>
-								<a providerId="${entity.providerId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
-								<%--</sec:authorize>--%>
+								<sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">
+									<a providerId="${entity.providerId}" title="入账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+								</sec:authorize>
+								<sec:authorize access="hasRole('ROLE_PROVIDER_ACCBAL')">
+									<a providerId="${entity.providerId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
+								</sec:authorize>
 							</c:if>
 						</td>
 					</tr>
@@ -103,7 +103,9 @@
 <div id="addOpenAccountModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<form class="form-horizontal">
 		<div class="modal-header">
+		<sec:authorize access="hasRole('ROLE_PROVIDER_OPENACCOUNT_COMMIT')">
 			<button class="close" data-dismiss="modal">&times;</button>
+		</sec:authorize>
 			<h3 id="commodityInfModal_h1">开户</h3>
 		</div>
 		<div class="modal-body">
@@ -112,44 +114,9 @@
 		</div>
 	</form>
 	<div class="modal-footer" style="text-align: center;">
+	<sec:authorize access="hasRole('ROLE_PROVIDER_OPENACCOUNT_COMMIT')">
 		<button class="btn btn-primary btn-openAccount-submit">确 定  </button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
-	</div>
-</div>
-
-<div id="addTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<form class="form-horizontal">
-		<div class="modal-header">
-			<button class="close" data-dismiss="modal">&times;</button>
-			<h3 id="commodityInfModal_h2">转账</h3>
-		</div>
-		<div class="modal-body">
-			<input type="hidden" id="provider_id" name="provider_id"/>
-			<fieldset>
-				<div class="control-group">
-					<label class="control-label">转账金额：</label>
-					<div class="controls">
-						<input type="text" class="span3" id="amount" name="amount"/>
-						<span class="help-block"></span>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">转至企业：</label>
-					<div class="controls">
-						<select name="companyId" id="companyId" class="input-medium">
-							<option value="">--请选择--</option>
-							<c:forEach var="c" items="${companyList}" varStatus="sta">
-								<option value="${c.companyId}"   >${c.name}</option>
-							</c:forEach>
-						</select>
-						<span class="help-block"></span>
-					</div>
-				</div>
-			</fieldset>
-		</div>
-	</form>
-	<div class="modal-footer" style="text-align: center;">
-		<button class="btn btn-primary btn-submit">确 定  </button>
+	</sec:authorize>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 	</div>
 </div>

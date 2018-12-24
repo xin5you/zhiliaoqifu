@@ -81,13 +81,21 @@
 						</td>
 						<td>
 							<c:if test="${entity.checkStat == '0'}">
-								<a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-								<a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
+								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOEDIT')">
+									<a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+								</sec:authorize>
+								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOCHECK')">
+									<a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
+								</sec:authorize>
 							</c:if>
 							<c:if test="${entity.checkStat == '1'&& entity.inaccountCheck == '0'}">
-								<a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
+								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_ADDCOMMIT')">
+									<a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
+								</sec:authorize>
 							</c:if>
-							<a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+							<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_DETAIL')">
+								<a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+							</sec:authorize>
 						</td>
 					</tr>
 				</c:forEach>
@@ -214,8 +222,10 @@
 		</div>
 	</form>
 	<div class="modal-footer" style="text-align: center;">
+	<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_ADD')">
 		<button id="btn-submit" class="btn btn-primary btn-submit">确 定  </button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+	</sec:authorize>
+	<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 	</div>
 </div>
 <div id="imorptMsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
@@ -248,7 +258,9 @@
 		</div>
 	</form>
 	<div class="modal-footer" style="text-align: center;">
+	<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_CHECK_COMMIT')">
 		<button class="btn btn-primary btn-checkStat-submit">确 定  </button>
+	</sec:authorize>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 	</div>
 </div>

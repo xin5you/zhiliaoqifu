@@ -99,12 +99,14 @@
 								</sec:authorize>
 							</c:if>
 							<c:if test="${company.isOpen=='1'}">
-								<%--<c:if test="${company.isOpen=='1'} && ${company.isPlatform=='1'}">--%>
-							<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
-								<%--</c:if>--%>
-								<%--<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">--%>
-							<a companyId="${company.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
-								<%--</sec:authorize>	--%>
+								<c:if test="${company.isPlatform=='1'}">
+									<sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT')">
+										<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
+									</sec:authorize>
+								</c:if>
+								<sec:authorize access="hasRole('ROLE_COMPANY_ACCBAL_INTO')">
+									<a companyId="${company.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
+								</sec:authorize>
 							</c:if>
 						</td>
 					</tr>
@@ -128,7 +130,9 @@
 		</div>
 	</form>
 	<div class="modal-footer" style="text-align: center;">
+	<sec:authorize access="hasRole('ROLE_COMPANY_OPENACCOUNT_COMMIT')">
 		<button class="btn btn-primary btn-open-submit">确 定  </button>
+	</sec:authorize>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 	</div>
 </div>

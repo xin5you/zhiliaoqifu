@@ -30,8 +30,10 @@
 						<h3 class="heading">上账信息列表</h3>
 						
 				         <div>
-				         	<button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
-				         </div>
+                            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_INTOADD')">
+				         	    <button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
+                            </sec:authorize>
+                         </div>
 				         <br/>
 				         
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
@@ -80,15 +82,25 @@
                                      </td>
 				                    <td>
                                         <c:if test="${entity.checkStat == '0'}">
-                                            <a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-                                            <a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
+                                            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTOEDIT')">
+                                                <a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+                                            </sec:authorize>
+                                            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_CHECK_INTO')">
+                                                <a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
+                                            </sec:authorize>
                                         </c:if>
                                         <c:if test="${entity.checkStat == '1'&& entity.inaccountCheck == '0'}">
-                                            <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
+                                            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ADDCOMMIT')">
+                                                <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
+                                            </sec:authorize>
                                         </c:if>
+                                        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_DETAIL')">
                                          <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+                                        </sec:authorize>
                                         <c:if test="${entity.inaccountCheck == '1'&& entity.transferCheck == '0'}">
-                                         <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
+                                            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_COMPANY')">
+                                                <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
+                                            </sec:authorize>
                                         </c:if>
 				                    </td>
 				                 </tr>
@@ -216,8 +228,10 @@
                 </div>
             </form>
             <div class="modal-footer" style="text-align: center;">
+            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_ADDCOMMIT')">
                 <button id="btn-submit" class="btn btn-primary btn-submit">确 定  </button>
-                <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+            </sec:authorize>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
             </div>
         </div>
         <div id="imorptMsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
@@ -250,7 +264,9 @@
                </div>
            </form>
            <div class="modal-footer" style="text-align: center;">
+            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_CHECK_COMMIT')">
                <button class="btn btn-primary btn-checkStat-submit">确 定  </button>
+            </sec:authorize>
                <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
            </div>
        </div>
@@ -268,7 +284,9 @@
                </div>
            </form>
            <div class="modal-footer" style="text-align: center;">
-               <button class="btn btn-primary btn-remit-submit">确 定  </button>
+                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_PLATFORM_COMMIT')">
+                    <button class="btn btn-primary btn-remit-submit">确 定  </button>
+                </sec:authorize>
                <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
            </div>
        </div>

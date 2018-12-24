@@ -142,12 +142,12 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			//执行开户操作
 			boolean eflag = transLogService.execute(intfaceTransLog);
 			if (eflag) {
-				return user.getUserId();
+				return personInf.getUserId();
 			} else {
 				return "";
 			}
 		}
-		return user.getUserId();
+		return personInf.getUserId();
 	}
 
 	/**

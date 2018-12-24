@@ -71,27 +71,27 @@
 									<%-- <a channelId="${entity.channelId}" title="添加产品折扣率" class="btn-mini btn-edit a" href="#"><i class="icon-pencil"></i></a> 
 									<a channelId="${entity.channelId}" title="追加备付金" class="btn-grant-role"  href="#"><i class="icon-plus"></i></a>  --%>
 									<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_INTOEDIT')">
-									<a channelId="${entity.channelId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+										<a channelId="${entity.channelId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 									</sec:authorize>
 									<c:if test="${entity.isOpen == '0'}">
 										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_DELETE')">
-										<a channelId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+											<a channelId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 										</sec:authorize>
 										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">
 											<a channelId="${entity.channelId}" title="开户" class="btn-mini btn-openAccount" href="#"><i class="icon-pencil"></i></a>
 										</sec:authorize>
 									</c:if>
 									<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_VIEW')">
-									<a channelId="${entity.channelId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+										<a channelId="${entity.channelId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 									</sec:authorize>
-										<c:if test="${entity.isOpen == '1'}">
-											<%--<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">--%>
-										<a channelId="${entity.channelId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
-											<%--</sec:authorize>	--%>
-											<%--<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">--%>
-										<a channelId="${entity.channelId}" title="上账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
-											<%--</sec:authorize>	--%>
-										</c:if>
+									<c:if test="${entity.isOpen == '1'}">
+										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_ACCBAL')">
+											<a channelId="${entity.channelId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
+										</sec:authorize>
+										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOADD')">
+											<a channelId="${entity.channelId}" title="上账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+										</sec:authorize>
+									</c:if>
 				                    </td>
 				                 </tr>
 				             </c:forEach>

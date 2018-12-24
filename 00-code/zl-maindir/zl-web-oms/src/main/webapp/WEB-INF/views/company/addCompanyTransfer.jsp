@@ -74,12 +74,18 @@
                                         </c:if>
                                      </td>
 				                    <td>
-                                        <a orderId="${entity.orderId}" title="订单明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+                                        <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_DETAIL')">
+                                            <a orderId="${entity.orderId}" title="收款明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+                                        </sec:authorize>
                                         <c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '0' && company.isPlatform == '1'}">
-                                         <a orderId="${entity.orderId}" title="平台收款" class="btn-mini btn-platform-ok" href="#"><i class="icon-ok"></i></a>
+                                            <sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT_INTO')">
+                                                <a orderId="${entity.orderId}" title="平台收款" class="btn-mini btn-platform-ok" href="#"><i class="icon-ok"></i></a>
+                                            </sec:authorize>
                                         </c:if>
                                         <c:if test="${entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '0' && company.isPlatform == '0'}">
-                                            <a orderId="${entity.orderId}" title="企业收款" class="btn-mini btn-company-ok" href="#"><i class="icon-ok"></i></a>
+                                            <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_INTO')">
+                                                <a orderId="${entity.orderId}" title="企业收款" class="btn-mini btn-company-ok" href="#"><i class="icon-ok"></i></a>
+                                            </sec:authorize>
                                         </c:if>
 				                    </td>
 				                 </tr>
@@ -116,7 +122,9 @@
                </div>
            </form>
            <div class="modal-footer" style="text-align: center;">
+            <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_COMMIT')">
                <button class="btn btn-primary btn-remit-submit">确 定  </button>
+            </sec:authorize>
                <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
            </div>
        </div>
