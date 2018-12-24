@@ -42,7 +42,7 @@ public class CompanyController {
 
 	@Autowired
 	private CompanyInfFacade companyInfFacade;
-	
+
 	@Autowired
 	private CompanyService companyService;
 
@@ -54,14 +54,14 @@ public class CompanyController {
 
 	@Autowired
 	private InaccountOrderDetailService inaccountOrderDetailService;
-	
+
 	/**
 	 * 企业信息列表查询
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return ModelAndView对象
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/listCompany")
 	public ModelAndView listCompany(HttpServletRequest req, HttpServletResponse response) throws IOException {
@@ -70,12 +70,12 @@ public class CompanyController {
 		String name = StringUtil.nullToString(req.getParameter("name"));
 		String transFlag = StringUtil.nullToString(req.getParameter("transFlag"));
 		String contacts = StringUtil.nullToString(req.getParameter("contacts"));
-		
+
 		CompanyInf companyInf = new CompanyInf();//通过封装类将前台查询条件用对象接收
 		companyInf.setName(name);
 		companyInf.setTransFlag(transFlag);
 		companyInf.setContacts(contacts);
-		
+
 		PageInfo<CompanyInf> pageList = null;
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
@@ -84,7 +84,7 @@ public class CompanyController {
 		} catch (Exception e) {
 			logger.error("## 查询企业列表信息出错", e);
 		}
-		
+
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
 		mv.addObject("companyInf", companyInf);
@@ -94,7 +94,7 @@ public class CompanyController {
 	@RequestMapping(value = "/intoAddCompany")
 	public ModelAndView intoAddCompany(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("company/addCompany");
-		
+
 		return mv;
 	}
 
@@ -103,7 +103,7 @@ public class CompanyController {
 	public Map<String, Object> addCompany(HttpServletRequest req, HttpServletResponse resp) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
-		
+
 		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
 		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(lawCode);
 		if (!StringUtil.isNullOrEmpty(company)) {
@@ -140,7 +140,7 @@ public class CompanyController {
 	public Map<String, Object> editCompany(HttpServletRequest req, HttpServletResponse resp) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
-		
+
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
 		CompanyInf companyInfCode = companyInfFacade.getCompanyInfById(companyId);
@@ -155,7 +155,7 @@ public class CompanyController {
 		try {
 			CompanyInf companyInf = getCompanyInf(req);
 			if (companyInfFacade.updateCompanyInf(companyInf)) {
-				
+
 			} else {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "修改企业信息失败");
@@ -171,10 +171,10 @@ public class CompanyController {
 	public Map<String, Object> deleteCompany(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
-		
+
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
+
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		CompanyInf company = new CompanyInf();
 		company.setCompanyId(companyId);;
@@ -182,7 +182,7 @@ public class CompanyController {
 		company.setUpdateUser(user.getId());
 		try {
 			if (companyInfFacade.deleteCompanyInf(company)) {
-				
+
 			} else {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "删除企业信息失败");
@@ -223,7 +223,7 @@ public class CompanyController {
 		companyInf.setUpdateTime(System.currentTimeMillis());
 		return companyInf;
 	}
-	
+
 	@RequestMapping(value = "/openAccountCompany")
 	@ResponseBody
 	public Map<String, Object> openAccountCompany(HttpServletRequest req, HttpServletResponse resp) {
@@ -252,6 +252,9 @@ public class CompanyController {
 
 		InaccountOrder order = new InaccountOrder();
 		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
+		if (IsOpenEnum.ISOPEN_FALSE.getCode().equals(company.getIsOpen())) {
+			order.setCompanyId(companyId);
+		}
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
@@ -361,5 +364,5 @@ public class CompanyController {
 		}
 		return mv;
 	}
-	
+
 }

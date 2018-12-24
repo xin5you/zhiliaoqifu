@@ -32,10 +32,10 @@ import com.github.pagehelper.PageInfo;
 @RequestMapping(value = "baseDict")
 public class BaseDictController {
 	Logger logger = LoggerFactory.getLogger(BaseDictController.class);
-	
+
 	@Autowired
 	private BaseDictService baseDictService;
-	
+
 	@Autowired
 	@Qualifier("jedisClusterUtils")
 	private JedisClusterUtils jedisClusterUtils;
@@ -48,22 +48,22 @@ public class BaseDictController {
 		BaseDict baseDict = new BaseDict();
 		baseDict.setDictName(StringUtil.nullToString(req.getParameter("dictName")));
 		baseDict.setDictCode(StringUtil.nullToString(req.getParameter("dictCode")));
-		
+
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 			pageList = baseDictService.getBaseDictListPage(startNum, pageSize, baseDict);
-		
+
 		} catch (Exception e) {
 			logger.error("## 查询字典列表信息出错", e);
 		}
-		
+
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
 		mv.addObject("baseDict", baseDict);
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/intoEditBaseDict")
 	public ModelAndView intoEditBaseDict(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("baseDict/editBaseDict");
@@ -72,15 +72,15 @@ public class BaseDictController {
 		mv.addObject("baseDict", baseDict);
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/editBaseDictCommit")
 	@ResponseBody
 	public Map<String, Object> editBaseDictCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+
 		String dictId = StringUtil.nullToString(req.getParameter("dictId"));
 		String dictCode = StringUtil.nullToString(req.getParameter("dictCode"));
-		
+
 		boolean flag = true;
 		List<BaseDict> baseDictList = baseDictService.getBaseDictList(new BaseDict());
 		for (BaseDict dict : baseDictList) {
@@ -91,28 +91,28 @@ public class BaseDictController {
 				}
 			}
 		}
-		
+
 		if (!flag) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "字典代码已存在，请重新输入");
 			return resultMap;
 		}
-		
+
 		BaseDict baseDict = getBaseDict(req);
 		if (!baseDictService.updateById(baseDict)) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑字典信息失败");
 		}
 		jedisClusterUtils.hset("TB_BASE_DICT_KV", "OMS_BATCH_OPEN_ACCOUNT_EXCEL_PATH", baseDict.getDictValue());
-		
+
 		resultMap.put("status", Boolean.TRUE);
 		return resultMap;
 	}
-	
+
 	private BaseDict getBaseDict(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
+
 		String dictId = StringUtil.nullToString(req.getParameter("dictId"));
 		String dictCode = StringUtil.nullToString(req.getParameter("dictCode"));
 		String isdefault = StringUtil.nullToString(req.getParameter("isdefault"));
@@ -122,7 +122,7 @@ public class BaseDictController {
 		String dictType = StringUtil.nullToString(req.getParameter("dictType"));
 		String dictValue = StringUtil.nullToString(req.getParameter("dictValue"));
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
-		
+
 		BaseDict baseDict = null;
 		if (!StringUtil.isNullOrEmpty(dictId)) {
 			baseDict = baseDictService.getById(dictId);
@@ -147,5 +147,5 @@ public class BaseDictController {
 		baseDict.setUpdateTime(System.currentTimeMillis());
 		return baseDict;
 	}
-	
+
 }

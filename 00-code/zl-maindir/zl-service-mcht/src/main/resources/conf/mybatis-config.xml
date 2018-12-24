@@ -4,7 +4,7 @@
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
 		<setting name="logImpl" value="SLF4J" />
-<!-- 		<setting name="logImpl" value="STDOUT_LOGGING" /> -->
+		<!-- 		<setting name="logImpl" value="STDOUT_LOGGING" /> -->
 	</settings>
 
 	<typeAliases>
@@ -17,8 +17,8 @@
 		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf"   alias="RetailChnlOrderInf" />
 		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf" alias="RetailChnlProductInf" />
 	</typeAliases>
-	
+
 	<mappers>
-	
+
 	</mappers>
 </configuration>

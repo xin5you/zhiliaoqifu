@@ -110,7 +110,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(retailChnlOrderInf.getChannelId());
 
             ProviderOrderInf providerOrderInf = providerOrderInfFacade
-                    .getTelOrderInfByChannelOrderId(channelOrderId);
+                    .getOrderInfByChannelOrderId(channelOrderId);
             // 异步通知供应商
             TeleRespVO respVo = new TeleRespVO();
             respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());

@@ -21,6 +21,7 @@
 								<li>企业管理</li>
 								<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
 								<li>企业信息列表</li>
+								<li>收款管理</li>
 								<li><a href="/company/intoAddCompanyTransfer.do?companyId=${company.companyId}">收款信息列表</a></li>
 								<li>收款明细列表</li>
 			                </ul>

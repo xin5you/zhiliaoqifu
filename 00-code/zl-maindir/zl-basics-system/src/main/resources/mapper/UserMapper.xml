@@ -87,4 +87,13 @@
 		 	and m.data_stat='0'
 		 	and m.login_type=#{loginType}
 	</select>
+
+	<select id="getUserByOrganId" parameterType="User" resultType="User">
+		select
+			<include refid="UserColumns" />
+		from tb_web_user m
+		where m.organization_id=#{organizationId}
+		and m.data_stat='0'
+		and m.login_type=#{loginType}
+	</select>
 </mapper>

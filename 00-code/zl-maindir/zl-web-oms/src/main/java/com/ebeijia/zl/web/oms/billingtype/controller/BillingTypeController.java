@@ -36,13 +36,13 @@ import com.github.pagehelper.PageInfo;
 @RequestMapping(value = "billingType")
 public class BillingTypeController {
 	Logger logger = LoggerFactory.getLogger(BillingTypeController.class);
-	
+
 	@Autowired
 	private BillingTypeService billingTypeInfService;
 
 	/**
 	 * 专用账户类型列表查询
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return ModelAndView对象
@@ -54,29 +54,29 @@ public class BillingTypeController {
 		PageInfo<BillingType> pageList = null;
 		BillingType billingTypeInf = new BillingType();
 		billingTypeInf.setBName(StringUtil.nullToString(req.getParameter("bName")));//创建专用账户类型对象，并设置name属性
-		
+
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 			pageList = billingTypeInfService.getBillingTypeInfListPage(startNum, pageSize, billingTypeInf);//将创建的专用账户类型对象传入查询专用账户类型列表的参数中，实现通过专用账户类型名称来模糊查询列表的功能，name为空则为查询所有
-		
+
 		} catch (Exception e) {
 			logger.error("## 查询专用账户类型列表信息出错", e);
 		}
-		
+
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("operStatus", operStatus);
 		mv.addObject("billingTypeInf", billingTypeInf);
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/intoAddBillingType")
 	public ModelAndView intoAddBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("billingType/addBillingType");
 		mv.addObject("billingTypeCodeList", SpecAccountTypeEnum.values());
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/addBillingType")
 	@ResponseBody
 	public Map<String, Object> addBillingType(HttpServletRequest req, HttpServletResponse response) {
@@ -88,7 +88,7 @@ public class BillingTypeController {
 			resultMap.put("msg", "账户类型已存在，请重新输入");
 			return resultMap;
 		}
-		
+
 		BillingType billingTypeInfo = getBillingTypeInf(req);
 		int i = billingTypeInfService.insertBillingTypeInf(billingTypeInfo);
 		resultMap.put("status", Boolean.TRUE);
@@ -98,7 +98,7 @@ public class BillingTypeController {
 		}
 		return resultMap;
 	}
-	
+
 	@RequestMapping(value = "/intoEditBillingType")
 	public ModelAndView intoEditBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("billingType/editBillingType");
@@ -110,7 +110,7 @@ public class BillingTypeController {
 		mv.addObject("billingTypeCodeList", speList);
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/editBillingType")
 	@ResponseBody
 	public Map<String, Object> editBillingType(HttpServletRequest req, HttpServletResponse response) {
@@ -126,7 +126,7 @@ public class BillingTypeController {
 				return resultMap;
 			}
 		}
-		
+
 		resultMap.put("status", Boolean.TRUE);
 		BillingType billingTypeInfo = getBillingTypeInf(req);
 		int i = billingTypeInfService.updateBillingTypeInf(billingTypeInfo);
@@ -136,7 +136,7 @@ public class BillingTypeController {
 		}
 		return resultMap;
 	}
-	
+
 	@RequestMapping(value = "/deleteBillingTypeCommit")
 	@ResponseBody
 	public Map<String, Object> deleteUserCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -145,13 +145,13 @@ public class BillingTypeController {
 
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
+
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		BillingType billingType = new BillingType();
 		billingType.setBId(bId);
 		billingType.setUpdateTime(System.currentTimeMillis());
 		billingType.setUpdateUser(user.getId());
-		
+
 		int i = billingTypeInfService.deleteBillingTypeInf(billingType);
 		if (i < 1) {
 			resultMap.put("status", Boolean.FALSE);
@@ -159,18 +159,18 @@ public class BillingTypeController {
 		}
 		return resultMap;
 	}
-	
+
 	private BillingType getBillingTypeInf(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
-		
+
 		String bId = StringUtil.nullToString(req.getParameter("bId"));
 		String bName = StringUtil.nullToString(req.getParameter("bName"));
 		String code = StringUtil.nullToString(req.getParameter("code"));
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
 		String loseFee = StringUtil.nullToString(req.getParameter("loseFee"));
 		String buyFee = StringUtil.nullToString(req.getParameter("buyFee"));
-		
+
 		BillingType billingType = null;
 		if (!StringUtil.isNullOrEmpty(bId)) {
 			billingType = billingTypeInfService.getBillingTypeInfById(bId);
@@ -191,5 +191,5 @@ public class BillingTypeController {
 		billingType.setUpdateTime(System.currentTimeMillis());
 		return billingType;
 	}
-	
+
 }

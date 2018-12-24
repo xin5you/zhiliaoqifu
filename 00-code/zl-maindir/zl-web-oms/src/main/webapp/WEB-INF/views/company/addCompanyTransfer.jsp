@@ -22,6 +22,7 @@
                                 <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
                                 <li>企业信息列表</li>
                                 <li>转账管理</li>
+                                <li>转账信息列表</li>
 			                </ul>
 			            </div>
 			        </nav>
@@ -108,7 +109,7 @@
                <input type="hidden" id="companyId" name="companyId"  value="${company.companyId }"/>
                <div class="modal-header">
                    <button class="close" data-dismiss="modal">&times;</button>
-                   <h3 id="commodityInfModal_h4">收款</h3>
+                   <h3 id="commodityInfModal_h1">收款</h3>
                </div>
                <div class="modal-body">
                    <span id="company_name">是否确认收款？</span>

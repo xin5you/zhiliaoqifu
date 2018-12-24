@@ -31,4 +31,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     User getUserByPhoneNo(User user);
+
+    User getUserByOrganId(User user);
 }

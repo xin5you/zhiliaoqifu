@@ -31,7 +31,7 @@ import com.github.pagehelper.PageInfo;
 @Controller
 @RequestMapping(value = "retailChnl/retailChnlProduct")
 public class RetailChnlProductController {
-	
+
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -42,7 +42,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 分销商产品列表
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -70,7 +70,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 进入添加分销商产品信息
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return
@@ -86,7 +86,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 添加分销商产品信息
-	 * 
+	 *
 	 * @param req
 	 * @return
 	 */
@@ -116,7 +116,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 进入编辑分销商产品信息
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return
@@ -139,7 +139,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 编辑分销商产品信息
-	 * 
+	 *
 	 * @param req
 	 * @return
 	 */
@@ -180,7 +180,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 供应商信息详情
-	 * 
+	 *
 	 * @param req
 	 * @param response
 	 * @return
@@ -205,7 +205,7 @@ public class RetailChnlProductController {
 
 	/**
 	 * 删除分销商产品信息
-	 * 
+	 *
 	 * @param req
 	 * @return
 	 */
@@ -229,7 +229,7 @@ public class RetailChnlProductController {
 		}
 		return resultMap;
 	}
-	
+
 	public RetailChnlProductInf getRetailChnlProductInf(HttpServletRequest req) {
 		String productAmt = StringUtil.nullToString(req.getParameter("productAmt"));
 		String productPrice = StringUtil.nullToString(req.getParameter("productPrice"));
@@ -239,8 +239,8 @@ public class RetailChnlProductController {
 		product.setAreaFlag(StringUtil.nullToString(req.getParameter("areaFlag")));
 		if (!StringUtil.isNullOrEmpty(productAmt))
 			/*product.setProductAmt(new BigDecimal(productAmt));*/
-		if (!StringUtil.isNullOrEmpty(productPrice))
-			product.setProductPrice(new BigDecimal(productPrice));
+			if (!StringUtil.isNullOrEmpty(productPrice))
+				product.setProductPrice(new BigDecimal(productPrice));
 		product.setProductType(StringUtil.nullToString(req.getParameter("productType")));
 		product.setRemarks(StringUtil.nullToString(req.getParameter("remarks")));
 		return product;
