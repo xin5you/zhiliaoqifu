@@ -1,9 +1,13 @@
 package com.ebeijia.zl.service.telrecharge.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
+import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
+import com.qianmi.open.api.domain.elife.OrderDetailInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +64,40 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 	@Override
 	public ProviderOrderInf getOrderInfByChannelOrderId(String OrderId) {
 		return providerOrderInfMapper.getOrderInfByChannelOrderId(OrderId);
+	}
+
+	/**
+	 * 话费充值状态
+	 * @param orderDetailInfo
+	 */
+	public void updateOrderRechargeState(ProviderOrderInf telProviderOrderInf,OrderDetailInfo orderDetailInfo,String respCode){
+
+		if(orderDetailInfo==null){
+			orderDetailInfo=new OrderDetailInfo();
+		}
+		//订单充值状态 0充值中 1成功 9撤销
+		String rechargeState= StringUtils.isNotEmpty(orderDetailInfo.getRechargeState())? orderDetailInfo.getRechargeState():"";
+		switch (rechargeState){
+			case "0":
+				telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode());
+				break;
+			case  "1":
+				telProviderOrderInf.setItemCost(new BigDecimal(orderDetailInfo.getItemCost()));  //商品成本价(进价)，单位元，保留3位小数
+				telProviderOrderInf.setTransCost(new BigDecimal(orderDetailInfo.getOrderCost())); //订单成本(进价)，单位元，保留3位小数，orderCost=itemCost*itemNum
+				telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode());
+				break;
+			default:
+				telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode());
+				break;
+		}
+		telProviderOrderInf.setBillId(orderDetailInfo.getBillId());
+
+		//订单付款状态 0 未付款1 已付款
+		telProviderOrderInf.setPayState(StringUtils.isEmpty(orderDetailInfo.getPayState()) ? "0": orderDetailInfo.getPayState());
+		telProviderOrderInf.setResv1(respCode); //记录充值渠道返回的结果信息
+
+		telProviderOrderInf.setOperateTime(System.currentTimeMillis());
+		this.updateById(telProviderOrderInf);
 	}
 
 }

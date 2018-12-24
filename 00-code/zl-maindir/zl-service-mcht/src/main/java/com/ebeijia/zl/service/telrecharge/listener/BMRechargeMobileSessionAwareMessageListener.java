@@ -97,6 +97,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 					payBillReq.setMobileNo(retailChnlOrderInf.getRechargePhone()); //手机号
 					payBillReq.setRechargeAmount(retailChnlOrderInf.getRechargeValue().toString());
 					payBillReq.setOuterTid(telProviderOrderInf.getRegOrderId());
+					payBillReq.setCallback("");
 					logger.info("手机充值--->立方话费充值接口，提交请求链接参数{}", JSONObject.toJSONString(payBillReq));
 
 					try {
@@ -114,32 +115,9 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 							logger.info("BmOrderCustomGetResponse customOrderResp -->{}",JSONObject.toJSONString(customOrderResp));
 							orderDetailInfo=customOrderResp.getOrderDetailInfo();
 						}
-						if(orderDetailInfo==null){
-							orderDetailInfo=new OrderDetailInfo();
-						}
-						//订单充值状态 0充值中 1成功 9撤销
-						String rechargeState= StringUtils.isNotEmpty(orderDetailInfo.getRechargeState())? orderDetailInfo.getRechargeState():"";
-						switch (rechargeState){
-							case "0":
-								telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode());
-								break;
-							case  "1":
-								telProviderOrderInf.setItemCost(new BigDecimal(orderDetailInfo.getItemCost()));  //商品成本价(进价)，单位元，保留3位小数
-								telProviderOrderInf.setTransCost(new BigDecimal(orderDetailInfo.getOrderCost())); //订单成本(进价)，单位元，保留3位小数，orderCost=itemCost*itemNum
-								telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode());
-								break;
-							default:
-								telProviderOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode());
-								break;
-						}
-						telProviderOrderInf.setBillId(orderDetailInfo.getBillId());
+						//修改供应商订单信息
+						providerOrderInfService.updateOrderRechargeState(telProviderOrderInf,orderDetailInfo,response.getErrorCode());
 
-						//订单付款状态 0 未付款1 已付款
-						telProviderOrderInf.setPayState(StringUtils.isEmpty(orderDetailInfo.getPayState()) ? "0": orderDetailInfo.getPayState());
-				        telProviderOrderInf.setResv1(response.getErrorCode()); //记录充值渠道返回的结果信息
-
-						telProviderOrderInf.setOperateTime(System.currentTimeMillis());
-				        providerOrderInfService.updateById(telProviderOrderInf);
 					} catch (Exception e) {
 						logger.error("##请求话费充值异常-->{}", e);
 					}
@@ -153,51 +131,14 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 					logger.error("##取消话费充值异常-->{}", e);
 				}
 		 }
-		if( "0".equals(retailChnlOrderInf.getNotifyFlag())){
-			try{
-				//异步通知供应商
-				TeleRespVO respVo=new TeleRespVO();
-				respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
-				respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
-				respVo.setPayState(retailChnlOrderInf.getOrderStat());
-				respVo.setRechargeState(telProviderOrderInf.getRechargeState()); //充值状态
-				if(telProviderOrderInf.getOperateTime() !=null){
-					respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(new Date(telProviderOrderInf.getOperateTime())));
-				}
-				respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(new Date(retailChnlOrderInf.getCreateTime()))); //操作时间
-				respVo.setFacePrice(retailChnlOrderInf.getRechargeValue().toString());
-				respVo.setItemNum(retailChnlOrderInf.getItemNum());
-				respVo.setOuterTid(retailChnlOrderInf.getOuterTid());
-				respVo.setChannelId(retailChnlOrderInf.getChannelId());
-				respVo.setChannelToken(retailChnlInf.getChannelCode());
-				respVo.setV(retailChnlOrderInf.getAppVersion());
-				respVo.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
-				respVo.setSubErrorCode(telProviderOrderInf.getResv1());
-				if(ReqMethodCode.R1.getCode().equals(retailChnlOrderInf.getRechargeType())){
-					respVo.setMethod(ReqMethodCode.R1.getValue());
-				}else if(ReqMethodCode.R2.getCode().equals(retailChnlOrderInf.getRechargeType())){
-					respVo.setMethod(ReqMethodCode.R2.getValue());
-				}
-				String psotToken=MD5SignUtils.genSign(respVo, "key",retailChnlInf.getChannelKey(), new String[]{"sign","serialVersionUID"}, null);
-				respVo.setSign(psotToken);
-				
-				//修改通知后 分销商的处理状态
-				logger.info("##发起分销商回调[{}],返回参数:[{}]",retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
-				String result=HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
-				if(result !=null && "SUCCESS ".equals(result.toUpperCase() )){
-					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
-				}else{
-					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
-				}
-				retailChnlOrderInfService.updateById(retailChnlOrderInf);
-				} catch (Exception e) {
-					logger.error("##话费充值失败，回调分销商异常-->{}", e);
-				}
-			}
-			try {
-				message.acknowledge();
-			} catch (JMSException e) {
-				logger.error("##消息ack确认发生异常-->{}", e);
-			}
+
+		 //迴調通知分銷商
+		retailChnlOrderInfService.doTelRechargeBackNotify(retailChnlInf,retailChnlOrderInf,telProviderOrderInf);
+
+		try {
+			message.acknowledge();
+		} catch (JMSException e) {
+			logger.error("##消息ack确认发生异常-->{}", e);
+		}
 		}
 }

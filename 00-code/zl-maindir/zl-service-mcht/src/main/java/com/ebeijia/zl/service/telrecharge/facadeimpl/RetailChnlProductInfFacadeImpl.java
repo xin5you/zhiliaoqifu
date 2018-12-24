@@ -34,7 +34,7 @@ public class RetailChnlProductInfFacadeImpl implements RetailChnlProductInfFacad
 	/**
 	 * 保存对象返回ID
 	 * 
-	 * @param RetailChnlProductInf
+	 * @param retailChnlProductInf
 	 * @return
 	 * @throws Exception
 	 */

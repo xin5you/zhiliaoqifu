@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
@@ -57,5 +59,13 @@ public interface RetailChnlOrderInfService extends IService<RetailChnlOrderInf> 
 //     List<RetailChnlOrderInfUpload> getRetailChnlOrderInfListToUpload(RetailChnlOrderInf order);
      
      RetailChnlOrderInf getRetailChnlOrderInfCount(RetailChnlOrderInf order);
+
+	/**
+	 * 話費充值迴調分銷商
+	 * @param retailChnlInf
+	 * @param retailChnlOrderInf
+	 * @param telProviderOrderInf
+	 */
+	void doTelRechargeBackNotify(RetailChnlInf retailChnlInf, RetailChnlOrderInf retailChnlOrderInf, ProviderOrderInf telProviderOrderInf);
 
 }

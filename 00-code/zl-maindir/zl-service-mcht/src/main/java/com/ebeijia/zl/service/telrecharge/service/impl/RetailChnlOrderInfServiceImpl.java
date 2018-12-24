@@ -6,10 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.http.HttpClientUtil;
+import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +42,9 @@ import com.github.pagehelper.PageInfo;
  */
 @Service
 public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderInfMapper,RetailChnlOrderInf> implements RetailChnlOrderInfService{
-	
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private RetailChnlOrderInfMapper retailChnlOrderInfMapper;
 	
@@ -134,7 +141,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			resOper=providerOrderInfService.save(providerOrderInf); //保存供应商订单
 
 			if(resOper){
-
+				//TODO 分銷商扣款
 			}
 
 		}
@@ -222,6 +229,51 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	@Override
 	public RetailChnlOrderInf getRetailChnlOrderInfCount(RetailChnlOrderInf order) {
 		return retailChnlOrderInfMapper.getRetailChnlOrderInfCount(order);
+	}
+
+	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf){
+		if( "0".equals(retailChnlOrderInf.getNotifyFlag())){
+			try{
+				//异步通知供应商
+				TeleRespVO respVo=new TeleRespVO();
+				respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
+				respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
+				respVo.setPayState(retailChnlOrderInf.getOrderStat());
+				respVo.setRechargeState(telProviderOrderInf.getRechargeState()); //充值状态
+				if(telProviderOrderInf.getOperateTime() !=null){
+					respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(new Date(telProviderOrderInf.getOperateTime())));
+				}
+				respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(new Date(retailChnlOrderInf.getCreateTime()))); //操作时间
+				respVo.setFacePrice(retailChnlOrderInf.getRechargeValue().toString());
+				respVo.setItemNum(retailChnlOrderInf.getItemNum());
+				respVo.setOuterTid(retailChnlOrderInf.getOuterTid());
+				respVo.setChannelId(retailChnlOrderInf.getChannelId());
+				respVo.setChannelToken(retailChnlInf.getChannelCode());
+				respVo.setV(retailChnlOrderInf.getAppVersion());
+				respVo.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
+				respVo.setSubErrorCode(telProviderOrderInf.getResv1());
+				if(TeleConstants.ReqMethodCode.R1.getCode().equals(retailChnlOrderInf.getRechargeType())){
+					respVo.setMethod(TeleConstants.ReqMethodCode.R1.getValue());
+				}else if(TeleConstants.ReqMethodCode.R2.getCode().equals(retailChnlOrderInf.getRechargeType())){
+					respVo.setMethod(TeleConstants.ReqMethodCode.R2.getValue());
+				}
+				String psotToken=MD5SignUtils.genSign(respVo, "key",retailChnlInf.getChannelKey(), new String[]{"sign","serialVersionUID"}, null);
+				respVo.setSign(psotToken);
+
+				//修改通知后 分销商的处理状态
+				logger.info("##发起分销商回调[{}],返回参数:[{}]",retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
+				String result=HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
+				if(result !=null && "SUCCESS ".equals(result.toUpperCase() )){
+					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
+				}else{
+					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
+				}
+
+				} catch (Exception e) {
+					logger.error("##话费充值失败，回调分销商异常-->{}", e);
+				}
+			this.updateById(retailChnlOrderInf);
+		}
 	}
 
 }
