@@ -65,41 +65,6 @@ public class BillingType extends Model<BillingType> {
     private String remarks;
 
     /**
-     * 创建人
-     */
-    @TableField("create_user")
-    @ApiModelProperty(value = "创建人")
-    private String createUser;
-
-    /**
-     * 更新人
-     */
-    @TableField("update_user")
-    @ApiModelProperty(value = "更新人")
-    private String updateUser;
-
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    @ApiModelProperty(value = "创建时间")
-    private Long createTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField("update_time")
-    @ApiModelProperty(value = "更新时间")
-    private Long updateTime;
-
-    /**
-     * 乐观锁版本
-     */
-    @TableField("lock_version")
-    @ApiModelProperty(value = "乐观锁版本")
-    private Integer lockVersion;
-
-    /**
      * 折损率
      */
     @TableField("lose_fee")

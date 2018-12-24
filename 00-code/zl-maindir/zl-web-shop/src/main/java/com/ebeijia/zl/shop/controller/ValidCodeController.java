@@ -1,7 +1,7 @@
 package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
-import com.ebeijia.zl.shop.vo.EcomOrderDetailInfo;
+import com.ebeijia.zl.shop.vo.ChannelOrder;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,7 +42,7 @@ public class ValidCodeController {
 
     @ApiOperation("测试用")
     @RequestMapping(value = "/session/get2",method = RequestMethod.GET)
-    public JsonResult<EcomOrderDetailInfo> ignoreMethod(){
+    public JsonResult<ChannelOrder> ignoreMethod(){
         return null;
     }
 

@@ -8,13 +8,13 @@ import com.ebeijia.zl.config.ShopConfig;
 import com.ebeijia.zl.core.activemq.service.MQProducerService;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
-import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static com.ebeijia.zl.shop.constants.ResultState.*;
 
 @Service
 public class ValidCodeService implements IValidCodeService {
@@ -41,7 +41,7 @@ public class ValidCodeService implements IValidCodeService {
         code = "1234";
         deliverAndSave(phoneNum, method, code);
         logger.info("向手机号%s发送%s验证码成功", phoneNum, method);
-        throw new AdviceMessenger(200, "发送成功");
+        throw new AdviceMessenger(OK, "发送成功");
     }
 
     private void deliverAndSave(String phoneNum, String method, String code) {
@@ -59,10 +59,6 @@ public class ValidCodeService implements IValidCodeService {
         jedis.set(method + "CODE:" + phoneNum, code, 300);
     }
 
-
-    private void sendSMS(String phoneNum, String code) {
-
-    }
 
     private String generateCode() {
         int v = (int) (Math.random() * 1000000);
@@ -85,7 +81,7 @@ public class ValidCodeService implements IValidCodeService {
     @Override
     public boolean checkValidCode(String method, String phone, String pwd) {
         if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(pwd)) {
-            throw new AdviceMessenger(ResultState.FORBIDDEN, "请输入正确的参数");
+            throw new AdviceMessenger(NOT_ACCEPTABLE, "请输入正确的参数");
         }
         String s = jedis.get(method + "CODE:" + phone);
 
@@ -102,7 +98,7 @@ public class ValidCodeService implements IValidCodeService {
         } else if (PhoneValidMethod.PAY.equals(method)) {
             return;
         }
-        throw new AdviceMessenger(ResultState.FORBIDDEN, "参数无效");
+        throw new AdviceMessenger(NOT_ACCEPTABLE, "参数无效");
     }
 
     private void validPhoneNumber(String phoneNum) {
@@ -114,6 +110,6 @@ public class ValidCodeService implements IValidCodeService {
             }
         } catch (Exception ignored) {
         }
-        throw new AdviceMessenger(ResultState.FORBIDDEN, "手机号有误，请检查");
+        throw new AdviceMessenger(NOT_ACCEPTABLE, "手机号有误，请检查");
     }
 }

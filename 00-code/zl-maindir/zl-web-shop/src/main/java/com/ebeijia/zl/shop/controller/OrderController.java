@@ -6,10 +6,7 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.TokenCheck;
-import com.ebeijia.zl.shop.vo.AddressInfo;
-import com.ebeijia.zl.shop.vo.EcomOrderDetailInfo;
-import com.ebeijia.zl.shop.vo.JsonResult;
-import com.ebeijia.zl.shop.vo.PayInfo;
+import com.ebeijia.zl.shop.vo.*;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class OrderController {
     @Autowired
-    IOrderService orderService;
+    private IOrderService orderService;
     //订单状态机：    下单-支付中-A类支付完成-B类支付完成-发货-评价
     //                     取消  -A类退款       -B类退款 -退货-退货申请
 
@@ -37,7 +34,10 @@ public class OrderController {
     @ApiOperation("商品直接下单")
     @RequestMapping(value = "/goods/create/",method = RequestMethod.POST)
     public JsonResult<TbEcomOrderInf> createOrder(@ApiParam(name = "productId",value = "货品ID") String productId,@ApiParam(name = "amounts",value = "数量") Integer amounts,AddressInfo address, @RequestParam("session") String session){
-        TbEcomPlatfShopOrder order = orderService.createSimpleOrder(productId,amounts,address);
+        OrderItemInfo orderItemInfo = new OrderItemInfo();
+        orderItemInfo.setProductId(productId);
+        orderItemInfo.setAmount(amounts);
+        TbEcomPlatfShopOrder order = orderService.createSimpleOrder(orderItemInfo,address);
         return new JsonResult<>(new TbEcomOrderInf());
     }
 
@@ -51,14 +51,15 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单状态修改")
     @RequestMapping(value = "/goods/update/{orderid}",method = RequestMethod.POST)
-    public JsonResult<Object> orderReplaceState(@PathVariable("orderid") String orderId){
-        return new JsonResult<>().setCode(200);
+    public JsonResult<TbEcomOrderInf> orderReplaceState(@PathVariable("orderid") String orderId,String state){
+        TbEcomOrderInf order = orderService.changeOrderState(orderId,state);
+        return new JsonResult<>(order);
     }
 
     @TokenCheck(force = true)
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
-    public JsonResult<EcomOrderDetailInfo> goodsOrderDetail(@PathVariable("orderid") String orderId){
+    public JsonResult<ChannelOrder> goodsOrderDetail(@PathVariable("orderid") String orderId){
         return new JsonResult<>();
     }
 

@@ -1,6 +1,5 @@
 package com.ebeijia.zl.shop.vo;
 
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderProductItem;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderShip;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Data
 @ApiModel("订单详情信息")
-public class EcomOrderDetailInfo {
+public class ChannelOrder {
 
 
     @ApiModelProperty(value = "order_id")
@@ -19,9 +18,6 @@ public class EcomOrderDetailInfo {
 
     @ApiModelProperty(value = "member_id")
     private String memberId;
-
-    @ApiModelProperty(value = "dms_related_key")
-    private String dmsRelatedKey;
 
     /**
      * 0：未付款
@@ -57,18 +53,6 @@ public class EcomOrderDetailInfo {
     @ApiModelProperty(value = "pay_time")
     private Long payTime;
 
-    @ApiModelProperty(value = "data_stat")
-    private String dataStat;
-
-    @ApiModelProperty(value = "remarks")
-    private String remarks;
-
-    @ApiModelProperty(value = "create_time")
-    private Long createTime;
-
-    @ApiModelProperty(value = "update_time")
-    private Long updateTime;
-
     @ApiModelProperty(value = "order_channel")
     private String orderChannel;
 
@@ -76,6 +60,6 @@ public class EcomOrderDetailInfo {
     TbEcomOrderShip ship;
 
     @ApiModelProperty(value = "订单的商品列表")
-    List<TbEcomOrderProductItem> itemList;
+    List<ItemInfo> itemList;
 
 }

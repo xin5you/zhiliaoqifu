@@ -1,6 +1,9 @@
 package com.ebeijia.zl.shop.vo;
 
-public class SimpleOrderInfo {
+import lombok.Data;
+
+@Data
+public class OrderItemInfo {
 
     private String productId;
 
