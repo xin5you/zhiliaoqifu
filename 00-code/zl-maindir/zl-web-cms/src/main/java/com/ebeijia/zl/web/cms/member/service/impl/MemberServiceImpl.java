@@ -2,11 +2,13 @@ package com.ebeijia.zl.web.cms.member.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
+import com.ebeijia.zl.shop.dao.member.mapper.TbEcomMemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.basics.member.domain.MemberInf;
-import com.ebeijia.zl.basics.member.mapper.MemberInfMapper;
 import com.ebeijia.zl.web.cms.member.service.MemberService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -15,13 +17,13 @@ import com.github.pagehelper.PageInfo;
 public class MemberServiceImpl implements MemberService {
 
 	@Autowired
-	private MemberInfMapper memberInfMapper;
+	private TbEcomMemberMapper memberInfMapper;
 
-	@Override
-	public PageInfo<MemberInf> getMemberListPage(int startNum, int pageSize, MemberInf entity) {
+	public PageInfo<TbEcomMember> getMemberListPage(int startNum, int pageSize, TbEcomMember entity) {
 		PageHelper.startPage(startNum, pageSize);
-		List<MemberInf> memberInfList = memberInfMapper.getList(entity);
-		PageInfo<MemberInf> userPage = new PageInfo<MemberInf>(memberInfList);
+		Wrapper<TbEcomMember> wrapper=new QueryWrapper<>();
+		List<TbEcomMember> memberInfList = memberInfMapper.selectList(wrapper);
+		PageInfo<TbEcomMember> userPage = new PageInfo<TbEcomMember>(memberInfList);
 		return userPage;
 	}
 

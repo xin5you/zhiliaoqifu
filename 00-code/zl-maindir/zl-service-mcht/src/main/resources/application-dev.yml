@@ -71,4 +71,4 @@ spring:
       timeout: 2000
       delay: -1
     registry:
-      address: zookeeper://192.168.2.210:2181
+      address: zookeeper://127.0.0.1:2181

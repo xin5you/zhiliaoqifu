@@ -40,10 +40,6 @@ public class ApiRechangeMobileValid {
 			logger.info("channelId为空");
 			return false;
 		}
-		if (StringUtil.isNullOrEmpty(req.getChannelToken())) {
-			logger.info("channelToken为空");
-			return false;
-		}
 		if (StringUtil.isNullOrEmpty(req.getV())) {
 			logger.info("v为空");
 			return false;

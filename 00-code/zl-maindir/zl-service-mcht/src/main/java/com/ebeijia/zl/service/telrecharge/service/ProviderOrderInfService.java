@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
+import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 
 
 /**
@@ -25,4 +26,10 @@ public interface ProviderOrderInfService extends IService<ProviderOrderInf> {
 	List<ProviderOrderInf> getListByTimer(ProviderOrderInf providerOrderInf);
 	
 	ProviderOrderInf getOrderInfByChannelOrderId(String OrderId);
+
+	/**
+	 * 话费充值状态
+	 * @param orderDetailInfo
+	 */
+	void updateOrderRechargeState(ProviderOrderInf telProviderOrderInf,OrderDetailInfo orderDetailInfo,String respCode);
 }
