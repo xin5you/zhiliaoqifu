@@ -30,6 +30,14 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @TableId(value = "order_id" ,type = IdType.UUID)
     @ApiModelProperty(value = "order_id")
     private String orderId;
+
+    @TableField("tfr_platform_order_id")
+    @ApiModelProperty(value = "tfr_platform_order_id")
+    private String tfrPlatformOrderId;
+
+    @TableField("tfr_company_order_id")
+    @ApiModelProperty(value = "tfr_company_order_id")
+    private String tfrCompanyOrderId;
  
     @TableField("order_type")
     @ApiModelProperty(value = "order_type")

@@ -103,7 +103,7 @@
 							<a companyId="${company.companyId}" title="收款" class="btn-mini btn-tansfer" href="#"><i class="icon-pencil"></i></a>
 								<%--</c:if>--%>
 								<%--<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_OPENACCOUNT')">--%>
-							<a companyId="${entity.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
+							<a companyId="${company.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
 								<%--</sec:authorize>	--%>
 							</c:if>
 						</td>

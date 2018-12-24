@@ -29,7 +29,7 @@
 			        </nav>
 					<form id="pageMainForm" class="form-inline form_validation_tip" method="post">
 						<h3 class="heading">收款明细列表</h3>
-
+						<input type="hidden" id="companyId" name="companyId" value="${company.companyId}"/>
 						<div class="control-group formSep">
 							<table cellpadding="5px" style="width: 100%">
 								<tr>

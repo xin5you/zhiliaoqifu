@@ -153,6 +153,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		InaccountOrder order = new InaccountOrder();
 		order.setOrderId(IdUtil.getNextId());
+		order.setTfrPlatformOrderId(IdUtil.getNextId());
+		order.setTfrCompanyOrderId(IdUtil.getNextId());
 		order.setOrderType(UserType.TYPE300.getCode());
 		order.setCheckStat(CheckStatEnum.CHECK_FALSE.getCode());
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
@@ -394,9 +396,14 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			logger.info("远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
 		} catch (Exception e) {
 			logger.error("## 远程调用充值接口异常", e);
-			return 0;
 		}
-
+		try {
+			if (StringUtil.isNullOrEmpty(result.getCode())) {
+				result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+			}
+		} catch (Exception e) {
+			logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
+		}
 		if (result == null) {
 			logger.error("## 远程调用充值接口失败，返回参数为空，orderId--->{},providerId--->{}", orderId, providerId);
 			return 0;
@@ -464,7 +471,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		reqVo.setUserId(providerId);
 		reqVo.setbIds(bIds);
 		reqVo.setUserType(UserType.TYPE300.getCode());
-		reqVo.setDmsRelatedKey(orderId);
+		reqVo.setDmsRelatedKey(order.getTfrPlatformOrderId());
 		reqVo.setUserChnlId(providerId);
 		reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 		reqVo.setTransDesc(order.getRemarks());
@@ -477,7 +484,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			logger.error("## 远程调用转账接口异常", e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "网络异常，请稍后再试");
-			return resultMap;
+		}
+		try {
+			if (StringUtil.isNullOrEmpty(result.getCode())) {
+				result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+			}
+		} catch (Exception e) {
+			logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
 		}
 		logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 		if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {

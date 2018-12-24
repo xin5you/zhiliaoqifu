@@ -360,6 +360,14 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				logger.error("## 远程调用开户接口出错,请求参数{}", JSONArray.toJSONString(req), e);
 				return 0;
 			}
+			try {
+				if (StringUtil.isNullOrEmpty(result.getCode())) {
+					result = accountTransactionFacade.executeQuery(req.getDmsRelatedKey(), req.getTransChnl());
+				}
+			} catch (Exception e) {
+				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
+				return 0;
+			}
 			BatchOrderList orderLists = new BatchOrderList();
 			orderLists.setPhoneNo(req.getMobilePhone());
 			batchOrderLists = batchOrderListMapper.getBatchOrderListByOrder(orderLists);
@@ -446,11 +454,27 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				} catch (Exception e) {
 					logger.error("## 远程调用批量充值接口出错{}", reqVoList, e);
 				}
+				try {
+					if (StringUtil.isNullOrEmpty(result.getCode())) {
+						result = accountTransactionFacade.executeQuery(reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl());
+					}
+				} catch (Exception e) {
+					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl(), e);
+					return 0;
+				}
 			} else {
 				try {
 					result = accountTransactionFacade.executeRecharge(reqVoList.get(0));
 				} catch (Exception e) {
 					logger.error("## 远程调用充值接口出错{}", reqVoList.get(0), e);
+				}
+				try {
+					if (StringUtil.isNullOrEmpty(result.getCode())) {
+						result = accountTransactionFacade.executeQuery(reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl());
+					}
+				} catch (Exception e) {
+					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl(), e);
+					return 0;
 				}
 			}
 			for (BatchOrderList oList : batchOrderList) {
@@ -494,41 +518,52 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			logger.error("## 批量充值名单为空");
 			return 0;
 		}
-			for (BatchOrderList batchOrder : batchOrderList) {
-				AccountTransferReqVo reqVo = new AccountTransferReqVo();
-				reqVo.setTransAmt(batchOrder.getAmount());
-				reqVo.setUploadAmt(batchOrder.getAmount());
-				reqVo.setTfrInBId(batchOrder.getTfrInBid());
-				reqVo.setTfrInUserId(batchOrder.getTfrInId());
-				reqVo.setTfrOutBId(batchOrder.getTfrOutBid());
-				reqVo.setTfrOutUserId(batchOrder.getTfrOutId());
-				reqVo.setTransId(TransCode.MB50.getCode());
-				reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
-				reqVo.setUserId(batchOrder.getPhoneNo());
-				reqVo.setUserType(UserType.TYPE200.getCode());
-				reqVo.setDmsRelatedKey(batchOrder.getOrderListId());
-				reqVo.setUserChnlId(order.getCompanyId());
-				reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-				BaseResult result = new BaseResult();
-				try {
-					result = accountTransactionFacade.executeTransfer(reqVo);
-				} catch (Exception e) {
-					logger.error("## 远程调用转账接口出错,入参--->{}", JSONArray.toJSONString(reqVo), e);
-				}
-				if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
-					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
-					order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
-				} else {
-					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
-					order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
-				}
-				int orderListResult = batchOrderListMapper.updateBatchOrderListByList(batchOrderList);
-				int orderRsult = batchOrderMapper.updateBatchOrder(order);
-				if (orderListResult < 0 || orderRsult < 0) {
-					logger.error("## 更新批量充值订单状态失败，batchOrder--->{},batchOrderList--->{}", JSONArray.toJSONString(order), JSONArray.toJSONString(batchOrderList));
-					return 0;
-				}
+
+		AccountTransferReqVo reqVo = new AccountTransferReqVo();
+		for (BatchOrderList batchOrder : batchOrderList) {
+			reqVo.setTransAmt(batchOrder.getAmount());
+			reqVo.setUploadAmt(batchOrder.getAmount());
+			reqVo.setTfrInUserId(batchOrder.getTfrInId());
+			reqVo.setTfrOutUserId(batchOrder.getTfrOutId());
+			reqVo.setTransId(TransCode.MB50.getCode());
+			reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
+			reqVo.setUserId(batchOrder.getTfrInId());
+			reqVo.setUserType(UserType.TYPE100.getCode());
+			reqVo.setUserChnlId(batchOrder.getTfrInId());
+			reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+			reqVo.setTransNumber(1);
+		}
+		reqVo.setTransDesc(order.getRemarks());
+		reqVo.setDmsRelatedKey(orderId);
+		BaseResult result = new BaseResult();
+		try {
+			result = accountTransactionFacade.executeTransfer(reqVo);
+		} catch (Exception e) {
+			logger.error("## 远程调用转账接口出错,入参--->{}", JSONArray.toJSONString(reqVo), e);
+		}
+		try {
+			if (StringUtil.isNullOrEmpty(result.getCode())) {
+				result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
 			}
+		} catch (Exception e) {
+			logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
+		}
+		for (BatchOrderList batchOrder : batchOrderList) {
+			if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
+				batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+				order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+			} else {
+				batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+				batchOrder.setRemarks(result.getMsg());
+				order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+			}
+			int orderListResult = batchOrderListMapper.updateBatchOrderListByList(batchOrderList);
+			int orderRsult = batchOrderMapper.updateBatchOrder(order);
+			if (orderListResult < 0 || orderRsult < 0) {
+				logger.error("## 更新批量充值订单状态失败，batchOrder--->{},batchOrderList--->{}", JSONArray.toJSONString(order), JSONArray.toJSONString(batchOrderList));
+				return 0;
+			}
+		}
 		return 1;
 	}
 

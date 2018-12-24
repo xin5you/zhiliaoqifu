@@ -333,12 +333,21 @@ public class CompanyController {
 	public Map<String, Object> addCompanyInvoiceCommit(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
+
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+
 		String orderListId = StringUtil.nullToString(req.getParameter("orderListId"));
+		String invoiceInfo = StringUtil.nullToString(req.getParameter("invoiceInfo"));
 		try {
 			InaccountOrderDetail orderDetail = inaccountOrderDetailService.getById(orderListId);
 			if (orderDetail != null) {
 				orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_TRUE.getCode());
-				if (!inaccountOrderDetailService.updateById(orderDetail)) {
+				orderDetail.setInvoiceInfo(invoiceInfo);
+				orderDetail.setUpdateTime(System.currentTimeMillis());
+				orderDetail.setUpdateUser(user.getId());
+				orderDetail.setLockVersion(orderDetail.getLockVersion() + 1);
+				if (!inaccountOrderDetailService.saveOrUpdate(orderDetail)) {
 					logger.error(" ## 更新订单{}开票失败 ", orderListId);
 					resultMap.put("status", Boolean.FALSE);
 					resultMap.put("msg", "开票异常，请稍后再试");

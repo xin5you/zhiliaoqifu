@@ -4,6 +4,8 @@
 
     <sql id="InaccountOrderColumns">
         o.order_id,
+        o.tfr_platform_order_id,
+        o.tfr_company_order_id,
         o.order_type,
         o.check_stat,
         o.remit_amt,

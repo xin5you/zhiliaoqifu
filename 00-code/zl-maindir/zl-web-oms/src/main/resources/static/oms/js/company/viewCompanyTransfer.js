@@ -22,7 +22,7 @@ var viewCompanyTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    $("#bName").val(data.msg.bName);
+                    $("#bName").val(data.msg.bname);
                     $("#companyInAmt").val(data.msg.companyInAmt);
                     $('#addInvoiceModal').modal({
                         backdrop : "static"
@@ -41,6 +41,7 @@ var viewCompanyTransfer = {
     addCompanyInvoiceCommit : function () {
        var orderListId = $('#orderListId').val();
        var companyId = $('#companyId').val();
+        var invoiceInfo = $('#invoiceInfo').val();
         $('#msg').modal({
             backdrop : "static"
         });
@@ -49,7 +50,8 @@ var viewCompanyTransfer = {
             type: 'post',
             dataType : "json",
             data: {
-                "orderListId": orderListId
+                "orderListId": orderListId,
+                "invoiceInfo": invoiceInfo
             },
             success: function (data) {
                 if(data.status){

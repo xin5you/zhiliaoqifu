@@ -172,7 +172,7 @@ public class CompanyServiceImpl implements CompanyService{
 			reqVo.setUserId(companyId);
 			reqVo.setbIds(bIds);
 			reqVo.setUserType(UserType.TYPE200.getCode());
-			reqVo.setDmsRelatedKey(orderId);
+			reqVo.setDmsRelatedKey(order.getTfrCompanyOrderId());
 			reqVo.setUserChnlId(companyId);
 			reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 			reqVo.setTransDesc(order.getRemarks());
@@ -183,9 +183,15 @@ public class CompanyServiceImpl implements CompanyService{
 				result = accountTransactionFacade.executeTransfer(reqVo);
 			} catch (Exception e) {
 				logger.error("## 远程调用转账接口异常", e);
+			}
+			try {
+				if (StringUtil.isNullOrEmpty(result.getCode())) {
+					result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+				}
+			} catch (Exception e) {
+				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "网络异常，请稍后再试");
-				return resultMap;
 			}
 			logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 			if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {

@@ -477,9 +477,15 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             logger.info("远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
         } catch (Exception e) {
             logger.error("## 远程调用充值接口异常", e);
+        }
+        try {
+            if (StringUtil.isNullOrEmpty(result.getCode())) {
+                result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+            }
+        } catch (Exception e) {
+            logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
             return 0;
         }
-
         if (result == null) {
             logger.error("## 远程调用充值接口失败，返回参数为空，orderId--->{},channelId--->{}", orderId, channelId);
             return 0;

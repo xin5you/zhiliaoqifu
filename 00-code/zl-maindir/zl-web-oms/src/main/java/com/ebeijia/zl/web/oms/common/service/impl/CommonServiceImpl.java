@@ -56,7 +56,7 @@ public class CommonServiceImpl implements CommonService {
             return resultMap;
         }
         try {
-        PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
+            PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额列表异常");
