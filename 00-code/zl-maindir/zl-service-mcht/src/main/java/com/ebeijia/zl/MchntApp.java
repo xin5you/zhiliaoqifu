@@ -68,13 +68,13 @@ public class MchntApp extends SpringBootServletInitializer implements WebApplica
 	}*/
 
 	// 事务管理
-	@Bean
+/*	@Bean
 	@ConditionalOnMissingBean
 	public PlatformTransactionManager transactionManager() {
-			return new DataSourceTransactionManager(dataSource());
-	}
-	
-    @Bean
+		return new DataSourceTransactionManager(dataSource());
+	}*/
+
+	@Bean
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();
     }

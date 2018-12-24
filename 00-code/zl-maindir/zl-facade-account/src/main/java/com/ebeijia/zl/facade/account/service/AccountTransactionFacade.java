@@ -96,4 +96,12 @@ public interface AccountTransactionFacade {
 	* 2018年12月6日     zhuqi           v1.0.0
 	 */
 	BaseResult executeRefund(AccountRefundReqVo req) throws Exception;
+
+	/**
+	 * 交易信息查询
+	 * @param dmsRelatedKey
+	 * @return
+	 * @throws Exception
+	 */
+	BaseResult executeQuery(String dmsRelatedKey,String transChnl) throws Exception;
 }

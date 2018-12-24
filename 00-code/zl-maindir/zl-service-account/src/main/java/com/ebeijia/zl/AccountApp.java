@@ -52,12 +52,12 @@ public class AccountApp extends SpringBootServletInitializer implements WebAppli
 //	}
 
 	// 事务管理
-	@Bean
+/*	@Bean
 	@ConditionalOnMissingBean
 	public PlatformTransactionManager transactionManager() {
 			return new DataSourceTransactionManager(dataSource());
-	}
-	
+	}*/
+
     @Bean
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();

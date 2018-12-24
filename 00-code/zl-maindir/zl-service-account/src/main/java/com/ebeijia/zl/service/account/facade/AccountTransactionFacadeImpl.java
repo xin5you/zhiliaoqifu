@@ -2,6 +2,7 @@ package com.ebeijia.zl.service.account.facade;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -287,8 +288,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
     	 eflag=transLogService.execute(intfaceTransLog); 
       } catch (AccountBizException accountBizException) {  
            return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
-      } 
-	
+      }
 	
 	//修改当前接口请求交易状态
 	intfaceTransLogService.updateById(intfaceTransLog,eflag);
@@ -312,10 +312,23 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
-		
 		intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(null, req.getTransChnl());
 		return null;
 	}
-	
 
+
+	/**
+	 * 交易信息查询
+	 * @param dmsRelatedKey
+	 * @return
+	 * @throws Exception
+	 */
+	public BaseResult executeQuery(String dmsRelatedKey,String transChnl) throws Exception{
+		log.info("==>  交易信息查询 mehtod=executeQuery and dmsRelatedKey={}",dmsRelatedKey);
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(dmsRelatedKey, transChnl);
+		if(intfaceTransLog==null){
+			return ResultsUtil.error("99", "交易订单不存在");
+		}
+		return ResultsUtil.error(StringUtils.isNotEmpty(intfaceTransLog.getRespCode())? intfaceTransLog.getRespCode(): "99","");
+	}
 }
