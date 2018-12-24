@@ -21,4 +21,5 @@ public interface ProviderInfService {
 
 	int editProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
+	Map<String, Object> deleteProviderTransfer(HttpServletRequest req);
 }

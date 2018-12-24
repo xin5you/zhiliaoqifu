@@ -18,6 +18,8 @@ var addRetailChnlInfTransfer = {
         $('.btn-view').on('click', addRetailChnlInfTransfer.viewRetailChnlTransferDetail);
         $('.btn-edit').on('click', addRetailChnlInfTransfer.intoEditRetailChnlTransfer);
         $('.btn-edit-submit').on('click', addRetailChnlInfTransfer.editRetailChnlTransferCommit);
+        $('.btn-delete').on('click', addRetailChnlInfTransfer.intoDeleteRetailChnlTransfer);
+        $('.btn-delete-submit').on('click', addRetailChnlInfTransfer.deleteRetailChnlTransferCommit);
     },
     intoAddRetailChnlTransfer : function() {
         var orderId = $(this).attr("orderId");
@@ -257,6 +259,36 @@ var addRetailChnlInfTransfer = {
             success: function (result) {
                 if(result.status) {
                     location = Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
+                } else {
+                    Helper.alert(result.msg);
+                    return false;
+                }
+            },
+            error:function(){
+                Helper.alert("系统故障，请稍后再试");
+            }
+        });
+    },
+    intoDeleteRetailChnlTransfer : function () {
+        var orderId = $(this).attr("orderId");
+        $("#transferOrderId").val(orderId);
+        $('#deleteTransferModal').modal({
+            backdrop : "static"
+        });
+    },
+    deleteRetailChnlTransferCommit : function () {
+        var orderId = $("#transferOrderId").val();
+        var providerId = $("#providerId").val();
+        $.ajax({
+            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/deleteRetailChnlTransfer.do',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "orderId": orderId
+            },
+            success: function (result) {
+                if(result.status) {
+                    location = Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=4&channelId='+channelId;
                 } else {
                     Helper.alert(result.msg);
                     return false;

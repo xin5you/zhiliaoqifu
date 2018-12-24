@@ -113,7 +113,6 @@
 							<button class="btn btn-inverse btn-reset" type="reset">重 置</button>
 						</div>
 					</div>
-			</div>
 			</form>
 		</div>
 	</div>

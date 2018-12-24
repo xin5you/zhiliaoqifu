@@ -20,7 +20,8 @@ var addTelProviderInfTransfer = {
         $('.btn-view').on('click', addTelProviderInfTransfer.viewProviderTransferDetail);
         $('.btn-edit').on('click', addTelProviderInfTransfer.intoEditProviderTransfer);
         $('.btn-edit-submit').on('click', addTelProviderInfTransfer.editProviderTransferCommit);
-        /*$('#btn-submit').on('click', addTelProviderInfTransfer.providerTransfer);*/
+        $('.btn-delete').on('click', addTelProviderInfTransfer.intoDeleteProviderTransfer);
+        $('.btn-delete-submit').on('click', addTelProviderInfTransfer.deleteProviderTransferCommit);
     },
     intoAddProviderTransfer : function() {
         var orderId = $(this).attr("orderId");
@@ -330,6 +331,36 @@ var addTelProviderInfTransfer = {
             success: function (result) {
                 if(result.status) {
                     location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                } else {
+                    Helper.alert(result.msg);
+                    return false;
+                }
+            },
+            error:function(){
+                Helper.alert("系统故障，请稍后再试");
+            }
+        });
+    },
+    intoDeleteProviderTransfer : function () {
+        var orderId = $(this).attr("orderId");
+        $("#transferOrderId").val(orderId);
+        $('#deleteTransferModal').modal({
+            backdrop : "static"
+        });
+    },
+    deleteProviderTransferCommit : function () {
+        var orderId = $("#transferOrderId").val();
+        var providerId = $("#providerId").val();
+        $.ajax({
+            url: Helper.getRootPath() + '/provider/providerInf/deleteProviderTransfer.do',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "orderId": orderId
+            },
+            success: function (result) {
+                if(result.status) {
+                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=4&providerId='+providerId;
                 } else {
                     Helper.alert(result.msg);
                     return false;

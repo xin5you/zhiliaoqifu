@@ -600,6 +600,13 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	@RequestMapping(value = "/deleteRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = retailChnlInfService.deleteRetailChnlTransfer(req);
+		return resultMap;
+	}
+
 	private RetailChnlInf getRetailChnlInf(HttpServletRequest req) throws Exception {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);

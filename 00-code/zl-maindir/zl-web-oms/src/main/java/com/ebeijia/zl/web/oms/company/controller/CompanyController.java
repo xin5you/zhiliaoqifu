@@ -112,6 +112,14 @@ public class CompanyController {
 			return resultMap;
 		}
 		CompanyInf companyInf = getCompanyInf(req);
+		if (IsPlatformEnum.ISOPEN_TRUE.getCode().equals(companyInf.getIsPlatform())) {
+			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
+			if (c != null && IsOpenEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "平台标识已有开户企业，请重新选择");
+				return resultMap;
+			}
+		}
 		try {
 			if (!companyInfFacade.insertCompanyInf(companyInf)) {
 				resultMap.put("status", Boolean.FALSE);
@@ -152,11 +160,17 @@ public class CompanyController {
 				return resultMap;
 			}
 		}
+		CompanyInf companyInf = getCompanyInf(req);
+		if (!companyInfCode.getIsPlatform().equals(companyInf.getIsPlatform()) && !companyInf.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())) {
+			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
+			if (c != null && IsOpenEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "平台标识已有开户企业，请重新选择");
+				return resultMap;
+			}
+		}
 		try {
-			CompanyInf companyInf = getCompanyInf(req);
-			if (companyInfFacade.updateCompanyInf(companyInf)) {
-
-			} else {
+			if (!companyInfFacade.updateCompanyInf(companyInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "修改企业信息失败");
 			}
@@ -181,9 +195,7 @@ public class CompanyController {
 		company.setUpdateTime(System.currentTimeMillis());
 		company.setUpdateUser(user.getId());
 		try {
-			if (companyInfFacade.deleteCompanyInf(company)) {
-
-			} else {
+			if (!companyInfFacade.deleteCompanyInf(company)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "删除企业信息失败");
 			}
@@ -252,7 +264,7 @@ public class CompanyController {
 
 		InaccountOrder order = new InaccountOrder();
 		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
-		if (IsOpenEnum.ISOPEN_FALSE.getCode().equals(company.getIsOpen())) {
+		if (IsOpenEnum.ISOPEN_TRUE.getCode().equals(company.getIsOpen())) {
 			order.setCompanyId(companyId);
 		}
 		try {

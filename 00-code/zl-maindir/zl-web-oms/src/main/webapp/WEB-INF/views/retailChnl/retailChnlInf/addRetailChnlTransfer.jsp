@@ -84,6 +84,9 @@
 								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOEDIT')">
 									<a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 								</sec:authorize>
+								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTODELETE')">
+									<a orderId="${entity.orderId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+								</sec:authorize>
 								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOCHECK')">
 									<a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
 								</sec:authorize>
@@ -261,6 +264,25 @@
 	<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_CHECK_COMMIT')">
 		<button class="btn btn-primary btn-checkStat-submit">确 定  </button>
 	</sec:authorize>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+	</div>
+</div>
+
+<div id="deleteTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<form class="form-horizontal">
+		<input type="hidden" id="transferOrderId" name="transferOrderId"/>
+		<div class="modal-header">
+			<button class="close" data-dismiss="modal">&times;</button>
+			<h3 id="commodityInfModal_h5">删除上账记录</h3>
+		</div>
+		<div class="modal-body">
+			<span>确认删除该条上账记录吗？</span>
+		</div>
+	</form>
+	<div class="modal-footer" style="text-align: center;">
+		<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_DELETE_COMMIT')">
+			<button class="btn btn-primary btn-delete-submit">确 定  </button>
+		</sec:authorize>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 	</div>
 </div>

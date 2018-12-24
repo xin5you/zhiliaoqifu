@@ -855,4 +855,47 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         return 1;
     }
 
+    @Override
+    public Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+
+        HttpSession session = req.getSession();
+        User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+        String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+
+        InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+        List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+
+        if (order == null || orderDetailList == null || orderDetailList.size() < 1) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "数据不存在，请重新查看订单信息");
+            return resultMap;
+        }
+
+        order.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
+        order.setUpdateTime(System.currentTimeMillis());
+        order.setUpdateUser(user.getId());
+        order.setLockVersion(order.getLockVersion() + 1);
+        for (InaccountOrderDetail orderDetail : orderDetailList) {
+            orderDetail.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
+            orderDetail.setUpdateTime(System.currentTimeMillis());
+            orderDetail.setUpdateUser(user.getId());
+            orderDetail.setLockVersion(orderDetail.getLockVersion() + 1);
+        }
+        if (!inaccountOrderService.saveOrUpdate(order)) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "删除失败，请稍后再试");
+            return resultMap;
+        }
+        if (!inaccountOrderDetailService.saveOrUpdateBatch(orderDetailList)) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "删除失败，请稍后再试");
+            return resultMap;
+        }
+
+        return resultMap;
+    }
+
 }

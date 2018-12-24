@@ -511,6 +511,13 @@ public class ProviderInfController {
 		return mv;
 	}
 
+	@RequestMapping(value = "/deleteProviderTransfer")
+	@ResponseBody
+	public Map<String, Object> deleteProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = providerInfService.deleteProviderTransfer(req);
+		return resultMap;
+	}
+
 	/**
 	 * 封装供应商实体
 	 */

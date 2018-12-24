@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 public interface RetailChnlInfService {
 
 	/**
@@ -32,4 +34,5 @@ public interface RetailChnlInfService {
 
 	int editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
+	Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req);
 }
