@@ -50,6 +50,7 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
 	 IntfaceTransLog newItfTransLog(
+	 		IntfaceTransLog intfaceTransLog,
 			String dms_related_key, //外部交易订单号
 			String user_id,
 			String trans_id,//交易类型

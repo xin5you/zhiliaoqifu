@@ -79,6 +79,7 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
 	public IntfaceTransLog newItfTransLog(
+			IntfaceTransLog itfTransLog,
 			String dms_related_key, //外部交易订单号
 			String user_id,
 			String trans_id,//交易类型
@@ -89,9 +90,11 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 			String userChnlId,
 			String org_itf_primary_key
 			){
-		IntfaceTransLog itfTransLog=new IntfaceTransLog();
-		
-		itfTransLog.setItfPrimaryKey(IdUtil.getNextId());
+
+		if(itfTransLog==null){
+			itfTransLog=new IntfaceTransLog();
+			itfTransLog.setItfPrimaryKey(IdUtil.getNextId());
+		}
 		itfTransLog.setOrgItfPrimaryKey(org_itf_primary_key);
 		itfTransLog.setDmsRelatedKey(dms_related_key);
 		itfTransLog.setUserId(user_id);

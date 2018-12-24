@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
+import com.ebeijia.zl.service.account.service.IAccountLogService;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	@Autowired
 	private IAccountInfService accountInfService;
 
+	@Autowired
+	private IAccountLogService accountLogService;
+
 	@Override
 	public List<AccountVO> getAccountInfList(AccountQueryReqVo req) throws AccountBizException {
 		return accountInfService.getAccountInfList(req);
@@ -70,7 +75,10 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	 */
 	@Override
 	public PageInfo<AccountLogVO> getAccountLogPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException{
-		return null;
+		PageHelper.startPage(startNum, pageSize);
+		List<AccountLogVO> list = accountLogService.getAccountLogVoList(req);
+		PageInfo<AccountLogVO> page = new PageInfo<AccountLogVO>(list);
+		return page;
 	}
 
 	/**
@@ -81,6 +89,9 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	 */
 	@Override
 	public AccountLogVO getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException{
-		return null;
+		if(StringUtils.isEmpty(req.getActPrimaryKey())){
+			return null;
+		}
+		return accountLogService.getAccountLogVoList(req).get(0);
 	}
 }

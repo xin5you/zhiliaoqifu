@@ -79,7 +79,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		 * 订单交易检验
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
-		if(intfaceTransLog!=null){
+		if(intfaceTransLog!=null && "00".equals(intfaceTransLog.getRespCode())){
 			return ResultsUtil.error("99", "重复交易");
 		}
 		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
@@ -87,7 +87,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			return ResultsUtil.error("99",String.format("当前用户{%s}所属渠渠道{%s}未开户", req.getTransChnl(),req.getUserChnl()));
 		}
 		/****实例化接口流水****/
-		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(),req.getPriBId(),
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(intfaceTransLog,req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(),req.getPriBId(),
 				req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),null);
 		intfaceTransLogService.addBizItfTransLog(
 				intfaceTransLog,
@@ -105,7 +105,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLog.setMchntCode(req.getFromCompanyId());
 		intfaceTransLog.setTransDesc(req.getTransDesc());
 		intfaceTransLog.setAdditionalInfo(req.getTransList() !=null ?JSONArray.toJSONString(req.getTransList()):"");
-		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
+		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
 		//执行操作
 		boolean eflag=false;
 		try {
@@ -156,7 +156,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		 * 订单交易检验
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
-		if(intfaceTransLog!=null){
+		if(intfaceTransLog!=null && "00".equals(intfaceTransLog.getRespCode())){
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
@@ -164,6 +164,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
+				intfaceTransLog,
 				req.getDmsRelatedKey(),
 				toUserInf.getUserId(),
 				req.getTransId(),
@@ -189,7 +190,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req.getTransList())); 
 		
 		/****保存接口易流水****/
-		intfaceTransLogService.save(intfaceTransLog);
+		intfaceTransLogService.saveOrUpdate(intfaceTransLog);
 		
 		//执行操作
 		boolean eflag=false; 
@@ -225,7 +226,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		 * 订单交易检验
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
-		if(intfaceTransLog!=null){
+		if(intfaceTransLog!=null && "00".equals(intfaceTransLog.getRespCode())){
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
@@ -253,6 +254,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
+				intfaceTransLog,
 				req.getDmsRelatedKey(),
 				fromUserInf.getUserId(),
 				req.getTransId(), 
@@ -278,8 +280,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	intfaceTransLog.setMchntCode(fromUserInf.getCompanyId());
 	//保存转账类型信息
 	intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req));
-	
-	intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
+	intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
 	
 	//执行操作
 	boolean eflag=false; 
@@ -289,7 +290,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
       } catch (AccountBizException accountBizException) {  
            return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
       }
-	
 	//修改当前接口请求交易状态
 	intfaceTransLogService.updateById(intfaceTransLog,eflag);
 	return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
@@ -308,7 +308,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		 * 订单交易检验
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
-		if(intfaceTransLog!=null){
+		if(intfaceTransLog !=null && "00".equals(intfaceTransLog.getRespCode())){
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}

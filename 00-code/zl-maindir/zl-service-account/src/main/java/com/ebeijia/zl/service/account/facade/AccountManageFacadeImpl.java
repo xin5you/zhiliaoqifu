@@ -85,14 +85,14 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
-		intfaceTransLog=intfaceTransLogService.newItfTransLog(req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(intfaceTransLog,req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),
 				req.getUserChnl(),req.getUserChnlId(),null);
 		intfaceTransLog.setTransDesc("开户");
 		intfaceTransLog.setMchntCode(req.getCompanyId());
-		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
+		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
 		
-		
-		
+
+
 		//执行开户操作
 		intfaceTransLog.setBIds(req.getbIds());
 		boolean eflag=transLogService.execute(intfaceTransLog); 

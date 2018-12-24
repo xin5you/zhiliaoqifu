@@ -34,15 +34,15 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
-public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> implements IUserInfService{
-	
+public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> implements IUserInfService {
+
 	@Autowired
 	private UserInfMapper userInfMapper;
-	
-	
+
+
 	@Autowired
 	private IPersonInfService personInfService;
-	
+
 	@Autowired
 	private IChannelUserInfService channelUserInfService;
 
@@ -52,47 +52,47 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 
 	@Autowired
 	private ITransLogService transLogService;
-	
+
 	/**
-	* 
-	* @param:userType 用户注册类型
-	* @param:userName 用户名
-	* @param:companyId 所属企业
-	* @param:mobilePhone 手机号
-	* @param:cardType 证件类型
-	* @param:cardNo  证件号
-	* @param:transId 交易类型
-	* @param:nl 交易渠道
-	* @param:userChnl 用户渠道
-	* @param:userChnlId 用户渠道Id
-	* 
-	* @return userId
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月4日 上午10:43:18 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月4日     zhuqi           v1.0.0
+	 * @return userId
+	 * @param:userType 用户注册类型
+	 * @param:userName 用户名
+	 * @param:companyId 所属企业
+	 * @param:mobilePhone 手机号
+	 * @param:cardType 证件类型
+	 * @param:cardNo 证件号
+	 * @param:transId 交易类型
+	 * @param:nl 交易渠道
+	 * @param:userChnl 用户渠道
+	 * @param:userChnlId 用户渠道Id
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月4日 上午10:43:18
+	 * <p>
+	 * Modification History:
+	 * Date         Author          Version
+	 * -------------------------------------*
+	 * 2018年12月4日     zhuqi           v1.0.0
 	 */
-	public String registerUserInf(String userType,String userName,String companyId,String mobilePhone,String cardType,String cardNo,String transId,String transChnl,String userChnl,String userChnlId){
-		
+	public String registerUserInf(String userType, String userName, String companyId, String mobilePhone, String cardType, String cardNo, String transId, String transChnl, String userChnl, String userChnlId)
+	{
+
 		//企业账户所属用户信息注册
-		if(!UserType.TYPE100.getCode().equals(userType)){
-			return this.registerUserInfForCompany(userName,userType, companyId);
+		if (!UserType.TYPE100.getCode().equals(userType)) {
+			return this.registerUserInfForCompany(userName, userType, companyId);
 		}
-		
+
 		//企业员工用户注册
 		/*** 判断用户 手机号是否已经注册 ***/
 		PersonInf personInf = personInfService.getPersonInfByPhoneNo(mobilePhone);
-		
-		UserInf user=null;
-		boolean userRegFlag=false;
-		
+
+		UserInf user = null;
+		boolean userRegFlag = false;
+		boolean isOpenAccount = false;
 		if (personInf == null) {
+			isOpenAccount = true;
 			/** 用户信息主键 */
-			
+
 			user = new UserInf();
 			user.setUserId(IdUtil.getNextId());
 			user.setUserType(userType);
@@ -109,44 +109,47 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			personInf.setPersonalCardType(cardType);
 			personInf.setPersonalCardNo(cardNo);
 			personInfService.save(personInf);
-			
-		}else{
+
+		} else {
 			//手机号是否在当前渠道注册
-			user=this.getUserInfByPhoneNo(mobilePhone, userChnl);
-			if(user !=null){
-				userRegFlag=true;
+			user = this.getUserInfByPhoneNo(mobilePhone, userChnl);
+			if (user != null) {
+				userRegFlag = true;
 			}
 		}
-		
-		/** 用户渠道信息 **/
-		if(!userRegFlag){
+
+		/** 保存用户渠道信息 **/
+		if (!userRegFlag) {
 			ChannelUserInf channelUserInf = new ChannelUserInf();
 			channelUserInf.setUserId(personInf.getUserId());
-		    if(StringUtil.isEmpty(userChnlId)){
+			if (StringUtil.isEmpty(userChnlId)) {
 				channelUserInf.setExternalId(IdUtil.getNextId());
-			}else{
+			} else {
 				channelUserInf.setExternalId(userChnlId);
 			}
 			channelUserInf.setChannelCode(userChnl);
 			channelUserInfService.save(channelUserInf);
 		}
+		//開戶操作
+		if (isOpenAccount) {
+			IntfaceTransLog intfaceTransLog = intfaceTransLogService.newItfTransLog(null, personInf.getPersonalId(), user.getUserId(), transId, null, userType, transChnl,
+					userChnl, userChnlId, null);
+			intfaceTransLog.setTransDesc("开户");
+			intfaceTransLog.setMchntCode(companyId);
+			intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
+			intfaceTransLog.setBIds(SpecAccountTypeEnum.getList());
 
-		IntfaceTransLog intfaceTransLog=intfaceTransLogService.newItfTransLog(personInf.getPersonalId(), user.getUserId(), transId, null, userType, transChnl,
-				userChnl,userChnlId,null);
-		intfaceTransLog.setTransDesc("开户");
-		intfaceTransLog.setMchntCode(companyId);
-		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
-		intfaceTransLog.setBIds(SpecAccountTypeEnum.getList());
-
-		//执行开户操作
-		boolean eflag=transLogService.execute(intfaceTransLog);
-		if(eflag){
-			return user.getUserId();
-		}else {
-			return "";
+			//执行开户操作
+			boolean eflag = transLogService.execute(intfaceTransLog);
+			if (eflag) {
+				return user.getUserId();
+			} else {
+				return "";
+			}
 		}
+		return user.getUserId();
 	}
-	
+
 	/**
 	 * 
 	* @Description: 注册企业账户的用户信息
