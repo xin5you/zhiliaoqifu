@@ -3,6 +3,8 @@ package com.ebeijia.zl.facade.account.req;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 /**
 * 
 * @Description: 账户信息查询列表
@@ -18,7 +20,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class AccountQueryReqVo{
+public class AccountQueryReqVo implements Serializable {
 
 	private static final long serialVersionUID = -5097911751512172022L;
 

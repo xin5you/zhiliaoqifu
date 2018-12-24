@@ -2,7 +2,6 @@ package com.ebeijia.zl.shop.service.order.impl;
 
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
-import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
@@ -17,16 +16,18 @@ import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
+import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.AddressInfo;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.OrderItemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-
-import static com.ebeijia.zl.shop.constants.ResultState.*;
-
 import java.util.*;
+
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_FOUND;
 
 @Service
 public class OrderService implements IOrderService {
@@ -46,6 +47,9 @@ public class OrderService implements IOrderService {
     @Autowired
     ITbEcomGoodsService goodsDao;
 
+    @Autowired
+    ShopUtils shopUtils;
+
 
     @Autowired
     private HttpSession session;
@@ -54,13 +58,13 @@ public class OrderService implements IOrderService {
     @ShopTransactional
     public TbEcomPlatfShopOrder createSimpleOrder(OrderItemInfo orderItemInfo, AddressInfo address) {
         //获得身份信息
-        String memberId = (String) session.getAttribute("memberId");
-        if (StringUtils.isEmpty(memberId)) {
+        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
+        if (memberInfo==null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
 
         //构造主订单
-        TbEcomPlatfOrder platfOrder = initOrderObject(memberId);
+        TbEcomPlatfOrder platfOrder = initOrderObject(memberInfo.getMemberId());
         String orderId = platfOrder.getOrderId();
 
 
@@ -154,8 +158,8 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_FOUND, "找不到订单");
         }
         //校验身份
-        String memberId = (String) session.getAttribute("memberId");
-        if (StringUtils.isEmpty(memberId) || !memberId.equals(order.getMemberId())) {
+        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
+        if (memberInfo==null || !memberInfo.getMemberId().equals(order.getMemberId())) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
         //获得路径

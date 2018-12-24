@@ -1,8 +1,10 @@
 package com.ebeijia.zl.shop.utils;
 
+import com.ebeijia.zl.common.utils.exceptions.BizException;
+import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
 import com.ebeijia.zl.shop.constants.ResultState;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
+
 /**
  * Session AOP切面
  */
@@ -26,18 +30,18 @@ import java.util.Enumeration;
 public class ShopAop {
 
     @Autowired
-    HttpServletRequest request;
+    private HttpServletRequest request;
     @Autowired
-    HttpServletResponse response;
+    private HttpServletResponse response;
     @Autowired
-    HttpSession session;
+    private HttpSession session;
 
     @Autowired
-    JedisUtilsWithNamespace jedis;
+    private JedisUtilsWithNamespace jedis;
 
-    ObjectMapper jsonMapper = new ObjectMapper();
-
-    Logger logger = LoggerFactory.getLogger(ShopAop.class);
+    @Autowired
+    ShopUtils shopUtils;
+    private static Logger logger = LoggerFactory.getLogger(ShopAop.class);
 
     @Around(value = "@annotation(com.ebeijia.zl.shop.utils.TokenCheck)")
     public Object tokenAccess(ProceedingJoinPoint pj) throws Throwable {
@@ -50,10 +54,15 @@ public class ShopAop {
             String s = jedis.get(token);
             logger.info("[user:" + s + "]");
             //TODO fake login user
-            session.setAttribute("userId", s);
-        }else if(isForceLogin(pj)){
-            session.setAttribute("userId", null);
-            throw new AdviceMessenger(ResultState.UNAUTHORIZED,"请登录后再试");
+            if (StringUtils.isEmpty(s)) {
+                throw new BizException(NOT_ACCEPTABLE, "参数异常");
+            }
+            //获得身份信息
+            MemberInfo memberInfo = shopUtils.readValue(s, MemberInfo.class);
+            session.setAttribute("user", memberInfo);
+        } else if (isForceLogin(pj)) {
+            session.setAttribute("user", null);
+            throw new AdviceMessenger(ResultState.UNAUTHORIZED, "请登录后再试");
         }
         Object proceed = pj.proceed();
         return proceed;
@@ -86,7 +95,7 @@ public class ShopAop {
             String json = jedis.get(signature.toLongString() + sessionId);
             if (json != null) {
                 if (json == "undefined") {
-                  throw new AdviceMessenger(403,"处理中，请稍后");
+                    throw new AdviceMessenger(403, "处理中，请稍后");
                 }
                 return json;
             }
