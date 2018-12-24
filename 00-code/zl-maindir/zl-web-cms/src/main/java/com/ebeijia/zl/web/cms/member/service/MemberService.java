@@ -1,6 +1,6 @@
 package com.ebeijia.zl.web.cms.member.service;
 
-import com.ebeijia.zl.basics.member.domain.MemberInf;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.github.pagehelper.PageInfo;
 
 public interface MemberService {
@@ -13,5 +13,5 @@ public interface MemberService {
 	 * @param entity
 	 * @return
 	 */
-	PageInfo<MemberInf> getMemberListPage(int startNum, int pageSize, MemberInf entity);
+	 PageInfo<TbEcomMember> getMemberListPage(int startNum, int pageSize, TbEcomMember entity);
 }
