@@ -79,6 +79,7 @@ public class AuthService implements IAuthService {
         memberInfo.setUserId(userInf.getUserId());
         memberInfo.setMemberId(memberId);
         memberInfo.setMobilePhoneNo(phone);
+        memberInfo.setUserName(userInf.getUserName());
         //将获取到的token存入redis缓存;
 
         try {
@@ -108,18 +109,21 @@ public class AuthService implements IAuthService {
 
     private String remoteRegister(String phone) {
         String userId = null;
+
+        //构造VO对象
         OpenUserInfReqVo req = new OpenUserInfReqVo();
         req.setMobilePhone(phone);
-
         req.setTransId(TransCode.CW80.getCode());
         req.setTransChnl(TransChnl.CHANNEL6.toString());
         //TODO 获取用户ID
         req.setUserName("用户");
         req.setUserType(UserType.TYPE100.getCode());
-        req.setCompanyId("100000000000000000000000");
+        //这里不应该是前端传递的
+//        req.setCompanyId("100000000000000000000000");
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
         req.setUserChnlId(IdUtil.getNextId());
 
+        //执行注册
         BaseResult result = userInfFacade.registerUserInf(req);
         checkResult(result);
         userId = (String) result.getObject();

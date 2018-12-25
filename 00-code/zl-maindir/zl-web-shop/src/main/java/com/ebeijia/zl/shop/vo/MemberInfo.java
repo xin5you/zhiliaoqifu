@@ -36,4 +36,10 @@ public class MemberInfo implements Serializable {
      */
     private String mobilePhoneNo;
 
+    /**
+     * 手机号
+     */
+    private String userName;
+
+
 }

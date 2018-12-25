@@ -16,6 +16,9 @@ public class PayInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("支付的订单编号")
+    String orderId;
+
     @ApiModelProperty("A类账户类型,目前已有通卡账户和托管账户")
     String typeA;
 

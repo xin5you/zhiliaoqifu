@@ -2,6 +2,7 @@ package com.ebeijia.zl.shop.service.order.impl;
 
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
+import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
@@ -18,7 +19,6 @@ import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.AddressInfo;
-import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.OrderItemInfo;
 import org.springframework.beans.factory.annotation.Autowired;
