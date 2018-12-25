@@ -17,7 +17,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -49,6 +48,11 @@
             <version>${ebj.zl.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-core-redis</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

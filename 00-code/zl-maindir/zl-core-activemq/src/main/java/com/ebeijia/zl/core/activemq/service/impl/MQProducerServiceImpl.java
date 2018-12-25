@@ -6,6 +6,7 @@ import com.ebeijia.zl.common.utils.domain.SmsVo;
 import com.ebeijia.zl.core.activemq.service.MQProducerService;
 import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
 import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -30,6 +32,8 @@ public class MQProducerServiceImpl implements MQProducerService {
 
 	private Logger logger = LoggerFactory.getLogger(MQProducerServiceImpl.class);
 
+	@Autowired
+	private JedisCluster jedisCluster;
 
 	/**
 	 * 微信客服消息
@@ -153,10 +157,13 @@ public class MQProducerServiceImpl implements MQProducerService {
 	public void sendSMS(final SmsVo smsVo){
 		String msg=JSONArray.toJSONString(smsVo);
 		logger.info("sendSMS={}",msg);
-		smsMsgJmsTemplate.send(new MessageCreator() {
-			public Message createMessage(Session session) throws JMSException {
-				return session.createTextMessage(msg);
-			}
-		});
+		//短信开关 Y：可发短信; N: 不可发短信
+		if("Y".equals(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"SMS_SWITCH_FLAG"))){
+			smsMsgJmsTemplate.send(new MessageCreator() {
+				public Message createMessage(Session session) throws JMSException {
+					return session.createTextMessage(msg);
+				}
+			});
+		}
 	}
 }
