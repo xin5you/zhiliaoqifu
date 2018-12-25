@@ -19,15 +19,13 @@ import java.math.BigDecimal;
  */
 public abstract class AmountUtil {
 
-	private AmountUtil() {
 
-	}
 
 	/**
 	 * 加法运算
 	 * 
-	 * @param v1
-	 * @param v2
+	 * @param b1
+	 * @param b2
 	 * @return
 	 */
 	public static BigDecimal add(BigDecimal b1, BigDecimal b2) {
@@ -37,8 +35,8 @@ public abstract class AmountUtil {
 	/**
 	 * 减法运算
 	 * 
-	 * @param v1被减数
-	 * @param v2减数
+	 * @param v1 被减数
+	 * @param v2 减数
 	 * @return
 	 */
 	public static BigDecimal sub(BigDecimal v1, BigDecimal v2) {
@@ -48,8 +46,8 @@ public abstract class AmountUtil {
 	/**
 	 * 乘法运算
 	 * 
-	 * @param v1被乘数
-	 * @param v2乘数
+	 * @param v1 被乘数
+	 * @param v2 乘数
 	 * @return
 	 */
 	public static BigDecimal mul(BigDecimal v1, BigDecimal v2) {
@@ -60,8 +58,8 @@ public abstract class AmountUtil {
 	 * 
 	 * 除法运算，当发生除不尽的情况时，精确到小数点以后2位，以后的数字四舍五入
 	 * 
-	 * @param v1被除数
-	 * @param v2除数
+	 * @param v1 被除数
+	 * @param v2 除数
 	 * @return
 	 */
 	public static BigDecimal div(BigDecimal v1, BigDecimal v2) {
@@ -72,9 +70,9 @@ public abstract class AmountUtil {
 	 * 
 	 * 除法运算，当发生除不尽的情况时，由scale参数指定精度，以后的数字四舍五入
 	 * 
-	 * @param v1被除数
-	 * @param v2除数
-	 * @param scale精确到小数点以后几位
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @param scale 精确到小数点以后几位
 	 * @return
 	 */
 	public static BigDecimal div(BigDecimal v1, BigDecimal v2, int scale) {
@@ -89,8 +87,8 @@ public abstract class AmountUtil {
 	/**
 	 * 判断 a 与 b 是否相等
 	 * 
-	 * @param a
-	 * @param b
+	 * @param v1
+	 * @param v2
 	 * @return a==b 返回true, a!=b 返回false
 	 */
 	public static boolean equal(BigDecimal v1, BigDecimal v2) {
@@ -156,7 +154,6 @@ public abstract class AmountUtil {
 	}
 
 	public static void main(String[] args) {
-		
 //		Double s = AmountUtil.sub(a, b);
 //		System.out.println(AmountUtil.roundDown(s));
 //		System.out.println(AmountUtil.div(101.1D, 1D, 2));

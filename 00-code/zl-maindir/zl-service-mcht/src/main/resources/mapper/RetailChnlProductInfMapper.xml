@@ -115,15 +115,22 @@
         where
         	 p.product_id=l.product_id
         and l.channel_id=a.channel_id
+		and a.channel_id=#{channelId}
         <if test="productId != null and productId != ''">
         	and  p.product_id=#{productId}
         </if>
 		<if test="operId != null and operId != ''">
 			and p.oper_id=#{operId}
 		</if>
-		and a.channel_id=#{channelId}
-		and p.product_amt=#{productAmt}
-		and p.product_type=#{productType}
+		<if test="bId != null and bId != ''">
+			and p.b_id=#{bId}
+		</if>
+		<if test="productAmt != null and productAmt != ''">
+			and p.product_amt=#{productAmt}
+		</if>
+		<if test="productType != null and productType != ''">
+			and p.product_type=#{productType}
+		</if>
 	</select>
 
 </mapper>

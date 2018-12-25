@@ -3,6 +3,8 @@ import java.util.List;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.core.activemq.service.MQProducerService;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +104,15 @@ public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 	@Override
 	public RetailChnlOrderInf getRetailChnlOrderInfCount(RetailChnlOrderInf order) {
 		return retailChnlOrderInfService.getRetailChnlOrderInfCount(order);
+	}
+
+	/**
+	 * 話費充值迴調分銷商
+	 * @param retailChnlInf
+	 * @param retailChnlOrderInf
+	 * @param telProviderOrderInf
+	 */
+	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf, RetailChnlOrderInf retailChnlOrderInf, ProviderOrderInf telProviderOrderInf){
+		retailChnlOrderInfService.doTelRechargeBackNotify(retailChnlInf,retailChnlOrderInf,telProviderOrderInf);
 	}
 }

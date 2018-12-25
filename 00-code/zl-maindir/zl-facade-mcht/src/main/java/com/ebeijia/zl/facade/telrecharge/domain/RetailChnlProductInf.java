@@ -37,6 +37,12 @@ public class RetailChnlProductInf extends Model<RetailChnlProductInf> {
      */
     @TableField("product_name")
     private String productName;
+
+    /**
+     * 专项类型
+     */
+    @TableField("b_id")
+    private String bId;
  
     /**
      * 1:移动

@@ -14,7 +14,7 @@ public class MQJmsTemplate {
 	
 	private final String consumerMsgSessionQueue="zlqf.activemq.send.wechat.msg.v1";
 	private final String smsMsgSessionQueue="zlqf.activemq.send.sms.msg.v1";
-	private final String rechargeMsgSessionQueue="zlqf.activemq.send.recharge.mobile.v1";
+	private final String rechargeMsgSessionQueue="zlqf.activemq.send.recharge.mobile.v2";
 
 	@Autowired
 	@Qualifier("activemqConnectionFactory")
