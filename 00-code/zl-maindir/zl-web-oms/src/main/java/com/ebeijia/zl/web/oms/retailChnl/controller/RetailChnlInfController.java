@@ -399,12 +399,15 @@ public class RetailChnlInfController {
 	@RequestMapping("/listRetailChnlAccBal")
 	public ModelAndView listRetailChnlAccBal(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlAccBal");
+		String channelId = StringUtil.nullToString(request.getParameter("channelId"));
+
 		try {
 			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
 			mv.addObject("pageInfo", resultMap.get("pageInfo"));
 		} catch (Exception e) {
 			logger.error("## 分销商账户列表查询异常", e);
 		}
+		mv.addObject("channelId", channelId);
 		return mv;
 	}
 
@@ -530,7 +533,7 @@ public class RetailChnlInfController {
 			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
 			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
 			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
-			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+			/*order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));*/
 			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 		}
 

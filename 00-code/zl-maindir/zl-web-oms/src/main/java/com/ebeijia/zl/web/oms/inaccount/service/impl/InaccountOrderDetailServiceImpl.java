@@ -2,6 +2,7 @@ package com.ebeijia.zl.web.oms.inaccount.service.impl;
 
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,12 @@ public class InaccountOrderDetailServiceImpl extends ServiceImpl<InaccountOrderD
         for (InaccountOrderDetail o : orderDetailList) {
             o.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getTransAmt().toString())));
             o.setBName(SpecAccountTypeEnum.findByBId(o.getBId()).getName());
-            o.setPlatformInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getPlatformInAmt().toString())));
-            o.setCompanyInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getCompanyInAmt().toString())));
+            if (!StringUtil.isNullOrEmpty(o.getPlatformInAmt())) {
+                o.setPlatformInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getPlatformInAmt().toString())));
+            }
+            if (!StringUtil.isNullOrEmpty(o.getCompanyInAmt())) {
+                o.setCompanyInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getCompanyInAmt().toString())));
+            }
         }
         PageInfo<InaccountOrderDetail> page = new PageInfo<InaccountOrderDetail>(orderDetailList);
         return page;

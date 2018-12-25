@@ -48,7 +48,9 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
         List<InaccountOrder> orderList = inaccountOrderMapper.getInaccountOrderByOrder(inaccountOrder);
         if (orderList != null && orderList.size() >= 1) {
             for (InaccountOrder o : orderList) {
-                o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
+                if (!StringUtil.isNullOrEmpty(o.getRemitAmt())) {
+                    o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
+                }
                 o.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInaccountAmt().toString())));
             }
         }

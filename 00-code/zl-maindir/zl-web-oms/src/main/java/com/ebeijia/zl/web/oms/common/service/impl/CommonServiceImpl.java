@@ -58,11 +58,61 @@ public class CommonServiceImpl implements CommonService {
         }
         try {
             PageInfo<AccountVO> pageList = accountQueryFacade.getAccountInfPage(startNum, pageSize, reqVo);
+            /*if (pageList != null && pageList.getList().size() >= 1) {
+                for (AccountVO vo : pageList.getList()) {
+
+                }
+            }*/
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额列表异常");
             resultMap.put("status", Boolean.FALSE);
             resultMap.put("msg", "查询账户余额列表异常");
+        }
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> getAccountLogInfPage(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+        String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+        String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+        String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+        String bId = StringUtil.nullToString(req.getParameter("bId"));
+        int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+        int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+        AccountQueryReqVo reqVo = new AccountQueryReqVo();
+        if (!StringUtil.isNullOrEmpty(providerId)) {
+            reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+            reqVo.setUserChnlId(providerId);
+            reqVo.setUserType(UserType.TYPE300.getCode());
+        } else if (!StringUtil.isNullOrEmpty(companyId)) {
+            reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+            reqVo.setUserChnlId(companyId);
+            reqVo.setUserType(UserType.TYPE300.getCode());
+        } else if (!StringUtil.isNullOrEmpty(channelId)) {
+            reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+            reqVo.setUserChnlId(channelId);
+            reqVo.setUserType(UserType.TYPE400.getCode());
+        } else {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "查询账户不正确");
+            return resultMap;
+        }
+        reqVo.setBId(bId);
+        try {
+            PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
+            /*if (pageList != null && pageList.getList().size() >= 1) {
+                for (AccountLogVO vo : pageList.getList()) {
+
+                }
+            }*/
+            resultMap.put("pageInfo", pageList);
+        } catch (Exception e) {
+            logger.error("## 查询账户余额明细列表异常");
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "查询账单明细列表异常");
         }
         return resultMap;
     }

@@ -243,8 +243,8 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         User user = (User)session.getAttribute(Constants.SESSION_USER);
 
         String channelId = StringUtil.nullToString(req.getParameter("channelId"));
-        String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
-        String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));
+       /* String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
+        String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));*/
         String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
         String A00 = StringUtil.nullToString(req.getParameter("A00"));
         String B01 = StringUtil.nullToString(req.getParameter("B01"));
@@ -261,7 +261,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         order.setOrderId(IdUtil.getNextId());
         order.setOrderType(UserType.TYPE400.getCode());
         order.setCheckStat(CheckStatEnum.CHECK_FALSE.getCode());
-        order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
+       /* order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));*/
         order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
         order.setProviderId(channelId);
         order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
@@ -275,12 +275,12 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         order.setUpdateTime(System.currentTimeMillis());
         order.setLockVersion(0);
 
-        Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
+        /*Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
         if (resultMap.get("status").equals(false)) {
             logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
             return 0;
         }
-        order.setEvidenceUrl(resultMap.get("msg").toString());
+        order.setEvidenceUrl(resultMap.get("msg").toString());*/
 
         List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
         if (!StringUtil.isNullOrEmpty(A00)) {
@@ -511,8 +511,8 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
 
         String orderId = StringUtil.nullToString(req.getParameter("orderId"));
         String channelId = StringUtil.nullToString(req.getParameter("channelId"));
-        String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
-        String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));
+       /* String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
+        String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));*/
         String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
         String A00 = StringUtil.nullToString(req.getParameter("A00"));
         String B01 = StringUtil.nullToString(req.getParameter("B01"));
@@ -530,19 +530,19 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             logger.error("## 根据上账订单号{}查询订单信息为空", orderId);
             return 0;
         }
-        order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
+       /* order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));*/
         order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
         order.setRemarks(remarks);
         order.setUpdateUser(user.getId());
         order.setUpdateTime(System.currentTimeMillis());
         order.setLockVersion(order.getLockVersion() + 1);
 
-        Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
+        /*Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
         if (resultMap.get("status").equals(false)) {
             logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
             return 0;
         }
-        order.setEvidenceUrl(resultMap.get("msg").toString());
+        order.setEvidenceUrl(resultMap.get("msg").toString());*/
 
         List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
         List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();

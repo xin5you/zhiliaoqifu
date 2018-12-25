@@ -10,5 +10,7 @@ public interface CommonService {
 
 	Map<String, Object> getAccountInfPage(HttpServletRequest req);
 
+	Map<String, Object> getAccountLogInfPage(HttpServletRequest req);
+
 	Map<String, Object> saveFile(MultipartFile file, HttpServletRequest request, String orderId);
 }

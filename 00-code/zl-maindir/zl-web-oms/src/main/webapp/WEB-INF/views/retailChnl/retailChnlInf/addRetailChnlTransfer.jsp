@@ -40,13 +40,13 @@
 					<th>序号</th>
 					<th>订单号</th>
 					<th>审核状态</th>
-					<th>打款金额(元)</th>
+					<%--<th>打款金额(元)</th>--%>
 					<th>上账金额(元)</th>
 					<%--<th>收款企业</th>--%>
 					<th>上账状态</th>
 					<%--<th>平台收款状态</th>
                     <th>企业收款状态</th>--%>
-					<th>打款凭证</th>
+					<%--<th>打款凭证</th>--%>
 					<th>操作</th>
 				</tr>
 				</thead>
@@ -59,26 +59,26 @@
 							<c:if test="${entity.checkStat == '0'}">未审核</c:if>
 							<c:if test="${entity.checkStat == '1'}">已审核</c:if>
 						</td>
-						<td>${entity.remitAmt}</td>
+						<%--<td>${entity.remitAmt}</td>--%>
 						<td>${entity.inaccountAmt}</td>
 							<%--<td>${entity.companyName}</td>--%>
 						<td>
 							<c:if test="${entity.inaccountCheck == '0'}">未上账</c:if>
 							<c:if test="${entity.inaccountCheck == '1'}">已上账</c:if>
 						</td>
-						<td>
-							<%--<td>
+						<%--<td>
+							&lt;%&ndash;<td>
                                 <c:if test="${entity.platformReceiverCheck == '0'}">未收款</c:if>
                                 <c:if test="${entity.platformReceiverCheck == '1'}">已收款</c:if>
                             </td>
                             <td>
                                 <c:if test="${entity.companyReceiverCheck == '0'}">未收款</c:if>
                                 <c:if test="${entity.companyReceiverCheck == '1'}">已收款</c:if>
-                            <td>--%>
+                            <td>&ndash;%&gt;
 						<c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
 							<a href="${entity.evidenceUrl}">${entity.evidenceUrl}</a>
 						</c:if>
-						</td>
+						</td>--%>
 						<td>
 							<c:if test="${entity.checkStat == '0'}">
 								<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOEDIT')">
@@ -122,21 +122,21 @@
 			<input type="hidden" id="orderId" name="orderId"/>
 			<input type="hidden" id="channelId" name="channelId"  value="${channelId }"/>
 			<fieldset>
-				<div class="control-group">
+				<%--<div class="control-group">
 					<label class="control-label">打款金额(元)：</label>
 					<div class="controls">
 						<input type="text" class="span3" id="remitAmt" name="remitAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						<span class="help-block"></span>
 					</div>
-				</div>
-				<div class="control-group">
+				</div>--%>
+				<%--<div class="control-group">
 					<label class="control-label">请选择打款凭证：</label>
 					<div class="controls">
 						<input id="evidenceUrl" name="evidenceUrl" class="span3" readonly type="text">
 						<input type="file" class="span3" id="evidenceUrlFile"  name="evidenceUrlFile" multiple/>
 						<span class="help-block"></span>
 					</div>
-				</div>
+				</div>--%>
 				<%--<div class="control-group">
                     <label class="control-label">企业识别码：</label>
                     <div class="controls">

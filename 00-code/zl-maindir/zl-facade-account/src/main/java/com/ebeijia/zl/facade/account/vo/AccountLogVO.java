@@ -3,11 +3,12 @@ package com.ebeijia.zl.facade.account.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class AccountLogVO {
+public class AccountLogVO implements Serializable {
 
     /**
      * 交易流水主键

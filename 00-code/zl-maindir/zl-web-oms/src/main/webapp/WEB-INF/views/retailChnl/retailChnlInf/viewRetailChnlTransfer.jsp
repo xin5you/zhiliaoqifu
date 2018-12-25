@@ -36,33 +36,34 @@
 										<label class="control-label" style="font-weight: bold;">审核状态：</label>
 										<label style="color: red;">${order.checkStat }</label>
 									</td>
-									<td>
+									<%--<td>
 										<label class="control-label" style="font-weight: bold;">打款总金额(元)：</label>
 										<label style="color: red;">${order.remitAmt }</label>
-									</td>
+									</td>--%>
 									<td>
 										<label class="control-label" style="font-weight: bold;">上账总金额(元)：</label>
 										<label style="color: red;">${order.inaccountAmt }</label>
+									</td>
+									<td>
+										<label class="control-label" style="font-weight: bold;">上账状态：</label>
+										<label style="color: red;">${order.inaccountCheck }</label>
 									</td>
 									<%--<td>
 										<label class="control-label" style="font-weight: bold;">收款企业：</label>
 										<label style="color: red;">${order.companyName }</label>
 									</td>--%>
 								</tr>
-								<tr>
-									<td>
-										<label class="control-label" style="font-weight: bold;">上账状态：</label>
-										<label style="color: red;">${order.inaccountCheck }</label>
-									</td>
-									<%--<td>
+								<%--<tr>
+
+									&lt;%&ndash;<td>
 										<label class="control-label" style="font-weight: bold;">平台收款状态：</label>
 										<label style="color: red;">${order.platformReceiverCheck }</label>
 									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">企业收款状态：</label>
 										<label style="color: red;">${order.companyReceiverCheck }</label>
-									</td>--%>
-								</tr>
+									</td>&ndash;%&gt;
+								</tr>--%>
 							</table>
 						</div>
 						<br/>
@@ -93,13 +94,13 @@
                                          <c:if test="${entity.isInvoice == '1'}">已开票</c:if>
                                      </td>
                                      <td>${entity.invoiceInfo}</td>
-									 <td>
+									 <%--<td>
 										 <c:if test="${order.companyReceiverCheck == '1' && company.isPlatform == '0' && entity.isInvoice == '0'}">
 											 <sec:authorize access="hasRole('ROLE_RETAIL_CHNL_INVOICE_INTOADD')">
 											 	<a orderListId="${entity.orderListId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>
 										 	</sec:authorize>
 										 </c:if>
-									 </td>
+									 </td>--%>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>

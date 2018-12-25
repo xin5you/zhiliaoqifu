@@ -81,12 +81,16 @@ var listTelChannelInf = {
     intoTelChannelOpenAccount : function () {
         var channelId = $(this).attr('channelId');
         $('#channelId').val(channelId);
+        $('#companyId').val(channelId);
+        $('#orderName').val("分销商"+channelId+"开户");
         $('#addOpenAccountModal').modal({
             backdrop : "static"
         });
     },
     telChannelOpenAccount : function() {
         var channelId = $('#channelId').val();
+        var companyId = $('#companyId').val();
+        var orderName = $('#orderName').val();
         $('#msg').modal({
             backdrop : "static"
         });
@@ -95,7 +99,9 @@ var listTelChannelInf = {
             type: 'post',
             dataType : "json",
             data: {
-                "channelId": channelId
+                "channelId": channelId,
+                "companyId": companyId,
+                "orderName": orderName
             },
             success: function (data) {
                 if(data.status){

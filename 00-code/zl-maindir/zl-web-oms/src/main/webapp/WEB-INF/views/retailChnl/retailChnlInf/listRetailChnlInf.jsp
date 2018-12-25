@@ -26,7 +26,8 @@
 						<div class="row-fluid" id="h_search">
 							 <div class="span10">
 		                       	<div class="input-prepend">
-		           			   	   	<span class="add-on">分销商名称</span><input id="channelName" name="channelName" type="text" class="input-medium" value="${retailChnlInf.channelName }" />
+		           			   	   	<span class="add-on">分销商名称</span>
+									<input id="channelName" name="channelName" type="text" class="input-medium" value="${retailChnlInf.channelName }" />
 		                       	</div>
 							</div>
 							<div class="pull-right">
@@ -110,6 +111,8 @@
 		    </div>
 		    <div class="modal-body">
 		        <input type="hidden" id="channelId" name="channelId"/>
+				<input type="hidden" id="companyId" name="companyId"/>
+				<input type="hidden" id="orderName" name="orderName"/>
 		        <span>你确定对该分销商开户吗？</span>
 		    </div>
 		</form>

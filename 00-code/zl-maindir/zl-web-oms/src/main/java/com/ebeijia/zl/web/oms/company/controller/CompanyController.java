@@ -264,7 +264,7 @@ public class CompanyController {
 
 		InaccountOrder order = new InaccountOrder();
 		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
-		if (IsOpenEnum.ISOPEN_TRUE.getCode().equals(company.getIsOpen())) {
+		if (IsOpenEnum.ISOPEN_FALSE.getCode().equals(company.getIsOpen())) {
 			order.setCompanyId(companyId);
 		}
 		try {
@@ -377,12 +377,15 @@ public class CompanyController {
 	@RequestMapping("/listCompanyAccBal")
 	public ModelAndView listCompanyAccBal(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("company/listCompanyAccBal");
+		String companyId = StringUtil.nullToString(request.getParameter("companyId"));
+
 		try {
 			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
 			mv.addObject("pageInfo", resultMap.get("pageInfo"));
 		} catch (Exception e) {
 			logger.error("## 企业账户列表查询异常", e);
 		}
+		mv.addObject("companyId", companyId);
 		return mv;
 	}
 

@@ -1,5 +1,6 @@
 package com.ebeijia.zl.facade.account.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 
@@ -8,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class AccountVO {
+public class AccountVO implements Serializable {
 	
 	/**
 	 * 账户号

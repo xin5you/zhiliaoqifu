@@ -21,6 +21,8 @@
 			            </div>
 			        </nav>
 					<form id="searchForm" class="form-inline" method="post">
+						<input type="hidden" id="channelId" name="channelId" value="${channelId}"/>
+
 						<h3 class="heading">分销商账户余额列表</h3>
 						<%--<div class="row-fluid" id="h_search">
 							 <div class="span10">
@@ -37,23 +39,27 @@
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 					             <tr>
-					               <th>账户号</th>
-					               <th>分销商ID</th>
+					              <%-- <th>账户号</th>
+					               <th>分销商ID</th>--%>
 					               <th>分销商名称</th>
 					               <th>账户名称</th>
 					               <th>账户余额</th>
 					               <th>代金券额度</th>
-					             </tr>
+									 <%--<th>操作</th>--%>
+								 </tr>
 				             </thead>
 				             <tbody>
 				             <c:forEach var="entity" items="${pageInfo.list}" varStatus="st">
 				                 <tr>
-				                 	<td>${entity.accountNo}</td>
-				                 	<td>${entity.userId}</td>
-									<td>${entity.userName}</td>
-									<td>${entity.bId}</td>
+				                 	<%--<td>${entity.accountNo}</td>
+				                 	<td>${entity.userId}</td>--%>
+									<td>${entity.personalName}</td>
+									<td>${entity.BId}</td>
 				                    <td>${entity.accBal}</td>
 				                    <td>${entity.couponBal}</td>
+										 <%--<td>
+                                             <a bId="${entity.BId}" title="账单详情" class="btn-mini btn-accBal" href="#"><i class="icon-search"></i></a>
+                                         </td>--%>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>

@@ -413,6 +413,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_TRUE.getCode());
 		} else {
 			order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_FALSE.getCode());
+			order.setRemarks(result.getMsg());
 		}
 
 		if (!inaccountOrderService.saveOrUpdate(order)) {

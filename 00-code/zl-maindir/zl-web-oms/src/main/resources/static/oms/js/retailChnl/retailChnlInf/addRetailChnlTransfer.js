@@ -37,8 +37,8 @@ var addRetailChnlInfTransfer = {
     },
     addRetailChnlTransfer:function(){
         var channelId = $("#channelId").val();
-        var remitAmt = $("#remitAmt").val();
-        var evidenceUrl = $("#evidenceUrl").val();
+       /* var remitAmt = $("#remitAmt").val();
+        var evidenceUrl = $("#evidenceUrl").val();*/
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
         var A00 = $("#A00").val();
@@ -50,14 +50,14 @@ var addRetailChnlInfTransfer = {
         var B06 = $("#B06").val();
         var B07 = $("#B07").val();
         var B08 = $("#B08").val();
-        if(remitAmt=='' || remitAmt == '0'){
+        /*if(remitAmt=='' || remitAmt == '0'){
             Helper.alert("打款金额不能为空");
             return false;
-        }
-        if(evidenceUrl=='' || evidenceUrl == '0'){
+        }*/
+        /*if(evidenceUrl=='' || evidenceUrl == '0'){
             Helper.alert("打款凭证不能为空");
             return false;
-        }
+        }*/
         if(inaccountAmt=='' || inaccountAmt == '0'){
             Helper.alert("上账金额不能为空");
             return false;
@@ -66,10 +66,10 @@ var addRetailChnlInfTransfer = {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
         }
-        if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
+        /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
             Helper.alert("上账金额不能大于打款金额");
             return false;
-        }
+        }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
         if ((sum - 0) - (inaccountAmt - 0)  > 0) {
             Helper.alert("所有专项金额总和不能大于上账金额");
@@ -169,7 +169,7 @@ var addRetailChnlInfTransfer = {
         var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/viewRetailChnlTransferDetail.do?orderId="+orderId;
         location.href=url;
     },
-    intoEditRetailChnlransfer : function () {
+    intoEditRetailChnlTransfer : function () {
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $.ajax({
@@ -181,9 +181,9 @@ var addRetailChnlInfTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    $("#remitAmt").val(data.order.remitAmt);
+                    /*$("#remitAmt").val(data.order.remitAmt);*/
                     $("#inaccountAmt").val(data.order.inaccountAmt);
-                    $("#evidenceUrl").val(data.order.evidenceUrl);
+                    /*$("#evidenceUrl").val(data.order.evidenceUrl);*/
                     $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
                         $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
@@ -208,8 +208,8 @@ var addRetailChnlInfTransfer = {
     editRetailChnlTransferCommit : function () {
         var orderId = $("#orderId").val();
         var chnannelId = $("#chnannelId").val();
-        var remitAmt = $("#remitAmt").val();
-        var evidenceUrl = $("#evidenceUrl").val();
+        /*var remitAmt = $("#remitAmt").val();
+        var evidenceUrl = $("#evidenceUrl").val();*/
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
         var A00 = $("#A00").val();
@@ -221,14 +221,14 @@ var addRetailChnlInfTransfer = {
         var B06 = $("#B06").val();
         var B07 = $("#B07").val();
         var B08 = $("#B08").val();
-        if(remitAmt=='' || remitAmt == '0'){
+        /*if(remitAmt=='' || remitAmt == '0'){
             Helper.alert("打款金额不能为空");
             return false;
         }
         if(evidenceUrl==''){
             Helper.alert("打款凭证不能为空");
             return false;
-        }
+        }*/
         if(inaccountAmt=='' || inaccountAmt == '0'){
             Helper.alert("上账金额不能为空");
             return false;
@@ -237,10 +237,10 @@ var addRetailChnlInfTransfer = {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
         }
-        if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
+        /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
             Helper.alert("上账金额不能大于打款金额");
             return false;
-        }
+        }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
         if ((sum - 0) - (inaccountAmt - 0)  > 0) {
             Helper.alert("所有专项金额总和不能大于上账金额");

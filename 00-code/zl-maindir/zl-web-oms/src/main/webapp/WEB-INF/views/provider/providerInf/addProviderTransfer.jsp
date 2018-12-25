@@ -287,7 +287,7 @@
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">
-        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_PLATFORM_COMMIT')">
+        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_COMPANY_COMMIT')">
             <button class="btn btn-primary btn-remit-submit">确 定  </button>
         </sec:authorize>
         <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>

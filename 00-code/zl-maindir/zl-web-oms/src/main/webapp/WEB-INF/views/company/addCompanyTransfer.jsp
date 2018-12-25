@@ -87,6 +87,11 @@
                                                 <a orderId="${entity.orderId}" title="企业收款" class="btn-mini btn-company-ok" href="#"><i class="icon-ok"></i></a>
                                             </sec:authorize>
                                         </c:if>
+                                        <c:if test="${entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '0' && company.isPlatform == '0'}">
+                                            <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_INTO')">
+                                                <a orderId="${entity.orderId}" title="企业收款" class="btn-mini btn-company-ok" href="#"><i class="icon-ok"></i></a>
+                                            </sec:authorize>
+                                        </c:if>
 				                    </td>
 				                 </tr>
 				             </c:forEach>

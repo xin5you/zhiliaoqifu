@@ -502,12 +502,15 @@ public class ProviderInfController {
 	@RequestMapping("/listProviderAccBal")
 	public ModelAndView listProviderAccBal(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/listProviderAccBal");
+		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
+
 		try {
 			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
 			mv.addObject("pageInfo", resultMap.get("pageInfo"));
 		} catch (Exception e) {
 			logger.error("## 供应商账户列表查询异常", e);
 		}
+		mv.addObject("providerId", providerId);
 		return mv;
 	}
 
@@ -516,6 +519,21 @@ public class ProviderInfController {
 	public Map<String, Object> deleteProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = providerInfService.deleteProviderTransfer(req);
 		return resultMap;
+	}
+
+	@RequestMapping("/listProviderAccBalDetail")
+	public ModelAndView viewProviderAccBalDetail(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("provider/providerInf/listProviderAccBalDetail");
+		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
+
+		try {
+			Map<String, Object> resultMap = commonService.getAccountLogInfPage(request);
+			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+		} catch (Exception e) {
+			logger.error("## 供应商账户列表查询异常", e);
+		}
+		mv.addObject("providerId", providerId);
+		return mv;
 	}
 
 	/**

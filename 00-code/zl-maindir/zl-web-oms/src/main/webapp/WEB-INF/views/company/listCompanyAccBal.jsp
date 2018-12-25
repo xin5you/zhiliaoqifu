@@ -22,7 +22,9 @@
 			        </nav>
 					<form id="searchForm" action="${ctx }/company/listCompanyAccBal.do" class="form-inline" method="post">
 						<h3 class="heading">企业账户余额列表</h3>
-						<%--<div class="row-fluid" id="h_search">
+						<input type="hidden" id="companyId" name="companyId" value="${companyId}"/>
+
+					<%--<div class="row-fluid" id="h_search">
 							 <div class="span10">
 		                       	<div class="input-prepend">
 		           			   	   	<span class="add-on">供应商名称</span><input id="providerName" name="providerName" type="text" class="input-medium" maxlength="32" value="${providerInf.providerName }" />
@@ -37,23 +39,27 @@
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 					             <tr>
-					               <th>账户号</th>
-					               <th>企业ID</th>
+					              <%-- <th>账户号</th>
+					               <th>企业ID</th>--%>
 					               <th>企业名称</th>
 					               <th>账户名称</th>
 					               <th>账户余额</th>
 					               <th>代金券额度</th>
+									 <%--<th>操作</th>--%>
 					             </tr>
 				             </thead>
 				             <tbody>
 				             <c:forEach var="entity" items="${pageInfo.list}" varStatus="st">
 				                 <tr>
-				                 	<td>${entity.accountNo}</td>
-				                 	<td>${entity.userId}</td>
-									<td>${entity.userName}</td>
-									<td>${entity.bId}</td>
+				                 	<%--<td>${entity.accountNo}</td>
+				                 	<td>${entity.userId}</td>--%>
+									<td>${entity.personalName}</td>
+									<td>${entity.BId}</td>
 				                    <td>${entity.accBal}</td>
 				                    <td>${entity.couponBal}</td>
+										 <%--<td>
+                                             <a bId="${entity.BId}" title="账单详情" class="btn-mini btn-accBal" href="#"><i class="icon-search"></i></a>
+                                         </td>--%>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>
