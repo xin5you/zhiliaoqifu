@@ -10,6 +10,7 @@ import javax.jms.MessageListener;
 import com.ebeijia.zl.api.bm001.api.req.PayBillReq;
 import com.ebeijia.zl.api.bm001.api.service.BMOpenApiService;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 import com.qianmi.open.api.response.BmOrderCustomGetResponse;
 import com.qianmi.open.api.response.BmRechargeMobilePayBillResponse;
@@ -34,6 +35,7 @@ import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlInfService;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlOrderInfService;
 import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.JedisCluster;
 
 /**
  * 立方话费充值
@@ -62,6 +64,9 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 
 	@Autowired
 	private BMOpenApiService bmOpenApiService;
+
+	@Autowired
+	private JedisCluster  jedisCluster;
 
 	public synchronized void onMessage(Message message) {
 		ActiveMQTextMessage msg = (ActiveMQTextMessage) message;
@@ -95,9 +100,9 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 
 					PayBillReq payBillReq=new PayBillReq();
 					payBillReq.setMobileNo(retailChnlOrderInf.getRechargePhone()); //手机号
-					payBillReq.setRechargeAmount(retailChnlOrderInf.getRechargeValue().toString());
+					payBillReq.setRechargeAmount(retailChnlOrderInf.getRechargeValue().setScale(0,BigDecimal.ROUND_HALF_DOWN).toString());
 					payBillReq.setOuterTid(telProviderOrderInf.getRegOrderId());
-					payBillReq.setCallback("");
+					payBillReq.setCallback(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WEB_API_DOMAIN")+"/api/recharge/notify/bm001CallBack");
 					logger.info("手机充值--->立方话费充值接口，提交请求链接参数{}", JSONObject.toJSONString(payBillReq));
 
 					try {

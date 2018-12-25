@@ -32,7 +32,7 @@ public class TeleReqVO extends TeleBaseDomain {
             t.setChannelId("0e04cf948e2af629a334c7c71fa3f8888");
             t.setMethod("hkb.api.mobile.charge");
             t.setV("1.0");
-            t.setTimestamp("2018-12-24 13:50:14");
+            t.setTimestamp("2018-12-25 13:50:14");
             t.setRechargePhone("13501755206");
             t.setRechargeAmount("1");
             t.setOuterTid(IdUtil.getNextId());

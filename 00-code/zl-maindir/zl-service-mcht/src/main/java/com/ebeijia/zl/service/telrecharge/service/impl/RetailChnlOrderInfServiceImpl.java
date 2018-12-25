@@ -9,6 +9,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
@@ -93,8 +94,9 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		maps.put("productId", retailChnlOrderInf.getProductId());
 		//maps.put("operId", operId);
 		//maps.put("areaName", areaName);
+		maps.put("bId", SpecAccountTypeEnum.B06.getbId()); //分销商ID
 		maps.put("channelId", retailChnlInf.getChannelId()); //分销商ID
-		maps.put("productAmt", retailChnlOrderInf.getRechargeValue());
+		maps.put("productAmt", retailChnlOrderInf.getRechargeValue().setScale(0).toString());
 		maps.put("productType", retailChnlOrderInf.getRechargeType());
 		
 		RetailChnlProductInf telChannelProductInf =retailChnlProductInfService.getProductRateByMaps(maps);
@@ -143,7 +145,6 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			if(resOper){
 				//TODO 分銷商扣款
 			}
-
 		}
 		if(!resOper){
 			//操作不同步，则回退事物
@@ -248,7 +249,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				respVo.setItemNum(retailChnlOrderInf.getItemNum());
 				respVo.setOuterTid(retailChnlOrderInf.getOuterTid());
 				respVo.setChannelId(retailChnlOrderInf.getChannelId());
-				respVo.setChannelToken(retailChnlInf.getChannelCode());
+				//respVo.setChannelToken(retailChnlInf.getChannelCode());
 				respVo.setV(retailChnlOrderInf.getAppVersion());
 				respVo.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
 				respVo.setSubErrorCode(telProviderOrderInf.getResv1());
