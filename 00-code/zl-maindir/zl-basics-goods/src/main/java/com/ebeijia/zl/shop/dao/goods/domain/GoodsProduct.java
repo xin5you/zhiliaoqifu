@@ -1,4 +1,4 @@
-package com.ebeijia.zl.basics.goods.domain;
+package com.ebeijia.zl.shop.dao.goods.domain;
 
 import com.ebeijia.zl.common.utils.domain.BaseEntity;
 
