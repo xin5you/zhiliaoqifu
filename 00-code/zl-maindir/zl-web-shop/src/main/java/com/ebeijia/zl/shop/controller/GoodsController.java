@@ -73,6 +73,24 @@ public class GoodsController {
         List<TbEcomGoodsProduct> detail = goodsService.listSkuByGoodsId(goodsId);
         return new JsonResult<>(detail);
     }
+
+
+    /**
+     *
+     SELECT
+     GOODSID
+     FROM
+     EMALL_GOODS_SPEC
+     WHERE
+     CLASSID=669 AND
+     ((SPECID = 5 AND SPEC_VALUEID = 9)
+     OR (SPECID = 6 AND SPEC_VALUEID = 51)
+     OR (SPECID = 3 AND SPEC_VALUEID = 5))
+     GROUP BY
+     GOODSID
+     HAVING
+     COUNT (*) = 3
+     */
     //
     //
 }
