@@ -1,5 +1,7 @@
 package com.ebeijia.zl;
 
+import com.baomidou.mybatisplus.core.injector.ISqlInjector;
+import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,8 +25,6 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @SpringBootApplication
 public class AccountApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
-
-	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(AccountApp.class);
 	}
@@ -58,10 +58,17 @@ public class AccountApp extends SpringBootServletInitializer implements WebAppli
 			return new DataSourceTransactionManager(dataSource());
 	}*/
 
+	/**
+	 * mybatis-plus逻辑删除
+	 * @return
+	 */
+	@Bean
+	public ISqlInjector sqlInjector() {
+		return new LogicSqlInjector();
+	}
+
     @Bean
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();
     }
-
-	
 }

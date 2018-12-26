@@ -5,11 +5,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
@@ -216,6 +212,7 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     /**
      * 数据状态
      */
+    @TableLogic
     @TableField("data_stat")
     private String dataStat;
  
@@ -270,6 +267,9 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
 
     @TableField(exist=false)
     private List<AccountTxnVo> addList;
+
+    @TableField(exist=false)
+    private AccountWithdrawDetail withdrawDetail; //提现操作
 
     @Override
     protected Serializable pkVal() { 
