@@ -2,6 +2,7 @@ package com.ebeijia.zl.shop.service.order.impl;
 
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
+import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
@@ -58,6 +59,7 @@ public class OrderService implements IOrderService {
     @ShopTransactional
     public TbEcomPlatfShopOrder createSimpleOrder(OrderItemInfo orderItemInfo, AddressInfo address) {
         //获得身份信息
+        //获得身份信息
         MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
         if (memberInfo==null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
@@ -106,8 +108,28 @@ public class OrderService implements IOrderService {
     }
 
 
+
+    @Override
+    public TbEcomOrderInf changeOrderState(String orderId, String state) {
+        //获取订单对象
+        TbEcomPlatfOrder order = platfOrderDao.getById(orderId);
+        if (order == null) {
+            throw new BizException(NOT_FOUND, "找不到订单");
+        }
+        //校验身份
+        String memberId = (String) session.getAttribute("memberId");
+        if (StringUtils.isEmpty(memberId) || !memberId.equals(order.getMemberId())) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        //获得路径
+
+        //执行操作
+        return null;
+    }
+
+
     /**
-     * 处理经过分组的商品，转化为订单商品对象
+     * 处理按照专项类型分组的商品，转化为订单商品对象
      *
      * @param sOrderId
      * @return
@@ -132,7 +154,7 @@ public class OrderService implements IOrderService {
 
 
     /**
-     * 将传入的购买商品列表，按照渠道转化为多个Hap
+     * 将传入的购买商品列表，按照渠道转化为多个Map
      */
     private HashMap<String, HashMap<TbEcomGoodsProduct, Integer>> processOrderProduct(List<OrderItemInfo> orderItemInfo) {
         HashMap<String, HashMap<TbEcomGoodsProduct, Integer>> itemMap = new HashMap<>();
@@ -150,23 +172,6 @@ public class OrderService implements IOrderService {
     }
 
 
-    @Override
-    public TbEcomOrderInf changeOrderState(String orderId, String state) {
-        //获取订单对象
-        TbEcomPlatfOrder order = platfOrderDao.getById(orderId);
-        if (order == null) {
-            throw new BizException(NOT_FOUND, "找不到订单");
-        }
-        //校验身份
-        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
-        if (memberInfo==null || !memberInfo.getMemberId().equals(order.getMemberId())) {
-            throw new BizException(NOT_ACCEPTABLE, "参数异常");
-        }
-        //获得路径
-
-        //执行操作
-        return null;
-    }
 
 
     /**

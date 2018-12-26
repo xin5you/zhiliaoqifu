@@ -40,10 +40,4 @@ public class ValidCodeController {
     }
 
 
-    @ApiOperation("测试用")
-    @RequestMapping(value = "/session/get2",method = RequestMethod.GET)
-    public JsonResult<ChannelOrder> ignoreMethod(){
-        return null;
-    }
-
 }
