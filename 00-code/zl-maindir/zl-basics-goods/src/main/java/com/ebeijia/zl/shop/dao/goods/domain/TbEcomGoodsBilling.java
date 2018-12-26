@@ -16,8 +16,8 @@ import java.io.Serializable;
  *
  * 商品专项账户关联表
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -26,25 +26,22 @@ import java.io.Serializable;
 public class TbEcomGoodsBilling extends Model<TbEcomGoodsBilling> {
  
     /**
-     * 商品id
-     */
-    @TableId(value = "goods_id" ,type = IdType.UUID)
-    @ApiModelProperty(value = "商品id")
-    private String goodsId;
- 
-    /**
-     * 如果是仅能使用通卡购买的情况，记为默认值0
+     * BID标记
      */
     @TableField("b_id")
-    @ApiModelProperty(value = "如果是仅能使用通卡购买的情况，记为默认值0")
+    @ApiModelProperty(value = "BID标记")
     private String bId;
  
     /**
-     * 账户名
+     * 商品id
      */
-    @TableField("b_name")
-    @ApiModelProperty(value = "账户名")
-    private String bName;
+    @TableField("goods_id")
+    @ApiModelProperty(value = "商品id")
+    private String goodsId;
+ 
+    @TableId(value = "id" ,type = IdType.UUID)
+    @ApiModelProperty(value = "id")
+    private Integer id;
  
     @TableField("备用字段")
     @ApiModelProperty(value = "备用字段")
@@ -57,6 +54,6 @@ public class TbEcomGoodsBilling extends Model<TbEcomGoodsBilling> {
 
     @Override
     protected Serializable pkVal() { 
-        return this.goodsId;
+        return this.id;
     }
 }

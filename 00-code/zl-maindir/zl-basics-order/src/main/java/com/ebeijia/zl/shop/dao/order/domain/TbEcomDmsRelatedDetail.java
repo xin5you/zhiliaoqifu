@@ -16,25 +16,14 @@ import java.io.Serializable;
  *
  * 渠道交易流水明细
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
 @TableName("tb_ecom_dms_related_detail")
 @ApiModel("渠道交易流水明细")
 public class TbEcomDmsRelatedDetail extends Model<TbEcomDmsRelatedDetail> {
- 
-    @TableId(value = "id" ,type = IdType.UUID)
-    @ApiModelProperty(value = "id")
-    private String id;
- 
-    /**
-     * 渠道子订单ID
-     */
-    @TableField("s_order_id")
-    @ApiModelProperty(value = "渠道子订单ID")
-    private String sOrderId;
  
     /**
      * 专项账户ID 如果是通卡账户，取默认值0
@@ -57,12 +46,23 @@ public class TbEcomDmsRelatedDetail extends Model<TbEcomDmsRelatedDetail> {
     @ApiModelProperty(value = "扣款金额 单位：分")
     private Integer debitPrice;
  
+    @TableId(value = "id" ,type = IdType.UUID)
+    @ApiModelProperty(value = "id")
+    private String id;
+ 
     /**
      * 关联支付明细
      */
     @TableField("pay_details_id")
     @ApiModelProperty(value = "关联支付明细")
     private String payDetailsId;
+ 
+    /**
+     * 渠道子订单ID
+     */
+    @TableField("s_order_id")
+    @ApiModelProperty(value = "渠道子订单ID")
+    private String sOrderId;
  
     @TableField("备用1")
     @ApiModelProperty(value = "备用1")

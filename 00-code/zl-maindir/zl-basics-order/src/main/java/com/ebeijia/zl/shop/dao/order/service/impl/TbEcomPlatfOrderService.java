@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  *
  * 订单总表 Service 实现类
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Service
 public class TbEcomPlatfOrderService extends ServiceImpl<TbEcomPlatfOrderMapper, TbEcomPlatfOrder> implements ITbEcomPlatfOrderService{

@@ -8,8 +8,8 @@ package com.ebeijia.zl.shop.dao.member.mapper;
  *
  * 会员信息表 Mapper 接口
  *
- * @User J
- * @Date 2018-12-06
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Mapper
 public interface TbEcomMemberMapper extends BaseMapper<TbEcomMember> {

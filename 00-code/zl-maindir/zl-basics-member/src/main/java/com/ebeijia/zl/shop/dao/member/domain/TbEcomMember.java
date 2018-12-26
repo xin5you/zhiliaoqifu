@@ -16,8 +16,8 @@ import java.io.Serializable;
  *
  * 会员信息表
  *
- * @User J
- * @Date 2018-12-06
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -45,17 +45,33 @@ public class TbEcomMember extends Model<TbEcomMember> {
     @ApiModelProperty(value = "lv_id")
     private String lvId;
  
+    /**
+     * 主键id
+     */
     @TableId(value = "member_id" ,type = IdType.UUID)
-    @ApiModelProperty(value = "member_id")
+    @ApiModelProperty(value = "主键id")
     private String memberId;
  
+    /**
+     * 记录的open_id
+     */
     @TableField("open_id")
-    @ApiModelProperty(value = "open_id")
+    @ApiModelProperty(value = "记录的open_id")
     private String openId;
  
+    /**
+     * 会员id
+     */
     @TableField("person_id")
-    @ApiModelProperty(value = "person_id")
+    @ApiModelProperty(value = "会员id")
     private String personId;
+ 
+    /**
+     * 会员
+     */
+    @TableField("phone")
+    @ApiModelProperty(value = "会员")
+    private String phone;
  
     @TableField("point")
     @ApiModelProperty(value = "point")
@@ -73,8 +89,11 @@ public class TbEcomMember extends Model<TbEcomMember> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
  
+    /**
+     * 关联用户id
+     */
     @TableField("user_id")
-    @ApiModelProperty(value = "user_id")
+    @ApiModelProperty(value = "关联用户id")
     private String userId;
 
 

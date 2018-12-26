@@ -81,7 +81,6 @@ public class PayController {
         MemberInfo memberInfo = shopUtils.getSession();
         List<AccountVO> accountVOS = payService.listAccountDetail(memberInfo.getUserId(), session);
         return new JsonResult<>(accountVOS);
-
     }
 
     //交易流水

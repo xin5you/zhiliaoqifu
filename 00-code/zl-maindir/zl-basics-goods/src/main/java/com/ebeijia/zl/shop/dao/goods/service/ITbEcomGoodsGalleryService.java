@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  *
  * 商品相册表 Service 接口类
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 public interface ITbEcomGoodsGalleryService extends IService<TbEcomGoodsGallery> {
 

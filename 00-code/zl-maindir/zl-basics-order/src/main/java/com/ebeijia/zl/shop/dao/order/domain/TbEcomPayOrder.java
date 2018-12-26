@@ -16,8 +16,8 @@ import java.io.Serializable;
  *
  * 渠道支付交易表
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -25,41 +25,53 @@ import java.io.Serializable;
 @ApiModel("渠道支付交易表")
 public class TbEcomPayOrder extends Model<TbEcomPayOrder> {
  
-    @TableId(value = "pay_order_id" ,type = IdType.UUID)
-    @ApiModelProperty(value = "pay_order_id")
-    private String payOrderId;
+    @TableField("create_time")
+    @ApiModelProperty(value = "create_time")
+    private Long createTime;
  
-    @TableField("org_pay_order_id")
-    @ApiModelProperty(value = "org_pay_order_id")
-    private String orgPayOrderId;
+    @TableField("create_user")
+    @ApiModelProperty(value = "create_user")
+    private String createUser;
+ 
+    @TableField("data_stat")
+    @ApiModelProperty(value = "data_stat")
+    private String dataStat;
  
     @TableField("dms_related_key")
     @ApiModelProperty(value = "dms_related_key")
     private String dmsRelatedKey;
  
+    @TableField("lock_version")
+    @ApiModelProperty(value = "lock_version")
+    private Integer lockVersion;
+ 
+    @TableField("member_id")
+    @ApiModelProperty(value = "member_id")
+    private String memberId;
+ 
     @TableField("org_dms_related_key")
     @ApiModelProperty(value = "org_dms_related_key")
     private String orgDmsRelatedKey;
  
-    @TableField("post_type")
-    @ApiModelProperty(value = "post_type")
-    private String postType;
+    @TableField("org_pay_order_id")
+    @ApiModelProperty(value = "org_pay_order_id")
+    private String orgPayOrderId;
  
     @TableField("out_trans_no")
     @ApiModelProperty(value = "out_trans_no")
     private String outTransNo;
  
-    @TableField("trans_shop_name")
-    @ApiModelProperty(value = "trans_shop_name")
-    private String transShopName;
+    @TableId(value = "pay_order_id" ,type = IdType.UUID)
+    @ApiModelProperty(value = "pay_order_id")
+    private String payOrderId;
  
-    @TableField("trans_shop_nunber")
-    @ApiModelProperty(value = "trans_shop_nunber")
-    private String transShopNunber;
+    @TableField("post_type")
+    @ApiModelProperty(value = "post_type")
+    private String postType;
  
-    @TableField("member_id")
-    @ApiModelProperty(value = "member_id")
-    private String memberId;
+    @TableField("remarks")
+    @ApiModelProperty(value = "remarks")
+    private String remarks;
  
     @TableField("resv1")
     @ApiModelProperty(value = "resv1")
@@ -85,33 +97,21 @@ public class TbEcomPayOrder extends Model<TbEcomPayOrder> {
     @ApiModelProperty(value = "resv6")
     private String resv6;
  
-    @TableField("data_stat")
-    @ApiModelProperty(value = "data_stat")
-    private String dataStat;
+    @TableField("trans_shop_name")
+    @ApiModelProperty(value = "trans_shop_name")
+    private String transShopName;
  
-    @TableField("remarks")
-    @ApiModelProperty(value = "remarks")
-    private String remarks;
- 
-    @TableField("create_user")
-    @ApiModelProperty(value = "create_user")
-    private String createUser;
- 
-    @TableField("update_user")
-    @ApiModelProperty(value = "update_user")
-    private String updateUser;
- 
-    @TableField("create_time")
-    @ApiModelProperty(value = "create_time")
-    private Long createTime;
+    @TableField("trans_shop_nunber")
+    @ApiModelProperty(value = "trans_shop_nunber")
+    private String transShopNunber;
  
     @TableField("update_time")
     @ApiModelProperty(value = "update_time")
     private Long updateTime;
  
-    @TableField("lock_version")
-    @ApiModelProperty(value = "lock_version")
-    private Integer lockVersion;
+    @TableField("update_user")
+    @ApiModelProperty(value = "update_user")
+    private String updateUser;
 
 
     @Override

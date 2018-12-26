@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  *
  * 货品(SKU)信息表 Service 实现类
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Service
 public class TbEcomGoodsProductService extends ServiceImpl<TbEcomGoodsProductMapper, TbEcomGoodsProduct> implements ITbEcomGoodsProductService{

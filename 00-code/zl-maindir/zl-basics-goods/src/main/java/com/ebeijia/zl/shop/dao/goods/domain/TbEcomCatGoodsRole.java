@@ -16,8 +16,8 @@ import java.io.Serializable;
  *
  * 商品分类关联表
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -32,12 +32,13 @@ public class TbEcomCatGoodsRole extends Model<TbEcomCatGoodsRole> {
     @ApiModelProperty(value = "分类ID")
     private String catId;
  
-    /**
-     * 商品ID
-     */
-    @TableField("goods_id")
-    @ApiModelProperty(value = "商品ID")
-    private String goodsId;
+    @TableField("create_time")
+    @ApiModelProperty(value = "create_time")
+    private Long createTime;
+ 
+    @TableField("create_user")
+    @ApiModelProperty(value = "create_user")
+    private String createUser;
  
     /**
      * 状态
@@ -47,31 +48,30 @@ public class TbEcomCatGoodsRole extends Model<TbEcomCatGoodsRole> {
     private String dataStat;
  
     /**
+     * 商品ID
+     */
+    @TableField("goods_id")
+    @ApiModelProperty(value = "商品ID")
+    private String goodsId;
+ 
+    @TableField("lock_version")
+    @ApiModelProperty(value = "lock_version")
+    private Integer lockVersion;
+ 
+    /**
      * 备注
      */
     @TableField("remarks")
     @ApiModelProperty(value = "备注")
     private String remarks;
  
-    @TableField("create_user")
-    @ApiModelProperty(value = "create_user")
-    private String createUser;
- 
-    @TableField("update_user")
-    @ApiModelProperty(value = "update_user")
-    private String updateUser;
- 
-    @TableField("create_time")
-    @ApiModelProperty(value = "create_time")
-    private Long createTime;
- 
     @TableField("update_time")
     @ApiModelProperty(value = "update_time")
     private Long updateTime;
  
-    @TableField("lock_version")
-    @ApiModelProperty(value = "lock_version")
-    private Integer lockVersion;
+    @TableField("update_user")
+    @ApiModelProperty(value = "update_user")
+    private String updateUser;
 
 
     @Override
