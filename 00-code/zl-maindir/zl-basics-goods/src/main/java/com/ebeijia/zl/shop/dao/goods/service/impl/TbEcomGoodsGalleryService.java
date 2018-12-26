@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  *
  * 商品相册表 Service 实现类
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Service
 public class TbEcomGoodsGalleryService extends ServiceImpl<TbEcomGoodsGalleryMapper, TbEcomGoodsGallery> implements ITbEcomGoodsGalleryService{

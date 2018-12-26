@@ -28,13 +28,13 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.CSS;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.ebeijia.zl.shop.constants.ResultState.*;
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_FOUND;
 
 @Service
 public class PayService implements IPayService {
@@ -100,7 +100,7 @@ public class PayService implements IPayService {
         //TODO 组合订单类型判断（未完成）
         Iterator<TbEcomPlatfShopOrder> iterator = shopOrders.iterator();
         while (iterator.hasNext()) {
-            String bId = iterator.next().getBid();
+            String bId = iterator.next().toString();
             if (!typeB.equals(bId)) {
                 throw new BizException(NOT_ACCEPTABLE, "支付类型不正确");
             }

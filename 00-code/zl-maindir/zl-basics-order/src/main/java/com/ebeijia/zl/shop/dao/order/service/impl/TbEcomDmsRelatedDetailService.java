@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  *
  * 渠道交易流水明细 Service 实现类
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Service
 public class TbEcomDmsRelatedDetailService extends ServiceImpl<TbEcomDmsRelatedDetailMapper, TbEcomDmsRelatedDetail> implements ITbEcomDmsRelatedDetailService{

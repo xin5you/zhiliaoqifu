@@ -11,13 +11,10 @@ import org.springframework.stereotype.Service;
  *
  * 商品分类关联表 Service 实现类
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Service
 public class TbEcomCatGoodsRoleService extends ServiceImpl<TbEcomCatGoodsRoleMapper, TbEcomCatGoodsRole> implements ITbEcomCatGoodsRoleService{
-
-
-
 
 }

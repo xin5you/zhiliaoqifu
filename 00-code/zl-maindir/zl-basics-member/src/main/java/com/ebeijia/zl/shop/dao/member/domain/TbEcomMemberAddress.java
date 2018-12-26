@@ -16,8 +16,8 @@ import java.io.Serializable;
  *
  * 会员收货地址
  *
- * @User J
- * @Date 2018-12-06
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)

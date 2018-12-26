@@ -16,14 +16,33 @@ import java.io.Serializable;
  *
  * 商品详情表
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
 @TableName("tb_ecom_goods_detail")
 @ApiModel("商品详情表")
 public class TbEcomGoodsDetail extends Model<TbEcomGoodsDetail> {
+ 
+    /**
+     * 购买量
+     */
+    @TableField("buy_count")
+    @ApiModelProperty(value = "购买量")
+    private Integer buyCount;
+ 
+    @TableField("create_time")
+    @ApiModelProperty(value = "create_time")
+    private Long createTime;
+ 
+    @TableField("create_user")
+    @ApiModelProperty(value = "create_user")
+    private String createUser;
+ 
+    @TableField("data_stat")
+    @ApiModelProperty(value = "data_stat")
+    private String dataStat;
  
     /**
      * 商品详情id
@@ -46,12 +65,20 @@ public class TbEcomGoodsDetail extends Model<TbEcomGoodsDetail> {
     @ApiModelProperty(value = "简介")
     private String intro;
  
+    @TableField("lock_version")
+    @ApiModelProperty(value = "lock_version")
+    private Integer lockVersion;
+ 
     /**
      * 参数
      */
     @TableField("params")
     @ApiModelProperty(value = "参数")
     private String params;
+ 
+    @TableField("remarks")
+    @ApiModelProperty(value = "remarks")
+    private String remarks;
  
     /**
      * 规格
@@ -60,47 +87,20 @@ public class TbEcomGoodsDetail extends Model<TbEcomGoodsDetail> {
     @ApiModelProperty(value = "规格")
     private String specs;
  
+    @TableField("update_time")
+    @ApiModelProperty(value = "update_time")
+    private Long updateTime;
+ 
+    @TableField("update_user")
+    @ApiModelProperty(value = "update_user")
+    private String updateUser;
+ 
     /**
      * 浏览量
      */
     @TableField("view_count")
     @ApiModelProperty(value = "浏览量")
     private Integer viewCount;
- 
-    /**
-     * 购买量
-     */
-    @TableField("buy_count")
-    @ApiModelProperty(value = "购买量")
-    private Integer buyCount;
- 
-    @TableField("data_stat")
-    @ApiModelProperty(value = "data_stat")
-    private String dataStat;
- 
-    @TableField("remarks")
-    @ApiModelProperty(value = "remarks")
-    private String remarks;
- 
-    @TableField("create_user")
-    @ApiModelProperty(value = "create_user")
-    private String createUser;
- 
-    @TableField("update_user")
-    @ApiModelProperty(value = "update_user")
-    private String updateUser;
- 
-    @TableField("create_time")
-    @ApiModelProperty(value = "create_time")
-    private Long createTime;
- 
-    @TableField("update_time")
-    @ApiModelProperty(value = "update_time")
-    private Long updateTime;
- 
-    @TableField("lock_version")
-    @ApiModelProperty(value = "lock_version")
-    private Integer lockVersion;
 
 
     @Override

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
  *
  * 会员信息表 Service 实现类
  *
- * @User J
- * @Date 2018-12-06
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Service
-public class TbEcomMemberService extends ServiceImpl<TbEcomMemberMapper, TbEcomMember> implements ITbEcomMemberService {
+public class TbEcomMemberService extends ServiceImpl<TbEcomMemberMapper, TbEcomMember> implements ITbEcomMemberService{
 
 }

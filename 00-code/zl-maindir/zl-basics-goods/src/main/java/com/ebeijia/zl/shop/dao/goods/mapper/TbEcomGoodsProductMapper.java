@@ -8,8 +8,8 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
  *
  * 货品(SKU)信息表 Mapper 接口
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Mapper
 public interface TbEcomGoodsProductMapper extends BaseMapper<TbEcomGoodsProduct> {

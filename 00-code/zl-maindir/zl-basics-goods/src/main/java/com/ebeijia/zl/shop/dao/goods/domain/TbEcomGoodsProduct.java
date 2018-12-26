@@ -16,8 +16,8 @@ import java.io.Serializable;
  *
  * 货品(SKU)信息表
  *
- * @User J
- * @Date 2018-12-03
+ * @User zl_shop
+ * @Date 2018-12-26
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -26,32 +26,33 @@ import java.io.Serializable;
 public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
  
     /**
-     * 货品id
+     * 目前是同一个spu下的所有sku专用账户是同一个；同一个spu最多建立一个专用账户属性
      */
-    @TableId(value = "product_id" ,type = IdType.UUID)
-    @ApiModelProperty(value = "货品id")
-    private String productId;
+    @TableField("account_sign")
+    @ApiModelProperty(value = "目前是同一个spu下的所有sku专用账户是同一个；同一个spu最多建立一个专用账户属性")
+    private String accountSign;
+ 
+    @TableField("create_time")
+    @ApiModelProperty(value = "create_time")
+    private Long createTime;
+ 
+    @TableField("create_user")
+    @ApiModelProperty(value = "create_user")
+    private String createUser;
  
     /**
-     * 对应商品id
+     * 状态
      */
-    @TableField("goods_id")
-    @ApiModelProperty(value = "对应商品id")
-    private String goodsId;
+    @TableField("data_stat")
+    @ApiModelProperty(value = "状态")
+    private String dataStat;
  
     /**
-     * 对应spu代码
+     * 商品详情id
      */
-    @TableField("spu_code")
-    @ApiModelProperty(value = "对应spu代码")
-    private String spuCode;
- 
-    /**
-     * sku代码
-     */
-    @TableField("sku_code")
-    @ApiModelProperty(value = "sku代码")
-    private String skuCode;
+    @TableField("detail_id")
+    @ApiModelProperty(value = "商品详情id")
+    private String detailId;
  
     /**
      * 分销商代码
@@ -61,25 +62,25 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     private String ecomCode;
  
     /**
-     * 是否上架
-     */
-    @TableField("product_enable")
-    @ApiModelProperty(value = "是否上架")
-    private Integer productEnable;
- 
-    /**
-     * 可用库存
-     */
-    @TableField("is_store")
-    @ApiModelProperty(value = "可用库存")
-    private Integer isStore;
- 
-    /**
      * 总库存
      */
     @TableField("enable_store")
     @ApiModelProperty(value = "总库存")
     private Integer enableStore;
+ 
+    /**
+     * 商品成本价
+     */
+    @TableField("goods_cost")
+    @ApiModelProperty(value = "商品成本价")
+    private String goodsCost;
+ 
+    /**
+     * 对应商品id
+     */
+    @TableField("goods_id")
+    @ApiModelProperty(value = "对应商品id")
+    private String goodsId;
  
     /**
      * 商品价格
@@ -89,11 +90,22 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     private String goodsPrice;
  
     /**
-     * 商品成本价
+     * 可用库存
      */
-    @TableField("goods_cost")
-    @ApiModelProperty(value = "商品成本价")
-    private String goodsCost;
+    @TableField("is_store")
+    @ApiModelProperty(value = "可用库存")
+    private Integer isStore;
+ 
+    @TableField("lock_version")
+    @ApiModelProperty(value = "lock_version")
+    private Integer lockVersion;
+ 
+    /**
+     * 页面描述
+     */
+    @TableField("meta_description")
+    @ApiModelProperty(value = "页面描述")
+    private String metaDescription;
  
     /**
      * 商品市场价
@@ -110,13 +122,6 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     private String pageTitle;
  
     /**
-     * 页面描述
-     */
-    @TableField("meta_description")
-    @ApiModelProperty(value = "页面描述")
-    private String metaDescription;
- 
-    /**
      * 图片
      */
     @TableField("pic_url")
@@ -124,49 +129,44 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     private String picUrl;
  
     /**
-     * 目前是同一个spu下的所有sku专用账户是同一个；同一个spu最多建立一个专用账户属性
+     * 是否上架
      */
-    @TableField("account_sign")
-    @ApiModelProperty(value = "目前是同一个spu下的所有sku专用账户是同一个；同一个spu最多建立一个专用账户属性")
-    private String accountSign;
+    @TableField("product_enable")
+    @ApiModelProperty(value = "是否上架")
+    private Integer productEnable;
  
     /**
-     * 状态
+     * 货品id
      */
-    @TableField("data_stat")
-    @ApiModelProperty(value = "状态")
-    private String dataStat;
+    @TableId(value = "product_id" ,type = IdType.UUID)
+    @ApiModelProperty(value = "货品id")
+    private String productId;
  
     @TableField("remarks")
     @ApiModelProperty(value = "remarks")
     private String remarks;
  
-    @TableField("create_user")
-    @ApiModelProperty(value = "create_user")
-    private String createUser;
+    /**
+     * sku代码
+     */
+    @TableField("sku_code")
+    @ApiModelProperty(value = "sku代码")
+    private String skuCode;
  
-    @TableField("update_user")
-    @ApiModelProperty(value = "update_user")
-    private String updateUser;
- 
-    @TableField("create_time")
-    @ApiModelProperty(value = "create_time")
-    private Long createTime;
+    /**
+     * 对应spu代码
+     */
+    @TableField("spu_code")
+    @ApiModelProperty(value = "对应spu代码")
+    private String spuCode;
  
     @TableField("update_time")
     @ApiModelProperty(value = "update_time")
     private Long updateTime;
  
-    /**
-     * 商品详情id
-     */
-    @TableField("detail_id")
-    @ApiModelProperty(value = "商品详情id")
-    private String detailId;
- 
-    @TableField("lock_version")
-    @ApiModelProperty(value = "lock_version")
-    private Integer lockVersion;
+    @TableField("update_user")
+    @ApiModelProperty(value = "update_user")
+    private String updateUser;
 
 
     @Override
