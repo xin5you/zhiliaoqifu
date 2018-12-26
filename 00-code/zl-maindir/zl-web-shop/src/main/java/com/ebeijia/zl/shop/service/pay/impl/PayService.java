@@ -18,6 +18,7 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
+import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.MemberInfo;
@@ -112,7 +113,6 @@ public class PayService implements IPayService {
 
         //幂等性验证
         //获取订单状态
-        String dmsKey = IdUtil.getNextId();
         TbEcomPlatfOrder platfOrder = new TbEcomPlatfOrder();
         platfOrder.setLockVersion(order.getLockVersion()+1);
         platfOrder.setPayTime(System.currentTimeMillis());
@@ -120,11 +120,19 @@ public class PayService implements IPayService {
         platfOrder.setUpdateUser("System");
         platfOrder.setUpdateTime(System.currentTimeMillis());
         //处理订单
-        QueryWrapper<TbEcomPlatfOrder> tbEcomPlatfOrderQueryWrapper = new QueryWrapper<>(order);
-//        platfOrderDao.update();
+        QueryWrapper<TbEcomPlatfOrder> wrapper = new QueryWrapper<>(order);
 
-        //持久化
+        boolean update = platfOrderDao.update(platfOrder, wrapper);
+        if (update==false){
+            throw new BizException(500,"支付失败，请检查您的订单状态");
+        }
+        //请求支付
+        BaseResult result = executeConsume(payInfo, memberInfo.getOpenId(), order.getDmsRelatedKey(), "商城消费");
+        //判断result
 
+        //修改订单状态
+
+        throw new AdviceMessenger(200,"支付成功");
     }
 
     @Override
@@ -162,7 +170,7 @@ public class PayService implements IPayService {
      * @return
      * @throws Exception
      */
-    private BaseResult executeConsume(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) throws Exception{
+    private BaseResult executeConsume(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
         AccountConsumeReqVo req=new AccountConsumeReqVo();
         //交易与渠道
         req.setTransId(TransCode.CW10.getCode());
@@ -177,7 +185,13 @@ public class PayService implements IPayService {
             desc = "商城消费";
         }
         req.setTransDesc(desc);
-        BaseResult result=accountTransactionFacade.executeConsume(req);
+        BaseResult result= null;
+        try {
+            result = accountTransactionFacade.executeConsume(req);
+        } catch (Exception e) {
+            logger.error(e.getStackTrace().toString());
+            throw new BizException(500,"账户系统调用异常");
+        }
         return result;
     }
 

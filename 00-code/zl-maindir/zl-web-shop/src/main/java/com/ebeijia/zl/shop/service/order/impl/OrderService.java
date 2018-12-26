@@ -96,7 +96,7 @@ public class OrderService implements IOrderService {
 
             //完善关联
         }
-
+        String dmsKey = IdUtil.getNextId();
 
         //完善主订单
 
