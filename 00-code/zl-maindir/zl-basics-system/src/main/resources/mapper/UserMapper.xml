@@ -78,6 +78,27 @@
 		</if>
 		order by m.update_time desc
 	</select>
+
+	<select id="getUserCmsList" parameterType="User" resultType="User">
+		select
+		<include refid="UserColumns" />,
+		r.id as role_id, r.role_name as role_name
+		from tb_web_user m
+		left join tb_web_user_role ur on m.id = ur.user_id
+		left join tb_web_role r on ur.role_id = r.id
+		where  m.data_stat = '0'
+		and m.login_type = #{loginType}
+		<if test="userName !=null and userName !='' ">
+			and m.user_name like '%' || #{userName} || '%'
+		</if>
+		<if test="loginName !=null and loginName !='' ">
+			and m.login_name like '%' || #{loginName} || '%'
+		</if>
+		<if test="id !=null and id !='' ">
+			and m.id = #{id}
+		</if>
+		order by m.update_time desc
+	</select>
 	
 	<select id="getUserByPhoneNo" parameterType="User" resultType="User">
 		 select 

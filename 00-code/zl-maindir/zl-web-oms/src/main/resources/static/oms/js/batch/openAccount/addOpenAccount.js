@@ -173,10 +173,10 @@ var addOpenAccount = {
 		});
 		$("#uploadMainForm").ajaxSubmit({
 			type:'post', // 提交方式 get/post
-            url: Helper.getRootPath() + '/file/excelImp.do', // 需要提交的 url
+            url: Helper.getRootPath() + '/common/excelImport/excelImp.do', // 需要提交的 url
             dataType: 'json',
             data: {
-				"batchType":"speOpenAccount"
+				"batchType":"openAccount"
 			},
 			success: function(data){
 				if(data.status) {

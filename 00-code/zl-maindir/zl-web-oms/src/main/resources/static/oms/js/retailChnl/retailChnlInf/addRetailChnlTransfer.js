@@ -71,8 +71,8 @@ var addRetailChnlInfTransfer = {
             return false;
         }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
-        if ((sum - 0) - (inaccountAmt - 0)  > 0) {
-            Helper.alert("所有专项金额总和不能大于上账金额");
+        if ((sum - 0) != (inaccountAmt - 0)) {
+            Helper.alert("所有专项金额总和必须等于上账金额");
             return false;
         }
         $.ajax({
@@ -207,7 +207,7 @@ var addRetailChnlInfTransfer = {
     },
     editRetailChnlTransferCommit : function () {
         var orderId = $("#orderId").val();
-        var chnannelId = $("#chnannelId").val();
+        var channelId = $("#channelId").val();
         /*var remitAmt = $("#remitAmt").val();
         var evidenceUrl = $("#evidenceUrl").val();*/
         var inaccountAmt = $("#inaccountAmt").val();
@@ -242,8 +242,8 @@ var addRetailChnlInfTransfer = {
             return false;
         }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
-        if ((sum - 0) - (inaccountAmt - 0)  > 0) {
-            Helper.alert("所有专项金额总和不能大于上账金额");
+        if ((sum - 0) != (inaccountAmt - 0)) {
+            Helper.alert("所有专项金额总和必须等于上账金额");
             return false;
         }
         $.ajax({

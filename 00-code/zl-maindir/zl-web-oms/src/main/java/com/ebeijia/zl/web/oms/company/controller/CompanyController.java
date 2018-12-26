@@ -70,7 +70,8 @@ public class CompanyController {
 		String name = StringUtil.nullToString(req.getParameter("name"));
 		String transFlag = StringUtil.nullToString(req.getParameter("transFlag"));
 		String contacts = StringUtil.nullToString(req.getParameter("contacts"));
-
+		/*System.out.println("====================================================="+
+		req.getServletContext() + "excel/batchRecharge.xlxs");*/
 		CompanyInf companyInf = new CompanyInf();//通过封装类将前台查询条件用对象接收
 		companyInf.setName(name);
 		companyInf.setTransFlag(transFlag);
@@ -294,9 +295,9 @@ public class CompanyController {
 				resultMap = companyService.updateCompanyTransferStat(req);
 			}
 		} catch (Exception e) {
-			logger.error(" ## 企业{}收款异常 ", companyId, e);
+			logger.error(" ## 平台{}打款至企业异常 ", companyId, e);
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "企业收款失败，请稍后再试");
+			resultMap.put("msg", "平台打款失败，请稍后再试");
 			return resultMap;
 		}
 		return resultMap;

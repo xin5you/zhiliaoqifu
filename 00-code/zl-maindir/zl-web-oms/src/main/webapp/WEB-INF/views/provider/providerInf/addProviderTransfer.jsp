@@ -69,12 +69,12 @@
                             <c:if test="${entity.inaccountCheck == '1'}">已上账</c:if>
                         </td>
                         <td>
-                            <c:if test="${entity.platformReceiverCheck == '0'}">未收款</c:if>
-                            <c:if test="${entity.platformReceiverCheck == '1'}">已收款</c:if>
+                            <c:if test="${entity.platformReceiverCheck == '0'}">未到账</c:if>
+                            <c:if test="${entity.platformReceiverCheck == '1'}">已到账</c:if>
                         </td>
                         <td>
-                            <c:if test="${entity.companyReceiverCheck == '0'}">未收款</c:if>
-                            <c:if test="${entity.companyReceiverCheck == '1'}">已收款</c:if>
+                            <c:if test="${entity.companyReceiverCheck == '0'}">未到账</c:if>
+                            <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
                         <td>
                             <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
                                 <a href="${entity.evidenceUrl}">${entity.evidenceUrl}</a>
@@ -102,7 +102,7 @@
                             </sec:authorize>
                             <c:if test="${entity.inaccountCheck == '1'&& entity.transferCheck == '0'}">
                                 <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_COMPANY')">
-                                    <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
+                                    <a orderId="${entity.orderId}" title="打款至平台" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
                                 </sec:authorize>
                             </c:if>
                         </td>
@@ -280,10 +280,10 @@
         <input type="hidden" id="company_id" name="company_id"/>
         <div class="modal-header">
             <button class="close" data-dismiss="modal">&times;</button>
-            <h3 id="commodityInfModal_h4">打款至企业</h3>
+            <h3 id="commodityInfModal_h4">打款至平台</h3>
         </div>
         <div class="modal-body">
-            <span id="company_name">确认打款至企业账户吗？</span>
+            <span id="company_name">确认打款至平台账户吗？</span>
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">

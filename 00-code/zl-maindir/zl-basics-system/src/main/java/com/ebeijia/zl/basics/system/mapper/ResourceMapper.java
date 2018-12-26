@@ -22,13 +22,20 @@ public interface ResourceMapper extends BaseMapper<Resource> {
     List<Resource> getResourceList(Resource entity);
 
     //根据用户Id获取该用户的权限
-    public List<Resource> getRoleResourceByRoleId(String roleId);
+    List<Resource> getRoleResourceByRoleId(String roleId);
 
     /***
      * 根据用户Id 查询对应的所有资源
      * @param userId
      * @return
      */
-    public List<Resource> getUserResourceByUserId(String userId);
+    List<Resource> getUserResourceByUserId(String userId);
+
+    /**
+     * 高级查询
+     * @param resource
+     * @return
+     */
+    List<Resource> getResourceListByResource(Resource resource);
 
 }

@@ -8,6 +8,7 @@ import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,15 @@ public class ExcelUploadController {
 			String path = null;
 			if (batchType.equals("openAccount")) {
 				path = jedisClusterUtils.hget("TB_BASE_DICT_KV", "OMS_BATCH_OPEN_ACCOUNT_EXCEL_PATH");
+				if (StringUtil.isNullOrEmpty(path)) {
+					path = "http://localhost:9998/oms/excel/batchOpenAccount.xlsx";
+				}
 			}
 			if (batchType.equals("recharge")) {
 				path = jedisClusterUtils.hget("TB_BASE_DICT_KV", "OMS_BATCH_RECHARGE_EXCEL_PATH");
+				if (StringUtil.isNullOrEmpty(path)) {
+					path = "http://localhost:9998/oms/excel/batchRecharge.xlsx";
+				}
 			}
 			logger.info("模板下载地址------>>{}", path);
 			URL url = new URL(path);

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ebeijia.zl.common.core.domain.BillingType;
+import com.ebeijia.zl.common.utils.enums.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,6 @@ import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.enums.IsOpenEnum;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
-import com.ebeijia.zl.common.utils.enums.TransCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
@@ -88,7 +85,12 @@ public class BatchOpenAccountController {
 		} catch (Exception e) {
 			logger.error("## 批量开户查询列表信息出错", e);
 		}
-		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(new CompanyInf());
+
+		//查询已开户企业
+		CompanyInf company = new CompanyInf();
+		company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
+		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())).collect(Collectors.toList());
 		
 		/*SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (!StringUtil.isNullOrEmpty(order.getStartTime())) {
@@ -123,6 +125,7 @@ public class BatchOpenAccountController {
 		CompanyInf company = new CompanyInf();
 		company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
+		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())).collect(Collectors.toList());
 		//查询所有账户类型
 		List<BillingType> billingTypeList = billingTypeInfService.getBillingTypeInfList(new BillingType());
 		//从缓存中查询是否存在数据

@@ -703,7 +703,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             }
         }
         InaccountOrderDetail detailB05 = new InaccountOrderDetail();
-        detailB05.setBId("A00");
+        detailB05.setBId("B05");
         detailB05.setOrderId(order.getOrderId());
         InaccountOrderDetail orderDetailB05 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB05);
         if (orderDetailB05 == null) {
@@ -737,7 +737,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         detailB06.setBId("B06");
         detailB06.setOrderId(order.getOrderId());
         InaccountOrderDetail orderDetailB06 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB06);
-        if (orderDetailA00 == null) {
+        if (orderDetailB06 == null) {
             if (!StringUtil.isNullOrEmpty(B06)) {
                 orderDetailB06 = new InaccountOrderDetail();
                 orderDetailB06.setOrderListId(IdUtil.getNextId());
@@ -847,9 +847,13 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         }
 
         if (delOrderDetailList != null && delOrderDetailList.size() >= 1) {
-            if (!inaccountOrderDetailService.removeByIds(delOrderDetailList)) {
-                logger.error("## 删除入账订单明细失败");
-                return 0;
+            if (delOrderDetailList != null && delOrderDetailList.size() >= 1) {
+                for (InaccountOrderDetail d : delOrderDetailList) {
+                    if (!inaccountOrderDetailService.removeById(d)) {
+                        logger.error("## 删除入账订单明细失败");
+                        return 0;
+                    }
+                }
             }
         }
         return 1;

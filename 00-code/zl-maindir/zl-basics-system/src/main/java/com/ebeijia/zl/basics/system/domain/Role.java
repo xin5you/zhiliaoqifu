@@ -103,6 +103,8 @@ public class Role extends Model<Role> {
     @TableField("lock_version")
     private Integer lockVersion;
 
+    @TableField(exist = false)
+    private String checked;
 
     @Override
     protected Serializable pkVal() { 

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class CommonServiceImpl implements CommonService {
         } else if (!StringUtil.isNullOrEmpty(companyId)) {
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(companyId);
-            reqVo.setUserType(UserType.TYPE300.getCode());
+            reqVo.setUserType(UserType.TYPE200.getCode());
         } else if (!StringUtil.isNullOrEmpty(channelId)) {
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(channelId);
@@ -58,11 +59,11 @@ public class CommonServiceImpl implements CommonService {
         }
         try {
             PageInfo<AccountVO> pageList = accountQueryFacade.getAccountInfPage(startNum, pageSize, reqVo);
-            /*if (pageList != null && pageList.getList().size() >= 1) {
+            if (pageList != null && pageList.getList().size() >= 1) {
                 for (AccountVO vo : pageList.getList()) {
-
+                    vo.setAccBal(new BigDecimal(NumberUtils.RMBCentToYuan(vo.getAccBal().toString())));
                 }
-            }*/
+            }
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额列表异常");
@@ -103,11 +104,11 @@ public class CommonServiceImpl implements CommonService {
         reqVo.setBId(bId);
         try {
             PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
-            /*if (pageList != null && pageList.getList().size() >= 1) {
+            if (pageList != null && pageList.getList().size() >= 1) {
                 for (AccountLogVO vo : pageList.getList()) {
 
                 }
-            }*/
+            }
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额明细列表异常");

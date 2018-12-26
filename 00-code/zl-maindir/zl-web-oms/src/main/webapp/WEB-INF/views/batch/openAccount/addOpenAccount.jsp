@@ -120,7 +120,7 @@
         <button class="close" data-dismiss="modal">&times;</button>
         <h3>文件导入</h3>
     </div>
-    <form id="uploadMainForm" action="${ctx}/common/excelImport/excelImp.do"   method="post" enctype="multipart/form-data">
+    <form id="uploadMainForm" action="${ctx}/common/excelImport/excelImp.do" method="post" enctype="multipart/form-data">
         <div class="modal-body">
             <div class="control-group">
                 <div class="controls" style="text-align: center;">

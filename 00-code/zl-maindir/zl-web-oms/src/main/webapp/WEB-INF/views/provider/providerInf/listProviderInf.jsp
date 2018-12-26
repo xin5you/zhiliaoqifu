@@ -43,9 +43,9 @@
 				<thead>
 				<tr>
 					<th>供应商名称</th>
-					<th>app_url</th>
+					<%--<th>app_url</th>
 					<th>app_Secret</th>
-					<th>access_token</th>
+					<th>access_token</th>--%>
 					<th>默认路由标识</th>
 					<th>供应商折扣</th>
 					<th>操作顺序</th>
@@ -57,9 +57,9 @@
 				<c:forEach var="entity" items="${pageInfo.list}" varStatus="st">
 					<tr>
 						<td>${entity.providerName}</td>
-						<td>${entity.appUrl}</td>
+						<%--<td>${entity.appUrl}</td>
 						<td>${entity.appSecret}</td>
-						<td>${entity.accessToken}</td>
+						<td>${entity.accessToken}</td>--%>
 						<td>${entity.defaultRoute}</td>
 						<td>${entity.providerRate}</td>
 						<td>${entity.operSolr}</td>
@@ -84,7 +84,7 @@
 							</sec:authorize>
 							<c:if test="${entity.isOpen=='1'}">
 								<sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER')">
-									<a providerId="${entity.providerId}" title="入账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+									<a providerId="${entity.providerId}" title="上账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
 								</sec:authorize>
 								<sec:authorize access="hasRole('ROLE_PROVIDER_ACCBAL')">
 									<a providerId="${entity.providerId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>

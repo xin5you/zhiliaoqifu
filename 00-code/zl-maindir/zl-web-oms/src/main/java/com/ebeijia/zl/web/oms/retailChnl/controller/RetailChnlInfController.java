@@ -559,6 +559,7 @@ public class RetailChnlInfController {
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		try {
 			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
 			if (orderDetail != null && orderDetail.size() >= 1) {
 				for (InaccountOrderDetail d : orderDetail) {

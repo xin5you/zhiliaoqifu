@@ -391,11 +391,10 @@ public class ProviderInfController {
 		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
-		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		try {
 			resultMap = providerInfService.updateProviderRemitStatCommit(req);
 		} catch (Exception e) {
-			logger.error("## 供应商{}转账至企业{}发生异常", providerId, companyId, e);
+			logger.error("## 供应商{}打款至平台账户发生异常", providerId, e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "网络异常，请稍后再试");
 			return resultMap;

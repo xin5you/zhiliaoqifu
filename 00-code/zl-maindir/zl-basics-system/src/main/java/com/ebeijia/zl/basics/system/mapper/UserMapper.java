@@ -17,11 +17,13 @@ import com.ebeijia.zl.basics.system.domain.User;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    public User getUserByName(User user);
+    User getUserByName(User user);
 
     List<User> getUserOmsList(User user);
     
     List<User> getUserDiyList(User user);
+
+    List<User> getUserCmsList(User user);
 
     /**
      * 根据手机号查询

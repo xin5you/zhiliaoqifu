@@ -75,8 +75,8 @@
 				               <th>交易金额(元)</th>
                                  <th>平台收入金额(元)</th>
                                  <th>企业收入金额(元)</th>
-                                 <th>开票状态</th>
-                                 <th>开票信息</th>
+                                 <%--<th>开票状态</th>
+                                 <th>开票信息</th>--%>
 				             </tr>
 				             </thead>
 				             <tbody>
@@ -88,11 +88,11 @@
 									<td>${entity.transAmt}</td>
                                      <td>${entity.platformInAmt}</td>
                                      <td>${entity.companyInAmt}</td>
-                                     <td>
+                                     <%--<td>
                                          <c:if test="${entity.isInvoice == '0'}">未开票</c:if>
                                          <c:if test="${entity.isInvoice == '1'}">已开票</c:if>
                                      </td>
-                                     <td>${entity.invoiceInfo}</td>
+                                     <td>${entity.invoiceInfo}</td>--%>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>

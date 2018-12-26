@@ -43,8 +43,7 @@
 					               <th>分销商ID</th>--%>
 					               <th>分销商名称</th>
 					               <th>账户名称</th>
-					               <th>账户余额</th>
-					               <th>代金券额度</th>
+					               <th>账户余额(元)</th>
 									 <%--<th>操作</th>--%>
 								 </tr>
 				             </thead>
@@ -56,7 +55,6 @@
 									<td>${entity.personalName}</td>
 									<td>${entity.BId}</td>
 				                    <td>${entity.accBal}</td>
-				                    <td>${entity.couponBal}</td>
 										 <%--<td>
                                              <a bId="${entity.BId}" title="账单详情" class="btn-mini btn-accBal" href="#"><i class="icon-search"></i></a>
                                          </td>--%>

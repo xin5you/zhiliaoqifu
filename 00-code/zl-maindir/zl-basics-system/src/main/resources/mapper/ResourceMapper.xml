@@ -46,7 +46,7 @@
 	<!-- 根据rId获取该用户的权限-->
 	<select id="getRoleResourceByRoleId" parameterType="String" resultType="Resource">
 		select 
-		<include refid="ResourceColumns" />
+			<include refid="ResourceColumns" />
 		from tb_web_resource 
 		where data_stat ='0' and id in(
 			select resource_id 
@@ -68,6 +68,23 @@
 				where user_id = #{userId}
 			)
 		)
+	</select>
+
+	<select id="getResourceListByResource" parameterType="Resource" resultType="Resource">
+		select
+		<include refid="ResourceColumns" />
+		from tb_web_resource
+		where login_type=#{loginType}
+		<if test="resourceName != null and resourceName != '' ">
+			and resource_name like '%' || #{resourceName} || '%'
+		</if>
+		<if test="resourceType != null and resourceType != '' ">
+			and resource_type = #{resourceType}
+		</if>
+		<if test="url != null and url != '' ">
+			and url like '%' || #{url} || '%'
+		</if>
+		order by create_time asc
 	</select>
 
 </mapper>

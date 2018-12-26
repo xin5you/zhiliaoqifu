@@ -358,7 +358,6 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				result = accountManageFacade.createAccount(req);
 			} catch (Exception e) {
 				logger.error("## 远程调用开户接口出错,请求参数{}", JSONArray.toJSONString(req), e);
-				return 0;
 			}
 			try {
 				if (StringUtil.isNullOrEmpty(result.getCode())) {
@@ -379,7 +378,6 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				}
 			}
 			openAccount = batchOrderListMapper.updateBatchOrderListByList(batchOrderLists);
-
 		}
 		if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 			if (openAccount > 0) {
@@ -549,6 +547,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			}
 		} catch (Exception e) {
 			logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
+			return 0;
 		}
 		for (BatchOrderList batchOrder : batchOrderList) {
 			if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {

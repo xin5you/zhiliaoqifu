@@ -136,16 +136,16 @@ public class CompanyServiceImpl implements CompanyService{
 			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
 			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "收款失败，该企业不存在或未开户");
+				resultMap.put("msg", "平台打款失败，该平台不存在或未开户");
 				return resultMap;
 			}
 
 			InaccountOrder order = inaccountOrderService.getById(orderId);
 			List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
 			if (order == null || orderDetailList == null || orderDetailList.size() < 1) {
-				logger.error("## 查询企业{}收款订单{}信息为空", companyId, orderId);
+				logger.error("## 查询平台{}打款订单{}信息为空", companyId, orderId);
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("status", "暂无可收款订单，请重新查看订单信息");
+				resultMap.put("status", "暂无可打款订单，请重新查看订单信息");
 				return resultMap;
 			}
 
@@ -195,20 +195,20 @@ public class CompanyServiceImpl implements CompanyService{
 			}
 			logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 			if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {
-				order.setPlatformReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
+				order.setCompanyReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
 			}
 
 			if (!inaccountOrderService.saveOrUpdate(order)) {
-				logger.error("## 更新平台{}收款状态{}失败", companyId, order.getPlatformReceiverCheck());
+				logger.error("## 更新企业{}收款状态{}失败", order.getCompanyId(), order.getPlatformReceiverCheck());
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "系统异常，请联系管理员");
 				return resultMap;
 			}
 
 		} catch (Exception e) {
-			logger.error(" ## 企业平台{}收款异常", companyId, e);
+			logger.error(" ## 平台{}打款异常", companyId, e);
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "企业平台收款失败，请稍后再试");
+			resultMap.put("msg", "平台打款失败，请稍后再试");
 			return resultMap;
 		}
 		return resultMap;

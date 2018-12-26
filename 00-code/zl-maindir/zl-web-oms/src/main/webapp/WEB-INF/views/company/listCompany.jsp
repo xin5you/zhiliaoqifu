@@ -101,14 +101,14 @@
 							<c:if test="${company.isOpen=='1'}">
 								<c:if test="${company.isPlatform=='1'}">
 									<sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT')">
-										<a companyId="${company.companyId}" title="平台收款" class="btn-mini btn-platform-tansfer" href="#"><i class="icon-pencil"></i></a>
+										<a companyId="${company.companyId}" title="平台打款" class="btn-mini btn-platform-tansfer" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
 								</c:if>
-								<c:if test="${company.isPlatform=='0'}">
+								<%--<c:if test="${company.isPlatform=='0'}">
 									<sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT')">
 										<a companyId="${company.companyId}" title="企业收款" class="btn-mini btn-company-tansfer" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
-								</c:if>
+								</c:if>--%>
 								<sec:authorize access="hasRole('ROLE_COMPANY_ACCBAL_INTO')">
 									<a companyId="${company.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
 								</sec:authorize>

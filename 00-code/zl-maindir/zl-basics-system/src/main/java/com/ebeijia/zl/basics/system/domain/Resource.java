@@ -129,6 +129,8 @@ public class Resource extends Model<Resource> {
     @TableField("login_type")
     private String loginType;
 
+    @TableField(exist = false)
+    private String checked;
 
     @Override
     protected Serializable pkVal() { 
