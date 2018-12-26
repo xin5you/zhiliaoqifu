@@ -4,6 +4,7 @@ package org.zl.service.account;
 import java.math.BigDecimal;
 
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountWithDrawReqVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,31 +168,27 @@ public class AccountTransTest {
 	
 	
 
-//  @Test
-// public void executeRechargeToUser() throws Exception{
-//	  AccountTransferReqVo req=new AccountTransferReqVo();
-//  	
-//	req.setTransId(TransCode.MB50.getCode());
-//	req.setTransChnl(TransChnl.CHANNEL0.toString());
-//	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-//	req.setUserChnlId("200000000000000000000001");
-//	req.setUserType(UserType.TYPE200.getCode());
-//
-//	req.setTransAmt(new BigDecimal(500000));
-//	req.setUploadAmt(new BigDecimal(500000));
-//	req.setDmsRelatedKey(IdUtil.getNextId());
-//	req.setTfrOutUserId("200000000000000000000001");
-//	req.setTfrOutBId(SpecAccountTypeEnum.A00.getbId());
-//	req.setTfrInUserId("13501755206");
-//	req.setTfrInBId(SpecAccountTypeEnum.A00.getbId());
-//	
-//	BaseResult<Object> result= accountTransactionFacade.executeTransfer(req);
-//	
-//	System.out.println(JSONArray.toJSONString(result));
-// }
+/*  @Test
+ public void executeRechargeToUser() throws Exception{
+	  AccountRechargeReqVo req=new AccountRechargeReqVo();
+
+	req.setTransId(TransCode.CW50.getCode());
+	req.setTransChnl(TransChnl.CHANNEL0.toString());
+	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+	req.setUserChnlId("b03976d2-8319-4c64-b9d7-5b8c5756ef6f");
+	req.setUserType(UserType.TYPE100.getCode());
+	req.setTransAmt(new BigDecimal(500000));
+	req.setUploadAmt(new BigDecimal(500000));
+	req.setPriBId(SpecAccountTypeEnum.A01.getbId());
+	req.setDmsRelatedKey(IdUtil.getNextId());
+	req.setTransDesc("企业员工充值");
+	BaseResult<Object> result= accountTransactionFacade.executeRecharge(req);
+
+	System.out.println(JSONArray.toJSONString(result));
+ }*/
 
 
-   @Test
+/*   @Test
    public void executeConsumeToRetail() throws Exception{
 
 	   AccountConsumeReqVo req=new AccountConsumeReqVo();
@@ -207,6 +204,37 @@ public class AccountTransTest {
     	req.setTransDesc("分销商消费");
 	   BaseResult result=accountTransactionFacade.executeConsume(req);
 	   System.out.println(JSONArray.toJSONString(result));
-   }
+   }*/
+
+
+	/**
+	 * 用户提现操作
+	 * @throws Exception
+	 */
+  @Test
+ public void executeWithdrawToUser() throws Exception{
+  	AccountWithDrawReqVo req=new AccountWithDrawReqVo();
+
+	req.setTransId(TransCode.CW91.getCode());
+	req.setTransChnl(TransChnl.CHANNEL0.toString());
+	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+	req.setUserChnlId("b03976d2-8319-4c64-b9d7-5b8c5756ef6f");
+	req.setUserType(UserType.TYPE100.getCode());
+	req.setTransAmt(new BigDecimal(10));
+	req.setUploadAmt(new BigDecimal(10));
+	req.setDmsRelatedKey(IdUtil.getNextId());
+	req.setTransDesc("员工提现到卡");
+
+	  req.setReceiverCardNo("6214830215284406"); //收款卡号
+	  req.setReceiverName("朱秋友");
+	  req.setBankName("招商银行");  //开户行
+	  req.setBankCode("CMB");  //开户行编号
+
+	  req.setRemarks("快点到账 快点到账");
+	  req.setOrderName("测试提现");
+	BaseResult<Object> result= accountTransactionFacade.executeWithDraw(req);
+
+	System.out.println(JSONArray.toJSONString(result));
+ }
 	
 }

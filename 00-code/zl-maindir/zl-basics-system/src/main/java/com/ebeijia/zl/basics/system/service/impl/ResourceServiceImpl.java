@@ -1,7 +1,9 @@
 package com.ebeijia.zl.basics.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.enums.LoginType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,9 +53,23 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 	@Override
 	public PageInfo<Resource> getResourcePage(int startNum, int pageSize, Resource entity) {
 		PageHelper.startPage(startNum, pageSize);
-		List<Resource> roleList = resourceMapper.getResourceList(entity);
-		PageInfo<Resource> userPage = new PageInfo<Resource>(roleList);
+		List<Resource> resourceList = new ArrayList<>();
+		if (LoginType.LoginType1.getCode().equals(entity.getLoginType())) {
+			resourceList = resourceMapper.getResourceList(entity);
+		} else if (LoginType.LoginType2.getCode().equals(entity.getLoginType())) {
+			resourceList = resourceMapper.getResourceListByResource(entity);
+		} else if (LoginType.LoginType3.getCode().equals(entity.getLoginType())) {
+			resourceList = resourceMapper.getResourceListByResource(entity);
+		} else {
+
+		}
+		PageInfo<Resource> userPage = new PageInfo<Resource>(resourceList);
 		return userPage;
+	}
+
+	@Override
+	public List<Resource> getResourceListByResource(Resource resource) {
+		return resourceMapper.getResourceListByResource(resource);
 	}
 
 }

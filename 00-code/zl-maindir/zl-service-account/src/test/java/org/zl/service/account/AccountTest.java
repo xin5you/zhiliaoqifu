@@ -159,7 +159,7 @@ public class AccountTest {
 	 *-------------------------------------*
 	 * 2018年12月14日     zhuqi           v1.0.0
 	 */
-	@Test
+/*	@Test
 	public void createAccountForZLRetail() throws Exception{
 		AccountOpenReqVo req=new AccountOpenReqVo();
 		req.setTransId(TransCode.MB80.getCode());
@@ -172,7 +172,7 @@ public class AccountTest {
 		req.setDmsRelatedKey(IdUtil.getNextId());
 		req.setbIds(SpecAccountTypeEnum.getList());
 		txnAccountInfFacade.createAccount(req);
-	}
+	}*/
 
 	/**
 	 * 
@@ -189,7 +189,7 @@ public class AccountTest {
 	*-------------------------------------*
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
-  /*  @Test
+    @Test
    public void createAccountForUser() throws Exception{
     	AccountOpenReqVo req=new AccountOpenReqVo();
     	req.setTransId(TransCode.CW80.getCode());
@@ -202,13 +202,13 @@ public class AccountTest {
     	req.setCompanyId("200000000000000000000001");
     	req.setDmsRelatedKey(IdUtil.getNextId());
     	
-    	Set<String>  bids=new HashSet<>();
+/*    	Set<String>  bids=new HashSet<>();
     	bids.add(SpecAccountTypeEnum.A00.getbId());
     	bids.add(SpecAccountTypeEnum.A01.getbId());
     	bids.add(SpecAccountTypeEnum.B01.getbId());
-    	bids.add(SpecAccountTypeEnum.B02.getbId());
+    	bids.add(SpecAccountTypeEnum.B02.getbId());*/
     	
-    	req.setbIds(bids);
+    	req.setbIds(SpecAccountTypeEnum.getList());
     	txnAccountInfFacade.createAccount(req);
-   }*/
+   }
 }

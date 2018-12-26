@@ -14,12 +14,17 @@ public class DubboProviderProperies {
 	
 	@Value("${spring.dubbo.protocol.name}")
 	private String protocolName;
-	
+
+	@Value("${spring.dubbo.protocol.host}")
+	private String host;
+
 	@Value("${spring.dubbo.protocol.port}")
 	private int protocolPort;
 	
 	@Value("${spring.dubbo.protocol.accepts}")
 	private int protocolAccepts;
+
+
 	
 	@Value("${spring.dubbo.provider.id}")
 	private String providerId;
@@ -95,6 +100,12 @@ public class DubboProviderProperies {
 	public void setProviderDelay(int providerDelay) {
 		this.providerDelay = providerDelay;
 	}
-	
-	
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 }

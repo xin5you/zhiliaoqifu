@@ -63,7 +63,12 @@
 		  <artifactId>zl-core-dubbo</artifactId>
 		  <version>${ebj.zl.version}</version>
 	  </dependency>
-	    
+
+	  <dependency>
+		  <groupId>com.ebeijia</groupId>
+		  <artifactId>zl-core-withdraw</artifactId>
+		  <version>${ebj.zl.version}</version>
+	  </dependency>
 
 		<dependency>
             <groupId>com.deepoove</groupId>

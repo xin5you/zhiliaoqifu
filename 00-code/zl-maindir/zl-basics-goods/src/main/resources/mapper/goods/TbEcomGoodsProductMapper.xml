@@ -2,4 +2,94 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsProductMapper">
 
+
+    <select id="getInventoryList" parameterType="TbEcomGoodsProduct" resultType="TbEcomGoodsProduct">
+        SELECT G.GOODS_NAME,
+        G.MARKET_ENABLE,
+        P.SKU_CODE,
+        P.ECOM_CODE,
+        P.PRODUCT_ENABLE,
+        P.IS_STORE,
+        P.PAGE_TITLE
+        FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+        WHERE G.GOODS_ID = P.GOODS_ID
+        AND G.DATA_STAT = '0'
+        AND P.DATA_STAT = '0'
+        AND P.ECOM_CODE = #{ecomCode}
+        <if test="goodsName != null and goodsName != '' ">
+            AND G.GOODS_NAME LIKE '%' || #{goodsName} || '%'
+        </if>
+        <if test="pageTitle != null and pageTitle != '' ">
+            AND P.PAGE_TITLE LIKE '%' || #{pageTitle} || '%'
+        </if>
+        <if test="marketEnable !=null and marketEnable !='' ">
+            AND G.MARKET_ENABLE = #{marketEnable}
+        </if>
+
+    </select>
+
+
+    <select id="getGoodsProductListByGoodsId" parameterType="String" resultType="TbEcomGoodsProduct">
+		SELECT P.PRODUCT_ID,
+		       P.GOODS_ID,
+		       P.SPU_CODE,
+		       P.SKU_CODE,
+		       P.ECOM_CODE,
+		       P.PRODUCT_ENABLE,
+		       P.IS_STORE,
+		       P.ENABLE_STORE,
+		       P.GOODS_PRICE,
+		       P.GOODS_COST,
+		       P.MKT_PRICE,
+		       P.PAGE_TITLE,
+		       P.META_DESCRIPTION,
+		       P.PIC_URL,
+		       P.DATA_STAT,
+		       P.REMARKS,
+		       P.CREATE_USER,
+		       P.UPDATE_USER,
+		       P.CREATE_TIME,
+		       P.UPDATE_TIME,
+		       P.LOCK_VERSION,
+		       G.GOODS_NAME,
+		       G.MARKET_ENABLE
+		  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+		 WHERE G.GOODS_ID = P.GOODS_ID
+		   AND G.DATA_STAT = '0'
+		   AND P.DATA_STAT = '0'
+		   AND G.GOODS_ID = #{goodsId}
+
+	</select>
+
+    <select id="getGoodsProductByPrimaryKey" parameterType="String" resultType="TbEcomGoodsProduct">
+		SELECT P.PRODUCT_ID,
+	       P.GOODS_ID,
+	       P.SPU_CODE,
+	       P.SKU_CODE,
+	       P.ECOM_CODE,
+	       P.PRODUCT_ENABLE,
+	       P.IS_STORE,
+	       P.ENABLE_STORE,
+	       P.GOODS_PRICE,
+	       P.GOODS_COST,
+	       P.MKT_PRICE,
+	       P.PAGE_TITLE,
+	       P.META_DESCRIPTION,
+	       P.PIC_URL,
+	       P.DATA_STAT,
+	       P.REMARKS,
+	       P.CREATE_USER,
+	       P.UPDATE_USER,
+	       P.CREATE_TIME,
+	       P.UPDATE_TIME,
+	       P.LOCK_VERSION,
+	       G.GOODS_NAME
+	  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
+	 WHERE G.GOODS_ID = P.GOODS_ID
+	   AND G.DATA_STAT = '0'
+	   AND P.DATA_STAT = '0'
+	   AND P.PRODUCT_ID = #{primaryKey}
+	</select>
+
+
 </mapper>

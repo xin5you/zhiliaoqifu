@@ -25,6 +25,7 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 	private static final long serialVersionUID = 6157195921555421701L;
 
 	private String priBId;
+
     /**
      * 实际交易金额
      */

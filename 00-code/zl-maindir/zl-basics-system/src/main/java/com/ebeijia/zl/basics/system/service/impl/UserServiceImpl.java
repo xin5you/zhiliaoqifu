@@ -43,7 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		if (LoginType.LoginType1.getCode().equals(user.getLoginType())) {
 			userList = userMapper.getUserOmsList(user);
 		} else if (LoginType.LoginType2.getCode().equals(user.getLoginType())) {
-			
+			userList = userMapper.getUserCmsList(user);
 		} else if (LoginType.LoginType3.getCode().equals(user.getLoginType())) {
 			userList = userMapper.getUserDiyList(user);
 		}

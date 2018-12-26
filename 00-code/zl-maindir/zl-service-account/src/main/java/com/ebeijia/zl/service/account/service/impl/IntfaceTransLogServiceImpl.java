@@ -36,7 +36,7 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 		 }else{
 			 entity.setRespCode("99");
 		 }
-		 
+		entity.setTransSt("1");
 		 return super.updateById(entity);
 	 }
 		

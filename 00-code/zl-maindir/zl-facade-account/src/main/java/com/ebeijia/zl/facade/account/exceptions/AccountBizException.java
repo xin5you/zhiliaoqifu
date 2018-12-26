@@ -44,7 +44,8 @@ public class AccountBizException extends BizException {
 			"结算账户余额 小于不可用余额，不能结算");
 
 	public static final AccountBizException ACCOUNT_POS_TRXTYPE_INVALID = new AccountBizException(20080112, "POS交易类型无效");
-	
+
+	public static final AccountBizException ACCOUNT_WITHDRID_SAVE_FAILED = new AccountBizException(20080113, "账户提现保存数据异常");
 	
 	public static final AccountBizException ACCOUNT_CARD_ATTR_ERROR = new AccountBizException(20089999, "当前交易类型未知");
 

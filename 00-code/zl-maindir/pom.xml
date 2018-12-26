@@ -94,6 +94,7 @@
 	    <module>zl-web-cms</module>
     	<module>zl-web-user</module>
         <module>zl-core-dubbo</module>
+        <module>zl-core-withdraw</module>
     </modules>
 
     <build>

@@ -3,10 +3,7 @@ package com.ebeijia.zl.facade.account.service;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
-import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
-import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
-import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
+import com.ebeijia.zl.facade.account.req.*;
 
 /**
 * @Description: 账户交易
@@ -79,6 +76,19 @@ public interface AccountTransactionFacade {
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
 	BaseResult executeTransfer(AccountTransferReqVo req) throws Exception;
+
+
+	/**
+	 * @Description: 提现
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月26日 上午11:11:39
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月26日     zhuqi           v1.0.0
+	 */
+	BaseResult executeWithDraw(AccountWithDrawReqVo req) throws Exception;
 	
 	/**
 	 * 

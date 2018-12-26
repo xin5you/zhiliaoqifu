@@ -42,7 +42,7 @@ public class DubboProviderConfig {
 	public ProtocolConfig protocol(){
 		ProtocolConfig protocolConfig = new ProtocolConfig();
 		protocolConfig.setName(dubboProviderProperies.getProtocolName());
-//		protocolConfig.setHost(mchntProvideProperies.getProtocolHost());
+		protocolConfig.setHost(dubboProviderProperies.getHost());
 		protocolConfig.setPort(dubboProviderProperies.getProtocolPort());
 		protocolConfig.setAccepts(dubboProviderProperies.getProtocolAccepts());
 		return protocolConfig;

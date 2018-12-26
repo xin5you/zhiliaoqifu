@@ -72,12 +72,12 @@
                 </table>
             </div>
             </br >
-            <div>
+            <%--<div>
                 <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_USER_INTOADD')">
                     <button class="btn btn-primary btn-addAccount" type="button"> 添 加 </button>
                 </sec:authorize>
             </div>
-            <br/>
+            <br/>--%>
 
             <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
                 <thead>
@@ -86,7 +86,7 @@
                     <th>姓名</th>
                     <th>身份证号码</th>
                     <th>手机号</th>
-                    <th>操作</th>
+                    <%--<th>操作</th>--%>
                 </tr>
                 </thead>
                 <tbody>
@@ -96,11 +96,11 @@
                         <td>${entity.userName}</td>
                         <td>${entity.userCardNo}</td>
                         <td>${entity.phoneNo}</td>
-                        <td>
+                        <%--<td>
                             <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')">
                                 <a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
                             </sec:authorize>
-                        </td>
+                        </td>--%>
                     </tr>
                 </c:forEach>
                 </tbody>

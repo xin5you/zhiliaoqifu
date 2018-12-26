@@ -25,7 +25,11 @@ public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, Rol
 	
 	@Override
 	public int deleteRoleResourceByRoleId(String roleId) {
-		return roleResourceMapper.deleteRoleResourceByRoleId(roleId);
+		List<RoleResource> roleResourceList = roleResourceMapper.getRoleResourceByRoleId(roleId);
+		if (roleResourceList != null && roleResourceList.size() >= 1) {
+			return roleResourceMapper.deleteRoleResourceByRoleId(roleId);
+		}
+		return 1;
 	}
 
 	@Override

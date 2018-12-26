@@ -22,8 +22,10 @@
 	<select id="getRoleList" parameterType="Role" resultType="Role">
 		select
 			<include refid="roleColumns"/>
-			from tb_web_role
-			where data_stat='0' and login_type = #{loginType}
+		from tb_web_role
+		where data_stat='0'
+		  and login_type = #{loginType}
+		order by create_time desc
 	</select>
 	
 	<select id="getUserRoleByUserId" parameterType="java.lang.String" resultType="Role">

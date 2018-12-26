@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.tools.SnowFlake;
+import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
+import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
+import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
+import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
+import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
-import com.ebeijia.zl.common.utils.enums.AccountCardAttrEnum;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.common.utils.enums.TransCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
 import com.ebeijia.zl.facade.account.dto.TransLog;
@@ -45,7 +48,12 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	
 	@Autowired
 	private IAccountInfService accountInfService;
-	
+
+	@Autowired
+	private IAccountWithdrawOrderService accountWithdrawOrderService;
+
+	@Autowired
+	private IAccountWithdrawDetailService accountWithdrawDetailService;
 	/**
 	* 
 	* @Description: 创建账户交易流水
@@ -141,7 +149,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 CW74("W74", "微信退款"),
 		 CW40("W40", "员工转账"),
 		 CW90("W90", "权益转让"),
-		 CW91("W91", "商户收款");
+		 CW91("W91", "用户收款");
 		 */
 		
 		 if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
@@ -171,7 +179,10 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
 			}
 		}
-		else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
+		 else if (TransCode.CW50.getCode().equals(intfaceTransLog.getTransId())){
+			 this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
+
+		 }else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
 			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
 			
@@ -222,7 +233,30 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				addToVoList(voList,transLog2,order);
 				order++;
 			}
-			
+		 }else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
+		 	//用户或者商户withdraw操作
+			 this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), 0);
+
+			 AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
+
+			 AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
+			 accountWithdrawOrder.setBatchNo(String.valueOf(SnowFlake.getInstance().nextId()));
+			 accountWithdrawOrder.setTotalAmount(withdrawDetail.getTransAmount());
+			 accountWithdrawOrder.setTxnPrimaryKey(voList.get(0).getTxnPrimaryKey());
+			 accountWithdrawOrder.setTotalNum(1);
+			 withdrawDetail.setBatchNo(accountWithdrawOrder.getBatchNo());
+			 if(TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
+				 withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.PERSON.toString()); //用户提现
+			 }else{
+				 withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.CORP.toString());//企业提现
+			 }
+			 boolean eflag=accountWithdrawOrderService.save(accountWithdrawOrder);
+			 if(eflag) {
+				 eflag=accountWithdrawDetailService.save(withdrawDetail);
+			 }
+			 if(!eflag) {
+				 throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
+			 }
 		}else{
 			this.addToVoList(voList, intfaceTransLog, null, null, null, 0);
 		}

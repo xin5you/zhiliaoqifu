@@ -60,7 +60,7 @@
                              </li>
                              </sec:authorize>
                              
-                             <sec:authorize access="hasRole('ROLE_DIY_MANAGER')">
+                             <%--<sec:authorize access="hasRole('ROLE_DIY_MANAGER')">
                              <li class="dropdown">
                                  <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-cog icon-white"></i>商户自助平台<b class="caret"></b></a>
                                  <ul class="dropdown-menu">
@@ -75,7 +75,7 @@
                                      </sec:authorize>
                                  </ul>
                              </li>
-                             </sec:authorize>
+                             </sec:authorize>--%>
                              
                              <sec:authorize access="hasRole('ROLE_ACCOUNT_MANAGE')">
                              <li class="dropdown">
