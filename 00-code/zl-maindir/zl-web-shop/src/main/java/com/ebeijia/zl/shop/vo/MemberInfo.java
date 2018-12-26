@@ -41,5 +41,9 @@ public class MemberInfo implements Serializable {
      */
     private String userName;
 
+    /**
+     * OpenId
+     */
+    private String openId;
 
 }

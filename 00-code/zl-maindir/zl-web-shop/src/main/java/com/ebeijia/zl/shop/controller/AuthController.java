@@ -31,5 +31,4 @@ public class AuthController {
         return new JsonResult<>(authService.phoneLogin(phone,pwd));
     }
 
-
 }

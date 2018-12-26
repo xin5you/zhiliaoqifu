@@ -104,7 +104,7 @@ public class MemberService implements IMemberService {
         //检查是否存在地址
         TbEcomMemberAddress memberAddress = addressDao.getOne(new QueryWrapper<>(temp));
         if (memberAddress==null){
-            throw new AdviceMessenger(ResultState.NOT_FOUND,"请输入收货地址");
+            throw new AdviceMessenger(ResultState.OK,"请输入收货地址");
         }
         return new AddressInfo(memberAddress);
     }

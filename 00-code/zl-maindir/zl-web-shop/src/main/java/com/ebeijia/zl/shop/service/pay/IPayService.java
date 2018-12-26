@@ -20,5 +20,5 @@ public interface IPayService {
     @Cacheable(cacheNames = ShopConfig.ID + "LISTDEALS")
     PageInfo<AccountLogVO> listDeals(String session, String userId, String type, String start, String limit);
 
-    List<AccountVO> listAccountDetail(String userId, String session);
+    List<AccountVO> listAccountDetail(String openId, String session);
 }

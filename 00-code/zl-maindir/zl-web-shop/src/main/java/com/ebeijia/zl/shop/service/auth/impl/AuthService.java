@@ -60,10 +60,14 @@ public class AuthService implements IAuthService {
         member.setPersonId(phone);
         member = memberDao.getOne(new QueryWrapper<>(member));
         String memberId = null;
+
+        //TODO 获取openId
+        String openId = IdUtil.getNextId();
+
         if (member == null) {
             //注册流程
-            remoteRegister(phone);
-            memberId = localRegister(phone);
+            remoteRegister(phone,openId);
+            memberId = localRegister(phone,openId);
         }else {
             memberId = member.getMemberId();
         }
@@ -80,6 +84,7 @@ public class AuthService implements IAuthService {
         memberInfo.setMemberId(memberId);
         memberInfo.setMobilePhoneNo(phone);
         memberInfo.setUserName(userInf.getUserName());
+        memberInfo.setOpenId(member.getOpenId());
         //将获取到的token存入redis缓存;
 
         try {
@@ -91,13 +96,14 @@ public class AuthService implements IAuthService {
         return new Token(token);
     }
 
-    private String localRegister(String phone) {
+    private String localRegister(String phone,String openId) {
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         TbEcomMember member = new TbEcomMember();
         //TODO 测试用
         String memberId = IdUtil.getNextId();
         member.setPersonId(phone);
         member.setMemberId(memberId);
+        member.setOpenId(openId);
         member.setUserId(userInf.getUserId());
         member.setCreateTime(System.currentTimeMillis());
         boolean save = memberDao.save(member);
@@ -107,7 +113,7 @@ public class AuthService implements IAuthService {
         return memberId;
     }
 
-    private String remoteRegister(String phone) {
+    private String remoteRegister(String phone,String openId) {
         String userId = null;
 
         //构造VO对象
@@ -121,7 +127,7 @@ public class AuthService implements IAuthService {
         //这里不应该是前端传递的
 //        req.setCompanyId("100000000000000000000000");
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
-        req.setUserChnlId(IdUtil.getNextId());
+        req.setUserChnlId(openId);
 
         //执行注册
         BaseResult result = userInfFacade.registerUserInf(req);

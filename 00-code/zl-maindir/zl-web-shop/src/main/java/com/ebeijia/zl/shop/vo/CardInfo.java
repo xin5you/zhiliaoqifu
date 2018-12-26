@@ -19,4 +19,6 @@ public class CardInfo {
 
     private String ok;
 
+
+    public CardInfo(){}
 }

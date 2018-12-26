@@ -3,9 +3,13 @@ package com.ebeijia.zl.shop.controller;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
 import com.ebeijia.zl.shop.service.pay.ICardService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
+import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
+import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.*;
@@ -32,13 +36,24 @@ public class PayController {
     private ICardService cardService;
 
     @Autowired
+    ValidCodeService validCodeService;
+
+    @Autowired
     ShopUtils shopUtils;
 
     @TokenCheck(force = true)
     @ApiOperation("绑定银行卡")
     @RequestMapping(value = "/card/bind", method = RequestMethod.POST)
-    public void bindBankCard() {
-
+    public JsonResult<Integer> bindBankCard(CardBindInfo card,String validCode) {
+        MemberInfo memberInfo = shopUtils.getSession();
+        if (memberInfo == null) {
+            throw new AdviceMessenger(406, "参数异常");
+        }
+        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, memberInfo.getMobilePhoneNo(), validCode);
+        if (!valid) {
+            throw new AdviceMessenger(403, "验证码有误");
+        }
+        return new JsonResult<>(cardService.bindCard(card));
     }
 
 
@@ -53,8 +68,9 @@ public class PayController {
     @TokenCheck(force = true)
     @ApiOperation("列出银行卡")
     @RequestMapping(value = "/card/list", method = RequestMethod.GET)
-    public void listAccountCard(@RequestParam("token") String token, @RequestParam("session") String session) {
-
+    public JsonResult<TbEcomPayCard> listAccountCard() {
+        TbEcomPayCard cardInfo = cardService.listAccountCard();
+        return new JsonResult<>(cardInfo);
     }
 
     //支付接口
@@ -79,7 +95,7 @@ public class PayController {
     @RequestMapping(value = "/balance/list/", method = RequestMethod.GET)
     public JsonResult<List<AccountVO>> listAccountDetail(@RequestParam("session") String session) {
         MemberInfo memberInfo = shopUtils.getSession();
-        List<AccountVO> accountVOS = payService.listAccountDetail(memberInfo.getUserId(), session);
+        List<AccountVO> accountVOS = payService.listAccountDetail(memberInfo.getOpenId(), session);
         return new JsonResult<>(accountVOS);
     }
 
@@ -89,7 +105,7 @@ public class PayController {
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         MemberInfo memberInfo = shopUtils.getSession();
-        PageInfo<AccountLogVO> deals = payService.listDeals(session, memberInfo.getUserId(), type, start, limit);
+        PageInfo<AccountLogVO> deals = payService.listDeals(session, memberInfo.getOpenId(), type, start, limit);
         return new JsonResult<>(deals);
     }
 
@@ -99,7 +115,7 @@ public class PayController {
     @RequestMapping(value = "/deal/list/", method = RequestMethod.GET)
     public void listAccountDealsWithTimestamp(String type, @RequestParam(value = "session", required = false) String session, Long begin, Long end) {
         MemberInfo memberInfo = shopUtils.getSession();
-        payService.listDeals(session,memberInfo.getUserId(),type,null,null);
+        payService.listDeals(session,memberInfo.getOpenId(),type,null,null);
     }
 
     /**
