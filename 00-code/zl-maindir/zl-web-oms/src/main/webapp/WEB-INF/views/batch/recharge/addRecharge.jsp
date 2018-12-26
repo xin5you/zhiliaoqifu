@@ -89,11 +89,11 @@
 			</div>
          	</br >  
          	<div>
-         	<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTCOMMIT')">
+         	<%--<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTCOMMIT')">
          		<button class="btn btn-primary btn-addRecharge" type="button">添加</button>
          	</sec:authorize>
          	</div>
-         	<br/>
+         	<br/>--%>
          	<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 			<thead>
 				<tr>
@@ -102,7 +102,7 @@
 					<th>身份证号码</th>
 					<th>手机号</th>
 					<th>充值金额</th>
-					<th>操作</th>
+					<%--<th>操作</th>--%>
 				</tr>
 			</thead>
 			<tbody>
@@ -113,11 +113,11 @@
 						<td>${entity.userCardNo}</td>
 						<td>${entity.phoneNo}</td>
 						<td>${entity.amount}</td>
-						<td>
+						<%--<td>
 						<sec:authorize access="hasRole('ROLE_BATCH_RECHARGE_ORDERLISTDELETE')">
 						<a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 						</sec:authorize>
-						</td>
+						</td>--%>
 					</tr>
 				</c:forEach>
 			</tbody>

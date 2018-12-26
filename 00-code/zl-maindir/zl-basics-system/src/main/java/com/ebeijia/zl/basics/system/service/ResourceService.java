@@ -28,8 +28,20 @@ public interface ResourceService extends IService<Resource> {
      */
     public List<Resource> getUserResourceByUserId(String userId);
 
+    /**
+     * 查询树形结构
+     * @param entity
+     * @return
+     */
     List<Resource> getResourceList(Resource entity);
 
     PageInfo<Resource> getResourcePage(int startNum, int pageSize, Resource entity);
+
+    /**
+     * 高级查询
+     * @param resource
+     * @return
+     */
+    List<Resource> getResourceListByResource(Resource resource);
 
 }

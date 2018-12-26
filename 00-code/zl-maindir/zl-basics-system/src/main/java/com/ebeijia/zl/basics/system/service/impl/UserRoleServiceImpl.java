@@ -25,7 +25,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 	
 	@Override
 	public int deleteUserRoleByUserId(String userId) {
-		return userRoleMapper.deleteUserRoleByUserId(userId);
+		List<UserRole> userRoleList = userRoleMapper.getUserRoleByUserId(userId);
+		if (userRoleList != null && userRoleList.size() >= 1) {
+			return userRoleMapper.deleteUserRoleByUserId(userId);
+		}
+		return 1;
 	}
 
 	@Override

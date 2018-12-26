@@ -120,9 +120,9 @@
 					                    <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ADDCOMMIT')">
 		                                    	<a orderId="${entity.orderId }" title="提交" class="btn-mini btn-submit" href="#"><i class="icon-ok"></i></a>
 		                                </sec:authorize>
-		                                <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_INTOEDIT')">
+		                                <%--<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_INTOEDIT')">
 												<a orderId="${entity.orderId }" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-										</sec:authorize>
+										</sec:authorize>--%>
 										<sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_DELETE')">
 												<a orderId="${entity.orderId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 										</sec:authorize>

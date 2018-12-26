@@ -73,10 +73,12 @@ public class ExcelImportController {
 			logger.error(" ##  读取excel数据异常", e);
 		}
 		if (batchType.equals("openAccount")) {
+			jedisClusterUtils.del(OrderConstants.openAccountSession);
 			jedisClusterUtils.setex(OrderConstants.openAccountSession, JSON.toJSONString(orderList),
 					1800);
 		}
 		if (batchType.equals("recharge")) {
+			jedisClusterUtils.del(OrderConstants.rechargeSession);
 			jedisClusterUtils.setex(OrderConstants.rechargeSession, JSON.toJSONString(orderList),
 					1800);
 		}

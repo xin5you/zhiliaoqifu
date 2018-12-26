@@ -76,13 +76,13 @@
 		from tb_web_resource
 		where login_type=#{loginType}
 		<if test="resourceName != null and resourceName != '' ">
-			and resource_name like '%' || #{resourceName} || '%'
+			and resource_name like "%"#{resourceName}"%"
 		</if>
 		<if test="resourceType != null and resourceType != '' ">
 			and resource_type = #{resourceType}
 		</if>
 		<if test="url != null and url != '' ">
-			and url like '%' || #{url} || '%'
+			and url like "%"#{url}"%"
 		</if>
 		order by create_time asc
 	</select>

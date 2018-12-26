@@ -47,13 +47,13 @@
         where  m.data_stat = '0'
         	and m.login_type = #{loginType}
         <if test="userName !=null and userName !='' ">
-			and m.user_name like '%' || #{userName} || '%'
+			and m.user_name like "%"#{userName}"%"
 		</if>
 		<if test="loginName !=null and loginName !='' ">
-			and m.login_name like '%' || #{loginName} || '%'
+			and m.login_name like "%"#{loginName}"%"
 		</if>
 		<if test="phoneNo !=null and phoneNo !='' ">
-			and m.phone_no like '%' || #{phoneNo} || '%'
+			and m.phone_no like "%"#{phoneNo}"%"
 		</if>
 		order by m.update_time desc
 	</select>
@@ -68,31 +68,31 @@
         where  m.data_stat = '0'
         	and m.login_type = #{loginType}
         <if test="userName !=null and userName !='' ">
-			and m.user_name like '%' || #{userName} || '%'
+			and m.user_name like "%"#{userName}"%"
 		</if>
 		<if test="loginName !=null and loginName !='' ">
-			and m.login_name like '%' || #{loginName} || '%'
+			and m.login_name like "%"#{loginName}"%"
 		</if>
 		<if test="phoneNo !=null and phoneNo !='' ">
-			and m.phone_no like '%' || #{phoneNo} || '%'
+			and m.phone_no like "%"#{phoneNo}"%"
 		</if>
 		order by m.update_time desc
 	</select>
 
 	<select id="getUserCmsList" parameterType="User" resultType="User">
 		select
-		<include refid="UserColumns" />,
-		r.id as role_id, r.role_name as role_name
+			<include refid="UserColumns" />,
+			r.id as role_id, r.role_name as role_name
 		from tb_web_user m
 		left join tb_web_user_role ur on m.id = ur.user_id
 		left join tb_web_role r on ur.role_id = r.id
 		where  m.data_stat = '0'
-		and m.login_type = #{loginType}
+			and m.login_type = #{loginType}
 		<if test="userName !=null and userName !='' ">
-			and m.user_name like '%' || #{userName} || '%'
+			and m.user_name like "%"#{userName}"%"
 		</if>
 		<if test="loginName !=null and loginName !='' ">
-			and m.login_name like '%' || #{loginName} || '%'
+			and m.login_name like "%"#{loginName}"%"
 		</if>
 		<if test="id !=null and id !='' ">
 			and m.id = #{id}
@@ -104,17 +104,17 @@
 		 select 
 	  		<include refid="UserColumns" />
 		 from tb_web_user m 
-		 where m.phone_no=#{phoneNo} 
-		 	and m.data_stat='0'
-		 	and m.login_type=#{loginType}
+		 where m.phone_no = #{phoneNo}
+		 	and m.data_stat = '0'
+		 	and m.login_type = #{loginType}
 	</select>
 
 	<select id="getUserByOrganId" parameterType="User" resultType="User">
 		select
 			<include refid="UserColumns" />
 		from tb_web_user m
-		where m.organization_id=#{organizationId}
-		and m.data_stat='0'
-		and m.login_type=#{loginType}
+		where m.organization_id = #{organizationId}
+		and m.data_stat = '0'
+		and m.login_type = #{loginType}
 	</select>
 </mapper>
