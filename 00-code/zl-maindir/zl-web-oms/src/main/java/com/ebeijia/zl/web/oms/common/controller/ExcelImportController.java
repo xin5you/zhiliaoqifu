@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -42,13 +43,11 @@ public class ExcelImportController {
 
 	@RequestMapping(value = "/excelImp")
 	@ResponseBody
-	public ModelMap importEcxel(HttpServletRequest req, HttpServletResponse response) {
+	public ModelMap importEcxel(HttpServletRequest req, HttpServletResponse response, @RequestParam(value = "file", required = false)MultipartFile file) {
 		LinkedList<BatchOrderList> orderList = new LinkedList<BatchOrderList>();
 		Map<String, BatchOrderList> orderMap = new LinkedHashMap<String, BatchOrderList>();
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
-		MultipartFile multipartFile = multipartRequest.getFile("file");
 		ModelMap map = null;
-		if (multipartFile == null) {
+		if (file == null) {
 			map = new ModelMap();
 			map.addAttribute("status", Boolean.FALSE);
 			map.addAttribute("msg", "请选择上传文件！！！");
@@ -56,14 +55,13 @@ public class ExcelImportController {
 		}
 		String batchType = req.getParameter("batchType");
 		try {
-			CommonsMultipartFile cf = (CommonsMultipartFile) multipartFile;
-			if (cf != null && cf.getSize() > 0) {
-				DiskFileItem fi = (DiskFileItem) cf.getFileItem();
-				File file = fi.getStoreLocation();
-				XlsReadFile xls = new XlsReadFile();
-				InputStream inputStream = new FileInputStream(file);
-				map = xls.readOrderExcel(inputStream, multipartFile.getOriginalFilename(), orderMap, batchType);
-			}
+			CommonsMultipartFile cf = (CommonsMultipartFile) file;
+			DiskFileItem fileItem = (DiskFileItem) cf.getFileItem();
+			InputStream inputStream = fileItem.getInputStream();
+
+			XlsReadFile xls = new XlsReadFile();
+			map = xls.readOrderExcel(inputStream, file.getOriginalFilename(), orderMap, batchType);
+
 			if ((boolean) map.get("status") == false) {
 				return map;
 			}

@@ -124,13 +124,13 @@ public class XlsReadFile {
 					if (!"".equals(getValue(row.getCell(1))) && getValue(row.getCell(1)) != null) {
 						// if( getValue(row.getCell(1)).length()!=18 &&
 						// getValue(row.getCell(1)).length()!=15){
-						if (!"该身份证有效".equals(IDCardValidateUtils.IDCardValidate(getValue(row.getCell(1))).toUpperCase())) {
+						/*if (!"该身份证有效".equals(IDCardValidateUtils.IDCardValidate(getValue(row.getCell(1))).toUpperCase())) {
 							orderMap = null;
 							map.addAttribute("status", Boolean.FALSE);
 							map.addAttribute("msg", "第" + (rIndex + 1) + "行身份证错误！"
 									+ IDCardValidateUtils.IDCardValidate(getValue(row.getCell(1))).toUpperCase());
 							return map;
-						}
+						}*/
 						// }
 					}
 					order.setUserCardNo(getValue(row.getCell(1)));
@@ -158,30 +158,30 @@ public class XlsReadFile {
 					}
 					order.setPhoneNo(getValue(row.getCell(2)));
 					
-					if (row.getCell(3) == null) {
+					/*if (row.getCell(3) == null) {
 						orderMap = null;
 						map.addAttribute("status", Boolean.FALSE);
 						map.addAttribute("msg", "上传文件格式不正确!!!");
 						return map;
 					}
-					order.setCompanyId(getValue(row.getCell(3)));
+					order.setCompanyId(getValue(row.getCell(3)));*/
 					
-					if (batchType.equals("speRecharge")) {
-						if (row.getCell(4) == null) {
+					if (batchType.equals("recharge")) {
+						if (row.getCell(3) == null) {
 							orderMap = null;
 							map.addAttribute("status", Boolean.FALSE);
 							map.addAttribute("msg", "上传文件格式不正确!!!");
 							return map;
 						}
 						if (!Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$")
-								.matcher(getValue(row.getCell(4))).find()) {
+								.matcher(getValue(row.getCell(3))).find()) {
 							orderMap = null;
 							map.addAttribute("status", Boolean.FALSE);
 							map.addAttribute("msg", "第" + (rIndex + 1) + "行金额错误!!!");
 							return map;
 						}
 						// order.setAmount(""+NumberUtils.formatMoney(NumberUtils.RMBYuanToCent(getValue(row.getCell(3)))));
-						order.setAmount(new BigDecimal(NumberUtils.RMBYuanToCent(getValue(row.getCell(4)))));
+						order.setAmount(new BigDecimal(NumberUtils.RMBYuanToCent(getValue(row.getCell(3)))));
 					}
 					// orderList.addLast(order);
 					orderMap.put(order.getPhoneNo(), order);
