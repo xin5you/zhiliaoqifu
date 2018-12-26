@@ -1,6 +1,5 @@
 package com.ebeijia.zl.shop.service.pay.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
@@ -31,8 +30,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
@@ -113,9 +112,19 @@ public class PayService implements IPayService {
 
         //幂等性验证
         //获取订单状态
-        //写入新版本号
+        String dmsKey = IdUtil.getNextId();
+        TbEcomPlatfOrder platfOrder = new TbEcomPlatfOrder();
+        platfOrder.setLockVersion(order.getLockVersion()+1);
+        platfOrder.setPayTime(System.currentTimeMillis());
+        platfOrder.setPayStatus("1");
+        platfOrder.setUpdateUser("System");
+        platfOrder.setUpdateTime(System.currentTimeMillis());
         //处理订单
+        QueryWrapper<TbEcomPlatfOrder> tbEcomPlatfOrderQueryWrapper = new QueryWrapper<>(order);
+//        platfOrderDao.update();
+
         //持久化
+
     }
 
     @Override
@@ -141,30 +150,60 @@ public class PayService implements IPayService {
         req.setUserChnlId(openId);
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
         List<AccountVO> list = accountQueryFacade.getAccountInfList(req);
-        //TODO 判断session
         return list;
     }
 
-    public void executeConsumeToRetail() throws Exception{
-
+    /**
+     * 商城消费
+     * @param payInfo
+     * @param openId
+     * @param dmsRelatedKey
+     * @param desc
+     * @return
+     * @throws Exception
+     */
+    private BaseResult executeConsume(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) throws Exception{
         AccountConsumeReqVo req=new AccountConsumeReqVo();
-        req.setTransId(TransCode.MB10.getCode());
-        req.setTransChnl(TransChnl.CHANNEL0.toString());
-        req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-        req.setUserChnlId("0e04cf948e2af629a334c7c71fa3f8888");
-        req.setUserType(UserType.TYPE400.getCode());
-        List<AccountTxnVo> objects = new LinkedList<>();
-        AccountTxnVo accountTxnVo = new AccountTxnVo();
-        accountTxnVo.setTxnAmt(new BigDecimal(1000));
-        accountTxnVo.setUpLoadAmt(new BigDecimal(1000));
-        accountTxnVo.setTxnBId("A01");
-
-        req.setTransList(objects);
-
-
-        req.setDmsRelatedKey(IdUtil.getNextId());
-        req.setTransDesc("消费描述");
+        //交易与渠道
+        req.setTransId(TransCode.CW10.getCode());
+        req.setTransChnl(TransChnl.CHANNEL6.toString());
+        //消费端用户识别
+        req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+        req.setUserChnlId(openId);
+        req.setUserType(UserType.TYPE100.getCode());
+        req.setTransList(buildTxnVo(payInfo));
+        req.setDmsRelatedKey(dmsRelatedKey);
+        if (desc == null){
+            desc = "商城消费";
+        }
+        req.setTransDesc(desc);
         BaseResult result=accountTransactionFacade.executeConsume(req);
-        System.out.println(JSONArray.toJSONString(result));
+        return result;
+    }
+
+    /**
+     * 简化的支付信息拆解
+     * @param payInfo
+     * @return
+     */
+    private List<AccountTxnVo> buildTxnVo(PayInfo payInfo) {
+        ArrayList<AccountTxnVo> result = new ArrayList<>();
+        SpecAccountTypeEnum typeA = SpecAccountTypeEnum.findByBId(payInfo.getTypeA());
+        if (typeA!=null) {
+            AccountTxnVo accountTxnVo = new AccountTxnVo();
+            accountTxnVo.setTxnBId(typeA.getbId());
+            accountTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostA()));
+            accountTxnVo.setTxnAmt(BigDecimal.valueOf(payInfo.getCostA()));
+            result.add(accountTxnVo);
+        }
+        SpecAccountTypeEnum typeB = SpecAccountTypeEnum.findByBId(payInfo.getTypeB());
+        if (typeB!=null) {
+            AccountTxnVo accountTxnVo = new AccountTxnVo();
+            accountTxnVo.setTxnBId(typeB.getbId());
+            accountTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostB()));
+            accountTxnVo.setTxnAmt(BigDecimal.valueOf(payInfo.getCostB()));
+            result.add(accountTxnVo);
+        }
+        return result;
     }
 }
