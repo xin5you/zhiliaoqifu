@@ -97,7 +97,7 @@
                         <td>${entity.userCardNo}</td>
                         <td>${entity.phoneNo}</td>
                         <td>
-                            <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_USER_DELETE')">
+                            <sec:authorize access="hasRole('ROLE_BATCH_OPEN_ACCOUNT_ORDERLISTDELETE')">
                                 <a accountInfPuid="${entity.puId }" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
                             </sec:authorize>
                         </td>

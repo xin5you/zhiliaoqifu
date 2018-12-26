@@ -465,13 +465,8 @@ public class BatchRechargeController {
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			String puId = req.getParameter("puId");
-			LinkedList<BatchOrderList> orderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.rechargeSession);
-			
-			for (BatchOrderList o : orderList) {
-				if (o.getPuId().equals(puId)) {
-					orderList.remove(o);
-				}
-			}
+			List<BatchOrderList> orderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.rechargeSession);
+			orderList = orderList.stream().filter(o -> !o.getPuId().equals(puId)).collect(Collectors.toList());
 			jedisClusterUtils.setex(OrderConstants.rechargeSession, JSON.toJSON(orderList).toString(), 1800); // 设置有效时间30分钟
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);

@@ -457,14 +457,9 @@ public class BatchOpenAccountController {
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			String puId = req.getParameter("puId");
-			LinkedList<BatchOrderList> batchOrderList = batchOrderListService.getRedisBatchOrderList(OrderConstants.openAccountSession);
-			
-			for (BatchOrderList o : batchOrderList) {
-				if (o.getPuId().equals(puId)) {
-					batchOrderList.remove(o);
-				}
-			}
-			jedisClusterUtils.setex(OrderConstants.openAccountSession, JSON.toJSON(batchOrderList).toString(), 1800);
+			List<BatchOrderList> batchOrderLists = batchOrderListService.getRedisBatchOrderList(OrderConstants.openAccountSession);
+			batchOrderLists = batchOrderLists.stream().filter(o -> !o.getPuId().equals(puId)).collect(Collectors.toList());
+			jedisClusterUtils.setex(OrderConstants.openAccountSession, JSON.toJSON(batchOrderLists).toString(), 1800);
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "系统故障，请稍后再试");
