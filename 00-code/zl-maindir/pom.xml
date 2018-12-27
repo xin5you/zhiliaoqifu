@@ -83,7 +83,7 @@
         <module>zl-core-activemq</module>
        	<module>zl-core-wechat</module>
         <module>zl-core-dubbo</module>
-       	
+
         <module>zl-facade-mcht</module>
         <module>zl-facade-account</module>
         

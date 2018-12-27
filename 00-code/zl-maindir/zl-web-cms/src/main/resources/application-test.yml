@@ -44,6 +44,12 @@ spring:
        minEvictableIdleTimeMillis: 60000
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
+  mq:
+    brokerURL: failover:(tcp://192.168.2.110:51511,tcp://192.168.2.110:51512,tcp://192.168.2.110:51513)?randomize=false
+    username: admin
+    password: admin
+    pool:
+    max-connections: 50
 mybatis-plus:
   mapper-locations: classpath*:mapper/*/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
