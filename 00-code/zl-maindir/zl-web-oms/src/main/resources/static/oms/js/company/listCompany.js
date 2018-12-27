@@ -21,6 +21,7 @@ var listCompany = {
         $('.btn-platform-tansfer').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-company-tansfer').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-accbal').on('click', listCompany.listCompanyAccBal);
+        $('.btn-invoice').on('click', listCompany.intoAddCompanyTransfer);
     },
     searchReset:function(){
         location = Helper.getRootPath() + '/company/listCompany.do';

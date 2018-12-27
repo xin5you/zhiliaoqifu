@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import com.ebeijia.zl.common.utils.IdUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -105,7 +106,7 @@ public class XlsReadFile {
 				Row row = sheet.getRow(rIndex);
 				if (row != null) {
 					order = new BatchOrderList();
-					order.setPuId(UUID.randomUUID().toString().replace("-", ""));
+					order.setPuId(IdUtil.getNextId().replace("-", ""));
 					if (row.getCell(0) == null) {
 						orderMap = null;
 						map.addAttribute("status", Boolean.FALSE);
@@ -181,7 +182,7 @@ public class XlsReadFile {
 							return map;
 						}
 						// order.setAmount(""+NumberUtils.formatMoney(NumberUtils.RMBYuanToCent(getValue(row.getCell(3)))));
-						order.setAmount(new BigDecimal(NumberUtils.RMBYuanToCent(getValue(row.getCell(3)))));
+						order.setAmount(new BigDecimal(getValue(row.getCell(3))));
 					}
 					// orderList.addLast(order);
 					orderMap.put(order.getPhoneNo(), order);

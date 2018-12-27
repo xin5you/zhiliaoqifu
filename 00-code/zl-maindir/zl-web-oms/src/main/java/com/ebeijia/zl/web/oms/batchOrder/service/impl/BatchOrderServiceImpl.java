@@ -135,7 +135,6 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		
 		String [] billingTypes = req.getParameterValues("billingTypes[]");
 		String billingType = StringUtil.nullToString(req.getParameter("billingType"));
-
 		List<BatchOrderList> list = new ArrayList<>();
 		if (TransCode.CW80.getCode().equals(orderType)) {
 			for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {

@@ -41,6 +41,7 @@ var viewCompanyTransfer = {
     addCompanyInvoiceCommit : function () {
        var orderListId = $('#orderListId').val();
        var companyId = $('#companyId').val();
+        var orderId = $('#orderId').val();
         var invoiceInfo = $('#invoiceInfo').val();
         $('#msg').modal({
             backdrop : "static"
@@ -55,7 +56,7 @@ var viewCompanyTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId;
+                    location.href=Helper.getRootPath() + '/company/viewCompanyTransferDetail.do?operStatus=1&companyId='+companyId+"&orderId="+orderId;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
