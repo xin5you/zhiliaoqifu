@@ -81,6 +81,7 @@
 
         <module>zl-core-redis</module>
         <module>zl-core-activemq</module>
+        <module>zl-core-rocketmq</module>
         <module>zl-core-wechat</module>
         <module>zl-core-dubbo</module>
 

@@ -2,19 +2,19 @@ package com.ebeijia.zl.service.telrecharge.listener;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
 
 import com.ebeijia.zl.api.bm001.api.req.PayBillReq;
 import com.ebeijia.zl.api.bm001.api.service.BMOpenApiService;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
+import com.ebeijia.zl.core.rocketmq.enums.RocketTopicEnums;
+import com.maihaoche.starter.mq.annotation.MQConsumer;
+import com.maihaoche.starter.mq.base.AbstractMQPushConsumer;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 import com.qianmi.open.api.response.BmOrderCustomGetResponse;
 import com.qianmi.open.api.response.BmRechargeMobilePayBillResponse;
-import org.apache.activemq.command.ActiveMQTextMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +45,10 @@ import redis.clients.jedis.JedisCluster;
  * @since 2018-07-10 11:21:23
  *  
  */
-@Configuration
-public class BMRechargeMobileSessionAwareMessageListener implements MessageListener {
+@MQConsumer(topic = RocketTopicEnums.mobileRechangeTopic,tag=RocketTopicEnums.mobileRechangeTag, consumerGroup = "${spring.rocketmq.producer-group}")
+public class BMRechargeMobileSessionAwareMessageListener extends AbstractMQPushConsumer {
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger logger = LoggerFactory.getLogger(BMRechargeMobileSessionAwareMessageListener.class);
 	
 	@Autowired
 	private ProviderOrderInfService providerOrderInfService;
@@ -68,14 +68,16 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 	@Autowired
 	private JedisCluster  jedisCluster;
 
-	public synchronized void onMessage(Message message) {
-		ActiveMQTextMessage msg = (ActiveMQTextMessage) message;
-			
+	@Override
+	public boolean process(Object message, Map map) {
+
+		logger.info("待发送的消息message={}", message);
+		logger.info("待发送的消息map=>{}", JSONObject.toJSONString(map));
 			//获取分销商订单
 			RetailChnlOrderInf retailChnlOrderInf=null;
 			ProviderOrderInf telProviderOrderInf=null;
 			try {
-				 String channelOrderId = msg.getText();
+				 String channelOrderId = String.valueOf(message);
 				 logger.info("待发起分销商充值的订单号-->{}", channelOrderId);
 				 retailChnlOrderInf=retailChnlOrderInfService.getById(channelOrderId);
 				 if(retailChnlOrderInf !=null){
@@ -123,6 +125,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 						//修改供应商订单信息
 						providerOrderInfService.updateOrderRechargeState(telProviderOrderInf,orderDetailInfo,response.getErrorCode());
 
+						return true;
 					} catch (Exception e) {
 						logger.error("##请求话费充值异常-->{}", e);
 					}
@@ -140,10 +143,6 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 		 //迴調通知分銷商
 		retailChnlOrderInfService.doTelRechargeBackNotify(retailChnlInf,retailChnlOrderInf,telProviderOrderInf);
 
-		try {
-			message.acknowledge();
-		} catch (JMSException e) {
-			logger.error("##消息ack确认发生异常-->{}", e);
-		}
-		}
+		return false;
+	}
 }

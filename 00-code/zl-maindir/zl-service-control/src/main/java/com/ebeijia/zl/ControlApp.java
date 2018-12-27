@@ -5,6 +5,7 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.maihaoche.starter.mq.annotation.EnableMQConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +16,6 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jms.annotation.EnableJms;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
@@ -26,8 +26,8 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableCaching
 @EnableTransactionManagement
 @EnableAutoConfiguration
-@EnableJms
 @SpringBootApplication
+@EnableMQConfiguration
 public class ControlApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 

@@ -51,7 +51,7 @@
         
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-activemq</artifactId>
+            <artifactId>zl-core-rocketmq</artifactId>
             <version>${ebj.zl.version}</version>
         </dependency>
 		

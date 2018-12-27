@@ -235,12 +235,15 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		}
 		
 		/****** setCouponBal set begin ***/
-		//员工账户消费 减少
+		//员工账户消费 扣款
 		if(UserType.TYPE100.equals(account.getAccountType())){
-			
-			//非 员工通用福利账户 并且 非现金账户
-			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
-				
+
+			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
+
+            }else if(SpecAccountTypeEnum.A01.getCode().equals(account.getBId())) {
+
+            }else {
+                //非 员工通用福利账户 并且 非现金账户
 				//购买代金券
 				if(TransCode.CW20.getCode().equals(transLog.getTransId())){
 					//如果用户的代金券的额度小鱼用户的本次交易金额

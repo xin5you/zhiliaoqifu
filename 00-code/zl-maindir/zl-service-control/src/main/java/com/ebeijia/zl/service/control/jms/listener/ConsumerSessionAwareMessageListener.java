@@ -1,15 +1,11 @@
 package com.ebeijia.zl.service.control.jms.listener;
 
-import javax.jms.Message;
-import javax.jms.MessageListener;
 
-import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ebeijia.zl.core.activemq.vo.WechatCustomerParam;
 import com.ebeijia.zl.core.wechat.process.MpAccount;
 import com.ebeijia.zl.core.wechat.process.WxApiClient;
 import org.springframework.context.annotation.Configuration;
@@ -29,14 +25,14 @@ import org.springframework.context.annotation.Configuration;
 *-------------------------------------*
 * 2018年12月7日     zhuqi           v1.0.0
  */
-@Configuration
-public class ConsumerSessionAwareMessageListener implements MessageListener {
+/*@Configuration*/
+public class ConsumerSessionAwareMessageListener {
 	private Logger logger = LoggerFactory.getLogger(ConsumerSessionAwareMessageListener.class);
 
-	@Autowired
-	private WxApiClient wxApiClient;
+/*	@Autowired
+	private WxApiClient wxApiClient;*/
 	
-	public synchronized void onMessage(Message message) {
+	/*public synchronized void onMessage(Message message) {
 
 		try {
 			ActiveMQTextMessage msg = (ActiveMQTextMessage) message;
@@ -51,5 +47,5 @@ public class ConsumerSessionAwareMessageListener implements MessageListener {
 		} catch (Exception e) {
 			logger.error("## 发送的客服消息异常：{}", e);
 		}
-	}
+	}*/
 }

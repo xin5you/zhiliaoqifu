@@ -6,9 +6,9 @@ public class WithdrawDetailDataVO implements java.io.Serializable {
 
     private String serialNo;
 
-    private String receiverType="PERSON";
+    private String receiverType;
 
-    private String receiverCurrency="CNY";
+    private String receiverCurrency;
 
     private String receiverName;
 
