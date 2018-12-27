@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.cms.system.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,6 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.system.domain.Role;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.domain.UserRole;
+import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserRoleService;
+import com.ebeijia.zl.basics.system.service.UserService;
+import com.ebeijia.zl.common.utils.IdUtil;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +34,6 @@ import com.ebeijia.zl.common.utils.tools.MD5Utils;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.web.cms.base.exception.BizHandlerException;
-import com.ebeijia.zl.web.cms.system.domain.Role;
-import com.ebeijia.zl.web.cms.system.domain.User;
-import com.ebeijia.zl.web.cms.system.service.RoleService;
-import com.ebeijia.zl.web.cms.system.service.UserService;
 import com.github.pagehelper.PageInfo;
 
 @RestController
@@ -42,6 +47,9 @@ public class UserController {
 
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private UserRoleService userRoleService;
 
 	/**
 	 * 修改密码
@@ -60,12 +68,14 @@ public class UserController {
 		try {
 			HttpSession session = req.getSession();
 			User user = (User) session.getAttribute(Constants.SESSION_USER);
-			User currUser = userService.selectByPrimaryKey(user.getId().toString());
+			User currUser = userService.getById(user.getId());
 			if (currUser != null) {
 				if (!currUser.getPassword().equals(oldPasswrod))
 					return ResultsUtil.error(ExceptionEnum.userNews.UN08.getCode(), ExceptionEnum.userNews.UN08.getMsg());
 				currUser.setPassword(newPasswordPage);
-				userService.updateByPrimaryKeySelective(currUser);
+				if (!userService.updateById(currUser)) {
+					return ResultsUtil.error(ExceptionEnum.userNews.UN09.getCode(), ExceptionEnum.userNews.UN09.getMsg());
+				}
 			}
 		} catch (BizHandlerException e) {
 			logger.error("## 密码修改失败", e.getMessage());
@@ -132,7 +142,7 @@ public class UserController {
 		String userId = req.getParameter("userId");
 		User user = new User();
 		try {
-			user = userService.selectByPrimaryKey(userId);
+			user = userService.getById(userId);
 		} catch (Exception e) {
 			logger.error("## 查询主键为[" + userId + "]的用户信息出错", e);
 		}
@@ -151,17 +161,19 @@ public class UserController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			u.setId(UUID.randomUUID().toString());
+			u.setId(IdUtil.getNextId());
 			u.setPassword(MD5Utils.MD5(u.getPassword()));
 			u.setIsdefault("1");
 			u.setLoginType(LoginType.LoginType2.getCode());
-			u.setCreateUser(user.getId().toString());
-			u.setUpdateUser(user.getId().toString());
+			u.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			u.setCreateUser(user.getId());
+			u.setUpdateUser(user.getId());
 			u.setCreateTime(System.currentTimeMillis());
 			u.setUpdateTime(System.currentTimeMillis());
+			u.setLockVersion(0);
 			User us = userService.getUserByName(null, u.getLoginName(), LoginType.LoginType2.getCode());
 			if(us == null){
-				if (userService.insert(u) > 0)
+				if (userService.save(u))
 					return ResultsUtil.success();
 				else
 					return ResultsUtil.error(ExceptionEnum.userNews.UN01.getCode(), ExceptionEnum.userNews.UN01.getMsg());
@@ -189,12 +201,12 @@ public class UserController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			User u = userService.selectByPrimaryKey(users.getId().toString());
+			User u = userService.getById(users.getId());
 			if(u.getLoginName().equals(users.getLoginName())){
 				u.setLoginName(users.getLoginName());
 				u.setUserName(users.getUserName());
 				u.setPassword(MD5Utils.MD5(users.getPassword()));
-				u.setUpdateUser(user.getId().toString());
+				u.setUpdateUser(user.getId());
 				u.setUpdateTime(System.currentTimeMillis());
 				u.setLoginType(LoginType.LoginType2.getCode());
 			}else{
@@ -210,7 +222,8 @@ public class UserController {
 					return ResultsUtil.error(ExceptionEnum.userNews.UN05.getCode(), ExceptionEnum.userNews.UN05.getMsg());
 				}
 			}
-			if (userService.updateByPrimaryKey(u) > 0)
+			u.setLockVersion(u.getLockVersion() + 1);
+			if (userService.updateById(u))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.userNews.UN02.getCode(), ExceptionEnum.userNews.UN02.getMsg());
@@ -234,7 +247,7 @@ public class UserController {
 	public BaseResult<Object> deleteUser(HttpServletRequest req) {
 		String userId = req.getParameter("userId");
 		try {
-			if (userService.deleteUser(userId) > 0)
+			if (userService.removeById(userId))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.userNews.UN03.getCode(), ExceptionEnum.userNews.UN03.getMsg());
@@ -261,7 +274,7 @@ public class UserController {
 			Role role = new Role();
 			role.setLoginType(LoginType.LoginType2.getCode());
 			List<Role> RoleList = roleService.getUserRoleByUserId(userId); // 当前用户的角色
-			List<Role> allRoleList = roleService.getList(role);// 所有的角色列表
+			List<Role> allRoleList = roleService.getRoleList(role);// 所有的角色列表
 			for (Role r : allRoleList) {
 				for (Role s : RoleList) {
 					if (r.getId().equals(s.getId()))
@@ -282,16 +295,24 @@ public class UserController {
 		int count = 0;
 		try {
 			String userId = req.getParameter("userId");
-			userService.deleteUserRoleByUserId(userId);
+			if (userRoleService.deleteUserRoleByUserId(userId) < 1) {
+				return ResultsUtil.error(ExceptionEnum.userNews.UN06.getCode(), ExceptionEnum.userNews.UN06.getMsg());
+			}
 			String ids = req.getParameter("ids");
+			List<UserRole> urList = new ArrayList<>();
 			if (ids == null || ids == "") {
 				return ResultsUtil.error(ExceptionEnum.userNews.UN10.getCode(), ExceptionEnum.userNews.UN10.getMsg());
 			} else {
 				String[] roleId = ids.split(",");
-				for (int i = 0; i < roleId.length; i++)
-					count = userService.addUserRole(userId, roleId[i]);
+				for (int i = 0; i < roleId.length; i++) {
+					UserRole ur = new UserRole();
+					ur.setId(IdUtil.getNextId());
+					ur.setUserId(userId);
+					ur.setRoleId(roleId[i]);
+					urList.add(ur);
+				}
 			}
-			if (count > 0)
+			if (userRoleService.saveBatch(urList))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.userNews.UN06.getCode(), ExceptionEnum.userNews.UN06.getMsg());

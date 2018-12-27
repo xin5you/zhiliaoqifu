@@ -641,7 +641,6 @@ public class RetailChnlInfController {
 			retailChnl.setLockVersion(0);
 		}
 
-		retailChnl.setChannelId(channelId);
 		retailChnl.setChannelName(channelName);
 		retailChnl.setChannelCode(channelCode);
 		retailChnl.setChannelKey(channelKey);

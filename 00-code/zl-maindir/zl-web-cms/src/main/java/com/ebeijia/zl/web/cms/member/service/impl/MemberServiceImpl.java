@@ -21,7 +21,7 @@ public class MemberServiceImpl implements MemberService {
 
 	public PageInfo<TbEcomMember> getMemberListPage(int startNum, int pageSize, TbEcomMember entity) {
 		PageHelper.startPage(startNum, pageSize);
-		Wrapper<TbEcomMember> wrapper=new QueryWrapper<>();
+		Wrapper<TbEcomMember> wrapper = new QueryWrapper<>();
 		List<TbEcomMember> memberInfList = memberInfMapper.selectList(wrapper);
 		PageInfo<TbEcomMember> userPage = new PageInfo<TbEcomMember>(memberInfList);
 		return userPage;

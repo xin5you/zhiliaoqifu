@@ -10,6 +10,7 @@ import com.ebeijia.zl.common.utils.tools.SnowFlake;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
+import com.ebeijia.zl.facade.account.enums.WithDrawStatusEnum;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
 import org.slf4j.Logger;
@@ -239,12 +240,17 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 			 AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
 
+
 			 AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
 			 accountWithdrawOrder.setBatchNo(String.valueOf(SnowFlake.getInstance().nextId()));
 			 accountWithdrawOrder.setTotalAmount(withdrawDetail.getTransAmount());
 			 accountWithdrawOrder.setTxnPrimaryKey(voList.get(0).getTxnPrimaryKey());
 			 accountWithdrawOrder.setTotalNum(1);
+			 accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status00.getCode()); //新建状态
+
 			 withdrawDetail.setBatchNo(accountWithdrawOrder.getBatchNo());
+			 withdrawDetail.setReceiverCurrency("CNY"); //人民币标识
+
 			 if(TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
 				 withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.PERSON.toString()); //用户提现
 			 }else{

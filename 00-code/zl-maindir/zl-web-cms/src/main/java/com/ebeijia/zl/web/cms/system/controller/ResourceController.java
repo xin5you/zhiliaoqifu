@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.system.domain.Resource;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +25,6 @@ import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.web.cms.system.domain.Resource;
-import com.ebeijia.zl.web.cms.system.domain.User;
-import com.ebeijia.zl.web.cms.system.service.ResourceService;
 import com.github.pagehelper.PageInfo;
 
 @RestController
@@ -47,6 +48,7 @@ public class ResourceController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
+			resource.setLoginType(LoginType.LoginType2.getCode());
 			PageInfo<Resource> pageList = resourceService.getResourcePage(startNum, pageSize, resource);
 			mv.addObject("resource", resource);
 			mv.addObject("pageInfo", pageList);
@@ -69,6 +71,7 @@ public class ResourceController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		try {
+			resource.setLoginType(LoginType.LoginType2.getCode());
 			PageInfo<Resource> pageList = resourceService.getResourcePage(startNum, pageSize, resource);
 			mv.addObject("resource", resource);
 			mv.addObject("pageInfo", pageList);
@@ -88,7 +91,7 @@ public class ResourceController {
 	public Resource getResource(HttpServletRequest req, Resource resource) {
 		Resource si = new Resource();
 		try {
-			si = resourceService.selectByPrimaryKey(resource.getId());
+			si = resourceService.getById(resource.getId());
 		} catch (Exception e) {
 			logger.error("## 查询主键为[" + resource.getId() + "]的资源信息出错", e);
 		}
@@ -109,16 +112,17 @@ public class ResourceController {
 			User user = (User) session.getAttribute(Constants.SESSION_USER);
 			String u = resource.getUrl().substring(resource.getUrl().indexOf("/") + 1);
 			String r = u.replaceAll("/", "_");
-			resource.setId(UUID.randomUUID().toString());
+			resource.setId(IdUtil.getNextId());
 			resource.setResourceKey(r.toUpperCase());
 			resource.setResourceType("0");
 			resource.setDataStat(Constants.PrmStat.PS0.getCode());
 			resource.setLoginType(LoginType.LoginType2.getCode());
-			resource.setCreateUser(user.getId().toString());
-			resource.setUpdateUser(user.getId().toString());
+			resource.setCreateUser(user.getId());
+			resource.setUpdateUser(user.getId());
 			resource.setCreateTime(System.currentTimeMillis());
 			resource.setUpdateTime(System.currentTimeMillis());
-			if (resourceService.insert(resource) > 0)
+			resource.setLockVersion(0);
+			if (resourceService.save(resource))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.resourceNews.RN01.getCode(), ExceptionEnum.resourceNews.RN01.getMsg());
@@ -139,7 +143,7 @@ public class ResourceController {
 		try {
 			HttpSession session = req.getSession();
 			User user = (User) session.getAttribute(Constants.SESSION_USER);
-			Resource resource = resourceService.selectByPrimaryKey(res.getId());
+			Resource resource = resourceService.getById(res.getId());
 			resource.setResourceName(res.getResourceName());
 			resource.setDescription(res.getDescription());
 			resource.setUrl(res.getUrl());
@@ -148,7 +152,8 @@ public class ResourceController {
 			resource.setResourceKey(r.toUpperCase());
 			resource.setUpdateUser(user.getId().toString());
 			resource.setUpdateTime(System.currentTimeMillis());
-			if (resourceService.updateByPrimaryKey(resource) > 0)
+			resource.setLockVersion(resource.getLockVersion() + 1);
+			if (resourceService.updateById(resource))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.resourceNews.RN02.getCode(), ExceptionEnum.resourceNews.RN02.getMsg());
@@ -167,7 +172,7 @@ public class ResourceController {
 	@PostMapping(value = "/deleteResource")
 	public BaseResult<Object> deleteResource(HttpServletRequest req, Resource resource) {
 		try {
-			if (resourceService.deleteByPrimaryKey(resource.getId()) > 0)
+			if (resourceService.removeById(resource.getId()))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.resourceNews.RN03.getCode(), ExceptionEnum.resourceNews.RN03.getMsg());

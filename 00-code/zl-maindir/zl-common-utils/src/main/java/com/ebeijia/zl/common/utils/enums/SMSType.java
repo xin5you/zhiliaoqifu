@@ -6,7 +6,8 @@ public enum SMSType {
 	SMSType1001("1001","密码重置"),
 	SMSType1002("1002","充值提醒"),
 	SMSType1003("1003","卡券转让"),
-	SMSType1004("1004","银卡添加");
+	SMSType1004("1004","银卡添加"),
+	SMSType1005("1005","安全验证");
 
 	private String code;
 	private String name;

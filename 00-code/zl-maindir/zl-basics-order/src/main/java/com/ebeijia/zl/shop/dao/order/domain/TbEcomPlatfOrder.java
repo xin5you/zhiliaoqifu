@@ -136,6 +136,11 @@ public class TbEcomPlatfOrder extends Model<TbEcomPlatfOrder> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
 
+    @TableField(exist = false)
+    private String mobilePhoneNo;
+
+    @TableField(exist = false)
+    private String personalName;
 
     @Override
     protected Serializable pkVal() { 

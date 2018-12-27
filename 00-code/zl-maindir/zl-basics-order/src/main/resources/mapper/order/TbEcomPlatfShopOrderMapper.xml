@@ -2,4 +2,101 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.order.mapper.TbEcomPlatfShopOrderMapper">
 
+    <sql id="platfShopOrderColumns">
+      pso.s_order_id,
+      pso.order_id,
+      pso.member_id,
+      pso.ecom_code,
+      pso.dms_related_key,
+      pso.sub_order_status,
+      pso.order_remark,
+      pso.pay_amt,
+      pso.shipping_freight_price,
+      pso.chnl_order_price,
+      pso.chnl_order_postage,
+      pso.data_stat,
+      pso.remarks,
+      pso.create_user,
+      pso.update_user,
+      pso.create_time,
+      pso.update_time,
+      pso.lock_version
+    </sql>
+
+    <sql id="tableName">
+      tb_ecom_platf_shop_order pso
+    </sql>
+
+    <select id="getPlatfShopOrderListByPlatfOrder" parameterType="TbEcomPlatfShopOrder" resultType="TbEcomPlatfShopOrder">
+        select
+          <include refid="platfShopOrderColumns" />
+        from
+          <include refid="tableName" />
+        where pso.data_stat = '0'
+        <if test="sOrderId !=null and sOrderId !='' ">
+            and pso.s_order_id = #{sOrderId}
+        </if>
+        <if test="orderId !=null and orderId !='' ">
+            and pso.order_id = #{orderId}
+        </if>
+        <if test="dmsRelatedKey !=null and dmsRelatedKey !='' ">
+            and pso.dms_related_key = #{dmsRelatedKey}
+        </if>
+        <if test="memberId !=null and memberId !='' ">
+            and pso.member_id = #{memberId}
+        </if>
+        <if test="subOrderStatus !=null and subOrderStatus !='' ">
+            and pso.sub_order_status = #{subOrderStatus}
+        </if>
+        <if test="orderRemark !=null and orderRemark !='' ">
+            and pso.order_remark = #{orderRemark}
+        </if>
+        <if test="ecomCode !=null and ecomCode !='' ">
+            and pso.ecom_code = #{ecomCode}
+        </if>
+        order by pso.update_time desc
+    </select>
+
+    <select id = "getPlatfShopOrderList" parameterType="TbEcomPlatfShopOrder" resultType="TbEcomPlatfShopOrder">
+        select
+          <include refid="platfShopOrderColumns" />,
+          po.pay_status as payStatus,
+          po.pay_time as payTime,
+          p.mobile_phone_no as mobilePhoneNo,
+          p.personal_name as personalName
+        from tb_ecom_platf_shop_order pso
+            left join tb_ecom_platf_order po on pso.order_id = po.order_id
+            left join tb_ecom_member m on po.member_id = m.member_id
+            left join tb_person_inf p on  m.person_id = p.personal_id
+        where 1=1
+        <if test="sOrderId !=null and sOrderId !='' ">
+            and pso.s_order_id = #{sOrderId}
+        </if>
+        <if test="orderId !=null and orderId !='' ">
+            and pso.order_id = #{orderId}
+        </if>
+        <if test="dmsRelatedKey !=null and dmsRelatedKey !='' ">
+            and pso.dms_related_key = #{dmsRelatedKey}
+        </if>
+        <if test="memberId !=null and memberId !='' ">
+            and pso.member_id = #{memberId}
+        </if>
+        <if test="subOrderStatus !=null and subOrderStatus !='' ">
+            and pso.sub_order_status = #{subOrderStatus}
+        </if>
+        <if test="ecomCode !=null and ecomCode !='' ">
+            and pso.ecom_code = #{ecomCode}
+        </if>
+        <if test="payStatus !=null and payStatus !='' ">
+            and po.pay_status = #{payStatus}
+        </if>
+        <if test="mobilePhoneNo !=null and mobilePhoneNo !='' ">
+            and p.mobile_phone_no = #{mobilePhoneNo}
+        </if>
+        <if test="personalName !=null and personalName !='' ">
+            and p.personal_name = #{personalName}
+        </if>
+        order by pso.update_time desc
+    </select>
+
 </mapper>

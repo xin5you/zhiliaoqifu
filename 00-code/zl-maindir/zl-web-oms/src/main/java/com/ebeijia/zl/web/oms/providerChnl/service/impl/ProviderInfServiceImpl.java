@@ -392,13 +392,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		BaseResult result = new BaseResult();
 		try {
+			logger.info("供应商充值，远程调用充值接口请求参数--->{}", JSONArray.toJSONString(reqVo));
 			result = accountTransactionFacade.executeRecharge(reqVo);
-			logger.info("远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
+			logger.info("供应商充值，远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
 		} catch (Exception e) {
 			logger.error("## 远程调用充值接口异常", e);
 		}
 		try {
 			if (StringUtil.isNullOrEmpty(result.getCode())) {
+				logger.info("供应商充值，远程调用查询接口请求参数--->dmsRelatedKey{},--->transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
 				result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
 			}
 		} catch (Exception e) {

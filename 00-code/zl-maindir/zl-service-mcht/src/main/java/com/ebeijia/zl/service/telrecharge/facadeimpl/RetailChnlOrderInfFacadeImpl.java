@@ -2,7 +2,7 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.core.activemq.service.MQProducerService;
+import com.ebeijia.zl.core.rocketmq.service.MQProducerService;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import org.slf4j.Logger;

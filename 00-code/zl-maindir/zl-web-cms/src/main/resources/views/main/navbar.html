@@ -23,7 +23,20 @@
 							<li><a th:href="@{/member/memberInf/getMemberInfList}" th:text="会员信息" /></li>
 						</ul>
 					</li> -->
-					
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-list icon-white"></i>订单管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/platforder/platforder/getPlatfOrderList}" th:text="电商一级订单管理" /></li>
+							<li><a th:href="@{/platforder/platforder/getPlatfShopOrderList}" th:text="电商二级订单管理" /></li>
+							<!--<li><a th:href="@{/platforder/orderShip/getOrderShipList}" th:text="订单收货地址" /></li>
+							<li><a th:href="@{/platforder/orderProductItem/getOrderProductItemList}" th:text="订单货品明细" /></li>
+							<li><a th:href="@{/platforder/expressPlatf/getExpressPlatfList}" th:text="订单物流管理" /></li>
+							<li><a th:href="@{/ecom/refund/listRefundsOrder}" th:text="订单退款管理" /></li>
+							<li><a th:href="@{/specialAccountOrder/listSpecialAccountOrder}" th:text="组合支付订单管理" /></li>-->
+						</ul>
+					</li>
 					<li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="icon-wrench icon-white"></i>系统管理<b class="caret"></b>

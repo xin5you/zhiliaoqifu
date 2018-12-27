@@ -11,6 +11,7 @@ var addCompanyTransfer = {
         $('.btn-company-ok').on('click', addCompanyTransfer.intoAddCompanyTransfer);
         $('.btn-remit-submit').on('click', addCompanyTransfer.addCompanyTransferCommit);
         $('.btn-view').on('click', addCompanyTransfer.viewCompanyTransferDetail);
+        $('.btn-invoice-order').on('click', addCompanyTransfer.viewCompanyTransferDetail);
 	},
     intoAddCompanyPlatformTransfer: function(){
         var orderId = $(this).attr("orderId");

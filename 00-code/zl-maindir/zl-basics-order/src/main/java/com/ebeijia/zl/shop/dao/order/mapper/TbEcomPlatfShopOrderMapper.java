@@ -4,6 +4,8 @@ package com.ebeijia.zl.shop.dao.order.mapper;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
 
+	import java.util.List;
+
 /**
  *
  * 渠道子订单表 Mapper 接口
@@ -13,5 +15,9 @@ package com.ebeijia.zl.shop.dao.order.mapper;
  */
 @Mapper
 public interface TbEcomPlatfShopOrderMapper extends BaseMapper<TbEcomPlatfShopOrder> {
-	
+
+	List<TbEcomPlatfShopOrder> getPlatfShopOrderListByPlatfOrder(TbEcomPlatfShopOrder platfShopOrder);
+
+	List<TbEcomPlatfShopOrder> getPlatfShopOrderList(TbEcomPlatfShopOrder platfShopOrder);
+
 }

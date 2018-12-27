@@ -73,15 +73,22 @@
                                             <a href="${entity.evidenceUrl}">${entity.evidenceUrl}</a>
                                         </c:if>
                                      </td>
-				                    <td>
-                                        <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_DETAIL')">
-                                            <a orderId="${entity.orderId}" title="订单明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-                                        </sec:authorize>
-                                        <c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '0' && company.isPlatform == '1'}">
-                                            <sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT_INTO')">
-                                                <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-platform-ok" href="#"><i class="icon-pencil"></i></a>
-                                            </sec:authorize>
-                                        </c:if>
+                                     <td>
+                                         <c:if test="${company.isPlatform == '1'}">
+                                             <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_DETAIL')">
+                                                 <a orderId="${entity.orderId}" title="订单明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+                                             </sec:authorize>
+                                         </c:if>
+                                         <c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '0' && company.isPlatform == '1'}">
+                                             <sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT_INTO')">
+                                                 <a orderId="${entity.orderId}" title="打款至企业" class="btn-mini btn-platform-ok" href="#"><i class="icon-pencil"></i></a>
+                                             </sec:authorize>
+                                         </c:if>
+                                         <c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '1' && company.isPlatform == '0'}">
+                                         <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_DETAIL')">
+                                             <a orderId="${entity.orderId}" title="开票订单" class="btn-mini btn-invoice-order" href="#"><i class="icon-search"></i></a>
+                                         </sec:authorize>
+                                         </c:if>
                                         <%--<c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '0' && company.isPlatform == '1'}">
                                             <sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT_INTO')">
                                                 <a orderId="${entity.orderId}" title="平台收款" class="btn-mini btn-platform-ok" href="#"><i class="icon-ok"></i></a>

@@ -1,11 +1,15 @@
 package com.ebeijia.zl.web.cms.system.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.system.domain.Resource;
+import com.ebeijia.zl.basics.system.domain.Role;
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +25,8 @@ import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.web.cms.system.domain.Resource;
-import com.ebeijia.zl.web.cms.system.domain.Role;
-import com.ebeijia.zl.web.cms.system.domain.User;
-import com.ebeijia.zl.web.cms.system.service.ResourceService;
-import com.ebeijia.zl.web.cms.system.service.RoleService;
-import com.ebeijia.zl.web.cms.system.service.UserService;
+
+import java.util.List;
 
 @RestController
 public class LoginController {

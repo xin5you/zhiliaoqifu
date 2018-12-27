@@ -19,26 +19,10 @@
 	</parent>
 
 	<dependencies>
-	
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.1.1</version>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.5-FINAL</version>
-		</dependency>
-
 		<!-- 确保内嵌的servlet容器不能干扰war包将部署的servlet容器 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -46,39 +30,35 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>1.0.27</version>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+		<!-- POI -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.14</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.pagehelper</groupId>
-			<artifactId>pagehelper-spring-boot-starter</artifactId>
-			<version>1.1.1</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.5-FINAL</version>
 		</dependency>
-		<dependency>
-			<groupId>com.github.jsqlparser</groupId>
-			<artifactId>jsqlparser</artifactId>
-			<version>0.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>  
-	        <groupId>org.springframework.boot</groupId>  
-	        <artifactId>spring-boot-starter-test</artifactId>  
-	        <scope>test</scope>  
-	    </dependency>
-	    
 		<!-- FTP -->
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -97,40 +77,48 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
-    		<groupId>net.sf.json-lib</groupId>
-    		<artifactId>json-lib</artifactId>
-    		<version>2.4</version>
-    		<classifier>jdk15</classifier>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
 		</dependency>
-		
-		<!-- 引入所需jar -->
 		<dependency>
-			<groupId>com.ebeijia</groupId>
-			<artifactId>zl-common-core</artifactId>
-			<version>${ebj.zl.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- 引入所需jar -->
 		<dependency>
 			<groupId>com.ebeijia</groupId>
 			<artifactId>zl-common-utils</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.ebeijia</groupId>
-			<artifactId>zl-base-core</artifactId>
+			<artifactId>zl-basics-system</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
-
-		
+		<dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-basics-order</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-basics-goods</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.ebeijia</groupId>
 			<artifactId>zl-basics-member</artifactId>
-			<version>1.0.0.RELEASE</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>zl-common</artifactId>
-					<groupId>com.ebeijia</groupId>
-				</exclusion>
-			</exclusions>
+			<version>${ebj.zl.version}</version>
 		</dependency>
 		
 	</dependencies>

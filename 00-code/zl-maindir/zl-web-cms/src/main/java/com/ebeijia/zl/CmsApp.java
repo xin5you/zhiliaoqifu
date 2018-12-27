@@ -28,11 +28,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 @SpringBootApplication
 public class CmsApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
-	@Autowired
-	private MyBatisProps myBatis;
-	@Autowired
-	private Environment env;
-	
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(CmsApp.class);
 	}
@@ -41,47 +36,6 @@ public class CmsApp extends SpringBootServletInitializer implements WebApplicati
 		SpringApplication.run(CmsApp.class, args);
 	}
 
-	// 开发环境DataSource配置 使用druid数据源
-	@Bean("dataSource")
-	@ConfigurationProperties(prefix = "spring.datasource")
-	public DruidDataSource dataSource() {
-		return new DruidDataSource();
-	}
-
-
-	// 提供SqlSeesion
-	@Bean
-	@ConditionalOnMissingBean
-	public SqlSessionFactory sqlSessionFactoryBean() throws Exception {
-		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-		
-		sqlSessionFactoryBean.setDataSource(dataSource());
-		// 分页插件
-		/*PageHelper pageHelper = new PageHelper();
-		Properties props = new Properties();
-		props.setProperty("dialect", "oracle");
-		props.setProperty("reasonable", "true");
-		props.setProperty("supportMethodsArguments", "true");
-		props.setProperty("returnPageInfo", "check");
-		props.setProperty("params", "count=countSql");
-		pageHelper.setProperties(props);
-		// 添加插件
-		sqlSessionFactoryBean.setPlugins(new Interceptor[] { pageHelper });*/
-
-		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		// sqlSessionFactoryBean.setTypeAliasesPackage(myBatis.getTypeAliasesPackage());
-		sqlSessionFactoryBean.setMapperLocations(resolver.getResources(myBatis.getMapperLocations()));
-		sqlSessionFactoryBean.setConfigLocation(resolver.getResource(myBatis.getConfigLocations()));
-		return sqlSessionFactoryBean.getObject();
-	}
-
-	// 事务管理
-	@Bean
-	@ConditionalOnMissingBean
-	public PlatformTransactionManager transactionManager() {
-			return new DataSourceTransactionManager(dataSource());
-	}
-	
 	// 显示声明CommonsMultipartResolver为mutipartResolver
 	@Bean(name = "multipartResolver")
 	public MultipartResolver multipartResolver() {

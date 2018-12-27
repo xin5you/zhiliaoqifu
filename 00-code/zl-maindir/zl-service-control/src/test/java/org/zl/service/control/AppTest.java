@@ -7,7 +7,7 @@ import java.util.Set;
 import com.ebeijia.zl.ControlApp;
 import com.ebeijia.zl.common.utils.domain.SmsVo;
 import com.ebeijia.zl.common.utils.enums.*;
-import com.ebeijia.zl.core.activemq.service.MQProducerService;
+import com.ebeijia.zl.core.rocketmq.service.MQProducerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

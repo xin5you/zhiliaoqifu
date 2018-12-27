@@ -1,17 +1,13 @@
 package com.ebeijia.zl.service.control.jms.listener;
 
-import javax.jms.Message;
-import javax.jms.MessageListener;
 
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
-import org.apache.activemq.command.ActiveMQTextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ebeijia.zl.core.activemq.vo.WechatTemplateParam;
 import com.ebeijia.zl.core.wechat.process.MpAccount;
 import com.ebeijia.zl.core.wechat.process.WxApiClient;
 import com.ebeijia.zl.core.wechat.vo.TemplateMessage;
@@ -26,11 +22,11 @@ import redis.clients.jedis.JedisCluster;
  * @since 2017-01-17 11:21:23
  *  
  */
-@Configuration
-public class TemplateSessionAwareMessageListener implements MessageListener {
+/*@Configuration*/
+public class TemplateSessionAwareMessageListener {
 	private Logger logger = LoggerFactory.getLogger(TemplateSessionAwareMessageListener.class);
 
-	@Autowired
+	/*@Autowired
 	private JedisCluster jedisCluster;
 	
 	@Autowired
@@ -57,5 +53,5 @@ public class TemplateSessionAwareMessageListener implements MessageListener {
 		} catch (Exception e) {
 			logger.error("## 待发送的模板消息异常：", e);
 		}
-	}
+	}*/
 }
