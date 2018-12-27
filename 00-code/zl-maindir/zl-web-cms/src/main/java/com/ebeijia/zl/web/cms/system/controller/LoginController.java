@@ -66,7 +66,7 @@ public class LoginController {
 				return ResultsUtil.error(ExceptionEnum.loginNews.LN02.getCode(), ExceptionEnum.loginNews.LN02.getMsg());
 
 			User currUser = userService.getUserByName(null, userName, LoginType.LoginType2.getCode());
-			if (currUser == null || 1 > 2)
+			if (currUser == null)
 				return ResultsUtil.error(ExceptionEnum.loginNews.LN03.getCode(), ExceptionEnum.loginNews.LN03.getMsg());
 
 			String sysMd5Password = MD5Utils.MD5(currUser.getPassword() + authCode);

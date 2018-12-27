@@ -51,7 +51,7 @@ spring:
     pool:
       max-connections: 50
 mybatis-plus:
-  mapper-locations: classpath*:mapper/*/*Mapper.xml
+  mapper-locations: classpath*:mapper/*/*Mapper.xml,classpath*:mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-cms.xml
