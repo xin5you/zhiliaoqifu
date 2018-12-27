@@ -13,6 +13,14 @@ spring:
     password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+    block-when-exhausted: true
+    max-wait-millis: 3000
+    test-on-borrow: false
+    test-on-return: false
+    test-while-idle: true
+    minEvictableIdleTimeMillis: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    numTestsPerEvictionRun: 1
   rocketmq:
     name-server-address: 192.168.2.110:9876
     producer-group: zlqf_group
