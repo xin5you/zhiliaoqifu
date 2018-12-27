@@ -96,6 +96,11 @@ public class TbEcomMember extends Model<TbEcomMember> {
     @ApiModelProperty(value = "关联用户id")
     private String userId;
 
+    @TableField(exist = false)
+    private String personalName;
+
+    @TableField(exist = false)
+    private String mobilePhoneNo;
 
     @Override
     protected Serializable pkVal() { 

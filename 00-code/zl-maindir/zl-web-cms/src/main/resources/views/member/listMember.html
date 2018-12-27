@@ -50,7 +50,7 @@
 								<td><span th:text="${memberInf.mobilePhoneNo}"></span></td>
 				                <td><span th:text="${memberInf.lvId}"></span></td>
 				                <td><span th:text="${memberInf.point}"></span></td>
-								<td><span th:text="${memberInf.createTime}"></span></td>
+								<td><span th:text="${#dates.format(memberInf.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 <!-- 				                <td> -->
 <!-- 									<span th:if="${user.isdefault != '0' and user.state != '1'}"> -->
 <!-- 										<a th:attr="userId=${user.id}" title="添加角色" class="btn-mini btn-grant-role" href="#"><i class="icon-plus"></i></a> -->

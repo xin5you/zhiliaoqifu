@@ -2,4 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.member.mapper.TbEcomMemberMapper">
 
+    <sql id="MemberInfColumns">
+		m.member_id,
+		m.person_id,
+		m.user_id,
+		m.open_id,
+		m.lv_id,
+		m.point,
+		m.data_stat,
+		m.remarks,
+		m.create_user,
+		m.update_user,
+		m.create_time,
+		m.update_time,
+		m.lock_version
+	</sql>
+
+    <select id="getMemberInfList" parameterType="TbEcomMember" resultType="TbEcomMember">
+        SELECT
+          <include refid="MemberInfColumns" />,
+          p.personal_name as personalName,
+          p.mobile_phone_no as mobilePhoneNo
+        from tb_ecom_member m, tb_person_inf p
+        where m.person_id = p.personal_id
+          and m.data_stat = '0'
+          and p.data_stat = '0'
+        <if test="personalName != null and personalName != '' ">
+          and p.personal_name like '%' || #{personalName} || '%'
+        </if>
+
+        <if test="mobilePhoneNo != null and mobilePhoneNo != '' ">
+          and p.mobile_phone_no =#{mobilePhoneNo}
+        </if>
+        order by m.update_time desc
+    </select>
 </mapper>

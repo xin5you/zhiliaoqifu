@@ -22,7 +22,6 @@ public class MemberController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	@Qualifier("memberService")
 	private MemberService memberService;
 
 	@RequestMapping(value = "/getMemberInfList")
@@ -36,7 +35,7 @@ public class MemberController {
 		} catch (Exception e) {
 			logger.error("## 会员信息查询出错", e);
 		}
-		
+		mv.addObject("memberInf", memberInf);
 		return mv;
 	}
 }

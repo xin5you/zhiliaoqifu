@@ -15,14 +15,30 @@
 					</li>
 				</ul>
 				<ul class="nav" id="mobile-nav">
-					<!-- <li class="dropdown">
+					 <li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="icon-list icon-white"></i>会员管理<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
 							<li><a th:href="@{/member/memberInf/getMemberInfList}" th:text="会员信息" /></li>
 						</ul>
-					</li> -->
+					</li>
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+							<i class="icon-list icon-white"></i>商品管理<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/ecom/goodsManage/listGoodsSpuInfo}" th:text="商品规格管理" /></li>
+							<li><a th:href="@{/ecom/goodsManage/listGoodsSpuInfo}" th:text="商品Spu管理" /></li>
+							<li><a th:href="@{/ecom/goodsManage/listGoodsSpuInfo}" th:text="商品详情管理" /></li>
+							<li><a th:href="@{/ecom/goodsManage/listGoodsSpuInfo}" th:text="商品Sku管理" /></li>
+							<li><a th:href="@{/ecom/goodsManage/listGoodsInfo}" th:text="商品信息管理" /></li>
+							<li><a th:href="@{/ecom/inventory/listInventory}" th:text="商品库存管理" /></li>
+							<!-- <li><a th:href="@{/ecom/category/listCategory}" th:text="分类管理" /></li> -->
+							<li><a th:href="@{/ecom/category/listFirstCategory}" th:text="商品一级分类管理" /></li>
+							<li><a th:href="@{/ecom/category/listSecondCateGory}" th:text="商品二级分类管理" /></li>
+						</ul>
+					</li>
 					<li class="dropdown">
 						<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 							<i class="icon-list icon-white"></i>订单管理<b class="caret"></b>

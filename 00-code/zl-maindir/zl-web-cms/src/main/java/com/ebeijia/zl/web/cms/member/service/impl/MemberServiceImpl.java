@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.mapper.TbEcomMemberMapper;
+import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,13 @@ import com.github.pagehelper.PageInfo;
 public class MemberServiceImpl implements MemberService {
 
 	@Autowired
-	private TbEcomMemberMapper memberInfMapper;
+	private ITbEcomMemberService tbEcomMemberService;
 
 	public PageInfo<TbEcomMember> getMemberListPage(int startNum, int pageSize, TbEcomMember entity) {
 		PageHelper.startPage(startNum, pageSize);
-		Wrapper<TbEcomMember> wrapper = new QueryWrapper<>();
-		List<TbEcomMember> memberInfList = memberInfMapper.selectList(wrapper);
-		PageInfo<TbEcomMember> userPage = new PageInfo<TbEcomMember>(memberInfList);
-		return userPage;
+		List<TbEcomMember> memberInfList = tbEcomMemberService.getMemberInfList(entity);
+		PageInfo<TbEcomMember> memberInfPage = new PageInfo<TbEcomMember>(memberInfList);
+		return memberInfPage;
 	}
 
 }
