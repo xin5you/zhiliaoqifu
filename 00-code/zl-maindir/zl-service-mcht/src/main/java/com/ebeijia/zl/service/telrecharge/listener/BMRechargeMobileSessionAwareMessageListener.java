@@ -143,6 +143,6 @@ public class BMRechargeMobileSessionAwareMessageListener extends AbstractMQPushC
 		 //迴調通知分銷商
 		retailChnlOrderInfService.doTelRechargeBackNotify(retailChnlInf,retailChnlOrderInf,telProviderOrderInf);
 
-		return false;
+		return true;
 	}
 }

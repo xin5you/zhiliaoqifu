@@ -111,7 +111,7 @@ public class SMSTemplateMessageListener  extends AbstractMQPushConsumer {
 		} catch (Exception e) {
 			logger.error("## 待发送的短信消息异常：", e);
 		}
-		return false;
+		return true;
 	}
 
 	/*public synchronized void onMessage(Message message) {
