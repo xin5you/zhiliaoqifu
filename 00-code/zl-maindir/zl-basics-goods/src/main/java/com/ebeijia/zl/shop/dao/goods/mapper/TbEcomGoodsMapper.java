@@ -4,6 +4,7 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
 	import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
+	import org.apache.ibatis.annotations.Param;
 
 	import java.util.List;
 
@@ -24,6 +25,7 @@ public interface TbEcomGoodsMapper extends BaseMapper<TbEcomGoods> {
 	 * @return
 	 */
 	List<Goods> getGoodsList(Goods goods);
+
 
 	/**
 	 * 查看商品信息

@@ -69,9 +69,9 @@ spring:
       check: false
     registry:
       address: zookeeper://127.0.0.1:2181
-myBatis:
-  mapperLocations: classpath*:mapper/*.xml
-  configLocations: classpath:conf/mybatis-config.xml
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.ebeijia.zl.shop.dao.*.domain
   #typeAliasesPackage: com.cn.thinx.ecom_cms.test.domain
 logging:
   config: classpath:conf/logback-ecom.xml

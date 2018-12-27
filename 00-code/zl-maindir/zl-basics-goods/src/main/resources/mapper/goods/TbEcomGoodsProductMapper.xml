@@ -4,91 +4,91 @@
 
 
     <select id="getInventoryList" parameterType="TbEcomGoodsProduct" resultType="TbEcomGoodsProduct">
-        SELECT G.GOODS_NAME,
-        G.MARKET_ENABLE,
-        P.SKU_CODE,
-        P.ECOM_CODE,
-        P.PRODUCT_ENABLE,
-        P.IS_STORE,
-        P.PAGE_TITLE
-        FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
-        WHERE G.GOODS_ID = P.GOODS_ID
-        AND G.DATA_STAT = '0'
-        AND P.DATA_STAT = '0'
-        AND P.ECOM_CODE = #{ecomCode}
-        <if test="goodsName != null and goodsName != '' ">
-            AND G.GOODS_NAME LIKE '%' || #{goodsName} || '%'
+        select g.goods_name,
+        g.market_enable,
+        p.sku_code,
+        p.ecom_code,
+        p.product_enable,
+        p.is_store,
+        p.page_title
+        from tb_ecom_goods g, tb_ecom_goods_product p
+        where g.goods_id = p.goods_id
+        and g.data_stat = '0'
+        and p.data_stat = '0'
+        and p.ecom_code = #{ecomcode}
+        <if test="goodsname != null and goodsname != '' ">
+            and g.goods_name like '%' || #{goodsname} || '%'
         </if>
-        <if test="pageTitle != null and pageTitle != '' ">
-            AND P.PAGE_TITLE LIKE '%' || #{pageTitle} || '%'
+        <if test="pagetitle != null and pagetitle != '' ">
+            and p.page_title like '%' || #{pagetitle} || '%'
         </if>
-        <if test="marketEnable !=null and marketEnable !='' ">
-            AND G.MARKET_ENABLE = #{marketEnable}
+        <if test="marketenable !=null and marketenable !='' ">
+            and g.market_enable = #{marketenable}
         </if>
 
     </select>
 
 
     <select id="getGoodsProductListByGoodsId" parameterType="String" resultType="TbEcomGoodsProduct">
-		SELECT P.PRODUCT_ID,
-		       P.GOODS_ID,
-		       P.SPU_CODE,
-		       P.SKU_CODE,
-		       P.ECOM_CODE,
-		       P.PRODUCT_ENABLE,
-		       P.IS_STORE,
-		       P.ENABLE_STORE,
-		       P.GOODS_PRICE,
-		       P.GOODS_COST,
-		       P.MKT_PRICE,
-		       P.PAGE_TITLE,
-		       P.META_DESCRIPTION,
-		       P.PIC_URL,
-		       P.DATA_STAT,
-		       P.REMARKS,
-		       P.CREATE_USER,
-		       P.UPDATE_USER,
-		       P.CREATE_TIME,
-		       P.UPDATE_TIME,
-		       P.LOCK_VERSION,
-		       G.GOODS_NAME,
-		       G.MARKET_ENABLE
-		  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
-		 WHERE G.GOODS_ID = P.GOODS_ID
-		   AND G.DATA_STAT = '0'
-		   AND P.DATA_STAT = '0'
-		   AND G.GOODS_ID = #{goodsId}
+		select p.product_id,
+		       p.goods_id,
+		       p.spu_code,
+		       p.sku_code,
+		       p.ecom_code,
+		       p.product_enable,
+		       p.is_store,
+		       p.enable_store,
+		       p.goods_price,
+		       p.goods_cost,
+		       p.mkt_price,
+		       p.page_title,
+		       p.meta_description,
+		       p.pic_url,
+		       p.data_stat,
+		       p.remarks,
+		       p.create_user,
+		       p.update_user,
+		       p.create_time,
+		       p.update_time,
+		       p.lock_version,
+		       g.goods_name,
+		       g.market_enable
+		  from tb_ecom_goods g, tb_ecom_goods_product p
+		 where g.goods_id = p.goods_id
+		   and g.data_stat = '0'
+		   and p.data_stat = '0'
+		   and g.goods_id = #{goodsid}
 
 	</select>
 
     <select id="getGoodsProductByPrimaryKey" parameterType="String" resultType="TbEcomGoodsProduct">
-		SELECT P.PRODUCT_ID,
-	       P.GOODS_ID,
-	       P.SPU_CODE,
-	       P.SKU_CODE,
-	       P.ECOM_CODE,
-	       P.PRODUCT_ENABLE,
-	       P.IS_STORE,
-	       P.ENABLE_STORE,
-	       P.GOODS_PRICE,
-	       P.GOODS_COST,
-	       P.MKT_PRICE,
-	       P.PAGE_TITLE,
-	       P.META_DESCRIPTION,
-	       P.PIC_URL,
-	       P.DATA_STAT,
-	       P.REMARKS,
-	       P.CREATE_USER,
-	       P.UPDATE_USER,
-	       P.CREATE_TIME,
-	       P.UPDATE_TIME,
-	       P.LOCK_VERSION,
-	       G.GOODS_NAME
-	  FROM TB_ECOM_GOODS G, TB_ECOM_GOODS_PRODUCT P
-	 WHERE G.GOODS_ID = P.GOODS_ID
-	   AND G.DATA_STAT = '0'
-	   AND P.DATA_STAT = '0'
-	   AND P.PRODUCT_ID = #{primaryKey}
+		select p.product_id,
+	       p.goods_id,
+	       p.spu_code,
+	       p.sku_code,
+	       p.ecom_code,
+	       p.product_enable,
+	       p.is_store,
+	       p.enable_store,
+	       p.goods_price,
+	       p.goods_cost,
+	       p.mkt_price,
+	       p.page_title,
+	       p.meta_description,
+	       p.pic_url,
+	       p.data_stat,
+	       p.remarks,
+	       p.create_user,
+	       p.update_user,
+	       p.create_time,
+	       p.update_time,
+	       p.lock_version,
+	       g.goods_name
+	  from tb_ecom_goods g, tb_ecom_goods_product p
+	 where g.goods_id = p.goods_id
+	   and g.data_stat = '0'
+	   and p.data_stat = '0'
+	   and p.product_id = #{primarykey}
 	</select>
 
 
