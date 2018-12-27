@@ -1,10 +1,8 @@
 package com.ebeijia.zl.shop.controller;
 
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsGallery;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
+import com.ebeijia.zl.shop.dao.goods.domain.*;
 import com.ebeijia.zl.shop.service.goods.IProductService;
+import com.ebeijia.zl.shop.vo.GoodsDetailInfo;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -27,31 +25,32 @@ public class GoodsController {
 
     @ApiOperation("所有商品列表，分页")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbEcomGoods>> listGoods(String orderby, Integer start, Integer limit){
+    public JsonResult<PageInfo<Goods>> listGoods(String orderby, Integer start, Integer limit){
         //TODO change VO design, vaild variable;
-        PageInfo<TbEcomGoods> list = goodsService.listGoods(null, null,orderby,start,limit);
-        return new JsonResult<PageInfo<TbEcomGoods>>(list);
+
+        PageInfo<Goods> listGoods = goodsService.listGoods(null, null, orderby, start, limit);
+        return new JsonResult<>(listGoods);
     }
 
     @ApiOperation("按专项类型的商品列表")
     @RequestMapping(value = "/list/{billingtype}",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbEcomGoods>> listGoods(@PathVariable("billingtype") String billingType, String orderby, Integer start, Integer limit){
-        PageInfo<TbEcomGoods> list = goodsService.listGoods(billingType,orderby,start,limit);
+    public JsonResult<PageInfo<Goods>> listGoods(@PathVariable("billingtype") String billingType, String orderby, Integer start, Integer limit){
+        PageInfo<Goods> list = goodsService.listGoods(billingType,orderby,start,limit);
 
-        return new JsonResult<PageInfo<TbEcomGoods>>(list);
+        return new JsonResult<>(list);
     }
 
     @ApiOperation("查找特定的商品列表（一期不用）")
     @RequestMapping(value = "/list/cat{catid}",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbEcomGoods>> listGoods(@PathVariable Integer catid,@RequestParam("billingtype") String billingType,  String orderby, Integer start, Integer limit){
-        PageInfo<TbEcomGoods> list = goodsService.listGoods(billingType,catid,orderby,start,limit);
-        return new JsonResult<PageInfo<TbEcomGoods>>(list);
+    public JsonResult<PageInfo<Goods>> listGoods(@PathVariable String catid,@RequestParam("billingtype") String billingType,  String orderby, Integer start, Integer limit){
+        PageInfo<Goods> list = goodsService.listGoods(billingType,catid,orderby,start,limit);
+        return new JsonResult<PageInfo<Goods>>(list);
     }
 
     @ApiOperation("商品详情")
     @RequestMapping(value = "/detail/get/{goods}",method = RequestMethod.GET)
-    public JsonResult<TbEcomGoodsDetail> goodsDetail(@PathVariable("goods") String goodsId){
-        TbEcomGoodsDetail detail = goodsService.getDetail(goodsId);
+    public JsonResult<GoodsDetailInfo> goodsDetail(@PathVariable("goods") String goodsId){
+        GoodsDetailInfo detail = goodsService.getDetail(goodsId);
         return new JsonResult<>(detail);
     }
 

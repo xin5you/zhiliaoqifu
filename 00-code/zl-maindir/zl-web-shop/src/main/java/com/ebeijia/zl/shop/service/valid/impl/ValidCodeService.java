@@ -53,7 +53,7 @@ public class ValidCodeService implements IValidCodeService {
             System.out.println(code);
         } else {
             //TODO Fix SNSType
-//            vo.setSmsType(SMSType.SMSType1005.getCode());
+            vo.setSmsType("1005");
         }
         vo.setPhoneNumber(phoneNum);
         vo.setCode(code);

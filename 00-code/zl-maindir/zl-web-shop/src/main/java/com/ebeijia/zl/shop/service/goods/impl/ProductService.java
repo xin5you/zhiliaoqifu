@@ -3,22 +3,18 @@ package com.ebeijia.zl.shop.service.goods.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsDetail;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsGallery;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsDetailService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsGalleryService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
+import com.ebeijia.zl.shop.dao.goods.domain.*;
+import com.ebeijia.zl.shop.dao.goods.service.*;
 import com.ebeijia.zl.shop.service.category.ICategoryService;
 import com.ebeijia.zl.shop.service.goods.IProductService;
+import com.ebeijia.zl.shop.vo.GoodsDetailInfo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProductService implements IProductService {
@@ -35,10 +31,19 @@ public class ProductService implements IProductService {
     private ITbEcomGoodsProductService productDao;
 
     @Autowired
-    ICategoryService categoryService;
+    private ITbEcomSpecificationService specificationDao;
+
+    @Autowired
+    private ITbEcomSpecValuesService specValuesDao;
+
+    @Autowired
+    private ICategoryService categoryService;
+
+    @Autowired
+    private ITbEcomGoodsSpecService goodsSpecDao;
 
     @Override
-    public PageInfo<TbEcomGoods> listGoods(String billingType, Integer catid, String orderby, Integer start, Integer limit) {
+    public PageInfo<Goods> listGoods(String billingType, String catid, String orderby, Integer start, Integer limit) {
         if (limit == null || limit > 100) {
             limit = Integer.valueOf(20);
         }
@@ -47,23 +52,23 @@ public class ProductService implements IProductService {
         }
 
         //TODO orderBy
-        List<TbEcomGoods> goodsList = null;
+        List<Goods> goodsList = null;
         PageHelper.startPage(start, limit);
-        TbEcomGoods queryBy = new TbEcomGoods();
-        if (catid != null) {
-        }
-        queryBy.setMarketEnable("1");
-        queryBy.setIsDisabled("0");
-        QueryWrapper<TbEcomGoods> query = new QueryWrapper<>(queryBy);
         SpecAccountTypeEnum type = SpecAccountTypeEnum.findByBId(billingType);
+        Goods goods = new Goods();
         if (type != null) {
             //TODO 优化sql
-            query.inSql("cat_id", "select cat_id from tb_ecom_categroy_billing where b_id=" + type.getbId());
+            String bId = type.getbId();
+            goods.setBId(bId);
         }
 
-        goodsList = goodsDao.list(query);
-
-        PageInfo<TbEcomGoods> page = new PageInfo<TbEcomGoods>(goodsList);
+        if (catid != null) {
+            goods.setCatId(catid);
+            goodsDao.getGoodsByCategory(goods);
+        } else {
+            goodsList = goodsDao.getGoodsList(new Goods());
+        }
+        PageInfo<Goods> page = new PageInfo<>(goodsList);
 //        page.getList().stream().filter(d ->{
 //            if(!StringUtil.isNullOrEmpty(d.getGoodsDetail())){
 //                goods.setGoodsPrice(NumberUtils.RMBCentToYuan(goods.getGoodsPrice()));
@@ -75,42 +80,67 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public PageInfo<TbEcomGoods> listGoods(String billingType, String orderby, Integer start, Integer limit) {
-        if (limit == null || limit > 100) {
-            limit = Integer.valueOf(20);
-        }
-        if (start == null) {
-            start = Integer.valueOf(0);
-        }
-
-        //TODO orderBy
-        List<TbEcomGoods> goodsList = null;
-        PageHelper.startPage(start, limit);
-        TbEcomGoods queryBy = new TbEcomGoods();
-
-        queryBy.setMarketEnable("1");
-        queryBy.setIsDisabled("0");
-        QueryWrapper<TbEcomGoods> query = new QueryWrapper<>(queryBy);
-        SpecAccountTypeEnum type = SpecAccountTypeEnum.findByBId(billingType);
-
-        if (type != null) {
-            //TODO 优化sql
-            query.inSql("goods_id", "select goods_id from tb_ecom_goods_billing where b_id=\"" + type.getbId()+"\"");
-        }
-
-        List<TbEcomGoods> list = goodsDao.list(query);
-        return new PageInfo<>(list);
+    public PageInfo<Goods> listGoods(String billingType, String orderby, Integer start, Integer limit) {
+        return listGoods(billingType, null, orderby, start, limit);
     }
 
 
     @Override
-    public TbEcomGoodsDetail getDetail(String goodsId) {
+    @Cacheable("GOODS_DETAIL")
+    public GoodsDetailInfo getDetail(String goodsId) {
         if (!vaildId(goodsId)) {
             return null;
         }
         TbEcomGoodsDetail detail = new TbEcomGoodsDetail();
         detail.setGoodsId(goodsId);
-        return detailDao.getOne(new QueryWrapper<>(detail));
+        GoodsDetailInfo goodsDetailInfo = new GoodsDetailInfo();
+        goodsDetailInfo.setDetail(detailDao.getOne(new QueryWrapper<>(detail)));
+        goodsDetailInfo.setInfo(goodsDao.getById(goodsId));
+
+        //构建查询器
+        TbEcomGoodsProduct query = new TbEcomGoodsProduct();
+        query.setGoodsId(goodsId);
+
+        //获取最大最小金额
+        List<TbEcomGoodsProduct> products = productDao.list(new QueryWrapper<>(query));
+        products.sort(Comparator.comparing(TbEcomGoodsProduct::getGoodsPrice));
+        goodsDetailInfo.setMinPrice(Long.valueOf(products.get(0).getGoodsPrice()));
+        goodsDetailInfo.setMaxPrice(Long.valueOf(products.get(products.size()-1).getGoodsPrice()));
+        goodsDetailInfo.setProducts(makeProductMap(products));
+        //TODO
+
+        TbEcomGoodsSpec tbEcomGoodsSpec = new TbEcomGoodsSpec();
+        tbEcomGoodsSpec.setGoodsId(goodsId);
+        List<TbEcomGoodsSpec> goodsSpecs = goodsSpecDao.list(new QueryWrapper<>(tbEcomGoodsSpec));
+
+        goodsDetailInfo.setSpecsMap(makeSpecsMap(goodsSpecs));
+        return goodsDetailInfo;
+    }
+
+    private Map<TbEcomSpecification, Map<TbEcomSpecValues, List<String>>> makeSpecsMap(List<TbEcomGoodsSpec> goodsSpecs) {
+        Map<String, HashMap<String, String>> result = new HashMap<>();
+        HashMap<TbEcomSpecification, List<String>> map = new HashMap<>();
+        Iterator<TbEcomGoodsSpec> iterator = goodsSpecs.iterator();
+        while(iterator.hasNext()){
+            TbEcomGoodsSpec spec = iterator.next();
+            if (result.get(spec.getSpecId())==null){
+                result.put(spec.getSpecId(),new HashMap<>());
+            }
+        }
+        return null;
+    }
+
+    private HashMap<String, TbEcomGoodsProduct> makeProductMap(List<TbEcomGoodsProduct> products) {
+        HashMap<String, TbEcomGoodsProduct> map = new HashMap<>();
+        Iterator<TbEcomGoodsProduct> iterator = products.iterator();
+        while(iterator.hasNext()){
+            TbEcomGoodsProduct next = iterator.next();
+            if (next==null||next.getProductId()==null){
+                continue;
+            }
+            map.put(next.getProductId(),next);
+        }
+        return map;
     }
 
     @Override
