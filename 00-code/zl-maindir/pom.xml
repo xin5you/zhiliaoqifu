@@ -63,12 +63,12 @@
     </repositories>
 
     <modules>
-    	<module>zl-common-utils</module>
-    	<module>zl-common-core</module>
-    	<module>zl-base-core</module>
-    	<module>zl-api-bm001</module>
-    	
-    	
+        <module>zl-common-utils</module>
+        <module>zl-common-core</module>
+        <module>zl-base-core</module>
+        <module>zl-api-bm001</module>
+
+
         <module>zl-basics-goods</module>
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
@@ -81,21 +81,21 @@
 
         <module>zl-core-redis</module>
         <module>zl-core-activemq</module>
-       	<module>zl-core-wechat</module>
+        <module>zl-core-wechat</module>
         <module>zl-core-dubbo</module>
 
         <module>zl-facade-mcht</module>
         <module>zl-facade-account</module>
-        
-       	<module>zl-service-mcht</module>
+
+        <module>zl-service-mcht</module>
         <module>zl-service-account</module>
-	    <module>zl-service-control</module>
-      
+        <module>zl-service-control</module>
+
         <module>zl-web-api</module>
         <module>zl-web-oms</module>
         <module>zl-web-diy</module>
-	    <module>zl-web-cms</module>
-    	<module>zl-web-user</module>
+        <module>zl-web-cms</module>
+        <module>zl-web-user</module>
 
     </modules>
 
