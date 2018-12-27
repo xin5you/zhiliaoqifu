@@ -1,35 +1,32 @@
 package com.ebeijia.zl.web.cms.system.controller;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
+import com.ebeijia.zl.basics.system.domain.*;
+import com.ebeijia.zl.basics.system.service.ResourceService;
+import com.ebeijia.zl.basics.system.service.RoleResourceService;
+import com.ebeijia.zl.basics.system.service.RoleService;
+import com.ebeijia.zl.basics.system.service.UserRoleService;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.web.cms.base.exception.BizHandlerException;
-import com.ebeijia.zl.web.cms.system.domain.Resource;
-import com.ebeijia.zl.web.cms.system.domain.Role;
-import com.ebeijia.zl.web.cms.system.domain.User;
-import com.ebeijia.zl.web.cms.system.service.ResourceService;
-import com.ebeijia.zl.web.cms.system.service.RoleService;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "system/role")
@@ -42,6 +39,12 @@ public class RoleController {
 
 	@Autowired
 	private ResourceService resourceService;
+
+	@Autowired
+	private RoleResourceService roleResourceService;
+
+	@Autowired
+	private UserRoleService userRoleService;
 
 	/**
 	 * 角色列表
@@ -97,7 +100,7 @@ public class RoleController {
 		String roleId = req.getParameter("roleId");
 		Role role = new Role();
 		try {
-			role = roleService.selectByPrimaryKey(roleId);
+			role = roleService.getById(roleId);
 		} catch (Exception e) {
 			logger.error("## 查询主键为[" + roleId + "]的角色信息出错", e);
 		}
@@ -116,22 +119,29 @@ public class RoleController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			Role r = roleService.selectByName(role.getRoleName());
-			if (r != null) {
+			role.setLoginType(LoginType.LoginType2.getCode());
+			Role roleName = roleService.getRoleByName(role);
+			if (roleName != null) {
 				return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
+			}
+			Role roleSeq = roleService.getRoleBySeq(role);
+			if (roleSeq != null) {
+				return ResultsUtil.error(ExceptionEnum.roleNews.REN07.getCode(), ExceptionEnum.roleNews.REN07.getMsg());
+			}
+			role.setId(UUID.randomUUID().toString());
+			role.setLoginType(LoginType.LoginType2.getCode());
+			role.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			role.setIsdefault("1");
+			role.setCreateUser(user.getId());
+			role.setUpdateUser(user.getId());
+			role.setCreateTime(System.currentTimeMillis());
+			role.setUpdateTime(System.currentTimeMillis());
+			role.setLockVersion(0);
+			if (roleService.save(role)) {
+				return ResultsUtil.success();
 			} else {
-				role.setId(UUID.randomUUID().toString());
-				role.setLoginType(LoginType.LoginType2.getCode());
-				role.setCreateUser(user.getId());
-				role.setUpdateUser(user.getId());
-				role.setCreateTime(System.currentTimeMillis());
-				role.setUpdateTime(System.currentTimeMillis());
-				if (roleService.insert(role) > 0) {
-					return ResultsUtil.success();
-				} else {
-					return ResultsUtil.error(ExceptionEnum.roleNews.REN01.getCode(),
-							ExceptionEnum.roleNews.REN01.getMsg());
-				}
+				return ResultsUtil.error(ExceptionEnum.roleNews.REN01.getCode(),
+						ExceptionEnum.roleNews.REN01.getMsg());
 			}
 		} catch (BizHandlerException e) {
 			logger.error("## 新增角色出错", e.getMessage());
@@ -154,19 +164,26 @@ public class RoleController {
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute(Constants.SESSION_USER);
 		try {
-			Role r = roleService.selectByName(role.getRoleName());
-			Role oldRole = roleService.selectByPrimaryKey(role.getId().toString());
-
-			if (oldRole.getRoleName().equals(role.getRoleName())) {
-				role.setUpdateUser(user.getId());
-			} else {
-				if (r != null)
-					return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
-				else
-					role.setUpdateUser(user.getId());
-			}
 			role.setLoginType(LoginType.LoginType2.getCode());
-			if (roleService.updateByPrimaryKey(role) > 0)
+			Role oldRole = roleService.getById(role.getId());
+
+			if (!oldRole.getRoleName().equals(role.getRoleName())) {
+				Role roleName = roleService.getRoleByName(role);
+				if (roleName != null) {
+					return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
+				}
+			}
+			if (!oldRole.getSeq().equals(role.getSeq())) {
+				Role roleSeq = roleService.getRoleBySeq(role);
+				if (roleSeq != null) {
+					return ResultsUtil.error(ExceptionEnum.roleNews.REN07.getCode(), ExceptionEnum.roleNews.REN07.getMsg());
+				}
+			}
+
+			role.setUpdateUser(user.getId());
+			role.setUpdateTime(System.currentTimeMillis());
+			role.setLockVersion(oldRole.getLockVersion() + 1);
+			if (roleService.updateById(role))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.roleNews.REN02.getCode(), ExceptionEnum.roleNews.REN02.getMsg());
@@ -190,8 +207,16 @@ public class RoleController {
 	public BaseResult<Object> deleteRole(HttpServletRequest req) {
 		String roleId = req.getParameter("roleId");
 		try {
-			roleService.deleteRole(roleId);
-			return ResultsUtil.success();
+			List<UserRole> userRoleList = userRoleService.getUserRoleByRoleId(roleId);
+			List<RoleResource> roleResourceList = roleResourceService.getRoleResourceByRoleId(roleId);
+			if (userRoleList != null || roleResourceList != null || userRoleList.size() >= 1 || roleResourceList.size() >= 1) {
+				return ResultsUtil.error(ExceptionEnum.roleNews.REN03.getCode(), ExceptionEnum.roleNews.REN03.getMsg());
+			}
+			if (roleService.removeById(roleId)) {
+				return ResultsUtil.success();
+			} else {
+				return ResultsUtil.error(ExceptionEnum.roleNews.REN03.getCode(), ExceptionEnum.roleNews.REN03.getMsg());
+			}
 		} catch (BizHandlerException e) {
 			logger.error("## 删除角色出错", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -213,7 +238,9 @@ public class RoleController {
 		ModelAndView mv = new ModelAndView("system/role/listRoleResource");
 		try {
 			List<Resource> roleResList = resourceService.getRoleResourceByRoleId(roleId); // 当前角色的权限
-			List<Resource> allResourceList = resourceService.getList1(); // 所有的资源列表
+			Resource resource = new Resource();
+			resource.setLoginType(LoginType.LoginType2.getCode());
+			List<Resource> allResourceList = resourceService.getResourceListByResource(resource);// 所有的资源列表
 			for (Resource r : allResourceList) {
 				for (Resource s : roleResList) {
 					if (r.getId().equals(s.getId()))
@@ -234,16 +261,24 @@ public class RoleController {
 		int count = 0;
 		try {
 			String roleId = req.getParameter("roleId");
-			roleService.deleteRoleResourceByRoleId(roleId);
+			if (roleResourceService.deleteRoleResourceByRoleId(roleId) < 1) {
+				return ResultsUtil.error(ExceptionEnum.roleNews.REN06.getCode(), ExceptionEnum.roleNews.REN06.getMsg());
+			}
 			String ids = req.getParameter("ids");
+			List<RoleResource> roleResList = new ArrayList<>();
 			if (ids == null || ids == "") {
 				return ResultsUtil.error(ExceptionEnum.userNews.UN10.getCode(), ExceptionEnum.userNews.UN10.getMsg());
 			} else {
 				String[] resourceId = ids.split(",");
-				for (int i = 0; i < resourceId.length; i++)
-					count = roleService.addRoleResource(roleId, resourceId[i]);
+				for (int i = 0; i < resourceId.length; i++) {
+					RoleResource roleRes = new RoleResource();
+					roleRes.setId(IdUtil.getNextId());
+					roleRes.setResourceId(resourceId[i]);
+					roleRes.setRoleId(roleId);
+					roleResList.add(roleRes);
+				}
 			}
-			if (count > 0)
+			if (roleResourceService.saveBatch(roleResList))
 				return ResultsUtil.success();
 			else
 				return ResultsUtil.error(ExceptionEnum.roleNews.REN06.getCode(), ExceptionEnum.roleNews.REN06.getMsg());

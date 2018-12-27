@@ -2,7 +2,10 @@ package com.ebeijia.zl.shop.dao.order.mapper;
 
 	import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+	import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 	import org.apache.ibatis.annotations.Mapper;
+
+	import java.util.List;
 
 /**
  *
@@ -13,5 +16,6 @@ package com.ebeijia.zl.shop.dao.order.mapper;
  */
 @Mapper
 public interface TbEcomPlatfOrderMapper extends BaseMapper<TbEcomPlatfOrder> {
-	
+
+	List<TbEcomPlatfOrder> getPlatfOrderList(TbEcomPlatfOrder platfOrder);
 }

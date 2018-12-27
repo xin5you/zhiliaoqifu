@@ -4,7 +4,10 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.dao.order.mapper.TbEcomPlatfOrderMapper;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -17,4 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbEcomPlatfOrderService extends ServiceImpl<TbEcomPlatfOrderMapper, TbEcomPlatfOrder> implements ITbEcomPlatfOrderService{
 
+    @Autowired
+    private TbEcomPlatfOrderMapper platfOrderMapper;
+
+    @Override
+    public List<TbEcomPlatfOrder> getPlatfOrderList(TbEcomPlatfOrder platfOrder) {
+        return platfOrderMapper.getPlatfOrderList(platfOrder);
+    }
 }

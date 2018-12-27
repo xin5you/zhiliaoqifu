@@ -143,6 +143,20 @@ public class TbEcomPlatfShopOrder extends Model<TbEcomPlatfShopOrder> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
 
+    @TableField(exist = false)
+    private String mobilePhoneNo;
+
+    @TableField(exist = false)
+    private String personalName;
+
+    @TableField(exist = false)
+    private String payStatus;
+
+    @TableField(exist = false)
+    private Long payTime;
+
+    @TableField(exist = false)
+    private String subOrderStatusName;
 
     @Override
     protected Serializable pkVal() { 
