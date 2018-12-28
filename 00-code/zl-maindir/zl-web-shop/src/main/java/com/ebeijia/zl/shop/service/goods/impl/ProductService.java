@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -41,6 +42,7 @@ public class ProductService implements IProductService {
 
     @Autowired
     private ITbEcomGoodsSpecService goodsSpecDao;
+
 
     @Override
     public PageInfo<Goods> listGoods(String billingType, String catid, String orderby, Integer start, Integer limit) {
@@ -105,41 +107,67 @@ public class ProductService implements IProductService {
         List<TbEcomGoodsProduct> products = productDao.list(new QueryWrapper<>(query));
         products.sort(Comparator.comparing(TbEcomGoodsProduct::getGoodsPrice));
         goodsDetailInfo.setMinPrice(Long.valueOf(products.get(0).getGoodsPrice()));
-        goodsDetailInfo.setMaxPrice(Long.valueOf(products.get(products.size()-1).getGoodsPrice()));
-        goodsDetailInfo.setProducts(makeProductMap(products));
+        goodsDetailInfo.setMaxPrice(Long.valueOf(products.get(products.size() - 1).getGoodsPrice()));
+        makeProductMap(goodsDetailInfo, products);
         //TODO
 
         TbEcomGoodsSpec tbEcomGoodsSpec = new TbEcomGoodsSpec();
         tbEcomGoodsSpec.setGoodsId(goodsId);
         List<TbEcomGoodsSpec> goodsSpecs = goodsSpecDao.list(new QueryWrapper<>(tbEcomGoodsSpec));
-
-        goodsDetailInfo.setSpecsMap(makeSpecsMap(goodsSpecs));
+        makeSpecAndValueNames(goodsDetailInfo, goodsSpecs);
+        makeSpecsMap(goodsDetailInfo, goodsSpecs);
         return goodsDetailInfo;
     }
 
-    private Map<TbEcomSpecification, Map<TbEcomSpecValues, List<String>>> makeSpecsMap(List<TbEcomGoodsSpec> goodsSpecs) {
-        Map<String, HashMap<String, String>> result = new HashMap<>();
-        HashMap<TbEcomSpecification, List<String>> map = new HashMap<>();
+    private void makeSpecAndValueNames(GoodsDetailInfo goodsDetailInfo, List<TbEcomGoodsSpec> goodsSpecs) {
+        List<String> specIds = new LinkedList<>();
+        List<String> valueIds = new LinkedList<>();
+
         Iterator<TbEcomGoodsSpec> iterator = goodsSpecs.iterator();
         while(iterator.hasNext()){
-            TbEcomGoodsSpec spec = iterator.next();
-            if (result.get(spec.getSpecId())==null){
-                result.put(spec.getSpecId(),new HashMap<>());
-            }
+            TbEcomGoodsSpec next = iterator.next();
+            specIds.add(next.getSpecId());
+            valueIds.add(next.getSpecValueId());
         }
-        return null;
+        //list转Map
+        Map<String, TbEcomSpecification> specificationMap = specificationDao.listByIds(specIds).stream().collect(Collectors.toMap(TbEcomSpecification::getSpecId, a -> a, (k1, k2) -> k1));
+        Map<String, TbEcomSpecValues> specValuesMap = specValuesDao.listByIds(valueIds).stream().collect(Collectors.toMap(TbEcomSpecValues::getSpecValueId, a -> a, (k1, k2) -> k1));
+        goodsDetailInfo.setSpecNames(specificationMap);
+        goodsDetailInfo.setValueNames(specValuesMap);
     }
 
-    private HashMap<String, TbEcomGoodsProduct> makeProductMap(List<TbEcomGoodsProduct> products) {
+    private Map<String, Map<String, List<String>>> makeSpecsMap(GoodsDetailInfo goodsDetailInfo, List<TbEcomGoodsSpec> goodsSpecs) {
+        Map<String, Map<String, List<String>>> result = new HashMap<>();
+        Map<TbEcomSpecification, List<String>> map = new HashMap<>();
+        Iterator<TbEcomGoodsSpec> iterator = goodsSpecs.iterator();
+        while (iterator.hasNext()) {
+            TbEcomGoodsSpec spec = iterator.next();
+            if (result.get(spec.getSpecId()) == null) {
+                Map<String, List<String>> init = new HashMap<>();
+                result.put(spec.getSpecId(), init);
+            }
+            Map<String, List<String>> specValuesAndSKU = result.get(spec.getSpecId());
+            if (specValuesAndSKU.get(spec.getSpecValueId()) == null) {
+                specValuesAndSKU.put(spec.getSpecValueId(), new LinkedList<>());
+            }
+            List<String> values = specValuesAndSKU.get(spec.getSpecValueId());
+            values.add(spec.getProductId());
+        }
+        goodsDetailInfo.setSpecsMap(result);
+        return result;
+    }
+
+    private HashMap<String, TbEcomGoodsProduct> makeProductMap(GoodsDetailInfo goodsDetailInfo, List<TbEcomGoodsProduct> products) {
         HashMap<String, TbEcomGoodsProduct> map = new HashMap<>();
         Iterator<TbEcomGoodsProduct> iterator = products.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             TbEcomGoodsProduct next = iterator.next();
-            if (next==null||next.getProductId()==null){
+            if (next == null || next.getProductId() == null) {
                 continue;
             }
-            map.put(next.getProductId(),next);
+            map.put(next.getProductId(), next);
         }
+        goodsDetailInfo.setProducts(map);
         return map;
     }
 

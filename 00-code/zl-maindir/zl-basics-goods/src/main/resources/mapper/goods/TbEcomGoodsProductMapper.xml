@@ -16,14 +16,14 @@
         and g.data_stat = '0'
         and p.data_stat = '0'
         and p.ecom_code = #{ecomcode}
-        <if test="goodsname != null and goodsname != '' ">
-            and g.goods_name like '%' || #{goodsname} || '%'
+        <if test="goodsName != null and goodsName != '' ">
+            and g.goods_name like '%' || #{goodsName} || '%'
         </if>
-        <if test="pagetitle != null and pagetitle != '' ">
-            and p.page_title like '%' || #{pagetitle} || '%'
+        <if test="pageTitle != null and pageTitle != '' ">
+            and p.page_title like '%' || #{pageTitle} || '%'
         </if>
-        <if test="marketenable !=null and marketenable !='' ">
-            and g.market_enable = #{marketenable}
+        <if test="marketEnable !=null and marketEnable !='' ">
+            and g.market_enable = #{marketEnable}
         </if>
 
     </select>
@@ -57,7 +57,7 @@
 		 where g.goods_id = p.goods_id
 		   and g.data_stat = '0'
 		   and p.data_stat = '0'
-		   and g.goods_id = #{goodsid}
+		   and g.goods_id = #{goodsId}
 
 	</select>
 
@@ -88,7 +88,7 @@
 	 where g.goods_id = p.goods_id
 	   and g.data_stat = '0'
 	   and p.data_stat = '0'
-	   and p.product_id = #{primarykey}
+	   and p.product_id = #{primaryKey}
 	</select>
 
 

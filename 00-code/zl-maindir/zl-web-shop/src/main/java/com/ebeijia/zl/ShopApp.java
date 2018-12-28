@@ -1,5 +1,6 @@
 package com.ebeijia.zl;
 
+import com.maihaoche.starter.mq.annotation.EnableMQConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
 
 @SpringBootApplication
+@EnableMQConfiguration
 @EnableTransactionManagement
 public class ShopApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 	
