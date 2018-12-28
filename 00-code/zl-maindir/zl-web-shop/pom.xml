@@ -97,7 +97,7 @@
 
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-activemq</artifactId>
+            <artifactId>zl-core-rocketmq</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
 

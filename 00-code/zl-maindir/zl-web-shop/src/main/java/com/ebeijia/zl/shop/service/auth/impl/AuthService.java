@@ -51,10 +51,10 @@ public class AuthService implements IAuthService {
     @Override
     public Token phoneLogin(String phone, String pwd) {
         String userId = null;
-        //TODO 验证码校验
         boolean validCode = validCodeService.checkValidCode(PhoneValidMethod.LOGIN, phone, pwd);
         if (!validCode) {
-            throw new AdviceMessenger(403, "验证码有误");
+        //TODO 验证码校验
+//            throw new AdviceMessenger(403, "验证码有误");
         }
         TbEcomMember member = new TbEcomMember();
         member.setPersonId(phone);
