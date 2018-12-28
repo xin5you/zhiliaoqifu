@@ -7,6 +7,6 @@ var listMember = {
 		$('.btn-reset').on('click', listMember.searchReset);
 	},
 	searchReset : function() {
-		Helper.post('/member/memberInf/getMemberInfList');
+		Helper.post('/member/getMemberInfList');
 	}
 };

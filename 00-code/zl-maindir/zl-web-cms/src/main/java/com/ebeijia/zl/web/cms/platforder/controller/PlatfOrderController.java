@@ -33,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.github.pagehelper.PageInfo;
 
 @RestController
-@RequestMapping("platforder/platforder")
+@RequestMapping("platforder")
 public class PlatfOrderController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

@@ -5,7 +5,6 @@ $(document).ready(function() {
 var listPlatfOrder = {
 	init : function() {
 		listPlatfOrder.initEvent();
-//		listPlatfOrder.showDatetimepicker();
 	},
 	initEvent : function() {
 		$('.date-time-picker').datetimepicker({
@@ -29,10 +28,10 @@ var listPlatfOrder = {
 	},
     getPlatfShopOrderListByPlatfOrder: function(){
 		var orderId = $(this).attr('orderId');
-		Helper.post('/platforder/platforder/getPlatfShopOrderListByPlatfOrder?orderId='+orderId);
+		Helper.post('/platforder/getPlatfShopOrderListByPlatfOrder?orderId='+orderId);
 	},
 	searchReset : function() {
-		Helper.post('/platforder/platforder/getPlatfOrderList');
+		Helper.post('/platforder/getPlatfOrderList');
 	},
 	searchData : function() {
 		var sd = $('#beginTime').val();
@@ -53,6 +52,6 @@ var listPlatfOrder = {
 		var payStatus = $("#payStatus").val();
 		var beginTime = $("#beginTime").val();
 		var endTime = $("#endTime").val();
-		Helper.post('/platforder/platforder/uploadListPlatfOrder' + '?orderId='+orderId+'&dmsRelatedKey='+dmsRelatedKey+'&personalName='+personalName+'&mobilePhoneNo='+mobilePhoneNo+'&payStatus='+payStatus+'&beginTime='+beginTime+'&endTime='+endTime);
+		Helper.post('/platforder/uploadListPlatfOrder' + '?orderId='+orderId+'&dmsRelatedKey='+dmsRelatedKey+'&personalName='+personalName+'&mobilePhoneNo='+mobilePhoneNo+'&payStatus='+payStatus+'&beginTime='+beginTime+'&endTime='+endTime);
 	}
 };

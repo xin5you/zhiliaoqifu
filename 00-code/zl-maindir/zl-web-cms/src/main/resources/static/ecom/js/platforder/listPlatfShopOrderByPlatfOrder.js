@@ -9,6 +9,6 @@ var listPlatfShopOrderByPlatfOrder = {
 	},
 	searchReset : function() {
 		var orderId = $("#orderId").val();
-		Helper.post('/platforder/platforder/getPlatfShopOrderListByPlatfOrder?orderId='+orderId);
+		Helper.post('/platforder/getPlatfShopOrderListByPlatfOrder?orderId='+orderId);
 	}
 };

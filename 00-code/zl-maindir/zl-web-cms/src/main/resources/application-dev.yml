@@ -55,4 +55,12 @@ mybatis-plus:
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-cms.xml
+#FTP服务器连接
+ftpClient:
+  connect:
+    server: 192.168.2.110
+    port: 21
+    username: app_img
+    password: app_img
+    separator: /
 

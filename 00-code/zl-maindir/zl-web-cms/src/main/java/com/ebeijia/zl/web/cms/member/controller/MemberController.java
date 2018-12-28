@@ -16,7 +16,7 @@ import com.ebeijia.zl.web.cms.member.service.MemberService;
 import com.github.pagehelper.PageInfo;
 
 @RestController
-@RequestMapping("member/memberInf")
+@RequestMapping("member")
 public class MemberController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

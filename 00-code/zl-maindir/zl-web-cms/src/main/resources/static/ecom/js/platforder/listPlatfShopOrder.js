@@ -26,7 +26,7 @@ var listPlatfShopOrder = {
         $('.btn-deliver-goods').on('click', listPlatfShopOrder.deliverGoods);
 	},
 	searchReset : function() {
-		Helper.post('/platforder/platforder/getPlatfShopOrderList');
+		Helper.post('/platforder/getPlatfShopOrderList');
 	},
 	searchData : function() {
 		var sd = $('#beginTime').val();
@@ -47,7 +47,7 @@ var listPlatfShopOrder = {
 		}
 		Helper.confirm("确定提交该订单吗？", function() {
 			$.ajax({
-				url : Helper.getRootPath() + '/platforder/platforder/placeOrder',
+				url : Helper.getRootPath() + '/platforder/placeOrder',
 				type : 'post',
 				dataType : "json",
 				data : {
@@ -55,7 +55,7 @@ var listPlatfShopOrder = {
 				},
 				success : function(data) {
 					if (data.code == '00') {
-						Helper.post('/platforder/platforder/getPlatfShopOrderList');
+						Helper.post('/platforder/getPlatfShopOrderList');
 					}  else {
 						Helper.alert(data.msg);
 						return false;
@@ -72,7 +72,7 @@ var listPlatfShopOrder = {
 		}
 		Helper.confirm("确定作废该订单吗？", function() {
 			$.ajax({
-				url : Helper.getRootPath() + '/platforder/platforder/cancellationOrder',
+				url : Helper.getRootPath() + '/platforder/cancellationOrder',
 				type : 'post',
 				dataType : "json",
 				data : {
@@ -80,7 +80,7 @@ var listPlatfShopOrder = {
 				},
 				success : function(data) {
 					if (data.code == '00') {
-						Helper.post('/platforder/platforder/getPlatfShopOrderList');
+						Helper.post('/platforder/getPlatfShopOrderList');
 					}  else {
 						Helper.alert(data.msg);
 						return false;
@@ -99,7 +99,7 @@ var listPlatfShopOrder = {
 		var payStatus = $("#payStatus").val();
 		var beginTime = $("#beginTime").val();
 		var endTime = $("#endTime").val();
-		Helper.post('/platforder/platforder/uploadListPlatfShopOrders' + '?sOrderId='+sOrderId+'&orderId='+orderId+'&personalName='+personalName+'&mobilePhoneNo='+mobilePhoneNo+'&ecomCode='+ecomCode+'&subOrderStatus='+subOrderStatus+'&payStatus='+payStatus+'&beginTime='+beginTime+'&endTime='+endTime);
+		Helper.post('/platforder/uploadListPlatfShopOrders' + '?sOrderId='+sOrderId+'&orderId='+orderId+'&personalName='+personalName+'&mobilePhoneNo='+mobilePhoneNo+'&ecomCode='+ecomCode+'&subOrderStatus='+subOrderStatus+'&payStatus='+payStatus+'&beginTime='+beginTime+'&endTime='+endTime);
 	},
     deliverGoods : function () {
         var sOrderId = $(this).attr('sOrderId');
@@ -109,7 +109,7 @@ var listPlatfShopOrder = {
         }
         Helper.confirm("确定对该订单发货吗？", function() {
             $.ajax({
-                url : Helper.getRootPath() + '/platforder/platforder/orderDeliverGoods',
+                url : Helper.getRootPath() + '/platforder/orderDeliverGoods',
                 type : 'post',
                 dataType : "json",
                 data : {
@@ -117,7 +117,7 @@ var listPlatfShopOrder = {
                 },
                 success : function(data) {
                     if (data.code == '00') {
-                        Helper.post('/platforder/platforder/getPlatfShopOrderList');
+                        Helper.post('/platforder/getPlatfShopOrderList');
                     }  else {
                         Helper.alert(data.msg);
                         return false;
