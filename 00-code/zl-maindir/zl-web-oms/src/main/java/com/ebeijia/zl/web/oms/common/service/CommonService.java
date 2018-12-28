@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.common.service;
 
+import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,4 +14,36 @@ public interface CommonService {
 	Map<String, Object> getAccountLogInfPage(HttpServletRequest req);
 
 	Map<String, Object> saveFile(MultipartFile file, HttpServletRequest request, String orderId);
+
+	/**
+	 * 文件上传
+	 * @param imgVo
+	 * @param file
+	 * @throws Exception
+	 */
+	Map<String, Object> uploadImange(FTPImageVo imgVo, MultipartFile file) throws Exception;
+
+	/**
+	 * 文件上传返回文件名
+	 * @param imgVo
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	Map<String, Object> uploadImangeName(FTPImageVo imgVo, MultipartFile file) throws Exception;
+
+	/**
+	 *  删除图片
+	 * @param imgVo
+	 * @param fileName
+	 */
+	void deleteImange(FTPImageVo imgVo, String fileName);
+
+	/**
+	 * 查看文件是否已存在
+	 * @param imgVo
+	 * @param fileName
+	 * @return
+	 */
+	Map<String, Object> isFileExsits(FTPImageVo imgVo, String fileName);
 }

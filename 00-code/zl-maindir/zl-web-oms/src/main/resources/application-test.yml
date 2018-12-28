@@ -66,6 +66,18 @@ mybatis-plus:
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-oms.xml
+#FTP服务器连接
+ftpClient:
+  connect:
+    server: 192.168.2.110
+    port: 21
+    username: app_img
+    password: app_img
+    separator: /
+IMG_SERVER: http://192.168.2.110:8880
+FILE_UPLAOD_PATH: /imgfile
+FILE_UPLAOD_SEPARATOR: /
+FILE_NEW_PATH: /oms/
 pagehelper:
   helperDialect: mysql
   reasonable: true

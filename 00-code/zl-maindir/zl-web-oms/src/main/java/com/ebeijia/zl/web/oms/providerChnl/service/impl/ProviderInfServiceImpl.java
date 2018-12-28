@@ -20,19 +20,21 @@ import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
 import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderService;
+import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
+import com.ebeijia.zl.web.oms.common.util.OrderConstants;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 import com.ebeijia.zl.web.oms.providerChnl.service.ProviderInfService;
-import com.ebeijia.zl.web.oms.utils.OrderConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +46,18 @@ import java.util.*;
 @Service("providerInfService")
 public class ProviderInfServiceImpl implements ProviderInfService {
 	Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Value("${FILE_UPLAOD_PATH}")
+	private String FILE_UPLAOD_PATH;
+
+	@Value("${FILE_UPLAOD_SEPARATOR}")
+	private String FILE_UPLAOD_SEPARATOR;
+
+	@Value("${IMG_SERVER}")
+	private String IMG_SERVER;
+
+	@Value("${FILE_NEW_PATH}")
+	private String FILE_NEW_PATH;
 
 	@Autowired
 	private ProviderInfFacade providerInfFacade;
@@ -176,12 +190,37 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(0);
 
-		Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
+		if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
+			logger.error("## 上传图片为空");
+			return 0;
+		}
+		FTPImageVo imgVo = new FTPImageVo();
+		imgVo.setImgId(order.getOrderId());
+		imgVo.setService(IMG_SERVER);
+		imgVo.setNewPath(FILE_NEW_PATH);
+		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
+		imgVo.setUploadPath(FILE_UPLAOD_PATH);
+		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_03.getValue());
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
+			if (resultMap.get("status") == "true") {
+				order.setEvidenceUrl(resultMap.get("msg").toString());
+			} else {
+				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+				return 0;
+			}
+		} catch (Exception e) {
+			logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
+			return 0;
+		}
+
+		/*Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
 		if (resultMap.get("status").equals(Boolean.FALSE)) {
 			logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
 			return 0;
 		}
-		order.setEvidenceUrl(resultMap.get("msg").toString());
+		order.setEvidenceUrl(resultMap.get("msg").toString());*/
 
 		List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
 		if (!StringUtil.isNullOrEmpty(A00)) {
@@ -560,14 +599,39 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(order.getLockVersion() + 1);
 
-		if (StringUtils.isNotBlank(evidenceUrlFile.getOriginalFilename())) {
+		if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
+			logger.error("## 上传图片为空");
+			return 0;
+		}
+		FTPImageVo imgVo = new FTPImageVo();
+		imgVo.setImgId(order.getOrderId());
+		imgVo.setService(IMG_SERVER);
+		imgVo.setNewPath(FILE_NEW_PATH);
+		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
+		imgVo.setUploadPath(FILE_UPLAOD_PATH);
+		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_03.getValue());
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
+			if (resultMap.get("status") == "true") {
+				order.setEvidenceUrl(resultMap.get("msg").toString());
+			} else {
+				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+				return 0;
+			}
+		} catch (Exception e) {
+			logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
+			return 0;
+		}
+
+		/*if (StringUtils.isNotBlank(evidenceUrlFile.getOriginalFilename())) {
 			Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
 			if (resultMap.get("status").equals(Boolean.FALSE)) {
 				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
 				return 0;
 			}
 			order.setEvidenceUrl(resultMap.get("msg").toString());
-		}
+		}*/
 
 		List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();

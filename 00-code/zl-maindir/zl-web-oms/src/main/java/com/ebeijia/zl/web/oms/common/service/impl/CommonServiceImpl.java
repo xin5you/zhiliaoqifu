@@ -1,5 +1,7 @@
 package com.ebeijia.zl.web.oms.common.service.impl;
 
+import com.ebeijia.zl.FtpProps;
+import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -8,8 +10,12 @@ import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
+import com.ebeijia.zl.web.oms.common.util.FTPUtil;
+import com.ebeijia.zl.web.oms.common.util.FileUtil;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +32,9 @@ import java.util.Map;
 @Service("commonService")
 public class CommonServiceImpl implements CommonService {
     Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private FtpProps ftpProps;
 
     @Autowired
     private AccountQueryFacade accountQueryFacade;
@@ -148,6 +157,121 @@ public class CommonServiceImpl implements CommonService {
             resultMap.put("msg", "文件上传异常");
             return resultMap;
         }
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> uploadImange(FTPImageVo imgVo, MultipartFile file) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+        if (file == null) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", ExceptionEnum.ImageNews.ImageNews03.getMsg());
+            return resultMap;
+        }
+        StringBuffer path = new StringBuffer();
+        path.append(imgVo.getUploadPath())
+                .append(imgVo.getNewPath())
+//                .append(imgVo.getDate())
+                .append(imgVo.getImgType())
+                .append(imgVo.getSeparator());
+        try {
+            // 打开ftp连接
+            FTPUtil ftpUtil = new FTPUtil();
+            FTPClient ftpClient = ftpUtil.getFTPClient(ftpProps);
+            // ftpClient.enterLocalActiveMode(); //主动模式
+            ftpClient.enterLocalPassiveMode(); // 被动模式
+            String newFilename = FileUtil.getNewFileName(file.getOriginalFilename());
+            newFilename = newFilename.replace(newFilename.substring(0, newFilename.indexOf('.')), imgVo.getImgId());
+            boolean flag = ftpUtil.uploadFile(ftpClient, path.toString(), newFilename, file.getInputStream());
+            if (!flag) {
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", ExceptionEnum.ImageNews.ImageNews02.getMsg());
+            }
+            ftpUtil.ftpCloseConnect(ftpClient); // 关闭ftp连接
+        } catch (Exception e) {
+            logger.error("## 图片上传异常", e);
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", ExceptionEnum.ImageNews.ImageNews02.getMsg());
+        }
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> uploadImangeName(FTPImageVo imgVo, MultipartFile file) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+        if (file == null) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", ExceptionEnum.ImageNews.ImageNews03.getMsg());
+            return resultMap;
+        }
+        StringBuffer newPath = new StringBuffer();
+        newPath.append(imgVo.getNewPath())
+//                .append(imgVo.getDate())
+                .append(imgVo.getImgType())
+                .append(imgVo.getSeparator());
+        StringBuffer realPath = new StringBuffer();
+        realPath.append(imgVo.getUploadPath())
+                .append(newPath);
+        // 打开ftp连接
+        FTPUtil ftpUtil = new FTPUtil();
+        FTPClient ftpClient = ftpUtil.getFTPClient(ftpProps);
+        ftpClient.enterLocalPassiveMode(); // 被动模式
+        try {
+            String newFilename = FileUtil.getNewFileName(file.getOriginalFilename());
+            newFilename = newFilename.replace(newFilename.substring(0, newFilename.indexOf('.')), imgVo.getImgId());
+            boolean flag = ftpUtil.uploadFile(ftpClient, realPath.toString(), newFilename, file.getInputStream());
+            if (flag) {
+                resultMap.put("msg", imgVo.getService() + newPath + newFilename);
+            }
+        } catch (Exception e) {
+            logger.error("## 图片上传异常", e);
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", ExceptionEnum.ImageNews.ImageNews02.getMsg());
+        } finally {
+            ftpUtil.ftpCloseConnect(ftpClient); // 关闭ftp连接
+        }
+
+        return resultMap;
+    }
+
+    @Override
+    public void deleteImange(FTPImageVo imgVo, String fileName) {
+        StringBuffer newPath = new StringBuffer();
+        String imgName = fileName.substring(fileName.lastIndexOf("/") + 1);
+        newPath.append(imgVo.getUploadPath())
+                .append(imgVo.getNewPath())
+//                .append(imgVo.getDate())
+                .append(imgVo.getImgType())
+                .append(imgVo.getSeparator())
+                .append(imgName);
+        FTPUtil ftpUtil = new FTPUtil();
+        FTPClient ftpClient = ftpUtil.getFTPClient(ftpProps);
+        // ftpClient.enterLocalActiveMode(); //主动模式
+        ftpClient.enterLocalPassiveMode(); // 被动模式
+        ftpUtil.deleteFile(ftpClient, newPath.toString());
+        ftpUtil.ftpCloseConnect(ftpClient);
+    }
+
+    @Override
+    public Map<String, Object> isFileExsits(FTPImageVo imgVo, String fileName) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        StringBuffer newPath = new StringBuffer();
+        String imgName = fileName.substring(fileName.lastIndexOf("/") + 1);
+        newPath.append(imgVo.getUploadPath())
+                .append(imgVo.getNewPath())
+//                .append(imgVo.getDate())
+                .append(imgVo.getImgType())
+                .append(imgVo.getSeparator())
+                .append(imgName);
+        FTPUtil ftpUtil = new FTPUtil();
+        FTPClient ftpClient = ftpUtil.getFTPClient(ftpProps);
+        // ftpClient.enterLocalActiveMode(); //主动模式
+        ftpClient.enterLocalPassiveMode(); // 被动模式
+        boolean flag = ftpUtil.isFileExsits(ftpClient, newPath.toString());
+        ftpUtil.ftpCloseConnect(ftpClient);
+        resultMap.put("status", flag);
         return resultMap;
     }
 }

@@ -245,7 +245,13 @@ public class ProviderInfController {
 		}
 		return resultMap;
 	}
-	
+
+	/**
+	 * 供应商开户
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/providerOpenAccount")
 	@ResponseBody
 	public Map<String, Object> providerOpenAccount(HttpServletRequest req, HttpServletResponse response) {
@@ -266,6 +272,12 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 供应商上账
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "intoAddProviderTransfer")
 	public ModelAndView intoAddProviderTransfer(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderTransfer");
@@ -286,6 +298,13 @@ public class ProviderInfController {
 		return mv;
 	}
 
+	/**
+	 * 供应商上账订单添加
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
 	@RequestMapping(value = "/addProviderTransfer")
 	@ResponseBody
 	public Map<String, Object> addProviderTransfer(HttpServletRequest req, HttpServletResponse response,
@@ -321,6 +340,12 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 供应商上账订单提交（调用交易系统充值）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
     @RequestMapping(value = "/addProviderTransferCommit")
     @ResponseBody
     public Map<String, Object> addProviderTransferCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -340,6 +365,12 @@ public class ProviderInfController {
         return resultMap;
     }
 
+	/**
+	 * 更新供应商上账审核状态
+	 * @param req
+	 * @param response
+	 * @return
+	 */
     @RequestMapping(value = "/updateProviderCheckStatCommit")
     @ResponseBody
     public Map<String, Object> updateProviderCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -364,6 +395,12 @@ public class ProviderInfController {
         return resultMap;
     }
 
+	/**
+	 * 查询供应商上账订单信息（根据订单ID查询）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/getProviderByOrderId")
 	@ResponseBody
 	public Map<String, Object> getProviderByOrderId(HttpServletRequest req, HttpServletResponse response) {
@@ -384,6 +421,12 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 更新供应商入账订单打款状态（打给平台）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/updateProviderRemitStatCommit")
 	@ResponseBody
 	public Map<String, Object> updateProviderRemitStatCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -402,6 +445,12 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 查询供应商打款订单明细
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "viewProviderTransferDetail")
 	public ModelAndView viewProviderTransferDetail(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/viewProviderTransfer");
@@ -433,6 +482,12 @@ public class ProviderInfController {
 		return mv;
 	}
 
+	/**
+	 * 更新供应商上账订单信息
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoEditProviderTransfer")
 	@ResponseBody
 	public Map<String, Object> intoEditProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
@@ -464,6 +519,13 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 更新供应商上账订单信息提交
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
 	@RequestMapping(value = "/editProviderTransfer")
 	@ResponseBody
 	public Map<String, Object> editProviderTransfer(HttpServletRequest req, HttpServletResponse response,
@@ -498,6 +560,11 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 查询供应商账户余额
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/listProviderAccBal")
 	public ModelAndView listProviderAccBal(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/listProviderAccBal");
@@ -513,6 +580,12 @@ public class ProviderInfController {
 		return mv;
 	}
 
+	/**
+	 * 删除供应商上账订单
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/deleteProviderTransfer")
 	@ResponseBody
 	public Map<String, Object> deleteProviderTransfer(HttpServletRequest req, HttpServletResponse response) {
@@ -520,6 +593,11 @@ public class ProviderInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 查询供应商账户余额明细
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/listProviderAccBalDetail")
 	public ModelAndView viewProviderAccBalDetail(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/listProviderAccBalDetail");
@@ -536,7 +614,7 @@ public class ProviderInfController {
 	}
 
 	/**
-	 * 封装供应商实体
+	 * 封装供应商实体类
 	 */
 	public ProviderInf getProviderInf(HttpServletRequest req) {
 		HttpSession session = req.getSession();
