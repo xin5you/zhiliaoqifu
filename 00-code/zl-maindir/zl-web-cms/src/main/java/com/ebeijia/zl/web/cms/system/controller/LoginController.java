@@ -61,17 +61,17 @@ public class LoginController {
 			// 先判断验证码
 			String sysAuthCode = (String) req.getSession().getAttribute(RandomCodeType.LOGIN.getCode());
 			if (sysAuthCode == null)// session过期
-				return ResultsUtil.error(ExceptionEnum.loginNews.LN01.getCode(), ExceptionEnum.loginNews.LN01.getMsg());
+				return ResultsUtil.error(ExceptionEnum.LoginNews.LN01.getCode(), ExceptionEnum.LoginNews.LN01.getMsg());
 			if (!authCode.equalsIgnoreCase(sysAuthCode))
-				return ResultsUtil.error(ExceptionEnum.loginNews.LN02.getCode(), ExceptionEnum.loginNews.LN02.getMsg());
+				return ResultsUtil.error(ExceptionEnum.LoginNews.LN02.getCode(), ExceptionEnum.LoginNews.LN02.getMsg());
 
 			User currUser = userService.getUserByName(null, userName, LoginType.LoginType2.getCode());
 			if (currUser == null)
-				return ResultsUtil.error(ExceptionEnum.loginNews.LN03.getCode(), ExceptionEnum.loginNews.LN03.getMsg());
+				return ResultsUtil.error(ExceptionEnum.LoginNews.LN03.getCode(), ExceptionEnum.LoginNews.LN03.getMsg());
 
 			String sysMd5Password = MD5Utils.MD5(currUser.getPassword() + authCode);
 			if (!currUser.getLoginName().equals(userName) || !sysMd5Password.equals(md5Code))
-				return ResultsUtil.error(ExceptionEnum.loginNews.LN03.getCode(), ExceptionEnum.loginNews.LN03.getMsg());
+				return ResultsUtil.error(ExceptionEnum.LoginNews.LN03.getCode(), ExceptionEnum.LoginNews.LN03.getMsg());
 
 			session.setAttribute(Constants.SESSION_USER, currUser);
 
@@ -84,7 +84,7 @@ public class LoginController {
 					resourceList = resourceService.getRoleResourceByRoleId(r.getId().toString());
 			}
 			if (resourceList == null || resourceList.size() <= 0) {
-				return ResultsUtil.error(ExceptionEnum.loginNews.LN05.getCode(), ExceptionEnum.loginNews.LN05.getMsg());
+				return ResultsUtil.error(ExceptionEnum.LoginNews.LN05.getCode(), ExceptionEnum.LoginNews.LN05.getMsg());
 			} else {
 				String[] UserAuthUrlArray = new String[resourceList.size()];
 				// 循环将该用户所拥有的权限路径保存在字符串数组
@@ -96,7 +96,7 @@ public class LoginController {
 			}
 		} catch (Exception e) {
 			logger.error("## 登录失败：", e);
-			return ResultsUtil.error(ExceptionEnum.loginNews.LN04.getCode(), ExceptionEnum.loginNews.LN04.getMsg());
+			return ResultsUtil.error(ExceptionEnum.LoginNews.LN04.getCode(), ExceptionEnum.LoginNews.LN04.getMsg());
 		}
 		return ResultsUtil.success();
 	}

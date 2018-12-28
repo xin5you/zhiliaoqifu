@@ -122,11 +122,11 @@ public class RoleController {
 			role.setLoginType(LoginType.LoginType2.getCode());
 			Role roleName = roleService.getRoleByName(role);
 			if (roleName != null) {
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN05.getCode(), ExceptionEnum.RoleNews.REN05.getMsg());
 			}
 			Role roleSeq = roleService.getRoleBySeq(role);
 			if (roleSeq != null) {
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN07.getCode(), ExceptionEnum.roleNews.REN07.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN07.getCode(), ExceptionEnum.RoleNews.REN07.getMsg());
 			}
 			role.setId(UUID.randomUUID().toString());
 			role.setLoginType(LoginType.LoginType2.getCode());
@@ -140,8 +140,8 @@ public class RoleController {
 			if (roleService.save(role)) {
 				return ResultsUtil.success();
 			} else {
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN01.getCode(),
-						ExceptionEnum.roleNews.REN01.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN01.getCode(),
+						ExceptionEnum.RoleNews.REN01.getMsg());
 			}
 		} catch (BizHandlerException e) {
 			logger.error("## 新增角色出错", e.getMessage());
@@ -170,13 +170,13 @@ public class RoleController {
 			if (!oldRole.getRoleName().equals(role.getRoleName())) {
 				Role roleName = roleService.getRoleByName(role);
 				if (roleName != null) {
-					return ResultsUtil.error(ExceptionEnum.roleNews.REN05.getCode(), ExceptionEnum.roleNews.REN05.getMsg());
+					return ResultsUtil.error(ExceptionEnum.RoleNews.REN05.getCode(), ExceptionEnum.RoleNews.REN05.getMsg());
 				}
 			}
 			if (!oldRole.getSeq().equals(role.getSeq())) {
 				Role roleSeq = roleService.getRoleBySeq(role);
 				if (roleSeq != null) {
-					return ResultsUtil.error(ExceptionEnum.roleNews.REN07.getCode(), ExceptionEnum.roleNews.REN07.getMsg());
+					return ResultsUtil.error(ExceptionEnum.RoleNews.REN07.getCode(), ExceptionEnum.RoleNews.REN07.getMsg());
 				}
 			}
 
@@ -186,7 +186,7 @@ public class RoleController {
 			if (roleService.updateById(role))
 				return ResultsUtil.success();
 			else
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN02.getCode(), ExceptionEnum.roleNews.REN02.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN02.getCode(), ExceptionEnum.RoleNews.REN02.getMsg());
 		} catch (BizHandlerException e) {
 			logger.error("## 编辑角色出错", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -210,12 +210,12 @@ public class RoleController {
 			List<UserRole> userRoleList = userRoleService.getUserRoleByRoleId(roleId);
 			List<RoleResource> roleResourceList = roleResourceService.getRoleResourceByRoleId(roleId);
 			if (userRoleList != null || roleResourceList != null || userRoleList.size() >= 1 || roleResourceList.size() >= 1) {
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN03.getCode(), ExceptionEnum.roleNews.REN03.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN03.getCode(), ExceptionEnum.RoleNews.REN03.getMsg());
 			}
 			if (roleService.removeById(roleId)) {
 				return ResultsUtil.success();
 			} else {
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN03.getCode(), ExceptionEnum.roleNews.REN03.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN03.getCode(), ExceptionEnum.RoleNews.REN03.getMsg());
 			}
 		} catch (BizHandlerException e) {
 			logger.error("## 删除角色出错", e.getMessage());
@@ -262,12 +262,12 @@ public class RoleController {
 		try {
 			String roleId = req.getParameter("roleId");
 			if (roleResourceService.deleteRoleResourceByRoleId(roleId) < 1) {
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN06.getCode(), ExceptionEnum.roleNews.REN06.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN06.getCode(), ExceptionEnum.RoleNews.REN06.getMsg());
 			}
 			String ids = req.getParameter("ids");
 			List<RoleResource> roleResList = new ArrayList<>();
 			if (ids == null || ids == "") {
-				return ResultsUtil.error(ExceptionEnum.userNews.UN10.getCode(), ExceptionEnum.userNews.UN10.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN10.getCode(), ExceptionEnum.UserNews.UN10.getMsg());
 			} else {
 				String[] resourceId = ids.split(",");
 				for (int i = 0; i < resourceId.length; i++) {
@@ -281,7 +281,7 @@ public class RoleController {
 			if (roleResourceService.saveBatch(roleResList))
 				return ResultsUtil.success();
 			else
-				return ResultsUtil.error(ExceptionEnum.roleNews.REN06.getCode(), ExceptionEnum.roleNews.REN06.getMsg());
+				return ResultsUtil.error(ExceptionEnum.RoleNews.REN06.getCode(), ExceptionEnum.RoleNews.REN06.getMsg());
 		} catch (BizHandlerException e) {
 			logger.error("## 新增角色资源出错", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());

@@ -8,7 +8,7 @@ public class ExceptionEnum {
 	public static final String ERROR_CODE = "999";
 	public static final String ERROR_MSG = "系统故障，请稍后再试";
 
-	public enum loginNews {
+	public enum LoginNews {
 		LN01("01", "会话过期，请重新登录"),
 		LN02("02", "验证码不正确，请重新输入"),
 		LN03("03", "用户名或密码错误，请重新输入"),
@@ -18,7 +18,7 @@ public class ExceptionEnum {
 		private String code;
 		private String msg;
 
-		private loginNews(String code, String msg) {
+		private LoginNews(String code, String msg) {
 			this.code = code;
 			this.msg = msg;
 		}
@@ -39,8 +39,8 @@ public class ExceptionEnum {
 			this.msg = msg;
 		}
 
-		public static loginNews findByCode(String code) {
-			for (loginNews t : loginNews.values()) {
+		public static LoginNews findByCode(String code) {
+			for (LoginNews t : LoginNews.values()) {
 				if (t.code.equalsIgnoreCase(code)) {
 					return t;
 				}
@@ -49,7 +49,7 @@ public class ExceptionEnum {
 		}
 	}
 
-	public enum userNews {
+	public enum UserNews {
 		UN01("01", "新增用户出错"),
 		UN02("02", "编辑用户出错"),
 		UN03("03", "删除用户出错"),
@@ -64,7 +64,7 @@ public class ExceptionEnum {
 		private String code;
 		private String msg;
 
-		private userNews(String code, String msg) {
+		private UserNews(String code, String msg) {
 			this.code = code;
 			this.msg = msg;
 		}
@@ -85,8 +85,8 @@ public class ExceptionEnum {
 			this.msg = msg;
 		}
 
-		public static userNews findByCode(String code) {
-			for (userNews t : userNews.values()) {
+		public static UserNews findByCode(String code) {
+			for (UserNews t : UserNews.values()) {
 				if (t.code.equalsIgnoreCase(code)) {
 					return t;
 				}
@@ -95,7 +95,7 @@ public class ExceptionEnum {
 		}
 	}
 
-	public enum roleNews {
+	public enum RoleNews {
 		REN01("01", "新增角色出错"),
 		REN02("02", "编辑角色出错"),
 		REN03("03", "删除角色出错"),
@@ -109,7 +109,7 @@ public class ExceptionEnum {
 		private String code;
 		private String msg;
 
-		private roleNews(String code, String msg) {
+		private RoleNews(String code, String msg) {
 			this.code = code;
 			this.msg = msg;
 		}
@@ -130,8 +130,8 @@ public class ExceptionEnum {
 			this.msg = msg;
 		}
 
-		public static roleNews findByCode(String code) {
-			for (roleNews t : roleNews.values()) {
+		public static RoleNews findByCode(String code) {
+			for (RoleNews t : RoleNews.values()) {
 				if (t.code.equalsIgnoreCase(code)) {
 					return t;
 				}
@@ -140,7 +140,7 @@ public class ExceptionEnum {
 		}
 	}
 
-	public enum resourceNews {
+	public enum ResourceNews {
 		RN01("01", "新增资源出错"),
 		RN02("02", "编辑资源出错"),
 		RN03("03", "删除资源出错"),
@@ -150,7 +150,7 @@ public class ExceptionEnum {
 		private String code;
 		private String msg;
 
-		private resourceNews(String code, String msg) {
+		private ResourceNews(String code, String msg) {
 			this.code = code;
 			this.msg = msg;
 		}
@@ -171,8 +171,8 @@ public class ExceptionEnum {
 			this.msg = msg;
 		}
 
-		public static resourceNews findByCode(String code) {
-			for (resourceNews t : resourceNews.values()) {
+		public static ResourceNews findByCode(String code) {
+			for (ResourceNews t : ResourceNews.values()) {
 				if (t.code.equalsIgnoreCase(code)) {
 					return t;
 				}
@@ -189,8 +189,8 @@ public class ExceptionEnum {
 	 */
 	public enum PlatfOrderNewsEnum {
 
-		PlatfOrderNews_1("1","订单不存在"),
-		PlatfOrderNews_2("2","订单发货失败");
+		PlatfOrderNews_01("01","订单不存在"),
+		PlatfOrderNews_02("02","订单发货失败");
 
 		private String code;
 		private String msg;
@@ -226,4 +226,91 @@ public class ExceptionEnum {
 		}
 	}
 
+	/*
+		图片上传枚举值
+	 */
+	public enum ImageNews {
+		ImageNews01("01", "图片上传返回地址失败"),
+		ImageNews02("02", "图片上传异常"),
+		ImageNews03("03", "请选择图片"),
+		ImageNews04("04", "删除图片异常");
+
+		private String code;
+		private String msg;
+
+		private ImageNews(String code, String msg) {
+			this.code = code;
+			this.msg = msg;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+
+		public static ImageNews findByCode(String code) {
+			for (ImageNews t : ImageNews.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * 商品规格枚举
+	 */
+	public enum GoodsSpecNews {
+		GoodsSpecNews01("01", "新增商品规格失败"),
+		GoodsSpecNews02("02", "编辑商品规格失败"),
+		GoodsSpecNews03("03", "删除商品规格失败"),
+		GoodsSpecNews04("04", "新增商品规格值失败"),
+		GoodsSpecNews05("05", "编辑商品规格值失败"),
+		GoodsSpecNews06("06", "删除商品规格值失败");
+
+		private String code;
+		private String msg;
+
+		private GoodsSpecNews(String code, String msg) {
+			this.code = code;
+			this.msg = msg;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+
+		public static GoodsSpecNews findByCode(String code) {
+			for (GoodsSpecNews t : GoodsSpecNews.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
 }

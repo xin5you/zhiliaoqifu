@@ -1,13 +1,22 @@
 package com.ebeijia.zl.web.cms.base.util;
 
 import com.ebeijia.zl.FtpProps;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.SocketException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FTPUtil {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	/**
 	 * ftp 实例化客户端
 	 * 
@@ -15,18 +24,11 @@ public class FTPUtil {
 	 */
 	public FTPClient getFTPClient(FtpProps ftpProps) {
 		FTPClient ftp = new FTPClient();
-		/*
-		 * String server = "192.168.1.102"; String port = "21"; String username
-		 * = "app_img"; String password = "app_img";
-		 */
+
 		String server = ftpProps.getConnect().get("server");
 		String port = ftpProps.getConnect().get("port");
 		String username = ftpProps.getConnect().get("username");
 		String password = ftpProps.getConnect().get("password");
-		// String server = ftpProps.getConnect().getServer();
-		// String port = ftpProps.getConnect().getPort();
-		// String username = ftpProps.getConnect().getUsername();
-		// String password = ftpProps.getConnect().getPassword();
 		ftp = this.ftpOpenConnect(server, Integer.parseInt(port), username, password);
 		return ftp;
 	}
@@ -51,7 +53,7 @@ public class FTPUtil {
 			// 登录FTP服务器
 			ftpClient.login(username, password);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("## ftp连接异常", e);
 		}
 		return ftpClient;
 	}
@@ -77,19 +79,18 @@ public class FTPUtil {
 					ftpClient.disconnect();
 					flag = true;
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("## ftp关闭连接异常", e);
 				}
 			}
 		}
 		return flag;
 	}
 
-	/** */
 	/**
 	 * 递归创建远程服务器目录
 	 * 
-	 * @param remote
-	 *            远程服务器文件绝对路径
+	 * @param
+	 *  //远程服务器文件绝对路径
 	 * @param ftpClient
 	 *            FTPClient对象
 	 * @return 目录创建是否成功
@@ -165,7 +166,7 @@ public class FTPUtil {
 			inputStream.close();
 			flag = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("## ftp上传文件异常", e);
 		}
 		return flag;
 	}
@@ -196,9 +197,10 @@ public class FTPUtil {
 			InputStream inputStream = new FileInputStream(new File(originfilename));
 			FTPClient ftpClient = ftpOpenConnect(server, port, username, password);
 			flag = uploadFile(ftpClient, pathname, filename, inputStream);
+			System.out.println(flag);
 			ftpCloseConnect(ftpClient);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("## ftp上传文件异常", e);
 		}
 		return flag;
 	}
@@ -231,7 +233,7 @@ public class FTPUtil {
 			flag = uploadFile(ftpClient, pathname, fileName, inputStream);
 			ftpCloseConnect(ftpClient);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("## ftp上传文件异常", e);
 		}
 		return flag;
 	}
@@ -318,11 +320,48 @@ public class FTPUtil {
 				try {
 					ftpClient.logout();
 				} catch (IOException e) {
-
+					logger.error("## ftp下载文件异常", e);
 				}
 			}
 		}
 		return flag;
+	}
+
+	public boolean isFileExsits(FTPClient ftpClient, String pathname) {
+		boolean flag = false;
+		try {
+			// 验证FTP服务器是否登录成功
+			int replyCode = ftpClient.getReplyCode();
+			if (!FTPReply.isPositiveCompletion(replyCode)) {
+				return flag;
+			}
+			// 切换FTP目录
+			FTPFile[] files = ftpClient.listFiles(pathname);
+			if(files != null && files.length > 0){
+				System.out.println("files size:" + files[0].getSize());
+				flag = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flag;
+	}
+
+	public static void main(String[] args) {
+		/*FTPUtil ftpUtil=new FTPUtil();
+		FTPClient ftpClient = new FTPClient();
+		System.out.println("------------------");
+		try {
+			ftpClient.connect("192.168.2.110", 21);
+			ftpClient.login("app_img", "app_img");
+			File file=new File("C:\\zhuomian.png");
+			InputStream inputStream = new FileInputStream(file);
+			ftpUtil.uploadFile(ftpClient, "/20181228/", "zhuomian.png", inputStream);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ftpUtil.ftpCloseConnect(ftpClient);*/
 	}
 
 }

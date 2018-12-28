@@ -64,17 +64,17 @@ public class UserController {
 		String newPasswordPage = req.getParameter("newPasswordPage");
 		String newPassword2Page = req.getParameter("newPassword2Page");
 		if (!newPasswordPage.equals(newPassword2Page))
-			return ResultsUtil.error(ExceptionEnum.userNews.UN07.getCode(), ExceptionEnum.userNews.UN07.getMsg());
+			return ResultsUtil.error(ExceptionEnum.UserNews.UN07.getCode(), ExceptionEnum.UserNews.UN07.getMsg());
 		try {
 			HttpSession session = req.getSession();
 			User user = (User) session.getAttribute(Constants.SESSION_USER);
 			User currUser = userService.getById(user.getId());
 			if (currUser != null) {
 				if (!currUser.getPassword().equals(oldPasswrod))
-					return ResultsUtil.error(ExceptionEnum.userNews.UN08.getCode(), ExceptionEnum.userNews.UN08.getMsg());
+					return ResultsUtil.error(ExceptionEnum.UserNews.UN08.getCode(), ExceptionEnum.UserNews.UN08.getMsg());
 				currUser.setPassword(newPasswordPage);
 				if (!userService.updateById(currUser)) {
-					return ResultsUtil.error(ExceptionEnum.userNews.UN09.getCode(), ExceptionEnum.userNews.UN09.getMsg());
+					return ResultsUtil.error(ExceptionEnum.UserNews.UN09.getCode(), ExceptionEnum.UserNews.UN09.getMsg());
 				}
 			}
 		} catch (BizHandlerException e) {
@@ -82,7 +82,7 @@ public class UserController {
 			return ResultsUtil.error(e.getCode(), e.getMessage());
 		} catch (Exception e) {
 			logger.error("## 密码修改失败", e);
-			return ResultsUtil.error(ExceptionEnum.userNews.UN09.getCode(), ExceptionEnum.userNews.UN09.getMsg());
+			return ResultsUtil.error(ExceptionEnum.UserNews.UN09.getCode(), ExceptionEnum.UserNews.UN09.getMsg());
 		}
 		return ResultsUtil.success();
 	}
@@ -112,7 +112,7 @@ public class UserController {
 	 * 用户列表
 	 * 
 	 * @param req
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@PostMapping(value = "/listUser")
@@ -153,7 +153,7 @@ public class UserController {
 	 * 新增用户信息
 	 * 
 	 * @param req
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@PostMapping(value = "/addUser")
@@ -176,9 +176,9 @@ public class UserController {
 				if (userService.save(u))
 					return ResultsUtil.success();
 				else
-					return ResultsUtil.error(ExceptionEnum.userNews.UN01.getCode(), ExceptionEnum.userNews.UN01.getMsg());
+					return ResultsUtil.error(ExceptionEnum.UserNews.UN01.getCode(), ExceptionEnum.UserNews.UN01.getMsg());
 			}else{
-				return ResultsUtil.error(ExceptionEnum.userNews.UN05.getCode(), ExceptionEnum.userNews.UN05.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN05.getCode(), ExceptionEnum.UserNews.UN05.getMsg());
 			}
 		} catch (BizHandlerException e) {
 			logger.error("## 新增用户出错", e.getMessage());
@@ -193,7 +193,7 @@ public class UserController {
 	 * 修改用户信息
 	 * 
 	 * @param req
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@PostMapping(value = "/updateUser")
@@ -219,14 +219,14 @@ public class UserController {
 					u.setUpdateTime(System.currentTimeMillis());
 					u.setLoginType(LoginType.LoginType2.getCode());
 				}else{
-					return ResultsUtil.error(ExceptionEnum.userNews.UN05.getCode(), ExceptionEnum.userNews.UN05.getMsg());
+					return ResultsUtil.error(ExceptionEnum.UserNews.UN05.getCode(), ExceptionEnum.UserNews.UN05.getMsg());
 				}
 			}
 			u.setLockVersion(u.getLockVersion() + 1);
 			if (userService.updateById(u))
 				return ResultsUtil.success();
 			else
-				return ResultsUtil.error(ExceptionEnum.userNews.UN02.getCode(), ExceptionEnum.userNews.UN02.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN02.getCode(), ExceptionEnum.UserNews.UN02.getMsg());
 		} catch (BizHandlerException e) {
 			logger.error("## 编辑用户出错", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -240,7 +240,7 @@ public class UserController {
 	 * 删除用户信息
 	 * 
 	 * @param req
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@PostMapping(value = "/deleteUser")
@@ -250,7 +250,7 @@ public class UserController {
 			if (userService.removeById(userId))
 				return ResultsUtil.success();
 			else
-				return ResultsUtil.error(ExceptionEnum.userNews.UN03.getCode(), ExceptionEnum.userNews.UN03.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN03.getCode(), ExceptionEnum.UserNews.UN03.getMsg());
 		} catch (BizHandlerException e) {
 			logger.error("## 删除用户出错", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -264,7 +264,7 @@ public class UserController {
 	 * 用户角色列表
 	 * 
 	 * @param req
-	 * @param resp
+	 * @param
 	 * @return
 	 */
 	@PostMapping(value = "/listUserRole/{type}")
@@ -296,12 +296,12 @@ public class UserController {
 		try {
 			String userId = req.getParameter("userId");
 			if (userRoleService.deleteUserRoleByUserId(userId) < 1) {
-				return ResultsUtil.error(ExceptionEnum.userNews.UN06.getCode(), ExceptionEnum.userNews.UN06.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN06.getCode(), ExceptionEnum.UserNews.UN06.getMsg());
 			}
 			String ids = req.getParameter("ids");
 			List<UserRole> urList = new ArrayList<>();
 			if (ids == null || ids == "") {
-				return ResultsUtil.error(ExceptionEnum.userNews.UN10.getCode(), ExceptionEnum.userNews.UN10.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN10.getCode(), ExceptionEnum.UserNews.UN10.getMsg());
 			} else {
 				String[] roleId = ids.split(",");
 				for (int i = 0; i < roleId.length; i++) {
@@ -315,7 +315,7 @@ public class UserController {
 			if (userRoleService.saveBatch(urList))
 				return ResultsUtil.success();
 			else
-				return ResultsUtil.error(ExceptionEnum.userNews.UN06.getCode(), ExceptionEnum.userNews.UN06.getMsg());
+				return ResultsUtil.error(ExceptionEnum.UserNews.UN06.getCode(), ExceptionEnum.UserNews.UN06.getMsg());
 		} catch (BizHandlerException e) {
 			logger.error("## 新增用户角色出错", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());

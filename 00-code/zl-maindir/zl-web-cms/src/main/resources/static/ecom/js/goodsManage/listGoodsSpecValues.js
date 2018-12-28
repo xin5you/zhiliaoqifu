@@ -1,20 +1,20 @@
 $(document).ready(function() {
-	listGoodsSpec.init();
+	listGoodsSpecValues.init();
 })
 
-var listGoodsSpec = {
+var listGoodsSpecValues = {
 	init : function() {
-        listGoodsSpec.initEvent();
+        listGoodsSpecValues.initEvent();
 	},
 
 	initEvent:function(){
-		$('.btn-reset').on('click', listGoodsSpec.searchReset);
-		$('.btn-add').on('click', listGoodsSpec.intoAddGoodsSpec);
-		$('.btn-edit').on('click', listGoodsSpec.intoEditGoodsSpec);
-		$('.btn-delete').on('click', listGoodsSpec.deleteGoodsSpec);
-		$('.btn-close').on('click',listGoodsSpec.searchReset);
-        $('#specImgFile').on('change', listGoodsSpec.imageUpload);
-        $('.btn-addSpecValues').on('click',listGoodsSpec.intoAddSpecValues);
+		$('.btn-reset').on('click', listGoodsSpecValues.searchReset);
+		$('.btn-add').on('click', listGoodsSpecValues.intoAddGoodsSpecValues);
+		$('.btn-edit').on('click', listGoodsSpecValues.intoEditGoodsSpecValues);
+		$('.btn-delete').on('click', listGoodsSpecValues.deleteGoodsSpecValues);
+		$('.btn-close').on('click',listGoodsSpecValues.searchReset);
+        $('#spec_type').on('change', listGoodsSpecValues.goodsSpecValuesType);
+        $('#specImageFile').on('change', listGoodsSpecValues.imageUpload);
 	},
 	
 	initTip: function (intoType) {
@@ -29,14 +29,12 @@ var listGoodsSpec = {
                 $(element).closest('div').removeClass("f_error");
             },
             rules:{
-                spec_name: { required: true},
-                spec_img: { required: true},
-                spec_order: { required: true}
+                spec_order: { required: true},
+                spec_type: { required: true}
             },
             messages: {
-                spec_name: { required: "请输入规格名称"},
-                spec_img: { required: "请选择规格图片"},
-                spec_order: { required: "请输入规格序号"}
+                spec_order: { required: "请输入规格值序号"},
+                spec_type: { required: "请输入规格值类型"}
             },
             invalidHandler: function(form, validator) {
             },
@@ -101,9 +99,9 @@ var listGoodsSpec = {
             submitHandler: function (form) {
             	$(".btn-submit").attr('disabled',"true");
             	if(intoType == 1) {
-                    listGoodsSpec.addGoodsSpec();
+                    listGoodsSpecValues.addGoodsSpecValues();
             	}else if(intoType == 2) {
-                    listGoodsSpec.editGoodsSpec();
+                    listGoodsSpecValues.editGoodsSpecValues();
             	}
                 return false;
             },
@@ -111,25 +109,25 @@ var listGoodsSpec = {
         });
     },
     imageUpload : function() {
-        var specImgFile = $("#specImgFile").val();
-        $("#spec_img").val(specImgFile);
+        var specImageFile = $("#specImageFile").val();
+        $("#spec_image").val(specImageFile);
     },
 	searchReset : function(){
-		Helper.post('/goodsManage/goodsSpec/getGoodsSpecList');
+		Helper.post('/goodsManage/goodsSpec/getGoodsSpecValuesList');
 	},
-	intoAddGoodsSpec : function(){
-        listGoodsSpec.loadModal(1, $(this).attr('specId'));
-        listGoodsSpec.initTip(1);
+	intoAddGoodsSpecValues : function(){
+        listGoodsSpecValues.loadModal(1, $(this).attr('specValueId'));
+        listGoodsSpecValues.initTip(1);
 	},
-	intoEditGoodsSpec : function(){
-        listGoodsSpec.loadModal(2, $(this).attr('specId'));
-        listGoodsSpec.initTip(2);
+	intoEditGoodsSpecValues : function(){
+        listGoodsSpecValues.loadModal(2, $(this).attr('specValueId'));
+        listGoodsSpecValues.initTip(2);
 	},
-	addGoodsSpec:function(){
+	addGoodsSpecValues:function(){
         $.ajax({
             type: 'POST',
-            url: Helper.getRootPath() + '/goodsManage/goodsSpec/addGoodsSpec',
-            data: new FormData($("#goodsSpecInfo")[0]),
+            url: Helper.getRootPath() + '/goodsManage/goodsSpec/addGoodsSpecValues',
+            data: new FormData($("#goodsSpecValuesInfo")[0]),
             processData: false,
             contentType: false,
             async: false,
@@ -138,8 +136,8 @@ var listGoodsSpec = {
             success: function(data) {
                 $(".btn-submit").removeAttr("disabled");
                 if (data.code == '00') {
-                    Helper.confirm_one('新增规格信息成功', function() {
-                        listGoodsSpec.searchReset();
+                    Helper.confirm_one('新增规格值信息成功', function() {
+                        listGoodsSpecValues.searchReset();
                     });
                 } else {
                     Helper.alert(data.msg);
@@ -151,11 +149,11 @@ var listGoodsSpec = {
             }
         });
     },
-    editGoodsSpec:function(){
+    editGoodsSpecValues:function(){
         $.ajax({
             type : 'POST',
-            url : Helper.getRootPath() + '/goodsManage/goodsSpec/editGoodsSpec',
-            data: new FormData($("#goodsSpecInfo")[0]),
+            url : Helper.getRootPath() + '/goodsManage/goodsSpec/editGoodsSpecValues',
+            data: new FormData($("#goodsSpecValuesInfo")[0]),
             processData: false,
             contentType: false,
             async: false,
@@ -164,8 +162,8 @@ var listGoodsSpec = {
             success : function(data) {
                 $(".btn-submit").removeAttr("disabled");
                 if (data.code == '00') {
-                    Helper.confirm_one('编辑规格信息成功', function() {
-                        listGoodsSpec.searchReset();
+                    Helper.confirm_one('编辑规格值信息成功', function() {
+                        listGoodsSpecValues.searchReset();
                     });
                 } else {
                     Helper.alert(data.msg);
@@ -177,24 +175,24 @@ var listGoodsSpec = {
             }
         });
     },
-	deleteGoodsSpec : function(){
-		var specId = $(this).attr('specId');
-		if(specId == null || specId == '') {
+	deleteGoodsSpecValues : function(){
+		var specValueId = $(this).attr('specValueId');
+		if(specValueId == null || specValueId == '') {
 			Helper.alert("系统故障，请稍后再试");
 			return false;
 		}
 		Helper.confirm("你是否删除该记录？",function(){
 			$.ajax({								  
-				url : Helper.getRootPath() + '/goodsManage/goodsSpec/deleteGoodsSpec',
+				url : Helper.getRootPath() + '/goodsManage/goodsSpec/deleteGoodsSpecValues',
 				type : 'post',
 				dataType : "json",
 				data : {
-					"specId": specId
+					"specValueId": specValueId
 				},
 				success : function (data) {
 					if(data.code == '00') {
 						Helper.confirm_one('删除规格信息成功', function(){
-                            listGoodsSpec.searchReset();
+                            listGoodsSpecValues.searchReset();
 	                	});
 					} else {
 						Helper.alert(data.msg);
@@ -207,29 +205,30 @@ var listGoodsSpec = {
 			});
 		});
 	},
-	loadModal : function(type, specId){
+	loadModal : function(type, specValueId){
 		$('#modal').modal({
 			backdrop : "static"
 		});
 		if(type == 1){
-			$('#modal_h').html("新增规格信息");
+			$('#modal_h').html("新增规格值信息");
 			return;
 		}else if(type == 2){
-			$('#modal_h').html("编辑规格信息");
+			$('#modal_h').html("编辑规格值信息");
 		}
 		
 		$.ajax({								  
-            url: Helper.getRootPath() + '/goodsManage/goodsSpec/getGoodsSpec',
+            url: Helper.getRootPath() + '/goodsManage/goodsSpec/getGoodsSpecValues',
             type: 'post',
             dataType : "json",
             data: {
-                "specId": specId
+                "specValueId": specValueId
             },
             success : function (data) {
-            	$('#spec_id').val(data.specId);
-            	$('#spec_name').val(data.specName);
+            	$('#spec_value_id').val(data.specValueId);
+            	$('#spec_value').val(data.specValue);
             	$('#spec_order').val(data.specOrder);
-            	$('#spec_img').val(data.specImg);
+                $('#spec_type').val(data.specType);
+            	$('#spec_image').val(data.specImage);
                 $('#remarks').val(data.remarks);
             },
             error : function(){
@@ -238,15 +237,24 @@ var listGoodsSpec = {
 	    });
 		
 		$("#modal").on("hidden.bs.modal", function(e) {
-			$("#spec_name").removeAttr('readonly');
-			$("#spec_img").removeAttr('readonly');
+			$("#spec_value").removeAttr('readonly');
+			$("#spec_type").removeAttr('readonly');
 			$("#spec_order").removeAttr('readonly');
+            $("#spec_image").removeAttr('readonly');
             $("#remarks").removeAttr('readonly');
 			$(".btn-submit").removeAttr('disabled');
 		});
 	},
-    intoAddSpecValues : function () {
-        var specId = $(this).attr("specId");
-        Helper.post('/goodsManage/goodsSpec/getGoodsSpecValuesList?specId='+specId);
+    goodsSpecValuesType : function () {
+	    var specType = $('#spec_type').val();
+        if (specType == '0') {
+            $("#spec_image").attr('disabled', "true");
+            $("#specImageFile").attr('disabled', "true");
+            $("#spec_value").removeAttr('disabled');
+        } else if (specType == '1') {
+            $("#spec_value").attr('disabled', "true");
+            $("#spec_image").removeAttr('disabled');
+            $("#specImageFile").removeAttr('disabled');
+        }
     }
 }

@@ -16,7 +16,7 @@ public class FileUtil {
 	
 	/**
 	 * 获取指定路径下文件名称
-	 * @param realpath
+	 * @param
 	 * @return
 	 */
 	public static String getNewFileName(String fileName){
@@ -125,7 +125,7 @@ public class FileUtil {
 
 	/**
 	 * 判断当前文件是图片
-	 * @param file
+	 * @param
 	 * @return
 	 */
 	public static boolean isImage(MultipartFile myfile) {

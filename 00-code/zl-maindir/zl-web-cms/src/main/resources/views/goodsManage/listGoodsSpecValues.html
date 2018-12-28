@@ -11,20 +11,25 @@
 		                    <li><a href="#"><i class="icon-home"></i></a></li>
 		                    <li>商品管理</li>
 		                    <li>规格管理</li>
+							<li>规格值管理</li>
 		                </ul>
 		            </div>
 	        	</nav>
-				<form id="searchForm" th:action="@{/goodsManage/goodsSpec/getGoodsSpecList}" th:object="${ecomSpecification}" class="form-inline" method="post">
+				<form id="searchForm" th:action="@{/goodsManage/goodsSpec/getGoodsSpecValuesList}" th:object="${ecomSpecValues}" class="form-inline" method="post">
 					<div class="row-fluid searchForm" id="h_search">
 						<div class="span12">
 							<div class="input-prepend">
 								<span class="add-on">规格名称</span>
-								<input id="specName" name="specName" type="text" class="input-medium" th:value="*{specName}" maxlength="20"/>
+								<input id="specName" name="specName" type="text" class="input-medium" th:value="*{specName}" maxlength="50"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">规格值</span>
+								<input id="specValue" name="specValue" type="text" class="input-medium" th:value="*{specValue}" maxlength="100"/>
 							</div>
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
-								<button type="button" class="btn btn-primary btn-add">新增规格</button>
+								<button type="button" class="btn btn-primary btn-add">新增规格值</button>
 							</div>
 						</div>
 					</div>
@@ -32,24 +37,29 @@
 						<thead>
 							<tr>
 								<th></th>
-								<th>规格Id</th>
-								<th>规格名称</th>
-				                <th>规格图片</th>
-				                <th>规格排序号</th>
+								<th>规格值Id</th>
+								<th>规格值</th>
+				                <th>规格值图片</th>
+								<th>规格值类型</th>
+				                <th>规格值排序号</th>
 				                <th>操作</th>
 							</tr>
 						</thead>
 				        <tbody>
 							<tr th:each="spec, specStat : ${pageInfo.list}" th:inline="text">
 								<td><span th:text="${specStat.count}"></span></td>
-								<td><span th:text="${spec.specId}"></span></td>
-								<td><span th:text="${spec.specName}"></span></td>
-								<td><a th:href="${spec.specImg}">[[${spec.specImg}]]</a></td>
+								<td><span th:text="${spec.specValueId}"></span></td>
+								<td><span th:text="${spec.specValue}"></span></td>
+								<td>
+									<!--<span  th:if="${spec.specImage} != null">
+										<a th:href="${spec.specImage}">[[${spec.specImage}]]</a>
+									</span>-->
+								</td>
+								<td><span th:text="${spec.specType}"></span></td>
 								<td><span th:text="${spec.specOrder}"></span></td>
 				                <td>
-									<a th:attr="specId=${spec.specId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<a th:attr="specId=${spec.specId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-									<a th:attr="specId=${spec.specId}" title="添加规格值" class="btn-mini btn-addSpecValues" href="#"><i class="icon-plus"></i></a>
+									<a th:attr="specValueId=${spec.specValueId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+									<a th:attr="specValueId=${spec.specValueId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 								</td>
 							</tr>
 						</tbody>
@@ -59,26 +69,38 @@
 			</div>
 		</div>
 		<div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<form id="goodsSpecInfo" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
+			<form id="goodsSpecValuesInfo" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
 					<button class="close btn-close" data-dismiss="modal">&times;</button>
 					<h3 id="modal_h"></h3>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" id="spec_id" name="spec_id"/>
+					<input type="hidden" id="spec_id" name="spec_id" th:value="${ecomSpecValues.specId}"/>
+					<input type="hidden" id="spec_value_id" name="spec_value_id"/>
 					<fieldset>
 						<div class="control-group">
-							<label class="control-label"><span class="f_req">* </span>规格名：</label>
+							<label class="control-label">规格类型：</label>
 							<div class="controls">
-								<input type="text" class="span3" name="spec_name" id="spec_name" maxlength="20"/>
+								<!--<input type="text" class="span3" name="spec_type" id="spec_type" maxlength="4"/>-->
+								<select id="spec_type" name="spec_type" class="span3">
+									<option value="">--请选择--</option>
+									<option th:each="g,gStat : ${goodsSpecTypeList}" th:value="${g.code}"><span th:text="${g.value}" /></option>
+								</select>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>规格值：</label>
+							<div class="controls">
+								<input type="text" class="span3" name="spec_value" id="spec_value" maxlength="100"/>
 								<span class="help-block"></span>
 							</div>
 						</div>
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格图片：</label>
 							<div class="controls">
-								<input type="text" class="span3" name="spec_img" id="spec_img" readonly="readonly"/>
-								<input type="file" class="span3" name="specImgFile" id="specImgFile"/>
+								<input type="text" class="span3" name="spec_image" id="spec_image" readonly="readonly"/>
+								<input type="file" class="span3" name="specImageFile" id="specImageFile"/>
 								<span class="help-block"></span>
 							</div>	
 						</div>
@@ -104,7 +126,7 @@
 		        </div>
 			</form>
 		</div>
-		<script th:src="@{/ecom/js/goodsManage/listGoodsSpec.js}"></script>
+		<script th:src="@{/ecom/js/goodsManage/listGoodsSpecValues.js}"></script>
 	</body>
 </html>
 

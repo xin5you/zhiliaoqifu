@@ -99,6 +99,8 @@ public class TbEcomSpecValues extends Model<TbEcomSpecValues> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
 
+    @TableField(exist = false)
+    private String specName;
 
     @Override
     protected Serializable pkVal() { 

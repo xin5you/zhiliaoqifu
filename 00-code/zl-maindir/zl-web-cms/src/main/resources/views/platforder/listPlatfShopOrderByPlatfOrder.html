@@ -15,7 +15,7 @@
 		                </ul>
 		            </div>
 	        	</nav>
-				<form id="searchForm" th:action="@{/platforder/platforder/getPlatfShopOrderListByPlatfOrder}" th:object="${platfShopOrder}" class="form-inline" method="post">
+				<form id="searchForm" th:action="@{/platforder/getPlatfShopOrderListByPlatfOrder}" th:object="${platfShopOrder}" class="form-inline" method="post">
 				<input type = "hidden" id="orderId" name="orderId" th:value="${orderId}"/>
 					<div class="row-fluid searchForm" id="h_search">
 						<div class="span12">

@@ -141,7 +141,7 @@ public class PlatfOrderController {
 		String sOrderId = req.getParameter("sOrderId");
 		TbEcomPlatfShopOrder platfShopOrder = ecomPlatfShopOrderService.getById(sOrderId);
 		if (platfShopOrder == null ) {
-			return ResultsUtil.error(ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_1.getCode(), ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_1.getMsg());
+			return ResultsUtil.error(ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getCode(), ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getMsg());
 		}
 
 		platfShopOrder.setSubOrderStatus(SubOrderStatusEnum.SOS12.getCode());
@@ -149,7 +149,7 @@ public class PlatfOrderController {
 		platfShopOrder.setUpdateUser(user.getId());
 		platfShopOrder.setLockVersion(platfShopOrder.getLockVersion() + 1);
 		if (!ecomPlatfShopOrderService.updateById(platfShopOrder)) {
-			return ResultsUtil.error(ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_1.getCode(), ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_1.getMsg());
+			return ResultsUtil.error(ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getCode(), ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getMsg());
 		}
 		return ResultsUtil.success();
 	}

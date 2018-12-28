@@ -4,6 +4,8 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
 
+	import java.util.List;
+
 /**
  *
  * 商品规格明细 Mapper 接口
@@ -13,23 +15,11 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
  */
 @Mapper
 public interface TbEcomSpecValuesMapper extends BaseMapper<TbEcomSpecValues> {
+
 	/**
-	 *     <select id="getGoodsSpecByGoodsId" parameterType="java.lang.String" resultType="SpecValues">
-	 *         SELECT
-	 *         sv.SPEC_VALUE_ID,
-	 *         sv.SPEC_ID,
-	 *         sv.SPEC_VALUE,
-	 *         sv.SPEC_IMAGE,
-	 *         sv.SPEC_ORDER,
-	 *         sv.SPEC_TYPE,
-	 *         sv.INHERENT_OR_ADD,
-	 *         gss.PRODUCT_ID PRODUCT_ID
-	 *         FROM
-	 *         TB_ECOM_GOODS_SPEC gss
-	 *         INNER JOIN TB_ECOM_SPEC_VALUES sv
-	 *         ON gss.SPEC_VALUE_ID = sv.SPEC_VALUE_ID
-	 *         WHERE gss.GOODS_ID=#{goodsId}
-	 *         ORDER BY gss.id DESC
-	 *     </select>
+	 * 查询商品规格值列表（高级查询）
+	 * @param entity
+	 * @return
 	 */
+	List<TbEcomSpecValues> getGoodsSpecValuesList(TbEcomSpecValues entity);
 }

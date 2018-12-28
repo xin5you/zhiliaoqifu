@@ -2,4 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomSpecificationMapper">
 
+    <sql id="EcomSpecColumns">
+      spec_id,
+      spec_name,
+      spec_img,
+      spec_order,
+      is_del,
+      data_stat,
+      remarks,
+      create_user,
+      update_user,
+      create_time,
+      update_time,
+      lock_version
+    </sql>
+
+    <sql id="tableName">
+        tb_ecom_specification
+    </sql>
+
+    <select id="getGoodsSpecList" parameterType="TbEcomSpecification" resultType="TbEcomSpecification">
+      select
+        <include refid="EcomSpecColumns" />
+      from
+        <include refid="tableName" />
+      where data_stat = '0'
+      <if test="specName != null and specName != ''">
+        and spec_name like "%"#{specName}"%"
+      </if>
+      order by create_time desc;
+    </select>
 </mapper>

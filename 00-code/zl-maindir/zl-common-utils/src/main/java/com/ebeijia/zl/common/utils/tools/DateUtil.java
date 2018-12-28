@@ -52,16 +52,22 @@ public class DateUtil {
 	public static final DateUtil CHINESE = new DateUtil(new SimpleDateFormat("yyyy年MM月dd日"));
 	public static final DateUtil CHINESE_FULL = new DateUtil(new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒"));
 	
-	
 	/**
 	 * 日期获取字符串
 	 */
 	public String getDateText(Date date){
 		return getFormat().format(date);
 	}
-	
 
-	
+	/**
+	 * 获取当前日期（年月日）
+	 * @return
+	 */
+	public static String getDate() {
+		Date d = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		return sdf.format(d);
+	}
 	/**
 	 * 日期获取字符串
 	 */
