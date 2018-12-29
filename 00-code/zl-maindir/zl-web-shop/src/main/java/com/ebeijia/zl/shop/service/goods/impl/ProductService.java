@@ -66,9 +66,9 @@ public class ProductService implements IProductService {
 
         if (catid != null) {
             goods.setCatId(catid);
-            goodsDao.getGoodsByCategory(goods);
+            goodsList = goodsDao.getGoodsByCategory(goods);
         } else {
-            goodsList = goodsDao.getGoodsList(new Goods());
+            goodsList = goodsDao.getGoodsList(goods);
         }
         PageInfo<Goods> page = new PageInfo<>(goodsList);
 //        page.getList().stream().filter(d ->{

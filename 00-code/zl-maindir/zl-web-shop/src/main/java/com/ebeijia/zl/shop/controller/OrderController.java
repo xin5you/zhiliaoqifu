@@ -2,7 +2,6 @@ package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderInf;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
@@ -70,9 +69,9 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单取消")
     @RequestMapping(value = "/goods/cancel",method = RequestMethod.POST)
-    public JsonResult<TbEcomOrderInf> orderCancel(String orderId){
-        orderService.cancelOrder(orderId);
-        return new JsonResult<>(new TbEcomOrderInf());
+    public JsonResult<TbEcomPlatfOrder> orderCancel(String orderId){
+        TbEcomPlatfOrder platfOrder = orderService.cancelOrder(orderId);
+        return new JsonResult<>(platfOrder);
     }
 
 

@@ -8,12 +8,16 @@ import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
-import com.ebeijia.zl.shop.dao.order.domain.*;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderProductItem;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderShip;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomDmsRelatedDetailService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomOrderProductItemService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
 import com.ebeijia.zl.shop.service.order.IOrderService;
+import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
@@ -57,6 +61,8 @@ public class OrderService implements IOrderService {
     @Autowired
     ShopUtils shopUtils;
 
+    @Autowired
+    IPayService payService;
 
     @Autowired
     private HttpSession session;
@@ -132,7 +138,7 @@ public class OrderService implements IOrderService {
 
 
     @Override
-    public TbEcomOrderInf cancelOrder(String orderId) {
+    public TbEcomPlatfOrder cancelOrder(String orderId) {
         MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
@@ -148,9 +154,18 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
         //获得路径
-
+        if (!order.getPayStatus().equals("0")){
+            throw new BizException(NOT_ACCEPTABLE, "您的订单无需取消");
+        }
+        order.setPayStatus("8");
+        platfOrderDao.save(order);
+        TbEcomPlatfShopOrder query = new TbEcomPlatfShopOrder();
+        query.setOrderId(order.getOrderId());
+        TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();
+        updataInf.setSubOrderStatus("27");
+        shopOrderDao.update(updataInf,new QueryWrapper<>(query));
         //执行操作
-        return null;
+        return order;
     }
 
     @Override
@@ -208,6 +223,8 @@ public class OrderService implements IOrderService {
             throw new BizException(500, "支付失败，请检查您的订单状态");
         }
         //修改订单状态
+
+
 
         return null;
     }
@@ -368,7 +385,7 @@ public class OrderService implements IOrderService {
         }
         //TODO 使用Redis记录库存
         Integer enableStore = sku.getEnableStore();
-        if (amount == null || enableStore == null || amount.compareTo(enableStore) < 0) {
+        if (amount == null || enableStore == null || amount.compareTo(enableStore) > 0) {
             throw new BizException(NOT_ACCEPTABLE, "商品库存不足");
         }
 

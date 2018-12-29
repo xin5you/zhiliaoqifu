@@ -29,35 +29,59 @@
       tb_ecom_platf_order po
     </sql>
 
+    <select id="getOrderInfo" parameterType="OrderInfo" resultType="OrderInfo">
+        select
+        /*item.product_id,item.product_price,item.product_num,item.product_name,*/
+        po.member_id,po.order_id,po.order_price,po.order_freight_amt,po.pay_status,po.pay_type,po.pay_amt,po.pay_time,
+        pso.s_order_id,pso.ecom_code,pso.sub_order_status,
+        dms.pay_status dms_status,dms.debit_account_code,dms.debit_account_type,dms.debit_price
+        from tb_ecom_platf_order po
+        left join tb_ecom_platf_shop_order pso
+        on po.order_id = pso.order_id
+        left join tb_ecom_dms_related_detail dm
+        on dm.s_order_id = pso.s_order_id
+        left join tb_ecom_pay_order_details dms
+        on dm.pay_details_id = dms.pay_details_id
+        /*left join tb_ecom_order_product_item item
+        on item.s_order_id = pso.s_order_id;*/
+        <where>
+            <if test="memberId!=null and memberId!='' ">
+                po.member_id = #{memberId}
+            </if>
+        </where>
+    </select>
+
     <select id="getPlatfOrderList" parameterType="TbEcomPlatfOrder" resultType="TbEcomPlatfOrder">
         select
-          <include refid="PlatfOrderColumns" />,
-          p.mobile_phone_no as mobilePhoneNo,
-          p.personal_name as personalName
+        <include refid="PlatfOrderColumns"/>,
+        p.mobile_phone_no as mobilePhoneNo,
+        p.personal_name as personalName
         from
-          <include refid="tableName" />,
-          tb_ecom_member m,tb_person_inf p
+        <include refid="tableName"/>,
+        tb_ecom_member m,tb_person_inf p
         where po.member_id = m.member_id
-          and m.person_id = p.personal_id
-          and po.data_stat = '0'
+        and m.person_id = p.personal_id
+        and po.data_stat = '0'
         <if test="orderId !=null and orderId !='' ">
-          and po.order_id = #{orderId}
+            and po.order_id = #{orderId}
         </if>
         <if test="personalName !=null and personalName !='' ">
-          and p.personal_name = #{personalName}
+            and p.personal_name = #{personalName}
         </if>
         <if test="dmsRelatedKey !=null and dmsRelatedKey !='' ">
-          and po.dms_related_key = #{dmsRelatedKey}
+            and po.dms_related_key = #{dmsRelatedKey}
         </if>
         <if test="mobilePhoneNo !=null and mobilePhoneNo !='' ">
-          and p.mobile_phone_no = #{mobilePhoneNo}
+            and p.mobile_phone_no = #{mobilePhoneNo}
         </if>
         <if test="payStatus !=null and payStatus !='' ">
-          and po.pay_status = #{payStatus}
+            and po.pay_status = #{payStatus}
         </if>
         <if test="payType !=null and payType !='' ">
-          and po.pay_type = #{payType}
+            and po.pay_type = #{payType}
         </if>
         order by po.create_time desc
     </select>
+
+
 </mapper>
