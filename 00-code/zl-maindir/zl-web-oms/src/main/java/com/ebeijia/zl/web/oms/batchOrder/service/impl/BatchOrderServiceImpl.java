@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
+import com.ebeijia.zl.web.oms.common.util.OrderConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,6 @@ import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrder;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
 import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
-import com.ebeijia.zl.web.oms.utils.OrderConstants;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -366,6 +365,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
 				return 0;
 			}
+			logger.info("远程调用开户接口返回参数---》{}", JSONArray.toJSONString(result));
 			if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 				successResult = successResult + 1;
 			} else {
@@ -478,6 +478,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 					return 0;
 				}
 			}
+			logger.info("远程调用充值接口返回参数---》{}", JSONArray.toJSONString(result));
 			for (BatchOrderList oList : batchOrderList) {
 				if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 					oList.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
@@ -554,6 +555,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
 				return 0;
 			}
+			logger.info("远程调用转账接口返回参数---》{}", JSONArray.toJSONString(result));
 			if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 				batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
 				successResult = successResult + 1;
@@ -563,7 +565,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				failResult = failResult + 1;
 			}
 			if (batchOrderListMapper.updateBatchOrderList(batchOrder) < 1) {
-				logger.error("更新充值订单明细{}状态{}失败", batchOrder.getOrderListId(), result.getCode());
+				logger.error("更新转账订单明细{}状态{}失败", batchOrder.getOrderListId(), result.getCode());
 			}
 		}
 		if (successResult == batchOrderList.size()) {
@@ -575,7 +577,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		}
 		int orderRsult = batchOrderMapper.updateBatchOrder(order);
 		if (orderListResult < 0 || orderRsult < 0) {
-			logger.error("## 更新批量充值订单状态失败，batchOrder--->{}", JSONArray.toJSONString(order));
+			logger.error("## 更新批量转账订单状态失败，batchOrder--->{}", JSONArray.toJSONString(order));
 			return 0;
 		}
 		return 1;

@@ -21,14 +21,14 @@
 								<li>企业管理</li>
 								<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
 								<li>企业信息列表</li>
-								<li>收款管理</li>
-								<li><a href="/company/intoAddCompanyTransfer.do?companyId=${company.companyId}">收款信息列表</a></li>
-								<li>收款明细列表</li>
+								<li>打款管理</li>
+								<li><a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}">打款信息列表</a></li>
+								<li>打款明细列表</li>
 			                </ul>
 			            </div>
 			        </nav>
 					<form id="pageMainForm" class="form-inline form_validation_tip" method="post">
-						<h3 class="heading">收款明细列表</h3>
+						<h3 class="heading">打款明细列表</h3>
 						<input type="hidden" id="companyId" name="companyId" value="${company.companyId}"/>
 						<input type="hidden" id="orderId" name="orderId" value="${order.orderId}"/>
 						<div class="control-group formSep">
@@ -110,7 +110,7 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                      <a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}"><button class="btn btn-primary" type="button">返 回</button></a>
+                      <a href="${ctx }/company/listCompany.do"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
 			   </div>

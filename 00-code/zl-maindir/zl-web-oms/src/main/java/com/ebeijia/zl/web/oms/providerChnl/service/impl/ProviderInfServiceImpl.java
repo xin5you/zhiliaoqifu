@@ -518,7 +518,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 		reqVo.setTransDesc(order.getRemarks());
 		reqVo.setTransNumber(1);
-
+		logger.error("远程调用转账接口请求参数--->{}", JSONArray.toJSONString(reqVo));
 		BaseResult result = new BaseResult();
 		try {
 			result = accountTransactionFacade.executeTransfer(reqVo);
