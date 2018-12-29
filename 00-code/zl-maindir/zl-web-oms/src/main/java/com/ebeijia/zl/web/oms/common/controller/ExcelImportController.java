@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ebeijia.zl.web.oms.common.util.OrderConstants;
+import com.ebeijia.zl.web.oms.common.util.XlsReadFile;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +30,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.alibaba.fastjson.JSON;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
-import com.ebeijia.zl.web.oms.utils.OrderConstants;
-import com.ebeijia.zl.web.oms.utils.XlsReadFile;
 
 @Controller
 @RequestMapping(value = "common/excelImport")

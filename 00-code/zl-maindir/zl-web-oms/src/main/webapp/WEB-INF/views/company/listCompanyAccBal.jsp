@@ -63,6 +63,7 @@
 				             </tbody>
 				         </table>
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
+						<a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 			   </div>
 	    </div>

@@ -81,6 +81,12 @@
 	        <artifactId>spring-boot-starter-test</artifactId>  
 	        <scope>test</scope>  
 	    </dependency>
+
+	  <dependency>
+		  <groupId>com.ebeijia</groupId>
+		  <artifactId>zl-core-rocketmq</artifactId>
+		  <version>${ebj.zl.version}</version>
+	  </dependency>
 	    
   </dependencies>
   

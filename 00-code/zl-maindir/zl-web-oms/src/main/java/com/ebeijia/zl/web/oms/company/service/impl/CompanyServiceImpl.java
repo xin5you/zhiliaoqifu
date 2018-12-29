@@ -15,6 +15,7 @@ import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.web.oms.common.util.OrderConstants;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
@@ -37,8 +38,6 @@ import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderListService;
 import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
 import com.ebeijia.zl.web.oms.company.service.CompanyService;
-import com.ebeijia.zl.web.oms.utils.OrderConstants;
-import org.springframework.ui.ModelMap;
 
 @Service("companyService")
 public class CompanyServiceImpl implements CompanyService{
@@ -177,7 +176,7 @@ public class CompanyServiceImpl implements CompanyService{
 			reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 			reqVo.setTransDesc(order.getRemarks());
 			reqVo.setTransNumber(1);
-
+			logger.info("远程调用转账接口请求参数--->{}", JSONArray.toJSONString(reqVo));
 			BaseResult result = new BaseResult();
 			try {
 				result = accountTransactionFacade.executeTransfer(reqVo);

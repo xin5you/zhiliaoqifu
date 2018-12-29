@@ -1,6 +1,7 @@
 package com.ebeijia.zl.service.account.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,19 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 		entity.setTransSt("1");
 		 return super.updateById(entity);
 	 }
-		
+
+	public boolean updateBatchById(List<IntfaceTransLog> list, boolean respCode){
+		for (IntfaceTransLog entity:list){
+			if(respCode){
+				entity.setRespCode("00");
+			}else{
+				entity.setRespCode("99");
+			}
+			entity.setTransSt("1");
+		}
+		return super.updateBatchById(list);
+	}
+
 	/**
 	 * 
 	* @Description: 查询外部渠道订单号

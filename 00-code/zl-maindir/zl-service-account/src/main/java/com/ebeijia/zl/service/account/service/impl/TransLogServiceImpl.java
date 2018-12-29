@@ -82,6 +82,36 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		log.info("==>execute create transLog end...<==");
 		return b;
 	}
+
+	/**
+	 *
+	 * @Function: ITransLogService.java
+	 * @Description: 創建賬戶交易流水
+	 *
+	 * @param:intfaceTransLogs 接口層流水集合
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月3日 上午11:35:33
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月3日     zhuqi           v1.0.0
+	 */
+	public boolean executeList(List<IntfaceTransLog> intfaceTransLogs) throws AccountBizException{
+		log.info("==>execute create intfaceTransLogs begin...");
+
+
+		List<TransLog> voList=new ArrayList<TransLog>();
+		for(IntfaceTransLog intfaceTransLog:intfaceTransLogs){
+			voList.addAll(doTransLog(intfaceTransLog));
+		}
+		boolean b=this.execute(voList);
+		voList.clear();
+		log.info("==>execute create transLog end...<==");
+		return true;
+	}
 	
 	/**
 	* @Description: 交易流水批量操作账户
@@ -331,9 +361,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		transLog.setPriBId(intfaceTransLog.getPriBId());
 		transLog.setCardAttr(AccountCardAttrEnum.OPER.getValue());
 	}
-	
 
-	
 	private void createTransLog(TransLog transLog){
 		transLog.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 		transLog.setCreateTime(System.currentTimeMillis());

@@ -41,9 +41,6 @@ public class AccountOpenReqVo extends BaseTxnReq {
 	 * 所属企業
 	 */
 	private String companyId;
-	
-
-	
 
 
 	public String getUserName() {

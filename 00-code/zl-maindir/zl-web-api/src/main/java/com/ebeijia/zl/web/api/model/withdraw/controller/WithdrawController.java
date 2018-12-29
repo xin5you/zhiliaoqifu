@@ -7,8 +7,11 @@ import java.util.concurrent.Executors;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.web.api.model.withdraw.vo.BatchDataNotify;
-import com.ebeijia.zl.web.api.model.withdraw.vo.Content;
+import com.ebeijia.zl.core.withdraw.suning.core.BatchWithdrawData;
+import com.ebeijia.zl.core.withdraw.suning.vo.BatchDataNotify;
+import com.ebeijia.zl.core.withdraw.suning.vo.Content;
+import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
+import com.ebeijia.zl.facade.account.service.AccountWithDrawOrderFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +38,11 @@ import com.alibaba.fastjson.JSONObject;
 @Controller
 @RequestMapping("/api/withdraw")
 public class WithdrawController {
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private BatchWithdrawData batchWithdrawData;
 
 	/**
 	 * 代付异步回调
@@ -51,7 +58,9 @@ public class WithdrawController {
 		String sign_type = request.getParameter("sign_type");
 		String vk_version = request.getParameter("vk_version");
 		Content content = JSONArray.parseObject(contentJson, Content.class);
+
 		logger.info("苏宁YFB异步通知返回：{}",contentJson);
+
 		BatchDataNotify batchData = new BatchDataNotify();
 		batchData.setContent(content);
 		batchData.setSign(sign);
@@ -60,6 +69,14 @@ public class WithdrawController {
 		
 		logger.info("易付宝回调请求参数{}", JSONArray.toJSONString(batchData));
 		//验证易付宝请求参数，更新出款订单表，新增出款订单明细表
+
+		boolean flag = batchWithdrawData.verifySignature(contentJson, sign);
+		if(!flag){
+			logger.info("易付宝回调请求参数 延签失败 return ->{}",false);
+			return false;
+		}
+		/*String batchNo=content.getBatchNo();
+		AccountWithdrawOrder accountWithdrawOrder=accountWithDrawOrderFacade.getAccountWithdrawOrderById(batchNo);*/
 		return true;
 	}
 	

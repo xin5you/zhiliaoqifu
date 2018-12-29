@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.common.core.domain.BillingType;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,7 @@ import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
 import com.ebeijia.zl.service.account.utils.CodeEncryUtils;
 import com.ebeijia.zl.service.user.mapper.UserInfMapper;
+import redis.clients.jedis.JedisCluster;
 
 /**
  *
@@ -59,6 +63,10 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	
 	@Autowired
 	private IAccountLogService accountLogService;
+
+
+	@Autowired
+	private JedisCluster jedisCluster;
 	
 	/***
 	 * 
@@ -84,7 +92,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			queryWrapper.eq("user_type", userType);
 			queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
 			UserInf userInf= userInfMapper.selectOne(queryWrapper);
-			
 			if(userInf==null){
 				return null;
 			}
@@ -170,7 +177,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			if(!flag){
 				throw AccountBizException.ACCOUNT_CREATE_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
 			}
-			
 			return flag;
 		}
 	}
@@ -186,30 +192,30 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		
 		/****** consumerBal set begin ***/
 		//员工账户充值 专用专项账户的按比例设置强制消费额度
+		account.setCouponBal(new BigDecimal(0));
 		if(UserType.TYPE100.equals(account.getAccountType())){
 			//非 员工通用福利账户 并且 非现金账户
 			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
 				//所有的专用类型的账户充值 都需要按比例划分到消费额度里
-				//TODO 获取代金券购买比例值
-				double coupon_rate=0.9;
-				BigDecimal couponBalAmt=new BigDecimal(coupon_rate); //加入消费比例是0.1 即 10%强制消费额度
-				
+				BigDecimal coupon_rate=new BigDecimal(0.9); //默认折扣率
+				String billingTypeSting=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE,account.getBId());
+				BillingType billingType=JSONObject.parseObject(billingTypeSting,BillingType.class);
+
+				if(billingType !=null){
+					coupon_rate=billingType.getBuyFee(); //可购率，指的是购买代金券的比例
+				}
+				BigDecimal couponBalAmt=AmountUtil.mul(transLog.getTransAmt(),coupon_rate); //加入消费比例是coupon_rate 即可购买的代金券的值
 				if(TransCode.MB50.getCode().equals(transLog.getTransId())){
 					//账户充值
 					account.setCouponBal(AmountUtil.add(account.getCouponBal(), couponBalAmt));
-					
 				}
 			}
-		}else{
-			//非员工账户，强制消费额度是0
-			account.setCouponBal(new BigDecimal(0));
 		}
 		/****** consumerBal set end ***/
 		
 		
 		/****** 操作余额 ***/
 		this.credit(account, transLog.getTransAmt());
-		
 		boolean flag=accountLogService.save(account, transLog);
 		if(flag){
 			flag=this.updateById(account);//修改当前賬戶信息
@@ -217,9 +223,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if(!flag){
 			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
 		}
-		log.info("==>credit<==");
 		return true;
-
 	}
 	/**
 	 * 减款
@@ -241,7 +245,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
 
             }else if(SpecAccountTypeEnum.A01.getCode().equals(account.getBId())) {
+				//托管账户提现
+				if(TransCode.CW91.getCode().equals(transLog.getTransId()) || TransCode.MB90.getCode().equals(transLog.getTransId())){
+					//TODO 发送消息
 
+				}
             }else {
                 //非 员工通用福利账户 并且 非现金账户
 				//购买代金券
@@ -260,7 +268,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		
 		/****** 操作余额 ***/
 		this.debit(account, transLog.getTransAmt());
-		
 		boolean flag=accountLogService.save(account, transLog);
 		if(flag){
 			flag=this.updateById(account);//修改当前賬戶信息
@@ -268,12 +275,9 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if(!flag){
 			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
 		}
-		log.info("==>debit<==");
 		return true;
 	}
-	
-	
-    
+
 	/**
 	 * 存入
 	 * @param account 账户信息
@@ -296,14 +300,12 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (! AccountStatusEnum.ACTIVE.getValue().equals(account.getAccountStat())) {
 			throw AccountBizException.ACCOUNT_STATUS_IS_INACTIVE.newInstance("账户状态异常,用户编号{%s},账户状态{%s}", account.getAccountNo(),account.getAccountStat()).print();
 		}
-
 		if (!this.availableBalanceIsEnough(account,transAmt)) {
 			throw AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.print();
 		}
 		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
 			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
 		}
-		
 		account.setAccBal(AmountUtil.sub(account.getAccBal(), transAmt));
 	}
 	
@@ -321,9 +323,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		}
 	}
 
-
-
-	
 	@Override
 	public boolean save(AccountInf entity) {
 		entity.setAccBalCode(CodeEncryUtils.generate(entity.getAccBal().toString(), entity.getAccountNo()));//余额加密

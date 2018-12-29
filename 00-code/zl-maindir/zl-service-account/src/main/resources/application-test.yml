@@ -1,13 +1,13 @@
 server:
   port: 10201
   contextPath: /itf
-
+  session:
+    store-type: redis
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-account.xml
-
 spring:
   datasource:
     url: jdbc:mysql://192.168.2.110:3306/zldb_test
@@ -29,6 +29,7 @@ spring:
       name: zl-service-account
     protocol:
       name: dubbo
+      host: 192.168.2.223
       port: 20880
       accepts: 1000
     provider:
@@ -37,3 +38,40 @@ spring:
       delay: -1
     registry:
       address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
+  rocketmq:
+    name-server-address: 192.168.2.110:9876
+    producer-group: zlqf_group
+    send-msg-timeout: 5000
+  redis:
+    timeout: 3000
+    cluster:
+       nodes: 192.168.2.110:7111,192.168.2.110:7112,192.168.2.110:7113,192.168.2.110:7114,192.168.2.110:7115,192.168.2.110:7116
+       connection-timeout: 1000
+       soTimeout: 3000
+       max-attempts: 5
+       password:
+       max-redirects: 2
+    pool:
+       max-total: 1024
+       max-active: 8
+       max-idle: 8
+       max-wait: -1
+       min-idle: 0
+       block-when-exhausted: true
+       max-wait-millis: 3000
+       test-on-borrow: false
+       test-on-return: false
+       test-while-idle: true
+       minEvictableIdleTimeMillis: 60000
+       timeBetweenEvictionRunsMillis: 60000
+       numTestsPerEvictionRun: 1
+withdraw:
+  yfb:
+    publicKeyIndex: 0001
+    publicKeyString:
+    merchantNo: 70235957
+    productCode: 01070000042
+    goodsType: 290054
+    privateKeyUrl: D:/app_itf/config/private.key
+    bathWithdrawUrl: https://wag.yifubao.com/epps-wag/withdraw.htm
+    yfbNotifyUrl: http://zlqfwebapi.free.idcfengye.com/web-api/api/withdraw/suning-yfb/notify

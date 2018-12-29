@@ -17,14 +17,14 @@ package com.ebeijia.zl.facade.account.service;
 public interface AccountSettFacade {
 
 	/**
-	 * 
+	 *
 	* @Function: TxnAccountSettFacade.java
 	* @Description: 现金账户结算
 	*
 	*
 	* @version: v1.0.0
 	* @author: zhuqi
-	* @date: 2018年11月30日 上午11:18:10 
+	* @date: 2018年11月30日 上午11:18:10
 	*
 	* Modification History:
 	* Date         Author          Version

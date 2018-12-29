@@ -306,7 +306,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	 */
 	public  BaseResult executeWithDraw(AccountWithDrawReqVo req) throws Exception{
 		log.info("==>  提现请求操作 mehtod=executeWithDraw and AccountWithDrawReqVo={}",JSONArray.toJSON(req));
-
 		/**
 		 * 订单交易检验
 		 */
@@ -338,9 +337,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				null,
 				null,
 				null,
-				fromUserInf.getUserId(),
-				SpecAccountTypeEnum.A01.getbId(), //从托管账户提现
-				fromUserInf.getUserId(),
+				 fromUserInf.getUserId(),
+				 SpecAccountTypeEnum.A01.getbId(), //从托管账户提现
+				 fromUserInf.getUserId(),
 				null,
 				null);
 
