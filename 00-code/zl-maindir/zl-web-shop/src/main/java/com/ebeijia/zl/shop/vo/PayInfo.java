@@ -30,4 +30,7 @@ public class PayInfo implements Serializable {
 
     @ApiModelProperty("单位分，从B类账户扣款金额")
     Long costB;
+
+    @ApiModelProperty("单位分，支付的邮费")
+    Long shipPrice;
 }

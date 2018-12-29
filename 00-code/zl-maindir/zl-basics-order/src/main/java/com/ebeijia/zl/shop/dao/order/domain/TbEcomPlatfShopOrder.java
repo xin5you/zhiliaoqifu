@@ -149,6 +149,16 @@ public class TbEcomPlatfShopOrder extends Model<TbEcomPlatfShopOrder> {
     @TableField(exist = false)
     private String personalName;
 
+    /**
+     * 0：未付款
+     * 1：已付款待确认
+     * 2：已付款
+     * 3：已退款
+     * 4：部分退款
+     * 5：部分付款
+     * 8：已取消
+     * 9：已完成
+     */
     @TableField(exist = false)
     private String payStatus;
 

@@ -73,7 +73,12 @@ mybatis-plus:
   #typeAliasesPackage: com.cn.thinx.ecom_cms.test.domain
 logging:
   config: classpath:conf/logback-ecom.xml
-  
+
+#锁定短信验证码
+sms:
+  enable: false
+  debug: true
+
 #知了企服加解密key（商城主页和订单）
 HKB_AES_KEY: litj49jk4op589o4
 

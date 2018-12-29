@@ -8,4 +8,6 @@ public interface IValidCodeService {
     void checkFrequency(String phoneNum, String method);
 
     boolean checkValidCode(String method, String phone, String pwd);
+
+    boolean discardValidCode(String phoneNum, String method);
 }

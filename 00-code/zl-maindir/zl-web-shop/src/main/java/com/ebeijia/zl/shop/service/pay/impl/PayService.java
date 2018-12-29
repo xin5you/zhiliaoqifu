@@ -1,11 +1,8 @@
 package com.ebeijia.zl.shop.service.pay.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
-import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
@@ -13,30 +10,24 @@ import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
-import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.vo.DealInfo;
-import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_FOUND;
 
 @Service
 public class PayService implements IPayService {
@@ -64,75 +55,20 @@ public class PayService implements IPayService {
     }
 
     @Override
-    @ShopTransactional
-    public void payOrder(PayInfo payInfo, String session) {
-        MemberInfo memberInfo = (MemberInfo) httpSession.getAttribute("user");
-        if (memberInfo == null) {
-            throw new BizException(NOT_ACCEPTABLE, "参数异常");
-        }
-        //验证输入信息有效性，订单查询
-        String typeA = payInfo.getTypeA();
-        String typeB = payInfo.getTypeB();
-        Long costA = payInfo.getCostA();
-        Long costB = payInfo.getCostB();
-        Long sum = costA + costB;
-        if (StringUtils.isAnyEmpty(typeA, typeB)) {
-            throw new BizException(NOT_ACCEPTABLE, "参数异常");
-        }
-        if (costA < 0 || costB < 0 || sum < costA || sum < costB) {
-            throw new BizException(NOT_ACCEPTABLE, "参数异常");
-        }
-
-        TbEcomPlatfOrder order = platfOrderDao.getById(payInfo.getOrderId());
-        if (order == null) {
-            throw new BizException(NOT_FOUND, "订单不存在");
-        }
-        if (!memberInfo.getMemberId().equals(order.getMemberId())) {
-            throw new BizException(NOT_ACCEPTABLE, "验证失败");
-        }
-        if (!order.getPayStatus().equals("0")) {
-            throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
-        }
-
-        //类型、总金额验证
-        TbEcomPlatfShopOrder shopOrder = new TbEcomPlatfShopOrder();
-        shopOrder.setOrderId(order.getOrderId());
-        QueryWrapper<TbEcomPlatfShopOrder> query = new QueryWrapper<>(shopOrder);
-        List<TbEcomPlatfShopOrder> shopOrders = shopOrderDao.list(query);
-        if (sum.compareTo(order.getOrderPrice().longValue()) != 0) {
-            throw new BizException(NOT_ACCEPTABLE, "订单金额不正确");
-        }
-        //TODO 组合订单类型判断（未完成）
-        Iterator<TbEcomPlatfShopOrder> iterator = shopOrders.iterator();
-        while (iterator.hasNext()) {
-            String bId = iterator.next().toString();
-            if (!typeB.equals(bId)) {
-                throw new BizException(NOT_ACCEPTABLE, "支付类型不正确");
-            }
-        }
-
-        //幂等性验证
-        //获取订单状态
-        TbEcomPlatfOrder platfOrder = new TbEcomPlatfOrder();
-        platfOrder.setLockVersion(order.getLockVersion()+1);
-        platfOrder.setPayTime(System.currentTimeMillis());
-        platfOrder.setPayStatus("1");
-        platfOrder.setUpdateUser("System");
-        platfOrder.setUpdateTime(System.currentTimeMillis());
-        //处理订单
-        QueryWrapper<TbEcomPlatfOrder> wrapper = new QueryWrapper<>(order);
-
-        boolean update = platfOrderDao.update(platfOrder, wrapper);
-        if (update==false){
-            throw new BizException(500,"支付失败，请检查您的订单状态");
-        }
+    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    public int payOrder(PayInfo payInfo, String openId,String dmsRelatedKey) {
         //请求支付
-        BaseResult result = executeConsume(payInfo, memberInfo.getOpenId(), order.getDmsRelatedKey(), "商城消费");
+        String result;
+        BaseResult baseResult = executeConsume(payInfo, openId, dmsRelatedKey, "商城消费");
+        Object object = baseResult.getObject();
+        if (object instanceof String){
+            result = (String) object;
+        }else {
+            throw new BizException(500,"远端系统返回异常,无法判定交易状态");
+        }
         //判断result
 
-        //修改订单状态
-
-        throw new AdviceMessenger(200,"支付成功");
+       return ResultState.OK;
     }
 
     @Override

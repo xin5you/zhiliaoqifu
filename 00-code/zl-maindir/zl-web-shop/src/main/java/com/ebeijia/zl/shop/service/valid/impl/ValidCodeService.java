@@ -13,6 +13,7 @@ import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
@@ -27,6 +28,12 @@ public class ValidCodeService implements IValidCodeService {
     @Autowired
     private MQProducerService mqProducerService;
 
+    @Value("${sms.enable:true}")
+    private Boolean smsEnable;
+
+    @Value("${sms.debug:false}")
+    private Boolean debug;
+
     Logger logger = LoggerFactory.getLogger(ValidCodeService.class);
 
     @Override
@@ -40,8 +47,10 @@ public class ValidCodeService implements IValidCodeService {
         validPhoneNumber(phoneNum);
         String code = generateCode();
         //TODO MockData
-        deliverAndSave(phoneNum, method, code);
-        logger.info("向手机号%s发送%s验证码成功", phoneNum, method);
+        if (smsEnable==null||!smsEnable) {
+            deliverAndSave(phoneNum, method, code);
+        }
+        logger.info(String.format("向手机号%s发送%s验证码成功", phoneNum, method));
         throw new AdviceMessenger(OK, "发送成功");
     }
 
@@ -50,10 +59,9 @@ public class ValidCodeService implements IValidCodeService {
         vo.setMsgId(IdUtil.getNextId());
         if (PhoneValidMethod.LOGIN.equals(method)) {
             vo.setSmsType(SMSType.SMSType1000.getCode());
-            System.out.println(code);
         } else {
             //TODO Fix SNSType
-            vo.setSmsType("1005");
+            vo.setSmsType(SMSType.SMSType1005.getCode());
         }
         vo.setPhoneNumber(phoneNum);
         vo.setCode(code);
@@ -67,7 +75,11 @@ public class ValidCodeService implements IValidCodeService {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(v);
         stringBuffer.append("000000");
+        if (debug!=null && debug) {
+            return "123456";
+        }
         return stringBuffer.substring(0, 6);
+        //TODO 调整开关
     }
 
     @Override
@@ -88,6 +100,18 @@ public class ValidCodeService implements IValidCodeService {
         String s = jedis.get(method + "CODE:" + phone);
 
         if (pwd != null && pwd.equals(s)) {
+            discardValidCode(phone,method);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean discardValidCode(String phoneNum, String method) {
+        validMethod(method);
+        validPhoneNumber(phoneNum);
+        long del = jedis.del(method + "CODE:" + phoneNum);
+        if (del > 0) {
             return true;
         }
         return false;

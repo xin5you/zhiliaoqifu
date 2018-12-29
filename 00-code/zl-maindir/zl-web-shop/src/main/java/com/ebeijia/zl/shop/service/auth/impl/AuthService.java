@@ -53,8 +53,8 @@ public class AuthService implements IAuthService {
         String userId = null;
         boolean validCode = validCodeService.checkValidCode(PhoneValidMethod.LOGIN, phone, pwd);
         if (!validCode) {
-        //TODO 验证码校验
-//            throw new AdviceMessenger(403, "验证码有误");
+            //TODO 验证码校验
+            throw new AdviceMessenger(403, "验证码有误");
         }
         TbEcomMember member = new TbEcomMember();
         member.setPersonId(phone);
@@ -66,19 +66,18 @@ public class AuthService implements IAuthService {
 
         if (member == null) {
             //注册流程
-            remoteRegister(phone,openId);
-            memberId = localRegister(phone,openId);
-        }else {
-            memberId = member.getMemberId();
+            remoteRegister(phone, openId);
+            member = localRegister(phone, openId);
         }
+        memberId = member.getMemberId();
 
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         if (userInf == null) {
             throw new AdviceMessenger(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
         }
 
-        String token = memberId+":"+IdUtil.getNextId();
-        jedis2.del(memberId+":*");
+        String token = memberId + ":" + IdUtil.getNextId();
+        jedis2.del(memberId + ":*");
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setUserId(userInf.getUserId());
         memberInfo.setMemberId(memberId);
@@ -88,7 +87,7 @@ public class AuthService implements IAuthService {
         //将获取到的token存入redis缓存;
 
         try {
-            jedis2.set(token,ShopUtils.MAPPER.writeValueAsString(memberInfo) , 3600 * 24);
+            jedis2.set(token, ShopUtils.MAPPER.writeValueAsString(memberInfo), 3600 * 24);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -96,7 +95,7 @@ public class AuthService implements IAuthService {
         return new Token(token);
     }
 
-    private String localRegister(String phone,String openId) {
+    private TbEcomMember localRegister(String phone, String openId) {
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         TbEcomMember member = new TbEcomMember();
         //TODO 测试用
@@ -110,10 +109,10 @@ public class AuthService implements IAuthService {
         if (!save) {
             throw new AdviceMessenger(500, "本地注册失败");
         }
-        return memberId;
+        return member;
     }
 
-    private String remoteRegister(String phone,String openId) {
+    private String remoteRegister(String phone, String openId) {
         String userId = null;
 
         //构造VO对象
