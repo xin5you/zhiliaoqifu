@@ -149,7 +149,8 @@ public class RetailChnlInfController {
 
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
-			if (!retailChnlInfFacade.updateRetailChnlInf(retailChnlInf)) {
+			boolean flag = retailChnlInfFacade.updateRetailChnlInf(retailChnlInf);
+			if (!flag) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑分销商信息失败");
 				return resultMap;
@@ -630,7 +631,7 @@ public class RetailChnlInfController {
 		if (!StringUtil.isNullOrEmpty(channelId)) {
 			retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
 			if (!StringUtil.isNullOrEmpty(lockVersion)) {
-				retailChnl.setLockVersion(Integer.valueOf(lockVersion) + 1);
+				retailChnl.setLockVersion(retailChnl.getLockVersion() + 1);
 			}
 		} else {
 			retailChnl = new RetailChnlInf();
@@ -640,7 +641,6 @@ public class RetailChnlInfController {
 			retailChnl.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			retailChnl.setLockVersion(0);
 		}
-
 		retailChnl.setChannelName(channelName);
 		retailChnl.setChannelCode(channelCode);
 		retailChnl.setChannelKey(channelKey);

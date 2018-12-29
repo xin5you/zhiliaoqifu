@@ -33,6 +33,12 @@ public class AccountManageServiceConfig extends DubboCustomerConfig {
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("createAccountList");
+		methodConfig.setTimeout(120000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
 		referenceBean.setMethods(methods);
 		
 		return referenceBean;
