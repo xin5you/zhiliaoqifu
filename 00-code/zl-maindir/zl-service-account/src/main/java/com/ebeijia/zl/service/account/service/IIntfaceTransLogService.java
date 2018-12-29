@@ -1,6 +1,7 @@
 package com.ebeijia.zl.service.account.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
@@ -17,7 +18,8 @@ public interface IIntfaceTransLogService extends IService<IntfaceTransLog> {
 	
 	 
 	 boolean updateById(IntfaceTransLog entity,boolean respFlag);
-	
+
+	boolean updateBatchById(List<IntfaceTransLog> list, boolean respFlag);
 	/**
 	 * 
 	* @Description: 查询外部渠道订单号

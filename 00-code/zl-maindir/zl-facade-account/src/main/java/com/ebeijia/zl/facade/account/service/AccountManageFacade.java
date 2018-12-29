@@ -56,8 +56,6 @@ public interface AccountManageFacade {
 	 * 2018年12月4日     zhuqi           v1.0.0
 	 */
 	@ApiOperation(value = "批量开户接口", notes = "")
-	BaseResult createAccountList(AccountOpenReqVo req) throws Exception;
-	
-
+	public BaseResult createAccountList(String dmsRelatedKey,String transChnl,String userType,List<AccountOpenReqVo> list) throws Exception;
 
 }
