@@ -32,7 +32,7 @@ public class AccountManageFacadeConfig extends DubboProviderConfig {
 		/*** dubbo method registerUserInf config*/
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("createAccount");
-		methodConfig.setTimeout(60000);
+		methodConfig.setTimeout(120000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		serviceBean.setMethods(methods);

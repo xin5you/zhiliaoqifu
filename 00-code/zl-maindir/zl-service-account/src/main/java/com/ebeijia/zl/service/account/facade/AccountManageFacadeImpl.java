@@ -128,12 +128,13 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 		log.info("==> 账户开户 mehtod=createAccount and createAccountList={}", JSONArray.toJSON(list));
 
 		IntfaceTransLog intfaceTrans = intfaceTransLogService.getItfTransLogDmsChannelTransId(dmsRelatedKey, transChnl);
-		intfaceTrans = intfaceTransLogService.newItfTransLog(intfaceTrans, dmsRelatedKey, dmsRelatedKey, TransCode.MB50.getCode(), null, userType, transChnl,
-				null,null, null);
-		intfaceTrans.setTransDesc("批量开户");
 		if(intfaceTrans!=null){
 			return ResultsUtil.error("99", "重复交易");
 		}
+		intfaceTrans = intfaceTransLogService.newItfTransLog(intfaceTrans, dmsRelatedKey, dmsRelatedKey, TransCode.MB50.getCode(), null, userType, transChnl,
+				null,null, null);
+		intfaceTrans.setTransDesc("批量开户");
+
 		/**
 		 * 注册用户信息
 		 */
