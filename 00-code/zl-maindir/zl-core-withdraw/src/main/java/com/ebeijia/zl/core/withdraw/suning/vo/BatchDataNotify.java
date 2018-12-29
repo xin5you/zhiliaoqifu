@@ -1,12 +1,14 @@
-package com.ebeijia.zl.web.api.model.withdraw.vo;
+package com.ebeijia.zl.core.withdraw.suning.vo;
 
 /**
  * 代付回调参数
  * 
- * @author xiaomei
+ * @author zhuqi
  *
  */
-public class BatchDataNotify {
+public class BatchDataNotify implements java.io.Serializable {
+
+	private static final long serialVersionUID = -8398482277370849640L;
 
 	private Content content;
 	private String sign;

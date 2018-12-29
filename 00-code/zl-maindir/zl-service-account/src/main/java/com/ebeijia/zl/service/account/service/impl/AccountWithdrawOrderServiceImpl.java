@@ -1,10 +1,19 @@
 package com.ebeijia.zl.service.account.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.tools.SnowFlake;
+import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.service.account.mapper.AccountWithdrawOrderMapper;
+import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 /**
  *
@@ -14,7 +23,11 @@ import org.springframework.stereotype.Service;
  * @Date 2018-12-26
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountWithdrawOrderServiceImpl extends ServiceImpl<AccountWithdrawOrderMapper, AccountWithdrawOrder> implements IAccountWithdrawOrderService {
+
+    @Autowired
+    private IAccountWithdrawDetailService accountWithdrawDetailService;
 
     @Override
     public boolean save(AccountWithdrawOrder entity) {
@@ -26,4 +39,6 @@ public class AccountWithdrawOrderServiceImpl extends ServiceImpl<AccountWithdraw
         entity.setLockVersion(0);
         return super.save(entity);
     }
+
+
 }

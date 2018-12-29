@@ -1,12 +1,14 @@
-package com.ebeijia.zl.web.api.model.withdraw.vo;
+package com.ebeijia.zl.core.withdraw.suning.vo;
 
 /**
  * 代付查询返回参数
  * 
- * @author xiaomei
+ * @author zhuqi
  *
  */
-public class WithdrawQuery {
+public class WithdrawQuery implements java.io.Serializable {
+
+	private static final long serialVersionUID = 8447362524153743371L;
 
 	private String responseCode;
 	private String responseMsg;

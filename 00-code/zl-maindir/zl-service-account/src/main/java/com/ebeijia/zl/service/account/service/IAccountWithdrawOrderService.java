@@ -13,4 +13,5 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
  */
 public interface IAccountWithdrawOrderService extends IService<AccountWithdrawOrder> {
 
+
 }

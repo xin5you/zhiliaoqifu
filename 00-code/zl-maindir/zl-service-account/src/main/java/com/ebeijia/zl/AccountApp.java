@@ -2,6 +2,7 @@ package com.ebeijia.zl;
 
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
+import com.maihaoche.starter.mq.annotation.EnableMQConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +24,7 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @SpringBootApplication
+@EnableMQConfiguration
 public class AccountApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

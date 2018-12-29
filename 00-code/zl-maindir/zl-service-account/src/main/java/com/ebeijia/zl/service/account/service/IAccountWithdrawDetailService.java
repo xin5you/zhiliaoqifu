@@ -3,6 +3,7 @@ package com.ebeijia.zl.service.account.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 
+import java.util.List;
 
 
 /**
@@ -14,4 +15,10 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
  */
 public interface IAccountWithdrawDetailService extends IService<AccountWithdrawDetail> {
 
+    /**
+     * 根据批次号获取提现数据
+     * @param batchNo
+     * @return
+     */
+    List<AccountWithdrawDetail> getListByBatchNo(String batchNo);
 }

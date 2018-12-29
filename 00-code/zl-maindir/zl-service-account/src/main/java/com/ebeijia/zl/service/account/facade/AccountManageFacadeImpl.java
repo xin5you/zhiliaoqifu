@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.facade;
 
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
+
+import java.util.List;
 
 
 /**
@@ -97,6 +100,61 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 		intfaceTransLog.setBIds(req.getbIds());
 		boolean eflag=transLogService.execute(intfaceTransLog); 
 		
+		intfaceTransLogService.updateById(intfaceTransLog,eflag);
+		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
+	}
+
+
+	/**
+	 * @Description:创建账户
+	 * @param:BaseAccountReq 账户开户请求参数
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月4日 上午9:21:32
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月4日     zhuqi           v1.0.0
+	 */
+	@ApiOperation(value = "批量开户接口", notes = "")
+	public BaseResult createAccountList(AccountOpenReqVo req) throws Exception{
+
+		log.info("==> 账户开户 mehtod=createAccount and OpenAccountReq={}",JSONArray.toJSON(req));
+
+		/**
+		 * 注册用户信息
+		 */
+		String userId=userInfService.registerUserInf(req.getUserType(),
+				req.getUserName(),
+				req.getCompanyId(),
+				req.getMobilePhone(),
+				null,
+				req.getIcardNo(),
+				req.getTransId(),
+				req.getTransChnl(),
+				req.getUserChnl(),
+				req.getUserChnlId());
+
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
+
+		if(intfaceTransLog!=null){
+			//TODO 重复交易返回
+			return ResultsUtil.error("99", "重复交易");
+		}
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(intfaceTransLog,req.getDmsRelatedKey(), userId, req.getTransId(), null, req.getUserType(), req.getTransChnl(),
+				req.getUserChnl(),req.getUserChnlId(),null);
+		intfaceTransLog.setTransDesc("开户");
+		intfaceTransLog.setMchntCode(req.getCompanyId());
+		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
+
+
+
+		//执行开户操作
+		intfaceTransLog.setBIds(req.getbIds());
+		boolean eflag=transLogService.execute(intfaceTransLog);
+
 		intfaceTransLogService.updateById(intfaceTransLog,eflag);
 		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}

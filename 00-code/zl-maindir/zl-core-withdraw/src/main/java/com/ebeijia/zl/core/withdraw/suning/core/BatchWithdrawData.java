@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.SnowFlake;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.withdraw.suning.config.YFBWithdrawConfig;
 import com.ebeijia.zl.core.withdraw.suning.utils.HttpClientUtil;
 import com.ebeijia.zl.core.withdraw.suning.vo.WithdrawBodyVO;
 import com.ebeijia.zl.core.withdraw.suning.vo.WithdrawDetailDataVO;
 import com.suning.epps.codec.Digest;
 import com.suning.epps.codec.RSAUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +27,8 @@ import java.util.*;
  */
 @Configuration
 public class BatchWithdrawData {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private YFBWithdrawConfig yfbWithdrawConfig;
@@ -149,5 +154,41 @@ public class BatchWithdrawData {
         }
         return detailArray;
 
+    }
+
+    /**
+     * 验证代付业务签名
+     *
+     * @param data 业务JSON参数
+     * @param signature 业务参数签名值
+     * @return
+     */
+    public  boolean verifySignature(String data, String signature) {
+        if (StringUtil.isNullOrEmpty(data)) {
+            logger.error("## 验证签名data参数为空");
+            return false;
+        }
+        // 生成MD5摘要
+        Map<String, String> signMap = new HashMap<>();
+        signMap.put("content", data);
+        String signData = Digest.digest(Digest.mapToString(Digest.treeMap(signMap)));
+
+        if (signData == null || signData.length() == 0) {
+            logger.error("## 原数据字符串为空,return->false");
+            return false;
+        }
+        if (signature == null || signature.length() == 0) {
+            logger.error("## 签名字符串为空,return->false");
+            return false;
+        }
+        try {
+            // 获取根据公钥字符串获取私钥
+            PublicKey pubKey = RSAUtil.getPublicKey(yfbWithdrawConfig.getWagKeyString());
+            // 返回验证结果
+            return RSAUtil.vertiy(signData, signature, pubKey);
+        } catch (Exception e) {
+            logger.error("## 验证签名异常{},return->false",e);
+            return false;
+        }
     }
 }
