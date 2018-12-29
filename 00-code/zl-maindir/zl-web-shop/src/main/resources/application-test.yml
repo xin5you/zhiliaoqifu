@@ -66,7 +66,7 @@ spring:
     consumer:
       check: false
     registry:
-      address: zookeeper://127.0.0.1:2181
+      address: zookeeper://192.168.2.110:2181
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.ebeijia.zl.shop.dao.*.domain

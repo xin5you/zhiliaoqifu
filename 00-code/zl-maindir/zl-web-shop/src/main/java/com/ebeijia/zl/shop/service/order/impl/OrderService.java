@@ -149,7 +149,7 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_FOUND, "找不到订单");
         }
         //校验身份
-        String memberId = (String) session.getAttribute("memberId");
+        String memberId = memberInfo.getMemberId();
         if (StringUtils.isEmpty(memberId) || !memberId.equals(order.getMemberId())) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
@@ -224,11 +224,8 @@ public class OrderService implements IOrderService {
         }
         //修改订单状态
 
-
-
         return null;
     }
-
 
     private Long getPayAmount(PayInfo payInfo) {
         String typeA = payInfo.getTypeA();
@@ -244,7 +241,6 @@ public class OrderService implements IOrderService {
         }
         return sum;
     }
-
 
     private void processOrderPrice(TbEcomPlatfOrder platfOrder, List<TbEcomPlatfShopOrder> subOrderList) {
         AtomicReference<Long> price = new AtomicReference<>(0L);
@@ -274,7 +270,6 @@ public class OrderService implements IOrderService {
         }
         shopOrder.setChnlOrderPrice(orderPrice.get());
     }
-
 
     /**
      * 处理按照专项类型分组的商品，转化为订单商品对象
@@ -402,6 +397,7 @@ public class OrderService implements IOrderService {
         shopOrder.setSOrderId(IdUtil.getNextId());
         shopOrder.setMemberId(platfOrder.getMemberId());
         shopOrder.setOrderId(platfOrder.getOrderId());
+        shopOrder.setChnlOrderPostage(0L);
         //记录操作
         shopOrder.setCreateTime(System.currentTimeMillis());
         shopOrder.setCreateUser("ShopSystem");
