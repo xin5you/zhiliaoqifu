@@ -303,7 +303,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         Map<String, Object> resultMap = new HashMap<>();
         try {
             resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
-            if (resultMap.get("status") == "true") {
+            if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
                 order.setEvidenceUrl(resultMap.get("msg").toString());
             } else {
                 logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
@@ -590,7 +590,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         Map<String, Object> resultMap = new HashMap<>();
         try {
             resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
-            if (resultMap.get("status") == "true") {
+            if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
                 order.setEvidenceUrl(resultMap.get("msg").toString());
             } else {
                 logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));

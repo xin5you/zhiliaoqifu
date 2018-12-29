@@ -301,7 +301,11 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			return 0;
 		}
 		BatchOrder order = batchOrderMapper.getBatchOrderById(orderId);
-		
+		if (order == null) {
+			logger.error("## 查询批量开户名单订单{}记录为空", orderId);
+			return 0;
+		}
+
 		BatchOrderList orderList = new BatchOrderList();
 		orderList.setOrderId(orderId);
 		orderList.setOrderStat(orderStat);
@@ -340,63 +344,90 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			reqVoList.add(reqVo);
 			accountType = batchOrder.getAccountType();
 		}
-		
-		if (UserType.TYPE100.getCode().equals(accountType)) {
-			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getMobilePhone))), ArrayList::new));
-		} else {
-			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getUserName))), ArrayList::new));
-		}
 
-		int successResult = 0;
-		int failResult = 0;
+		BaseResult result = new BaseResult();
 		for (AccountOpenReqVo req : reqVoList) {
 			req.setbIds(bIds);
-			BaseResult result = new BaseResult();
+		}
+		if (UserType.TYPE100.getCode().equals(accountType)) {
+			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getMobilePhone))), ArrayList::new));
 			try {
-				result = accountManageFacade.createAccount(req);
+				result = accountManageFacade.createAccountList(orderId, TransChnl.CHANNEL0.toString(), accountType, reqVoList);
 			} catch (Exception e) {
-				logger.error("## 远程调用开户接口出错,请求参数{}", JSONArray.toJSONString(req), e);
+				logger.error("## 远程调用开户接口出错,dmsRelatedKey--->{},transChnl--->{},userType--->{},reqVoList--->{}",
+						order.getOrderId(), TransChnl.CHANNEL0.toString(), accountType, JSONArray.toJSONString(reqVoList), e);
 			}
 			try {
 				if (StringUtil.isNullOrEmpty(result.getCode())) {
-					result = accountTransactionFacade.executeQuery(req.getDmsRelatedKey(), req.getTransChnl());
+					result = accountTransactionFacade.executeQuery(order.getOrderId(), TransChnl.CHANNEL0.toString());
 				}
 			} catch (Exception e) {
-				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
+				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", order.getOrderId(), TransChnl.CHANNEL0.toString(), e);
 				return 0;
 			}
 			logger.info("远程调用开户接口返回参数---》{}", JSONArray.toJSONString(result));
-			if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
-				successResult = successResult + 1;
-			} else {
-				failResult = failResult + 1;
-			}
-			BatchOrderList orderLists = new BatchOrderList();
-			orderLists.setPhoneNo(req.getMobilePhone());
-			List<BatchOrderList> batchOrderLists = batchOrderListMapper.getBatchOrderListByOrder(orderLists);
-			for (BatchOrderList oLists : batchOrderLists) {
+			for (BatchOrderList batchOrder : batchOrderList) {
 				if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
-					oLists.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
 				} else {
-					oLists.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+					batchOrder.setRemarks(result.getMsg());
 				}
 			}
-			if (batchOrderListMapper.updateBatchOrderListByList(batchOrderLists) < 1) {
-				logger.error("更新开户订单明细{}状态{}失败", JSONArray.toJSONString(batchOrderLists), result.getCode());
+			if (batchOrderListMapper.updateBatchOrderListByList(batchOrderList) >= 1) {
+				if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
+					order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+				} else {
+					order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+				}
+				if (batchOrderMapper.updateBatchOrder(order) < 1) {
+					logger.error("## 更新开户后的订单信息失败，orderId--->{}", orderId);
+					return 0;
+				}
+			} else {
+				logger.error("更新开户订单明细{}状态{}失败", JSONArray.toJSONString(batchOrderList), result.getCode());
+			}
+		} else {
+			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getUserName))), ArrayList::new));
+			for (AccountOpenReqVo req : reqVoList) {
+				try {
+					result = accountManageFacade.createAccount(req);
+				} catch (Exception e) {
+					logger.error("## 远程调用开户接口出错,reqVot--->{}", JSONArray.toJSONString(req), e);
+				}
+				try {
+					if (StringUtil.isNullOrEmpty(result.getCode())) {
+						result = accountTransactionFacade.executeQuery(req.getDmsRelatedKey(), req.getTransChnl());
+					}
+				} catch (Exception e) {
+					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
+					return 0;
+				}
+				logger.info("远程调用开户接口返回参数---》{}", JSONArray.toJSONString(result));
+				List<BatchOrderList> batchOrderLists = batchOrderListMapper.getBatchOrderListByOrderId(orderId);
+				for (BatchOrderList oLists : batchOrderLists) {
+					if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
+						oLists.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+					} else {
+						oLists.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+						oLists.setRemarks(result.getMsg());
+					}
+				}
+				if (batchOrderListMapper.updateBatchOrderListByList(batchOrderLists) < 1) {
+					logger.error("更新开户订单明细{}状态{}失败", JSONArray.toJSONString(batchOrderLists), result.getCode());
+					return 0;
+				}
+			}
+			if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
+				order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
+			} else {
+				order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
+			}
+			if (batchOrderMapper.updateBatchOrder(order) < 1) {
+				logger.error("## 更新开户后的订单信息失败，orderId--->{}", orderId);
+				return 0;
 			}
 		}
-		if (reqVoList.size() == successResult) {
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
-		} else if (reqVoList.size() == failResult) {
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
-		} else {
-			order.setOrderStat(BatchOrderStat.BatchOrderStat_40.getCode());
-		}
-		if (batchOrderMapper.updateBatchOrder(order) < 1) {
-			logger.error("## 更新开户后的订单信息失败，orderId--->{}", orderId);
-			return 0;
-		}
-		
 		return 1;
 	}
 
