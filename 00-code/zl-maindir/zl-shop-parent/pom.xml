@@ -15,6 +15,7 @@
         <module>../zl-basics-order</module>
         <module>../zl-basics-member</module>
         <module>../zl-web-shop</module>
+        <module>../zl-core-rocketmq</module>
     </modules>
 
 </project>

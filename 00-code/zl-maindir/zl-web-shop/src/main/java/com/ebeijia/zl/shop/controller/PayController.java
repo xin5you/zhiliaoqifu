@@ -74,12 +74,12 @@ public class PayController {
     }
 
     //支付接口
-    @TokenCheck(force = true)
-    @ApiOperation("支付订单")
-    @RequestMapping(value = "/deal/order/{orderid}", method = RequestMethod.POST)
-    public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {
-        payService.payOrder(payInfo, session);
-    }
+//    @TokenCheck(force = true)
+//    @ApiOperation("支付订单")
+//    @RequestMapping(value = "/deal/order/{orderid}", method = RequestMethod.POST)
+//    public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {
+//        payService.payOrder(payInfo, session);
+//    }
 
 
     @ApiOperation("列出所有专项账户类型的ID")
