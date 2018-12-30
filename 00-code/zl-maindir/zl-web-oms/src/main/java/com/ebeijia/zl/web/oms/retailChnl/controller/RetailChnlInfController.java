@@ -631,7 +631,7 @@ public class RetailChnlInfController {
 		if (!StringUtil.isNullOrEmpty(channelId)) {
 			retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
 			if (!StringUtil.isNullOrEmpty(lockVersion)) {
-				retailChnl.setLockVersion(retailChnl.getLockVersion() + 1);
+				retailChnl.setLockVersion(retailChnl.getLockVersion());
 			}
 		} else {
 			retailChnl = new RetailChnlInf();

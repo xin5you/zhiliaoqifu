@@ -190,7 +190,8 @@ public class ExceptionEnum {
 	public enum PlatfOrderNewsEnum {
 
 		PlatfOrderNews_01("01","订单不存在"),
-		PlatfOrderNews_02("02","订单发货失败");
+		PlatfOrderNews_02("02","订单发货失败"),
+		PlatfOrderNews_03("03","订单货品信息不存在");
 
 		private String code;
 		private String msg;

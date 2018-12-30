@@ -7,6 +7,8 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface PlatfOrderInfService {
 
 	/**
@@ -39,4 +41,10 @@ public interface PlatfOrderInfService {
 	 */
 	PageInfo<TbEcomPlatfShopOrder> getPlatfShopOrderListPage(int startNum, int pageSize, TbEcomPlatfShopOrder entity);
 
+	/**
+	 * 更新订单商品发货状态（根据二级订单发货）
+	 * @param req
+	 * @return
+	 */
+	BaseResult<Object> updateOrderGoodsDeliverCheck(HttpServletRequest req);
 }

@@ -12,4 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbEcomOrderProductItemService extends IService<TbEcomOrderProductItem> {
 
+    /**
+     * 根据二级订单ID查询货品信息
+     * @param sOrderId
+     * @return
+     */
+    TbEcomOrderProductItem getOrderProductItemBySOrderId(String sOrderId);
 }

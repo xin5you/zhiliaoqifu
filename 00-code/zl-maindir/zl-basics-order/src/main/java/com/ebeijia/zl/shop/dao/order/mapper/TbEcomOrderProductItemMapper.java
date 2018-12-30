@@ -13,5 +13,11 @@ package com.ebeijia.zl.shop.dao.order.mapper;
  */
 @Mapper
 public interface TbEcomOrderProductItemMapper extends BaseMapper<TbEcomOrderProductItem> {
-	
+
+	/**
+	 * 根据二级订单ID查询货品信息
+	 * @param sOrderId
+	 * @return
+	 */
+	TbEcomOrderProductItem getOrderProductItemBySOrderId(String sOrderId);
 }
