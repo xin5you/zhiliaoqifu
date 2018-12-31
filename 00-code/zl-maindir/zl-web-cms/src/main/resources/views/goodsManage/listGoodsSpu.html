@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="main/header::header" />
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>商品管理</li>
+		                    <li>商品信息管理</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" th:action="@{/goodsManage/goodsInf/getGoodsSpuList}" th:object="${ecomGoods}" class="form-inline" method="post">
+					<div class="row-fluid searchForm" id="h_search">
+						<div class="span12">
+							<div class="input-prepend">
+								<span class="add-on">商品名称</span>
+								<input id="goodsName" name="goodsName" type="text" class="input-medium" th:value="*{goodsName}" maxlength="255"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">SPU代码</span>
+								<input id="spuCode" name="spuCode" type="text" class="input-medium" th:value="*{spuCode}" maxlength="50"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">分销商代码</span>
+								<input id="ecomCode" name="ecomCode" type="text" class="input-medium" th:value="*{ecomCode}" maxlength="50"/>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">商品类型</span>
+								<select id="goodsType" name="goodsType" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="g,gStat : ${goodsTypeList}" th:value="${g.code}"><span th:text="${g.name}" /></option>
+								</select>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">所属专项类型</span>
+								<select id="BId" name="BId" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="s,sStat : ${specAccountTypeList}" th:value="${s.bId}"><span th:text="${s.name}" /></option>
+								</select>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">上下架状态</span>
+								<select id="marketEnable" name="marketEnable" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="m,mStat : ${marketEnableList}" th:value="${m.code}"><span th:text="${m.name}" /></option>
+								</select>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">商品组合类型</span>
+								<select id="haveGroups" name="haveGroups" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="h,hStat : ${haveGroupsList}" th:value="${h.code}"><span th:text="${h.name}" /></option>
+								</select>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">禁用状态</span>
+								<select id="isDisabled" name="isDisabled" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="s,sStat : ${isDisabledList}" th:value="${s.code}"><span th:text="${s.name}" /></option>
+								</select>
+							</div>
+							<div class="input-prepend">
+								<span class="add-on">热销状态</span>
+								<select id="isHot" name="isHot" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="s,sStat : ${goodsIsHotList}" th:value="${s.code}"><span th:text="${s.name}" /></option>
+								</select>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-search">查 询</button>
+								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
+								<button type="button" class="btn btn-primary btn-add">新增规格</button>
+							</div>
+						</div>
+					</div>
+					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
+						<thead>
+							<tr>
+								<th></th>
+								<th>商品名称</th>
+								<th>商品图片</th>
+								<th>SPU代码</th>
+								<th>分销商代码</th>
+				                <th>商品类型</th>
+				                <th>专项类型</th>
+								<th>上下架状态</th>
+								<th>商品组合状态</th>
+								<th>禁用状态</th>
+								<th>热销状态</th>
+				                <th>操作</th>
+							</tr>
+						</thead>
+				        <tbody>
+							<tr th:each="goods, goodsStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${goodsStat.count}"></span></td>
+								<td><span th:text="${goods.goodsName}"></span></td>
+								<td><a th:href="${goods.goodsImg}">[[${spec.goodsImg}]]</a></td>
+								<td><span th:text="${goods.spuCode}"></span></td>
+								<td><span th:text="${goods.ecomCode}"></span></td>
+								<td><span th:text="${goods.goodsType}"></span></td>
+								<td><span th:text="${goods.BName}"></span></td>
+								<td><span th:text="${goods.marketEnable}"></span></td>
+								<td><span th:text="${goods.haveGroups}"></span></td>
+								<td><span th:text="${goods.isDisabled}"></span></td>
+								<td><span th:text="${goods.isHot}"></span></td>
+				                <td>
+									<a th:attr="goodsId=${goods.goodsId}" title="商品详情" class="btn-mini btn-view" href="#"><i class="icon-view"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="上下架" class="btn-mini btn-updateEnable" href="#"><i class="icon-edit"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="添加商品相册" class="btn-mini btn-addGoodsImg" href="#"><i class="icon-plus"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="添加商品详情" class="btn-mini btn-addGoodsView" href="#"><i class="icon-plus"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="添加商品SKU" class="btn-mini btn-addGoodsSku" href="#"><i class="icon-plus"></i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+			    </form>
+			</div>
+		</div>
+		<div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="goodsInfo" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<button class="close btn-close" data-dismiss="modal">&times;</button>
+					<h3 id="modal_h"></h3>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="goods_id" name="goods_id"/>
+					<fieldset>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>商品名称：</label>
+								<div class="controls">
+									<input type="text" class="span3" name="goods_name" id="goods_name" maxlength="20"/>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>商品图片：</label>
+								<div class="controls">
+									<input type="text" class="span3" name="goods_img" id="goods_img" readonly="readonly"/>
+									<input type="file" class="span3" name="goodsImgFile" id="goodsImgFile"/>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>SPU代码：</label>
+								<div class="controls">
+									<input type="text" class="span3" name="spu_code" id="spu_code" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>分销商代码：</label>
+								<div class="controls">
+									<select name="ecom_code" id="ecom_code" class="span3">
+										<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.code}">
+											<span th:text="${e.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>商品类型：</label>
+								<div class="controls">
+									<select name="goods_type" id="goods_type" class="span3">
+										<option th:each="g,gStat : ${goodsTypeList}" th:value="${g.code}">
+											<span th:text="${g.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>所属专项类型：</label>
+								<div class="controls">
+									<select name="b_id" id="b_id" class="span3">
+										<option th:each="b,bStat : ${billingTypeList}" th:value="${b.code}">
+											<span th:text="${b.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>单位：</label>
+								<div class="controls">
+									<select name="unit" id="unit" class="span3">
+										<option th:each="u,uStat : ${unitList}" th:value="${u.code}">
+											<span th:text="${u.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>重量：</label>
+								<div class="controls">
+									<input type="text" class="span3" name="weight" id="weight" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>默认sku代码：</label>
+								<div class="controls">
+									<select name="default_sku_code" id="default_sku_code" class="span3">
+										<option th:each="s,sStat : ${skuCodeList}" th:value="${s.code}">
+											<span th:text="${s.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>上下架状态：</label>
+								<div class="controls">
+									<select name="market_enable" id="market_enable" class="span3">
+										<option th:each="m,mStat : ${marketEnableList}" th:value="${m.code}">
+											<span th:text="${m.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>简介：</label>
+								<div class="controls">
+									<input type="text" class="span3" name="brief" id="brief" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>商品富文本ID：</label>
+								<div class="controls">
+									<select name="goods_detail" id="goods_detail" class="span3">
+										<option th:each="g,gStat : ${goodsDetailList}" th:value="${g.code}">
+											<span th:text="${g.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>商品组合状态：</label>
+								<div class="controls">
+									<select name="have_groups" id="have_groups" class="span3">
+										<option th:each="h,hStat : ${haveGroupsList}" th:value="${h.code}">
+											<span th:text="${h.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>禁用状态：</label>
+								<div class="controls">
+									<select name="is_disabled" id="is_disabled" class="span3">
+										<option th:each="s,sStat : ${isDisabledList}" th:value="${s.code}">
+											<span th:text="${s.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="input-prepend">
+								<label class="control-label"><span class="f_req">* </span>热销状态：</label>
+								<div class="controls">
+									<select name="is_hot" id="is_hot" class="span3">
+										<option th:each="s,sStat : ${isHotList}" th:value="${s.code}">
+											<span th:text="${s.name}"></span>
+										</option>
+									</select>
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="input-prepend">
+								<label class="control-label">备注：</label>
+								<div class="controls">
+									<input type="text" class="span3" name="remarks" id="remarks" maxlength="256"/>
+									<span class="help-block"></span>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modal-footer" style="text-align: center;">
+		            <button class="btn btn-primary btn-submit" type="submit">提 交 </button>
+		            <button class="btn btn-close" data-dismiss="modal" aria-hidden="true">关 闭</button>
+		        </div>
+			</form>
+		</div>
+		<script th:src="@{/ecom/js/goodsManage/listGoodsSpec.js}"></script>
+		<script type="text/css">
+			#modal {
+				width: 900px;
+				margin: -250px 0 0 -450px;
+			}
+		</script>
+		<!--<script th:inline="javascript">
+			$("#goodsType").val(/*[[${goods.goodsType}]]*/);
+		</script>-->
+	</body>
+</html>
+

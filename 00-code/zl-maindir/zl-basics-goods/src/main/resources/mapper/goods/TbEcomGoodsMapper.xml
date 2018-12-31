@@ -2,6 +2,81 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsMapper">
 
+    <sql id="ecomGoodsColumns">
+        g.goods_id,
+        g.goods_name,
+        g.spu_code,
+        g.ecom_code,
+        g.goods_type,
+        g.b_id,
+        g.unit,
+        g.weight,
+        g.default_sku_code,
+        g.market_enable,
+        g.brief,
+        g.goods_detail,
+        g.have_groups,
+        g.have_params,
+        g.have_spec,
+        g.is_disabled,
+        g.ponumber,
+        g.goods_sord,
+        g.goods_weight,
+        g.grade,
+        g.is_hot,
+        g.goods_img,
+        g.data_stat,
+        g.remarks,
+        g.create_user,
+        g.update_user,
+        g.create_time,
+        g.update_time,
+        g.lock_version
+    </sql>
+
+    <sql id="tableName">
+        tb_ecom_goods g
+    </sql>
+
+    <select id="getGoodsInfList" parameterType="TbEcomGoods" resultType="TbEcomGoods">
+        select
+          <include refid="ecomGoodsColumns"/>,
+          b.b_name as BName
+        from
+          <include refid="tableName"/>
+        left join tb_billing_type b on b.b_id = g.b_id
+        where g.data_stat = '0'
+        <if test="goodsName != null and goodsName != ''">
+          and g.goods_name like "%"#{goodsName}"%"
+        </if>
+        <if test="spuCode != null and spuCode != ''">
+            and g.spu_code = #{spuCode}
+        </if>
+        <if test="ecomCode != null and ecomCode != ''">
+            and g.ecom_code = #{ecomCode}
+        </if>
+        <if test="goodsType != null and goodsType != ''">
+            and g.goods_type = #{goodsType}
+        </if>
+        <if test="BId != null and BId != ''">
+            and g.b_id  like "%"#{BId}"%"
+        </if>
+        <if test="marketEnable != null and marketEnable != ''">
+            and g.market_enable = #{marketEnable}
+        </if>
+        <if test="haveGroups != null and haveGroups != ''">
+            and g.have_groups = #{haveGroups}
+        </if>
+        <if test="isDisabled != null and isDisabled != ''">
+            and g.is_disabled = #{isDisabled}
+        </if>
+        <if test="isHot != null and isHot != ''">
+            and g.is_hot = #{isHot}
+        </if>
+    </select>
+
+
+
     <select id="getGoodsList"  parameterType="com.ebeijia.zl.shop.dao.goods.domain.Goods"  resultType="com.ebeijia.zl.shop.dao.goods.domain.Goods">
         select g.goods_id,
         g.goods_name,

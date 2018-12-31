@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 public class TbEcomGoodsService extends ServiceImpl<TbEcomGoodsMapper, TbEcomGoods> implements ITbEcomGoodsService{
 
+
     @Override
     public List<Goods> getGoodsList(Goods goods) {
         return baseMapper.getGoodsList(goods);
@@ -45,5 +46,10 @@ public class TbEcomGoodsService extends ServiceImpl<TbEcomGoodsMapper, TbEcomGoo
     @Override
     public Goods selectGoodsByProductId(String productId) {
         return baseMapper.selectGoodsByProductId(productId);
+    }
+
+    @Override
+    public List<TbEcomGoods> getGoodsInfList(TbEcomGoods ecomGoods) {
+        return baseMapper.getGoodsInfList(ecomGoods);
     }
 }

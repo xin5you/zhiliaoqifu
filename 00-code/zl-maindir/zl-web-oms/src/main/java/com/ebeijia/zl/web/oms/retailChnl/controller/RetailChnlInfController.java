@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -441,7 +440,7 @@ public class RetailChnlInfController {
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 		try {
 			RetailChnlInf retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
-			if (retailChnl == null || retailChnl.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (retailChnl == null || retailChnl.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加上账信息失败，该分销商信息不存在或未开户");
 				return resultMap;
@@ -587,7 +586,7 @@ public class RetailChnlInfController {
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 		try {
 			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
-			if (retailChnlInf == null || retailChnlInf.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (retailChnlInf == null || retailChnlInf.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑上账信息失败，该分销商信息不存在或未开户");
 				return resultMap;

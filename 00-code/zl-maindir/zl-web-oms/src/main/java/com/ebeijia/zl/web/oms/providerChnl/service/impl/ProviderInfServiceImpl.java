@@ -8,7 +8,6 @@ import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
@@ -122,7 +121,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		}
 		jedisClusterUtils.del(OrderConstants.providerOrderIdSession);
 		
-		providerInf.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+		providerInf.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 		try {
 			if (!providerInfFacade.updateProviderInf(providerInf)) {
 				logger.error("## 更新供应商{}开户成功状态失败", providerId);

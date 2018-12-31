@@ -80,7 +80,7 @@ public class ProviderInfController {
 			ProviderInf providerInf = this.getProviderInf(request);
 			PageInfo<ProviderInf> pageList = providerInfFacade.getProviderInfPage(startNum, pageSize, providerInf);
 			CompanyInf company = new CompanyInf();
-			company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+			company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 			List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 			mv.addObject("pageInfo", pageList);
 			mv.addObject("providerInf", providerInf);
@@ -315,13 +315,13 @@ public class ProviderInfController {
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
 		try {
 			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
-			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (provider == null || provider.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
 			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;
@@ -536,13 +536,13 @@ public class ProviderInfController {
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
 		try {
 			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
-			if (provider == null || provider.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (provider == null || provider.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
 			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;

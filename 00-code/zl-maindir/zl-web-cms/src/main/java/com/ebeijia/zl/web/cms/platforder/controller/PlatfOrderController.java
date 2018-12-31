@@ -1,15 +1,6 @@
 package com.ebeijia.zl.web.cms.platforder.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.ebeijia.zl.basics.system.domain.User;
-import com.ebeijia.zl.common.utils.constants.Constants;
-import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.GoodsEcomCodeTypeEnum;
 import com.ebeijia.zl.common.utils.enums.PlatfOrderPayStatEnum;
@@ -19,7 +10,6 @@ import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
 import com.ebeijia.zl.web.cms.platforder.service.PlatfOrderInfService;
 import org.slf4j.Logger;
@@ -135,23 +125,8 @@ public class PlatfOrderController {
 	 */
 	@PostMapping(value = "/orderDeliverGoods")
 	public BaseResult<Object> orderDeliverGoods(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute(Constants.SESSION_USER);
-
-		String sOrderId = req.getParameter("sOrderId");
-		TbEcomPlatfShopOrder platfShopOrder = ecomPlatfShopOrderService.getById(sOrderId);
-		if (platfShopOrder == null ) {
-			return ResultsUtil.error(ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getCode(), ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getMsg());
-		}
-
-		platfShopOrder.setSubOrderStatus(SubOrderStatusEnum.SOS12.getCode());
-		platfShopOrder.setUpdateTime(System.currentTimeMillis());
-		platfShopOrder.setUpdateUser(user.getId());
-		platfShopOrder.setLockVersion(platfShopOrder.getLockVersion() + 1);
-		if (!ecomPlatfShopOrderService.updateById(platfShopOrder)) {
-			return ResultsUtil.error(ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getCode(), ExceptionEnum.PlatfOrderNewsEnum.PlatfOrderNews_01.getMsg());
-		}
-		return ResultsUtil.success();
+		BaseResult<Object> result = platfOrderInfService.updateOrderGoodsDeliverCheck(req);
+		return result;
 	}
 
 }

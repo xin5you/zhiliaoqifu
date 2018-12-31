@@ -8,11 +8,11 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.common.utils.enums.GoodsSpecTypeEnum;
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecValues;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecification;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecValuesService;
@@ -332,6 +332,34 @@ public class GoodsManageController {
 		}
 		specValues.setRemarks(remarks);
 		return specValues;
+	}
+
+	/**
+	 * 商品信息Spu列表（分页）
+	 * @param req
+	 * @param ecomGoods
+	 * @return
+	 */
+	@RequestMapping(value = "/goodsInf/getGoodsSpuList")
+	public ModelAndView getGoodsSpuList(HttpServletRequest req, TbEcomGoods ecomGoods) {
+		ModelAndView mv = new ModelAndView("goodsManage/listGoodsSpu");
+		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+		PageInfo<TbEcomGoods> pageInfo = new PageInfo<>();
+		try {
+			pageInfo = goodsManageService.getGoodsInfListPage(startNum, pageSize, ecomGoods);
+		} catch (Exception e) {
+			logger.error("## 查询商品Spu信息异常{}", e);
+		}
+		mv.addObject("pageInfo", pageInfo);
+		mv.addObject("ecomGoods", ecomGoods);
+		mv.addObject("goodsIsHotList", GoodsIsHotEnum.values());
+		mv.addObject("isDisabledList", IsDisabledEnum.values());
+		mv.addObject("haveGroupsList", HaveGroupsEnum.values());
+		mv.addObject("marketEnableList", MarketEnableEnum.values());
+		mv.addObject("goodsTypeList", GoodsTypeEnum.values());
+		mv.addObject("specAccountTypeList", SpecAccountTypeEnum.values());
+		return mv;
 	}
 
 }
