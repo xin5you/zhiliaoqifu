@@ -78,7 +78,7 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
-    public JsonResult<ChannelOrder> goodsOrderDetail(@PathVariable("orderid") String orderId){
+    public JsonResult<OrderDetailInfo> goodsOrderDetail(@PathVariable("orderid") String orderId){
 
         return new JsonResult<>();
     }
@@ -86,7 +86,7 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单列表")
     @RequestMapping(value = "/goods/list/{stat}",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbEcomPlatfOrder>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
+    public JsonResult<PageInfo<OrderDetailInfo>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
         return new JsonResult<>();
     }
 
