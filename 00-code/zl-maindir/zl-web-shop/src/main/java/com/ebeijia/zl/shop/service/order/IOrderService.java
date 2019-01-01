@@ -13,5 +13,5 @@ public interface IOrderService {
 
     TbEcomPlatfOrder cancelOrder(String orderId);
 
-    TbEcomPlatfOrder applyOrder(AddressInfo address, PayInfo payInfo);
+    TbEcomPlatfOrder applyOrder(PayInfo payInfo);
 }

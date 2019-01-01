@@ -17,10 +17,10 @@ public interface IPayService {
     int transferToCard(DealInfo dealInfo, Double session);
 
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey);
+    int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc);
 
     @Cacheable(cacheNames = ShopConfig.ID + "LISTDEALS")
-    PageInfo<AccountLogVO> listDeals(String session, String userId, String type, String start, String limit);
+    PageInfo<AccountLogVO> listDeals(String range, String userId, String type, String start, String limit);
 
     List<AccountVO> listAccountDetail(String openId, String session);
 }

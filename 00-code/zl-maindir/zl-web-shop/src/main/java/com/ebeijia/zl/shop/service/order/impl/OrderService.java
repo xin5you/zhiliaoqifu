@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsBilling;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
+import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsBillingService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderProductItem;
@@ -34,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.ebeijia.zl.shop.constants.ResultState.ERROR;
 import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
 import static com.ebeijia.zl.shop.constants.ResultState.NOT_FOUND;
 
@@ -54,6 +58,9 @@ public class OrderService implements IOrderService {
 
     @Autowired
     ITbEcomGoodsService goodsDao;
+
+    @Autowired
+    ITbEcomGoodsBillingService goodsBillingDao;
 
     @Autowired
     ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
@@ -116,7 +123,6 @@ public class OrderService implements IOrderService {
             //存储子订单，待持久化
             subOrderList.add(shopOrder);
         }
-        String dmsKey = IdUtil.getNextId();
 
         //完善主订单
         processOrderPrice(platfOrder, subOrderList);
@@ -154,7 +160,7 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
         //获得路径
-        if (!order.getPayStatus().equals("0")){
+        if (!order.getPayStatus().equals("0")) {
             throw new BizException(NOT_ACCEPTABLE, "您的订单无需取消");
         }
         order.setPayStatus("8");
@@ -163,13 +169,21 @@ public class OrderService implements IOrderService {
         query.setOrderId(order.getOrderId());
         TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();
         updataInf.setSubOrderStatus("27");
-        shopOrderDao.update(updataInf,new QueryWrapper<>(query));
+        shopOrderDao.update(updataInf, new QueryWrapper<>(query));
         //执行操作
         return order;
     }
 
+    /**
+     * 简单的支付订单功能
+     *
+     * @param payInfo
+     * @return
+     */
     @Override
-    public TbEcomPlatfOrder applyOrder(AddressInfo address, PayInfo payInfo) {
+    @ShopTransactional
+    public TbEcomPlatfOrder applyOrder(PayInfo payInfo) {
+        logger.info(String.format("支付订单开始，参数%s", payInfo));
         MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
@@ -188,60 +202,118 @@ public class OrderService implements IOrderService {
         if (!order.getPayStatus().equals("0")) {
             throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
         }
-
+        //乐观锁
+        order.setPayTime(System.currentTimeMillis());
+        order.setPayStatus("1");
+        order.setUpdateUser("System");
+        order.setUpdateTime(System.currentTimeMillis());
+        order = orderUpdateLocker(order);
         //类型、总金额验证
         TbEcomPlatfShopOrder shopOrder = new TbEcomPlatfShopOrder();
         shopOrder.setOrderId(order.getOrderId());
         QueryWrapper<TbEcomPlatfShopOrder> query = new QueryWrapper<>(shopOrder);
         List<TbEcomPlatfShopOrder> shopOrders = shopOrderDao.list(query);
-        if (payAmount.compareTo(order.getOrderPrice().longValue()) != 0) {
+        if (payAmount.compareTo(order.getOrderPrice()) != 0) {
             throw new BizException(NOT_ACCEPTABLE, "订单金额不正确");
         }
-        //TODO 组合订单类型判断（未完成）
+
+        //创建订单简介，用于账务流水
+        StringBuilder descBuilder = new StringBuilder("购买");
+
+        //TODO 组合订单类型判断（未完成，目前仅能处理一种商品，并且只支持商品和账户类型一对一的情况）
         Iterator<TbEcomPlatfShopOrder> iterator = shopOrders.iterator();
         while (iterator.hasNext()) {
-            String bId = iterator.next().toString();
-            if (!payInfo.getTypeB().equals(bId)) {
+            TbEcomPlatfShopOrder platfShopOrder = iterator.next();
+            platfShopOrder.setDmsRelatedKey(dmsRelatedKey);
+            String sOrderId = platfShopOrder.getSOrderId();
+            TbEcomOrderProductItem item = orderProductItemDao.getOrderProductItemBySOrderId(sOrderId);
+            TbEcomGoodsProduct product = productDao.getById(item.getProductId());
+            descBuilder.append(item.getProductName());
+            if (iterator.hasNext()) {
+                descBuilder.append(",");
+            }
+            TbEcomGoodsBilling goodsBilling = new TbEcomGoodsBilling();
+            goodsBilling.setGoodsId(product.getGoodsId());
+            List<TbEcomGoodsBilling> list = goodsBillingDao.list(new QueryWrapper<>(goodsBilling));
+            //如果没有指定账户类型，那不允许用B类账户支付
+            if (list == null && payInfo.getCostB() != null) {
                 throw new BizException(NOT_ACCEPTABLE, "支付类型不正确");
             }
+            //当存在账户类型时，必须和支付类型匹配（这里只判定了商品和账户类型一对一的情况）
+            if (list != null && payInfo.getTypeB() != null) {
+                String bId = list.get(0).getBId();
+                if (!bId.equals(payInfo.getTypeB())) {
+                    throw new BizException(NOT_ACCEPTABLE, "支付类型不正确");
+                }
+            }
+        }
+        if (!shopOrderDao.updateBatchById(shopOrders)) {
+            throw new BizException(ERROR, "子订单提交异常");
         }
 
-        //TODO 幂等性验证
 
-        //获取订单状态
-        TbEcomPlatfOrder platfOrder = new TbEcomPlatfOrder();
-        platfOrder.setLockVersion(order.getLockVersion() + 1);
-        platfOrder.setPayTime(System.currentTimeMillis());
-        platfOrder.setPayStatus("1");
-        platfOrder.setUpdateUser("System");
-        platfOrder.setUpdateTime(System.currentTimeMillis());
-        //处理订单
-        QueryWrapper<TbEcomPlatfOrder> wrapper = new QueryWrapper<>(order);
-
-        boolean update = platfOrderDao.update(platfOrder, wrapper);
-        if (update == false) {
-            throw new BizException(500, "支付失败，请检查您的订单状态");
+        //处理订单支付过程，调用了payService
+        try {
+            if (ResultState.OK != payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString())) {
+                throw new BizException();
+            }
+        } catch (Exception e) {
+            if (e instanceof BizException) {
+                logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
+                throw (BizException) e;
+            }
         }
         //修改订单状态
-
-        return null;
+        order.setPayStatus("2");
+        //持久化并且锁版本加1
+        order = orderUpdateLocker(order);
+        return order;
     }
 
+    private TbEcomPlatfOrder orderUpdateLocker(TbEcomPlatfOrder order) {
+        TbEcomPlatfOrder query = new TbEcomPlatfOrder();
+        query.setOrderId(order.getOrderId());
+        query.setLockVersion(order.getLockVersion());
+        order.setLockVersion(order.getLockVersion() + 1);
+        boolean update = platfOrderDao.update(order, new QueryWrapper<>(query));
+        if (!update) {
+            throw new BizException(NOT_ACCEPTABLE, "锁状态异常");
+        }
+        return order;
+    }
+
+    /**
+     * 计算支付总和，以及判断支付金额有效性
+     *
+     * @param payInfo
+     * @return
+     */
     private Long getPayAmount(PayInfo payInfo) {
         String typeA = payInfo.getTypeA();
         String typeB = payInfo.getTypeB();
         Long costA = payInfo.getCostA();
         Long costB = payInfo.getCostB();
-        Long sum = costA + costB;
-        if (StringUtils.isAnyEmpty(typeA, typeB)) {
+        Long sum = 0L;
+        if (costA != null && costA < 0L) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
-        if (costA < 0 || costB < 0 || payInfo.getShipPrice()<0 || sum < costA || sum < costB) {
+        if (costB != null && costB < 0L) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        if (StringUtils.isAllEmpty(typeA, typeB)) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        sum += costA == null ? 0L : costA;
+        sum += costB == null ? 0L : costB;
+        if (sum.compareTo(0L) < 0) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
         return sum;
     }
 
+    /**
+     * 记录订单总价和总邮费
+     */
     private void processOrderPrice(TbEcomPlatfOrder platfOrder, List<TbEcomPlatfShopOrder> subOrderList) {
         AtomicReference<Long> price = new AtomicReference<>(0L);
         AtomicReference<Long> shipPrice = new AtomicReference<>(0L);

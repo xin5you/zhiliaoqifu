@@ -53,7 +53,7 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单支付确认")
     @RequestMapping(value = "/goods/apply/",method = RequestMethod.POST)
-    public JsonResult<TbEcomPlatfOrder> orderNextState(AddressInfo address, PayInfo payInfo, String validCode){
+    public JsonResult<TbEcomPlatfOrder> orderNextState(PayInfo payInfo, String validCode){
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
@@ -62,7 +62,7 @@ public class OrderController {
         if (!valid) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
         }
-        TbEcomPlatfOrder platfOrder = orderService.applyOrder(address,payInfo);
+        TbEcomPlatfOrder platfOrder = orderService.applyOrder(payInfo);
         return new JsonResult<>(platfOrder);
     }
 

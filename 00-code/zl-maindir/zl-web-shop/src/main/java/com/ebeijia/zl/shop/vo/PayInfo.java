@@ -2,6 +2,7 @@ package com.ebeijia.zl.shop.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,9 +10,7 @@ import lombok.ToString;
 import java.io.Serializable;
 
 @ApiModel("支付信息")
-@Getter
-@Setter
-@ToString
+@Data
 public class PayInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,6 +1,6 @@
 package com.ebeijia.zl.shop.dao.goods.domain;
 
-import com.ebeijia.zl.common.utils.domain.BaseEntity;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class GoodsProduct extends BaseEntity {
+public class GoodsProduct extends Model<GoodsProduct> {
 	
 	private static final long serialVersionUID = -3209543443585542837L;
 	
