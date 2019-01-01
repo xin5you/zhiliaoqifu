@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -115,7 +114,7 @@ public class CompanyController {
 		CompanyInf companyInf = getCompanyInf(req);
 		if (IsPlatformEnum.ISOPEN_TRUE.getCode().equals(companyInf.getIsPlatform())) {
 			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
-			if (c != null && IsOpenEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
+			if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "平台标识已有开户企业，请重新选择");
 				return resultMap;
@@ -164,7 +163,7 @@ public class CompanyController {
 		CompanyInf companyInf = getCompanyInf(req);
 		if (!companyInfCode.getIsPlatform().equals(companyInf.getIsPlatform()) && !companyInf.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())) {
 			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
-			if (c != null && IsOpenEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
+			if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "平台标识已有开户企业，请重新选择");
 				return resultMap;
@@ -218,7 +217,7 @@ public class CompanyController {
 		} else {
 			companyInf = new CompanyInf();
 			companyInf.setCompanyId(IdUtil.getNextId());
-			companyInf.setIsOpen(IsOpenEnum.ISOPEN_FALSE.getCode());
+			companyInf.setIsOpen(IsOpenAccountEnum.ISOPEN_FALSE.getCode());
 			companyInf.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			companyInf.setCreateUser(user.getId());
 			companyInf.setCreateTime(System.currentTimeMillis());
@@ -265,7 +264,7 @@ public class CompanyController {
 
 		InaccountOrder order = new InaccountOrder();
 		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
-		if (IsOpenEnum.ISOPEN_FALSE.getCode().equals(company.getIsOpen())) {
+		if (IsOpenAccountEnum.ISOPEN_FALSE.getCode().equals(company.getIsOpen())) {
 			order.setCompanyId(companyId);
 		}
 		try {

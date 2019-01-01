@@ -1,6 +1,5 @@
 package com.ebeijia.zl.web.oms.batchOrder.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -88,7 +86,7 @@ public class BatchOpenAccountController {
 
 		//查询已开户企业
 		CompanyInf company = new CompanyInf();
-		company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+		company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())).collect(Collectors.toList());
 		
@@ -123,7 +121,7 @@ public class BatchOpenAccountController {
 		ModelAndView mv = new ModelAndView("batch/openAccount/addOpenAccount");
 		//查询已开户企业
 		CompanyInf company = new CompanyInf();
-		company.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+		company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())).collect(Collectors.toList());
 		//查询所有账户类型

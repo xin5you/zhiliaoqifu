@@ -9,8 +9,10 @@ import com.ebeijia.zl.common.utils.enums.GoodsSpecTypeEnum;
 import com.ebeijia.zl.common.utils.enums.ImageTypeEnum;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecValues;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecification;
+import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecValuesService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecificationService;
 import com.ebeijia.zl.web.cms.base.exception.BizHandlerException;
@@ -52,6 +54,9 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 	@Autowired
 	private ITbEcomSpecValuesService ecomSpecValuesService;
+
+	@Autowired
+	private ITbEcomGoodsService ecomGoodsService;
 
 	@Override
 	public PageInfo<TbEcomSpecification> getGodosSpecListPage(int startNum, int pageSize, TbEcomSpecification entity) {
@@ -269,5 +274,15 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews06.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews06.getMsg());
 		}
 		return ResultsUtil.success();
+	}
+
+	@Override
+	public PageInfo<TbEcomGoods> getGoodsInfListPage(int startNum, int pageSize, TbEcomGoods entity) {
+		List<TbEcomGoods> goodsInfList = new ArrayList<TbEcomGoods>();
+
+		PageHelper.startPage(startNum, pageSize);
+		goodsInfList = ecomGoodsService.getGoodsInfList(entity);
+		PageInfo<TbEcomGoods> page = new PageInfo<TbEcomGoods>(goodsInfList);
+		return page;
 	}
 }

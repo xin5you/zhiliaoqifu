@@ -8,6 +8,8 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface GoodsManageService {
 
     /**
@@ -73,4 +75,11 @@ public interface GoodsManageService {
      * @return
      */
     BaseResult<Object> deleteGoodsSpecValues(TbEcomSpecValues entity);
+
+    /**
+     * 查询商品(Spu)信息列表（分页）
+     * @param entity
+     * @return
+     */
+    PageInfo<TbEcomGoods> getGoodsInfListPage(int startNum, int pageSize, TbEcomGoods entity);
 }

@@ -29,9 +29,13 @@
 
     <select id="getPlatfShopOrderListByPlatfOrder" parameterType="TbEcomPlatfShopOrder" resultType="TbEcomPlatfShopOrder">
         select
-          <include refid="platfShopOrderColumns" />
+          <include refid="platfShopOrderColumns" />,
+          g.goods_type as goodsType
         from
           <include refid="tableName" />
+          inner join tb_ecom_order_product_item item on item.s_order_id = pso.s_order_id
+          left join tb_ecom_goods_product pro on pro.product_id = item.product_id
+          left join tb_ecom_goods g on g.spu_code = pro.spu_code
         where pso.data_stat = '0'
         <if test="sOrderId !=null and sOrderId !='' ">
             and pso.s_order_id = #{sOrderId}

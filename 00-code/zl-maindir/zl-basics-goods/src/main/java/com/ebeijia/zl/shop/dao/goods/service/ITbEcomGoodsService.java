@@ -47,4 +47,11 @@ public interface ITbEcomGoodsService extends IService<TbEcomGoods> {
     Goods selectGoodsAndDefProductByGoodId(String goodsId) throws Exception;
 
     Goods selectGoodsByProductId(String productId);
+
+    /**
+     * 查询商品（Spu）信息列表
+     * @param ecomGoods
+     * @return
+     */
+    List<TbEcomGoods> getGoodsInfList(TbEcomGoods ecomGoods);
 }

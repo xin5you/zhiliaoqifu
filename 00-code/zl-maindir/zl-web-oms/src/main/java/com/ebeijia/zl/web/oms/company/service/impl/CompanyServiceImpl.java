@@ -8,19 +8,15 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
-import com.ebeijia.zl.common.utils.tools.NumberUtils;
-import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
-import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.web.oms.common.util.OrderConstants;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
-import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +30,6 @@ import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.web.oms.batchOrder.model.BatchOrderList;
-import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderListService;
 import com.ebeijia.zl.web.oms.batchOrder.service.BatchOrderService;
 import com.ebeijia.zl.web.oms.common.util.OmsEnum.BatchOrderStat;
 import com.ebeijia.zl.web.oms.company.service.CompanyService;
@@ -113,7 +108,7 @@ public class CompanyServiceImpl implements CompanyService{
 		jedisClusterUtils.del(OrderConstants.companyOrderIdSession);
 		
 		try {
-			companyInf.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+			companyInf.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 			if (!companyInfFacade.updateCompanyInf(companyInf)) {
 				logger.error("## 更新企业{}开户成功状态失败", companyId);
 				return 0;
@@ -133,7 +128,7 @@ public class CompanyServiceImpl implements CompanyService{
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		try {
 			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
-			if (company == null || company.getIsOpen().equals(IsOpenEnum.ISOPEN_FALSE.getCode())) {
+			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "平台打款失败，该平台不存在或未开户");
 				return resultMap;

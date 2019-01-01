@@ -40,7 +40,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="row-fluid searchForm" id="h_search">
+					<div class="row-fluid searchForm" id="h_search1">
 						<div class="span12">
 							<div class="input-prepend">
 	           			   	   	<span class="add-on">电商名称</span>
@@ -114,9 +114,9 @@
 								<td><span th:text="${platfShopOrder.payStatus}"></span></td>
 								<td><span th:text="${#dates.format(platfShopOrder.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 								<td>
-									<a th:if="${platfShopOrder.subOrderStatus == '44'}" th:attr="sOrderId=${platfShopOrder.sOrderId}" title="重新下单" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
-									<a th:if="${platfShopOrder.subOrderStatus == '44'}" th:attr="sOrderId=${platfShopOrder.sOrderId}" title="作废" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<a th:if="${platfShopOrder.subOrderStatus == '10'}" th:attr="sOrderId=${platfShopOrder.sOrderId}" title="发货" class="btn-mini btn-deliver-goods" href="#"><i class="icon-pencil"></i></a>
+									<!--<a th:if="${platfShopOrder.subOrderStatus == '44'}" th:attr="sOrderId=${platfShopOrder.sOrderId}" title="重新下单" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
+									<a th:if="${platfShopOrder.subOrderStatus == '44'}" th:attr="sOrderId=${platfShopOrder.sOrderId}" title="作废" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>-->
+									<a th:if="${platfShopOrder.subOrderStatus == '10' and platfShopOrder.goodsType == '0'}" th:attr="sOrderId=${platfShopOrder.sOrderId}" title="发货" class="btn-mini btn-deliver-goods" href="#"><i class="icon-pencil"></i></a>
 								</td>
 							</tr>
 						</tbody>

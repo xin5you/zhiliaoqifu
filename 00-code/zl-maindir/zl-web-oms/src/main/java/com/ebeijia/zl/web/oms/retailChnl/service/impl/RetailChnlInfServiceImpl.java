@@ -240,7 +240,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         jedisClusterUtils.del(OrderConstants.retailChnlOrderIdSession);
 
         try {
-            retailChnl.setIsOpen(IsOpenEnum.ISOPEN_TRUE.getCode());
+            retailChnl.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
             if (!retailChnlInfFacade.updateRetailChnlInf(retailChnl)) {
                 logger.error("## 更新分销商{}开户成功状态失败", channelId);
                 return 0;

@@ -191,7 +191,8 @@ public class ExceptionEnum {
 
 		PlatfOrderNews_01("01","订单不存在"),
 		PlatfOrderNews_02("02","订单发货失败"),
-		PlatfOrderNews_03("03","订单货品信息不存在");
+		PlatfOrderNews_03("03","订单货品信息不存在"),
+		PlatfOrderNews_04("02","订单发货,更新物流信息失败");
 
 		private String code;
 		private String msg;

@@ -197,6 +197,8 @@ public class TbEcomGoods extends Model<TbEcomGoods> {
     @ApiModelProperty(value = "重量")
     private BigDecimal weight;
 
+    @TableField(exist = false)
+    private String bName;
 
     @Override
     protected Serializable pkVal() { 
