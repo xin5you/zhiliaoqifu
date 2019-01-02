@@ -88,7 +88,15 @@ public class OrderController {
     @RequestMapping(value = "/goods/list/{stat}",method = RequestMethod.GET)
     public JsonResult<PageInfo<OrderDetailInfo>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
         PageInfo<OrderDetailInfo> orderDetailInfos = orderService.listOrderDetail(orderStat,start,limit);
-        return new JsonResult<>();
+        return new JsonResult<>(orderDetailInfos);
+    }
+
+    @TokenCheck(force = true)
+    @ApiOperation("订单列表")
+    @RequestMapping(value = "/goods/list",method = RequestMethod.GET)
+    public JsonResult<PageInfo<OrderDetailInfo>> goodsOrderListAll(String orderby, Integer start, Integer limit){
+        PageInfo<OrderDetailInfo> orderDetailInfos = orderService.listOrderDetail(null,start,limit);
+        return new JsonResult<>(orderDetailInfos);
     }
 
 

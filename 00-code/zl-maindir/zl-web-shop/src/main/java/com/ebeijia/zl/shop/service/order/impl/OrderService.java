@@ -310,6 +310,15 @@ public class OrderService implements IOrderService {
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
+
+        if (limit == null || limit > 100) {
+            limit = Integer.valueOf(20);
+        }
+        if (start == null) {
+            start = Integer.valueOf(0);
+        }
+
+
         TbEcomPlatfOrder query = new TbEcomPlatfOrder();
         query.setMemberId(memberInfo.getMemberId());
         if (!StringUtils.isEmpty(orderStat)) {
@@ -391,7 +400,7 @@ public class OrderService implements IOrderService {
     //TODO 邮费计算规则需要调整
     private void processShopOrderPrice(TbEcomPlatfShopOrder shopOrder, List<TbEcomOrderProductItem> product) {
         AtomicReference<Long> orderPrice = new AtomicReference<>(0L);
-        product.stream().forEach(item -> orderPrice.updateAndGet(v -> v + item.getProductPrice()));
+        product.stream().forEach(item -> orderPrice.updateAndGet(v -> v + item.getProductPrice()*item.getProductNum()));
         if (orderPrice.get().compareTo(0L) < 0) {
             logger.error("订单状态异常：" + product.toString());
             throw new BizException(500, "订单价格异常");
