@@ -59,7 +59,7 @@
             and g.goods_type = #{goodsType}
         </if>
         <if test="BId != null and BId != ''">
-            and g.b_id  like "%"#{BId}"%"
+            and g.b_id  = #{BId}
         </if>
         <if test="marketEnable != null and marketEnable != ''">
             and g.market_enable = #{marketEnable}
@@ -75,7 +75,16 @@
         </if>
     </select>
 
-
+    <select id="getGoodsInfByGoodsId" parameterType="String" resultType="TbEcomGoods">
+        select
+            <include refid="ecomGoodsColumns"/>,
+            b.b_name as BName
+        from
+          <include refid="tableName"/>
+        left join tb_billing_type b on b.b_id = g.b_id
+        where g.data_stat = '0'
+          and g.goods_id = #{goodsId}
+    </select>
 
     <select id="getGoodsList"  parameterType="com.ebeijia.zl.shop.dao.goods.domain.Goods"  resultType="com.ebeijia.zl.shop.dao.goods.domain.Goods">
         select g.goods_id,

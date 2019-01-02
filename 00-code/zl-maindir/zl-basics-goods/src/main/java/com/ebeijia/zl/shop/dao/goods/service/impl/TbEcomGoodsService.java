@@ -52,4 +52,9 @@ public class TbEcomGoodsService extends ServiceImpl<TbEcomGoodsMapper, TbEcomGoo
     public List<TbEcomGoods> getGoodsInfList(TbEcomGoods ecomGoods) {
         return baseMapper.getGoodsInfList(ecomGoods);
     }
+
+    @Override
+    public TbEcomGoods getGoodsInfByGoodsId(String goodsId) {
+        return baseMapper.getGoodsInfByGoodsId(goodsId);
+    }
 }

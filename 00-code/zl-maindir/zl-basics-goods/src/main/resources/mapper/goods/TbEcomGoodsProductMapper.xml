@@ -2,8 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsProductMapper">
 
+	<sql id="goodsProductColumns">
+		p.product_id,
+		p.goods_id,
+		p.spu_code,
+		p.sku_code,
+		p.ecom_code,
+		p.product_enable,
+		p.is_store,
+		p.enable_store,
+		p.goods_price,
+		p.goods_cost,
+		p.mkt_price,
+		p.page_title,
+		p.meta_description,
+		p.pic_url,
+		p.account_sign,
+		p.detail_id,
+		p.data_stat,
+        p.remarks,
+        p.create_user,
+        p.update_user,
+        p.create_time,
+        p.update_time,
+        p.lock_version
+	</sql>
 
-    <select id="getInventoryList" parameterType="TbEcomGoodsProduct" resultType="TbEcomGoodsProduct">
+	<sql id="tableName">
+		tb_ecom_goods_product p
+	</sql>
+
+    <select id="getInventoryList" parameterType="GoodsProduct" resultType="GoodsProduct">
         select g.goods_name,
         g.market_enable,
         p.sku_code,
@@ -30,38 +59,15 @@
 
 
     <select id="getGoodsProductListByGoodsId" parameterType="String" resultType="TbEcomGoodsProduct">
-		select p.product_id,
-		       p.goods_id,
-		       p.spu_code,
-		       p.sku_code,
-		       p.ecom_code,
-		       p.product_enable,
-		       p.is_store,
-		       p.enable_store,
-		       p.goods_price,
-		       p.goods_cost,
-		       p.mkt_price,
-		       p.page_title,
-		       p.meta_description,
-		       p.pic_url,
-		       p.data_stat,
-		       p.remarks,
-		       p.create_user,
-		       p.update_user,
-		       p.create_time,
-		       p.update_time,
-		       p.lock_version,
-		       g.goods_name,
-		       g.market_enable
-		  from tb_ecom_goods g, tb_ecom_goods_product p
-		 where g.goods_id = p.goods_id
-		   and g.data_stat = '0'
-		   and p.data_stat = '0'
-		   and g.goods_id = #{goodsId}
-
+		select
+			<include refid="goodsProductColumns"/>
+		from
+			<include refid="tableName"/>
+		 where p.data_stat = '0'
+		   and p.goods_id = #{goodsId}
 	</select>
 
-    <select id="getGoodsProductByPrimaryKey" parameterType="String" resultType="TbEcomGoodsProduct">
+    <select id="getGoodsProductByPrimaryKey" parameterType="String" resultType="GoodsProduct">
 		select p.product_id,
 	       p.goods_id,
 	       p.spu_code,
@@ -91,5 +97,13 @@
 	   and p.product_id = #{primaryKey}
 	</select>
 
+	<select id="getGoodsProductList" parameterMap="TbEcomGoodsProduct" resultMap="TbEcomGoodsProduct">
+		select
+			<include refid="goodsProductColumns"/>
+		from
+			<include refid="tableName"/>
+		where p.data_stat = '0'
+		order by p.create_time desc
+	</select>
 
 </mapper>

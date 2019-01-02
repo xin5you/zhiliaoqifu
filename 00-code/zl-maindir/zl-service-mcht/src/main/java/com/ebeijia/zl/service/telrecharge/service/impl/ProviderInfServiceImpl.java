@@ -48,4 +48,9 @@ public class ProviderInfServiceImpl extends ServiceImpl<ProviderInfMapper, Provi
 		
 		return providerInfMapper.getList(providerInf);
 	}
+
+	@Override
+	public ProviderInf getProviderInfByLawCode(String lawCode) {
+		return providerInfMapper.getProviderInfByLawCode(lawCode);
+	}
 }

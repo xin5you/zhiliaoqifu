@@ -280,7 +280,11 @@ public class ExceptionEnum {
 		GoodsSpecNews03("03", "删除商品规格失败"),
 		GoodsSpecNews04("04", "新增商品规格值失败"),
 		GoodsSpecNews05("05", "编辑商品规格值失败"),
-		GoodsSpecNews06("06", "删除商品规格值失败");
+		GoodsSpecNews06("06", "删除商品规格值失败"),
+		GoodsSpecNews07("07", "新增商品信息失败"),
+		GoodsSpecNews08("08", "编辑商品信息失败"),
+		GoodsSpecNews09("09", "删除商品信息失败"),
+		GoodsSpecNews10("10", "更新上下架状态失败");
 
 		private String code;
 		private String msg;

@@ -3,15 +3,16 @@ package com.ebeijia.zl.web.cms.goodsmanage.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.GoodsSpecTypeEnum;
 import com.ebeijia.zl.common.utils.enums.ImageTypeEnum;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecValues;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecification;
+import com.ebeijia.zl.shop.dao.goods.domain.*;
+import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecValuesService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecificationService;
@@ -28,6 +29,9 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Service("goodsManageService")
 public class GoodsManageServiceImpl implements GoodsManageService {
@@ -57,6 +61,9 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 	@Autowired
 	private ITbEcomGoodsService ecomGoodsService;
+
+	@Autowired
+	private ITbEcomGoodsProductService ecomGoodsProductService;
 
 	@Override
 	public PageInfo<TbEcomSpecification> getGodosSpecListPage(int startNum, int pageSize, TbEcomSpecification entity) {
@@ -276,6 +283,13 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		return ResultsUtil.success();
 	}
 
+	/**
+	 * 查询商品Spu下的所有Sku信息
+	 * @param startNum
+	 * @param pageSize
+	 * @param entity
+	 * @return
+	 */
 	@Override
 	public PageInfo<TbEcomGoods> getGoodsInfListPage(int startNum, int pageSize, TbEcomGoods entity) {
 		List<TbEcomGoods> goodsInfList = new ArrayList<TbEcomGoods>();
@@ -284,5 +298,139 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		goodsInfList = ecomGoodsService.getGoodsInfList(entity);
 		PageInfo<TbEcomGoods> page = new PageInfo<TbEcomGoods>(goodsInfList);
 		return page;
+	}
+
+	@Override
+	public BaseResult<Object> addGoodsSpu(TbEcomGoods entity, MultipartFile goodsImgFile) {
+		if (goodsImgFile == null || goodsImgFile.isEmpty()) {
+			return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews03.getCode(), ExceptionEnum.ImageNews.ImageNews03.getMsg());
+		}
+		FTPImageVo imgVo = new FTPImageVo();
+		imgVo.setImgId(entity.getGoodsId());
+		imgVo.setService(IMG_SERVER);
+		imgVo.setNewPath(FILE_NEW_PATH);
+		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
+		imgVo.setUploadPath(FILE_UPLAOD_PATH);
+		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_04.getValue());
+		try {
+			String imageUrl = imageService.uploadImangeName(imgVo, goodsImgFile);
+			if (StringUtil.isNullOrEmpty(imageUrl)) {
+				logger.error("## 商品信息图片上传返回路径为空");
+				return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews01.getCode(), ExceptionEnum.ImageNews.ImageNews01.getMsg());
+			}
+			entity.setGoodsImg(imageUrl);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品信息图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 商品信息图片上传异常");
+			return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews02.getCode(), ExceptionEnum.ImageNews.ImageNews02.getMsg());
+		}
+		if (!ecomGoodsService.save(entity)) {
+			logger.error("## 新增商品信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews07.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews07.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	@Override
+	public BaseResult<Object> editGoodsSpu(TbEcomGoods entity, MultipartFile goodsImgFile) {
+		if (goodsImgFile == null || goodsImgFile.isEmpty()) {
+			return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews03.getCode(), ExceptionEnum.ImageNews.ImageNews03.getMsg());
+		}
+		FTPImageVo imgVo = new FTPImageVo();
+		imgVo.setImgId(entity.getGoodsId());
+		imgVo.setService(IMG_SERVER);
+		imgVo.setNewPath(FILE_NEW_PATH);
+		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
+		imgVo.setUploadPath(FILE_UPLAOD_PATH);
+		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_04.getValue());
+		try {
+			if (goodsImgFile != null && !goodsImgFile.isEmpty()) {
+				String imageUrl = imageService.uploadImangeName(imgVo, goodsImgFile);
+				if (StringUtil.isNullOrEmpty(imageUrl)) {
+					logger.error("## 商品信息图片上传返回路径为空");
+					return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews01.getCode(), ExceptionEnum.ImageNews.ImageNews01.getMsg());
+				}
+				entity.setGoodsImg(imageUrl);
+			}
+		} catch (BizHandlerException e) {
+			logger.error("## 商品信息图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 商品信息图片上传异常");
+			return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews02.getCode(), ExceptionEnum.ImageNews.ImageNews02.getMsg());
+		}
+		if (!ecomGoodsService.updateById(entity)) {
+			logger.error("## 编辑商品信息信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews08.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews08.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	@Override
+	public BaseResult<Object> deleteGoodsSpu(TbEcomGoods entity) {
+		FTPImageVo imgVo = new FTPImageVo();
+		imgVo.setImgId(entity.getGoodsId());
+		imgVo.setService(IMG_SERVER);
+		imgVo.setNewPath(FILE_NEW_PATH);
+		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
+		imgVo.setUploadPath(FILE_UPLAOD_PATH);
+		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_02.getValue());
+		try {
+			if (imageService.isFileExsits(imgVo, entity.getGoodsId())) {
+				imageService.deleteImange(imgVo, entity.getGoodsId());
+			}
+		} catch (BizHandlerException e) {
+			logger.error("## 删除商品信息图片异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 删除商品信息图片异常");
+			return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews04.getCode(), ExceptionEnum.ImageNews.ImageNews04.getMsg());
+		}
+		if (!ecomGoodsService.removeById(entity.getGoodsId())) {
+			logger.error("## 删除商品信息信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	@Override
+	public BaseResult<Object> updateGoodsSpuEnable(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String goodsId = req.getParameter("goodsId_");
+		String marketEnable = req.getParameter("marketEnable_");
+
+		//查询商品Spu信息
+		TbEcomGoods goods = ecomGoodsService.getById(goodsId);
+		goods.setMarketEnable(marketEnable);
+		goods.setUpdateTime(System.currentTimeMillis());
+		goods.setUpdateUser(user.getId());
+		goods.setLockVersion(goods.getLockVersion() + 1);
+
+		//查询商品Spu信息下的所有Sku
+		List<TbEcomGoodsProduct> ecomGoodsProductList = ecomGoodsProductService.getProductlistByGoodsId(goodsId);
+		for (TbEcomGoodsProduct product : ecomGoodsProductList) {
+			product.setProductEnable(Integer.valueOf(marketEnable));
+			product.setUpdateTime(System.currentTimeMillis());
+			product.setUpdateUser(user.getId());
+			product.setLockVersion(product.getLockVersion() + 1);
+		}
+
+		//更新商品Spu上下架状态
+		if (!ecomGoodsService.updateById(goods)) {
+			logger.error("## 更新商品Spu{}信息上下架失败", goodsId);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getMsg());
+		}
+
+		//更新商品Spu下的所有Sku上下架状态
+		if (ecomGoodsProductService.updateBatchById(ecomGoodsProductList)) {
+			logger.error("## 更新商品Spu{}下的所有Sku信息上下架失败", goodsId);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getMsg());
+		}
+
+		return ResultsUtil.success();
 	}
 }

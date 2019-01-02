@@ -23,6 +23,7 @@ public interface ProviderInfFacade {
 	
 	List<ProviderInf> getProviderInfList(ProviderInf  providerInf) throws Exception;
 	
-	PageInfo<ProviderInf> getProviderInfPage(int startNum, int pageSize, ProviderInf providerInf) throws Exception; 
+	PageInfo<ProviderInf> getProviderInfPage(int startNum, int pageSize, ProviderInf providerInf) throws Exception;
 
+	ProviderInf getProviderInfBylawCode(String lawCode) throws Exception;
 }

@@ -27,7 +27,10 @@
 							</div>
 							<div class="input-prepend">
 								<span class="add-on">分销商代码</span>
-								<input id="ecomCode" name="ecomCode" type="text" class="input-medium" th:value="*{ecomCode}" maxlength="50"/>
+								<select id="ecomCode" name="ecomCode" class="input-medium">
+									<option value=""><span th:text="请选择" /></option>
+									<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.lawCode}"><span th:text="${e.channelName}" /></option>
+								</select>
 							</div>
 							<div class="input-prepend">
 								<span class="add-on">商品类型</span>
@@ -124,6 +127,34 @@
 			    </form>
 			</div>
 		</div>
+		<div id="modal2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="modal-form2" class="form-horizontal form_validation_tip" method="post">
+				<div class="modal-header">
+					<button class="close btn-close" data-dismiss="modal1">&times;</button>
+					<h3 id="modal_h2">编辑商品上下架</h3>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="goodsId_" name="goodsId_" />
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">商品上下架：</label>
+							<div class="controls">
+								<select name="marketEnable_" id="marketEnable_" class="span3">
+									<option th:each="m,mStat : ${marketEnableList}" th:value="${m.code}">
+										<span th:text="${m.name}"></span>
+									</option>
+								</select>
+								<span class="help-block"></span>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="modal-footer" style="text-align: center;">
+					<button class="btn btn-primary btn-updateEnableCommit" type="submit">提交</button>
+					<button class="btn btn-close" data-dismiss="modal" aria-hidden="true">关 闭</button>
+				</div>
+			</form>
+		</div>
 		<div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<form id="goodsInfo" class="form-horizontal form_validation_tip" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
@@ -186,7 +217,7 @@
 								<label class="control-label"><span class="f_req">* </span>所属专项类型：</label>
 								<div class="controls">
 									<select name="b_id" id="b_id" class="span3">
-										<option th:each="b,bStat : ${billingTypeList}" th:value="${b.code}">
+										<option th:each="b,bStat : ${specAccountTypeList}" th:value="${b.code}">
 											<span th:text="${b.name}"></span>
 										</option>
 									</select>
@@ -199,7 +230,7 @@
 								<label class="control-label"><span class="f_req">* </span>单位：</label>
 								<div class="controls">
 									<select name="unit" id="unit" class="span3">
-										<option th:each="u,uStat : ${unitList}" th:value="${u.code}">
+										<option th:each="u,uStat : ${goodsUnitList}" th:value="${u.code}">
 											<span th:text="${u.name}"></span>
 										</option>
 									</select>
@@ -219,15 +250,13 @@
 								<label class="control-label"><span class="f_req">* </span>默认sku代码：</label>
 								<div class="controls">
 									<select name="default_sku_code" id="default_sku_code" class="span3">
-										<option th:each="s,sStat : ${skuCodeList}" th:value="${s.code}">
-											<span th:text="${s.name}"></span>
-										</option>
+
 									</select>
 									<span class="help-block"></span>
 								</div>
 							</div>
 							<div class="input-prepend">
-								<label class="control-label"><span class="f_req">* </span>上下架状态：</label>
+								<!--<label class="control-label"><span class="f_req">* </span>上下架状态：</label>
 								<div class="controls">
 									<select name="market_enable" id="market_enable" class="span3">
 										<option th:each="m,mStat : ${marketEnableList}" th:value="${m.code}">
@@ -235,7 +264,7 @@
 										</option>
 									</select>
 									<span class="help-block"></span>
-								</div>
+								</div>-->
 							</div>
 						</div>
 						<div class="control-group">
@@ -250,8 +279,8 @@
 								<label class="control-label"><span class="f_req">* </span>商品富文本ID：</label>
 								<div class="controls">
 									<select name="goods_detail" id="goods_detail" class="span3">
-										<option th:each="g,gStat : ${goodsDetailList}" th:value="${g.code}">
-											<span th:text="${g.name}"></span>
+										<option th:each="g,gStat : ${goodsDetailList}" th:value="${g.detailId}">
+											<span th:text="${g.detailId}"></span>
 										</option>
 									</select>
 									<span class="help-block"></span>
@@ -317,9 +346,15 @@
 				margin: -250px 0 0 -450px;
 			}
 		</script>
-		<!--<script th:inline="javascript">
-			$("#goodsType").val(/*[[${goods.goodsType}]]*/);
-		</script>-->
+		<script th:inline="javascript">
+			$("#ecomCode").val(/*[[${ecomGoods.ecomCode}]]*/);
+            $("#goodsType").val(/*[[${ecomGoods.goodsType}]]*/);
+            $("#BId").val(/*[[${ecomGoods.BId}]]*/);
+            $("#marketEnable").val(/*[[${ecomGoods.marketEnable}]]*/);
+            $("#haveGroups").val(/*[[${ecomGoods.haveGroups}]]*/);
+            $("#isDisabled").val(/*[[${ecomGoods.isDisabled}]]*/);
+            $("#isHot").val(/*[[${ecomGoods.isHot}]]*/);
+		</script>
 	</body>
 </html>
 

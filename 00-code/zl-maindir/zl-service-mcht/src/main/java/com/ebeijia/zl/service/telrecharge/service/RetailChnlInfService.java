@@ -16,4 +16,6 @@ import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 public interface RetailChnlInfService extends IService<RetailChnlInf> {
 
 	List<RetailChnlInf> getList(RetailChnlInf retailChnlInf);
+
+	RetailChnlInf getRetailChnlInfByLawCode(String lawCode);
 }

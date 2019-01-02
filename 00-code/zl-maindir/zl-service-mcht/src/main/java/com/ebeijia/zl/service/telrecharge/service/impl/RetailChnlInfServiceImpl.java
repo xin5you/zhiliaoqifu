@@ -44,4 +44,9 @@ public class RetailChnlInfServiceImpl extends ServiceImpl<RetailChnlInfMapper, R
 	public List<RetailChnlInf> getList(RetailChnlInf retailChnlInf){
 		return retailChnlInfMapper.getList(retailChnlInf);
 	}
+
+	@Override
+	public RetailChnlInf getRetailChnlInfByLawCode(String lawCode) {
+		return retailChnlInfMapper.getRetailChnlInfByLawCode(lawCode);
+	}
 }

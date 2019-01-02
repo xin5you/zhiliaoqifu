@@ -15,6 +15,7 @@ var editRetailChnlInf = {
 		var lockVersion=$('#lockVersion').val();
 		var channelName=$('#channelName').val();
     	var channelCode=$('#channelCode').val();
+        var lawCode=$('#lawCode').val();
     	var channelKey=$('#channelKey').val();
     	var phoneNo=$('#phoneNo').val();
     	/*var channelReserveAmt=$('#channelReserveAmt').val();
@@ -29,6 +30,10 @@ var editRetailChnlInf = {
     		Helper.alert("请输入分销商编号");
     		return false;
     	}
+        if(lawCode ==''){
+            Helper.alert("请输入分销商代码");
+            return false;
+        }
     	if(channelKey ==''){
     		Helper.alert("请输入分销商KEY");
     		return false;
@@ -62,6 +67,7 @@ var editRetailChnlInf = {
 	            	"channelId" : channelId,
 	                "channelName" : channelName,
 	                "channelCode" : channelCode,
+                    "lawCode" : lawCode,
 	                "channelKey" : channelKey,
 	                /*"channelReserveAmt" : channelReserveAmt,
 	                "channelPrewarningAmt" : channelPrewarningAmt,*/

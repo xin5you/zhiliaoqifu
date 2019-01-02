@@ -42,7 +42,7 @@ var listGoodsSpu = {
                 unit: { required: true},
                 weight: { required: true},
                 default_sku_code: { required: true},
-                market_enable: { required: true},
+                /*market_enable: { required: true},*/
                 brief: { required: true},
                 goods_detail: { required: true},
                 have_groups: { required: true},
@@ -59,7 +59,7 @@ var listGoodsSpu = {
                 unit: { required: "请选择商品单位"},
                 weight: { required: "请输入商品重量"},
                 default_sku_code: { required: "请选择默认的Sku"},
-                market_enable: { required: "请选择上下架状态"},
+                /*market_enable: { required: "请选择上下架状态"},*/
                 brief: { required: "请输入商品简介"},
                 goods_detail: { required: "请选择商品富文本ID"},
                 have_groups: { required: "请选择商品组合状态"},
@@ -245,6 +245,24 @@ var listGoodsSpu = {
 		}else if(type == 2){
 			$('#modal_h').html("编辑商品信息");
 		}
+
+        $.ajax({
+            url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProductByGoodsId',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "goodsId": goodsId
+            },
+            success : function (data) {
+                $("#default_sku_code").empty();
+                $.each(data, function(i, item){
+                    $("#default_sku_code").append($("<option/>").text(item.skuCode).attr("value",item.skuCode));
+                });
+            },
+            error : function(){
+                Helper.alert("系统故障，请稍后再试");
+            }
+        });
 		
 		$.ajax({								  
             url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsSpu',
@@ -264,7 +282,7 @@ var listGoodsSpu = {
                 $('#unit').val(data.unit);
                 $('#weight').val(data.weight);
                 $('#default_sku_code').val(data.defaultSkuCode);
-                $('#market_enable').val(data.marketEnable);
+                /*$('#market_enable').val(data.marketEnable);*/
                 $('#brief').val(data.brief);
                 $('#goods_detail').val(data.goodsDetail);
                 $('#have_groups').val(data.haveGroups);
@@ -287,7 +305,7 @@ var listGoodsSpu = {
             $("#unit").removeAttr('readonly');
             $("#weight").removeAttr('readonly');
             $("#default_sku_code").removeAttr('readonly');
-            $("#market_enable").removeAttr('readonly');
+            /*$("#market_enable").removeAttr('readonly');*/
             $("#brief").removeAttr('readonly');
             $("#goods_detail").removeAttr('readonly');
             $("#have_groups").removeAttr('readonly');
@@ -299,13 +317,16 @@ var listGoodsSpu = {
 	},
     intoUpdateGoodsEnable : function () {
         var goodsId = $(this).attr("goodsId");
-        //页面上新加一个上下架模态框，然后弹出模态框，将goodsId的值赋给模态框里面的隐藏域商品ID
+        $('#modal').modal({
+            backdrop : "static"
+        });
+        $("#goodsId_").val(goodsId);
     },
     updateGoodsEnable : function () {
         $("#btn-updateEnableCommit").attr('disabled',"true");
         var goodsId = $("#goodsId_").val();
         $.ajax({
-            url : Helper.getRootPath() + '/goodsManage/goodsInf/updateGoodsEnable',
+            url : Helper.getRootPath() + '/goodsManage/goodsInf/updateGoodsSpuEnable',
             type : 'post',
             dataType : "json",
             data : {

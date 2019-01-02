@@ -43,6 +43,14 @@
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
+
+										<div class="control-group">
+											<label class="control-label">分销商代码<span style="color:red">*</span></label>
+											<div class="controls">
+												<input type="text" class="span6" id="lawCode" name="lawCode" value="${retailChnlInf.lawCode }" maxlength="32"/>
+												<span class="help-block"></span>
+											</div>
+										</div>
 							     		
 							     		<div class="control-group">
 							             <label class="control-label">分销商KEY<span style="color:red">*</span></label>

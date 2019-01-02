@@ -131,13 +131,19 @@ public class ProviderInfController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
 			ProviderInf providerInf = this.getProviderInf(req);
+			ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
+			if (provider != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "供应商代码已存在，请重新输入");
+				return resultMap;
+			}
 			if(!providerInfFacade.saveProviderInf(providerInf)) {
-				resultMap.addAttribute("status", Boolean.FALSE);
-				resultMap.addAttribute("msg", "系统异常，请稍后再试");
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增供应商失败，请稍后再试");
 			}
 		} catch (Exception e) {
-			resultMap.addAttribute("status", Boolean.FALSE);
-			resultMap.addAttribute("msg", "系统异常，请稍后再试");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "系统异常，请稍后再试");
 			logger.error("## 添加供应商信息异常", e);
 			return resultMap;
 		}
@@ -185,6 +191,12 @@ public class ProviderInfController {
 			}
 			
 			ProviderInf providerInf = this.getProviderInf(req);
+			ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
+			if (provider != null && !provider.getProviderId().equals(provider.getProviderId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "供应商代码已存在，请重新输入");
+				return resultMap;
+			}
 			if (!providerInfFacade.updateProviderInf(providerInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑失败，请联系管理员");
@@ -640,6 +652,7 @@ public class ProviderInfController {
 			logger.error("## 查询供应商信息失败，providerId--->{}", providerId);
 		}
 		providerInf.setProviderName(StringUtil.nullToString(req.getParameter("providerName")));
+		providerInf.setLawCode(StringUtil.nullToString(req.getParameter("lawCode")));
 		providerInf.setAppUrl(StringUtil.nullToString(req.getParameter("appUrl")));
 		providerInf.setAppSecret(StringUtil.nullToString(req.getParameter("appSecret")));
 		providerInf.setAccessToken(StringUtil.nullToString(req.getParameter("accessToken")));

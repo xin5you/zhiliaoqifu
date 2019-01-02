@@ -4,6 +4,8 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
 
+	import java.util.List;
+
 /**
  *
  * 商品详情表 Mapper 接口
@@ -13,5 +15,11 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
  */
 @Mapper
 public interface TbEcomGoodsDetailMapper extends BaseMapper<TbEcomGoodsDetail> {
-	
+
+	/**
+	 * 查询商品详情信息（多条件查询）
+	 * @param ecomGoodsDetail
+	 * @return
+	 */
+	List<TbEcomGoodsDetail> getGoodsDetailList(TbEcomGoodsDetail ecomGoodsDetail);
 }

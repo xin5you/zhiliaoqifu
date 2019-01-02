@@ -18,4 +18,6 @@ public interface ProviderInfService extends IService<ProviderInf> {
 	int updateByDefaultRoute();
 	
 	public List<ProviderInf> getProviderInfList(ProviderInf providerInf);
+
+	ProviderInf getProviderInfByLawCode(String lawCode);
 }

@@ -89,4 +89,9 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 		PageInfo<ProviderInf> ProviderInfPage = new PageInfo<ProviderInf>(ProviderInfList);
 		return ProviderInfPage;
 	}
+
+	@Override
+	public ProviderInf getProviderInfBylawCode(String lawCode) throws Exception {
+		return providerInfService.getProviderInfByLawCode(lawCode);
+	}
 }

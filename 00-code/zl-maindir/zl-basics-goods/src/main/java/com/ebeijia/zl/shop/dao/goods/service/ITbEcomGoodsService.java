@@ -54,4 +54,11 @@ public interface ITbEcomGoodsService extends IService<TbEcomGoods> {
      * @return
      */
     List<TbEcomGoods> getGoodsInfList(TbEcomGoods ecomGoods);
+
+    /**
+     * 根据goodsId查询商品信息
+     * @param goodsId
+     * @return
+     */
+    TbEcomGoods getGoodsInfByGoodsId(String goodsId);
 }

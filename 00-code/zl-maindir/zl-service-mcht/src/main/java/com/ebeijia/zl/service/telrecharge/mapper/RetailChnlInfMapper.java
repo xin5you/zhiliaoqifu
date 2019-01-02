@@ -13,4 +13,6 @@ public interface RetailChnlInfMapper extends BaseMapper<RetailChnlInf> {
 	RetailChnlInf getRetailChnlInfByMchntCode(String mchntCode);
 	
 	List<RetailChnlInf> getList(RetailChnlInf retailChnlInf);
+
+	RetailChnlInf getRetailChnlInfByLawCode(String lawCode);
 }

@@ -12,11 +12,10 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecValues;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecification;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecValuesService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomSpecificationService;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
+import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
+import com.ebeijia.zl.shop.dao.goods.domain.*;
+import com.ebeijia.zl.shop.dao.goods.service.*;
 import com.ebeijia.zl.web.cms.base.exception.BizHandlerException;
 import com.ebeijia.zl.web.cms.goodsmanage.service.GoodsManageService;
 import org.slf4j.Logger;
@@ -27,6 +26,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageInfo;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "goodsManage")
@@ -42,6 +48,18 @@ public class GoodsManageController {
 
 	@Autowired
 	private ITbEcomSpecValuesService ecomSpecValuesService;
+
+	@Autowired
+	private ITbEcomGoodsProductService ecomGoodsProductService;
+
+	@Autowired
+	private ITbEcomGoodsDetailService ecomGoodsDetailService;
+
+	@Autowired
+	private ITbEcomGoodsService ecomGoodsService;
+
+	@Autowired
+	private RetailChnlInfFacade retailChnlInfFacade;
 
 	/**
 	 * 商品规格信息列表（分页）
@@ -346,20 +364,213 @@ public class GoodsManageController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<TbEcomGoods> pageInfo = new PageInfo<>();
+		List<RetailChnlInf> retailChnlInfList = new ArrayList<>();
+		List<TbEcomGoodsDetail> goodsDetailList = new ArrayList<>();
 		try {
 			pageInfo = goodsManageService.getGoodsInfListPage(startNum, pageSize, ecomGoods);
+			retailChnlInfList = retailChnlInfFacade.getRetailChnlInfList(new RetailChnlInf());
+			goodsDetailList = ecomGoodsDetailService.getGoodsDetailList(new TbEcomGoodsDetail());
 		} catch (Exception e) {
 			logger.error("## 查询商品Spu信息异常{}", e);
 		}
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("ecomGoods", ecomGoods);
+		mv.addObject("ecomCodeList", retailChnlInfList);
 		mv.addObject("goodsIsHotList", GoodsIsHotEnum.values());
 		mv.addObject("isDisabledList", IsDisabledEnum.values());
 		mv.addObject("haveGroupsList", HaveGroupsEnum.values());
 		mv.addObject("marketEnableList", MarketEnableEnum.values());
 		mv.addObject("goodsTypeList", GoodsTypeEnum.values());
 		mv.addObject("specAccountTypeList", SpecAccountTypeEnum.values());
+		mv.addObject("goodsUnitList", GoodsUnitEnum.values());
+		mv.addObject("goodsDetailList", goodsDetailList);
+
 		return mv;
+	}
+
+	/**
+	 * 查询商品Spu下的所有Sku信息
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/getGoodsProductByGoodsId")
+	public List<TbEcomGoodsProduct> getGoodsSpecValues(HttpServletRequest req) {
+		List<TbEcomGoodsProduct> goodsProductList = new ArrayList<>();
+		String goodsId = req.getParameter("goodsId");
+		try {
+			goodsProductList = ecomGoodsProductService.getProductlistByGoodsId(goodsId);
+		} catch (Exception e) {
+			logger.error("## 查询商品Spu{}下的所有Sku信息", goodsId, e);
+		}
+		return goodsProductList;
+	}
+
+	/**
+	 * 新增商品信息
+	 * @param goodsImgFile
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/addGoodsSpu")
+	public BaseResult<Object> addGoodsSpu(@RequestParam("goodsImgFile") MultipartFile goodsImgFile, HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			TbEcomGoods goods = getTbEcomGoodsInf(req);
+			result = goodsManageService.addGoodsSpu(goods, goodsImgFile);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品信息图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 新增商品信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews07.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews07.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 编辑商品信息
+	 * @param goodsImgFile
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/editGoodsSpu")
+	public BaseResult<Object> editGoodsSpu(@RequestParam("goodsImgFile") MultipartFile goodsImgFile, HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			TbEcomGoods goods = getTbEcomGoodsInf(req);
+			result = goodsManageService.editGoodsSpu(goods, goodsImgFile);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品信息图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 编辑商品信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews08.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews08.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 删除商品信息
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/deleteGoodsSpu")
+	public BaseResult<Object> deleteGoodsSpu(HttpServletRequest req) {
+		/*BaseResult<Object> result = new BaseResult<>();*/
+		try {
+			/*TbEcomGoods goods = getTbEcomGoodsInf(req);*/
+			HttpSession session = req.getSession();
+			User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+			String goodsId = req.getParameter("goods_id");
+			TbEcomGoods goods = ecomGoodsService.getById(goodsId);
+			goods.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
+			goods.setUpdateUser(user.getId());
+			goods.setUpdateTime(System.currentTimeMillis());
+			goods.setLockVersion(goods.getLockVersion() + 1);
+
+			if (!ecomGoodsService.updateById(goods)) {
+				logger.error("# 删除商品{}Spu信息失败", goodsId);
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getMsg());
+			}
+		} catch (BizHandlerException e) {
+			logger.error("## 删除商品信息图片异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 删除商品信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	/**
+	 * 更新商品上下架状态
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/updateGoodsSpuEnable")
+	public BaseResult<Object> updateGoodsSpuEnable(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			result = goodsManageService.updateGoodsSpuEnable(req);
+		} catch (Exception e) {
+			logger.error("## 更新商品Spu上下架出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 封装商品信息类
+	 * @param req
+	 * @return
+	 */
+	private TbEcomGoods getTbEcomGoodsInf(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String goodsId = req.getParameter("goods_id");
+		String goodsName = req.getParameter("goods_name");
+		String goodsImg = req.getParameter("goods_img");
+		String spuCode = req.getParameter("spu_code");
+		String ecomCode = req.getParameter("ecom_code");
+		String goodsType = req.getParameter("goods_type");
+		String bId = req.getParameter("b_id");
+		String unit = req.getParameter("unit");
+		String weight = req.getParameter("weight");
+		String defaultSkuCode = req.getParameter("default_sku_code");
+		/*String marketEnable = req.getParameter("market_enable");*/
+		String brief = req.getParameter("brief");
+		String goodsDetail = req.getParameter("goods_detail");
+		String haveGroups = req.getParameter("have_groups");
+		String isDisabled = req.getParameter("is_disabled");
+		String isHot = req.getParameter("is_hot");
+		String remarks = req.getParameter("remarks");
+		String havaParams = req.getParameter("hava_params");
+		String haveSpec = req.getParameter("have_spec");
+		String ponumber = req.getParameter("ponumber");
+		String goodsSord = req.getParameter("goods_sord");
+		String goodsWeight = req.getParameter("goods_weight");
+		String grade = req.getParameter("grade");
+
+		TbEcomGoods goods = null;
+		if (!StringUtil.isNullOrEmpty(goodsId)) {
+			goods = ecomGoodsService.getById(goodsId);
+			goods.setLockVersion(goods.getLockVersion() + 1);
+		} else {
+			goods = new TbEcomGoods();
+			goods.setGoodsId(IdUtil.getNextId());
+			goods.setCreateUser(user.getId());
+			goods.setCreateTime(System.currentTimeMillis());
+			goods.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			goods.setLockVersion(0);
+		}
+		goods.setUpdateUser(user.getId());
+		goods.setUpdateTime(System.currentTimeMillis());
+		goods.setGoodsName(goodsName);
+		goods.setSpuCode(spuCode);
+		goods.setEcomCode(ecomCode);
+		goods.setGoodsType(goodsType);
+		goods.setBId(bId);
+		goods.setUnit(unit);
+		goods.setWeight(new BigDecimal(weight));
+		goods.setDefaultSkuCode(defaultSkuCode);
+		/*goods.setMarketEnable(marketEnable);*/
+		goods.setMarketEnable(MarketEnableEnum.MarketEnableEnum_1.getCode());
+		goods.setBrief(brief);
+		goods.setGoodsDetail(goodsDetail);
+		goods.setHaveGroups(haveGroups);
+		goods.setHaveParams(havaParams);
+		goods.setHaveSpec(haveSpec);
+		goods.setIsDisabled(isDisabled);
+		goods.setPonumber(Integer.valueOf(ponumber));
+		goods.setGoodsSord(Integer.valueOf(goodsSord));
+		goods.setGoodsWeight(goodsWeight);
+		goods.setGrade(Integer.valueOf(grade));
+		goods.setIsHot(isHot);
+		goods.setGoodsImg(goodsImg);
+		goods.setRemarks(remarks);
+		return goods;
 	}
 
 }

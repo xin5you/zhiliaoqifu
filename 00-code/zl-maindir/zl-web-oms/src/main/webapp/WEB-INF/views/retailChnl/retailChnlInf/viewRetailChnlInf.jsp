@@ -47,6 +47,14 @@
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
+
+										<div class="control-group">
+											<label class="control-label">分销商代码</label>
+											<div class="controls">
+												<input type="text" class="span6" id="lawCode" name="lawCode" value="${retailChnlInf.lawCode }" readonly="readonly"/>
+												<span class="help-block"></span>
+											</div>
+										</div>
 							     		
 							     		<div class="control-group">
 							             <label class="control-label">分销商KEY</label>
@@ -92,7 +100,7 @@
                                         <div class="control-group">
                                              <label class="control-label">是否开户</label>
                                              <div class="controls">
-                                                  <input type="text" class="span6" id="email" name="email" value="<c:if test="${retailChnlInf.isOpen == '0' }">未开户</c:if><c:if test="${retailChnlInf.isOpen == '1' }">已开户</c:if>" readonly="readonly"/>
+                                                  <input type="text" class="span6" id="isOpen" name="isOpen" value="<c:if test="${retailChnlInf.isOpen == '0' }">未开户</c:if><c:if test="${retailChnlInf.isOpen == '1' }">已开户</c:if>" readonly="readonly"/>
                                              </div>
                                         </div>
                                         

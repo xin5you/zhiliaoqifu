@@ -8,6 +8,7 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface GoodsManageService {
@@ -82,4 +83,33 @@ public interface GoodsManageService {
      * @return
      */
     PageInfo<TbEcomGoods> getGoodsInfListPage(int startNum, int pageSize, TbEcomGoods entity);
+
+    /**
+     * 商品信息新增
+     * @param entity
+     * @param goodsImgFile
+     * @return
+     */
+    BaseResult<Object> addGoodsSpu(TbEcomGoods entity, MultipartFile goodsImgFile);
+
+    /**
+     * 商品信息编辑
+     * @param entity
+     * @param goodsImgFile
+     * @return
+     */
+    BaseResult<Object> editGoodsSpu(TbEcomGoods entity, MultipartFile goodsImgFile);
+
+    /**
+     * 商品信息删除
+     * @param entity
+     * @return
+     */
+    BaseResult<Object> deleteGoodsSpu(TbEcomGoods entity);
+
+    /**
+     * 更新商品上下架状态
+     * @return
+     */
+    BaseResult<Object> updateGoodsSpuEnable(HttpServletRequest req);
 }

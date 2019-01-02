@@ -111,6 +111,12 @@ public class RetailChnlInfController {
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
+			RetailChnlInf chnlInf = retailChnlInfFacade.getRetailChnlInfByLawCode(retailChnlInf.getLawCode());
+			if (chnlInf != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "分销商代码已存在，请重新输入");
+				return resultMap;
+			}
 			if (!retailChnlInfFacade.saveRetailChnlInf(retailChnlInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加分销商信息失败");
@@ -148,8 +154,13 @@ public class RetailChnlInfController {
 
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
-			boolean flag = retailChnlInfFacade.updateRetailChnlInf(retailChnlInf);
-			if (!flag) {
+			RetailChnlInf chnlInf = retailChnlInfFacade.getRetailChnlInfByLawCode(retailChnlInf.getLawCode());
+			if (chnlInf != null && !chnlInf.getChannelId().equals(retailChnlInf.getChannelId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "分销商代码已存在，请重新输入");
+				return resultMap;
+			}
+			if (!retailChnlInfFacade.updateRetailChnlInf(retailChnlInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑分销商信息失败");
 				return resultMap;
@@ -618,6 +629,7 @@ public class RetailChnlInfController {
 		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
 		String channelName = StringUtil.nullToString(req.getParameter("channelName"));
 		String channelCode = StringUtil.nullToString(req.getParameter("channelCode"));
+		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
 		String channelKey = StringUtil.nullToString(req.getParameter("channelKey"));
 		String channelReserveAmt = StringUtil.nullToString(req.getParameter("channelReserveAmt"));
 		String channelPrewarningAmt = StringUtil.nullToString(req.getParameter("channelPrewarningAmt"));
@@ -642,6 +654,7 @@ public class RetailChnlInfController {
 		}
 		retailChnl.setChannelName(channelName);
 		retailChnl.setChannelCode(channelCode);
+		retailChnl.setLawCode(lawCode);
 		retailChnl.setChannelKey(channelKey);
 		if (!StringUtil.isNullOrEmpty(channelReserveAmt)) {
 			String reserveAmtCent = NumberUtils.RMBYuanToCent(channelReserveAmt);

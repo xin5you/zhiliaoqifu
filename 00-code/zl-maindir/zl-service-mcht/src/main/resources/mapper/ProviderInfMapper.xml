@@ -47,6 +47,15 @@
 		</if>
 		order by m.update_time desc
 	</select>
+
+	<select id="getProviderInfByLawCode" parameterType="String" resultType="ProviderInf">
+		select
+			<include refid="ColumnResult" />
+		from
+			<include refid="TableName" /> m
+		where m.data_stat='0'
+			and m.law_code = #{lawCode}
+	</select>
 	
 	<update id="updateByDefaultRoute">
 		update

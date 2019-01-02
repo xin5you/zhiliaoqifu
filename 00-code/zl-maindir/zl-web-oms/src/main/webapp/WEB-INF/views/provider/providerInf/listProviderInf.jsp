@@ -43,6 +43,7 @@
 				<thead>
 				<tr>
 					<th>供应商名称</th>
+					<th>供应商代码</th>
 					<%--<th>app_url</th>
 					<th>app_Secret</th>
 					<th>access_token</th>--%>
@@ -57,6 +58,7 @@
 				<c:forEach var="entity" items="${pageInfo.list}" varStatus="st">
 					<tr>
 						<td>${entity.providerName}</td>
+						<td>${entity.lawCode}</td>
 						<%--<td>${entity.appUrl}</td>
 						<td>${entity.appSecret}</td>
 						<td>${entity.accessToken}</td>--%>

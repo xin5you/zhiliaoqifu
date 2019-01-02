@@ -46,6 +46,7 @@
 				             	<th>分销商ID</th>
 				                <th>分销商名称</th>
 				               	<th>分销商编号</th>
+								 <th>分销商代码</th>
 				               	<!-- <th>分销商备付金额(元)</th>
 				                <th>分销商预警金额(元)</th> -->
 				                <th>管理员手机号</th>
@@ -60,6 +61,7 @@
 				                 	<td>${entity.channelId}</td>
 				                 	<td>${entity.channelName}</td>
 				                 	<td>${entity.channelCode}</td>
+									 <td>${entity.lawCode}</td>
 									<%-- <td>${entity.channelReserveAmt}</td>
 				                    <td>${entity.channelPrewarningAmt}</td> --%>
 				                    <td>${entity.phoneNo}</td>

@@ -23,7 +23,7 @@ public interface TbEcomGoodsProductMapper extends BaseMapper<TbEcomGoodsProduct>
 	 * @param goodsId
 	 * @return
 	 */
-	public List<GoodsProduct> getProductlistByGoodsId(String goodsId);
+	public List<TbEcomGoodsProduct> getProductlistByGoodsId(String goodsId);
 
 	/**
 	 * 库存列表
@@ -35,4 +35,18 @@ public interface TbEcomGoodsProductMapper extends BaseMapper<TbEcomGoodsProduct>
 
 
 	GoodsProduct getGoodsProductByPrimaryKey(String primaryKey);
+
+	/**
+	 * 查询货品信息（多条件查询）
+	 * @param ecomGoodsProduct
+	 * @return
+	 */
+	List<TbEcomGoodsProduct> getGoodsProductList(TbEcomGoodsProduct ecomGoodsProduct);
+
+	/**
+	 * 查询所有sku信息（没有关联的spu的sku信息）
+	 * @param skuList
+	 * @return
+	 */
+	List<TbEcomGoodsProduct> getGoodsProductListBySkuList(List<String> skuList);
 }

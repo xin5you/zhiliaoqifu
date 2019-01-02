@@ -166,11 +166,6 @@
 			<artifactId>zl-basics-system</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.ebeijia</groupId>
-			<artifactId>zl-basics-system</artifactId>
-			<version>${ebj.zl.version}</version>
-		</dependency> -->
 		<dependency>
 				<groupId>com.ebeijia</groupId>
 				<artifactId>zl-facade-mcht</artifactId>

@@ -1,10 +1,14 @@
 package com.ebeijia.zl.shop.dao.goods.service.impl;
 
+import com.ebeijia.zl.shop.dao.goods.domain.GoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsProductMapper;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -16,5 +20,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TbEcomGoodsProductService extends ServiceImpl<TbEcomGoodsProductMapper, TbEcomGoodsProduct> implements ITbEcomGoodsProductService{
+
+
+    @Autowired
+    private TbEcomGoodsProductMapper ecomGoodsProductMapper;
+
+    @Override
+    public List<TbEcomGoodsProduct> getGoodsProductList(TbEcomGoodsProduct ecomGoodsProduct) {
+        return ecomGoodsProductMapper.getGoodsProductList(ecomGoodsProduct);
+    }
+
+    @Override
+    public List<TbEcomGoodsProduct> getProductlistByGoodsId(String goodsId) {
+        return ecomGoodsProductMapper.getProductlistByGoodsId(goodsId);
+    }
 
 }

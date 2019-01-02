@@ -18,5 +18,7 @@ public interface ProviderInfMapper extends BaseMapper<ProviderInf> {
 	int updateByDefaultRoute();
 	
 	List<ProviderInf> getList(ProviderInf providerInf);
+
+	ProviderInf getProviderInfByLawCode(String lawCode);
 	
 }

@@ -27,4 +27,6 @@ public interface RetailChnlInfFacade {
 	PageInfo<RetailChnlInf> getRetailChnlInfPage(int startNum, int pageSize, RetailChnlInf retailChnlInf) throws Exception;
 	
 //	RetailChnlInf getRetailChnlInfByMchntCode(String mchntCode) throws Exception;
+
+	RetailChnlInf getRetailChnlInfByLawCode(String lawCode) throws Exception;
 }
