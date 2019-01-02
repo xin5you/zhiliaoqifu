@@ -4,27 +4,24 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
+import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.goods.domain.Goods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
+import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsBilling;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
+import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsBillingService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderProductItem;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderShip;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomDmsRelatedDetailService;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomOrderProductItemService;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
+import com.ebeijia.zl.shop.dao.order.domain.*;
+import com.ebeijia.zl.shop.dao.order.service.*;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
-import com.ebeijia.zl.shop.vo.AddressInfo;
-import com.ebeijia.zl.shop.vo.MemberInfo;
-import com.ebeijia.zl.shop.vo.OrderItemInfo;
-import com.ebeijia.zl.shop.vo.PayInfo;
+import com.ebeijia.zl.shop.vo.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +31,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_FOUND;
+import static com.ebeijia.zl.shop.constants.ResultState.*;
 
 @Service
 public class OrderService implements IOrderService {
@@ -47,22 +43,28 @@ public class OrderService implements IOrderService {
     private ITbEcomPlatfShopOrderService shopOrderDao;
 
     @Autowired
-    ITbEcomOrderProductItemService orderProductItemDao;
+    private ITbEcomOrderProductItemService orderProductItemDao;
 
     @Autowired
-    ITbEcomGoodsProductService productDao;
+    private ITbEcomOrderShipService orderShipDao;
 
     @Autowired
-    ITbEcomGoodsService goodsDao;
+    private ITbEcomGoodsProductService productDao;
 
     @Autowired
-    ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
+    private ITbEcomGoodsService goodsDao;
 
     @Autowired
-    ShopUtils shopUtils;
+    private ITbEcomGoodsBillingService goodsBillingDao;
 
     @Autowired
-    IPayService payService;
+    private ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
+
+    @Autowired
+    private ShopUtils shopUtils;
+
+    @Autowired
+    private IPayService payService;
 
     @Autowired
     private HttpSession session;
@@ -116,7 +118,6 @@ public class OrderService implements IOrderService {
             //存储子订单，待持久化
             subOrderList.add(shopOrder);
         }
-        String dmsKey = IdUtil.getNextId();
 
         //完善主订单
         processOrderPrice(platfOrder, subOrderList);
@@ -125,6 +126,7 @@ public class OrderService implements IOrderService {
 
         //持久化 主订单、子订单、订单商品、收货地址
         platfOrderDao.save(platfOrder);
+
         for (TbEcomPlatfShopOrder subOrder : subOrderList) {
             shopOrderDao.save(subOrder);
         }
@@ -154,7 +156,7 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
         //获得路径
-        if (!order.getPayStatus().equals("0")){
+        if (!order.getPayStatus().equals("0")) {
             throw new BizException(NOT_ACCEPTABLE, "您的订单无需取消");
         }
         order.setPayStatus("8");
@@ -163,13 +165,21 @@ public class OrderService implements IOrderService {
         query.setOrderId(order.getOrderId());
         TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();
         updataInf.setSubOrderStatus("27");
-        shopOrderDao.update(updataInf,new QueryWrapper<>(query));
+        shopOrderDao.update(updataInf, new QueryWrapper<>(query));
         //执行操作
         return order;
     }
 
+    /**
+     * 简单的支付订单功能
+     *
+     * @param payInfo
+     * @return
+     */
     @Override
-    public TbEcomPlatfOrder applyOrder(AddressInfo address, PayInfo payInfo) {
+    @ShopTransactional
+    public TbEcomPlatfOrder applyOrder(PayInfo payInfo) {
+        logger.info(String.format("支付订单开始，参数%s", payInfo));
         MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
@@ -188,60 +198,187 @@ public class OrderService implements IOrderService {
         if (!order.getPayStatus().equals("0")) {
             throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
         }
-
+        //乐观锁
+        order.setPayTime(System.currentTimeMillis());
+        order.setPayStatus("1");
+        order.setUpdateUser("System");
+        order.setUpdateTime(System.currentTimeMillis());
+        order = orderUpdateLocker(order);
         //类型、总金额验证
         TbEcomPlatfShopOrder shopOrder = new TbEcomPlatfShopOrder();
         shopOrder.setOrderId(order.getOrderId());
         QueryWrapper<TbEcomPlatfShopOrder> query = new QueryWrapper<>(shopOrder);
         List<TbEcomPlatfShopOrder> shopOrders = shopOrderDao.list(query);
-        if (payAmount.compareTo(order.getOrderPrice().longValue()) != 0) {
+        if (payAmount.compareTo(order.getOrderPrice()) != 0) {
             throw new BizException(NOT_ACCEPTABLE, "订单金额不正确");
         }
-        //TODO 组合订单类型判断（未完成）
+
+        //创建订单简介，用于账务流水
+        StringBuilder descBuilder = new StringBuilder("购买");
+
+        //TODO 组合订单类型判断（未完成，目前仅能处理一种商品，并且只支持商品和账户类型一对一的情况）
         Iterator<TbEcomPlatfShopOrder> iterator = shopOrders.iterator();
         while (iterator.hasNext()) {
-            String bId = iterator.next().toString();
-            if (!payInfo.getTypeB().equals(bId)) {
+            TbEcomPlatfShopOrder platfShopOrder = iterator.next();
+            platfShopOrder.setDmsRelatedKey(dmsRelatedKey);
+            String sOrderId = platfShopOrder.getSOrderId();
+            TbEcomOrderProductItem item = orderProductItemDao.getOrderProductItemBySOrderId(sOrderId);
+            TbEcomGoodsProduct product = productDao.getById(item.getProductId());
+            descBuilder.append(item.getProductName());
+            if (iterator.hasNext()) {
+                descBuilder.append(",");
+            }
+            TbEcomGoodsBilling goodsBilling = new TbEcomGoodsBilling();
+            goodsBilling.setGoodsId(product.getGoodsId());
+            List<TbEcomGoodsBilling> list = goodsBillingDao.list(new QueryWrapper<>(goodsBilling));
+            //如果没有指定账户类型，那不允许用B类账户支付
+            if (list == null && payInfo.getCostB() != null) {
                 throw new BizException(NOT_ACCEPTABLE, "支付类型不正确");
             }
+            //当存在账户类型时，必须和支付类型匹配（这里只判定了商品和账户类型一对一的情况）
+            if (list != null && payInfo.getTypeB() != null) {
+                String bId = list.get(0).getBId();
+                if (!bId.equals(payInfo.getTypeB())) {
+                    throw new BizException(NOT_ACCEPTABLE, "支付类型不正确");
+                }
+            }
+        }
+        if (!shopOrderDao.updateBatchById(shopOrders)) {
+            throw new BizException(ERROR, "子订单提交异常");
         }
 
-        //TODO 幂等性验证
 
-        //获取订单状态
-        TbEcomPlatfOrder platfOrder = new TbEcomPlatfOrder();
-        platfOrder.setLockVersion(order.getLockVersion() + 1);
-        platfOrder.setPayTime(System.currentTimeMillis());
-        platfOrder.setPayStatus("1");
-        platfOrder.setUpdateUser("System");
-        platfOrder.setUpdateTime(System.currentTimeMillis());
-        //处理订单
-        QueryWrapper<TbEcomPlatfOrder> wrapper = new QueryWrapper<>(order);
-
-        boolean update = platfOrderDao.update(platfOrder, wrapper);
-        if (update == false) {
-            throw new BizException(500, "支付失败，请检查您的订单状态");
+        //处理订单支付过程，调用了payService
+        try {
+            if (ResultState.OK != payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString())) {
+                throw new BizException();
+            }
+        } catch (Exception e) {
+            if (e instanceof BizException) {
+                logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
+                throw (BizException) e;
+            }
         }
         //修改订单状态
-
-        return null;
+        order.setPayStatus("2");
+        //持久化并且锁版本加1
+        order = orderUpdateLocker(order);
+        return order;
     }
 
+    @Override
+    public OrderDetailInfo orderDetail(String orderId) {
+        OrderDetailInfo result = new OrderDetailInfo();
+        SubOrder subOrder = new SubOrder();
+
+        OrderInfo orderQuery = new OrderInfo();
+        orderQuery.setOrderId(orderId);
+        result.setOrder(platfOrderDao.getOrderInfo(orderQuery));
+
+        TbEcomOrderShip shipQuery = new TbEcomOrderShip();
+        shipQuery.setOrderId(orderId);
+        result.setShip(orderShipDao.getOne(new QueryWrapper<>(shipQuery)));
+
+        TbEcomOrderProductItem orderProductItemBySOrderId = orderProductItemDao.getOrderProductItemBySOrderId(result.getOrder().getSOrderId());
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put(orderProductItemBySOrderId.getProductId(),orderProductItemBySOrderId.getProductNum());
+        subOrder.setAmount(map);
+
+        Goods goodsQuery = new Goods();
+        goodsQuery.setProductId(orderProductItemBySOrderId.getProductId());
+        Goods goods = goodsDao.getGoods(goodsQuery);
+        goods.setGoodsName(orderProductItemBySOrderId.getProductName());
+        goods.setGoodsPrice(String.valueOf(orderProductItemBySOrderId.getProductPrice()));
+        LinkedList<Goods> products = new LinkedList<>();
+        products.add(goods);
+        subOrder.setProducts(products);
+
+        TbEcomPlatfShopOrder shopQuery = new TbEcomPlatfShopOrder();
+        shopQuery.setOrderId(orderId);
+        TbEcomPlatfShopOrder shopOrder = shopOrderDao.getOne(new QueryWrapper<>(shopQuery));
+
+        subOrder.setShopOrder(shopOrder);
+        LinkedList<SubOrder> subOrderList = new LinkedList<>();
+        subOrderList.add(subOrder);
+        result.setSubOrders(subOrderList);
+        return result;
+    }
+
+    @Override
+    public PageInfo<OrderDetailInfo> listOrderDetail(String orderStat, Integer start, Integer limit) {
+        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
+        if (memberInfo == null) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+
+        if (limit == null || limit > 100) {
+            limit = Integer.valueOf(20);
+        }
+        if (start == null) {
+            start = Integer.valueOf(0);
+        }
+
+
+        TbEcomPlatfOrder query = new TbEcomPlatfOrder();
+        query.setMemberId(memberInfo.getMemberId());
+        if (!StringUtils.isEmpty(orderStat)) {
+            query.setPayStatus(orderStat);
+        }
+        PageHelper.startPage(start, limit);
+        List<TbEcomPlatfOrder> orderList = platfOrderDao.list(new QueryWrapper<>(query));
+        LinkedList<OrderDetailInfo> result = new LinkedList<>();
+        if (orderList != null) {
+            for (TbEcomPlatfOrder order : orderList) {
+                result.add(orderDetail(order.getOrderId()));
+            }
+        }
+        return new PageInfo<>(result);
+    }
+
+    private TbEcomPlatfOrder orderUpdateLocker(TbEcomPlatfOrder order) {
+        TbEcomPlatfOrder query = new TbEcomPlatfOrder();
+        query.setOrderId(order.getOrderId());
+        query.setLockVersion(order.getLockVersion());
+        order.setLockVersion(order.getLockVersion() + 1);
+        boolean update = platfOrderDao.update(order, new QueryWrapper<>(query));
+        if (!update) {
+            throw new BizException(NOT_ACCEPTABLE, "锁状态异常");
+        }
+        return order;
+    }
+
+    /**
+     * 计算支付总和，以及判断支付金额有效性
+     *
+     * @param payInfo
+     * @return
+     */
     private Long getPayAmount(PayInfo payInfo) {
         String typeA = payInfo.getTypeA();
         String typeB = payInfo.getTypeB();
         Long costA = payInfo.getCostA();
         Long costB = payInfo.getCostB();
-        Long sum = costA + costB;
-        if (StringUtils.isAnyEmpty(typeA, typeB)) {
+        Long sum = 0L;
+        if (costA != null && costA < 0L) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
-        if (costA < 0 || costB < 0 || payInfo.getShipPrice()<0 || sum < costA || sum < costB) {
+        if (costB != null && costB < 0L) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        if (StringUtils.isAllEmpty(typeA, typeB)) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        sum += costA == null ? 0L : costA;
+        sum += costB == null ? 0L : costB;
+        if (sum.compareTo(0L) < 0) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
         return sum;
     }
 
+    /**
+     * 记录订单总价和总邮费
+     */
     private void processOrderPrice(TbEcomPlatfOrder platfOrder, List<TbEcomPlatfShopOrder> subOrderList) {
         AtomicReference<Long> price = new AtomicReference<>(0L);
         AtomicReference<Long> shipPrice = new AtomicReference<>(0L);
@@ -263,7 +400,7 @@ public class OrderService implements IOrderService {
     //TODO 邮费计算规则需要调整
     private void processShopOrderPrice(TbEcomPlatfShopOrder shopOrder, List<TbEcomOrderProductItem> product) {
         AtomicReference<Long> orderPrice = new AtomicReference<>(0L);
-        product.stream().forEach(item -> orderPrice.updateAndGet(v -> v + item.getProductPrice()));
+        product.stream().forEach(item -> orderPrice.updateAndGet(v -> v + item.getProductPrice()*item.getProductNum()));
         if (orderPrice.get().compareTo(0L) < 0) {
             logger.error("订单状态异常：" + product.toString());
             throw new BizException(500, "订单价格异常");
@@ -398,6 +535,7 @@ public class OrderService implements IOrderService {
         shopOrder.setMemberId(platfOrder.getMemberId());
         shopOrder.setOrderId(platfOrder.getOrderId());
         shopOrder.setChnlOrderPostage(0L);
+        shopOrder.setLockVersion(0);
         //记录操作
         shopOrder.setCreateTime(System.currentTimeMillis());
         shopOrder.setCreateUser("ShopSystem");
@@ -409,6 +547,8 @@ public class OrderService implements IOrderService {
         platfOrder.setOrderId(IdUtil.getNextId());
         platfOrder.setMemberId(memberId);
         //记录操作
+        platfOrder.setPayStatus("0");
+        platfOrder.setLockVersion(0);
         platfOrder.setCreateTime(System.currentTimeMillis());
         platfOrder.setCreateUser("ShopSystem");
         return platfOrder;
@@ -424,6 +564,7 @@ public class OrderService implements IOrderService {
         productItem.setProductNum(amounts);
         productItem.setProductPrice(Integer.valueOf(sku.getGoodsPrice()));
         productItem.setDataStat("0");
+        productItem.setLockVersion(0);
         //记录操作
         productItem.setCreateTime(System.currentTimeMillis());
         productItem.setCreateUser("ShopSystem");

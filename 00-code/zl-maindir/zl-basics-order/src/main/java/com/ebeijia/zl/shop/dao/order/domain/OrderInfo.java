@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.dao.order.domain;
 
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,7 +8,7 @@ import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class OrderInfo implements Serializable {
+public class OrderInfo extends Model<OrderInfo> {
 
     private String memberId;
     private String orderId;

@@ -103,20 +103,13 @@ public class PayController {
     @TokenCheck
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
-    public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+    public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type,@RequestParam(value = "range",required = false) String range ,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         MemberInfo memberInfo = shopUtils.getSession();
-        PageInfo<AccountLogVO> deals = payService.listDeals(session, memberInfo.getOpenId(), type, start, limit);
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, memberInfo.getOpenId(), type, start, limit);
         return new JsonResult<>(deals);
     }
 
-    //交易流水
-    @TokenCheck
-    @ApiOperation("时间戳筛选，列出交易流水记录")
-    @RequestMapping(value = "/deal/list/", method = RequestMethod.GET)
-    public void listAccountDealsWithTimestamp(String type, @RequestParam(value = "session", required = false) String session, Long begin, Long end) {
-        MemberInfo memberInfo = shopUtils.getSession();
-        payService.listDeals(session,memberInfo.getOpenId(),type,null,null);
-    }
+
 
     /**
      * 托管账户转账

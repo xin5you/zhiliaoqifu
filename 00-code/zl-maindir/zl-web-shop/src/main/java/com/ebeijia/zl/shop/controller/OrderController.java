@@ -53,7 +53,7 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单支付确认")
     @RequestMapping(value = "/goods/apply/",method = RequestMethod.POST)
-    public JsonResult<TbEcomPlatfOrder> orderNextState(AddressInfo address, PayInfo payInfo, String validCode){
+    public JsonResult<TbEcomPlatfOrder> orderNextState(PayInfo payInfo, String validCode){
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
@@ -62,7 +62,7 @@ public class OrderController {
         if (!valid) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
         }
-        TbEcomPlatfOrder platfOrder = orderService.applyOrder(address,payInfo);
+        TbEcomPlatfOrder platfOrder = orderService.applyOrder(payInfo);
         return new JsonResult<>(platfOrder);
     }
 
@@ -78,16 +78,25 @@ public class OrderController {
     @TokenCheck(force = true)
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
-    public JsonResult<ChannelOrder> goodsOrderDetail(@PathVariable("orderid") String orderId){
-
-        return new JsonResult<>();
+    public JsonResult<OrderDetailInfo> goodsOrderDetail(@PathVariable("orderid") String orderId){
+        OrderDetailInfo orderDetailInfo = orderService.orderDetail(orderId);
+        return new JsonResult<>(orderDetailInfo);
     }
 
     @TokenCheck(force = true)
     @ApiOperation("订单列表")
     @RequestMapping(value = "/goods/list/{stat}",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbEcomPlatfOrder>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
-        return new JsonResult<>();
+    public JsonResult<PageInfo<OrderDetailInfo>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
+        PageInfo<OrderDetailInfo> orderDetailInfos = orderService.listOrderDetail(orderStat,start,limit);
+        return new JsonResult<>(orderDetailInfos);
+    }
+
+    @TokenCheck(force = true)
+    @ApiOperation("订单列表")
+    @RequestMapping(value = "/goods/list",method = RequestMethod.GET)
+    public JsonResult<PageInfo<OrderDetailInfo>> goodsOrderListAll(String orderby, Integer start, Integer limit){
+        PageInfo<OrderDetailInfo> orderDetailInfos = orderService.listOrderDetail(null,start,limit);
+        return new JsonResult<>(orderDetailInfos);
     }
 
 

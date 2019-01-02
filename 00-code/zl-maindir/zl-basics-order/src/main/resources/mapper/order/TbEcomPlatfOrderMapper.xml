@@ -45,8 +45,11 @@
         /*left join tb_ecom_order_product_item item
         on item.s_order_id = pso.s_order_id;*/
         <where>
+            <if test="orderId!=null and orderId!='' ">
+                po.order_id = #{orderId}
+            </if>
             <if test="memberId!=null and memberId!='' ">
-                po.member_id = #{memberId}
+                and po.member_id = #{memberId}
             </if>
         </where>
     </select>

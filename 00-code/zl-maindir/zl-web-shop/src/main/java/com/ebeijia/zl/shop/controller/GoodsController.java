@@ -26,8 +26,6 @@ public class GoodsController {
     @ApiOperation("所有商品列表，分页")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public JsonResult<PageInfo<Goods>> listGoods(String orderby, Integer start, Integer limit){
-        //TODO change VO design, vaild variable;
-
         PageInfo<Goods> listGoods = goodsService.listGoods(null, null, orderby, start, limit);
         return new JsonResult<>(listGoods);
     }

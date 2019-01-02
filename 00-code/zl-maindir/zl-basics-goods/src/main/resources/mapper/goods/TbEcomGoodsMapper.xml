@@ -146,15 +146,61 @@
         select g.goods_id,
         g.goods_name,
         g.spu_code,
+        p.sku_code,
+        p.product_id,
         g.ecom_code,
         g.market_enable,
         p.pic_url,
-        p.goods_price
-        from tb_ecom_goods g, tb_ecom_goods_product p
-        where g.default_sku_code = p.sku_code
-        and g.data_stat = '0'
+        b.b_id,
+        c.cat_name,
+        pc.cat_name as parent_cat_name,
+        p.goods_price,
+        d.view_count,
+        d.buy_count,
+        specv.spec_value
+        from tb_ecom_goods g
+        inner join tb_ecom_goods_product p
+        on p.goods_id = g.goods_id
+        left join tb_ecom_cat_goods_role r
+        on r.goods_id = g.goods_id
+        left join tb_ecom_goods_billing b
+        on b.goods_id = g.goods_id
+        left join tb_ecom_goods_detail d
+        on d.goods_id = g.goods_id
+        left join tb_ecom_goods_category c
+        on r.cat_id = c.cat_id
+        and c.data_stat = '0'
+        left join tb_ecom_goods_category pc
+        on pc.cat_id = c.parent_id
+        and pc.data_stat = '0'
+        left join tb_ecom_goods_spec spec
+        on spec.product_id = p.product_id
+        left join tb_ecom_spec_values specv
+        on specv.spec_value_id = spec.spec_value_id
+        where g.data_stat = '0'
         and p.data_stat = '0'
-        <if test="goodsId != null and goodsId != '' "> and g.goods_id=#{goodsId}</if>
+        <if test="ecomCode != null and ecomCode != '' ">
+            and	 g.ecom_code = #{ecomCode}
+        </if>
+        <if test="spuCode != null and spuCode != '' ">
+            and	 g.spu_code = #{spuCode}
+        </if>
+        <if test="goodsName != null and goodsName != '' ">
+            and	 g.goods_name like '%' || #{goodsName} || '%'
+        </if>
+        <if test="marketEnable != null and marketEnable != '' ">
+            and	 g.market_enable = #{marketEnable}
+        </if>
+        <if test="skuCode != null and skuCode != '' ">
+            and	 p.sku_code = #{skuCode}
+        </if>
+        <if test="productId != null and productId != '' ">
+            and	 p.product_id = #{productId}
+        </if>
+        <if test="bId != null and bId != '' ">
+            and	 b.b_id = #{bId}
+        </if>
+        group by p.product_id
     </select>
 
     <select id="getGoodsByCategory"  parameterType="com.ebeijia.zl.shop.dao.goods.domain.Goods"  resultType="com.ebeijia.zl.shop.dao.goods.domain.Goods">

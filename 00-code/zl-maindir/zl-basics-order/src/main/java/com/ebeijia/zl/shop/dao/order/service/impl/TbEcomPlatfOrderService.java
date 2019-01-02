@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.dao.order.service.impl;
 
+import com.ebeijia.zl.shop.dao.order.domain.OrderInfo;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.dao.order.mapper.TbEcomPlatfOrderMapper;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
@@ -22,6 +23,11 @@ public class TbEcomPlatfOrderService extends ServiceImpl<TbEcomPlatfOrderMapper,
 
     @Autowired
     private TbEcomPlatfOrderMapper platfOrderMapper;
+
+    @Override
+    public OrderInfo getOrderInfo(OrderInfo orderInfo) {
+        return platfOrderMapper.getOrderInfo(orderInfo);
+    }
 
     @Override
     public List<TbEcomPlatfOrder> getPlatfOrderList(TbEcomPlatfOrder platfOrder) {
