@@ -284,7 +284,15 @@ public class ExceptionEnum {
 		GoodsSpecNews07("07", "新增商品信息失败"),
 		GoodsSpecNews08("08", "编辑商品信息失败"),
 		GoodsSpecNews09("09", "删除商品信息失败"),
-		GoodsSpecNews10("10", "更新上下架状态失败");
+		GoodsSpecNews10("10", "更新上下架状态失败"),
+		GoodsSpecNews11("11", "新增商品相册信息失败"),
+		GoodsSpecNews12("12", "编辑商品相册信息失败"),
+		GoodsSpecNews13("13", "删除商品相册信息失败"),
+		GoodsSpecNews14("14", "排序号已存在，请重新输入"),
+		GoodsSpecNews15("15", "新增商品Sku失败"),
+		GoodsSpecNews16("16", "编辑商品Sku失败"),
+		GoodsSpecNews17("17", "删除商品Sku失败"),
+		GoodsSpecNews18("18", "SkuCode已存在，请重新输入");
 
 		private String code;
 		private String msg;

@@ -30,4 +30,11 @@ public interface ITbEcomGoodsProductService extends IService<TbEcomGoodsProduct>
      */
     public List<TbEcomGoodsProduct> getProductlistByGoodsId(String goodsId);
 
+    /**
+     * 根据SkuCode查询Sku商品信息
+     * @param skuCode
+     * @return
+     */
+    TbEcomGoodsProduct getGoodsProductBySkuCode(String skuCode);
+
 }

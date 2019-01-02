@@ -103,7 +103,17 @@
 		from
 			<include refid="tableName"/>
 		where p.data_stat = '0'
+			and p.goods_id = #{goodsId}
 		order by p.create_time desc
+	</select>
+
+	<select id="getGoodsProductBySkuCode" parameterMap="String" resultMap="TbEcomGoodsProduct">
+		select
+			<include refid="goodsProductColumns"/>
+		from
+			<include refid="tableName"/>
+		where p.data_stat = '0'
+		and p.sku_code = #{skuCode}
 	</select>
 
 </mapper>

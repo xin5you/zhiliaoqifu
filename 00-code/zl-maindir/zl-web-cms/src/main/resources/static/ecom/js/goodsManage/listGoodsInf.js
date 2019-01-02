@@ -1,24 +1,24 @@
 $(document).ready(function() {
-	listGoodsSpu.init();
+	listGoodsInf.init();
 })
 
-var listGoodsSpu = {
+var listGoodsInf = {
 	init : function() {
-        listGoodsSpu.initEvent();
+        listGoodsInf.initEvent();
 	},
 
 	initEvent:function(){
-		$('.btn-reset').on('click', listGoodsSpu.searchReset);
-		$('.btn-add').on('click', listGoodsSpu.intoAddGoodsSpu);
-		$('.btn-edit').on('click', listGoodsSpu.intoEditGoodsSpu);
-		$('.btn-delete').on('click', listGoodsSpu.deleteGoodsSpu);
-		$('.btn-close').on('click',listGoodsSpu.searchReset);
-        $('#goodsImgFile').on('change', listGoodsSpu.imageUpload);
-        $('.btn-updateEnable').on('click',listGoodsSpu.intoUpdateGoodsEnable);
-        $('.btn-updateEnableCommit').on('click',listGoodsSpu.updateGoodsEnable);
-        $('.btn-addGoodsImg').on('click',listGoodsSpu.intoAddGoodsImg);
-        $('.btn-addGoodsView').on('click',listGoodsSpu.intoAddGoodsView);
-        $('.btn-addGoodsSku').on('click',listGoodsSpu.intoAddGoodsSku);
+		$('.btn-reset').on('click', listGoodsInf.searchReset);
+		$('.btn-add').on('click', listGoodsInf.intoAddGoodsInf);
+		$('.btn-edit').on('click', listGoodsInf.intoEditGoodsInf);
+		$('.btn-delete').on('click', listGoodsInf.deleteGoodsInf);
+		$('.btn-close').on('click',listGoodsInf.searchReset);
+        $('#goodsImgFile').on('change', listGoodsInf.imageUpload);
+        $('.btn-updateEnable').on('click',listGoodsInf.intoUpdateGoodsEnable);
+        $('.btn-updateEnableCommit').on('click',listGoodsInf.updateGoodsEnable);
+        $('.btn-addGoodsImg').on('click',listGoodsInf.intoAddGoodsImg);
+        $('.btn-addGoodsView').on('click',listGoodsInf.intoAddGoodsView);
+        $('.btn-addGoodsSku').on('click',listGoodsInf.intoAddGoodsSku);
 	},
 	
 	initTip: function (intoType) {
@@ -129,9 +129,9 @@ var listGoodsSpu = {
             submitHandler: function (form) {
             	$(".btn-submit").attr('disabled',"true");
             	if(intoType == 1) {
-                    listGoodsSpu.addGoodsSpu();
+                    listGoodsInf.addGoodsInf();
             	}else if(intoType == 2) {
-                    listGoodsSpu.editGoodsSpu();
+                    listGoodsInf.editGoodsInf();
             	}
                 return false;
             },
@@ -143,20 +143,20 @@ var listGoodsSpu = {
         $("#goods_img").val(goodsImgFile);
     },
 	searchReset : function(){
-		Helper.post('/goodsManage/goodsInf/getGoodsSpuList');
+		Helper.post('/goodsManage/goodsInf/getGoodsInfList');
 	},
-	intoAddGoodsSpu : function(){
-        listGoodsSpu.loadModal(1, $(this).attr('goodsId'));
-        listGoodsSpu.initTip(1);
+	intoAddGoodsInf : function(){
+        listGoodsInf.loadModal(1, $(this).attr('goodsId'));
+        listGoodsInf.initTip(1);
 	},
-	intoEditGoodsSpu : function(){
-        listGoodsSpu.loadModal(2, $(this).attr('goodsId'));
-        listGoodsSpu.initTip(2);
+	intoEditGoodsInf : function(){
+        listGoodsInf.loadModal(2, $(this).attr('goodsId'));
+        listGoodsInf.initTip(2);
 	},
-	addGoodsSpu:function(){
+	addGoodsInf:function(){
         $.ajax({
             type: 'POST',
-            url: Helper.getRootPath() + '/goodsManage/goodsInf/addGoodsSpu',
+            url: Helper.getRootPath() + '/goodsManage/goodsInf/addGoodsInf',
             data: new FormData($("#goodsInfo")[0]),
             processData: false,
             contentType: false,
@@ -167,7 +167,7 @@ var listGoodsSpu = {
                 $(".btn-submit").removeAttr("disabled");
                 if (data.code == '00') {
                     Helper.confirm_one('新增商品信息成功', function() {
-                        listGoodsSpu.searchReset();
+                        listGoodsInf.searchReset();
                     });
                 } else {
                     Helper.alert(data.msg);
@@ -179,10 +179,10 @@ var listGoodsSpu = {
             }
         });
     },
-    editGoodsSpu:function(){
+    editGoodsInf:function(){
         $.ajax({
             type : 'POST',
-            url : Helper.getRootPath() + '/goodsManage/goodsInf/editGoodsSpu',
+            url : Helper.getRootPath() + '/goodsManage/goodsInf/editGoodsInf',
             data: new FormData($("#goodsInfo")[0]),
             processData: false,
             contentType: false,
@@ -193,7 +193,7 @@ var listGoodsSpu = {
                 $(".btn-submit").removeAttr("disabled");
                 if (data.code == '00') {
                     Helper.confirm_one('编辑商品信息成功', function() {
-                        listGoodsSpu.searchReset();
+                        listGoodsInf.searchReset();
                     });
                 } else {
                     Helper.alert(data.msg);
@@ -205,7 +205,7 @@ var listGoodsSpu = {
             }
         });
     },
-	deleteGoodsSpu : function(){
+	deleteGoodsInf : function(){
 		var goodsId = $(this).attr('goodsId');
 		if(goodsId == null || goodsId == '') {
 			Helper.alert("系统故障，请稍后再试");
@@ -213,7 +213,7 @@ var listGoodsSpu = {
 		}
 		Helper.confirm("你是否删除该记录？",function(){
 			$.ajax({								  
-				url : Helper.getRootPath() + '/goodsManage/goodsInf/deleteGoodsSpu',
+				url : Helper.getRootPath() + '/goodsManage/goodsInf/deleteGoodsInf',
 				type : 'post',
 				dataType : "json",
 				data : {
@@ -222,7 +222,7 @@ var listGoodsSpu = {
 				success : function (data) {
 					if(data.code == '00') {
 						Helper.confirm_one('删除商品信息成功', function(){
-                            listGoodsSpu.searchReset();
+                            listGoodsInf.searchReset();
 	                	});
 					} else {
 						Helper.alert(data.msg);
@@ -265,7 +265,7 @@ var listGoodsSpu = {
         });
 		
 		$.ajax({								  
-            url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsSpu',
+            url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsInf',
             type: 'post',
             dataType : "json",
             data: {
@@ -325,18 +325,20 @@ var listGoodsSpu = {
     updateGoodsEnable : function () {
         $("#btn-updateEnableCommit").attr('disabled',"true");
         var goodsId = $("#goodsId_").val();
+        var marketEnable = $("#marketEnable_").val();
         $.ajax({
-            url : Helper.getRootPath() + '/goodsManage/goodsInf/updateGoodsSpuEnable',
+            url : Helper.getRootPath() + '/goodsManage/goodsInf/updateGoodsInfEnable',
             type : 'post',
             dataType : "json",
             data : {
-                "goodsId": goodsId
+                "goodsId": goodsId,
+                "marketEnable" : marketEnable
             },
             success : function (data) {
                 $(".btn-updateEnableCommit").removeAttr("disabled");
                 if(data.code == '00') {
                     Helper.confirm_one('编辑商品上下架成功', function(){
-                        listGoodsSpu.searchReset();
+                        listGoodsInf.searchReset();
                     });
                 } else {
                     Helper.alert(data.msg);

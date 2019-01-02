@@ -59,6 +59,9 @@ public class GoodsManageController {
 	private ITbEcomGoodsService ecomGoodsService;
 
 	@Autowired
+	private ITbEcomGoodsGalleryService ecomGoodsGalleryService;
+
+	@Autowired
 	private RetailChnlInfFacade retailChnlInfFacade;
 
 	/**
@@ -358,9 +361,9 @@ public class GoodsManageController {
 	 * @param ecomGoods
 	 * @return
 	 */
-	@RequestMapping(value = "/goodsInf/getGoodsSpuList")
-	public ModelAndView getGoodsSpuList(HttpServletRequest req, TbEcomGoods ecomGoods) {
-		ModelAndView mv = new ModelAndView("goodsManage/listGoodsSpu");
+	@RequestMapping(value = "/goodsInf/getGoodsInfList")
+	public ModelAndView getGoodsInfList(HttpServletRequest req, TbEcomGoods ecomGoods) {
+		ModelAndView mv = new ModelAndView("goodsManage/listGoodsInf");
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<TbEcomGoods> pageInfo = new PageInfo<>();
@@ -411,12 +414,12 @@ public class GoodsManageController {
 	 * @param req
 	 * @return
 	 */
-	@PostMapping(value = "/goodsInf/addGoodsSpu")
-	public BaseResult<Object> addGoodsSpu(@RequestParam("goodsImgFile") MultipartFile goodsImgFile, HttpServletRequest req) {
+	@PostMapping(value = "/goodsInf/addGoodsInf")
+	public BaseResult<Object> addGoodsInf(@RequestParam("goodsImgFile") MultipartFile goodsImgFile, HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomGoods goods = getTbEcomGoodsInf(req);
-			result = goodsManageService.addGoodsSpu(goods, goodsImgFile);
+			result = goodsManageService.addGoodsInf(goods, goodsImgFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品信息图片上传异常", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -433,12 +436,12 @@ public class GoodsManageController {
 	 * @param req
 	 * @return
 	 */
-	@PostMapping(value = "/goodsInf/editGoodsSpu")
-	public BaseResult<Object> editGoodsSpu(@RequestParam("goodsImgFile") MultipartFile goodsImgFile, HttpServletRequest req) {
+	@PostMapping(value = "/goodsInf/editGoodsInf")
+	public BaseResult<Object> editGoodsInf(@RequestParam("goodsImgFile") MultipartFile goodsImgFile, HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomGoods goods = getTbEcomGoodsInf(req);
-			result = goodsManageService.editGoodsSpu(goods, goodsImgFile);
+			result = goodsManageService.editGoodsInf(goods, goodsImgFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品信息图片上传异常", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -454,33 +457,17 @@ public class GoodsManageController {
 	 * @param req
 	 * @return
 	 */
-	@PostMapping(value = "/goodsInf/deleteGoodsSpu")
-	public BaseResult<Object> deleteGoodsSpu(HttpServletRequest req) {
-		/*BaseResult<Object> result = new BaseResult<>();*/
+	@PostMapping(value = "/goodsInf/deleteGoodsInf")
+	public BaseResult<Object> deleteGoodsInf(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		String goodsId = req.getParameter("goods_id");
 		try {
-			/*TbEcomGoods goods = getTbEcomGoodsInf(req);*/
-			HttpSession session = req.getSession();
-			User user = (User) session.getAttribute(Constants.SESSION_USER);
-
-			String goodsId = req.getParameter("goods_id");
-			TbEcomGoods goods = ecomGoodsService.getById(goodsId);
-			goods.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
-			goods.setUpdateUser(user.getId());
-			goods.setUpdateTime(System.currentTimeMillis());
-			goods.setLockVersion(goods.getLockVersion() + 1);
-
-			if (!ecomGoodsService.updateById(goods)) {
-				logger.error("# 删除商品{}Spu信息失败", goodsId);
-				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getMsg());
-			}
-		} catch (BizHandlerException e) {
-			logger.error("## 删除商品信息图片异常", e.getMessage());
-			return ResultsUtil.error(e.getCode(), e.getMessage());
+			result = goodsManageService.deleteGoodsInf(req);
 		} catch (Exception e) {
-			logger.error("## 删除商品信息出错", e);
+			logger.error("# 删除商品{}Spu信息异常", goodsId, e);
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews09.getMsg());
 		}
-		return ResultsUtil.success();
+		return result;
 	}
 
 	/**
@@ -488,11 +475,11 @@ public class GoodsManageController {
 	 * @param req
 	 * @return
 	 */
-	@PostMapping(value = "/goodsInf/updateGoodsSpuEnable")
-	public BaseResult<Object> updateGoodsSpuEnable(HttpServletRequest req) {
+	@PostMapping(value = "/goodsInf/updateGoodsInfEnable")
+	public BaseResult<Object> updateGoodsInfEnable(HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
-			result = goodsManageService.updateGoodsSpuEnable(req);
+			result = goodsManageService.updateGoodsInfEnable(req);
 		} catch (Exception e) {
 			logger.error("## 更新商品Spu上下架出错", e);
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getMsg());
@@ -571,6 +558,350 @@ public class GoodsManageController {
 		goods.setGoodsImg(goodsImg);
 		goods.setRemarks(remarks);
 		return goods;
+	}
+
+	/**
+	 * 查询商品相册信息列表（分页）
+	 * @param req
+	 * @param ecomGoodsGallery
+	 * @return
+	 */
+	@RequestMapping(value = "/goodsInf/getGoodsGalleryList")
+	public ModelAndView getGoodsGalleryList(HttpServletRequest req, TbEcomGoodsGallery ecomGoodsGallery) {
+		ModelAndView mv = new ModelAndView("goodsManage/listGoodsGallery");
+		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+		PageInfo<TbEcomGoodsGallery> pageInfo = new PageInfo<>();
+		String goodsId = req.getParameter("goodsId");
+		try {
+			ecomGoodsGallery.setGoodsId(goodsId);
+			pageInfo = goodsManageService.getGoodsGalleryListPage(startNum, pageSize, ecomGoodsGallery);
+		} catch (Exception e) {
+			logger.error("## 查询商品{}相册信息异常", goodsId, e);
+		}
+		mv.addObject("pageInfo", pageInfo);
+		mv.addObject("ecomGoodsGallery", ecomGoodsGallery);
+		mv.addObject("isDefaultList", IsDefaultEnum.values());
+
+		return mv;
+	}
+
+	/**
+	 * 根据主键查询商品相册信息
+	 * @param req
+	 * @param ecomGoodsGallery
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/getGoodsGallery")
+	public TbEcomGoodsGallery getGoodsGallery(HttpServletRequest req, TbEcomGoodsGallery ecomGoodsGallery) {
+		TbEcomGoodsGallery goodsGallery = new TbEcomGoodsGallery();
+		try {
+			goodsGallery = ecomGoodsGalleryService.getById(ecomGoodsGallery.getImgId());
+		} catch (Exception e) {
+			logger.error("## 查询主键为[{}]的商品相册信息出错", ecomGoodsGallery.getImgId(), e);
+		}
+		return goodsGallery;
+	}
+
+	/**
+	 * 新增商品相册信息
+	 * @param thumbnailFile
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/addGoodsGallery")
+	public BaseResult<Object> addGoodsGallery(@RequestParam("thumbnailFile") MultipartFile thumbnailFile, HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			TbEcomGoodsGallery goodsGallery = getTbEcomGoodsGallery(req);
+			result = goodsManageService.addGoodsGallery(goodsGallery, thumbnailFile);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品相册图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 新增商品相册信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews11.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews11.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 编辑商品相册信息
+	 * @param thumbnailFile
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/editGoodsGallery")
+	public BaseResult<Object> editGoodsGallery(@RequestParam("thumbnailFile") MultipartFile thumbnailFile, HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			TbEcomGoodsGallery goodsGallery = getTbEcomGoodsGallery(req);
+			result = goodsManageService.editGoodsGallery(goodsGallery, thumbnailFile);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品相册图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 编辑商品相册信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews12.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews12.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 删除商品相册信息
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/deleteGoodsGallery")
+	public BaseResult<Object> deleteGoodsGallery(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			result = goodsManageService.deleteGoodsGallery(req);
+		} catch (BizHandlerException e) {
+			logger.error("## 删除商品相册图片异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 删除商品相册信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews13.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews13.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 商品相册信息封装类方法
+	 * @param req
+	 * @return
+	 */
+	private TbEcomGoodsGallery getTbEcomGoodsGallery(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String imgId = req.getParameter("img_id");
+		String goodsId = req.getParameter("goodsId");
+		String thumbnail = req.getParameter("thumbnail");
+		String isDefaultList = req.getParameter("isDefaultList");
+		String sort = req.getParameter("sort");
+		String remarks = req.getParameter("remarks");
+
+		TbEcomGoodsGallery goodsGallery = null;
+		if (!StringUtil.isNullOrEmpty(imgId)) {
+			goodsGallery = ecomGoodsGalleryService.getById(imgId);
+			goodsGallery.setLockVersion(goodsGallery.getLockVersion() + 1);
+		} else {
+			goodsGallery = new TbEcomGoodsGallery();
+			goodsGallery.setImgId(IdUtil.getNextId());
+			goodsGallery.setCreateUser(user.getId());
+			goodsGallery.setCreateTime(System.currentTimeMillis());
+			goodsGallery.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			goodsGallery.setLockVersion(0);
+		}
+		goodsGallery.setUpdateUser(user.getId());
+		goodsGallery.setUpdateTime(System.currentTimeMillis());
+		goodsGallery.setGoodsId(goodsId);
+		goodsGallery.setThumbnail(thumbnail);
+		goodsGallery.setIsDefault(isDefaultList);
+		goodsGallery.setSort(Integer.valueOf(sort));
+		goodsGallery.setRemarks(remarks);
+		return goodsGallery;
+	}
+
+	/**
+	 * 查询商品Sku列表（分页）
+	 * @param req
+	 * @param ecomGoodsProduct
+	 * @return
+	 */
+	@RequestMapping(value = "/goodsInf/getGoodsProductList")
+	public ModelAndView getGoodsProductList(HttpServletRequest req, TbEcomGoodsProduct ecomGoodsProduct) {
+		ModelAndView mv = new ModelAndView("goodsManage/listGoodsProduct");
+
+		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+
+		String goodsId = req.getParameter("goodsId");
+
+		PageInfo<TbEcomGoodsProduct> pageInfo = new PageInfo<>();
+		TbEcomGoods goodsInf = new TbEcomGoods();
+		try {
+			ecomGoodsProduct.setGoodsId(goodsId);
+			pageInfo = goodsManageService.getGoodsProductListPage(startNum, pageSize, ecomGoodsProduct);
+			goodsInf = ecomGoodsService.getGoodsInfByGoodsId(goodsId);
+		} catch (Exception e) {
+			logger.error("## 查询商品{}Sku信息异常", goodsId, e);
+		}
+		mv.addObject("pageInfo", pageInfo);
+		mv.addObject("ecomGoodsProduct", ecomGoodsProduct);
+		mv.addObject("goodsInf", goodsInf);
+		mv.addObject("productEnableList", MarketEnableEnum.values());
+		return mv;
+	}
+
+	/**
+	 * 根据主键查询商品Sku信息
+	 * @param req
+	 * @param ecomGoodsProduct
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/getGoodsProduct")
+	public TbEcomGoodsProduct getGoodsProduct(HttpServletRequest req, TbEcomGoodsProduct ecomGoodsProduct) {
+		TbEcomGoodsProduct goodsProduct = new TbEcomGoodsProduct();
+		try {
+			goodsProduct = ecomGoodsProductService.getById(ecomGoodsProduct.getProductId());
+		} catch (Exception e) {
+			logger.error("## 查询主键为[{}]的商品Sku信息出错", goodsProduct.getProductId(), e);
+		}
+		return goodsProduct;
+	}
+
+	/**
+	 * 新增商品Sku信息
+	 * @param picUrlFile
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/addGoodsProduct")
+	public BaseResult<Object> addGoodsProduct(@RequestParam("picUrlFile") MultipartFile picUrlFile, HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			TbEcomGoodsProduct goodsProduct = TbEcomGoodsProduct(req);
+			result = goodsManageService.addGoodsProduct(goodsProduct, picUrlFile);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品Sku图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 新增商品Sku信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews15.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews15.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 编辑商品Sku信息
+	 * @param picUrlFile
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/editGoodsProduct")
+	public BaseResult<Object> editGoodsProduct(@RequestParam("picUrlFile") MultipartFile picUrlFile, HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			TbEcomGoodsProduct goodsProduct = TbEcomGoodsProduct(req);
+			result = goodsManageService.editGoodsProduct(goodsProduct, picUrlFile);
+		} catch (BizHandlerException e) {
+			logger.error("## 商品Sku图片上传异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 编辑商品Sku信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 删除商品Sku信息
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/deleteGoodsProduct")
+	public BaseResult<Object> deleteGoodsProduct(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		try {
+			result = goodsManageService.deleteGoodsProduct(req);
+		} catch (BizHandlerException e) {
+			logger.error("## 删除商品Sku图片异常", e.getMessage());
+			return ResultsUtil.error(e.getCode(), e.getMessage());
+		} catch (Exception e) {
+			logger.error("## 删除商品Sku信息出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getMsg());
+		}
+		return result;
+	}
+
+	/**
+	 * 更新商品Sku上下架状态
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/updateGoodsProductEnable")
+	public BaseResult<Object> updateGoodsProductEnable(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String productId = req.getParameter("productId");
+		String productEnable = req.getParameter("productEnable");
+
+		try {
+			TbEcomGoodsProduct goodsProduct = ecomGoodsProductService.getById(productId);
+			goodsProduct.setProductEnable(Integer.valueOf(productEnable));
+			goodsProduct.setUpdateUser(user.getId());
+			goodsProduct.setUpdateTime(System.currentTimeMillis());
+			goodsProduct.setLockVersion(goodsProduct.getLockVersion() + 1);
+
+			if (!ecomGoodsProductService.updateById(goodsProduct)) {
+				logger.error("## 更新商品Sku上下架出错,productId--->{}", productId);
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getMsg());
+			}
+		} catch (Exception e) {
+			logger.error("## 更新商品Sku上下架出错", e);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews10.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	/**
+	 * 商品Sku信息封装类方法
+	 * @param req
+	 * @return
+	 */
+	private TbEcomGoodsProduct TbEcomGoodsProduct(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String productId = req.getParameter("product_id");
+		String goodsId = req.getParameter("goods_id");
+		String spuCode = req.getParameter("spu_code");
+		String ecomCode = req.getParameter("ecom_code");
+		String accountSign = req.getParameter("account_sign");
+		String isStore = req.getParameter("is_store");
+		String skuCode = req.getParameter("sku_code");
+		String enableStore = req.getParameter("enable_store");
+		String goodsPrice = req.getParameter("goods_price");
+		String goodsCost = req.getParameter("goods_cost");
+		String mktPrice = req.getParameter("mkt_price");
+		String pageTitle = req.getParameter("page_title");
+		String metaDescription = req.getParameter("meta_description");
+		String picUrl = req.getParameter("pic_url");
+		String remarks = req.getParameter("remarks");
+
+		TbEcomGoodsProduct goodsProduct = null;
+		if (!StringUtil.isNullOrEmpty(productId)) {
+			goodsProduct = ecomGoodsProductService.getById(productId);
+			goodsProduct.setLockVersion(goodsProduct.getLockVersion() + 1);
+		} else {
+			goodsProduct = new TbEcomGoodsProduct();
+			goodsProduct.setProductId(IdUtil.getNextId());
+			goodsProduct.setCreateUser(user.getId());
+			goodsProduct.setCreateTime(System.currentTimeMillis());
+			goodsProduct.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			goodsProduct.setLockVersion(0);
+		}
+		goodsProduct.setUpdateUser(user.getId());
+		goodsProduct.setUpdateTime(System.currentTimeMillis());
+		goodsProduct.setGoodsId(goodsId);
+		goodsProduct.setSpuCode(spuCode);
+		goodsProduct.setEcomCode(ecomCode);
+		goodsProduct.setAccountSign(accountSign);
+		goodsProduct.setIsStore(Integer.valueOf(isStore));
+		goodsProduct.setSkuCode(skuCode);
+		goodsProduct.setEnableStore(Integer.valueOf(enableStore));
+		goodsProduct.setGoodsPrice(goodsPrice);
+		goodsProduct.setGoodsCost(goodsCost);
+		goodsProduct.setMktPrice(mktPrice);
+		goodsProduct.setPageTitle(pageTitle);
+		goodsProduct.setMetaDescription(metaDescription);
+		goodsProduct.setPicUrl(picUrl);
+		goodsProduct.setRemarks(remarks);
+		return goodsProduct;
 	}
 
 }

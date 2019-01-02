@@ -10,7 +10,9 @@ public enum ImageTypeEnum {
 	ImageTypeEnum_01("01", "goodsSpec", "商品规格"),
 	ImageTypeEnum_02("02", "goodsSpecValues", "商品规格值"),
 	ImageTypeEnum_03("03", "remitEvidence", "上账凭证"),
-	ImageTypeEnum_04("04", "goodsInf", "商品信息");
+	ImageTypeEnum_04("04", "goodsInf", "商品Spu信息"),
+	ImageTypeEnum_05("05", "goodsGallery", "商品相册信息"),
+	ImageTypeEnum_06("06", "goodsProduct", "商品Sku信息");
 
 	private String code;
 	private String value;

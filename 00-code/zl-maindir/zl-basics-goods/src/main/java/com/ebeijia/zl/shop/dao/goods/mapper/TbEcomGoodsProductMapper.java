@@ -49,4 +49,11 @@ public interface TbEcomGoodsProductMapper extends BaseMapper<TbEcomGoodsProduct>
 	 * @return
 	 */
 	List<TbEcomGoodsProduct> getGoodsProductListBySkuList(List<String> skuList);
+
+	/**
+	 * 根据SkuCode查询Sku商品信息
+	 * @param skuCode
+	 * @return
+	 */
+	TbEcomGoodsProduct getGoodsProductBySkuCode(String skuCode);
 }

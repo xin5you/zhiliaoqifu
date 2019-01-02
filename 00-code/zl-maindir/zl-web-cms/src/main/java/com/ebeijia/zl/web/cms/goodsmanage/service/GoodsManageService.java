@@ -1,9 +1,7 @@
 package com.ebeijia.zl.web.cms.goodsmanage.service;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecValues;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomSpecification;
+import com.ebeijia.zl.shop.dao.goods.domain.*;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,7 +88,7 @@ public interface GoodsManageService {
      * @param goodsImgFile
      * @return
      */
-    BaseResult<Object> addGoodsSpu(TbEcomGoods entity, MultipartFile goodsImgFile);
+    BaseResult<Object> addGoodsInf(TbEcomGoods entity, MultipartFile goodsImgFile);
 
     /**
      * 商品信息编辑
@@ -98,18 +96,78 @@ public interface GoodsManageService {
      * @param goodsImgFile
      * @return
      */
-    BaseResult<Object> editGoodsSpu(TbEcomGoods entity, MultipartFile goodsImgFile);
+    BaseResult<Object> editGoodsInf(TbEcomGoods entity, MultipartFile goodsImgFile);
 
     /**
      * 商品信息删除
-     * @param entity
+     * @param req
      * @return
      */
-    BaseResult<Object> deleteGoodsSpu(TbEcomGoods entity);
+    BaseResult<Object> deleteGoodsInf(HttpServletRequest req);
 
     /**
      * 更新商品上下架状态
      * @return
      */
-    BaseResult<Object> updateGoodsSpuEnable(HttpServletRequest req);
+    BaseResult<Object> updateGoodsInfEnable(HttpServletRequest req);
+
+    /**
+     * 查询商品相册信息列表（分页）
+     * @param entity
+     * @return
+     */
+    PageInfo<TbEcomGoodsGallery> getGoodsGalleryListPage(int startNum, int pageSize, TbEcomGoodsGallery entity);
+
+    /**
+     * 商品相册信息新增
+     * @param entity
+     * @param thumbnailFile
+     * @return
+     */
+    BaseResult<Object> addGoodsGallery(TbEcomGoodsGallery entity, MultipartFile thumbnailFile);
+
+    /**
+     * 商品相册信息编辑
+     * @param entity
+     * @param thumbnailFile
+     * @return
+     */
+    BaseResult<Object> editGoodsGallery(TbEcomGoodsGallery entity, MultipartFile thumbnailFile);
+
+    /**
+     * 商品相册信息删除
+     * @param req)
+     * @return
+     */
+    BaseResult<Object> deleteGoodsGallery(HttpServletRequest req);
+
+    /**
+     * 查询商品Sku信息列表（分页）
+     * @param entity
+     * @return
+     */
+    PageInfo<TbEcomGoodsProduct> getGoodsProductListPage(int startNum, int pageSize, TbEcomGoodsProduct entity);
+
+    /**
+     * 商品Sku信息新增
+     * @param entity
+     * @param picUrlFile
+     * @return
+     */
+    BaseResult<Object> addGoodsProduct(TbEcomGoodsProduct entity, MultipartFile picUrlFile);
+
+    /**
+     * 商品Sku信息编辑
+     * @param entity
+     * @param picUrlFile
+     * @return
+     */
+    BaseResult<Object> editGoodsProduct(TbEcomGoodsProduct entity, MultipartFile picUrlFile);
+
+    /**
+     * 商品Sku信息删除
+     * @param req)
+     * @return
+     */
+    BaseResult<Object> deleteGoodsProduct(HttpServletRequest req);
 }

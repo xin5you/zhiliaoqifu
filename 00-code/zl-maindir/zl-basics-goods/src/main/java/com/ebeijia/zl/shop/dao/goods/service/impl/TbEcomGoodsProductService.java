@@ -21,18 +21,19 @@ import java.util.List;
 @Service
 public class TbEcomGoodsProductService extends ServiceImpl<TbEcomGoodsProductMapper, TbEcomGoodsProduct> implements ITbEcomGoodsProductService{
 
-
-    @Autowired
-    private TbEcomGoodsProductMapper ecomGoodsProductMapper;
-
     @Override
     public List<TbEcomGoodsProduct> getGoodsProductList(TbEcomGoodsProduct ecomGoodsProduct) {
-        return ecomGoodsProductMapper.getGoodsProductList(ecomGoodsProduct);
+        return baseMapper.getGoodsProductList(ecomGoodsProduct);
     }
 
     @Override
     public List<TbEcomGoodsProduct> getProductlistByGoodsId(String goodsId) {
-        return ecomGoodsProductMapper.getProductlistByGoodsId(goodsId);
+        return baseMapper.getProductlistByGoodsId(goodsId);
+    }
+
+    @Override
+    public TbEcomGoodsProduct getGoodsProductBySkuCode(String skuCode) {
+        return baseMapper.getGoodsProductBySkuCode(skuCode);
     }
 
 }

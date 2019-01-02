@@ -14,7 +14,7 @@
 		                </ul>
 		            </div>
 	        	</nav>
-				<form id="searchForm" th:action="@{/goodsManage/goodsInf/getGoodsSpuList}" th:object="${ecomGoods}" class="form-inline" method="post">
+				<form id="searchForm" th:action="@{/goodsManage/goodsInf/getGoodsInfList}" th:object="${ecomGoods}" class="form-inline" method="post">
 					<div class="row-fluid searchForm" id="h_search">
 						<div class="span12">
 							<div class="input-prepend">
@@ -77,7 +77,7 @@
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
-								<button type="button" class="btn btn-primary btn-add">新增规格</button>
+								<button type="button" class="btn btn-primary btn-add">新增商品</button>
 							</div>
 						</div>
 					</div>
@@ -112,7 +112,7 @@
 								<td><span th:text="${goods.isDisabled}"></span></td>
 								<td><span th:text="${goods.isHot}"></span></td>
 				                <td>
-									<a th:attr="goodsId=${goods.goodsId}" title="商品详情" class="btn-mini btn-view" href="#"><i class="icon-view"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-view"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="上下架" class="btn-mini btn-updateEnable" href="#"><i class="icon-edit"></i></a>
@@ -339,7 +339,7 @@
 		        </div>
 			</form>
 		</div>
-		<script th:src="@{/ecom/js/goodsManage/listGoodsSpec.js}"></script>
+		<script th:src="@{/ecom/js/goodsManage/listGoodsInf.js}"></script>
 		<script type="text/css">
 			#modal {
 				width: 900px;
