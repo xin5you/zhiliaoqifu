@@ -147,8 +147,6 @@ public class ShopAop {
         Enumeration e1 = request.getHeaderNames();
         while (e1.hasMoreElements()) {
             String headerName = (String) e1.nextElement();
-            System.out.print("/" + headerName);
-            System.out.println("");
             if (headerName.equals("Authorization") || headerName.equals("authorization")) {
                 return request.getHeader(headerName);
             }

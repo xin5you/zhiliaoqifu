@@ -28,13 +28,13 @@
       tb_ecom_order_product_item
     </sql>
 
-    <select id="getOrderProductItemBySOrderId" parameterType="TbEcomOrderProductItem" resultType="TbEcomOrderProductItem">
+    <select id="getOrderProductItemBySOrderId" parameterType="java.lang.String" resultType="TbEcomOrderProductItem">
       select
         <include refid="ecomOrderProductItem"/>
       from
         <include refid="tableName"/>
       where data_stat = '0'
-         and sOrderId = #{sOrderId}
+         and s_order_id = #{sOrderId}
     </select>
 
 </mapper>

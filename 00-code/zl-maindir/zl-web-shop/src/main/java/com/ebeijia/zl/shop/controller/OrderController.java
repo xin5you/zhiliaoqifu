@@ -79,14 +79,15 @@ public class OrderController {
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
     public JsonResult<OrderDetailInfo> goodsOrderDetail(@PathVariable("orderid") String orderId){
-
-        return new JsonResult<>();
+        OrderDetailInfo orderDetailInfo = orderService.orderDetail(orderId);
+        return new JsonResult<>(orderDetailInfo);
     }
 
     @TokenCheck(force = true)
     @ApiOperation("订单列表")
     @RequestMapping(value = "/goods/list/{stat}",method = RequestMethod.GET)
     public JsonResult<PageInfo<OrderDetailInfo>> goodsOrderList(@PathVariable("stat") String orderStat, String orderby, Integer start, Integer limit){
+        PageInfo<OrderDetailInfo> orderDetailInfos = orderService.listOrderDetail(orderStat,start,limit);
         return new JsonResult<>();
     }
 

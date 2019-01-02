@@ -7,6 +7,7 @@ import com.ebeijia.zl.common.utils.enums.TransChnl;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
@@ -20,6 +21,7 @@ import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
 import com.ebeijia.zl.shop.service.auth.IAuthService;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
+import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.Token;
@@ -49,6 +51,7 @@ public class AuthService implements IAuthService {
     private UserInfFacade userInfFacade;
 
     @Override
+    @ShopTransactional
     public Token phoneLogin(String phone, String pwd) {
         String userId = null;
         boolean validCode = validCodeService.checkValidCode(PhoneValidMethod.LOGIN, phone, pwd);
@@ -61,10 +64,9 @@ public class AuthService implements IAuthService {
         member = memberDao.getOne(new QueryWrapper<>(member));
         String memberId = null;
 
-        //TODO 获取openId
-        String openId = IdUtil.getNextId();
-
         if (member == null) {
+            //TODO 获取openId
+            String openId = IdUtil.getNextId();
             //注册流程
             remoteRegister(phone, openId);
             member = localRegister(phone, openId);
@@ -73,7 +75,7 @@ public class AuthService implements IAuthService {
 
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         if (userInf == null) {
-            throw new AdviceMessenger(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
+            throw new BizException(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
         }
 
         String token = memberId + ":" + IdUtil.getNextId();

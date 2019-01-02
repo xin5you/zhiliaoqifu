@@ -5,29 +5,23 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.goods.domain.Goods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsBilling;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsBillingService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderProductItem;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomOrderShip;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomDmsRelatedDetailService;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomOrderProductItemService;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfOrderService;
-import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
+import com.ebeijia.zl.shop.dao.order.domain.*;
+import com.ebeijia.zl.shop.dao.order.service.*;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
-import com.ebeijia.zl.shop.vo.AddressInfo;
-import com.ebeijia.zl.shop.vo.MemberInfo;
-import com.ebeijia.zl.shop.vo.OrderItemInfo;
-import com.ebeijia.zl.shop.vo.PayInfo;
+import com.ebeijia.zl.shop.vo.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +31,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.ebeijia.zl.shop.constants.ResultState.ERROR;
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_FOUND;
+import static com.ebeijia.zl.shop.constants.ResultState.*;
 
 @Service
 public class OrderService implements IOrderService {
@@ -51,25 +43,28 @@ public class OrderService implements IOrderService {
     private ITbEcomPlatfShopOrderService shopOrderDao;
 
     @Autowired
-    ITbEcomOrderProductItemService orderProductItemDao;
+    private ITbEcomOrderProductItemService orderProductItemDao;
 
     @Autowired
-    ITbEcomGoodsProductService productDao;
+    private ITbEcomOrderShipService orderShipDao;
 
     @Autowired
-    ITbEcomGoodsService goodsDao;
+    private ITbEcomGoodsProductService productDao;
 
     @Autowired
-    ITbEcomGoodsBillingService goodsBillingDao;
+    private ITbEcomGoodsService goodsDao;
 
     @Autowired
-    ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
+    private ITbEcomGoodsBillingService goodsBillingDao;
 
     @Autowired
-    ShopUtils shopUtils;
+    private ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
 
     @Autowired
-    IPayService payService;
+    private ShopUtils shopUtils;
+
+    @Autowired
+    private IPayService payService;
 
     @Autowired
     private HttpSession session;
@@ -131,6 +126,7 @@ public class OrderService implements IOrderService {
 
         //持久化 主订单、子订单、订单商品、收货地址
         platfOrderDao.save(platfOrder);
+
         for (TbEcomPlatfShopOrder subOrder : subOrderList) {
             shopOrderDao.save(subOrder);
         }
@@ -268,6 +264,66 @@ public class OrderService implements IOrderService {
         //持久化并且锁版本加1
         order = orderUpdateLocker(order);
         return order;
+    }
+
+    @Override
+    public OrderDetailInfo orderDetail(String orderId) {
+        OrderDetailInfo result = new OrderDetailInfo();
+        SubOrder subOrder = new SubOrder();
+
+        OrderInfo orderQuery = new OrderInfo();
+        orderQuery.setOrderId(orderId);
+        result.setOrder(platfOrderDao.getOrderInfo(orderQuery));
+
+        TbEcomOrderShip shipQuery = new TbEcomOrderShip();
+        shipQuery.setOrderId(orderId);
+        result.setShip(orderShipDao.getOne(new QueryWrapper<>(shipQuery)));
+
+        TbEcomOrderProductItem orderProductItemBySOrderId = orderProductItemDao.getOrderProductItemBySOrderId(result.getOrder().getSOrderId());
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put(orderProductItemBySOrderId.getProductId(),orderProductItemBySOrderId.getProductNum());
+        subOrder.setAmount(map);
+
+        Goods goodsQuery = new Goods();
+        goodsQuery.setProductId(orderProductItemBySOrderId.getProductId());
+        Goods goods = goodsDao.getGoods(goodsQuery);
+        goods.setGoodsName(orderProductItemBySOrderId.getProductName());
+        goods.setGoodsPrice(String.valueOf(orderProductItemBySOrderId.getProductPrice()));
+        LinkedList<Goods> products = new LinkedList<>();
+        products.add(goods);
+        subOrder.setProducts(products);
+
+        TbEcomPlatfShopOrder shopQuery = new TbEcomPlatfShopOrder();
+        shopQuery.setOrderId(orderId);
+        TbEcomPlatfShopOrder shopOrder = shopOrderDao.getOne(new QueryWrapper<>(shopQuery));
+
+        subOrder.setShopOrder(shopOrder);
+        LinkedList<SubOrder> subOrderList = new LinkedList<>();
+        subOrderList.add(subOrder);
+        result.setSubOrders(subOrderList);
+        return result;
+    }
+
+    @Override
+    public PageInfo<OrderDetailInfo> listOrderDetail(String orderStat, Integer start, Integer limit) {
+        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
+        if (memberInfo == null) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        TbEcomPlatfOrder query = new TbEcomPlatfOrder();
+        query.setMemberId(memberInfo.getMemberId());
+        if (!StringUtils.isEmpty(orderStat)) {
+            query.setPayStatus(orderStat);
+        }
+        PageHelper.startPage(start, limit);
+        List<TbEcomPlatfOrder> orderList = platfOrderDao.list(new QueryWrapper<>(query));
+        LinkedList<OrderDetailInfo> result = new LinkedList<>();
+        if (orderList != null) {
+            for (TbEcomPlatfOrder order : orderList) {
+                result.add(orderDetail(order.getOrderId()));
+            }
+        }
+        return new PageInfo<>(result);
     }
 
     private TbEcomPlatfOrder orderUpdateLocker(TbEcomPlatfOrder order) {
@@ -470,6 +526,7 @@ public class OrderService implements IOrderService {
         shopOrder.setMemberId(platfOrder.getMemberId());
         shopOrder.setOrderId(platfOrder.getOrderId());
         shopOrder.setChnlOrderPostage(0L);
+        shopOrder.setLockVersion(0);
         //记录操作
         shopOrder.setCreateTime(System.currentTimeMillis());
         shopOrder.setCreateUser("ShopSystem");
@@ -481,6 +538,8 @@ public class OrderService implements IOrderService {
         platfOrder.setOrderId(IdUtil.getNextId());
         platfOrder.setMemberId(memberId);
         //记录操作
+        platfOrder.setPayStatus("0");
+        platfOrder.setLockVersion(0);
         platfOrder.setCreateTime(System.currentTimeMillis());
         platfOrder.setCreateUser("ShopSystem");
         return platfOrder;
@@ -496,6 +555,7 @@ public class OrderService implements IOrderService {
         productItem.setProductNum(amounts);
         productItem.setProductPrice(Integer.valueOf(sku.getGoodsPrice()));
         productItem.setDataStat("0");
+        productItem.setLockVersion(0);
         //记录操作
         productItem.setCreateTime(System.currentTimeMillis());
         productItem.setCreateUser("ShopSystem");
