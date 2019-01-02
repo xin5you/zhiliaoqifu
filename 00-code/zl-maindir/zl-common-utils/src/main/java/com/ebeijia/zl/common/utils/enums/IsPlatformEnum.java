@@ -7,8 +7,8 @@ package com.ebeijia.zl.common.utils.enums;
  */
 public enum IsPlatformEnum {
 
-	ISOPEN_TRUE("1", "是"),
-	ISOPEN_FALSE("0", "否");
+	IsPlatformEnum_1("1", "是"),
+	IsPlatformEnum_0("0", "否");
 
 	private String code;
 	private String name;

@@ -481,7 +481,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return resultMap;
 		}
 
-		CompanyInf companyInf = companyInfFacade.getCompanyInfByIsPlatform(IsPlatformEnum.ISOPEN_TRUE.getCode());
+		CompanyInf companyInf = companyInfFacade.getCompanyInfByIsPlatform(IsPlatformEnum.IsPlatformEnum_1.getCode());
 		if (companyInf == null) {
 			logger.error("## 查询平台企业账户信息为空");
 			resultMap.put("status", Boolean.FALSE);

@@ -50,7 +50,7 @@ public class AccountTransationServiceConfig extends DubboCustomerConfig {
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("executeTransfer");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(60000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		

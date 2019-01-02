@@ -112,7 +112,7 @@ public class CompanyController {
 			return resultMap;
 		}
 		CompanyInf companyInf = getCompanyInf(req);
-		if (IsPlatformEnum.ISOPEN_TRUE.getCode().equals(companyInf.getIsPlatform())) {
+		if (IsPlatformEnum.IsPlatformEnum_1.getCode().equals(companyInf.getIsPlatform())) {
 			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
 			if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
 				resultMap.put("status", Boolean.FALSE);
@@ -161,7 +161,7 @@ public class CompanyController {
 			}
 		}
 		CompanyInf companyInf = getCompanyInf(req);
-		if (!companyInfCode.getIsPlatform().equals(companyInf.getIsPlatform()) && !companyInf.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())) {
+		if (!companyInfCode.getIsPlatform().equals(companyInf.getIsPlatform()) && !companyInf.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_0.getCode())) {
 			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
 			if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
 				resultMap.put("status", Boolean.FALSE);
@@ -264,7 +264,7 @@ public class CompanyController {
 
 		InaccountOrder order = new InaccountOrder();
 		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
-		if (IsOpenAccountEnum.ISOPEN_FALSE.getCode().equals(company.getIsOpen())) {
+		if (IsPlatformEnum.IsPlatformEnum_0.getCode().equals(company.getIsPlatform())) {
 			order.setCompanyId(companyId);
 		}
 		try {
@@ -288,7 +288,7 @@ public class CompanyController {
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		try {
 			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
-			if (IsPlatformEnum.ISOPEN_TRUE.getCode().equals(company.getIsPlatform())) {
+			if (IsPlatformEnum.IsPlatformEnum_1.getCode().equals(company.getIsPlatform())) {
 				resultMap = companyService.addCompanyTransferCommit(req);
 			} else {
 				resultMap = companyService.updateCompanyTransferStat(req);
@@ -311,7 +311,7 @@ public class CompanyController {
 		InaccountOrder inaccountOrder = new InaccountOrder();
 		inaccountOrder.setOrderId(orderId);
 		CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
-		if (IsPlatformEnum.ISOPEN_FALSE.getCode().equals(company.getIsPlatform())) {
+		if (IsPlatformEnum.IsPlatformEnum_0.getCode().equals(company.getIsPlatform())) {
 			inaccountOrder.setCompanyId(company.getCompanyId());
 		}
 		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);

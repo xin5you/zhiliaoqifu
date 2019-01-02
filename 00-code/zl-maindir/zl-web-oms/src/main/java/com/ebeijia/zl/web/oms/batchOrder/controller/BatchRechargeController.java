@@ -90,7 +90,7 @@ public class BatchRechargeController {
 		CompanyInf company = new CompanyInf();
 		company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
-		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())).collect(Collectors.toList());
+		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_0.getCode())).collect(Collectors.toList());
 		
 		/*SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (!StringUtil.isNullOrEmpty(order.getStartTime())) {
@@ -125,7 +125,7 @@ public class BatchRechargeController {
 		CompanyInf company = new CompanyInf();
 		company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
-		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.ISOPEN_FALSE.getCode())).collect(Collectors.toList());
+		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_0.getCode())).collect(Collectors.toList());
 		
 		List<BillingType> bList = billingTypeInfService.getBillingTypeInfList(new BillingType());
 		List<BillingType> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getbId().equals(t.getBId())).collect(Collectors.toList());
