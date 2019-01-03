@@ -13,14 +13,15 @@ import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrder;
-import com.ebeijia.zl.shop.dao.order.service.*;
+import com.ebeijia.zl.shop.dao.order.service.ITbEcomDmsRelatedDetailService;
+import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderDetailsService;
+import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
-import com.sun.tools.javadoc.Start;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,10 +80,11 @@ public class PayService implements IPayService {
         if (object instanceof String) {
             result = (String) object;
         } else {
-            throw new BizException();
+            logger.error("支付失败" + object.toString());
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "支付失败，请检查余额");
         }
         //判断result
-
+        logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s",payInfo,openId,dmsRelatedKey,desc,result));
         return ResultState.OK;
     }
 
@@ -104,10 +106,10 @@ public class PayService implements IPayService {
         int startNum = 0;
         int pageSize = 20;
         try {
-                startNum = Integer.valueOf(start);
-                startNum = startNum < 0 ? 0 : startNum;
-                pageSize = Integer.valueOf(limit);
-                pageSize = pageSize > 100 ? 100 : pageSize;
+            startNum = Integer.valueOf(start);
+            startNum = startNum < 0 ? 0 : startNum;
+            pageSize = Integer.valueOf(limit);
+            pageSize = pageSize > 100 ? 100 : pageSize;
         } catch (Exception ignore) {
         }
         return accountQueryFacade.getAccountLogPage(startNum, pageSize, req);

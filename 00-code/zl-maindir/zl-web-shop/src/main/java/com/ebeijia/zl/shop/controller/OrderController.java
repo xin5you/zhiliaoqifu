@@ -74,7 +74,6 @@ public class OrderController {
         return new JsonResult<>(platfOrder);
     }
 
-
     @TokenCheck(force = true)
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
@@ -98,6 +97,5 @@ public class OrderController {
         PageInfo<OrderDetailInfo> orderDetailInfos = orderService.listOrderDetail(null,start,limit);
         return new JsonResult<>(orderDetailInfos);
     }
-
 
 }
