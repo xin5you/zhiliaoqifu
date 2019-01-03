@@ -89,7 +89,11 @@ var listRecharge = {
 	},
 	addOrderCommit:function(){
 		var orderId = $(this).attr('orderId');
+
 		Helper.confirm("您确认提交该订单吗？",function(){
+            $('#msg').modal({
+                backdrop : "static"
+            });
 		    $.ajax({								  
 	            url: Helper.getRootPath() + '/batch/recharge/addOrderCommit.do',
 	            type: 'post',
@@ -101,10 +105,12 @@ var listRecharge = {
 	            	if(result.status){
 	            		location.href=Helper.getRootPath() + '/batch/recharge/listRecharge.do?operStatus=1';
 	            	}else{
+                        $('#msg').modal('hide');
 	            		Helper.alter(result.msg);
 	            	}
 	            },
 	            error:function(){
+                    $('#msg').modal('hide');
 	            	Helper.alert("系统故障，请稍后再试");
 	            }
 	      });

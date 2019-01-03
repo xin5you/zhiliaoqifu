@@ -86,7 +86,11 @@ var listOpenAccount = {
 	},
 	addOrderCommit:function(){
 		var orderId = $(this).attr('orderId');
+
 		Helper.confirm("您确认提交该订单吗？",function(){
+            $('#msg').modal({
+                backdrop : "static"
+            });
 		    $.ajax({								  
 	            url: Helper.getRootPath() + '/batch/openAccount/addOrderCommit.do',
 	            type: 'post',
@@ -98,12 +102,15 @@ var listOpenAccount = {
 	            	if(result.status){
 	            		location.href=Helper.getRootPath() + '/batch/openAccount/listOpenAccount.do?operStatus=1';
 	            	}else{
+                        $('#msg').modal('hide');
 	            		Helper.alter(result.msg);
 	            		return false;
 	            	}
 	            },
 	            error:function(){
+                    $('#msg').modal('hide');
 	            	Helper.alert("系统故障，请稍后再试");
+                    return false;
 	            }
 	      });
 		});
