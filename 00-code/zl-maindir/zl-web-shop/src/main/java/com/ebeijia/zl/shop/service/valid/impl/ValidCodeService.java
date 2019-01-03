@@ -100,7 +100,9 @@ public class ValidCodeService implements IValidCodeService {
         String s = jedis.get(method + "CODE:" + phone);
 
         if (pwd != null && pwd.equals(s)) {
-            discardValidCode(phone,method);
+            if (!debug) {
+                discardValidCode(phone, method);
+            }
             return true;
         }
         return false;

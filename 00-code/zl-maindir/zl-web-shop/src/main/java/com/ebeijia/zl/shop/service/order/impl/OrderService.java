@@ -14,11 +14,11 @@ import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
 import com.ebeijia.zl.shop.dao.order.domain.*;
 import com.ebeijia.zl.shop.dao.order.service.*;
+import com.ebeijia.zl.shop.service.goods.IProductService;
 import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
-import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -61,7 +61,7 @@ public class OrderService implements IOrderService {
     private ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
 
     @Autowired
-    private ShopUtils shopUtils;
+    private IProductService productService;
 
     @Autowired
     private IPayService payService;
@@ -92,12 +92,9 @@ public class OrderService implements IOrderService {
         List<TbEcomOrderProductItem> subOrderItemList = new LinkedList<>();
         List<TbEcomPlatfShopOrder> subOrderList = new LinkedList<>();
         //循环处理各渠道信息
-        for (String s : itemMap.keySet()) {
+        for (String ecom : itemMap.keySet()) {
             //根据Map构造子订单，这里用了简化逻辑
             TbEcomPlatfShopOrder shopOrder = initShopOrderObject(platfOrder);
-
-            //获取渠道代码
-            String ecom = s;
 
             //获取商品列表和购买数量
             HashMap<TbEcomGoodsProduct, Integer> productInfo = itemMap.get(ecom);
@@ -132,6 +129,8 @@ public class OrderService implements IOrderService {
             shopOrderDao.save(subOrder);
         }
         for (TbEcomOrderProductItem item : subOrderItemList) {
+            //处理库存
+            productService.productStoreConsumer(item.getProductId(), item.getProductNum());
             orderProductItemDao.save(item);
         }
         //校验信息
@@ -166,6 +165,9 @@ public class OrderService implements IOrderService {
         TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();
         updataInf.setSubOrderStatus("27");
         shopOrderDao.update(updataInf, new QueryWrapper<>(query));
+
+        TbEcomOrderProductItem productItem = orderProductItemDao.getOrderProductItemBySOrderId(updataInf.getSOrderId());
+        productService.productStoreRecover(productItem.getProductId(), productItem.getProductNum());
         //执行操作
         return order;
     }
@@ -189,6 +191,7 @@ public class OrderService implements IOrderService {
         //验证输入信息有效性，订单查询
         Long payAmount = getPayAmount(payInfo);
         TbEcomPlatfOrder order = platfOrderDao.getById(payInfo.getOrderId());
+        order.setDmsRelatedKey(dmsRelatedKey);
         if (order == null) {
             throw new BizException(NOT_FOUND, "订单不存在");
         }
@@ -213,6 +216,8 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "订单金额不正确");
         }
 
+        //存储所有订单item
+        List<TbEcomOrderProductItem> itemList = new LinkedList();
         //创建订单简介，用于账务流水
         StringBuilder descBuilder = new StringBuilder("购买");
 
@@ -223,6 +228,7 @@ public class OrderService implements IOrderService {
             platfShopOrder.setDmsRelatedKey(dmsRelatedKey);
             String sOrderId = platfShopOrder.getSOrderId();
             TbEcomOrderProductItem item = orderProductItemDao.getOrderProductItemBySOrderId(sOrderId);
+            itemList.add(item);
             TbEcomGoodsProduct product = productDao.getById(item.getProductId());
             descBuilder.append(item.getProductName());
             if (iterator.hasNext()) {
@@ -247,22 +253,19 @@ public class OrderService implements IOrderService {
             throw new BizException(ERROR, "子订单提交异常");
         }
 
-
         //处理订单支付过程，调用了payService
-        try {
-            if (ResultState.OK != payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString())) {
-                throw new BizException();
-            }
-        } catch (Exception e) {
-            if (e instanceof BizException) {
-                logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
-                throw (BizException) e;
-            }
+        if (ResultState.OK != payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString())) {
+            logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
+            throw new BizException(ResultState.ERROR,"支付失败");
         }
         //修改订单状态
         order.setPayStatus("2");
         //持久化并且锁版本加1
         order = orderUpdateLocker(order);
+        //实际库存调整
+        for (TbEcomOrderProductItem i : itemList) {
+            productService.productStoreChange(i.getProductId(), 0 - i.getProductNum());
+        }
         return order;
     }
 
@@ -281,7 +284,7 @@ public class OrderService implements IOrderService {
 
         TbEcomOrderProductItem orderProductItemBySOrderId = orderProductItemDao.getOrderProductItemBySOrderId(result.getOrder().getSOrderId());
         HashMap<String, Integer> map = new HashMap<>();
-        map.put(orderProductItemBySOrderId.getProductId(),orderProductItemBySOrderId.getProductNum());
+        map.put(orderProductItemBySOrderId.getProductId(), orderProductItemBySOrderId.getProductNum());
         subOrder.setAmount(map);
 
         Goods goodsQuery = new Goods();
@@ -326,6 +329,8 @@ public class OrderService implements IOrderService {
         }
         PageHelper.startPage(start, limit);
         List<TbEcomPlatfOrder> orderList = platfOrderDao.list(new QueryWrapper<>(query));
+
+        PageHelper.clearPage();
         LinkedList<OrderDetailInfo> result = new LinkedList<>();
         if (orderList != null) {
             for (TbEcomPlatfOrder order : orderList) {
@@ -400,7 +405,7 @@ public class OrderService implements IOrderService {
     //TODO 邮费计算规则需要调整
     private void processShopOrderPrice(TbEcomPlatfShopOrder shopOrder, List<TbEcomOrderProductItem> product) {
         AtomicReference<Long> orderPrice = new AtomicReference<>(0L);
-        product.stream().forEach(item -> orderPrice.updateAndGet(v -> v + item.getProductPrice()*item.getProductNum()));
+        product.stream().forEach(item -> orderPrice.updateAndGet(v -> v + item.getProductPrice() * item.getProductNum()));
         if (orderPrice.get().compareTo(0L) < 0) {
             logger.error("订单状态异常：" + product.toString());
             throw new BizException(500, "订单价格异常");

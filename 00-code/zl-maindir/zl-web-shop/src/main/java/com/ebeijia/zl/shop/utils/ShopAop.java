@@ -48,11 +48,12 @@ public class ShopAop {
         //TODO 优化性能，避免执行不必要的逻辑
         doLog(pj);
         String token = getToken();
-        logger.info(token);
-
+        if (!token.contains(":")) {
+            throw new AdviceMessenger(ResultState.UNAUTHORIZED, "请登录");
+        }
+        String memberId = token.substring(0, token.indexOf(":"));
         if (token != null) {
-            String s = jedis.get(token);
-            logger.info("[user:" + s + "]");
+            String s = jedis.hget("TOKEN" + memberId, token);
             //TODO fake login user
             if (StringUtils.isEmpty(s)) {
                 throw new BizException(NOT_ACCEPTABLE, "参数异常");
