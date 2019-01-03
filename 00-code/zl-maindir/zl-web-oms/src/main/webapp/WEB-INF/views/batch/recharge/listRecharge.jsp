@@ -151,5 +151,13 @@
 				      </form>
 			   </div>
 	    </div>
+	   <div id="msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 200px;">
+		   <div class="modal-header">
+
+			   <h3 id="commodityInfModal_h">温馨提示</h3>
+		   </div>
+		   <br/><br/><br/>
+		   <h3 align="center">信息正在处理......</h3>
+	   </div>
 </body>
 </html>

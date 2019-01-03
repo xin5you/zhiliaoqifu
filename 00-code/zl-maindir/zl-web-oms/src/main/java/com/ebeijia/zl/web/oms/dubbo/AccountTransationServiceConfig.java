@@ -37,7 +37,7 @@ public class AccountTransationServiceConfig extends DubboCustomerConfig {
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("executeRecharge");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
