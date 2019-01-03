@@ -79,7 +79,8 @@ public class AuthService implements IAuthService {
         }
 
         String token = memberId + ":" + IdUtil.getNextId();
-        jedis2.del(memberId + ":*");
+        //TODO
+        jedis2.del("TOKEN"+ memberId);
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setUserId(userInf.getUserId());
         memberInfo.setMemberId(memberId);
@@ -89,7 +90,8 @@ public class AuthService implements IAuthService {
         //将获取到的token存入redis缓存;
 
         try {
-            jedis2.set(token, ShopUtils.MAPPER.writeValueAsString(memberInfo), 3600 * 24);
+            jedis2.hset("TOKEN"+ memberId, token ,ShopUtils.MAPPER.writeValueAsString(memberInfo));
+            jedis2.expire("TOKEN"+ memberId,3600*24);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

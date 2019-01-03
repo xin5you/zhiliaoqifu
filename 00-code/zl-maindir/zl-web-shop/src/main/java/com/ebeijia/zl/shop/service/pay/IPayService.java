@@ -3,6 +3,7 @@ package com.ebeijia.zl.shop.service.pay;
 import com.ebeijia.zl.config.ShopConfig;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
@@ -19,8 +20,9 @@ public interface IPayService {
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc);
 
-    @Cacheable(cacheNames = ShopConfig.ID + "LISTDEALS")
-    PageInfo<AccountLogVO> listDeals(String range, String userId, String type, String start, String limit);
+    PageInfo<AccountLogVO> listDeals(String range, String type, String start, String limit);
 
     List<AccountVO> listAccountDetail(String openId, String session);
+
+    List<TbEcomPayOrderDetails> getDeal(String dms);
 }

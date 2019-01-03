@@ -6,6 +6,7 @@ import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.service.pay.ICardService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
@@ -90,7 +91,7 @@ public class PayController {
     }
 
 
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("列出可用专项账户类型与余额")
     @RequestMapping(value = "/balance/list/", method = RequestMethod.GET)
     public JsonResult<List<AccountVO>> listAccountDetail(@RequestParam("session") String session) {
@@ -100,16 +101,33 @@ public class PayController {
     }
 
     //交易流水
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type,@RequestParam(value = "range",required = false) String range ,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-        MemberInfo memberInfo = shopUtils.getSession();
-        PageInfo<AccountLogVO> deals = payService.listDeals(range, memberInfo.getOpenId(), type, start, limit);
+
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, type, start, limit);
+        return new JsonResult<>(deals);
+    }
+
+    //交易流水
+    @TokenCheck(force = true)
+    @ApiOperation("列出交易流水记录")
+    @RequestMapping(value = "/deal/list", method = RequestMethod.GET)
+    public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range",required = false) String range ,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, null, start, limit);
         return new JsonResult<>(deals);
     }
 
 
+    //交易流水
+    @TokenCheck(force = true)
+    @ApiOperation("获取订单DMS对应的流水记录")
+    @RequestMapping(value = "/deal/get/{dms}", method = RequestMethod.GET)
+    public JsonResult<List<TbEcomPayOrderDetails>> getDealInfoByDms(@PathVariable("dms") String dms) {
+        List<TbEcomPayOrderDetails> deals = payService.getDeal(dms);
+        return new JsonResult<>(deals);
+    }
 
     /**
      * 托管账户转账

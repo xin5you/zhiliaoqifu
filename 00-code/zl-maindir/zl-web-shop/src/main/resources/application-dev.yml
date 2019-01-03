@@ -188,4 +188,6 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
-
+sms:
+  enable: false
+  debug: true

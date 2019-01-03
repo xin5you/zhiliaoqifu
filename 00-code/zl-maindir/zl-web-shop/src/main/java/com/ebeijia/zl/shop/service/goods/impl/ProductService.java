@@ -2,7 +2,9 @@ package com.ebeijia.zl.shop.service.goods.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.goods.domain.*;
 import com.ebeijia.zl.shop.dao.goods.service.*;
 import com.ebeijia.zl.shop.service.category.ICategoryService;
@@ -10,8 +12,9 @@ import com.ebeijia.zl.shop.service.goods.IProductService;
 import com.ebeijia.zl.shop.vo.GoodsDetailInfo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,6 +46,7 @@ public class ProductService implements IProductService {
     @Autowired
     private ITbEcomGoodsSpecService goodsSpecDao;
 
+    private static Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @Override
     public PageInfo<Goods> listGoods(String billingType, String catid, String orderby, Integer start, Integer limit) {
@@ -86,7 +90,6 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    @Cacheable("GOODS_DETAIL")
     public GoodsDetailInfo getDetail(String goodsId) {
         if (!vaildId(goodsId)) {
             return null;
@@ -196,4 +199,45 @@ public class ProductService implements IProductService {
         }
         return true;
     }
+
+    @Override
+    public void productStoreConsumer(String productId, int i) {
+        if (i==0){
+            return;
+        }
+        TbEcomGoodsProduct product = productDao.getById(productId);
+        Integer isStore = product.getIsStore() - i ;
+        if (isStore.compareTo(0)<0){
+            throw new BizException(ResultState.NOT_ACCEPTABLE,"库存不足");
+        }
+        product.setIsStore(isStore);
+        productDao.updateById(product);
+    }
+
+    @Override
+    public void productStoreRecover(String productId, int i) {
+        if (i==0){
+            return;
+        }
+        TbEcomGoodsProduct product = productDao.getById(productId);
+        Integer isStore = product.getIsStore()+i;
+        product.setIsStore(isStore);
+        productDao.updateById(product);
+
+    }
+
+    @Override
+    public void productStoreChange(String productId, int i) {
+        if (i==0){
+            return;
+        }
+        TbEcomGoodsProduct product = productDao.getById(productId);
+        Integer enableStore = product.getEnableStore()+i;
+        if (enableStore.compareTo(0)<0){
+            throw new BizException(ResultState.NOT_ACCEPTABLE,"库存调整异常");
+        }
+        product.setEnableStore(enableStore);
+        productDao.updateById(product);
+    }
+
 }

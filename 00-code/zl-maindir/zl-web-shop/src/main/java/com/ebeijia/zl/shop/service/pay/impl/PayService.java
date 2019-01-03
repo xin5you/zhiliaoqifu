@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.service.pay.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
@@ -13,6 +14,7 @@ import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrder;
+import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomDmsRelatedDetailService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderDetailsService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderService;
@@ -20,6 +22,7 @@ import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.DealInfo;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -75,17 +78,41 @@ public class PayService implements IPayService {
 
         //请求支付
         String result;
-        BaseResult baseResult = executeConsume(payInfo, openId, dmsRelatedKey, desc);
+        List<AccountTxnVo> txnList = buildTxnVo(payInfo);
+        BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc);
         Object object = baseResult.getObject();
         if (object instanceof String) {
             result = (String) object;
         } else {
-            logger.error("支付失败" + object.toString());
+            logger.error("支付失败,参数%s,%s,%s,%s", payInfo, openId, dmsRelatedKey, desc);
             throw new BizException(ResultState.NOT_ACCEPTABLE, "支付失败，请检查余额");
         }
         //判断result
-        logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s",payInfo,openId,dmsRelatedKey,desc,result));
+        logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s", payInfo, openId, dmsRelatedKey, desc, result));
+
+        //构造payOrderDetail对象
+        for (AccountTxnVo v : txnList) {
+            TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
+            payOrderDetails.setDebitAccountCode(v.getTxnBId());
+            payOrderDetails.setDebitAccountType(v.getTxnBId().substring(0,1));
+            payOrderDetails.setDebitPrice(v.getTxnAmt().longValue());
+            payOrderDetails.setDmsRelatedKey(dmsRelatedKey);
+            payOrderDetails.setOutOrderId(payInfo.getOrderId());
+            payOrderDetails.setPayStatus("2");
+            payOrderDetailsDao.save(payOrderDetails);
+        }
+
         return ResultState.OK;
+    }
+
+    private TbEcomPayOrderDetails initPayOrderDetailObject() {
+        TbEcomPayOrderDetails payOrderDetails = new TbEcomPayOrderDetails();
+        payOrderDetails.setPayDetailsId(IdUtil.getNextId());
+        payOrderDetails.setCreateTime(System.currentTimeMillis());
+        payOrderDetails.setCreateUser("ShopSystem");
+        payOrderDetails.setDataStat("0");
+        payOrderDetails.setLockVersion(0);
+        return payOrderDetails;
     }
 
     private TbEcomPayOrder initPayOrderObject() {
@@ -97,9 +124,16 @@ public class PayService implements IPayService {
     }
 
     @Override
-    public PageInfo<AccountLogVO> listDeals(String range, String openId, String type, String start, String limit) {
+    public PageInfo<AccountLogVO> listDeals(String range, String type, String start, String limit) {
+
+        MemberInfo memberInfo = shopUtils.getSession();
+        String openId = memberInfo.getOpenId();
         AccountQueryReqVo req = new AccountQueryReqVo();
         setQueryDateRange(req, range);
+        SpecAccountTypeEnum bId = SpecAccountTypeEnum.findByBId(type);
+        if (bId!=null) {
+            req.setBId(bId.getbId());
+        }
         req.setUserType(UserType.TYPE100.getCode());
         req.setUserChnlId(openId);
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
@@ -155,6 +189,13 @@ public class PayService implements IPayService {
         return listAccountDetail(openId);
     }
 
+    @Override
+    public List<TbEcomPayOrderDetails> getDeal(String dms) {
+        TbEcomPayOrderDetails details = new TbEcomPayOrderDetails();
+        details.setDmsRelatedKey(dms);
+        return payOrderDetailsDao.list(new QueryWrapper<>(details));
+    }
+
 
     private List<AccountVO> listAccountDetail(String openId) {
         AccountQueryReqVo req = new AccountQueryReqVo();
@@ -168,14 +209,14 @@ public class PayService implements IPayService {
     /**
      * 商城消费
      *
-     * @param payInfo
+     * @param consumeList
      * @param openId
      * @param dmsRelatedKey
      * @param desc
      * @return
      * @throws Exception
      */
-    private BaseResult executeConsume(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
+    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String openId, String dmsRelatedKey, String desc) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         //交易与渠道
         req.setTransId(TransCode.CW10.getCode());
@@ -184,7 +225,7 @@ public class PayService implements IPayService {
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
         req.setUserChnlId(openId);
         req.setUserType(UserType.TYPE100.getCode());
-        req.setTransList(buildTxnVo(payInfo));
+        req.setTransList(consumeList);
         req.setDmsRelatedKey(dmsRelatedKey);
         if (desc == null) {
             desc = "商城消费";
