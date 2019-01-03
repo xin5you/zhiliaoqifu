@@ -34,7 +34,7 @@ public class CardService implements ICardService {
         try {
             bankMap = new ObjectMapper().readValue(bankKv, bankMap.getClass());
             bankKv = null;
-            System.out.println(bankMap.size());
+            logger.info(String.format("成功初始化了%s个银行简称",bankMap.size()));
         } catch (IOException e) {
             e.printStackTrace();
         }

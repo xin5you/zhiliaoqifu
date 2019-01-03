@@ -97,7 +97,7 @@
 	   and p.product_id = #{primaryKey}
 	</select>
 
-	<select id="getGoodsProductList" parameterMap="TbEcomGoodsProduct" resultMap="TbEcomGoodsProduct">
+	<select id="getGoodsProductList" parameterType="TbEcomGoodsProduct" resultType="TbEcomGoodsProduct">
 		select
 			<include refid="goodsProductColumns"/>
 		from
@@ -107,7 +107,7 @@
 		order by p.create_time desc
 	</select>
 
-	<select id="getGoodsProductBySkuCode" parameterMap="String" resultMap="TbEcomGoodsProduct">
+	<select id="getGoodsProductBySkuCode" parameterType="String" resultType="TbEcomGoodsProduct">
 		select
 			<include refid="goodsProductColumns"/>
 		from

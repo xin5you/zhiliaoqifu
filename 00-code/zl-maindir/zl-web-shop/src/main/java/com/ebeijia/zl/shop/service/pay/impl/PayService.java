@@ -224,6 +224,7 @@ public class PayService implements IPayService {
             accountTxnVo.setTxnAmt(BigDecimal.valueOf(payInfo.getCostB()));
             result.add(accountTxnVo);
         }
+
         return result;
     }
 }
