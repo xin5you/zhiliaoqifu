@@ -126,6 +126,7 @@ public class OrderService implements IOrderService {
 
         //持久化 主订单、子订单、订单商品、收货地址
         platfOrderDao.save(platfOrder);
+        orderShipDao.save(ship);
 
         for (TbEcomPlatfShopOrder subOrder : subOrderList) {
             shopOrderDao.save(subOrder);
@@ -133,7 +134,6 @@ public class OrderService implements IOrderService {
         for (TbEcomOrderProductItem item : subOrderItemList) {
             orderProductItemDao.save(item);
         }
-
         //校验信息
         return platfOrder;
     }
@@ -160,7 +160,7 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "您的订单无需取消");
         }
         order.setPayStatus("8");
-        platfOrderDao.save(order);
+        platfOrderDao.updateById(order);
         TbEcomPlatfShopOrder query = new TbEcomPlatfShopOrder();
         query.setOrderId(order.getOrderId());
         TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();

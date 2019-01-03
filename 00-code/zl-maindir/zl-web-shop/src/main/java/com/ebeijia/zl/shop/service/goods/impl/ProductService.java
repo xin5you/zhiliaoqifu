@@ -80,12 +80,10 @@ public class ProductService implements IProductService {
         return page;
     }
 
-
     @Override
     public PageInfo<Goods> listGoods(String billingType, String orderby, Integer start, Integer limit) {
         return listGoods(billingType, null, orderby, start, limit);
     }
-
 
     @Override
     @Cacheable("GOODS_DETAIL")
