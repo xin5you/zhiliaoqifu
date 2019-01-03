@@ -29,6 +29,7 @@
         from
           <include refid="tableName"/>
         where data_stat = '0'
+        order by create_time desc
     </select>
 
 </mapper>

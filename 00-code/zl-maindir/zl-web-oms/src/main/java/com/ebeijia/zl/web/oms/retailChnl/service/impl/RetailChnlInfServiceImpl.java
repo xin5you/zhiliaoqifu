@@ -289,7 +289,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         order.setUpdateTime(System.currentTimeMillis());
         order.setLockVersion(0);
 
-        if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
+        /*if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
             logger.error("## 上传图片为空");
             return 0;
         }
@@ -312,7 +312,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } catch (Exception e) {
             logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
             return 0;
-        }
+        }*/
 
         /*Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
         if (resultMap.get("status").equals(false)) {
@@ -576,7 +576,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         order.setUpdateTime(System.currentTimeMillis());
         order.setLockVersion(order.getLockVersion() + 1);
 
-        if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
+        /*if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
             logger.error("## 上传图片为空");
             return 0;
         }
@@ -599,7 +599,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } catch (Exception e) {
             logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
             return 0;
-        }
+        }*/
 
         /*Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
         if (resultMap.get("status").equals(false)) {

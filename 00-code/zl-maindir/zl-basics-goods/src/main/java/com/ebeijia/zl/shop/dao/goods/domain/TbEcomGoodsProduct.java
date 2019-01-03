@@ -168,6 +168,8 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
 
+    @TableField(exist = false)
+    private String isDefault;
 
     @Override
     protected Serializable pkVal() { 

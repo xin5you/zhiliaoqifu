@@ -13,5 +13,18 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
  */
 @Mapper
 public interface TbEcomGoodsBillingMapper extends BaseMapper<TbEcomGoodsBilling> {
-	
+
+	/**
+	 * 根据goodsId查询商品关联表信息
+	 * @param goodsId
+	 * @return
+	 */
+	TbEcomGoodsBilling getGoodsBillingByGoodsId(String goodsId);
+
+	/**
+	 * 新增商品专项类型关联表
+	 * @param ecomGoodsBilling
+	 * @return
+	 */
+	int insert(TbEcomGoodsBilling ecomGoodsBilling);
 }

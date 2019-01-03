@@ -17,4 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbEcomGoodsBillingService extends ServiceImpl<TbEcomGoodsBillingMapper, TbEcomGoodsBilling> implements ITbEcomGoodsBillingService{
 
+    @Override
+    public TbEcomGoodsBilling getGoodsBillingByGoodsId(String goodsId) {
+        return baseMapper.getGoodsBillingByGoodsId(goodsId);
+    }
+
+    @Override
+    public int insert(TbEcomGoodsBilling ecomGoodsBilling) {
+        return baseMapper.insert(ecomGoodsBilling);
+    }
 }

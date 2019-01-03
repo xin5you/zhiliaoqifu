@@ -34,7 +34,7 @@ var listGoodsSpecValues = {
             },
             messages: {
                 spec_order: { required: "请输入规格值序号"},
-                spec_type: { required: "请输入规格值类型"}
+                spec_type: { required: "请选择规格值类型"}
             },
             invalidHandler: function(form, validator) {
             },
@@ -113,7 +113,8 @@ var listGoodsSpecValues = {
         $("#spec_image").val(specImageFile);
     },
 	searchReset : function(){
-		Helper.post('/goodsManage/goodsSpec/getGoodsSpecValuesList');
+	    var specId = $("#spec_id").val();
+		Helper.post('/goodsManage/goodsSpec/getGoodsSpecValuesList?specId='+specId);
 	},
 	intoAddGoodsSpecValues : function(){
         listGoodsSpecValues.loadModal(1, $(this).attr('specValueId'));
@@ -145,7 +146,8 @@ var listGoodsSpecValues = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
+                return false;
             }
         });
     },
@@ -171,7 +173,7 @@ var listGoodsSpecValues = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -199,9 +201,9 @@ var listGoodsSpecValues = {
 						return false;
 					}
 				},
-				error : function(){
-					Helper.alert(data.msg);
-				}
+                error : function() {
+                    Helper.alert("网络异常，请稍后再试");
+                }
 			});
 		});
 	},
@@ -225,11 +227,18 @@ var listGoodsSpecValues = {
             },
             success : function (data) {
             	$('#spec_value_id').val(data.specValueId);
-            	$('#spec_value').val(data.specValue);
-            	$('#spec_order').val(data.specOrder);
                 $('#spec_type').val(data.specType);
+                $('#spec_order').val(data.specOrder);
+            	$('#spec_value').val(data.specValue);
             	$('#spec_image').val(data.specImage);
                 $('#remarks').val(data.remarks);
+                if ($('#spec_type').val() == '0') {
+                    $("#specImageFile").hide();
+                    $("#spec_value").removeAttr('disabled');
+                } else {
+                    $("#specImageFile").show();
+                    $("#spec_value").attr('disabled', "true");
+                }
             },
             error : function(){
             	Helper.alert("系统故障，请稍后再试");
@@ -249,12 +258,12 @@ var listGoodsSpecValues = {
 	    var specType = $('#spec_type').val();
         if (specType == '0') {
             $("#spec_image").attr('disabled', "true");
-            $("#specImageFile").attr('disabled', "true");
+            $("#specImageFile").hide();
             $("#spec_value").removeAttr('disabled');
         } else if (specType == '1') {
             $("#spec_value").attr('disabled', "true");
             $("#spec_image").removeAttr('disabled');
-            $("#specImageFile").removeAttr('disabled');
+            $("#specImageFile").show();
         }
     }
 }

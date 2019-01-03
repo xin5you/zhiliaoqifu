@@ -33,7 +33,7 @@
 							<tr>
 								<th></th>
 								<th>Sku代码</th>
-								<th>分销商名称</th>
+								<th>供应商代码</th>
 								<th>上下架状态</th>
 								<th>可用库存</th>
 								<th>总库存</th>
@@ -120,6 +120,18 @@
 							<label class="control-label"><span class="f_req">* </span>Sku代码：</label>
 							<div class="controls">
 								<input type="text" class="span3" name="sku_code" id="sku_code" maxlength="25"/>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">是否默认：</label>
+							<div class="controls">
+								<select name="default_sku_code" id="default_sku_code" class="span3">
+									<option th:each="g,gStat : ${isDefaultList}" th:value="${g.code}">
+										<span th:text="${g.name}"></span>
+									</option>
+
+								</select>
 								<span class="help-block"></span>
 							</div>
 						</div>

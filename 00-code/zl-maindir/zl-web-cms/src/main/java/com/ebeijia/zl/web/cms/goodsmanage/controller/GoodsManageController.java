@@ -12,7 +12,9 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
+import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.shop.dao.goods.domain.*;
 import com.ebeijia.zl.shop.dao.goods.service.*;
@@ -62,7 +64,7 @@ public class GoodsManageController {
 	private ITbEcomGoodsGalleryService ecomGoodsGalleryService;
 
 	@Autowired
-	private RetailChnlInfFacade retailChnlInfFacade;
+	private ProviderInfFacade providerInfFacade;
 
 	/**
 	 * 商品规格信息列表（分页）
@@ -156,7 +158,9 @@ public class GoodsManageController {
 	public BaseResult<Object> deleteGoodsSpec(HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
-			TbEcomSpecification ecomSpecification = getTbEcomSpecification(req);
+			String specId = req.getParameter("specId");
+			TbEcomSpecification ecomSpecification = ecomSpecificationService.getById(specId);
+			ecomSpecification.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
 			result = goodsManageService.deleteGoodsSpec(ecomSpecification);
 		} catch (BizHandlerException e) {
 			logger.error("## 删除商品规格图片异常", e.getMessage());
@@ -299,7 +303,9 @@ public class GoodsManageController {
 	public BaseResult<Object> deleteGoodsSpecValues(HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
-			TbEcomSpecValues specValues = getTbEcomSpecValues(req);
+			String specValueId = req.getParameter("specValueId");
+			TbEcomSpecValues specValues = ecomSpecValuesService.getById(specValueId);
+			specValues.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
 			result = goodsManageService.deleteGoodsSpecValues(specValues);
 		} catch (BizHandlerException e) {
 			logger.error("## 删除商品规格值图片异常", e.getMessage());
@@ -347,9 +353,11 @@ public class GoodsManageController {
 		specValues.setSpecType(specType);
 		if (GoodsSpecTypeEnum.GoodsSpecTypeEnum_1.getCode().equals(specType)) {
 			specValues.setSpecImage(specImage);
+			specValues.setSpecValue("");
 		}
 		if (GoodsSpecTypeEnum.GoodsSpecTypeEnum_0.getCode().equals(specType)) {
 			specValues.setSpecValue(specValue);
+			specValues.setSpecImage("");
 		}
 		specValues.setRemarks(remarks);
 		return specValues;
@@ -367,18 +375,20 @@ public class GoodsManageController {
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<TbEcomGoods> pageInfo = new PageInfo<>();
-		List<RetailChnlInf> retailChnlInfList = new ArrayList<>();
+		List<ProviderInf> providerInfList = new ArrayList<>();
 		List<TbEcomGoodsDetail> goodsDetailList = new ArrayList<>();
 		try {
 			pageInfo = goodsManageService.getGoodsInfListPage(startNum, pageSize, ecomGoods);
-			retailChnlInfList = retailChnlInfFacade.getRetailChnlInfList(new RetailChnlInf());
+			ProviderInf providerInf = new ProviderInf();
+			providerInf.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
+			providerInfList = providerInfFacade.getProviderInfList(providerInf);
 			goodsDetailList = ecomGoodsDetailService.getGoodsDetailList(new TbEcomGoodsDetail());
 		} catch (Exception e) {
 			logger.error("## 查询商品Spu信息异常{}", e);
 		}
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("ecomGoods", ecomGoods);
-		mv.addObject("ecomCodeList", retailChnlInfList);
+		mv.addObject("ecomCodeList", providerInfList);
 		mv.addObject("goodsIsHotList", GoodsIsHotEnum.values());
 		mv.addObject("isDisabledList", IsDisabledEnum.values());
 		mv.addObject("haveGroupsList", HaveGroupsEnum.values());
@@ -505,7 +515,7 @@ public class GoodsManageController {
 		String bId = req.getParameter("b_id");
 		String unit = req.getParameter("unit");
 		String weight = req.getParameter("weight");
-		String defaultSkuCode = req.getParameter("default_sku_code");
+		/*String defaultSkuCode = req.getParameter("default_sku_code");*/
 		/*String marketEnable = req.getParameter("market_enable");*/
 		String brief = req.getParameter("brief");
 		String goodsDetail = req.getParameter("goods_detail");
@@ -541,19 +551,31 @@ public class GoodsManageController {
 		goods.setBId(bId);
 		goods.setUnit(unit);
 		goods.setWeight(new BigDecimal(weight));
-		goods.setDefaultSkuCode(defaultSkuCode);
+		/*goods.setDefaultSkuCode(defaultSkuCode);*/
 		/*goods.setMarketEnable(marketEnable);*/
 		goods.setMarketEnable(MarketEnableEnum.MarketEnableEnum_1.getCode());
 		goods.setBrief(brief);
 		goods.setGoodsDetail(goodsDetail);
 		goods.setHaveGroups(haveGroups);
-		goods.setHaveParams(havaParams);
-		goods.setHaveSpec(haveSpec);
+		if (!StringUtil.isNullOrEmpty(havaParams)) {
+			goods.setHaveParams(havaParams);
+		}
+		if (!StringUtil.isNullOrEmpty(haveSpec)) {
+			goods.setHaveSpec(haveSpec);
+		}
+		if (!StringUtil.isNullOrEmpty(ponumber)) {
+			goods.setPonumber(Integer.valueOf(ponumber));
+		}
+		if (!StringUtil.isNullOrEmpty(goodsSord)) {
+			goods.setGoodsSord(Integer.valueOf(goodsSord));
+		}
+		if (!StringUtil.isNullOrEmpty(goodsWeight)) {
+			goods.setGoodsWeight(goodsWeight);
+		}
+		if (!StringUtil.isNullOrEmpty(grade)) {
+			goods.setGrade(Integer.valueOf(grade));
+		}
 		goods.setIsDisabled(isDisabled);
-		goods.setPonumber(Integer.valueOf(ponumber));
-		goods.setGoodsSord(Integer.valueOf(goodsSord));
-		goods.setGoodsWeight(goodsWeight);
-		goods.setGrade(Integer.valueOf(grade));
 		goods.setIsHot(isHot);
 		goods.setGoodsImg(goodsImg);
 		goods.setRemarks(remarks);
@@ -733,6 +755,7 @@ public class GoodsManageController {
 		mv.addObject("ecomGoodsProduct", ecomGoodsProduct);
 		mv.addObject("goodsInf", goodsInf);
 		mv.addObject("productEnableList", MarketEnableEnum.values());
+		mv.addObject("isDefaultList", IsDefaultEnum.values());
 		return mv;
 	}
 
@@ -872,6 +895,7 @@ public class GoodsManageController {
 		String metaDescription = req.getParameter("meta_description");
 		String picUrl = req.getParameter("pic_url");
 		String remarks = req.getParameter("remarks");
+		String defaultSkuCode = req.getParameter("default_sku_code");
 
 		TbEcomGoodsProduct goodsProduct = null;
 		if (!StringUtil.isNullOrEmpty(productId)) {
@@ -901,6 +925,7 @@ public class GoodsManageController {
 		goodsProduct.setMetaDescription(metaDescription);
 		goodsProduct.setPicUrl(picUrl);
 		goodsProduct.setRemarks(remarks);
+		goodsProduct.setIsDefault(defaultSkuCode);
 		return goodsProduct;
 	}
 

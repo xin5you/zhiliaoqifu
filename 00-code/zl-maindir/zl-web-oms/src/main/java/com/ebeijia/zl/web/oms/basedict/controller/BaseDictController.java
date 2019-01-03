@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ebeijia.zl.common.core.domain.BaseDict;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,8 @@ public class BaseDictController {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑字典信息失败");
 		}
-		jedisClusterUtils.hset("TB_BASE_DICT_KV", "OMS_BATCH_OPEN_ACCOUNT_EXCEL_PATH", baseDict.getDictValue());
+
+		jedisClusterUtils.hset(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, baseDict.getDictCode(), baseDict.getDictValue());
 
 		resultMap.put("status", Boolean.TRUE);
 		return resultMap;
