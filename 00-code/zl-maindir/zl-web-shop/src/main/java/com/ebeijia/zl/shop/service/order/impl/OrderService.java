@@ -165,8 +165,10 @@ public class OrderService implements IOrderService {
         TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();
         updataInf.setSubOrderStatus("27");
         shopOrderDao.update(updataInf, new QueryWrapper<>(query));
-
-        TbEcomOrderProductItem productItem = orderProductItemDao.getOrderProductItemBySOrderId(updataInf.getSOrderId());
+        updataInf = shopOrderDao.getOne( new QueryWrapper<>(query));
+        TbEcomOrderProductItem queryItem = new TbEcomOrderProductItem();
+        queryItem.setSOrderId(updataInf.getSOrderId());
+        TbEcomOrderProductItem productItem = orderProductItemDao.getOne(new QueryWrapper<>(queryItem));
         productService.productStoreRecover(productItem.getProductId(), productItem.getProductNum());
         //执行操作
         return order;
@@ -179,7 +181,6 @@ public class OrderService implements IOrderService {
      * @return
      */
     @Override
-    @ShopTransactional
     public TbEcomPlatfOrder applyOrder(PayInfo payInfo) {
         logger.info(String.format("支付订单开始，参数%s", payInfo));
         MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
@@ -328,7 +329,9 @@ public class OrderService implements IOrderService {
             query.setPayStatus(orderStat);
         }
         PageHelper.startPage(start, limit);
-        List<TbEcomPlatfOrder> orderList = platfOrderDao.list(new QueryWrapper<>(query));
+        QueryWrapper<TbEcomPlatfOrder> queryWrapper = new QueryWrapper<>(query);
+        queryWrapper.orderByDesc("create_time");
+        List<TbEcomPlatfOrder> orderList = platfOrderDao.list();
 
         PageHelper.clearPage();
         LinkedList<OrderDetailInfo> result = new LinkedList<>();

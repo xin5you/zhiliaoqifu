@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
-
 /**
  * Session AOP切面
  */
@@ -56,7 +54,7 @@ public class ShopAop {
             String s = jedis.hget("TOKEN" + memberId, token);
             //TODO fake login user
             if (StringUtils.isEmpty(s)) {
-                throw new BizException(NOT_ACCEPTABLE, "参数异常");
+                throw new BizException(ResultState.UNAUTHORIZED, "请重新登录");
             }
             //获得身份信息
             MemberInfo memberInfo = shopUtils.readValue(s, MemberInfo.class);

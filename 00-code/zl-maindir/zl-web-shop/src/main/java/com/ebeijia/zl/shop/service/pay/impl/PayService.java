@@ -32,9 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PayService implements IPayService {
@@ -94,7 +92,7 @@ public class PayService implements IPayService {
         for (AccountTxnVo v : txnList) {
             TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
             payOrderDetails.setDebitAccountCode(v.getTxnBId());
-            payOrderDetails.setDebitAccountType(v.getTxnBId().substring(0,1));
+            payOrderDetails.setDebitAccountType(v.getTxnBId().substring(0, 1));
             payOrderDetails.setDebitPrice(v.getTxnAmt().longValue());
             payOrderDetails.setDmsRelatedKey(dmsRelatedKey);
             payOrderDetails.setOutOrderId(payInfo.getOrderId());
@@ -131,9 +129,10 @@ public class PayService implements IPayService {
         AccountQueryReqVo req = new AccountQueryReqVo();
         setQueryDateRange(req, range);
         SpecAccountTypeEnum bId = SpecAccountTypeEnum.findByBId(type);
-        if (bId!=null) {
+        if (bId != null) {
             req.setBId(bId.getbId());
         }
+
         req.setUserType(UserType.TYPE100.getCode());
         req.setUserChnlId(openId);
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
@@ -145,6 +144,14 @@ public class PayService implements IPayService {
             pageSize = Integer.valueOf(limit);
             pageSize = pageSize > 100 ? 100 : pageSize;
         } catch (Exception ignore) {
+        }
+        //简单处理流水请求A、B分类
+        if ("B".equals(type)) {
+            req.setBId(null);
+            PageInfo<AccountLogVO> result = accountQueryFacade.getAccountLogPage(0, 2000, req);
+            result.getList().removeIf(accountLogVO -> accountLogVO.getPriBId().charAt(0) == 'A');
+            //扩大查询范围
+            return result;
         }
         return accountQueryFacade.getAccountLogPage(startNum, pageSize, req);
     }

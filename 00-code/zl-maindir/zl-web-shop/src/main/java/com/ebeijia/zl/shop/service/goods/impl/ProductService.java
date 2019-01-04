@@ -44,6 +44,9 @@ public class ProductService implements IProductService {
     private ICategoryService categoryService;
 
     @Autowired
+    private ITbEcomGoodsDetailService goodsDetailDao;
+
+    @Autowired
     private ITbEcomGoodsSpecService goodsSpecDao;
 
     private static Logger logger = LoggerFactory.getLogger(ProductService.class);
@@ -125,7 +128,7 @@ public class ProductService implements IProductService {
         List<String> valueIds = new LinkedList<>();
 
         Iterator<TbEcomGoodsSpec> iterator = goodsSpecs.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             TbEcomGoodsSpec next = iterator.next();
             specIds.add(next.getSpecId());
             valueIds.add(next.getSpecValueId());
@@ -202,13 +205,13 @@ public class ProductService implements IProductService {
 
     @Override
     public void productStoreConsumer(String productId, int i) {
-        if (i==0){
+        if (i == 0) {
             return;
         }
         TbEcomGoodsProduct product = productDao.getById(productId);
-        Integer isStore = product.getIsStore() - i ;
-        if (isStore.compareTo(0)<0){
-            throw new BizException(ResultState.NOT_ACCEPTABLE,"库存不足");
+        Integer isStore = product.getIsStore() - i;
+        if (isStore.compareTo(0) < 0) {
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "库存不足");
         }
         product.setIsStore(isStore);
         productDao.updateById(product);
@@ -216,11 +219,11 @@ public class ProductService implements IProductService {
 
     @Override
     public void productStoreRecover(String productId, int i) {
-        if (i==0){
+        if (i == 0) {
             return;
         }
         TbEcomGoodsProduct product = productDao.getById(productId);
-        Integer isStore = product.getIsStore()+i;
+        Integer isStore = product.getIsStore() + i;
         product.setIsStore(isStore);
         productDao.updateById(product);
 
@@ -228,16 +231,23 @@ public class ProductService implements IProductService {
 
     @Override
     public void productStoreChange(String productId, int i) {
-        if (i==0){
+        if (i == 0) {
             return;
         }
         TbEcomGoodsProduct product = productDao.getById(productId);
-        Integer enableStore = product.getEnableStore()+i;
-        if (enableStore.compareTo(0)<0){
-            throw new BizException(ResultState.NOT_ACCEPTABLE,"库存调整异常");
+        Integer enableStore = product.getEnableStore() + i;
+        if (enableStore.compareTo(0) < 0) {
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "库存调整异常");
         }
         product.setEnableStore(enableStore);
         productDao.updateById(product);
+        TbEcomGoodsDetail detail = new TbEcomGoodsDetail();
+        detail.setGoodsId(product.getGoodsId());
+        TbEcomGoodsDetail update = goodsDetailDao.getOne(new QueryWrapper<>(detail));
+        update.setBuyCount(update.getBuyCount() + i);
+        if (update.getBuyCount() >= 0) {
+            goodsDetailDao.updateById(update);
+        }
     }
 
 }
