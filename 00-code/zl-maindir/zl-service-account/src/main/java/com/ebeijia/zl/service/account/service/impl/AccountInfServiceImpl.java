@@ -384,8 +384,12 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		 }
 		list.forEach(s ->{
 			//单位分转元
-			s.setAccBal(AmountUtil.RMBCentToYuan(s.getAccBal()));
-			s.setCouponBal(AmountUtil.RMBCentToYuan(s.getCouponBal()));
+			if(s.getAccBal() !=null) {
+				s.setAccBal(AmountUtil.RMBCentToYuan(s.getAccBal()));
+			}
+			if(s.getCouponBal() !=null) {
+				s.setCouponBal(AmountUtil.RMBCentToYuan(s.getCouponBal()));
+			}
 		});
 		 return list;
 	}
