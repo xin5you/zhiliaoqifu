@@ -1,6 +1,6 @@
 spring:
   profiles: 
-    active: dev
+    active: test
 quartz:
   cronExpression:
     dictBiz: 0 0/5 * * * ?

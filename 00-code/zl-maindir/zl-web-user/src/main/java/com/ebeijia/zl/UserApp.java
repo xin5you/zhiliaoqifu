@@ -1,5 +1,7 @@
 package com.ebeijia.zl;
 
+import com.ebeijia.zl.basics.wechat.service.MpAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,16 +31,23 @@ public class UserApp extends SpringBootServletInitializer implements WebApplicat
 		return application.sources(UserApp.class);
 	}
 
+
+
 	public static void main(String[] args) {
+
 		SpringApplication.run(UserApp.class, args);
+
+
 	}
 
 	// 开发环境DataSource配置 使用druid数据源
+/*
 	@Bean("dataSource")
 	@ConfigurationProperties(prefix = "spring.datasource")
 	public DruidDataSource dataSource() {
 		return new DruidDataSource();
 	}
+*/
 
 
 	// 提供SqlSeesion
@@ -52,12 +61,14 @@ public class UserApp extends SpringBootServletInitializer implements WebApplicat
 //	}
 
 	// 事务管理
+/*
 	@Bean
 	@ConditionalOnMissingBean
 	public PlatformTransactionManager transactionManager() {
 			return new DataSourceTransactionManager(dataSource());
 	}
-	
+*/
+
     @Bean
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();

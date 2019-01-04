@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.account.facade;
 
 import java.util.List;
 
+import com.ebeijia.zl.common.utils.tools.AmountUtil;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
@@ -47,13 +49,16 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 
 	@Override
 	public List<AccountVO> getAccountInfList(AccountQueryReqVo req) throws AccountBizException {
-		return accountInfService.getAccountInfList(req);
+		List<AccountVO> list= accountInfService.getAccountInfList(req);
+
+		return list;
 	}
 
 	@Override
 	public PageInfo<AccountVO> getAccountInfPage(int startNum, int pageSize, AccountQueryReqVo req) throws AccountBizException {
 		PageHelper.startPage(startNum, pageSize);
 		List<AccountVO> list = getAccountInfList(req);
+
 		PageInfo<AccountVO> page = new PageInfo<AccountVO>(list);
 		return page;
 	}

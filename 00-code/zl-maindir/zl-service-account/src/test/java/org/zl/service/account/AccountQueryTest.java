@@ -64,8 +64,8 @@ public class AccountQueryTest {
 	@Test
 	public void getAccountInfListTo400() throws Exception{
 		AccountQueryReqVo req = new AccountQueryReqVo();
-		req.setUserType(UserType.TYPE400.getCode());
-		req.setUserChnlId("1f16051a7f18f3aa3688b799dd06c424");
+		req.setUserType(UserType.TYPE200.getCode());
+		req.setUserChnlId("c524deaa-f669-44ff-85d2-4cc5f5d296e7");
 		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 		List<AccountVO> list=accountInfService.getAccountInfList(req);
 		System.out.println(JSONArray.toJSONString(list));

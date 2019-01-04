@@ -56,6 +56,17 @@ public class AccountQueryReqVo implements Serializable {
 	private String bId;
 
 	/**
+	 * 专项类型 A OR B
+	 */
+	private String bCode;
+
+
+	/**
+	 * 交易类型 0：开户 1：加款 2：减款
+	 */
+	private  String accType;
+
+	/**
 	 * 开始时间 时间戳
 	 */
 	private Long sDate;
