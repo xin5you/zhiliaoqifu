@@ -1,12 +1,6 @@
 server:
   port: 10202
-  contextPath: /mcht
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain: 
-
+  contextPath: /web-mcht
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
@@ -63,6 +57,7 @@ spring:
       name: zl-service-mcht
     protocol:
       name: dubbo
+      host:
       port: 20881
       accepts: 1000
     provider:

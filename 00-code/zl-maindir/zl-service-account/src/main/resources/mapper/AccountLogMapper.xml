@@ -62,5 +62,6 @@
 				and bt.`code`=#{bCode}
 			</if>
 		</where>
+			order by al.create_time desc
 	</select>
 </mapper>

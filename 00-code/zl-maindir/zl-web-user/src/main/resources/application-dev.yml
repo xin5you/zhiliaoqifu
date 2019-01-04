@@ -1,6 +1,6 @@
 server:
   port: 10501
-  contextPath: /
+  contextPath: /web-user
 mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml

@@ -1,6 +1,6 @@
 server:
   port: 10201
-  contextPath: /itf
+  contextPath: /web-account
   session:
     store-type: redis
 mybatis-plus:
