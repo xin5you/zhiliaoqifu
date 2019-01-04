@@ -220,7 +220,7 @@
 								<label class="control-label"><span class="f_req">* </span>所属专项类型：</label>
 								<div class="controls">
 									<select name="b_id" id="b_id" class="span3">
-										<option th:each="b,bStat : ${specAccountTypeList}" th:value="${b.code}">
+										<option th:each="b,bStat : ${specAccountTypeList}" th:value="${b.bId}">
 											<span th:text="${b.name}"></span>
 										</option>
 									</select>

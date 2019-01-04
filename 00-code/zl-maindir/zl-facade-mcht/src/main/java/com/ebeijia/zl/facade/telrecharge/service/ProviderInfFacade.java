@@ -25,5 +25,5 @@ public interface ProviderInfFacade {
 	
 	PageInfo<ProviderInf> getProviderInfPage(int startNum, int pageSize, ProviderInf providerInf) throws Exception;
 
-	ProviderInf getProviderInfBylawCode(String lawCode) throws Exception;
+	ProviderInf getProviderInfByLawCode(String lawCode) throws Exception;
 }

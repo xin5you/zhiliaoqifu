@@ -29,4 +29,5 @@ public interface RetailChnlInfFacade {
 //	RetailChnlInf getRetailChnlInfByMchntCode(String mchntCode) throws Exception;
 
 	RetailChnlInf getRetailChnlInfByLawCode(String lawCode) throws Exception;
+
 }

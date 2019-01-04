@@ -402,20 +402,20 @@ public class GoodsManageController {
 	}
 
 	/**
-	 * 查询商品Spu下的所有Sku信息
+	 * 查询商品Spu信息
 	 * @param req
 	 * @return
 	 */
-	@PostMapping(value = "/goodsInf/getGoodsProductByGoodsId")
-	public List<TbEcomGoodsProduct> getGoodsSpecValues(HttpServletRequest req) {
-		List<TbEcomGoodsProduct> goodsProductList = new ArrayList<>();
+	@PostMapping(value = "/goodsInf/getGoodsInf")
+	public TbEcomGoods getGoodsInf(HttpServletRequest req) {
 		String goodsId = req.getParameter("goodsId");
+		TbEcomGoods goods = new TbEcomGoods();
 		try {
-			goodsProductList = ecomGoodsProductService.getProductlistByGoodsId(goodsId);
+			goods = ecomGoodsService.getById(goodsId);
 		} catch (Exception e) {
-			logger.error("## 查询商品Spu{}下的所有Sku信息", goodsId, e);
+			logger.error("## 查询商品Spu{}信息异常", goodsId, e);
 		}
-		return goodsProductList;
+		return goods;
 	}
 
 	/**
@@ -604,7 +604,7 @@ public class GoodsManageController {
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("ecomGoodsGallery", ecomGoodsGallery);
 		mv.addObject("isDefaultList", IsDefaultEnum.values());
-
+		mv.addObject("goodsId", goodsId);
 		return mv;
 	}
 
@@ -632,11 +632,11 @@ public class GoodsManageController {
 	 * @return
 	 */
 	@PostMapping(value = "/goodsInf/addGoodsGallery")
-	public BaseResult<Object> addGoodsGallery(@RequestParam("thumbnailFile") MultipartFile thumbnailFile, HttpServletRequest req) {
+	public BaseResult<Object> addGoodsGallery(@RequestParam("originalFile") MultipartFile originalFile, HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomGoodsGallery goodsGallery = getTbEcomGoodsGallery(req);
-			result = goodsManageService.addGoodsGallery(goodsGallery, thumbnailFile);
+			result = goodsManageService.addGoodsGallery(goodsGallery, originalFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品相册图片上传异常", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -654,11 +654,11 @@ public class GoodsManageController {
 	 * @return
 	 */
 	@PostMapping(value = "/goodsInf/editGoodsGallery")
-	public BaseResult<Object> editGoodsGallery(@RequestParam("thumbnailFile") MultipartFile thumbnailFile, HttpServletRequest req) {
+	public BaseResult<Object> editGoodsGallery(@RequestParam("originalFile") MultipartFile originalFile, HttpServletRequest req) {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomGoodsGallery goodsGallery = getTbEcomGoodsGallery(req);
-			result = goodsManageService.editGoodsGallery(goodsGallery, thumbnailFile);
+			result = goodsManageService.editGoodsGallery(goodsGallery, originalFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品相册图片上传异常", e.getMessage());
 			return ResultsUtil.error(e.getCode(), e.getMessage());
@@ -700,7 +700,7 @@ public class GoodsManageController {
 
 		String imgId = req.getParameter("img_id");
 		String goodsId = req.getParameter("goodsId");
-		String thumbnail = req.getParameter("thumbnail");
+		String original = req.getParameter("original");
 		String isDefaultList = req.getParameter("isDefaultList");
 		String sort = req.getParameter("sort");
 		String remarks = req.getParameter("remarks");
@@ -720,7 +720,7 @@ public class GoodsManageController {
 		goodsGallery.setUpdateUser(user.getId());
 		goodsGallery.setUpdateTime(System.currentTimeMillis());
 		goodsGallery.setGoodsId(goodsId);
-		goodsGallery.setThumbnail(thumbnail);
+		goodsGallery.setOriginal(original);
 		goodsGallery.setIsDefault(isDefaultList);
 		goodsGallery.setSort(Integer.valueOf(sort));
 		goodsGallery.setRemarks(remarks);

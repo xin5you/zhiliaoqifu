@@ -67,11 +67,11 @@ public class ProviderInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
-		/*methodConfig=new MethodConfig();
+		methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderInfByLawCode");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
-		methods.add(methodConfig); //*/
+		methods.add(methodConfig); //
 		
 		return referenceBean;
 	}

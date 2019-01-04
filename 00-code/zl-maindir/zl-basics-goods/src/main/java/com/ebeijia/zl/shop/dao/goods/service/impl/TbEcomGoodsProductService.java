@@ -27,8 +27,8 @@ public class TbEcomGoodsProductService extends ServiceImpl<TbEcomGoodsProductMap
     }
 
     @Override
-    public List<TbEcomGoodsProduct> getProductlistByGoodsId(String goodsId) {
-        return baseMapper.getProductlistByGoodsId(goodsId);
+    public List<TbEcomGoodsProduct> getGoodsProductListByGoodsId(String goodsId) {
+        return baseMapper.getGoodsProductListByGoodsId(goodsId);
     }
 
     @Override

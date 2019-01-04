@@ -110,6 +110,8 @@ public class TbEcomGoodsGallery extends Model<TbEcomGoodsGallery> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
 
+    @TableField(exist = false)
+    private String goodsName;
 
     @Override
     protected Serializable pkVal() { 
