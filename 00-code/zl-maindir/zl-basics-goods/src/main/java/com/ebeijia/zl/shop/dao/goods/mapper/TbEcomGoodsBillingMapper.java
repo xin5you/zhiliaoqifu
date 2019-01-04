@@ -21,10 +21,4 @@ public interface TbEcomGoodsBillingMapper extends BaseMapper<TbEcomGoodsBilling>
 	 */
 	TbEcomGoodsBilling getGoodsBillingByGoodsId(String goodsId);
 
-	/**
-	 * 新增商品专项类型关联表
-	 * @param ecomGoodsBilling
-	 * @return
-	 */
-	int insert(TbEcomGoodsBilling ecomGoodsBilling);
 }

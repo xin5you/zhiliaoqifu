@@ -36,20 +36,20 @@
 	<select id="getList" parameterType="RetailChnlInf" resultType="RetailChnlInf">
 		select 
 	  		<include refid="ColumnResult" />
-		from tb_retail_chnl_inf m
-		where m.data_stat='0' 
+		from tb_retail_chnl_inf
+		where data_stat='0'
 		<if test="channelName != null and channelName != '' ">
-			and m.channel_name like '%' || #{channelName} || '%'
+			and channel_name like '%' || #{channelName} || '%'
 		</if>
-		order by m.update_time desc
+		order by update_time desc
 	</select>
 
 	<select id="getRetailChnlInfByLawCode" parameterType="String" resultType="RetailChnlInf">
 		select
 			<include refid="ColumnResult" />
 		from tb_retail_chnl_inf m
-		where m.data_stat='0'
-			and m.law_code = #{lawCode}
+		where data_stat='0'
+			and law_code = #{lawCode}
 	</select>
 	
 </mapper>

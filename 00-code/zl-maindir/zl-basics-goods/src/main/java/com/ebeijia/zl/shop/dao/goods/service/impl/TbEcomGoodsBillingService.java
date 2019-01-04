@@ -22,8 +22,4 @@ public class TbEcomGoodsBillingService extends ServiceImpl<TbEcomGoodsBillingMap
         return baseMapper.getGoodsBillingByGoodsId(goodsId);
     }
 
-    @Override
-    public int insert(TbEcomGoodsBilling ecomGoodsBilling) {
-        return baseMapper.insert(ecomGoodsBilling);
-    }
 }

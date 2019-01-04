@@ -22,7 +22,7 @@ public interface TbEcomGoodsProductMapper extends BaseMapper<TbEcomGoodsProduct>
      * @param goodsId
      * @return
      */
-    public List<TbEcomGoodsProduct> getProductlistByGoodsId(String goodsId);
+    public List<TbEcomGoodsProduct> getGoodsProductListByGoodsId(String goodsId);
 
     /**
      * 库存列表

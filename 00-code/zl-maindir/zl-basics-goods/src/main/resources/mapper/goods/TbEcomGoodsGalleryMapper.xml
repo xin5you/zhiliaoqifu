@@ -3,35 +3,37 @@
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsGalleryMapper">
 
     <sql id="goodsGalleryColumns">
-        img_id,
-        goods_id,
-        thumbnail,
-        small,
-        big,
-        original,
-        tiny,
-        is_default,
-        sort,
-        data_stat,
-        remarks,
-        create_user,
-        update_user,
-        create_time,
-        update_time,
-        lock_version
+        g.img_id,
+        g.goods_id,
+        g.thumbnail,
+        g.small,
+        g.big,
+        g.original,
+        g.tiny,
+        g.is_default,
+        g.sort,
+        g.data_stat,
+        g.remarks,
+        g.create_user,
+        g.update_user,
+        g.create_time,
+        g.update_time,
+        g.lock_version
     </sql>
 
     <sql id="tableName">
-      tb_ecom_goods_gallery
+      tb_ecom_goods_gallery g
     </sql>
 
     <select id="getGoodsGalleryList" parameterType="TbEcomGoodsGallery" resultType="TbEcomGoodsGallery">
         select
-          <include refid="goodsGalleryColumns"/>
+          <include refid="goodsGalleryColumns"/>,
+          d.goods_name as goodsName
         from
           <include refid="tableName"/>
-        where data_stat = '0'
-        order by create_time desc
+        left join tb_ecom_goods d on d.goods_id = g.goods_id
+        where g.data_stat = '0'
+        order by g.create_time desc
     </select>
 
     <select id="getGoodsGalleryByIsDefault" parameterType="String" resultType="TbEcomGoodsGallery">
@@ -39,19 +41,19 @@
           <include refid="goodsGalleryColumns"/>
         from
           <include refid="tableName"/>
-        where data_stat = '0'
-          and is_default = #{isDefault}
-        order by create_time desc
+        where g.data_stat = '0'
+          and g.is_default = #{isDefault}
+        order by g.create_time desc
     </select>
 
     <select id="getGoodsGalleryBySort" parameterType="Integer" resultType="TbEcomGoodsGallery">
         select
-        <include refid="goodsGalleryColumns"/>
+          <include refid="goodsGalleryColumns"/>
         from
-        <include refid="tableName"/>
-        where data_stat = '0'
-        and sort = #{sort}
-        order by create_time desc
+          <include refid="tableName"/>
+        where g.data_stat = '0'
+        and g.sort = #{sort}
+        order by g.create_time desc
     </select>
 
 </mapper>

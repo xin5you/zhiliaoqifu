@@ -19,10 +19,4 @@ public interface ITbEcomGoodsBillingService extends IService<TbEcomGoodsBilling>
      */
     TbEcomGoodsBilling getGoodsBillingByGoodsId(String goodsId);
 
-    /**
-     * 新增商品专项类型关联表
-     * @param ecomGoodsBilling
-     * @return
-     */
-    int insert(TbEcomGoodsBilling ecomGoodsBilling);
 }

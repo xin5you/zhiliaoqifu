@@ -13,7 +13,7 @@ var ListGoodsGallery = {
 		$('.btn-edit').on('click', ListGoodsGallery.intoEditGoodsGallery);
 		$('.btn-delete').on('click', ListGoodsGallery.deleteGoodsGallery);
 		$('.btn-close').on('click',ListGoodsGallery.searchReset);
-        $('#thumbnailFile').on('change', ListGoodsGallery.imageUpload);
+        $('#originalFile').on('change', ListGoodsGallery.imageUpload);
 	},
 	
 	initTip: function (intoType) {
@@ -108,11 +108,12 @@ var ListGoodsGallery = {
         });
     },
     imageUpload : function() {
-        var thumbnailFile = $("#thumbnailFile").val();
-        $("#thumbnail").val(thumbnailFile);
+        var originalFile = $("#originalFile").val();
+        $("#original").val(originalFile);
     },
 	searchReset : function(){
-		Helper.post('/goodsManage/goodsInf/getGoodsGalleryList');
+	    var goodsId = $("#goodsId").val();
+		Helper.post('/goodsManage/goodsInf/getGoodsGalleryList?goodsId=' + goodsId);
 	},
 	intoAddGoodsGallery : function(){
         ListGoodsGallery.loadModal(1, $(this).attr('imgId'));
@@ -224,7 +225,7 @@ var ListGoodsGallery = {
             },
             success : function (data) {
             	$('#img_id').val(data.img_id);
-            	$('#thumbnail').val(data.thumbnail);
+            	$('#original').val(data.original);
             	$('#isDefaultList').val(data.isDefaultList);
             	$('#sort').val(data.sort);
                 $('#remarks').val(data.remarks);

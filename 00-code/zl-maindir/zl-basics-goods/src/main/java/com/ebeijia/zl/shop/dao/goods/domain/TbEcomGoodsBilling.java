@@ -39,7 +39,7 @@ public class TbEcomGoodsBilling extends Model<TbEcomGoodsBilling> {
     @ApiModelProperty(value = "商品id")
     private String goodsId;
  
-    @TableId(value = "id" ,type = IdType.UUID)
+    @TableId(value = "id" ,type = IdType.AUTO)
     @ApiModelProperty(value = "id")
     private Integer id;
  

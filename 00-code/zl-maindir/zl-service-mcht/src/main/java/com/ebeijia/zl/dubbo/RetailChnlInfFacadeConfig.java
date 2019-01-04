@@ -36,11 +36,11 @@ public class RetailChnlInfFacadeConfig extends DubboProviderConfig {
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
-		/*methodConfig=new MethodConfig();
+		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlInfByLawCode");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
-		methods.add(methodConfig); //*/
+		methods.add(methodConfig); //
 
 		return serviceBean;
 	}

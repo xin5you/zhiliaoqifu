@@ -46,11 +46,15 @@
 						</thead>
 				        <tbody>
 							<tr th:each="gallery, galleryStat : ${pageInfo.list}" th:inline="text">
-								<td><span th:text="${gallery.count}"></span></td>
+								<td><span th:text="${galleryStat.count}"></span></td>
 								<td><span th:text="${gallery.imgId}"></span></td>
 								<td><span th:text="${gallery.goodsName}"></span></td>
-								<td><a th:href="${gallery.thumbnail}">[[${gallery.thumbnail}]]</a></td>
-								<td><span th:text="${gallery.original}"></span></td>
+								<td><span th:text="${gallery.thumbnail}"></span></td>
+								<td>
+									<span  th:if="${gallery.original} != null">
+										<a th:href="${gallery.original}">[[${gallery.original}]]</a>
+									</span>
+								</td>
 								<td><span th:text="${gallery.small}"></span></td>
 								<td><span th:text="${gallery.big}"></span></td>
 								<td><span th:text="${gallery.tiny}"></span></td>
@@ -76,13 +80,13 @@
 				</div>
 				<div class="modal-body">
 					<input type="hidden" id="img_id" name="img_id"/>
-					<input type="hidden" id="goodsId" name="goodsId" th:value="${ecomGoodsGallery.goodsId}"/>
+					<input type="hidden" id="goodsId" name="goodsId" th:value="${goodsId}"/>
 					<fieldset>
 						<div class="control-group">
-							<label class="control-label"><span class="f_req">* </span>相册列表尺寸图：</label>
+							<label class="control-label"><span class="f_req">* </span>相册列表图：</label>
 							<div class="controls">
-								<input type="text" class="span3" name="thumbnail" id="thumbnail" readonly="readonly"/>
-								<input type="file" class="span3" name="thumbnailFile" id="thumbnailFile"/>
+								<input type="text" class="span3" name="original" id="original" readonly="readonly"/>
+								<input type="file" class="span3" name="originalFile" id="originalFile"/>
 								<span class="help-block"></span>
 							</div>
 						</div>
@@ -90,8 +94,8 @@
 							<label class="control-label"><span class="f_req">* </span>是否默认：</label>
 							<div class="controls">
 								<select name="isDefaultList" id="isDefaultList" class="span3">
-									<option th:each="s,sStat : ${isDefaultList}" th:value="${e.code}">
-										<span th:text="${e.name}"></span>
+									<option th:each="s,sStat : ${isDefaultList}" th:value="${s.code}">
+										<span th:text="${s.name}"></span>
 									</option>
 								</select>
 								<span class="help-block"></span>

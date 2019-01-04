@@ -20,14 +20,4 @@
       where goods_id = #{goodsId}
     </select>
 
-    <insert id="insert" parameterType="TbEcomGoodsBilling" useGeneratedKeys="true" keyProperty="id">
-      insert into
-        <include refid="tableName"/>
-        (goods_id, b_id)
-      values(
-        #{goods_id},
-        #{b_id}
-      )
-    </insert>
-
 </mapper>

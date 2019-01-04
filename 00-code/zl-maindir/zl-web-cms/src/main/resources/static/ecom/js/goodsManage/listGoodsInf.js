@@ -278,7 +278,7 @@ var listGoodsInf = {
             	$('#spu_code').val(data.spuCode);
                 $('#ecom_code').val(data.ecomCode);
                 $('#goods_type').val(data.goodsType);
-                $('#b_id').val(data.BId);
+                $('#b_id').val(data.bid);
                 $('#unit').val(data.unit);
                 $('#weight').val(data.weight);
                 /*$('#default_sku_code').val(data.defaultSkuCode);*/
@@ -317,10 +317,25 @@ var listGoodsInf = {
 	},
     intoUpdateGoodsEnable : function () {
         var goodsId = $(this).attr("goodsId");
-        $('#modal').modal({
+        $.ajax({
+            url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsInf',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "goodsId": goodsId
+            },
+            success : function (data) {
+                $('#goodsId_').val(data.goodsId);
+                $('#marketEnable_').val(data.marketEnable);
+            },
+            error : function(){
+                Helper.alert("系统故障，请稍后再试");
+                return false;
+            }
+        });
+        $('#modal2').modal({
             backdrop : "static"
         });
-        $("#goodsId_").val(goodsId);
     },
     updateGoodsEnable : function () {
         $("#btn-updateEnableCommit").attr('disabled',"true");
@@ -352,14 +367,14 @@ var listGoodsInf = {
     },
     intoAddGoodsImg : function () {
         var goodsId = $(this).attr("goodsId");
-        Helper.post('/goodsManage/goodsInf/getGoodsGalleryList');
+        Helper.post('/goodsManage/goodsInf/getGoodsGalleryList?goodsId=' + goodsId);
     },
     intoAddGoodsView : function () {
         var goodsId = $(this).attr("goodsId");
-        Helper.post('/goodsManage/goodsInf/getGoodsDetailList');
+        Helper.post('/goodsManage/goodsInf/getGoodsDetailList?goodsId=' + goodsId);
     },
     intoAddGoodsSku : function () {
         var goodsId = $(this).attr("goodsId");
-        Helper.post('/goodsManage/goodsInf/getGoodsSkuList');
+        Helper.post('/goodsManage/goodsInf/getGoodsSkuList?goodsId=' + goodsId);
     }
 }
