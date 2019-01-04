@@ -90,7 +90,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>web-mchnt</finalName>
+		<finalName>web-mcht</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -98,8 +98,12 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 
 		list.forEach(s ->{
 			//单位分转元
-			s.setTxnAmt(AmountUtil.RMBCentToYuan(s.getTxnAmt()));
-			s.setAccTotalBal(AmountUtil.RMBCentToYuan(s.getAccTotalBal()));
+			if(s.getTxnAmt() !=null) {
+				s.setTxnAmt(AmountUtil.RMBCentToYuan(s.getTxnAmt()));
+			}
+			if(s.getAccTotalBal() !=null) {
+				s.setAccTotalBal(AmountUtil.RMBCentToYuan(s.getAccTotalBal()));
+			}
 
 			//公司名称
 			if (TransCode.MB50.getCode().equals(s.getTransId()) && UserType.TYPE100.getCode().equals(s.getUserType())){
