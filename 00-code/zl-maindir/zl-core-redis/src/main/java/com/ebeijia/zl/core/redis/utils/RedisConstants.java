@@ -16,4 +16,6 @@ public class RedisConstants {
 	public static final String REDIS_HASH_TABLE_TB_BILLING_TYPE = "TB_BILLING_TYPE";
 
 	public static final String REDIS_HASH_BIZ_WITHDRAW_ACCEPTS = "BIZ_WITHDRAW_ACCEPTS_";
+
+	public static final String PLATFORM_FEE = "PLATFORM_FEE";
 }

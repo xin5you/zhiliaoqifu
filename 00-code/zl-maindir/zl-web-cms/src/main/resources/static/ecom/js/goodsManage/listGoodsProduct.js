@@ -160,7 +160,7 @@ var listGoodsProduct = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -186,7 +186,7 @@ var listGoodsProduct = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -214,9 +214,9 @@ var listGoodsProduct = {
 						return false;
 					}
 				},
-				error : function(){
-					Helper.alert(data.msg);
-				}
+                error : function() {
+                    Helper.alert("网络异常，请稍后再试");
+                }
 			});
 		});
 	},
@@ -250,8 +250,8 @@ var listGoodsProduct = {
                 $('#pic_url').val(data.picUrl);
                 $('#remarks').val(data.remarks);
             },
-            error : function(){
-            	Helper.alert("系统故障，请稍后再试");
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
             }
 	    });
 		
@@ -298,8 +298,8 @@ var listGoodsProduct = {
                     return false;
                 }
             },
-            error : function(){
-                Helper.alert(data.msg);
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     }

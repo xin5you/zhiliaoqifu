@@ -17,6 +17,7 @@
 				<form id="searchForm" th:action="@{/goodsManage/goodsInf/getGoodsInfList}" th:object="${ecomGoods}" class="form-inline" method="post">
 					<div class="row-fluid searchForm" id="h_search">
 						<div class="span12">
+							<div class="control-group">
 							<div class="input-prepend">
 								<span class="add-on">商品名称</span>
 								<input id="goodsName" name="goodsName" type="text" class="input-medium" th:value="*{goodsName}" maxlength="255"/>
@@ -26,10 +27,10 @@
 								<input id="spuCode" name="spuCode" type="text" class="input-medium" th:value="*{spuCode}" maxlength="50"/>
 							</div>
 							<div class="input-prepend">
-								<span class="add-on">分销商代码</span>
+								<span class="add-on">所属供应商</span>
 								<select id="ecomCode" name="ecomCode" class="input-medium">
 									<option value=""><span th:text="请选择" /></option>
-									<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.lawCode}"><span th:text="${e.channelName}" /></option>
+									<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.lawCode}"><span th:text="${e.providerName}" /></option>
 								</select>
 							</div>
 							<div class="input-prepend">
@@ -46,6 +47,8 @@
 									<option th:each="s,sStat : ${specAccountTypeList}" th:value="${s.bId}"><span th:text="${s.name}" /></option>
 								</select>
 							</div>
+							</div>
+							<div class="control-group">
 							<div class="input-prepend">
 								<span class="add-on">上下架状态</span>
 								<select id="marketEnable" name="marketEnable" class="input-medium">
@@ -79,6 +82,7 @@
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
 								<button type="button" class="btn btn-primary btn-add">新增商品</button>
 							</div>
+							</div>
 						</div>
 					</div>
 					<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
@@ -88,7 +92,7 @@
 								<th>商品名称</th>
 								<th>商品图片</th>
 								<th>SPU代码</th>
-								<th>分销商代码</th>
+								<th>供应商代码</th>
 				                <th>商品类型</th>
 				                <th>专项类型</th>
 								<th>上下架状态</th>
@@ -102,7 +106,11 @@
 							<tr th:each="goods, goodsStat : ${pageInfo.list}" th:inline="text">
 								<td><span th:text="${goodsStat.count}"></span></td>
 								<td><span th:text="${goods.goodsName}"></span></td>
-								<td><a th:href="${goods.goodsImg}">[[${spec.goodsImg}]]</a></td>
+								<td>
+									<span  th:if="${goods.goodsImg} != null">
+										<a th:href="${goods.goodsImg}">[[${goods.goodsImg}]]</a>
+									</span>
+								</td>
 								<td><span th:text="${goods.spuCode}"></span></td>
 								<td><span th:text="${goods.ecomCode}"></span></td>
 								<td><span th:text="${goods.goodsType}"></span></td>
@@ -165,44 +173,39 @@
 					<input type="hidden" id="goods_id" name="goods_id"/>
 					<fieldset>
 						<div class="control-group">
-							<div class="input-prepend">
 								<label class="control-label"><span class="f_req">* </span>商品名称：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="goods_name" id="goods_name" maxlength="20"/>
 									<span class="help-block"></span>
 								</div>
-							</div>
-							<div class="input-prepend">
+						</div>
+						<div class="control-group">
 								<label class="control-label"><span class="f_req">* </span>商品图片：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="goods_img" id="goods_img" readonly="readonly"/>
 									<input type="file" class="span3" name="goodsImgFile" id="goodsImgFile"/>
 									<span class="help-block"></span>
 								</div>
-							</div>
 						</div>
 						<div class="control-group">
-							<div class="input-prepend">
 								<label class="control-label"><span class="f_req">* </span>SPU代码：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="spu_code" id="spu_code" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="input-prepend">
-								<label class="control-label"><span class="f_req">* </span>分销商代码：</label>
+						<div class="control-group">
+								<label class="control-label"><span class="f_req">* </span>所属供应商：</label>
 								<div class="controls">
 									<select name="ecom_code" id="ecom_code" class="span3">
-										<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.code}">
-											<span th:text="${e.name}"></span>
+										<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.lawCode}">
+											<span th:text="${e.providerName}"></span>
 										</option>
 									</select>
 									<span class="help-block"></span>
 								</div>
-							</div>
 						</div>
 						<div class="control-group">
-							<div class="input-prepend">
 								<label class="control-label"><span class="f_req">* </span>商品类型：</label>
 								<div class="controls">
 									<select name="goods_type" id="goods_type" class="span3">
@@ -213,7 +216,7 @@
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="input-prepend">
+						<div class="control-group">
 								<label class="control-label"><span class="f_req">* </span>所属专项类型：</label>
 								<div class="controls">
 									<select name="b_id" id="b_id" class="span3">
@@ -223,10 +226,8 @@
 									</select>
 									<span class="help-block"></span>
 								</div>
-							</div>
 						</div>
 						<div class="control-group">
-							<div class="input-prepend">
 								<label class="control-label"><span class="f_req">* </span>单位：</label>
 								<div class="controls">
 									<select name="unit" id="unit" class="span3">
@@ -237,45 +238,30 @@
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="input-prepend">
+						<div class="control-group">
 								<label class="control-label"><span class="f_req">* </span>重量：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="weight" id="weight" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 									<span class="help-block"></span>
 								</div>
-							</div>
 						</div>
-						<div class="control-group">
-							<div class="input-prepend">
-								<label class="control-label"><span class="f_req">* </span>默认sku代码：</label>
+						<!--<div class="control-group">
+								<label class="control-label">默认sku代码：</label>
 								<div class="controls">
 									<select name="default_sku_code" id="default_sku_code" class="span3">
-
 									</select>
 									<span class="help-block"></span>
 								</div>
-							</div>
-							<div class="input-prepend">
-								<!--<label class="control-label"><span class="f_req">* </span>上下架状态：</label>
-								<div class="controls">
-									<select name="market_enable" id="market_enable" class="span3">
-										<option th:each="m,mStat : ${marketEnableList}" th:value="${m.code}">
-											<span th:text="${m.name}"></span>
-										</option>
-									</select>
-									<span class="help-block"></span>
-								</div>-->
-							</div>
-						</div>
+						</div>-->
+
 						<div class="control-group">
-							<div class="input-prepend">
-								<label class="control-label"><span class="f_req">* </span>简介：</label>
+								<label class="control-label">简介：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="brief" id="brief" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="input-prepend">
+						<div class="control-group">
 								<label class="control-label"><span class="f_req">* </span>商品富文本ID：</label>
 								<div class="controls">
 									<select name="goods_detail" id="goods_detail" class="span3">
@@ -285,10 +271,8 @@
 									</select>
 									<span class="help-block"></span>
 								</div>
-							</div>
 						</div>
 						<div class="control-group">
-							<div class="input-prepend">
 								<label class="control-label"><span class="f_req">* </span>商品组合状态：</label>
 								<div class="controls">
 									<select name="have_groups" id="have_groups" class="span3">
@@ -299,7 +283,7 @@
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="input-prepend">
+						<div class="control-group">
 								<label class="control-label"><span class="f_req">* </span>禁用状态：</label>
 								<div class="controls">
 									<select name="is_disabled" id="is_disabled" class="span3">
@@ -309,28 +293,25 @@
 									</select>
 									<span class="help-block"></span>
 								</div>
-							</div>
 						</div>
 						<div class="control-group">
-							<div class="input-prepend">
 								<label class="control-label"><span class="f_req">* </span>热销状态：</label>
 								<div class="controls">
 									<select name="is_hot" id="is_hot" class="span3">
-										<option th:each="s,sStat : ${isHotList}" th:value="${s.code}">
+										<option th:each="s,sStat : ${goodsIsHotList}" th:value="${s.code}">
 											<span th:text="${s.name}"></span>
 										</option>
 									</select>
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="input-prepend">
+							<div class="control-group">
 								<label class="control-label">备注：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="remarks" id="remarks" maxlength="256"/>
 									<span class="help-block"></span>
 								</div>
 							</div>
-						</div>
 					</fieldset>
 				</div>
 				<div class="modal-footer" style="text-align: center;">

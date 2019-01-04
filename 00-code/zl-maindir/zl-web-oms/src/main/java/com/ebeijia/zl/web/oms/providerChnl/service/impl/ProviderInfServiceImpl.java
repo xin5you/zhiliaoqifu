@@ -9,6 +9,7 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
@@ -140,9 +141,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
-		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
 		String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
+		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
 		String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
 		String A00 = StringUtil.nullToString(req.getParameter("A00"));
 		String B01 = StringUtil.nullToString(req.getParameter("B01"));
@@ -157,12 +158,14 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
 
-		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
-		platformFee = "0.4";
+		String platformFee = jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, RedisConstants.PLATFORM_FEE);
 		if (StringUtil.isNullOrEmpty(platformFee)) {
-			logger.error("## 获取平台手续费失败");
+            logger.error("## 新增供应商{}上账，获取平台费率失败", providerId);
 			return 0;
 		}
+
+		BigDecimal platformFeeSum = new BigDecimal(platformFee).add(new BigDecimal(1));
+		BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
 
 		InaccountOrder order = new InaccountOrder();
 		order.setOrderId(IdUtil.getNextId());
@@ -173,7 +176,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
 		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
 		order.setPlatformInSumAmt(order.getInaccountAmt());
-		order.setCompanyInSumAmt(order.getInaccountAmt().subtract(order.getInaccountAmt().multiply(new BigDecimal(platformFee))));
+		order.setCompanyInSumAmt(companyInAmtSum);
 		order.setProviderId(providerId);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
@@ -230,7 +233,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 			orderDetail.setBId("A00");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -247,7 +251,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 			orderDetail.setBId("B01");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -264,7 +269,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 			orderDetail.setBId("B02");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -281,7 +287,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 			orderDetail.setBId("B03");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -298,7 +305,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 			orderDetail.setBId("B04");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -315,7 +323,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 			orderDetail.setBId("B05");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -332,7 +341,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 			orderDetail.setBId("B06");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -349,7 +359,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 			orderDetail.setBId("B07");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -366,7 +377,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 			orderDetail.setBId("B08");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			orderDetail.setCompanyInAmt(orderDetail.getTransAmt().subtract(orderDetail.getTransAmt().multiply(new BigDecimal(platformFee))));
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
 			orderDetail.setUpdateUser(user.getId());
@@ -555,11 +567,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 
-		String platformFee = jedisClusterUtils.hget(OmsEnum.TB_BASE_DICT, OmsEnum.PLATFORM_FEE);
-		if (StringUtil.isNullOrEmpty(platformFee)) {
-			platformFee = "0.4";
-		}
-
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
@@ -588,39 +595,46 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			logger.error("## 根据上账订单号{}查询订单信息为空", orderId);
 			return 0;
 		}
+
+		String platformFee = jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, RedisConstants.PLATFORM_FEE);
+		if (StringUtil.isNullOrEmpty(platformFee)) {
+		    logger.error("## 编辑供应商{}上账，获取平台费率失败", providerId);
+			return 0;
+		}
+		BigDecimal platformFeeSum = new BigDecimal(platformFee).add(new BigDecimal(1));
+		BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
+
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
 		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
 		order.setPlatformInSumAmt(order.getInaccountAmt());
-		order.setCompanyInSumAmt(order.getInaccountAmt().multiply(new BigDecimal(platformFee)));
+		order.setCompanyInSumAmt(companyInAmtSum);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemarks(remarks);
 		order.setUpdateUser(user.getId());
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(order.getLockVersion() + 1);
 
-		if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
-			logger.error("## 上传图片为空");
-			return 0;
-		}
-		FTPImageVo imgVo = new FTPImageVo();
-		imgVo.setImgId(order.getOrderId());
-		imgVo.setService(IMG_SERVER);
-		imgVo.setNewPath(FILE_NEW_PATH);
-		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
-		imgVo.setUploadPath(FILE_UPLAOD_PATH);
-		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_03.getValue());
-		Map<String, Object> resultMap = new HashMap<>();
-		try {
-			resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
-			if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
-				order.setEvidenceUrl(resultMap.get("msg").toString());
-			} else {
-				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+		if (evidenceUrlFile != null && !evidenceUrlFile.isEmpty()) {
+			FTPImageVo imgVo = new FTPImageVo();
+			imgVo.setImgId(order.getOrderId());
+			imgVo.setService(IMG_SERVER);
+			imgVo.setNewPath(FILE_NEW_PATH);
+			imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
+			imgVo.setUploadPath(FILE_UPLAOD_PATH);
+			imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_03.getValue());
+			Map<String, Object> resultMap = new HashMap<>();
+			try {
+				resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
+				if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
+					order.setEvidenceUrl(resultMap.get("msg").toString());
+				} else {
+					logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+					return 0;
+				}
+			} catch (Exception e) {
+				logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
 				return 0;
 			}
-		} catch (Exception e) {
-			logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
-			return 0;
 		}
 
 		/*if (StringUtils.isNotBlank(evidenceUrlFile.getOriginalFilename())) {
@@ -648,7 +662,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 				orderDetailA00.setBId("A00");
 				orderDetailA00.setPlatformInAmt(orderDetailA00.getTransAmt());
-				orderDetailA00.setCompanyInAmt(orderDetailA00.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailA00.setCompanyInAmt(companyInAmt);
 				orderDetailA00.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailA00.setCreateUser(user.getId());
 				orderDetailA00.setUpdateUser(user.getId());
@@ -661,7 +676,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(A00)) {
 				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 				orderDetailA00.setPlatformInAmt(orderDetailA00.getTransAmt());
-				orderDetailA00.setCompanyInAmt(orderDetailA00.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailA00.setCompanyInAmt(companyInAmt);
 				orderDetailA00.setUpdateUser(user.getId());
 				orderDetailA00.setUpdateTime(System.currentTimeMillis());
 				orderDetailA00.setLockVersion(orderDetailA00.getLockVersion() + 1);
@@ -683,7 +699,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 				orderDetailB01.setBId("B01");
 				orderDetailB01.setPlatformInAmt(orderDetailB01.getTransAmt());
-				orderDetailB01.setCompanyInAmt(orderDetailB01.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB01.setCompanyInAmt(companyInAmt);
 				orderDetailB01.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB01.setCreateUser(user.getId());
 				orderDetailB01.setUpdateUser(user.getId());
@@ -696,7 +713,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B01)) {
 				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 				orderDetailB01.setPlatformInAmt(orderDetailB01.getTransAmt());
-				orderDetailB01.setCompanyInAmt(orderDetailB01.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB01.setCompanyInAmt(companyInAmt);
 				orderDetailB01.setUpdateUser(user.getId());
 				orderDetailB01.setUpdateTime(System.currentTimeMillis());
 				orderDetailB01.setLockVersion(orderDetailB01.getLockVersion() + 1);
@@ -718,7 +736,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 				orderDetailB02.setBId("B02");
 				orderDetailB02.setPlatformInAmt(orderDetailB02.getTransAmt());
-				orderDetailB02.setCompanyInAmt(orderDetailB02.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB02.setCompanyInAmt(companyInAmt);
 				orderDetailB02.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB02.setCreateUser(user.getId());
 				orderDetailB02.setUpdateUser(user.getId());
@@ -731,7 +750,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B02)) {
 				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 				orderDetailB02.setPlatformInAmt(orderDetailB02.getTransAmt());
-				orderDetailB02.setCompanyInAmt(orderDetailB02.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB02.setCompanyInAmt(companyInAmt);
 				orderDetailB02.setUpdateUser(user.getId());
 				orderDetailB02.setUpdateTime(System.currentTimeMillis());
 				orderDetailB02.setLockVersion(orderDetailB02.getLockVersion() + 1);
@@ -753,7 +773,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 				orderDetailB03.setBId("B03");
 				orderDetailB03.setPlatformInAmt(orderDetailB03.getTransAmt());
-				orderDetailB03.setCompanyInAmt(orderDetailB03.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB03.setCompanyInAmt(companyInAmt);
 				orderDetailB03.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB03.setCreateUser(user.getId());
 				orderDetailB03.setUpdateUser(user.getId());
@@ -766,7 +787,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B03)) {
 				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 				orderDetailB03.setPlatformInAmt(orderDetailB03.getTransAmt());
-				orderDetailB03.setCompanyInAmt(orderDetailB03.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB03.setCompanyInAmt(companyInAmt);
 				orderDetailB03.setUpdateUser(user.getId());
 				orderDetailB03.setUpdateTime(System.currentTimeMillis());
 				orderDetailB03.setLockVersion(orderDetailB03.getLockVersion() + 1);
@@ -788,7 +810,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 				orderDetailB04.setBId("B04");
 				orderDetailB04.setPlatformInAmt(orderDetailB04.getTransAmt());
-				orderDetailB04.setCompanyInAmt(orderDetailB04.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB04.setCompanyInAmt(companyInAmt);
 				orderDetailB04.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB04.setCreateUser(user.getId());
 				orderDetailB04.setUpdateUser(user.getId());
@@ -801,7 +824,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B04)) {
 				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 				orderDetailB04.setPlatformInAmt(orderDetailB04.getTransAmt());
-				orderDetailB04.setCompanyInAmt(orderDetailB04.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB04.setCompanyInAmt(companyInAmt);
 				orderDetailB04.setUpdateUser(user.getId());
 				orderDetailB04.setUpdateTime(System.currentTimeMillis());
 				orderDetailB04.setLockVersion(orderDetailB04.getLockVersion() + 1);
@@ -823,7 +847,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 				orderDetailB05.setBId("B05");
 				orderDetailB05.setPlatformInAmt(orderDetailB05.getTransAmt());
-				orderDetailB05.setCompanyInAmt(orderDetailB05.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB05.setCompanyInAmt(companyInAmt);
 				orderDetailB05.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB05.setCreateUser(user.getId());
 				orderDetailB05.setUpdateUser(user.getId());
@@ -836,7 +861,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B05)) {
 				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 				orderDetailB05.setPlatformInAmt(orderDetailB05.getTransAmt());
-				orderDetailB05.setCompanyInAmt(orderDetailB05.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB05.setCompanyInAmt(companyInAmt);
 				orderDetailB05.setUpdateUser(user.getId());
 				orderDetailB05.setUpdateTime(System.currentTimeMillis());
 				orderDetailB05.setLockVersion(orderDetailB05.getLockVersion() + 1);
@@ -858,7 +884,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 				orderDetailB06.setBId("B06");
 				orderDetailB06.setPlatformInAmt(orderDetailB06.getTransAmt());
-				orderDetailB06.setCompanyInAmt(orderDetailB06.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB06.setCompanyInAmt(companyInAmt);
 				orderDetailB06.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB06.setCreateUser(user.getId());
 				orderDetailB06.setUpdateUser(user.getId());
@@ -871,7 +898,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B06)) {
 				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 				orderDetailB06.setPlatformInAmt(orderDetailB06.getTransAmt());
-				orderDetailB06.setCompanyInAmt(orderDetailB06.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB06.setCompanyInAmt(companyInAmt);
 				orderDetailB06.setUpdateUser(user.getId());
 				orderDetailB06.setUpdateTime(System.currentTimeMillis());
 				orderDetailB06.setLockVersion(orderDetailB06.getLockVersion() + 1);
@@ -893,7 +921,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 				orderDetailB07.setBId("B07");
 				orderDetailB07.setPlatformInAmt(orderDetailB07.getTransAmt());
-				orderDetailB07.setCompanyInAmt(orderDetailB07.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB07.setCompanyInAmt(companyInAmt);
 				orderDetailB07.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB07.setCreateUser(user.getId());
 				orderDetailB07.setUpdateUser(user.getId());
@@ -906,7 +935,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B07)) {
 				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 				orderDetailB07.setPlatformInAmt(orderDetailB07.getTransAmt());
-				orderDetailB07.setCompanyInAmt(orderDetailB07.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB07.setCompanyInAmt(companyInAmt);
 				orderDetailB07.setUpdateUser(user.getId());
 				orderDetailB07.setUpdateTime(System.currentTimeMillis());
 				orderDetailB07.setLockVersion(orderDetailB07.getLockVersion() + 1);
@@ -928,7 +958,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 				orderDetailB08.setBId("B08");
 				orderDetailB08.setPlatformInAmt(orderDetailB08.getTransAmt());
-				orderDetailB08.setCompanyInAmt(orderDetailB08.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB08.setCompanyInAmt(companyInAmt);
 				orderDetailB08.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB08.setCreateUser(user.getId());
 				orderDetailB08.setUpdateUser(user.getId());
@@ -941,7 +972,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B08)) {
 				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 				orderDetailB08.setPlatformInAmt(orderDetailB08.getTransAmt());
-				orderDetailB08.setCompanyInAmt(orderDetailB08.getTransAmt().multiply(new BigDecimal(platformFee)));
+				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(platformFeeSum, 0);
+				orderDetailB08.setCompanyInAmt(companyInAmt);
 				orderDetailB08.setUpdateUser(user.getId());
 				orderDetailB08.setUpdateTime(System.currentTimeMillis());
 				orderDetailB08.setLockVersion(orderDetailB08.getLockVersion() + 1);

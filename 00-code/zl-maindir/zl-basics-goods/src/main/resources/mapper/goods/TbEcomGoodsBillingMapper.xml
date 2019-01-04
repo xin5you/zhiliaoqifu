@@ -2,4 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsBillingMapper">
 
+    <sql id="goodsBillingColumns">
+        id,
+        goods_id,
+        b_id
+    </sql>
+
+    <sql id="tableName">
+      tb_ecom_goods_billing
+    </sql>
+
+    <select id="getGoodsBillingByGoodsId" parameterType="TbEcomGoodsBilling" resultType="TbEcomGoodsBilling">
+      select
+        <include refid="goodsBillingColumns"/>
+      from
+        <include refid="tableName"/>
+      where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insert" parameterType="TbEcomGoodsBilling" useGeneratedKeys="true" keyProperty="id">
+      insert into
+        <include refid="tableName"/>
+        (goods_id, b_id)
+      values(
+        #{goods_id},
+        #{b_id}
+      )
+    </insert>
+
 </mapper>

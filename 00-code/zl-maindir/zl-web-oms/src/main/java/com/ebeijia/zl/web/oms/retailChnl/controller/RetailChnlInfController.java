@@ -111,12 +111,12 @@ public class RetailChnlInfController {
 		resultMap.put("status", Boolean.TRUE);
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
-			RetailChnlInf chnlInf = retailChnlInfFacade.getRetailChnlInfByLawCode(retailChnlInf.getLawCode());
+			/*RetailChnlInf chnlInf = retailChnlInfFacade.getRetailChnlInfByLawCode(retailChnlInf.getLawCode());
 			if (chnlInf != null) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "分销商代码已存在，请重新输入");
 				return resultMap;
-			}
+			}*/
 			if (!retailChnlInfFacade.saveRetailChnlInf(retailChnlInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加分销商信息失败");
@@ -154,12 +154,12 @@ public class RetailChnlInfController {
 
 		try {
 			RetailChnlInf retailChnlInf = getRetailChnlInf(req);
-			RetailChnlInf chnlInf = retailChnlInfFacade.getRetailChnlInfByLawCode(retailChnlInf.getLawCode());
+			/*RetailChnlInf chnlInf = retailChnlInfFacade.getRetailChnlInfByLawCode(retailChnlInf.getLawCode());
 			if (chnlInf != null && !chnlInf.getChannelId().equals(retailChnlInf.getChannelId())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "分销商代码已存在，请重新输入");
 				return resultMap;
-			}
+			}*/
 			if (!retailChnlInfFacade.updateRetailChnlInf(retailChnlInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑分销商信息失败");

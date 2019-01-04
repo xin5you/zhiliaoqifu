@@ -131,12 +131,12 @@ public class ProviderInfController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
 			ProviderInf providerInf = this.getProviderInf(req);
-			ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
+			/*ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
 			if (provider != null) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "供应商代码已存在，请重新输入");
 				return resultMap;
-			}
+			}*/
 			if(!providerInfFacade.saveProviderInf(providerInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "新增供应商失败，请稍后再试");
@@ -191,12 +191,12 @@ public class ProviderInfController {
 			}
 			
 			ProviderInf providerInf = this.getProviderInf(req);
-			ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
+			/*ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
 			if (provider != null && !provider.getProviderId().equals(provider.getProviderId())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "供应商代码已存在，请重新输入");
 				return resultMap;
-			}
+			}*/
 			if (!providerInfFacade.updateProviderInf(providerInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑失败，请联系管理员");
@@ -325,6 +325,8 @@ public class ProviderInfController {
 		resultMap.put("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
+		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
+		String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
 		try {
 			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
 			if (provider == null || provider.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
@@ -338,6 +340,16 @@ public class ProviderInfController {
 				resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;
 			}
+
+			BigDecimal providerFee = provider.getProviderRate().add(new BigDecimal(1));
+			BigDecimal inAccountAmt = new BigDecimal(remitAmt).divide(providerFee, 4);
+			if (!inAccountAmt.toString().equals(inaccountAmt)) {
+				logger.error("## 供应商{}上账{}金额不正确，应上账{}", providerId, inaccountAmt, inAccountAmt);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，供应商上账金额不正确");
+				return resultMap;
+			}
+
 			int i = providerInfService.addProviderTransfer(req, evidenceUrlFile);
 			if (i < 1) {
 				resultMap.put("status", Boolean.FALSE);

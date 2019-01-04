@@ -144,7 +144,7 @@ var ListGoodsGallery = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -170,7 +170,7 @@ var ListGoodsGallery = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -198,9 +198,9 @@ var ListGoodsGallery = {
 						return false;
 					}
 				},
-				error : function(){
-					Helper.alert(data.msg);
-				}
+                error : function() {
+                    Helper.alert("网络异常，请稍后再试");
+                }
 			});
 		});
 	},
@@ -229,8 +229,8 @@ var ListGoodsGallery = {
             	$('#sort').val(data.sort);
                 $('#remarks').val(data.remarks);
             },
-            error : function(){
-            	Helper.alert("系统故障，请稍后再试");
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
             }
 	    });
 		

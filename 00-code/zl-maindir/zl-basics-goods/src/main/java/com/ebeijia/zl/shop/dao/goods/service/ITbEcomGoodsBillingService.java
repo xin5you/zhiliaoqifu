@@ -12,4 +12,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbEcomGoodsBillingService extends IService<TbEcomGoodsBilling> {
 
+    /**
+     * 根据goodsId查询商品关联表信息
+     * @param goodsId
+     * @return
+     */
+    TbEcomGoodsBilling getGoodsBillingByGoodsId(String goodsId);
+
+    /**
+     * 新增商品专项类型关联表
+     * @param ecomGoodsBilling
+     * @return
+     */
+    int insert(TbEcomGoodsBilling ecomGoodsBilling);
 }

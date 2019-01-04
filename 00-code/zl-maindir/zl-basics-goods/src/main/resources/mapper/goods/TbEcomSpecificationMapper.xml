@@ -30,6 +30,6 @@
       <if test="specName != null and specName != ''">
         and spec_name like "%"#{specName}"%"
       </if>
-      order by create_time desc;
+      order by create_time desc
     </select>
 </mapper>

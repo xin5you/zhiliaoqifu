@@ -24,9 +24,8 @@ public class EcomInterceptor extends HandlerInterceptorAdapter {
 
 		String method = request.getMethod();// 获得当前请求的方式
 		String url = request.getRequestURI();// 获得当前请求的路径
-
-		if ("get".equalsIgnoreCase(method)) {// 判断当前请求路径方式是否是get方式
-												// equalsIgnoreCase()忽略大小写
+		// 判断当前请求路径方式是否是get方式，equalsIgnoreCase()忽略大小写
+		if ("get".equalsIgnoreCase(method)) {
 			for (String c : COMMON_AUTH_URL) {// 循环判断当前请求的路径是否包含公共权限路径
 				if (url.indexOf(c) != -1)// 当前请求的路径包含公共权限路径就通过拦截器
 					return super.preHandle(request, response, handler);

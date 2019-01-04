@@ -51,9 +51,9 @@
 								<td><span th:text="${spec.specValueId}"></span></td>
 								<td><span th:text="${spec.specValue}"></span></td>
 								<td>
-									<!--<span  th:if="${spec.specImage} != null">
+									<span  th:if="${spec.specImage} != null">
 										<a th:href="${spec.specImage}">[[${spec.specImage}]]</a>
-									</span>-->
+									</span>
 								</td>
 								<td><span th:text="${spec.specType}"></span></td>
 								<td><span th:text="${spec.specOrder}"></span></td>
@@ -104,6 +104,7 @@
 								<span class="help-block"></span>
 							</div>	
 						</div>
+
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格排序：</label>
 							<div class="controls">

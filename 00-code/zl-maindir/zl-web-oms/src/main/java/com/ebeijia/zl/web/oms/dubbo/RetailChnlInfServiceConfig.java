@@ -68,6 +68,12 @@ public class RetailChnlInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
+
+		/*methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlInfByLawCode");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //*/
 		
 		return referenceBean;
 	}

@@ -41,9 +41,9 @@ var listGoodsInf = {
                 b_id: { required: true},
                 unit: { required: true},
                 weight: { required: true},
-                default_sku_code: { required: true},
+                /*default_sku_code: { required: true},*/
                 /*market_enable: { required: true},*/
-                brief: { required: true},
+                /*brief: { required: true},*/
                 goods_detail: { required: true},
                 have_groups: { required: true},
                 is_disabled: { required: true},
@@ -58,9 +58,9 @@ var listGoodsInf = {
                 b_id: { required: "请选择所属专项类型"},
                 unit: { required: "请选择商品单位"},
                 weight: { required: "请输入商品重量"},
-                default_sku_code: { required: "请选择默认的Sku"},
+                /*default_sku_code: { required: "请选择默认的Sku"},*/
                 /*market_enable: { required: "请选择上下架状态"},*/
-                brief: { required: "请输入商品简介"},
+                /*brief: { required: "请输入商品简介"},*/
                 goods_detail: { required: "请选择商品富文本ID"},
                 have_groups: { required: "请选择商品组合状态"},
                 is_disabled: { required: "请选择商品禁用状态"},
@@ -175,7 +175,7 @@ var listGoodsInf = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -201,7 +201,7 @@ var listGoodsInf = {
                 }
             },
             error : function() {
-                Helper.alert(data.msg);
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
@@ -229,9 +229,9 @@ var listGoodsInf = {
 						return false;
 					}
 				},
-				error : function(){
-					Helper.alert(data.msg);
-				}
+                error : function() {
+                    Helper.alert("网络异常，请稍后再试");
+                }
 			});
 		});
 	},
@@ -246,7 +246,7 @@ var listGoodsInf = {
 			$('#modal_h').html("编辑商品信息");
 		}
 
-        $.ajax({
+        /*$.ajax({
             url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProductByGoodsId',
             type: 'post',
             dataType : "json",
@@ -259,10 +259,10 @@ var listGoodsInf = {
                     $("#default_sku_code").append($("<option/>").text(item.skuCode).attr("value",item.skuCode));
                 });
             },
-            error : function(){
-                Helper.alert("系统故障，请稍后再试");
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
             }
-        });
+        });*/
 		
 		$.ajax({								  
             url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsInf',
@@ -281,7 +281,7 @@ var listGoodsInf = {
                 $('#b_id').val(data.BId);
                 $('#unit').val(data.unit);
                 $('#weight').val(data.weight);
-                $('#default_sku_code').val(data.defaultSkuCode);
+                /*$('#default_sku_code').val(data.defaultSkuCode);*/
                 /*$('#market_enable').val(data.marketEnable);*/
                 $('#brief').val(data.brief);
                 $('#goods_detail').val(data.goodsDetail);
@@ -304,7 +304,7 @@ var listGoodsInf = {
             $("#b_id").removeAttr('readonly');
             $("#unit").removeAttr('readonly');
             $("#weight").removeAttr('readonly');
-            $("#default_sku_code").removeAttr('readonly');
+            /*$("#default_sku_code").removeAttr('readonly');*/
             /*$("#market_enable").removeAttr('readonly');*/
             $("#brief").removeAttr('readonly');
             $("#goods_detail").removeAttr('readonly');
@@ -345,8 +345,8 @@ var listGoodsInf = {
                     return false;
                 }
             },
-            error : function(){
-                Helper.alert(data.msg);
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
             }
         });
     },
