@@ -75,6 +75,7 @@ public class ProductService implements IProductService {
             goods.setCatId(catid);
             goodsList = goodsDao.getGoodsByCategory(goods);
         } else {
+            //TODO 跨服务域
             goodsList = goodsDao.getGoodsList(goods);
         }
         PageInfo<Goods> page = new PageInfo<>(goodsList);

@@ -83,7 +83,7 @@ public class PayService implements IPayService {
             result = (String) object;
         } else {
             logger.error("支付失败,参数%s,%s,%s,%s", payInfo, openId, dmsRelatedKey, desc);
-            throw new BizException(ResultState.NOT_ACCEPTABLE, "支付失败，请检查余额");
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "账户余额不足");
         }
         //判断result
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s", payInfo, openId, dmsRelatedKey, desc, result));
