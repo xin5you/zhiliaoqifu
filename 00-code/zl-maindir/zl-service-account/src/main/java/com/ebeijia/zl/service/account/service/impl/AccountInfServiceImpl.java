@@ -382,6 +382,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		 }else if(UserType.TYPE400.getCode().equals(req.getUserType())){
 			 list=accountInfMapper.getAccountVOToRetailList(req.getUserChnlId(),req.getUserType());
 		 }
+		list.forEach(s ->{
+			//单位分转元
+			s.setAccBal(AmountUtil.RMBCentToYuan(s.getAccBal()));
+			s.setCouponBal(AmountUtil.RMBCentToYuan(s.getCouponBal()));
+		});
 		 return list;
 	}
 }

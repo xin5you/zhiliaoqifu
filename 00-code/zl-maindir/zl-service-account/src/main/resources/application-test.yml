@@ -29,13 +29,15 @@ spring:
       name: zl-service-account
     protocol:
       name: dubbo
-      host: 192.168.2.223
+      host: 192.168.2.110
       port: 20880
       accepts: 1000
     provider:
       id: provider_zl-service-account
       timeout: 2000
       delay: -1
+    consumer:
+      check: false
     registry:
       address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
   rocketmq:

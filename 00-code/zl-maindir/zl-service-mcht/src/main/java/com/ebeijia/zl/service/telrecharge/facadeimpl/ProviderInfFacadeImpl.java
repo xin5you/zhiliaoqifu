@@ -74,7 +74,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	 * 
 	 * @param startNum
 	 * @param pageSize
-	 * @param ProviderInf
+	 * @param providerInf
 	 * @return
 	 * @throws Exception
 	 */
@@ -91,7 +91,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	}
 
 	@Override
-	public ProviderInf getProviderInfBylawCode(String lawCode) throws Exception {
+	public ProviderInf getProviderInfByLawCode(String lawCode) throws Exception {
 		return providerInfService.getProviderInfByLawCode(lawCode);
 	}
 }
