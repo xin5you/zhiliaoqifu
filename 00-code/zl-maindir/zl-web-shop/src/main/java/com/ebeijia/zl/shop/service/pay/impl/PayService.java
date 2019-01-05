@@ -5,6 +5,7 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
+import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
@@ -32,7 +33,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class PayService implements IPayService {
@@ -55,27 +58,25 @@ public class PayService implements IPayService {
     @Autowired
     AccountTransactionFacade accountTransactionFacade;
 
+    @Autowired
+    JedisUtilsWithNamespace jedis;
+
     Logger logger = LoggerFactory.getLogger(PayService.class);
 
     @Override
     public int transferToCard(DealInfo dealInfo, Double session) {
+
+
+
         return (int) (Math.random() * 10000);
     }
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     public int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
-        //构造payOrder对象
-        String memberId = shopUtils.getSession().getMemberId();
-        String payOrderId = IdUtil.getNextId();
-        TbEcomPayOrder pay = initPayOrderObject();
-        pay.setMemberId(memberId);
-        pay.setDmsRelatedKey(dmsRelatedKey);
-        pay.setPayOrderId(payOrderId);
-        payOrderDao.save(pay);
 
         //请求支付
-        String result;
+        String result = "";
         List<AccountTxnVo> txnList = buildTxnVo(payInfo);
         BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc);
         Object object = baseResult.getObject();
@@ -87,6 +88,16 @@ public class PayService implements IPayService {
         }
         //判断result
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s", payInfo, openId, dmsRelatedKey, desc, result));
+
+        //构造payOrder对象
+        String memberId = shopUtils.getSession().getMemberId();
+        String payOrderId = IdUtil.getNextId();
+        TbEcomPayOrder pay = initPayOrderObject();
+        pay.setMemberId(memberId);
+        pay.setDmsRelatedKey(dmsRelatedKey);
+        pay.setPayOrderId(payOrderId);
+        pay.setOutTransNo(result);
+        payOrderDao.save(pay);
 
         //构造payOrderDetail对象
         for (AccountTxnVo v : txnList) {
@@ -243,7 +254,7 @@ public class PayService implements IPayService {
             result = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
             logger.error(e.getStackTrace().toString());
-            throw new BizException(500, "账户系统调用异常");
+            throw new BizException(500, "服务器连接中断，请稍后再试");
         }
         return result;
     }

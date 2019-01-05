@@ -3,11 +3,13 @@ package com.ebeijia.zl.shop.service.valid.impl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.SmsVo;
 import com.ebeijia.zl.common.utils.enums.SMSType;
+import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.config.ShopConfig;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
 import com.ebeijia.zl.core.rocketmq.service.MQProducerService;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
 import static com.ebeijia.zl.shop.constants.ResultState.OK;
@@ -139,5 +142,22 @@ public class ValidCodeService implements IValidCodeService {
         } catch (Exception ignored) {
         }
         throw new AdviceMessenger(NOT_ACCEPTABLE, "手机号有误，请检查");
+    }
+
+
+    public void checkSession(String method,String session){
+        StringBuilder sb = new StringBuilder();
+        sb.append(ShopConfig.ID);
+        sb.append("SESSION_LOCK_");
+        sb.append(method);
+        sb.append(":");
+        sb.append(session);
+        String key = sb.toString();
+        JedisCluster resource = jedis.getJedis().getResource();
+        Long result = resource.setnx(key, method);
+        if (result != 0) {
+            throw new BizException(ResultState.FORBIDDEN, "请求太频繁了");
+        }
+        resource.expire(key, ShopConfig.SUBMIT_INTERVAL);
     }
 }

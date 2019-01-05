@@ -91,7 +91,7 @@ public class CardService implements ICardService {
         }
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
-            throw new AdviceMessenger(406, "参数异常");
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
         String memberId = memberInfo.getMemberId();
 
