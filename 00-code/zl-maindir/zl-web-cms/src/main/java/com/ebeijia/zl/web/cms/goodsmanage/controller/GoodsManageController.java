@@ -64,6 +64,9 @@ public class GoodsManageController {
 	private ITbEcomGoodsGalleryService ecomGoodsGalleryService;
 
 	@Autowired
+	private ITbEcomGoodsSpecService ecomGoodsSpecService;
+
+	@Autowired
 	private ProviderInfFacade providerInfFacade;
 
 	/**
@@ -318,6 +321,24 @@ public class GoodsManageController {
 	}
 
 	/**
+	 * 根据规格ID查询规格值信息
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsSpec/getSpecValuesBySpecId")
+	public List<TbEcomSpecValues> getSpecValuesBySpecId(HttpServletRequest req) {
+		String specId = req.getParameter("specId");
+		if (StringUtil.isNullOrEmpty(specId)) {
+			logger.error("## 根据规格ID查询规格值信息，规格ID为空");
+			return null;
+		}
+		TbEcomSpecValues goodsSpecValues = new TbEcomSpecValues();
+		goodsSpecValues.setSpecId(specId);
+		List<TbEcomSpecValues> goodsSpecValueList = ecomSpecValuesService.getGoodsSpecValuesList(goodsSpecValues);
+		return goodsSpecValueList;
+	}
+
+	/**
 	 * 商品规格信息值封装类方法
 	 * @param req
 	 * @return
@@ -328,6 +349,7 @@ public class GoodsManageController {
 
 		String specId = req.getParameter("spec_id");
 		String specValueId = req.getParameter("spec_value_id");
+		String specValueName = req.getParameter("spec_value_name");
 		String specValue = req.getParameter("spec_value");
 		String specImage = req.getParameter("spec_image");
 		String specOrder = req.getParameter("spec_order");
@@ -351,6 +373,7 @@ public class GoodsManageController {
 		specValues.setUpdateTime(System.currentTimeMillis());
 		specValues.setSpecOrder(Integer.valueOf(specOrder));
 		specValues.setSpecType(specType);
+		specValues.setSpecValueName(specValueName);
 		if (GoodsSpecTypeEnum.GoodsSpecTypeEnum_1.getCode().equals(specType)) {
 			specValues.setSpecImage(specImage);
 			specValues.setSpecValue("");
@@ -744,10 +767,15 @@ public class GoodsManageController {
 
 		PageInfo<TbEcomGoodsProduct> pageInfo = new PageInfo<>();
 		TbEcomGoods goodsInf = new TbEcomGoods();
+		List<TbEcomSpecification> goodsSpecList = new ArrayList<>();
+		List<TbEcomSpecValues> goodsSpecValuesList = new ArrayList<>();
+
 		try {
 			ecomGoodsProduct.setGoodsId(goodsId);
 			pageInfo = goodsManageService.getGoodsProductListPage(startNum, pageSize, ecomGoodsProduct);
 			goodsInf = ecomGoodsService.getGoodsInfByGoodsId(goodsId);
+			goodsSpecList = ecomSpecificationService.getGoodsSpecList(new TbEcomSpecification());
+			goodsSpecValuesList = ecomSpecValuesService.getGoodsSpecValuesList(new TbEcomSpecValues());
 		} catch (Exception e) {
 			logger.error("## 查询商品{}Sku信息异常", goodsId, e);
 		}
@@ -756,6 +784,8 @@ public class GoodsManageController {
 		mv.addObject("goodsInf", goodsInf);
 		mv.addObject("productEnableList", MarketEnableEnum.values());
 		mv.addObject("isDefaultList", IsDefaultEnum.values());
+		mv.addObject("goodsSpecList", goodsSpecList);
+		mv.addObject("goodsSpecValuesList", goodsSpecValuesList);
 		return mv;
 	}
 
@@ -770,6 +800,25 @@ public class GoodsManageController {
 		TbEcomGoodsProduct goodsProduct = new TbEcomGoodsProduct();
 		try {
 			goodsProduct = ecomGoodsProductService.getById(ecomGoodsProduct.getProductId());
+			if (goodsProduct != null && !StringUtil.isEmpty(goodsProduct)) {
+				TbEcomGoodsSpec ecomGoodsSpec = new TbEcomGoodsSpec();
+				ecomGoodsSpec.setGoodsId(goodsProduct.getGoodsId());
+				ecomGoodsSpec.setProductId(goodsProduct.getProductId());
+				TbEcomGoodsSpec goodsSpec = ecomGoodsSpecService.getGoodsSpecByGoodsIdAndProductId(ecomGoodsSpec);
+				if (goodsSpec != null) {
+					goodsProduct.setSpecId(goodsSpec.getSpecId());
+					goodsProduct.setSpecValueId(goodsSpec.getSpecValueId());
+				}
+				goodsProduct.setGoodsPrice(NumberUtils.RMBCentToYuan(goodsProduct.getGoodsPrice()));
+				goodsProduct.setGoodsCost(NumberUtils.RMBCentToYuan(goodsProduct.getGoodsCost()));
+				goodsProduct.setMktPrice(NumberUtils.RMBCentToYuan(goodsProduct.getMktPrice()));
+				TbEcomGoods goods = ecomGoodsService.getById(goodsProduct.getGoodsId());
+				if (!StringUtil.isNullOrEmpty(goods.getDefaultSkuCode()) && goods.getDefaultSkuCode().equals(goodsProduct.getSkuCode())) {
+					goodsProduct.setIsDefault(IsDefaultEnum.IsDefaultEnum_0.getCode());
+				} else {
+					goodsProduct.setIsDefault(IsDefaultEnum.IsDefaultEnum_1.getCode());
+				}
+            }
 		} catch (Exception e) {
 			logger.error("## 查询主键为[{}]的商品Sku信息出错", goodsProduct.getProductId(), e);
 		}
@@ -896,6 +945,8 @@ public class GoodsManageController {
 		String picUrl = req.getParameter("pic_url");
 		String remarks = req.getParameter("remarks");
 		String defaultSkuCode = req.getParameter("default_sku_code");
+		String specId = req.getParameter("specId");
+		String specValueId = req.getParameter("specValueId");
 
 		TbEcomGoodsProduct goodsProduct = null;
 		if (!StringUtil.isNullOrEmpty(productId)) {
@@ -918,14 +969,17 @@ public class GoodsManageController {
 		goodsProduct.setIsStore(Integer.valueOf(isStore));
 		goodsProduct.setSkuCode(skuCode);
 		goodsProduct.setEnableStore(Integer.valueOf(enableStore));
-		goodsProduct.setGoodsPrice(goodsPrice);
-		goodsProduct.setGoodsCost(goodsCost);
-		goodsProduct.setMktPrice(mktPrice);
+		goodsProduct.setGoodsPrice(NumberUtils.RMBYuanToCent(goodsPrice));
+		goodsProduct.setGoodsCost(NumberUtils.RMBYuanToCent(goodsCost));
+		goodsProduct.setMktPrice(NumberUtils.RMBYuanToCent(mktPrice));
 		goodsProduct.setPageTitle(pageTitle);
 		goodsProduct.setMetaDescription(metaDescription);
 		goodsProduct.setPicUrl(picUrl);
 		goodsProduct.setRemarks(remarks);
 		goodsProduct.setIsDefault(defaultSkuCode);
+		goodsProduct.setProductEnable(Integer.valueOf(MarketEnableEnum.MarketEnableEnum_1.getCode()));
+		goodsProduct.setSpecId(specId);
+		goodsProduct.setSpecValueId(specValueId);
 		return goodsProduct;
 	}
 

@@ -2,4 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.service.account.mapper.AccountWithdrawDetailMapper">
 
+
+    <select id="getWithdrawTotalToMonthByUserId"  resultType="java.lang.Integer">
+        select count(1) from tb_account_withdraw_detail  t
+          where t.user_id=#{userId}
+          and t.create_time &gt;=#{sDate}
+          and t.create_time &lt;=#{eDate}
+          and t.success !='true'
+    </select>
+
+    <select id="getWithdrawAmtByUserIdAndTime"  resultType="java.math.BigDecimal">
+        select IFNULL(sum(t.trans_amount),0) from tb_account_withdraw_detail t
+        where t.user_id=#{userId}
+          and t.create_time &gt;=#{sDate}
+          and t.create_time &lt;=#{eDate}
+          and t.success !='true'
+    </select>
+
+    <select id="getWithdrawAmtByCardAndTime"  resultType="java.math.BigDecimal">
+        select IFNULL(sum(t.trans_amount),0) from tb_account_withdraw_detail t
+        where t.receivercard_no=#{cardNo}
+        and t.create_time &gt;=#{sDate}
+        and t.create_time &lt;=#{eDate}
+        and t.success !='true'
+    </select>
 </mapper>

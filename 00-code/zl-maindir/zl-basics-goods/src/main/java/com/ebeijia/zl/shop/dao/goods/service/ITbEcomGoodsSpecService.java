@@ -12,4 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbEcomGoodsSpecService extends IService<TbEcomGoodsSpec> {
 
+    /**
+     * 根据goodsId和productId查询商品规格关联表信息
+     * @param ecomGoodsSpec
+     * @return
+     */
+    TbEcomGoodsSpec getGoodsSpecByGoodsIdAndProductId(TbEcomGoodsSpec ecomGoodsSpec);
 }

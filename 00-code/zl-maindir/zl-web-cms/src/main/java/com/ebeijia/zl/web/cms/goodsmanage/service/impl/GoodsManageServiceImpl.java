@@ -9,6 +9,7 @@ import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
@@ -63,6 +64,9 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 	@Autowired
 	private ITbEcomGoodsProductService ecomGoodsProductService;
+
+	@Autowired
+	private ITbEcomGoodsSpecService ecomGoodsSpecService;
 
 	@Autowired
 	private ITbEcomGoodsGalleryService ecomGoodsGalleryService;
@@ -519,9 +523,13 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 	@Override
 	public PageInfo<TbEcomGoodsGallery> getGoodsGalleryListPage(int startNum, int pageSize, TbEcomGoodsGallery entity) {
-		List<TbEcomGoodsGallery> goodsGalleryList = new ArrayList<TbEcomGoodsGallery>();
 		PageHelper.startPage(startNum, pageSize);
-		goodsGalleryList = ecomGoodsGalleryService.getGoodsGalleryList(entity);
+		List<TbEcomGoodsGallery> goodsGalleryList = ecomGoodsGalleryService.getGoodsGalleryList(entity);
+		if (goodsGalleryList != null && goodsGalleryList.size() >= 1) {
+			for (TbEcomGoodsGallery g : goodsGalleryList) {
+				g.setIsDefault(IsDefaultEnum.findByBId(g.getIsDefault()).getName());
+			}
+		}
 		PageInfo<TbEcomGoodsGallery> page = new PageInfo<TbEcomGoodsGallery>(goodsGalleryList);
 		return page;
 	}
@@ -538,7 +546,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			TbEcomGoodsGallery goodsGallery = ecomGoodsGalleryService.getGoodsGalleryByIsDefault(entity.getIsDefault());
 			if (goodsGallery != null) {
 				goodsGallery.setIsDefault(IsDefaultEnum.IsDefaultEnum_1.getCode());
-				if (ecomGoodsGalleryService.updateById(goodsGallery)) {
+				if (!ecomGoodsGalleryService.updateById(goodsGallery)) {
 					logger.error("## 新增商品相册信息失败");
 					return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews11.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews11.getMsg());
 				}
@@ -582,7 +590,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 	@Override
 	public BaseResult<Object> editGoodsGallery(TbEcomGoodsGallery entity, MultipartFile originalFile) {
 		TbEcomGoodsGallery gallery = ecomGoodsGalleryService.getGoodsGalleryBySort(entity.getSort());
-		if (gallery != null) {
+		if (gallery != null && !gallery.getImgId().equals(entity.getImgId())) {
 			logger.error("## 编辑商品相册信息失败,排序号{}已存在");
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getMsg());
 		}
@@ -591,14 +599,14 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			TbEcomGoodsGallery goodsGallery = ecomGoodsGalleryService.getGoodsGalleryByIsDefault(entity.getIsDefault());
 			if (goodsGallery != null) {
 				goodsGallery.setIsDefault(IsDefaultEnum.IsDefaultEnum_1.getCode());
-				if (ecomGoodsGalleryService.updateById(goodsGallery)) {
+				if (!ecomGoodsGalleryService.updateById(goodsGallery)) {
 					logger.error("## 编辑商品相册信息失败");
 					return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews12.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews12.getMsg());
 				}
 			}
 		}
 
-		if (StringUtil.isNullOrEmpty(entity.getThumbnail())) {
+		if (StringUtil.isNullOrEmpty(entity.getOriginal())) {
 			return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews03.getCode(), ExceptionEnum.ImageNews.ImageNews03.getMsg());
 		}
 		if (originalFile != null && !originalFile.isEmpty()) {
@@ -661,10 +669,22 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 	@Override
 	public PageInfo<TbEcomGoodsProduct> getGoodsProductListPage(int startNum, int pageSize, TbEcomGoodsProduct entity) {
-		List<TbEcomGoodsProduct> goodsProductList = new ArrayList<TbEcomGoodsProduct>();
-
 		PageHelper.startPage(startNum, pageSize);
-		goodsProductList = ecomGoodsProductService.getGoodsProductList(entity);
+		List<TbEcomGoodsProduct> goodsProductList = ecomGoodsProductService.getGoodsProductList(entity);
+		try {
+			if (goodsProductList != null && goodsProductList.size() >= 1) {
+				for (TbEcomGoodsProduct g : goodsProductList) {
+					ProviderInf provider = providerInfFacade.getProviderInfByLawCode(g.getEcomCode());
+					g.setEcomCode(provider.getProviderName());
+					g.setProductEnableName(MarketEnableEnum.findByBId(Integer.toString(g.getProductEnable())).getName());
+					g.setGoodsPrice(NumberUtils.RMBCentToYuan(g.getGoodsPrice()));
+					g.setGoodsCost(NumberUtils.RMBCentToYuan(g.getGoodsCost()));
+					g.setMktPrice(NumberUtils.RMBCentToYuan(g.getMktPrice()));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		PageInfo<TbEcomGoodsProduct> page = new PageInfo<TbEcomGoodsProduct>(goodsProductList);
 		return page;
 	}
@@ -706,7 +726,11 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 		if (IsDefaultEnum.IsDefaultEnum_0.getCode().equals(entity.getIsDefault())) {
 			TbEcomGoods goods = ecomGoodsService.getById(entity.getGoodsId());
-			goods.setDefaultSkuCode(entity.getIsDefault());
+			if (StringUtil.isNullOrEmpty(goods.getDefaultSkuCode())) {
+				logger.error("## 新增商品Sku信息失败，必须要有一个是默认的Sku");
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews19.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews19.getMsg());
+			}
+			goods.setDefaultSkuCode(entity.getSkuCode());
 			goods.setUpdateTime(System.currentTimeMillis());
 			goods.setUpdateUser(entity.getUpdateUser());
 			goods.setLockVersion(goods.getLockVersion() + 1);
@@ -720,15 +744,41 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			logger.error("## 新增商品Sku信息失败");
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews15.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews15.getMsg());
 		}
+
+		TbEcomGoodsSpec goodsSpec = new TbEcomGoodsSpec();
+		goodsSpec.setId(IdUtil.getNextId());
+		goodsSpec.setSpecId(entity.getSpecId());
+		goodsSpec.setSpecValueId(entity.getSpecValueId());
+		goodsSpec.setGoodsId(entity.getGoodsId());
+		goodsSpec.setProductId(entity.getProductId());
+		goodsSpec.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+		goodsSpec.setCreateUser(entity.getUpdateUser());
+		goodsSpec.setCreateTime(System.currentTimeMillis());
+		goodsSpec.setUpdateTime(System.currentTimeMillis());
+		goodsSpec.setUpdateUser(entity.getUpdateUser());
+		goodsSpec.setLockVersion(0);
+		if (!ecomGoodsSpecService.save(goodsSpec)) {
+			logger.error("## 新增商品Sku信息失败,商品规格关联表新增失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews15.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews15.getMsg());
+		}
 		return ResultsUtil.success();
 	}
 
 	@Override
 	public BaseResult<Object> editGoodsProduct(TbEcomGoodsProduct entity, MultipartFile picUrlFile) {
 		TbEcomGoodsProduct product = ecomGoodsProductService.getGoodsProductBySkuCode(entity.getSkuCode());
-		if (product != null) {
+		if (product != null && !product.getProductId().equals(entity.getProductId())) {
 			logger.error("## 编辑商品Sku信息失败,skuCode{}已存在");
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews18.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews18.getMsg());
+		}
+
+		TbEcomGoodsSpec ecomGoodsSpec = new TbEcomGoodsSpec();
+		ecomGoodsSpec.setGoodsId(entity.getGoodsId());
+		ecomGoodsSpec.setProductId(entity.getProductId());
+		TbEcomGoodsSpec goodsSpec = ecomGoodsSpecService.getGoodsSpecByGoodsIdAndProductId(ecomGoodsSpec);
+		if (goodsSpec == null) {
+			logger.error("## 编辑商品Sku信息失败,查询商品规格关联表信息为空");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getMsg());
 		}
 
 		if (StringUtil.isNullOrEmpty(entity.getPicUrl())) {
@@ -762,7 +812,11 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 
 		if (IsDefaultEnum.IsDefaultEnum_0.getCode().equals(entity.getIsDefault())) {
 			TbEcomGoods goods = ecomGoodsService.getById(entity.getGoodsId());
-			goods.setDefaultSkuCode(entity.getIsDefault());
+			if (StringUtil.isNullOrEmpty(goods.getDefaultSkuCode())) {
+				logger.error("## 编辑商品Sku信息失败，必须要有一个是默认的Sku");
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews19.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews19.getMsg());
+			}
+			goods.setDefaultSkuCode(entity.getSkuCode());
 			goods.setUpdateTime(System.currentTimeMillis());
 			goods.setUpdateUser(entity.getUpdateUser());
 			goods.setLockVersion(goods.getLockVersion() + 1);
@@ -776,6 +830,17 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			logger.error("## 编辑商品Sku信息失败");
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getMsg());
 		}
+
+		goodsSpec.setSpecValueId(entity.getSpecValueId());
+		goodsSpec.setSpecId(entity.getSpecId());
+		goodsSpec.setUpdateUser(entity.getUpdateUser());
+		goodsSpec.setUpdateTime(System.currentTimeMillis());
+		goodsSpec.setLockVersion(goodsSpec.getLockVersion() + 1);
+		if (!ecomGoodsSpecService.updateById(goodsSpec)) {
+			logger.error("## 编辑商品Sku信息失败,更新商品关联表信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews16.getMsg());
+		}
+
 		return ResultsUtil.success();
 	}
 
@@ -792,8 +857,32 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 			product.setUpdateTime(System.currentTimeMillis());
 			product.setLockVersion(product.getLockVersion() + 1);
 
+			TbEcomGoods goods = ecomGoodsService.getById(product.getGoodsId());
+			if (goods.getDefaultSkuCode().equals(product.getSkuCode())) {
+				logger.error("# 删除商品Sku信息失败,productId--->{},该Sku是默认的Sku标识", productId);
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews20.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews20.getMsg());
+			}
+
+			TbEcomGoodsSpec ecomGoodsSpec = new TbEcomGoodsSpec();
+			ecomGoodsSpec.setGoodsId(product.getGoodsId());
+			ecomGoodsSpec.setProductId(product.getProductId());
+			TbEcomGoodsSpec goodsSpec = ecomGoodsSpecService.getGoodsSpecByGoodsIdAndProductId(ecomGoodsSpec);
+			if (goodsSpec == null) {
+				logger.error("## 删除商品Sku信息失败,查询商品规格关联表信息为空");
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getMsg());
+			}
+
 			if (!ecomGoodsProductService.updateById(product)) {
 				logger.error("# 删除商品Sku信息失败,productId--->{}", productId);
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getMsg());
+			}
+
+			goodsSpec.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
+			goodsSpec.setUpdateUser(product.getUpdateUser());
+			goodsSpec.setUpdateTime(System.currentTimeMillis());
+			goodsSpec.setLockVersion(goodsSpec.getLockVersion() + 1);
+			if (!ecomGoodsSpecService.updateById(goodsSpec)) {
+				logger.error("## 删除商品Sku信息失败,删除商品关联表信息失败");
 				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews17.getMsg());
 			}
 

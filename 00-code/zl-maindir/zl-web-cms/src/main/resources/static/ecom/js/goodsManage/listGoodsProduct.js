@@ -12,14 +12,17 @@ var listGoodsProduct = {
 		$('.btn-add').on('click', listGoodsProduct.intoAddGoodsProduct);
 		$('.btn-edit').on('click', listGoodsProduct.intoEditGoodsProduct);
 		$('.btn-delete').on('click', listGoodsProduct.deleteGoodsProduct);
+        $('.btn-view').on('click', listGoodsProduct.intoViewGoodsProduct);
 		$('.btn-close').on('click',listGoodsProduct.searchReset);
         $('#picUrlFile').on('change', listGoodsProduct.imageUpload);
         $('.btn-updateEnable').on('click',listGoodsProduct.intoUpdateGoodsProductEnable);
         $('.btn-updateEnableCommit').on('click',listGoodsProduct.updateGoodsProductEnable);
+        $('#specId').on('change', listGoodsProduct.getSpecValuesBySpecId);
+        $('.btn-backGoodsInf').on('click',listGoodsProduct.intoBackGoodsInf);
 	},
 	
 	initTip: function (intoType) {
-        var ttip_validator = $('.form_validation_tip').validate({
+        var ttip_validator = $('#goodsProductInfo').validate({
         	onkeyup: false,
             errorClass: 'error',
             validClass: 'valid',
@@ -31,6 +34,8 @@ var listGoodsProduct = {
             },
             rules:{
                 sku_code: { required: true},
+                specId: { required: true},
+                specValueId: { required: true},
                 is_store: { required: true},
                 enable_store: { required: true},
                 goods_price: { required: true},
@@ -42,6 +47,8 @@ var listGoodsProduct = {
             },
             messages: {
                 sku_code: { required: "请输入Sku代码"},
+                specId: { required: "请选择规格"},
+                specValueId: { required: "请选择规格值"},
                 is_store: { required: "请输入可用库存"},
                 enable_store: { required: "请输入总库存"},
                 goods_price: { required: "请输入商品价格"},
@@ -128,16 +135,24 @@ var listGoodsProduct = {
         $("#pic_url").val(picUrlFile);
     },
 	searchReset : function(){
-		Helper.post('/goodsManage/goodsInf/getGoodsProductList');
+	    var goodsId = $("#goods_id").val();
+		Helper.post('/goodsManage/goodsInf/getGoodsProductList?goodsId=' + goodsId);
 	},
-	intoAddGoodsInf : function(){
+    intoAddGoodsProduct : function(){
         listGoodsProduct.loadModal(1, $(this).attr('productId'));
         listGoodsProduct.initTip(1);
 	},
-	intoEditGoodsInf : function(){
+	intoEditGoodsProduct : function(){
         listGoodsProduct.loadModal(2, $(this).attr('productId'));
         listGoodsProduct.initTip(2);
 	},
+    intoViewGoodsProduct : function(){
+        listGoodsProduct.loadModal(3, $(this).attr('productId'));
+        listGoodsProduct.initTip(3);
+    },
+    intoBackGoodsInf : function () {
+        Helper.post('/goodsManage/goodsInf/getGoodsInfList');
+    },
     addGoodsProduct:function(){
         $.ajax({
             type: 'POST',
@@ -229,7 +244,23 @@ var listGoodsProduct = {
 			return;
 		}else if(type == 2){
 			$('#modal_h').html("编辑商品Sku信息信息");
-		}
+		} else if(type == 3){
+            $('#modal_h').html("商品Sku信息详情");
+            $("#is_store").attr("readonly","readonly");
+            $("#sku_code").attr("readonly","readonly");
+            $("#enable_store").attr("readonly","readonly");
+            $("#goods_price").attr("readonly","readonly");
+            $("#goods_cost").attr("readonly","readonly");
+            $("#mkt_price").attr("readonly","readonly");
+            $("#page_title").attr("readonly","readonly");
+            $("#meta_description").attr("readonly","readonly");
+            $("#picUrlFile").hide();
+            $("#remarks").attr("readonly","readonly");
+            $("#default_sku_code").attr("disabled","true");
+            $("#specId").attr("disabled","true");
+            $("#specValueId").attr("disabled","true");
+            $(".btn-submit").attr("disabled","true");
+        }
 
 		$.ajax({
             url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProduct',
@@ -240,6 +271,7 @@ var listGoodsProduct = {
             },
             success : function (data) {
             	$('#product_id').val(data.productId);
+                $('#is_store').val(data.isStore);
             	$('#sku_code').val(data.skuCode);
                 $('#enable_store').val(data.enableStore);
             	$('#goods_price').val(data.goodsPrice);
@@ -248,6 +280,10 @@ var listGoodsProduct = {
                 $('#page_title').val(data.pageTitle);
                 $('#meta_description').val(data.metaDescription);
                 $('#pic_url').val(data.picUrl);
+                $('#default_sku_code').val(data.isDefault);
+                $('#specId').val(data.specId);
+                console.log(data.specValueId);
+                $('#specValueId').val(data.specValueId);
                 $('#remarks').val(data.remarks);
             },
             error : function() {
@@ -257,14 +293,18 @@ var listGoodsProduct = {
 		
 		$("#modal").on("hidden.bs.modal", function(e) {
 			$("#sku_code").removeAttr('readonly');
+            $("#is_store").removeAttr('readonly');
 			$("#enable_store").removeAttr('readonly');
 			$("#goods_price").removeAttr('readonly');
             $("#goods_cost").removeAttr('readonly');
             $("#mkt_price").removeAttr('readonly');
             $("#page_title").removeAttr('readonly');
             $("#meta_description").removeAttr('readonly');
-            $("#pic_url").removeAttr('readonly');
+            $("#picUrlFile").show();
             $("#remarks").removeAttr('readonly');
+            $("#default_sku_code").removeAttr('disabled');
+            $("#specValueId").removeAttr('disabled');
+            $("#specId").removeAttr('disabled');
 			$(".btn-submit").removeAttr('disabled');
 		});
 	},
@@ -300,6 +340,34 @@ var listGoodsProduct = {
             },
             error : function() {
                 Helper.alert("网络异常，请稍后再试");
+            }
+        });
+    },
+    getSpecValuesBySpecId : function () {
+        var specId = $("#specId").val();
+        $.ajax({
+            url : Helper.getRootPath() + '/goodsManage/goodsSpec/getSpecValuesBySpecId',
+            type : 'post',
+            dataType : "json",
+            data : {
+                "specId": specId
+            },
+            success : function (data) {
+                console.log(data);
+                if (data == null || data == '') {
+                    Helper.alert("网络异常，请稍后再试");
+                    return false;
+                }
+                $("#specValueId").empty();
+                $("#specValueId").append("<option value=''>"+"---请选择---"+"</option>");
+                for(var i = 0; i < data.length; i++){
+                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValue+"</option>");//新增
+                }
+                /*$("#specValueId option:eq(0)").attr('selected', 'selected');//选中第一个*/
+            },
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
+                return false;
             }
         });
     }

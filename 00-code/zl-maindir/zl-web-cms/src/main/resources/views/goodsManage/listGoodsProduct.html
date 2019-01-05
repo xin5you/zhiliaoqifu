@@ -11,6 +11,7 @@
 		                    <li><a href="#"><i class="icon-home"></i></a></li>
 		                    <li>商品管理</li>
 		                    <li>商品信息管理</li>
+							<li>商品Sku列表</li>
 		                </ul>
 		            </div>
 	        	</nav>
@@ -45,11 +46,11 @@
 							</tr>
 						</thead>
 				        <tbody>
-							<tr th:each="v, productStat : ${pageInfo.list}" th:inline="text">
-								<td><span th:text="${product.count}"></span></td>
+							<tr th:each="product, productStat : ${pageInfo.list}" th:inline="text">
+								<td><span th:text="${productStat.count}"></span></td>
 								<td><span th:text="${product.skuCode}"></span></td>
 								<td><span th:text="${product.ecomCode}"></span></td>
-								<td><span th:text="${product.productEnable}"></span></td>
+								<td><span th:text="${product.productEnableName}"></span></td>
 								<td><span th:text="${product.isStore}"></span></td>
 								<td><span th:text="${product.enableStore}"></span></td>
 								<td><span th:text="${product.goodsPrice}"></span></td>
@@ -57,9 +58,9 @@
 								<td><span th:text="${product.mktPrice}"></span></td>
 								<td><span th:text="${product.pageTitle}"></span></td>
 				                <td>
-									<a th:attr="productId=${gallery.productId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-view"></i></a>
-									<a th:attr="productId=${gallery.productId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<a th:attr="productId=${gallery.productId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									<a th:attr="productId=${product.productId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
+									<a th:attr="productId=${product.productId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+									<a th:attr="productId=${product.productId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 								</td>
 							</tr>
 						</tbody>
@@ -110,13 +111,6 @@
 					<input type="hidden" id="account_sign" name="account_sign" th:value="${goodsInf.BId}"/>
 					<fieldset>
 						<div class="control-group">
-							<label class="control-label"><span class="f_req">* </span>可用库存：</label>
-							<div class="controls">
-								<input type="text" class="span3" name="is_store" id="is_store" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
-								<span class="help-block"></span>
-							</div>
-						</div>
-						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>Sku代码：</label>
 							<div class="controls">
 								<input type="text" class="span3" name="sku_code" id="sku_code" maxlength="25"/>
@@ -124,7 +118,7 @@
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label">是否默认：</label>
+							<label class="control-label"><span class="f_req">* </span>是否默认：</label>
 							<div class="controls">
 								<select name="default_sku_code" id="default_sku_code" class="span3">
 									<option th:each="g,gStat : ${isDefaultList}" th:value="${g.code}">
@@ -135,6 +129,31 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
+                        <div class="control-group">
+                            <label class="control-label"><span class="f_req">* </span>规格：</label>
+                            <div class="controls">
+                                <select name="specId" id="specId" class="span3">
+									<option value="">---请选择---</option>
+									<option th:each="g,gStat : ${goodsSpecList}" th:value="${g.specId}">
+                                        <span th:text="${g.specName}"></span>
+                                    </option>
+
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"><span class="f_req">* </span>规格值：</label>
+                            <div class="controls">
+                                <select name="specValueId" id="specValueId" class="span3">
+									<option value="">---请选择---</option>
+									<option th:each="g,gStat : ${goodsSpecValuesList}" th:value="${g.specValueId}">
+                                        <span th:text="${g.specName}"></span>
+                                    </option>
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>总库存：</label>
 							<div class="controls">
@@ -142,6 +161,13 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
+                        <div class="control-group">
+                            <label class="control-label"><span class="f_req">* </span>可用库存：</label>
+                            <div class="controls">
+                                <input type="text" class="span3" name="is_store" id="is_store" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>商品价格：</label>
 							<div class="controls">
@@ -177,7 +203,7 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
-						<div class="input-prepend">
+						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>图片：</label>
 							<div class="controls">
 								<input type="text" class="span3" name="pic_url" id="pic_url" readonly="readonly"/>
@@ -200,7 +226,7 @@
 		        </div>
 			</form>
 		</div>
-		<script th:src="@{/ecom/js/goodsManage/listGoodsGallery.js}"></script>
+		<script th:src="@{/ecom/js/goodsManage/listGoodsProduct.js}"></script>
 	</body>
 </html>
 

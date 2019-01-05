@@ -29,10 +29,12 @@ var listGoodsSpecValues = {
                 $(element).closest('div').removeClass("f_error");
             },
             rules:{
+                spec_value_name: { required: true},
                 spec_order: { required: true},
                 spec_type: { required: true}
             },
             messages: {
+                spec_value_name: { required: "请输入规格值名称"},
                 spec_order: { required: "请输入规格值序号"},
                 spec_type: { required: "请选择规格值类型"}
             },
@@ -227,6 +229,7 @@ var listGoodsSpecValues = {
             },
             success : function (data) {
             	$('#spec_value_id').val(data.specValueId);
+                $('#spec_value_name').val(data.specValueName);
                 $('#spec_type').val(data.specType);
                 $('#spec_order').val(data.specOrder);
             	$('#spec_value').val(data.specValue);
@@ -246,6 +249,7 @@ var listGoodsSpecValues = {
 	    });
 		
 		$("#modal").on("hidden.bs.modal", function(e) {
+            $("#spec_value_name").removeAttr('readonly');
 			$("#spec_value").removeAttr('readonly');
 			$("#spec_type").removeAttr('readonly');
 			$("#spec_order").removeAttr('readonly');

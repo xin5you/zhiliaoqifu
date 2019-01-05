@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class AccountLogVO implements Serializable {
 
     /**
-     * 交易流水主键
+     * 交易日志主键
      */
    private String txnPrimaryKey;
 
@@ -69,10 +69,20 @@ public class AccountLogVO implements Serializable {
      */
     private String mchntName;
 
+   /**
+    * 交易渠道
+    */
+   private String transChnl;
+
     /***
     * 用户类型
     */
    private String userType;
+
+ /**
+  * 交易流水
+  */
+ private String itfPrimaryKey;
 
     /***
      * 专项类型分类

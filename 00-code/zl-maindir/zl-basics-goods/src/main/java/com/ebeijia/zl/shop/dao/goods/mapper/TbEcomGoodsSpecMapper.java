@@ -13,24 +13,11 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
  */
 @Mapper
 public interface TbEcomGoodsSpecMapper extends BaseMapper<TbEcomGoodsSpec> {
+
 	/**
-	 * 	<select id="getGoodsSpecByGoodsId" parameterType="java.lang.String"  resultType="GoodsSpec">
-	 *
-	 * 		     SELECT DISTINCT s.SPEC_ID,
-	 * 				s.SPEC_NAME,
-	 * 				sv.SPEC_VALUE_ID,
-	 * 				sv.SPEC_VALUE,
-	 * 				sv.SPEC_IMAGE ,
-	 * 				gs.GOODS_ID
-	 * 			FROM
-	 * 				TB_ECOM_SPECIFICATION s,
-	 * 				TB_ECOM_SPEC_VALUES sv,
-	 * 				TB_ECOM_GOODS_SPEC gs
-	 * 		WHERE s.SPEC_ID = sv.SPEC_ID
-	 * 			AND gs.SPEC_VALUE_ID = sv.SPEC_VALUE_ID
-	 * 			AND gs.GOODS_ID=#{goodsId}
-	 * 			ORDER BY s.SPEC_ID
-	 * 	</select>
-	 *
+	 * 根据goodsId和productId查询商品规格关联表信息
+	 * @param ecomGoodsSpec
+	 * @return
 	 */
+	TbEcomGoodsSpec getGoodsSpecByGoodsIdAndProductId(TbEcomGoodsSpec ecomGoodsSpec);
 }

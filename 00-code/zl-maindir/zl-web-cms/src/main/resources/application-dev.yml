@@ -56,7 +56,7 @@ spring:
       consumer:
         check: false
       registry:
-        address: zookeeper://192.168.2.210:2181
+        address: zookeeper://127.0.0.1:2181
 mybatis-plus:
   mapper-locations: classpath*:mapper/*/*Mapper.xml,classpath*:mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml

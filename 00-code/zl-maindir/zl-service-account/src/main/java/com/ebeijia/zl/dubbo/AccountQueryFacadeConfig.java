@@ -30,25 +30,25 @@ public class AccountQueryFacadeConfig extends DubboProviderConfig {
 		List<MethodConfig> methods=new ArrayList<MethodConfig>();
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("getAccountInfList");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getAccountInfPage");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getAccountLogPage");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getAccountLogVoByParams");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 

@@ -5,6 +5,7 @@
     <sql id="goodsDetailColumns">
         detail_id,
         goods_id,
+        detail_name,
         intro,
         params,
         specs,

@@ -17,4 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbEcomGoodsSpecService extends ServiceImpl<TbEcomGoodsSpecMapper, TbEcomGoodsSpec> implements ITbEcomGoodsSpecService{
 
+    @Override
+    public TbEcomGoodsSpec getGoodsSpecByGoodsIdAndProductId(TbEcomGoodsSpec ecomGoodsSpec) {
+        return baseMapper.getGoodsSpecByGoodsIdAndProductId(ecomGoodsSpec);
+    }
 }

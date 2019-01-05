@@ -99,6 +99,10 @@ public class TbEcomSpecValues extends Model<TbEcomSpecValues> {
     @ApiModelProperty(value = "update_user")
     private String updateUser;
 
+    @TableField("spec_value_name")
+    @ApiModelProperty(value = "规格值名称")
+    private String specValueName;
+
     @TableField(exist = false)
     private String specName;
 

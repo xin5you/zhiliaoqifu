@@ -220,8 +220,8 @@ public class AccountTransTest {
 	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 	req.setUserChnlId("b03976d2-8319-4c64-b9d7-5b8c5756ef6f");
 	req.setUserType(UserType.TYPE100.getCode());
-	req.setTransAmt(new BigDecimal(10));
-	req.setUploadAmt(new BigDecimal(10));
+	req.setTransAmt(new BigDecimal(1));
+	req.setUploadAmt(new BigDecimal(1));
 	req.setDmsRelatedKey(IdUtil.getNextId());
 	req.setTransDesc("员工提现到卡");
 
@@ -232,7 +232,7 @@ public class AccountTransTest {
 
 	  req.setRemarks("快点到账 快点到账");
 	  req.setOrderName("测试提现");
-	BaseResult<Object> result= accountTransactionFacade.executeWithDraw(req);
+	 BaseResult<Object> result= accountTransactionFacade.executeWithDraw(req);
 
 	System.out.println(JSONArray.toJSONString(result));
  }

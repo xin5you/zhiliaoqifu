@@ -29,7 +29,7 @@ spring:
       name: zl-service-account
     protocol:
       name: dubbo
-      host: 192.168.2.110
+      host:
       port: 20880
       accepts: 1000
     provider:

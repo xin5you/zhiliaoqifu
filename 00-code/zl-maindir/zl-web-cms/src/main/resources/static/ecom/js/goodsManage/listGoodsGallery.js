@@ -12,8 +12,10 @@ var ListGoodsGallery = {
 		$('.btn-add').on('click', ListGoodsGallery.intoAddGoodsGallery);
 		$('.btn-edit').on('click', ListGoodsGallery.intoEditGoodsGallery);
 		$('.btn-delete').on('click', ListGoodsGallery.deleteGoodsGallery);
+        $('.btn-view').on('click', ListGoodsGallery.intoViewGoodsGallery);
 		$('.btn-close').on('click',ListGoodsGallery.searchReset);
         $('#originalFile').on('change', ListGoodsGallery.imageUpload);
+        $('.btn-backGoodsInf').on('click',ListGoodsGallery.intoBackGoodsInf);
 	},
 	
 	initTip: function (intoType) {
@@ -99,7 +101,7 @@ var ListGoodsGallery = {
             	$(".btn-submit").attr('disabled',"true");
             	if(intoType == 1) {
                     ListGoodsGallery.addGoodsGallery();
-            	}else if(intoType == 2) {
+            	} else if(intoType == 2) {
                     ListGoodsGallery.editGoodsGallery();
             	}
                 return false;
@@ -123,6 +125,13 @@ var ListGoodsGallery = {
         ListGoodsGallery.loadModal(2, $(this).attr('imgId'));
         ListGoodsGallery.initTip(2);
 	},
+    intoViewGoodsGallery : function(){
+    ListGoodsGallery.loadModal(3, $(this).attr('imgId'));
+    ListGoodsGallery.initTip(3);
+    },
+    intoBackGoodsInf : function () {
+        Helper.post('/goodsManage/goodsInf/getGoodsInfList');
+    },
 	addGoodsGallery:function(){
         $.ajax({
             type: 'POST',
@@ -214,7 +223,14 @@ var ListGoodsGallery = {
 			return;
 		}else if(type == 2){
 			$('#modal_h').html("编辑商品相册信息");
-		}
+		} else if(type == 3){
+            $('#modal_h').html("商品相册信息详情");
+            $("#originalFile").hide();
+            $("#isDefaultList").attr("disabled","true");
+            $("#sort").attr("readonly","readonly");
+            $("#remarks").attr("disabled","true");
+            $(".btn-submit").attr("disabled","true");
+        }
 		
 		$.ajax({								  
             url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsGallery',
@@ -224,9 +240,9 @@ var ListGoodsGallery = {
                 "imgId": imgId
             },
             success : function (data) {
-            	$('#img_id').val(data.img_id);
+            	$('#img_id').val(data.imgId);
             	$('#original').val(data.original);
-            	$('#isDefaultList').val(data.isDefaultList);
+            	$('#isDefaultList').val(data.isDefault);
             	$('#sort').val(data.sort);
                 $('#remarks').val(data.remarks);
             },
@@ -236,7 +252,8 @@ var ListGoodsGallery = {
 	    });
 		
 		$("#modal").on("hidden.bs.modal", function(e) {
-			$("#isDefaultList").removeAttr('readonly');
+            $("#originalFile").show();
+			$("#isDefaultList").removeAttr('disabled');
 			$("#sort").removeAttr('readonly');
             $("#remarks").removeAttr('readonly');
 			$(".btn-submit").removeAttr('disabled');

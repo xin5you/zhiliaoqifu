@@ -11,6 +11,7 @@
 		                    <li><a href="#"><i class="icon-home"></i></a></li>
 		                    <li>商品管理</li>
 		                    <li>商品信息管理</li>
+							<li>商品信息列表</li>
 		                </ul>
 		            </div>
 	        	</nav>
@@ -120,7 +121,7 @@
 								<td><span th:text="${goods.isDisabled}"></span></td>
 								<td><span th:text="${goods.isHot}"></span></td>
 				                <td>
-									<a th:attr="goodsId=${goods.goodsId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-view"></i></a>
+									<a th:attr="goodsId=${goods.goodsId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="上下架" class="btn-mini btn-updateEnable" href="#"><i class="icon-edit"></i></a>
@@ -262,11 +263,11 @@
 								</div>
 							</div>
 						<div class="control-group">
-								<label class="control-label"><span class="f_req">* </span>商品富文本ID：</label>
+								<label class="control-label"><span class="f_req">* </span>商品详情：</label>
 								<div class="controls">
 									<select name="goods_detail" id="goods_detail" class="span3">
 										<option th:each="g,gStat : ${goodsDetailList}" th:value="${g.detailId}">
-											<span th:text="${g.detailId}"></span>
+											<span th:text="${g.detailName}"></span>
 										</option>
 									</select>
 									<span class="help-block"></span>
