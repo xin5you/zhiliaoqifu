@@ -69,9 +69,14 @@ public class AccountLogVO implements Serializable {
      */
     private String mchntName;
 
-  /***
-  * 用户类型
-  */
- private String userType;
+    /***
+    * 用户类型
+    */
+   private String userType;
+
+    /***
+     * 专项类型分类
+     */
+    private String code;
 
 }

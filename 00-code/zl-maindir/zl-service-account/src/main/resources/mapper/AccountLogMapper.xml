@@ -5,23 +5,25 @@
 
     <select id="getAccountLogVoList" parameterType="AccountQueryReqVo" resultType="AccountLogVO">
 		select
-			al.txn_primary_key,
-			al.txn_date,
-			al.txn_time,
-			al.acc_type,
-			al.txn_amt,
-			al.acc_total_bal,
-			tl.trans_desc,
-			tl.trans_number,
-			tl.trans_id,
-			tl.pri_b_id,
-			tl.mchnt_code,
-			ui.user_type
+		al.txn_primary_key,
+		al.txn_date,
+		al.txn_time,
+		al.acc_type,
+		al.txn_amt,
+		al.acc_total_bal,
+		tl.trans_desc,
+		tl.trans_number,
+		tl.trans_id,
+		tl.pri_b_id,
+		tl.mchnt_code,
+		ui.user_type,
+		bt.`code`
 		from tb_account_log al
 		LEFT JOIN tb_account_inf ai on al.account_no=ai.account_no
 		LEFT JOIN tb_trans_log tl on al.txn_primary_key=tl.txn_primary_key
 		LEFT JOIN tb_user_inf ui on  ui.user_id=ai.user_id
 		LEFT JOIN tb_channel_user_inf cui on cui.user_id=ui.user_id
+		LEFT JOIN tb_billing_type bt on tl.pri_b_id=bt.b_id
 
 		<where>
 			<if test="actPrimaryKey != null and actPrimaryKey !=''">
@@ -48,9 +50,18 @@
 				and al.create_time &lt;= #{eDate}
 			</if>
 
+			<if test="accType != null and accType != ''">
+				and al.acc_type=#{accType}
+			</if>
+
 			<if test="bId != null and bId != ''">
 				and ai.b_id=#{bId}
 			</if>
+
+			<if test="bCode != null and bCode != ''">
+				and bt.`code`=#{bCode}
+			</if>
 		</where>
+			order by al.create_time desc
 	</select>
 </mapper>

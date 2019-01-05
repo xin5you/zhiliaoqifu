@@ -201,7 +201,7 @@ public class WxApiCtrl {
 	 *            二维码参数
 	 * @return
 	 */
-	@RequestMapping(value = "/createQrcode", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/createQrcode", method = RequestMethod.POST)
 	public ModelAndView createQrcode(HttpServletRequest request, Integer num) {
 		ModelAndView mv = new ModelAndView("wxcms/qrcode");
 		mv.addObject("cur_nav", "qrcode");
@@ -213,10 +213,10 @@ public class WxApiCtrl {
 		}
 		mv.addObject("num", num);
 		return mv;
-	}
+	}*/
 
 	// 以根据openid群发文本消息为例
-	@RequestMapping(value = "/massSendTextMsg", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/massSendTextMsg", method = RequestMethod.POST)
 	public void massSendTextMsg(HttpServletResponse response, String openid, String content) {
 		content = "群发文本消息";
 		MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
@@ -241,7 +241,7 @@ public class WxApiCtrl {
 		mv.addObject("failureMsg", rstMsg);
 	}
 
-	/**
+	*//**
 	 * 发送客服消息
 	 * 
 	 * @param openId
@@ -249,7 +249,7 @@ public class WxApiCtrl {
 	 * @param content
 	 *            ： 消息内容
 	 * @return
-	 */
+	 *//*
 	@RequestMapping(value = "/sendCustomTextMsg", method = RequestMethod.POST)
 	public void sendCustomTextMsg(HttpServletRequest request, HttpServletResponse response, String openid) {
 		MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
@@ -264,7 +264,7 @@ public class WxApiCtrl {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * 获取js ticket

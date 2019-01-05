@@ -1,18 +1,11 @@
 server:
   port: 10202
-  contextPath: /mcht
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain: 
-
+  contextPath: /web-mcht
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-mcht.xml
-
 spring:
   datasource:
     url: jdbc:mysql://192.168.2.110:3306/zldb_test
@@ -56,13 +49,12 @@ spring:
     name-server-address: 192.168.2.110:9876
     producer-group: zlqf_group
     send-msg-timeout: 5000
-    pool:
-      max-connections: 50
   dubbo:
     application:
       name: zl-service-mcht
     protocol:
       name: dubbo
+      host:
       port: 20881
       accepts: 1000
     provider:

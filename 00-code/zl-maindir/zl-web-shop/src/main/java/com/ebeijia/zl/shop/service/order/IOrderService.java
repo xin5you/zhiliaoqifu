@@ -13,8 +13,10 @@ public interface IOrderService {
     @ShopTransactional
     TbEcomPlatfOrder createSimpleOrder(OrderItemInfo orderItemInfo, AddressInfo address);
 
+    @ShopTransactional
     TbEcomPlatfOrder cancelOrder(String orderId);
 
+    @ShopTransactional
     TbEcomPlatfOrder applyOrder(PayInfo payInfo);
 
     OrderDetailInfo orderDetail(String orderId);

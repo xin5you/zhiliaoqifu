@@ -16,6 +16,9 @@ public interface ResultState {
     //没有发现资源
     int NOT_FOUND = 404;
 
+    //账户资源不足
+    int BALANCE_NOT_ENOUGH = 414;
+
     //用户或者参数不匹配
     int NOT_ACCEPTABLE = 406;
 

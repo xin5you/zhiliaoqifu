@@ -153,6 +153,15 @@ public abstract class AmountUtil {
 		//return new BigDecimal(num).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
+	/**
+	 * 人民币 分转元
+	 * @param v1
+	 * @return
+	 */
+	public static BigDecimal RMBCentToYuan(BigDecimal v1){
+		return v1.divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN);
+	}
+
 	public static void main(String[] args) {
 //		Double s = AmountUtil.sub(a, b);
 //		System.out.println(AmountUtil.roundDown(s));

@@ -1,7 +1,13 @@
 package com.ebeijia.zl.service.account.service.impl;
 
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
+import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.service.account.service.IAccountLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +41,10 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 
     @Autowired
     private AccountLogMapper accountLogMapper;
+
+	@Autowired
+    private CompanyInfFacade companyInfFacade;
+
 	/**
 	 * 
 	* @Function: AccountLogServiceImpl.java
@@ -83,6 +93,26 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 	 * @return
 	 */
 	public List<AccountLogVO> getAccountLogVoList(AccountQueryReqVo req) {
-		return accountLogMapper.getAccountLogVoList(req);
+		List<AccountLogVO>  list= accountLogMapper.getAccountLogVoList(req);
+
+
+		list.forEach(s ->{
+			//单位分转元
+			if(s.getTxnAmt() !=null) {
+				s.setTxnAmt(AmountUtil.RMBCentToYuan(s.getTxnAmt()));
+			}
+			if(s.getAccTotalBal() !=null) {
+				s.setAccTotalBal(AmountUtil.RMBCentToYuan(s.getAccTotalBal()));
+			}
+
+			//公司名称
+			if (TransCode.MB50.getCode().equals(s.getTransId()) && UserType.TYPE100.getCode().equals(s.getUserType())){
+				CompanyInf companyInf=companyInfFacade.getCompanyInfById(s.getMchntCode());
+				if(companyInf !=null) {
+					s.setMchntName(companyInf.getName());
+				}
+			}
+		});
+		return  list;
 	}
 }

@@ -32,12 +32,13 @@ public class TransLogTest {
     public void getAccountLogVoList(){
     	
     	AccountQueryReqVo req=new AccountQueryReqVo();
-/*    	req.setUserType(UserType.TYPE100.getCode());
+    	req.setUserType(UserType.TYPE100.getCode());
     	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-    	req.setUserChnlId("cdeb7a4a-859a-4d23-b3c6-03782a51688d");*/
-    	req.setActPrimaryKey("02354413-2b31-4729-a501-2e153026c16e");
-/*		req.setSDate(1545103378868l);
-		req.setEDate(System.currentTimeMillis());*/
+		//req.setUserChnlId("cdeb7a4a-859a-4d23-b3c6-03782a51688d");
+    	//req.setActPrimaryKey("02354413-2b31-4729-a501-2e153026c16e");
+		//req.setSDate(1545103378868l);
+		//req.setEDate(System.currentTimeMillis());
+		req.setBCode("B");
 		List<AccountLogVO> list=accountLogService.getAccountLogVoList(req);
 
 		System.out.println(JSONArray.toJSONString(list));

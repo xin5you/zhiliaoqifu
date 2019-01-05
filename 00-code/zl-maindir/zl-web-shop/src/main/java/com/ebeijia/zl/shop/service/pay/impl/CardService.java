@@ -98,8 +98,14 @@ public class CardService implements ICardService {
         CardInfo cardInfo = validCardNum(card.getCardNumber());
 
         TbEcomPayCard temp = new TbEcomPayCard();
+        //检查是否有相同卡信息
+        temp.setCardNumber(card.getCardNumber());
+        if (cardDao.getOne(new QueryWrapper<>(temp))!=null){
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE,"您输入的卡已被绑定");
+        }
+        temp.setCardNumber(null);
+        //检查用户是否存在记录
         temp.setMemberId(memberId);
-        //检查是否存在地址
         TbEcomPayCard one = cardDao.getOne(new QueryWrapper<>(temp));
         temp.setBankCode(cardInfo.getBank());
         temp.setUserName(card.getUserName());

@@ -74,7 +74,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	 * 
 	 * @param startNum
 	 * @param pageSize
-	 * @param ProviderInf
+	 * @param providerInf
 	 * @return
 	 * @throws Exception
 	 */

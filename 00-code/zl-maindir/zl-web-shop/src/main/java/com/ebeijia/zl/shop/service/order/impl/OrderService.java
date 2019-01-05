@@ -165,8 +165,10 @@ public class OrderService implements IOrderService {
         TbEcomPlatfShopOrder updataInf = new TbEcomPlatfShopOrder();
         updataInf.setSubOrderStatus("27");
         shopOrderDao.update(updataInf, new QueryWrapper<>(query));
-
-        TbEcomOrderProductItem productItem = orderProductItemDao.getOrderProductItemBySOrderId(updataInf.getSOrderId());
+        updataInf = shopOrderDao.getOne( new QueryWrapper<>(query));
+        TbEcomOrderProductItem queryItem = new TbEcomOrderProductItem();
+        queryItem.setSOrderId(updataInf.getSOrderId());
+        TbEcomOrderProductItem productItem = orderProductItemDao.getOne(new QueryWrapper<>(queryItem));
         productService.productStoreRecover(productItem.getProductId(), productItem.getProductNum());
         //执行操作
         return order;
@@ -179,7 +181,6 @@ public class OrderService implements IOrderService {
      * @return
      */
     @Override
-    @ShopTransactional
     public TbEcomPlatfOrder applyOrder(PayInfo payInfo) {
         logger.info(String.format("支付订单开始，参数%s", payInfo));
         MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
@@ -256,7 +257,7 @@ public class OrderService implements IOrderService {
         //处理订单支付过程，调用了payService
         if (ResultState.OK != payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString())) {
             logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
-            throw new BizException(ResultState.ERROR,"支付失败");
+            throw new BizException(ResultState.NOT_ACCEPTABLE,"参数异常");
         }
         //修改订单状态
         order.setPayStatus("2");
@@ -321,16 +322,15 @@ public class OrderService implements IOrderService {
             start = Integer.valueOf(0);
         }
 
-
         TbEcomPlatfOrder query = new TbEcomPlatfOrder();
         query.setMemberId(memberInfo.getMemberId());
         if (!StringUtils.isEmpty(orderStat)) {
             query.setPayStatus(orderStat);
         }
         PageHelper.startPage(start, limit);
-        List<TbEcomPlatfOrder> orderList = platfOrderDao.list(new QueryWrapper<>(query));
-
-        PageHelper.clearPage();
+        QueryWrapper<TbEcomPlatfOrder> queryWrapper = new QueryWrapper<>(query);
+        queryWrapper.orderByDesc("create_time");
+        List<TbEcomPlatfOrder> orderList = platfOrderDao.list(queryWrapper);
         LinkedList<OrderDetailInfo> result = new LinkedList<>();
         if (orderList != null) {
             for (TbEcomPlatfOrder order : orderList) {

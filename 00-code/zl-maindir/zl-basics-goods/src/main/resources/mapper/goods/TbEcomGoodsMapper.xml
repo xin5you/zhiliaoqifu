@@ -93,6 +93,7 @@
         p.sku_code,
         p.product_id,
         g.ecom_code,
+        pro.provider_name ecom_name,
         g.market_enable,
         p.pic_url,
         b.b_id,
@@ -113,6 +114,8 @@
         left join tb_ecom_goods_category c
         on r.cat_id = c.cat_id
         and c.data_stat = '0'
+        left join tb_provider_inf pro
+        on g.ecom_code = pro.law_code
         left join tb_ecom_goods_category pc
         on pc.cat_id = c.parent_id
         and pc.data_stat = '0'
@@ -149,6 +152,7 @@
         p.sku_code,
         p.product_id,
         g.ecom_code,
+        pro.provider_name ecom_name,
         g.market_enable,
         p.pic_url,
         b.b_id,
@@ -173,6 +177,8 @@
         left join tb_ecom_goods_category pc
         on pc.cat_id = c.parent_id
         and pc.data_stat = '0'
+        left join tb_provider_inf pro
+        on g.ecom_code = pro.law_code
         left join tb_ecom_goods_spec spec
         on spec.product_id = p.product_id
         left join tb_ecom_spec_values specv
