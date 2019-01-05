@@ -102,6 +102,9 @@ public class TbEcomGoodsDetail extends Model<TbEcomGoodsDetail> {
     @ApiModelProperty(value = "浏览量")
     private Integer viewCount;
 
+    @TableField("detail_name")
+    @ApiModelProperty(value = "商品详情名称")
+    private String detailName;
 
     @Override
     protected Serializable pkVal() { 

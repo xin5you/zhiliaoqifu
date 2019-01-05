@@ -36,26 +36,6 @@ public class ProviderInfServiceConfig extends DubboCustomerConfig {
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
-		methodConfig.setName("saveProviderInf");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("updateProviderInf");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("deleteProviderInfById");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		
-		methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderInfList");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);

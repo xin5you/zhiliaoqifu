@@ -171,6 +171,15 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     @TableField(exist = false)
     private String isDefault;
 
+    @TableField(exist = false)
+    private String productEnableName;
+
+    @TableField(exist = false)
+    private String specId;
+
+    @TableField(exist = false)
+    private String specValueId;
+
     @Override
     protected Serializable pkVal() { 
         return this.productId;

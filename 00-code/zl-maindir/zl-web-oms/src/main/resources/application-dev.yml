@@ -67,7 +67,7 @@ spring:
     consumer:
       check: false
     registry:
-      address: zookeeper://192.168.2.210:2181
+      address: zookeeper://127.0.0.1:2181
 #FTP服务器连接
 ftpClient:
   connect:

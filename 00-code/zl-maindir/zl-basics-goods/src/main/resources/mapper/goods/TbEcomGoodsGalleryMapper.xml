@@ -53,7 +53,6 @@
           <include refid="tableName"/>
         where g.data_stat = '0'
         and g.sort = #{sort}
-        order by g.create_time desc
     </select>
 
 </mapper>

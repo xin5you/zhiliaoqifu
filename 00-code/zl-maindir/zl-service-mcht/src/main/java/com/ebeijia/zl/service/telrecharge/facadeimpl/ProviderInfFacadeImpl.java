@@ -91,7 +91,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	}
 
 	@Override
-	public ProviderInf getProviderInfBylawCode(String lawCode) throws Exception {
+	public ProviderInf getProviderInfByLawCode(String lawCode) throws Exception {
 		return providerInfService.getProviderInfByLawCode(lawCode);
 	}
 }

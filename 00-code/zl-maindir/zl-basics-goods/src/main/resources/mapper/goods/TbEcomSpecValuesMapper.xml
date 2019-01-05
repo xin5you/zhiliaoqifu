@@ -5,6 +5,7 @@
     <sql id="EcomSpecValuesColumns">
       v.spec_value_id,
       v.spec_id,
+      v.spec_value_name,
       v.spec_value,
       v.spec_image,
       v.spec_order,
