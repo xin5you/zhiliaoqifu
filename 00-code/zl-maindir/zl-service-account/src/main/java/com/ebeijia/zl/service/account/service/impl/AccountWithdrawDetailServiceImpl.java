@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -36,6 +37,37 @@ public class AccountWithdrawDetailServiceImpl extends ServiceImpl<AccountWithdra
        queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
        return accountWithdrawDetailMapper.selectList(queryWrapper);
     }
+
+    /**
+     * 单个账户当月提现次数
+     * @param userId
+     * @param sDate
+     * @param eDate
+     * @return
+     */
+   public int getWithdrawTotalToMonthByUserId( String userId, long sDate,long eDate){
+       return accountWithdrawDetailMapper.getWithdrawTotalToMonthByUserId(userId,sDate,eDate);
+   }
+
+    /**
+     * 单个账户 日期范围内 提现金额
+     * @return
+     */
+    public BigDecimal getWithdrawAmtByUserIdAndTime(String userId, long sDate, long eDate){
+        return accountWithdrawDetailMapper.getWithdrawAmtByUserIdAndTime(userId,sDate,eDate);
+    }
+
+    /**
+     * 单个银行卡 日期范围内 提现金额
+     * @param cardNo
+     * @param sDate
+     * @param eDate
+     * @return
+     */
+   public BigDecimal getWithdrawAmtByCardAndTime(String cardNo, long sDate,long eDate){
+        return accountWithdrawDetailMapper.getWithdrawAmtByCardAndTime(cardNo,sDate,eDate);
+    }
+
     @Override
     public boolean save(AccountWithdrawDetail entity) {
         entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());

@@ -8,6 +8,7 @@ import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
+import com.ebeijia.zl.core.rocketmq.service.MQProducerService;
 import com.ebeijia.zl.facade.account.dto.AccountLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +65,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	@Autowired
 	private IAccountLogService accountLogService;
 
-
 	@Autowired
 	private JedisCluster jedisCluster;
+
+	@Autowired
+	private MQProducerService mqProducerService;
 	
 	/***
 	 * 
@@ -192,7 +195,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		
 		/****** consumerBal set begin ***/
 		//员工账户充值 专用专项账户的按比例设置强制消费额度
-		account.setCouponBal(new BigDecimal(0));
+
 		if(UserType.TYPE100.equals(account.getAccountType())){
 			//非 员工通用福利账户 并且 非现金账户
 			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
@@ -211,6 +214,9 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 				}
 			}
 		}
+        if(account.getCouponBal()==null){
+            account.setCouponBal(new BigDecimal(0));
+        }
 		/****** consumerBal set end ***/
 		
 		
@@ -288,6 +294,9 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
 			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
 		}
+		if(account.getAccBal()==null){
+            account.setAccBal(new BigDecimal(0));
+        }
 		account.setAccBal(AmountUtil.add(account.getAccBal(), transAmt));
 	}
 

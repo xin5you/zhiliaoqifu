@@ -11,6 +11,7 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
 import com.ebeijia.zl.facade.account.enums.WithDrawStatusEnum;
+import com.ebeijia.zl.facade.account.enums.WithDrawSuccessEnum;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
 import org.slf4j.Logger;
@@ -280,6 +281,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 			 withdrawDetail.setBatchNo(accountWithdrawOrder.getBatchNo());
 			 withdrawDetail.setReceiverCurrency("CNY"); //人民币标识
+			 withdrawDetail.setSuccess(WithDrawSuccessEnum.Processing.getCode()); //提现中
 
 			 if(TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
 				 withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.PERSON.toString()); //用户提现
@@ -293,7 +295,14 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			 if(!eflag) {
 				 throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
 			 }
-		}else{
+		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
+			 List<AccountTxnVo> addList = intfaceTransLog.getAddList();
+			 if (addList != null && addList.size() > 0) {
+				 for (AccountTxnVo accountTxnVo : addList) {
+					 this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getTxnAmt());
+				 }
+			 }
+		 }else{
 			this.addToVoList(voList, intfaceTransLog, null, null, null, 0);
 		}
 		return voList;

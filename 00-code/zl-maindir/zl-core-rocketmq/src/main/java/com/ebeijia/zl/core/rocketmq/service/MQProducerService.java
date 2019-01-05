@@ -52,4 +52,14 @@ public class MQProducerService extends AbstractMQProducer {
         }
     }
 
+    /**
+     * @param batchNo 提现操作批次号
+     */
+    public void sendWithDrawBatchNo(final String batchNo){
+        logger.info("提现操作，batchNo={}",batchNo);
+        Message message=new Message(RocketTopicEnums.withDrawTopic,RocketTopicEnums.withDrawTag,batchNo.getBytes());
+        message.setDelayTimeLevel(2);
+        super.syncSend(message);
+    }
+
 }

@@ -60,17 +60,16 @@ public class WithDrawSessionAwareMessageListener extends AbstractMQPushConsumer 
 		logger.info("待发送的消息message={}", message);
 		logger.info("待发送的消息map=>{}", JSONObject.toJSONString(map));
 
-		try {
+
 			String batchNo = String.valueOf(message); //获取批次号
 			String redisKV=jedisClusterUtils.get(RedisConstants.REDIS_HASH_BIZ_WITHDRAW_ACCEPTS+batchNo);
 
 			if(StringUtils.isNotEmpty(redisKV)){
+				logger.info("用户提现操作失败，重复交易,批次号->{}",batchNo);
 				return  true;
 			}else{
-				logger.info("用户提现操作失败，重复交易,批次号->{}",batchNo);
-				jedisClusterUtils.set(RedisConstants.REDIS_HASH_BIZ_WITHDRAW_ACCEPTS+batchNo,batchNo,60);
+				jedisClusterUtils.set(RedisConstants.REDIS_HASH_BIZ_WITHDRAW_ACCEPTS+batchNo,batchNo,60*60*12);
 			}
-
 			//获取用户的提现批次数据
 			AccountWithdrawOrder accountWithdrawOrder=accountWithdrawOrderService.getById(batchNo);
 			//获取用户的提现数据明细
@@ -85,40 +84,49 @@ public class WithDrawSessionAwareMessageListener extends AbstractMQPushConsumer 
 				logger.info("用户提现操作失败，重复交易,批次号->{}",batchNo);
 				return true;
 			}
+			//提现交易开关
+			String switchFlag=jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_SWITCH_FLAG");
 
-			WithdrawBodyVO bodyVO=new WithdrawBodyVO();
-			bodyVO.setBatchNo(accountWithdrawOrder.getBatchNo());
-			bodyVO.setTotalNum(accountWithdrawOrder.getTotalNum());
+			if("Y".equals(switchFlag)) {
 
-			List<WithdrawDetailDataVO> list=new ArrayList<WithdrawDetailDataVO>();
-			WithdrawDetailDataVO detailDataVO=null;
-			for(AccountWithdrawDetail accountWithdrawDetail:detailList){ //遍历账户详情
-				detailDataVO=new WithdrawDetailDataVO();
-				detailDataVO.setSerialNo(accountWithdrawDetail.getSerialNo());
-				detailDataVO.setReceiverCardNo(accountWithdrawDetail.getReceivercardNo()); //收款卡号
-				detailDataVO.setReceiverName(accountWithdrawDetail.getReceiverName());
-				detailDataVO.setBankName(accountWithdrawDetail.getBankName());  //开户行
-				detailDataVO.setBankCode(accountWithdrawDetail.getBankCode());  //开户行编号
-				detailDataVO.setAmount(accountWithdrawDetail.getTransAmount().setScale(0).longValue());
-				detailDataVO.setRemark(accountWithdrawDetail.getRemarks());
-				detailDataVO.setOrderName(accountWithdrawDetail.getOrderName());
-				detailDataVO.setBankProvince(accountWithdrawDetail.getBankProvince());
-				detailDataVO.setBankCity(accountWithdrawDetail.getBankCity());
-				detailDataVO.setPayeeBankLinesNo(accountWithdrawDetail.getPayeeBankLinesNo());
-				list.add(detailDataVO);
+				WithdrawBodyVO bodyVO = new WithdrawBodyVO();
+				bodyVO.setBatchNo(accountWithdrawOrder.getBatchNo());
+				bodyVO.setTotalNum(accountWithdrawOrder.getTotalNum());
+
+				List<WithdrawDetailDataVO> list = new ArrayList<WithdrawDetailDataVO>();
+				WithdrawDetailDataVO detailDataVO = null;
+				for (AccountWithdrawDetail accountWithdrawDetail : detailList) { //遍历账户详情
+					detailDataVO = new WithdrawDetailDataVO();
+					detailDataVO.setSerialNo(accountWithdrawDetail.getSerialNo());
+					detailDataVO.setReceiverCardNo(accountWithdrawDetail.getReceivercardNo()); //收款卡号
+					detailDataVO.setReceiverName(accountWithdrawDetail.getReceiverName());
+					detailDataVO.setBankName(accountWithdrawDetail.getBankName());  //开户行
+					detailDataVO.setBankCode(accountWithdrawDetail.getBankCode());  //开户行编号
+					detailDataVO.setAmount(accountWithdrawDetail.getTransAmount().setScale(0).longValue());
+					detailDataVO.setRemark(accountWithdrawDetail.getRemarks());
+					detailDataVO.setOrderName(accountWithdrawDetail.getOrderName());
+					detailDataVO.setBankProvince(accountWithdrawDetail.getBankProvince());
+					detailDataVO.setBankCity(accountWithdrawDetail.getBankCity());
+					detailDataVO.setPayeeBankLinesNo(accountWithdrawDetail.getPayeeBankLinesNo());
+					list.add(detailDataVO);
+				}
+				try {
+					bodyVO.setDetailData(list);
+					String respStr = batchWithdrawData.batchWithDraw(bodyVO);
+					JSONObject json = JSONObject.parseObject(respStr);
+					if (json.containsKey("responseCode") && "0000".equals(json.get("responseCode"))) {// 易付宝受理成功
+						accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status01.getCode());
+					}
+					accountWithdrawOrder.setErrorCode(json.getString("responseCode"));
+				} catch (Exception ex) {
+					logger.error("苏宁代付请求失败->{}", ex);
+					return true;
+				}
+
+			}else{
+				accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status04.getCode());
 			}
-			bodyVO.setDetailData(list);
-			String respStr = batchWithdrawData.batchWithDraw(bodyVO);
-			JSONObject json = JSONObject.parseObject(respStr);
-			if (json.containsKey("responseCode") && "0000".equals(json.get("responseCode"))) {// 易付宝受理成功
-				accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status01.getCode());
-			}
-			accountWithdrawOrder.setErrorCode(json.getString("responseCode"));
 			accountWithdrawOrderService.updateById(accountWithdrawOrder);
-		}catch (Exception ex){
-			logger.error("苏宁代付请求失败->{}",ex);
-			return true;
-		}
 		//获取分销商订单
 		return true;
 	}
