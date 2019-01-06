@@ -141,18 +141,18 @@ public class PayController {
      *
      * @return
      */
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("托管账户转出到银行卡")
     @ApiResponses({@ApiResponse(code = ResultState.OK, message = "操作成功"),
             @ApiResponse(code = ResultState.ERROR, message = "服务器内部异常"),
             @ApiResponse(code = ResultState.FORBIDDEN, message = "权限不足"),
             @ApiResponse(code = ResultState.UNAUTHORIZED, message = "请重新登录")})
     @RequestMapping(value = "/deal/transfer", method = RequestMethod.POST)
-    public JsonResult transferToCard(@Param("deal") DealInfo dealInfo, @Param(value = "session") Double session) {
+    public JsonResult transferToCard(@RequestParam("deal") Long dealInfo, @RequestParam String vaildCode, @RequestParam(value = "session") Double session) {
         if (session == null) {
             session = 0D;
         }
-        int state = payService.transferToCard(dealInfo, session);
+        int state = payService.transferToCard(dealInfo, vaildCode, session);
         return new JsonResult(state);
     }
 
