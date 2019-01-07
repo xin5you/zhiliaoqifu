@@ -172,7 +172,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			account.setAccountStat("00");//00：正常 10：冻结 90：注销
 			account.setAccountType(transLog.getUserType());
 			account.setAccBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户时余额为0
-			
+			account.setCouponBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN));
 			boolean flag= this.save(account);
 			if(flag){
 				flag=accountLogService.save(account, transLog);//保存賬戶信息
