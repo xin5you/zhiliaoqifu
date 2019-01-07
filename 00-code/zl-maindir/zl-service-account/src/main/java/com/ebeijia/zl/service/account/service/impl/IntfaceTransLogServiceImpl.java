@@ -38,7 +38,8 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 			 entity.setRespCode("99");
 		 }
 		entity.setTransSt("1");
-		 return super.updateById(entity);
+		entity.setUpdateTime(System.currentTimeMillis());
+		return super.updateById(entity);
 	 }
 
 	public boolean updateBatchById(List<IntfaceTransLog> list, boolean respCode){
