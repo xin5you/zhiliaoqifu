@@ -77,8 +77,8 @@
                             <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
                         <td>
                             <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
-                                <div style="height: 200px; width: 200px">
-                                    <img height="100px" width="100px" src="data:image/jpg;base64,${entity.evidenceUrl}" />
+                                <div id="evidenceUrlDiv1" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
+                                    <img src="data:image/jpg;base64,${entity.evidenceUrl}" style="height: 100%; width: 100%"/>
                                 </div>
                             </c:if>
                         </td>
@@ -129,6 +129,7 @@
         <div class="modal-body">
             <input type="hidden" id="orderId" name="orderId"/>
             <input type="hidden" id="providerId" name="providerId"  value="${providerId }"/>
+            <input type="hidden" id="providerRate" name="providerRate"  value="${providerRate }"/>
             <fieldset>
                 <div class="control-group">
                     <label class="control-label">打款金额(元)：</label>
@@ -140,10 +141,10 @@
                 <div class="control-group">
                     <label class="control-label">请选择打款凭证：</label>
                     <div class="controls">
-                        <div style="height: 200px; width: 200px">
-                            <img id="evidenceUrl" name="evidenceUrl" height="100px" width="100px" />
+                        <div id="evidenceUrlDiv2" style="height: 200px; width: 200px">
+                            <img id="evidenceUrlImg" name="evidenceUrl" style="height: 100%; width: 100%"/>
                         </div>
-                        <%--<input id="evidenceUrl" name="evidenceUrl" class="span3" readonly type="text">--%>
+                        <input id="evidenceUrl" name="evidenceUrl" class="span3" type="hidden">
                         <input type="file" class="span3" id="evidenceUrlFile"  name="evidenceUrlFile" multiple/>
                         <span class="help-block"></span>
                     </div>
@@ -158,7 +159,7 @@
                 <div class="control-group">
                     <label class="control-label">上账金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="checkPrice(this)"/>
+                        <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="checkPrice(this)" readonly="readonly"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -316,6 +317,20 @@
         </sec:authorize>
         <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
     </div>
+</div>
+
+<div id="imageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form class="form-horizontal">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal">&times;</button>
+            <h3 id="commodityInfModal_h6">上账凭证图片</h3>
+        </div>
+        <div class="modal-body" >
+            <div style="width: 100%; height: 100%; overflow-x: scroll">
+                <img id="bigImage" style="height: 500px; max-width:initial"/>
+            </div>
+        </div>
+    </form>
 </div>
 </body>
 <script type="text/javascript">

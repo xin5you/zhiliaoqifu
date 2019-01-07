@@ -14,6 +14,7 @@ import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
@@ -165,7 +166,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		}
 
 		BigDecimal platformFeeSum = new BigDecimal(platformFee).add(new BigDecimal(1));
-		BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
+		//BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
 
 		InaccountOrder order = new InaccountOrder();
 		order.setOrderId(IdUtil.getNextId());
@@ -176,7 +177,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
 		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
 		order.setPlatformInSumAmt(order.getInaccountAmt());
-		order.setCompanyInSumAmt(companyInAmtSum);
+		//order.setCompanyInSumAmt(companyInAmtSum);
 		order.setProviderId(providerId);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
@@ -226,8 +227,18 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			order.setEvidenceUrl(resultMap.get("msg").toString());
 		}
 
+		BigDecimal companyFee = new BigDecimal(0);;
 		List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
 		if (!StringUtil.isNullOrEmpty(A00)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("A00");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -235,7 +246,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 			orderDetail.setBId("A00");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -246,6 +257,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B01)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B01");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -253,7 +273,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 			orderDetail.setBId("B01");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -264,6 +284,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B02)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B02");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -271,7 +300,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 			orderDetail.setBId("B02");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -282,6 +311,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B03)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B03");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -289,7 +327,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 			orderDetail.setBId("B03");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -300,6 +338,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B04)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B04");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -307,7 +354,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 			orderDetail.setBId("B04");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -318,6 +365,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B05)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B05");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -325,7 +381,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 			orderDetail.setBId("B05");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -336,6 +392,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B06)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B06");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -343,7 +408,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 			orderDetail.setBId("B06");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -354,6 +419,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B07)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B07");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -361,7 +435,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 			orderDetail.setBId("B07");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -372,6 +446,15 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B08)) {
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B08");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				companyFee = platformFeeSum;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
 			orderDetail.setOrderId(order.getOrderId());
@@ -379,7 +462,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 			orderDetail.setBId("B08");
 			orderDetail.setPlatformInAmt(orderDetail.getTransAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(platformFeeSum, 0);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -390,6 +473,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 
+		BigDecimal companyInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_CEILING, 0), BigDecimal::add);
+		order.setCompanyInSumAmt(companyInAmtSum);
 		if (!inaccountOrderService.save(order)) {
 			logger.error("## 新增入账订单信息失败");
 			return 0;
@@ -604,12 +689,12 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return 0;
 		}
 		BigDecimal platformFeeSum = new BigDecimal(platformFee).add(new BigDecimal(1));
-		BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
+		//BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
 
 		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
 		order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
 		order.setPlatformInSumAmt(order.getInaccountAmt());
-		order.setCompanyInSumAmt(companyInAmtSum);
+		//order.setCompanyInSumAmt(companyInAmtSum);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemarks(remarks);
 		order.setUpdateUser(user.getId());
@@ -649,6 +734,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			}
 		}
 
+		BigDecimal companyFee = new BigDecimal(0);;
+
 		List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> delOrderDetailList = new ArrayList<InaccountOrderDetail>();
@@ -656,6 +743,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailA00.setBId("A00");
 		detailA00.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailA00 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailA00);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtA00 = new CompanyBillingTypeInf();
+		cbtA00.setCompanyId(company.getCompanyId());
+		cbtA00.setBId("A00");
+		CompanyBillingTypeInf companyBillingTypeInfA00 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtA00);
+		if (companyBillingTypeInfA00 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfA00.getFee());
+		}
 		if (orderDetailA00 == null) {
 			if (!StringUtil.isNullOrEmpty(A00)) {
 				orderDetailA00 = new InaccountOrderDetail();
@@ -665,7 +762,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 				orderDetailA00.setBId("A00");
 				orderDetailA00.setPlatformInAmt(orderDetailA00.getTransAmt());
-				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailA00.setCompanyInAmt(companyInAmt);
 				orderDetailA00.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailA00.setCreateUser(user.getId());
@@ -679,7 +776,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(A00)) {
 				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 				orderDetailA00.setPlatformInAmt(orderDetailA00.getTransAmt());
-				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailA00.setCompanyInAmt(companyInAmt);
 				orderDetailA00.setUpdateUser(user.getId());
 				orderDetailA00.setUpdateTime(System.currentTimeMillis());
@@ -693,6 +790,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB01.setBId("B01");
 		detailB01.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB01 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB01);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB01 = new CompanyBillingTypeInf();
+		cbtB01.setCompanyId(company.getCompanyId());
+		cbtB01.setBId("B01");
+		CompanyBillingTypeInf companyBillingTypeInfB01 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB01);
+		if (companyBillingTypeInfB01 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee());
+		}
 		if (orderDetailB01 == null) {
 			if (!StringUtil.isNullOrEmpty(B01)) {
 				orderDetailB01 = new InaccountOrderDetail();
@@ -702,7 +809,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 				orderDetailB01.setBId("B01");
 				orderDetailB01.setPlatformInAmt(orderDetailB01.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB01.setCompanyInAmt(companyInAmt);
 				orderDetailB01.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB01.setCreateUser(user.getId());
@@ -716,7 +823,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B01)) {
 				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 				orderDetailB01.setPlatformInAmt(orderDetailB01.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB01.setCompanyInAmt(companyInAmt);
 				orderDetailB01.setUpdateUser(user.getId());
 				orderDetailB01.setUpdateTime(System.currentTimeMillis());
@@ -730,6 +837,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB02.setBId("B02");
 		detailB02.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB02 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB02);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB02 = new CompanyBillingTypeInf();
+		cbtB02.setCompanyId(company.getCompanyId());
+		cbtB02.setBId("B02");
+		CompanyBillingTypeInf companyBillingTypeInfB02 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB02);
+		if (companyBillingTypeInfB02 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB02.getFee());
+		}
 		if (orderDetailB02 == null) {
 			if (!StringUtil.isNullOrEmpty(B02)) {
 				orderDetailB02 = new InaccountOrderDetail();
@@ -739,7 +856,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 				orderDetailB02.setBId("B02");
 				orderDetailB02.setPlatformInAmt(orderDetailB02.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB02.setCompanyInAmt(companyInAmt);
 				orderDetailB02.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB02.setCreateUser(user.getId());
@@ -753,7 +870,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B02)) {
 				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 				orderDetailB02.setPlatformInAmt(orderDetailB02.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB02.setCompanyInAmt(companyInAmt);
 				orderDetailB02.setUpdateUser(user.getId());
 				orderDetailB02.setUpdateTime(System.currentTimeMillis());
@@ -767,6 +884,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB03.setBId("B03");
 		detailB03.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB03 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB03);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB03 = new CompanyBillingTypeInf();
+		cbtB03.setCompanyId(company.getCompanyId());
+		cbtB03.setBId("B03");
+		CompanyBillingTypeInf companyBillingTypeInfB03 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB03);
+		if (companyBillingTypeInfB03 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB03.getFee());
+		}
 		if (orderDetailB03 == null) {
 			if (!StringUtil.isNullOrEmpty(B03)) {
 				orderDetailB03 = new InaccountOrderDetail();
@@ -776,7 +903,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 				orderDetailB03.setBId("B03");
 				orderDetailB03.setPlatformInAmt(orderDetailB03.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB03.setCompanyInAmt(companyInAmt);
 				orderDetailB03.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB03.setCreateUser(user.getId());
@@ -790,7 +917,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B03)) {
 				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 				orderDetailB03.setPlatformInAmt(orderDetailB03.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB03.setCompanyInAmt(companyInAmt);
 				orderDetailB03.setUpdateUser(user.getId());
 				orderDetailB03.setUpdateTime(System.currentTimeMillis());
@@ -804,6 +931,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB04.setBId("B04");
 		detailB04.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB04 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB04);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB04 = new CompanyBillingTypeInf();
+		cbtB04.setCompanyId(company.getCompanyId());
+		cbtB04.setBId("B04");
+		CompanyBillingTypeInf companyBillingTypeInfB04 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB04);
+		if (companyBillingTypeInfB04 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB04.getFee());
+		}
 		if (orderDetailB04 == null) {
 			if (!StringUtil.isNullOrEmpty(B04)) {
 				orderDetailB04 = new InaccountOrderDetail();
@@ -813,7 +950,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 				orderDetailB04.setBId("B04");
 				orderDetailB04.setPlatformInAmt(orderDetailB04.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB04.setCompanyInAmt(companyInAmt);
 				orderDetailB04.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB04.setCreateUser(user.getId());
@@ -827,7 +964,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B04)) {
 				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 				orderDetailB04.setPlatformInAmt(orderDetailB04.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB04.setCompanyInAmt(companyInAmt);
 				orderDetailB04.setUpdateUser(user.getId());
 				orderDetailB04.setUpdateTime(System.currentTimeMillis());
@@ -841,6 +978,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB05.setBId("B05");
 		detailB05.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB05 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB05);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB05 = new CompanyBillingTypeInf();
+		cbtB05.setCompanyId(company.getCompanyId());
+		cbtB05.setBId("B05");
+		CompanyBillingTypeInf companyBillingTypeInfB05 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB05);
+		if (companyBillingTypeInfB05 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB05.getFee());
+		}
 		if (orderDetailB05 == null) {
 			if (!StringUtil.isNullOrEmpty(B05)) {
 				orderDetailB05 = new InaccountOrderDetail();
@@ -850,7 +997,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 				orderDetailB05.setBId("B05");
 				orderDetailB05.setPlatformInAmt(orderDetailB05.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB05.setCompanyInAmt(companyInAmt);
 				orderDetailB05.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB05.setCreateUser(user.getId());
@@ -864,7 +1011,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B05)) {
 				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 				orderDetailB05.setPlatformInAmt(orderDetailB05.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB05.setCompanyInAmt(companyInAmt);
 				orderDetailB05.setUpdateUser(user.getId());
 				orderDetailB05.setUpdateTime(System.currentTimeMillis());
@@ -878,6 +1025,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB06.setBId("B06");
 		detailB06.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB06 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB06);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB06 = new CompanyBillingTypeInf();
+		cbtB06.setCompanyId(company.getCompanyId());
+		cbtB06.setBId("B06");
+		CompanyBillingTypeInf companyBillingTypeInfB06 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB06);
+		if (companyBillingTypeInfB06 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB06.getFee());
+		}
 		if (orderDetailB06 == null) {
 			if (!StringUtil.isNullOrEmpty(B06)) {
 				orderDetailB06 = new InaccountOrderDetail();
@@ -887,7 +1044,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 				orderDetailB06.setBId("B06");
 				orderDetailB06.setPlatformInAmt(orderDetailB06.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB06.setCompanyInAmt(companyInAmt);
 				orderDetailB06.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB06.setCreateUser(user.getId());
@@ -901,7 +1058,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B06)) {
 				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 				orderDetailB06.setPlatformInAmt(orderDetailB06.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB06.setCompanyInAmt(companyInAmt);
 				orderDetailB06.setUpdateUser(user.getId());
 				orderDetailB06.setUpdateTime(System.currentTimeMillis());
@@ -915,6 +1072,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB07.setBId("B07");
 		detailB07.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB07 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB07);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB07 = new CompanyBillingTypeInf();
+		cbtB07.setCompanyId(company.getCompanyId());
+		cbtB07.setBId("B07");
+		CompanyBillingTypeInf companyBillingTypeInfB07 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB07);
+		if (companyBillingTypeInfB07 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB07.getFee());
+		}
 		if (orderDetailB07 == null) {
 			if (!StringUtil.isNullOrEmpty(B07)) {
 				orderDetailB07 = new InaccountOrderDetail();
@@ -924,7 +1091,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 				orderDetailB07.setBId("B07");
 				orderDetailB07.setPlatformInAmt(orderDetailB07.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB07.setCompanyInAmt(companyInAmt);
 				orderDetailB07.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB07.setCreateUser(user.getId());
@@ -938,7 +1105,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B07)) {
 				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 				orderDetailB07.setPlatformInAmt(orderDetailB07.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB07.setCompanyInAmt(companyInAmt);
 				orderDetailB07.setUpdateUser(user.getId());
 				orderDetailB07.setUpdateTime(System.currentTimeMillis());
@@ -952,6 +1119,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		detailB08.setBId("B08");
 		detailB08.setOrderId(order.getOrderId());
 		InaccountOrderDetail orderDetailB08 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB08);
+		//企业专项类型费率
+		CompanyBillingTypeInf cbtB08 = new CompanyBillingTypeInf();
+		cbtB08.setCompanyId(company.getCompanyId());
+		cbtB08.setBId("B08");
+		CompanyBillingTypeInf companyBillingTypeInfB08 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB08);
+		if (companyBillingTypeInfB08 == null) {
+			companyFee = platformFeeSum;
+		} else {
+			companyFee = new BigDecimal(companyBillingTypeInfB08.getFee());
+		}
 		if (orderDetailB08 == null) {
 			if (!StringUtil.isNullOrEmpty(B08)) {
 				orderDetailB08 = new InaccountOrderDetail();
@@ -961,7 +1138,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 				orderDetailB08.setBId("B08");
 				orderDetailB08.setPlatformInAmt(orderDetailB08.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB08.setCompanyInAmt(companyInAmt);
 				orderDetailB08.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB08.setCreateUser(user.getId());
@@ -975,7 +1152,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			if (!StringUtil.isNullOrEmpty(B08)) {
 				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 				orderDetailB08.setPlatformInAmt(orderDetailB08.getTransAmt());
-				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(platformFeeSum, 0);
+				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB08.setCompanyInAmt(companyInAmt);
 				orderDetailB08.setUpdateUser(user.getId());
 				orderDetailB08.setUpdateTime(System.currentTimeMillis());
@@ -986,12 +1163,10 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			}
 		}
 
-		if (!inaccountOrderService.saveOrUpdate(order)) {
-			logger.error("## 更新入账订单信息失败");
-			return 0;
-		}
-
+		BigDecimal companyInAmtSum = new BigDecimal(0);
 		if (addOrderDetailList != null && addOrderDetailList.size() >= 1) {
+			BigDecimal addOrderDetailInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_CEILING, 0), BigDecimal::add);
+			companyInAmtSum = addOrderDetailInAmtSum;
 			if (!inaccountOrderDetailService.saveBatch(addOrderDetailList)) {
 				logger.error("## 新增入账订单明细失败");
 				return 0;
@@ -999,6 +1174,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		}
 
 		if (editOrderDetailList != null && editOrderDetailList.size() >= 1) {
+			BigDecimal editOrderDetailInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_CEILING, 0), BigDecimal::add);
+			companyInAmtSum = companyInAmtSum.add(editOrderDetailInAmtSum);
 			if (!inaccountOrderDetailService.saveOrUpdateBatch(editOrderDetailList)) {
 				logger.error("## 编辑入账订单明细失败");
 				return 0;
@@ -1012,6 +1189,12 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 					return 0;
 				}
 			}
+		}
+
+		order.setCompanyInSumAmt(companyInAmtSum.setScale(0, BigDecimal.ROUND_CEILING));
+		if (!inaccountOrderService.saveOrUpdate(order)) {
+			logger.error("## 更新入账订单信息失败");
+			return 0;
 		}
 		return 1;
 	}

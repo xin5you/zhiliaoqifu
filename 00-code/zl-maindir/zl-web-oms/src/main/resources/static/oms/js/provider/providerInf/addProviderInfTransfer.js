@@ -22,6 +22,9 @@ var addTelProviderInfTransfer = {
         $('.btn-edit-submit').on('click', addTelProviderInfTransfer.editProviderTransferCommit);
         $('.btn-delete').on('click', addTelProviderInfTransfer.intoDeleteProviderTransfer);
         $('.btn-delete-submit').on('click', addTelProviderInfTransfer.deleteProviderTransferCommit);
+        $('#remitAmt').on('change', addTelProviderInfTransfer.getInaccountAmtSum);
+        $("#evidenceUrlDiv1").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
+        $("#evidenceUrlDiv2").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
     },
     intoAddProviderTransfer : function() {
         var orderId = $(this).attr("orderId");
@@ -228,8 +231,9 @@ var addTelProviderInfTransfer = {
                     $("#remitAmt").val(data.order.remitAmt);
                     $("#inaccountAmt").val(data.order.inaccountAmt);
                     $("#companyCode").val(data.order.companyCode);
-                    $("#evidenceUrl").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
-                    //$("#evidenceUrl").val(data.order.evidenceUrl);
+                    $("#evidenceUrlImg").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
+                    $("#evidenceUrlDiv2").attr("evidenceImage", data.order.evidenceUrl);
+                    $("#evidenceUrl").val(data.order.evidenceUrl);
                     $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
                         $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
@@ -349,6 +353,21 @@ var addTelProviderInfTransfer = {
                 Helper.alert("系统故障，请稍后再试");
             }
         });
+    },
+    getInaccountAmtSum: function () {
+        var remitAmt = $("#remitAmt").val();
+        var providerRate = $("#providerRate").val();
+        var fee = 1 + parseFloat(providerRate);
+        var inaccountAmt = (parseFloat(remitAmt)/parseFloat(fee)).toFixed(4);
+        inaccountAmt = Math.round(inaccountAmt * 100) / 100;
+        $("#inaccountAmt").val(inaccountAmt);
+    },
+    showEvidenceUrlDiv : function () {
+       var image = $(this).attr("evidenceImage");
+       $("#bigImage").attr("src","data:image/jpg;base64,"+image);
+       $('#imageModal').modal({
+           backdrop : "static"
+       });
     }
 };
 

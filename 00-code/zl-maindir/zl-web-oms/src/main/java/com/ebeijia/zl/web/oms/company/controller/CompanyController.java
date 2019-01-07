@@ -396,7 +396,6 @@ public class CompanyController {
 	@RequestMapping("/listCompanyFee")
 	public ModelAndView listCompanyFee(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("company/addCompanyFee");
-		String operStatus = StringUtil.nullToString(request.getParameter("operStatus"));
 		String companyId = StringUtil.nullToString(request.getParameter("companyId"));
 		String bName = StringUtil.nullToString(request.getParameter("bName"));
 		CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
@@ -408,12 +407,12 @@ public class CompanyController {
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 			pageList = companyInfFacade.getCompanyBillingTypeInfPage(startNum, pageSize, cbt);
 		} catch (Exception e) {
-			logger.error("## 企业账户列表查询异常", e);
+			logger.error("## 企业专项费率信息列表查询异常", e);
 		}
-		mv.addObject("operStatus", operStatus);
 		mv.addObject("companyId", companyId);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("billingTypeList", SpecAccountTypeEnum.values());
+		mv.addObject("companyBillingTypeInf", cbt);
 		return mv;
 	}
 
@@ -540,7 +539,7 @@ public class CompanyController {
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
 		if (!StringUtil.isNullOrEmpty(id)) {
 			cbt = companyInfFacade.getCompanyBillingTypeInfById(id);
-			cbt.setLockVersion(cbt.getLockVersion() + 1);
+			cbt.setLockVersion(cbt.getLockVersion());
 		} else {
 			cbt = new CompanyBillingTypeInf();
 			cbt.setId(IdUtil.getNextId());

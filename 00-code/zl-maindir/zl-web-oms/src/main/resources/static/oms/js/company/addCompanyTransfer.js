@@ -12,6 +12,7 @@ var addCompanyTransfer = {
         $('.btn-remit-submit').on('click', addCompanyTransfer.addCompanyTransferCommit);
         $('.btn-view').on('click', addCompanyTransfer.viewCompanyTransferDetail);
         $('.btn-invoice-order').on('click', addCompanyTransfer.viewCompanyTransferDetail);
+        $("#evidenceUrlDiv1").on('click', addCompanyTransfer.showEvidenceUrlDiv);
 	},
     intoAddCompanyPlatformTransfer: function(){
         var orderId = $(this).attr("orderId");
@@ -62,6 +63,13 @@ var addCompanyTransfer = {
         var companyId = $("#companyId").val();
         var url = Helper.getRootPath()+"/company/viewCompanyTransferDetail.do?orderId="+orderId+"&companyId="+companyId;
         location.href=url;
+    },
+    showEvidenceUrlDiv : function () {
+        var image = $(this).attr("evidenceImage");
+        $("#bigImage").attr("src","data:image/jpg;base64,"+image);
+        $('#imageModal').modal({
+            backdrop : "static"
+        });
     }
 };
 

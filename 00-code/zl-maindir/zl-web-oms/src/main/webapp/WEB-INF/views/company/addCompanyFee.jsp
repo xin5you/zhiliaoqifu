@@ -22,21 +22,20 @@
 			</div>
 		</nav>
 		<form id="searchForm" action="${ctx }/company/listCompanyFee.do" class="form-inline" method="post">
-			<input type="hidden" id="operStatus" name="operStatus" value="${operStatus }"/>
 			<input type="hidden" id="companyId" name="companyId" value="${companyId }"/>
 			<h3 class="heading">企业专项费率列表</h3>
 			<div class="row-fluid" id="h_search">
 				<div class="span10">
 					<div class="input-prepend">
-						<span class="add-on">专项类型名称</span><input id="bName" name="bName" type="text" class="input-medium" value="${companyBillingTypeInf.bName }" />
+						<span class="add-on">专项类型名称</span><input id="bName" name="bName" type="text" class="input-medium" value="${companyBillingTypeInf.BName }" />
 					</div>
 				</div>
 				<div class="pull-right">
 					<button type="submit" class="btn btn-search">查 询</button>
 					<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
-					<%--<sec:authorize access="hasRole('ROLE_COMPANY_INTOADD')">--%>
+					<sec:authorize access="hasRole('ROLE_COMPANY_FEE_INTOADD')">
 						<button type="button" class="btn btn-primary btn-add">新增专项费率</button>
-					<%--</sec:authorize>--%>
+					</sec:authorize>
 				</div>
 			</div>
 
@@ -55,16 +54,16 @@
 				<c:forEach var="companyBilling" items="${pageInfo.list}" varStatus="st">
 					<tr>
 						<td>${companyBilling.companyName}</td>
-						<td>${companyBilling.bName}</td>
+						<td>${companyBilling.BName}</td>
 						<td>${companyBilling.fee}</td>
 						<td>${companyBilling.remarks}</td>
 						<td>
-							<%--<sec:authorize access="hasRole('ROLE_COMPANY_INTOEDIT')">--%>
+							<sec:authorize access="hasRole('ROLE_COMPANY_FEE_INTOEDIT')">
 								<a companyBillingId="${companyBilling.id}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-							<%--</sec:authorize>--%>
-							<%--<sec:authorize access="hasRole('ROLE_COMPANY_DELETE')">--%>
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_COMPANY_FEE_DELETE')">
 								<a companyBillingId="${companyBilling.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-							<%--</sec:authorize>--%>
+							</sec:authorize>
 						</td>
 					</tr>
 				</c:forEach>
@@ -87,7 +86,7 @@
 				<div class="control-group">
 					<label class="control-label">专项类型：</label>
 					<div class="controls">
-						<select name="bId" id="bId" class="span6">
+						<select name="bId" id="bId" class="span3">
 							<c:forEach var="b" items="${billingTypeList}" varStatus="st">
 								<option value="${b.bId}">${b.name}</option>
 							</c:forEach>
@@ -113,9 +112,9 @@
 		</div>
 	</form>
 	<div class="modal-footer" style="text-align: center;">
-		<%--<sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_ADDCOMMIT')">--%>
+		<sec:authorize access="hasRole('ROLE_COMPANY_FEE_COMMIT')">
 			<button id="btn-submit" class="btn btn-primary btn-submit">确 定  </button>
-		<%--</sec:authorize>--%>
+		</sec:authorize>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
 	</div>
 </div>

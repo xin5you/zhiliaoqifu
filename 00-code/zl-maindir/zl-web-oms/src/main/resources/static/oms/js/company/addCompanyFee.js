@@ -6,8 +6,6 @@ var addCompanyFee = {
 
     init : function() {
         addCompanyFee.initEvent();
-        var operStatus=$("#operStatus").val();
-        Helper.operTip(operStatus);
     },
 
     initEvent:function(){
@@ -19,7 +17,8 @@ var addCompanyFee = {
         $('.btn-delete').on('click', addCompanyFee.deleteCompanyBillingTypeCommit);
     },
     searchReset:function(){
-        location = Helper.getRootPath() + '/company/listCompanyFee.do';
+        var companyId = $("#companyId").val();
+        location = Helper.getRootPath() + "/company/listCompanyFee.do?companyId="+companyId;
     },
     intoAddCompanyBillingType : function() {
         var companyBillingId = $(this).attr("companyBillingId");
@@ -51,7 +50,7 @@ var addCompanyFee = {
             success: function (data) {
                 $("#btn-submit").removeAttr("disabled");
                 if(data.status) {
-                    location = Helper.getRootPath() + '/company/listCompanyFee.do';
+                    location = Helper.getRootPath() + '/company/listCompanyFee.do?operStatus=1&companyId='+companyId;
                 }else {
                     Helper.alert(data.msg);
                     return false;
@@ -80,7 +79,7 @@ var addCompanyFee = {
                     Helper.alert("系统故障，请稍后再试");
                     return false;
                 }
-                $("#bId").val(data.bId);
+                $("#bId").val(data.bid);
                 $("#fee").val(data.fee);
                 $("#remarks").val(data.remarks);
             },
@@ -99,6 +98,7 @@ var addCompanyFee = {
     },
     editCompanyBillingTypeCommit : function () {
         $("#btn-submit").attr('disabled',"true");
+        var companyId = $("#companyId").val();
         var companyBillingTypeId = $("#companyBillingTypeId").val();
         var fee = $("#fee").val();
         var remarks = $("#remarks").val();
@@ -107,6 +107,7 @@ var addCompanyFee = {
             type: 'post',
             dataType : "json",
             data: {
+                "companyId" : companyId,
                 "companyBillingTypeId" : companyBillingTypeId,
                 "fee" : fee,
                 "remarks" : remarks
@@ -115,7 +116,7 @@ var addCompanyFee = {
             success: function (data) {
                 $("#btn-submit").removeAttr("disabled");
                 if(data.status) {
-                    location = Helper.getRootPath() + '/company/listCompanyFee.do';
+                    location = Helper.getRootPath() + '/company/listCompanyFee.do?operStatus=2&companyId='+companyId;
                 }else {
                     Helper.alert(data.msg);
                     return false;
@@ -129,6 +130,7 @@ var addCompanyFee = {
         });
     },
     deleteCompanyBillingTypeCommit:function(){
+        var companyId = $("#companyId").val();
         var companyBillingId = $(this).attr('companyBillingId');
         Helper.confirm("您是否删除该企业专项类型费率信息？",function(){
             $.ajax({
@@ -140,7 +142,7 @@ var addCompanyFee = {
                 },
                 success: function (data) {
                     if(data.status){
-                        location.href=Helper.getRootPath() + '/company/listCompanyFee.do?operStatus=4';
+                        location.href=Helper.getRootPath() + '/company/listCompanyFee.do?operStatus=4&companyId='+companyId;
                     }else{
                         Helper.alter(data.msg);
                         return false;

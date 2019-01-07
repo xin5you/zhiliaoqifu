@@ -70,8 +70,8 @@
                                          <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
                                      <td>
                                         <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
-                                            <div style="height: 200px; width: 200px">
-                                                <img height="100px" width="100px" src="data:image/jpg;base64,${entity.evidenceUrl}" />
+                                            <div id="evidenceUrlDiv1" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
+                                                <img style="height: 100%; width: 100%" src="data:image/jpg;base64,${entity.evidenceUrl}" />
                                             </div>
                                         </c:if>
                                      </td>
@@ -87,9 +87,9 @@
                                              </sec:authorize>
                                          </c:if>
                                          <c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '1' && entity.companyReceiverCheck == '1' && company.isPlatform == '0'}">
-                                         <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_DETAIL')">
-                                             <a orderId="${entity.orderId}" title="开票订单" class="btn-mini btn-invoice-order" href="#"><i class="icon-search"></i></a>
-                                         </sec:authorize>
+                                             <sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT_DETAIL')">
+                                                 <a orderId="${entity.orderId}" title="开票订单" class="btn-mini btn-invoice-order" href="#"><i class="icon-search"></i></a>
+                                             </sec:authorize>
                                          </c:if>
                                         <%--<c:if test="${entity.transferCheck == '1' && entity.platformReceiverCheck == '0' && company.isPlatform == '1'}">
                                             <sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT_INTO')">
@@ -141,6 +141,20 @@
             </sec:authorize>
                <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
            </div>
+       </div>
+
+       <div id="imageModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+           <form class="form-horizontal">
+               <div class="modal-header">
+                   <button class="close" data-dismiss="modal">&times;</button>
+                   <h3 id="commodityInfModal_h6">上账凭证图片</h3>
+               </div>
+               <div class="modal-body">
+                   <div style="width: 100%; height: 100%; overflow-x: scroll">
+                       <img id="bigImage" style="height: 500px; max-width:initial"/>
+                   </div>
+               </div>
+           </form>
        </div>
 </body>
 </html>

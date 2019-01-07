@@ -302,7 +302,9 @@ public class ProviderInfController {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
+			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
 			mv.addObject("pageInfo", pageList);
+			mv.addObject("providerRate", provider.getProviderRate());
 		} catch (Exception e) {
 			logger.error("## 查询供应商上账信息详情异常", e);
 		}
