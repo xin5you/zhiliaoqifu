@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import java.util.List;
 @RequestMapping(value = "/pay")
 @RestController
 public class PayController {
+    private static final BigDecimal oneHundred = BigDecimal.valueOf(100);
     @Autowired
     private IPayService payService;
 
@@ -45,7 +47,7 @@ public class PayController {
     @TokenCheck(force = true)
     @ApiOperation("绑定银行卡")
     @RequestMapping(value = "/card/bind", method = RequestMethod.POST)
-    public JsonResult<Integer> bindBankCard(CardBindInfo card,String validCode) {
+    public JsonResult<Integer> bindBankCard(CardBindInfo card, String validCode) {
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
             throw new AdviceMessenger(406, "参数异常");
@@ -97,6 +99,11 @@ public class PayController {
     public JsonResult<List<AccountVO>> listAccountDetail(@RequestParam("session") String session) {
         MemberInfo memberInfo = shopUtils.getSession();
         List<AccountVO> accountVOS = payService.listAccountDetail(memberInfo.getOpenId(), session);
+        //处理流水金额问题
+        accountVOS.stream().forEach(vo -> {
+            vo.setAccBal(vo.getAccBal().multiply(oneHundred));
+            vo.setCouponBal(vo.getCouponBal().multiply(oneHundred));
+        });
         return new JsonResult<>(accountVOS);
     }
 
@@ -104,7 +111,7 @@ public class PayController {
     @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
-    public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type,@RequestParam(value = "range",required = false) String range ,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+    public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
 
         PageInfo<AccountLogVO> deals = payService.listDeals(range, type, start, limit);
         return new JsonResult<>(deals);
@@ -114,7 +121,7 @@ public class PayController {
     @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list", method = RequestMethod.GET)
-    public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range",required = false) String range ,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+    public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         PageInfo<AccountLogVO> deals = payService.listDeals(range, null, start, limit);
         return new JsonResult<>(deals);
     }
@@ -134,18 +141,18 @@ public class PayController {
      *
      * @return
      */
-    @TokenCheck
+    @TokenCheck(force = true)
     @ApiOperation("托管账户转出到银行卡")
     @ApiResponses({@ApiResponse(code = ResultState.OK, message = "操作成功"),
             @ApiResponse(code = ResultState.ERROR, message = "服务器内部异常"),
             @ApiResponse(code = ResultState.FORBIDDEN, message = "权限不足"),
             @ApiResponse(code = ResultState.UNAUTHORIZED, message = "请重新登录")})
     @RequestMapping(value = "/deal/transfer", method = RequestMethod.POST)
-    public JsonResult transferToCard(@Param("deal") DealInfo dealInfo, @Param(value = "session") Double session) {
+    public JsonResult transferToCard(@RequestParam("deal") Long dealInfo, @RequestParam String vaildCode, @RequestParam(value = "session") Double session) {
         if (session == null) {
             session = 0D;
         }
-        int state = payService.transferToCard(dealInfo, session);
+        int state = payService.transferToCard(dealInfo, vaildCode, session);
         return new JsonResult(state);
     }
 

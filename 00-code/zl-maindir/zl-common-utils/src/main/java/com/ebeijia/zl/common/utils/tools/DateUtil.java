@@ -132,23 +132,64 @@ public class DateUtil {
 	}
 	
 	//获取当天开始时间
-	/*public static Date getStartTime() {  
+	public static Long getStartTimeInMillis() {
         Calendar todayStart = Calendar.getInstance();  
         todayStart.set(Calendar.HOUR_OF_DAY, 0);  
         todayStart.set(Calendar.MINUTE, 0);  
         todayStart.set(Calendar.SECOND, 0);  
         todayStart.set(Calendar.MILLISECOND, 0);
-        return todayStart.getTime();  
+        return todayStart.getTimeInMillis();
     }
 	//获取当天结束时间
-	public static Date getnowEndTime() {  
+	public static Long getEndTimeInMillis() {
         Calendar todayEnd = Calendar.getInstance();  
         todayEnd.set(Calendar.HOUR_OF_DAY, 23);  
         todayEnd.set(Calendar.MINUTE, 59);  
         todayEnd.set(Calendar.SECOND, 59);  
         todayEnd.set(Calendar.MILLISECOND, 999);  
-        return todayEnd.getTime();  
-    }*/
+        return todayEnd.getTimeInMillis();
+    }
+	/**
+	 * 获取当前日期所在月份开始的时间戳
+	 * @param
+	 * @return
+	 */
+	public static Long getMonthBeginInMillis() {
+		Calendar c = Calendar.getInstance();
+		//设置为1号,当前日期既为本月第一天
+		c.set(Calendar.DAY_OF_MONTH, 1);
+		//将小时至0
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		//将分钟至0
+		c.set(Calendar.MINUTE, 0);
+		//将秒至0
+		c.set(Calendar.SECOND,0);
+		//将毫秒至0
+		c.set(Calendar.MILLISECOND, 0);
+		// 获取本月第一天的时间戳
+		return c.getTimeInMillis();
+	}
+
+	/**
+	 * 获取当前日期所在月份结束的时间戳
+	 * @param
+	 * @return
+	 */
+	public static Long getMonthEndInMillis() {
+		Calendar c = Calendar.getInstance();
+		//设置为当月最后一天
+		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+		//将小时至23
+		c.set(Calendar.HOUR_OF_DAY, 23);
+		//将分钟至59
+		c.set(Calendar.MINUTE, 59);
+		//将秒至59
+		c.set(Calendar.SECOND,59);
+		//将毫秒至999
+		c.set(Calendar.MILLISECOND, 999);
+		// 获取本月最后一天的时间戳
+		return c.getTimeInMillis();
+	}
 
 	/**
 	 * get current day, not time
@@ -640,19 +681,8 @@ public class DateUtil {
 	}
 	
 	public static void main(String[] args) {
-		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_YYYY_MM_DD_HH_MM_SS);
-		 long longTime = 0;
-        try {
-			longTime = sdf.parse("2011-09-20 12:30:45").getTime();
-			longTime = longTime / 1000;
-		} catch (ParseException e) {
-			log.error("## 时间转换异常", e);
-		}
-		System.out.println(new Date(1316493045));
-		SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		sdfLong.format(new Date(1316493045));
-		System.out.println("========"+sdfLong.format(new Date(1316493045)));
-		System.out.println(DateUtil.COMMON_FULL.getDateText(new Date(System.currentTimeMillis())));
+		System.out.println(getStartTimeInMillis());
+		System.out.println(getEndTimeInMillis());
 	}
 
 	/**

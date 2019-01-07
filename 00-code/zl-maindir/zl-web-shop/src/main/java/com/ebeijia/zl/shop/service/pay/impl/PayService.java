@@ -5,26 +5,35 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
+import com.ebeijia.zl.common.utils.tools.StringUtils;
+import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
+import com.ebeijia.zl.facade.account.req.AccountWithDrawReqVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
+import com.ebeijia.zl.shop.dao.member.service.ITbEcomPayCardService;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrder;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomDmsRelatedDetailService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderDetailsService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
+import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
+import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
-import com.ebeijia.zl.shop.vo.DealInfo;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
+import com.sun.org.glassfish.external.amx.AMX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +41,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
+import static com.ebeijia.zl.shop.constants.ResultState.OK;
 
 @Service
 public class PayService implements IPayService {
@@ -41,41 +55,76 @@ public class PayService implements IPayService {
     private AccountQueryFacade accountQueryFacade;
 
     @Autowired
-    ShopUtils shopUtils;
+    private ShopUtils shopUtils;
 
     @Autowired
-    ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
+    private ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
 
     @Autowired
-    ITbEcomPayOrderService payOrderDao;
+    private ITbEcomPayOrderService payOrderDao;
 
     @Autowired
-    ITbEcomPayOrderDetailsService payOrderDetailsDao;
+    private ITbEcomPayOrderDetailsService payOrderDetailsDao;
 
     @Autowired
-    AccountTransactionFacade accountTransactionFacade;
+    private AccountTransactionFacade accountTransactionFacade;
+
+    @Autowired
+    private ValidCodeService validCodeService;
+
+    @Autowired
+    private ITbEcomPayCardService payCardDao;
+
+    @Autowired
+    private JedisUtilsWithNamespace jedis;
 
     Logger logger = LoggerFactory.getLogger(PayService.class);
 
     @Override
-    public int transferToCard(DealInfo dealInfo, Double session) {
-        return (int) (Math.random() * 10000);
+    public int transferToCard(Long dealInfo, String validCode, Double session) {
+        MemberInfo memberInfo = shopUtils.getSession();
+        if (memberInfo == null) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
+        }
+        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, memberInfo.getMobilePhoneNo(), validCode);
+        if (!valid) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
+        }
+        validCodeService.checkSession("transferToCard", session.toString());
+        TbEcomPayCard payCard = new TbEcomPayCard();
+        payCard.setMemberId(memberInfo.getMemberId());
+        payCard = payCardDao.getOne(new QueryWrapper<>(payCard));
+        if (payCard == null || StringUtils.isAnyEmpty(payCard.getBankCode(), payCard.getCardNumber(), payCard.getMobile(), payCard.getIdCard())) {
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "您绑定的卡信息有误");
+        }
+        AccountWithDrawReqVo req = new AccountWithDrawReqVo();
+        req.setBankCode(payCard.getBankCode());
+        req.setBankCity(payCard.getCity());
+        req.setBankName(payCard.getBankName());
+        req.setBankProvince(payCard.getProvince());
+        req.setOrderName("转账");
+        req.setReceiverCardNo(payCard.getCardNumber());
+        req.setReceiverName(payCard.getUserName());
+        req.setTransAmt(BigDecimal.valueOf(dealInfo));
+        req.setUploadAmt(BigDecimal.valueOf(dealInfo));
+        BaseResult baseResult = null;
+        try {
+            baseResult = accountTransactionFacade.executeWithDraw(req);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (baseResult==null || baseResult.getCode()!="OK"){
+            throw new BizException(ResultState.ERROR,"网络不稳定，请稍后再试");
+        }
+        throw new AdviceMessenger(ResultState.OK,"成功！信息已提交");
     }
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     public int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
-        //构造payOrder对象
-        String memberId = shopUtils.getSession().getMemberId();
-        String payOrderId = IdUtil.getNextId();
-        TbEcomPayOrder pay = initPayOrderObject();
-        pay.setMemberId(memberId);
-        pay.setDmsRelatedKey(dmsRelatedKey);
-        pay.setPayOrderId(payOrderId);
-        payOrderDao.save(pay);
 
         //请求支付
-        String result;
+        String result = "";
         List<AccountTxnVo> txnList = buildTxnVo(payInfo);
         BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc);
         Object object = baseResult.getObject();
@@ -87,6 +136,16 @@ public class PayService implements IPayService {
         }
         //判断result
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s", payInfo, openId, dmsRelatedKey, desc, result));
+
+        //构造payOrder对象
+        String memberId = shopUtils.getSession().getMemberId();
+        String payOrderId = IdUtil.getNextId();
+        TbEcomPayOrder pay = initPayOrderObject();
+        pay.setMemberId(memberId);
+        pay.setDmsRelatedKey(dmsRelatedKey);
+        pay.setPayOrderId(payOrderId);
+        pay.setOutTransNo(result);
+        payOrderDao.save(pay);
 
         //构造payOrderDetail对象
         for (AccountTxnVo v : txnList) {
@@ -243,7 +302,7 @@ public class PayService implements IPayService {
             result = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
             logger.error(e.getStackTrace().toString());
-            throw new BizException(500, "账户系统调用异常");
+            throw new BizException(500, "服务器连接中断，请稍后再试");
         }
         return result;
     }

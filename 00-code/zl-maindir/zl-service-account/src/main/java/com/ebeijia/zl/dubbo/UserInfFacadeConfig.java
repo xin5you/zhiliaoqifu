@@ -32,8 +32,8 @@ public class UserInfFacadeConfig extends DubboProviderConfig {
 		/*** dubbo method registerUserInf config*/
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("registerUserInf");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(3);
+		methodConfig.setTimeout(10000);
+		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		serviceBean.setMethods(methods);
 		

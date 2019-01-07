@@ -1,10 +1,15 @@
 package com.ebeijia.zl.service.account.facade;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.tools.AmountUtil;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.req.*;
+import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +29,7 @@ import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
 import com.ebeijia.zl.service.user.service.IPersonInfService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
+import redis.clients.jedis.JedisCluster;
 
 
 /**
@@ -58,7 +64,11 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	@Autowired
 	private IIntfaceTransLogService intfaceTransLogService;
 
+	@Autowired
+	private IAccountWithdrawDetailService accountWithdrawDetailService;
 
+	@Autowired
+	private JedisCluster jedisCluster;
 	/**
 	 *
 	 * @Description: 账户充值
@@ -131,11 +141,8 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	* 2018年11月30日     zhuqi           v1.0.0
 	 */
 	public BaseResult executeRecharge(List list) throws Exception {
-		
 
-		
 		return null;
-		
 	}
 
 	/**
@@ -156,7 +163,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
 		if(intfaceTransLog!=null && "00".equals(intfaceTransLog.getRespCode())){
-			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
 		/**获取用户数据*/
@@ -226,7 +232,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		 */
 		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
 		if(intfaceTransLog!=null && "00".equals(intfaceTransLog.getRespCode())){
-			//TODO 重复交易返回
 			return ResultsUtil.error("99", "重复交易");
 		}
 		
@@ -319,6 +324,54 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			return ResultsUtil.error("99", "账户信息不存在{%s}"+req.getUserChnlId());
 		}
 
+		long sDate=DateUtil.getMonthBeginInMillis();
+		long eDate=DateUtil.getMonthEndInMillis();
+		//step2: 当前用户当月提现金额
+		BigDecimal txnAmt=accountWithdrawDetailService.getWithdrawAmtByUserIdAndTime(fromUserInf.getUserId(),sDate,eDate);
+
+		//如果当前用户已经有提现操作
+		if(AmountUtil.bigger(txnAmt,new BigDecimal(0))){
+
+			//单月提现次数
+			int total=accountWithdrawDetailService.getWithdrawTotalToMonthByUserId(fromUserInf.getUserId(),sDate,eDate);
+			int withDrawTotal=Integer.parseInt(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_MONTH_TOTAL_NUM"));
+			if(total>=withDrawTotal){
+				return ResultsUtil.error("99", "用户单月提现次数已经超过限额");
+			}
+
+			//单日提现金额
+			sDate=DateUtil.getStartTimeInMillis();
+			eDate=DateUtil.getEndTimeInMillis();
+			txnAmt=accountWithdrawDetailService.getWithdrawAmtByUserIdAndTime(fromUserInf.getUserId(),sDate,eDate);
+
+			BigDecimal withDrawDayAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_DAY_TOTAL_AMT"));
+			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawDayAmt)){
+				return ResultsUtil.error("99", "用户单日提现金额已经超过限额");
+			}
+		}
+
+
+		//step2: 银行卡当月提现金额
+		//单张银行卡号当月提现金额
+		sDate=DateUtil.getMonthBeginInMillis();
+		eDate=DateUtil.getMonthEndInMillis();
+		txnAmt=accountWithdrawDetailService.getWithdrawAmtByCardAndTime(req.getReceiverCardNo(),sDate,eDate);
+		if(AmountUtil.bigger(txnAmt,new BigDecimal(0))){
+			BigDecimal withDrawCardAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_CARD_MONTH_TOTAL_AMT"));
+			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawCardAmt)){
+				return ResultsUtil.error("99", "单张银行卡当月提现金额已经超过限额");
+			}
+			//银行卡单日提现金额
+			sDate=DateUtil.getStartTimeInMillis();
+			eDate=DateUtil.getEndTimeInMillis();
+			txnAmt=accountWithdrawDetailService.getWithdrawAmtByCardAndTime(req.getReceiverCardNo(),sDate,eDate);
+
+			withDrawCardAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_CARD_DAY_TOTAL_AMT"));
+			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawCardAmt)){
+				return ResultsUtil.error("99", "单张银行卡当日提现金额已经超过限额");
+			}
+		}
+
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
 				intfaceTransLog,
@@ -374,26 +427,57 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
 
-	
 	/**
 	 * 退款操作
 	 */
 	@Override
 	public BaseResult executeRefund(AccountRefundReqVo req) throws Exception {
-		
 		log.info("==>  退款操作 mehtod=executeRefund and AccountRefundReqVo={}",JSONArray.toJSON(req));
-		
 		/**
 		 * 订单交易检验
 		 */
-		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getById(req.getOrgItfPrimaryKey());
+
+		if(intfaceTransLog ==null || ! "00".equals(intfaceTransLog.getRespCode())){
+			return ResultsUtil.error("99", "原交易不存在");
+		}
+		intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
 		if(intfaceTransLog !=null && "00".equals(intfaceTransLog.getRespCode())){
 			return ResultsUtil.error("99", "重复交易");
 		}
-		intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(null, req.getTransChnl());
-		return null;
-	}
+		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(),req.getUserChnl());
+		/****实例化接口流水****/
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(intfaceTransLog,req.getDmsRelatedKey(), toUserInf.getUserId(), req.getTransId(),null,
+				req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),req.getOrgItfPrimaryKey());
+		intfaceTransLogService.addBizItfTransLog(
+				intfaceTransLog,
+				null,
+				null,
+				null,
+				null,
+				null,
+				 null,
+				null,
+				null,
+				null,
+				null);
+		//企业信息
+		intfaceTransLog.setTransDesc(req.getTransDesc());
+		intfaceTransLog.setAdditionalInfo(req.getTransList() !=null ?JSONArray.toJSONString(req.getTransList()):"");
+		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
 
+		//执行操作
+		boolean eflag=false;
+		try {
+			intfaceTransLog.setTransList(req.getTransList());//多专项账户类型
+			eflag=transLogService.execute(intfaceTransLog);
+		} catch (AccountBizException accountBizException) {
+			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
+		}
+		//修改当前接口请求交易状态
+		intfaceTransLogService.updateById(intfaceTransLog,eflag);
+		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
+	}
 
 	/**
 	 * 交易信息查询

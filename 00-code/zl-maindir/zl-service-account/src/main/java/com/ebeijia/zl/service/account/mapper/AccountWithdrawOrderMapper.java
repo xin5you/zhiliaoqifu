@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.math.BigDecimal;
+
 /**
  *
  * 账户交易流水 Mapper 接口
@@ -13,5 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AccountWithdrawOrderMapper extends BaseMapper<AccountWithdrawOrder> {
-
+    
 }

@@ -12,6 +12,7 @@ import com.ebeijia.zl.core.withdraw.suning.core.BatchWithdrawData;
 import com.ebeijia.zl.core.withdraw.suning.vo.WithdrawBodyVO;
 import com.ebeijia.zl.core.withdraw.suning.vo.WithdrawDetailDataVO;
 import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
+import com.ebeijia.zl.facade.account.req.AccountWithDrawReqVo;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,38 +39,20 @@ public class WithdrawTest {
     @Test
    public void testConfig() throws Exception{
 
-     /*   WithdrawDetailDataVO vo=new WithdrawDetailDataVO();
-        vo.setSerialNo(UUID.randomUUID().toString().replace("-",""));
-        vo.setReceiverCardNo("6214830215284406"); //收款卡号
-        vo.setReceiverName("朱秋友");
-        vo.setBankName("招商银行");  //开户行
-        vo.setBankCode("CMB");  //开户行编号
-        vo.setAmount(1l);
-        vo.setRemark(null);
-        vo.setOrderName(null);
+         AccountWithDrawReqVo reqVo=new AccountWithDrawReqVo();
 
-        List<WithdrawDetailDataVO> detailData=new ArrayList<WithdrawDetailDataVO>();
-        detailData.add(vo);
+         reqVo.setDmsRelatedKey(IdUtil.getNextId());
 
-        WithdrawBodyVO body=new WithdrawBodyVO();
-        body.setDetailData(detailData);
+         reqVo.setReceiverCardNo("6214830215284406"); //收款卡号
+         reqVo.setReceiverName("朱秋友");
+         reqVo.setBankName("招商银行");  //开户行
+         reqVo.setBankCode("CMB");  //开户行编号
+         reqVo.setTransAmt(new BigDecimal(1));
+         reqVo.setUploadAmt(new BigDecimal(1));
+         reqVo.setReceiverType("PERSON");
+         reqVo.setRemarks(null);
+         reqVo.setOrderName(null);
 
-        body.setBatchNo(UUID.randomUUID().toString().replace("-",""));
-        body.setMerchantNo(yfbWithdrawConfig.getMerchantNo());
-        body.setProductCode(yfbWithdrawConfig.getProductCode());
-        body.setTotalNum(1);
-        body.setTotalAmount(1l);
-        body.setPayDate(DateUtil.getCurrentDateStr());
-        body.setNotifyUrl("http://zlqfwebapi.free.idcfengye.com/web-api/api/withdraw/suning-yfb/notify");
-
-        WithdrawContentVO content=new WithdrawContentVO();
-        content.setBody(body);
-        content.setPublicKeyIndex(yfbWithdrawConfig.getPublicKeyIndex());
-        content.setMerchantNo(yfbWithdrawConfig.getMerchantNo());*/
-
-         String s=batchWithdrawData.batchWithDraw(null);
-
-         System.out.println("batchWithDraw->"+s);
 
    }
 }

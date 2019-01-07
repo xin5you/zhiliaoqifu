@@ -163,8 +163,9 @@ public abstract class AmountUtil {
 	}
 
 	public static void main(String[] args) {
-//		Double s = AmountUtil.sub(a, b);
-//		System.out.println(AmountUtil.roundDown(s));
-//		System.out.println(AmountUtil.div(101.1D, 1D, 2));
+			BigDecimal a=new BigDecimal("1.2");
+		    BigDecimal b=new BigDecimal("1.1");
+
+		System.out.println(AmountUtil.bigger(a,b));
 	}
 }
