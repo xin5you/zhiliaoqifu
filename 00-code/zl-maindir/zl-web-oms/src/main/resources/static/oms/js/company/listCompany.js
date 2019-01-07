@@ -22,6 +22,7 @@ var listCompany = {
         $('.btn-company-tansfer').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-accbal').on('click', listCompany.listCompanyAccBal);
         $('.btn-invoice').on('click', listCompany.intoAddCompanyTransfer);
+        $('.btn-add-fee').on('click', listCompany.intoAddCompanyFee);
     },
     searchReset:function(){
         location = Helper.getRootPath() + '/company/listCompany.do';
@@ -107,6 +108,11 @@ var listCompany = {
     listCompanyAccBal : function () {
         var companyId = $(this).attr('companyId');
         var url = Helper.getRootPath()+"/company/listCompanyAccBal.do?companyId="+companyId;
+        location.href=url;
+    },
+    intoAddCompanyFee : function () {
+        var companyId = $(this).attr('companyId');
+        var url = Helper.getRootPath()+"/company/listCompanyFee.do?companyId="+companyId;
         location.href=url;
     }
 }

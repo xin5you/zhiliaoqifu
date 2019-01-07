@@ -116,6 +116,9 @@
 									<sec:authorize access="hasRole('ROLE_COMPANY_INVOICE_INTO')">
 										<a companyId="${company.companyId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
+									<%--<sec:authorize access="hasRole('ROLE_COMPANY_INTOADD')">--%>
+										<a companyId="${company.companyId}" title="添加费率" class="btn-mini btn-add-fee" href="#"><i class="icon-plus"></i></a>
+									<%--</sec:authorize>--%>
 								</c:if>
 							</c:if>
 						</td>

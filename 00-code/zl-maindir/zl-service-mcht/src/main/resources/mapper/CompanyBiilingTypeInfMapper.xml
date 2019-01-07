@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.CompanyBillingTypeInfMapper">
+
+	<sql id="companyBillingTypeInfColumns">
+		c.id,
+		c.company_id,
+		c.b_id,
+		c.fee,
+		c.remarks,
+		c.create_user,
+		c.update_user,
+		c.create_time,
+		c.update_time,
+		c.lock_version
+	</sql>
+
+	<sql id="tableName">
+		tb_company_billingtype_inf c
+	</sql>
+
+	<select id="getCompanyBillingTypeInfList" parameterType="CompanyBillingTypeInf" resultType="CompanyBillingTypeInf">
+		select
+			<include refid="companyBillingTypeInfColumns"/>,
+			p.name as companyName,
+			t.b_name as bName
+		from
+			tb_company_inf p inner join tb_company_billingtype_inf c on p.company_id = c.company_id
+			inner join tb_billing_type t on c.b_id = t.b_id
+		where c.data_stat = '0'
+			and c.company_id = #{companyId}
+		<if test="bName != null and bName != '' ">
+			and t.b_name like "%"#{bName}"%"
+		</if>
+		order by t.b_id asc
+	</select>
+
+	<select id="getCompanyBillingTypeInfByBIdAndCompanyId" parameterType="CompanyBillingTypeInf" resultType="CompanyBillingTypeInf">
+		select
+			<include refid="companyBillingTypeInfColumns"/>
+		from
+			<include refid="tableName"/>
+		where c.data_stat = '0'
+			and c.b_id = #{BId}
+			and c.company_id = #{companyId}
+	</select>
+
+</mapper>

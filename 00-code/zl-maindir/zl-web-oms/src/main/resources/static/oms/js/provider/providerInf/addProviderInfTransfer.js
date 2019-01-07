@@ -228,7 +228,8 @@ var addTelProviderInfTransfer = {
                     $("#remitAmt").val(data.order.remitAmt);
                     $("#inaccountAmt").val(data.order.inaccountAmt);
                     $("#companyCode").val(data.order.companyCode);
-                    $("#evidenceUrl").val(data.order.evidenceUrl);
+                    $("#evidenceUrl").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
+                    //$("#evidenceUrl").val(data.order.evidenceUrl);
                     $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
                         $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);

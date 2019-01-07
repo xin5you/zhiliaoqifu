@@ -77,7 +77,9 @@
                             <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
                         <td>
                             <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
-                                <a href="${entity.evidenceUrl}">${entity.evidenceUrl}</a>
+                                <div style="height: 200px; width: 200px">
+                                    <img height="100px" width="100px" src="data:image/jpg;base64,${entity.evidenceUrl}" />
+                                </div>
                             </c:if>
                         </td>
                         <td>
@@ -131,14 +133,17 @@
                 <div class="control-group">
                     <label class="control-label">打款金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="remitAmt" name="remitAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="remitAmt" name="remitAmt" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">请选择打款凭证：</label>
                     <div class="controls">
-                        <input id="evidenceUrl" name="evidenceUrl" class="span3" readonly type="text">
+                        <div style="height: 200px; width: 200px">
+                            <img id="evidenceUrl" name="evidenceUrl" height="100px" width="100px" />
+                        </div>
+                        <%--<input id="evidenceUrl" name="evidenceUrl" class="span3" readonly type="text">--%>
                         <input type="file" class="span3" id="evidenceUrlFile"  name="evidenceUrlFile" multiple/>
                         <span class="help-block"></span>
                     </div>
@@ -153,70 +158,70 @@
                 <div class="control-group">
                     <label class="control-label">上账金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">通用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="A00" name ="A00" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="A00" name ="A00" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">办公用品账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B01" name ="B01" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B01" name ="B01" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">差旅专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B02" name ="B02" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B02" name ="B02" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">体检专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B03" name ="B03" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B03" name ="B03" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">培训专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B04" name ="B04" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B04" name ="B04" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">食品专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B05" name ="B05" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B05" name ="B05" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">通讯专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B06" name ="B06" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B06" name ="B06" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">保险专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B07" name ="B07" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B07" name ="B07" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">交通专用账户金额(元)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="B08" name ="B08" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                        <input type="text" class="span3" id="B08" name ="B08" onkeyup="checkPrice(this)"/>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -313,4 +318,17 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    //验证价格（带有小数点，小数点最多是两位）
+    function checkPrice(obj){
+        obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字而不是
+        obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d).*$/,'$2$1.$2');//只能输入两个小数
+        if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+            obj.value= parseFloat(obj.value);
+        }
+    }
+</script>
 </html>

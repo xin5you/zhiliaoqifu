@@ -19,12 +19,14 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Autowired
     private AccountQueryFacade accountQueryFacade;
+
+    @Value("${IMG_PATH}")
+    private String IMG_PATH;
 
     @Override
     public Map<String, Object> getAccountInfPage(HttpServletRequest req) {
@@ -128,40 +133,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public Map<String, Object> saveFile(MultipartFile file, HttpServletRequest request, String orderId) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("status", Boolean.TRUE);
-        try {
-            String fileName = file.getOriginalFilename();//获取file图片名称
-            String endFileName = fileName.substring(fileName.lastIndexOf("."));
-            if (!endFileName.equalsIgnoreCase(".jpg") && !endFileName.equalsIgnoreCase(".jpeg") && !endFileName.equalsIgnoreCase(".bmp") && !endFileName.equalsIgnoreCase(".gif") && !endFileName.equalsIgnoreCase(".png")){
-                resultMap.put("status", Boolean.FALSE);
-                resultMap.put("msg", "文件类型不正确");
-                return resultMap;
-            }
-            // 文件保存路径
-            String filePath = request.getSession().getServletContext().getRealPath("images/");//本地项目路径
-
-            File targetFile = new File(filePath);
-            if(!targetFile.exists()){
-                targetFile.mkdirs();
-            }
-            FileOutputStream out = new FileOutputStream(filePath + orderId + endFileName);
-            out.write(file.getBytes());
-            out.flush();
-            out.close();
-            resultMap.put("msg", filePath + orderId + endFileName);
-        } catch (Exception e) {
-            logger.error("## 文件上传异常");
-            resultMap.put("status", Boolean.FALSE);
-            resultMap.put("msg", "文件上传异常");
-            return resultMap;
-        }
-        return resultMap;
-    }
-
-    @Override
-    public Map<String, Object> uploadImange(FTPImageVo imgVo, MultipartFile file) throws Exception {
+    public Map<String, Object> uploadImage(FTPImageVo imgVo, MultipartFile file) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("status", Boolean.TRUE);
         if (file == null) {
@@ -198,7 +170,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public Map<String, Object> uploadImangeName(FTPImageVo imgVo, MultipartFile file) throws Exception {
+    public Map<String, Object> uploadImageName(FTPImageVo imgVo, MultipartFile file) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("status", Boolean.TRUE);
         if (file == null) {
@@ -237,7 +209,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public void deleteImange(FTPImageVo imgVo, String fileName) {
+    public void deleteImage(FTPImageVo imgVo, String fileName) {
         StringBuffer newPath = new StringBuffer();
         String imgName = fileName.substring(fileName.lastIndexOf("/") + 1);
         newPath.append(imgVo.getUploadPath())
@@ -274,4 +246,60 @@ public class CommonServiceImpl implements CommonService {
         resultMap.put("status", flag);
         return resultMap;
     }
+
+    @Override
+    public Map<String, Object> uploadImage(MultipartFile file, HttpServletRequest request, String imgType, String orderId) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+        try {
+            String originalFilename = file.getOriginalFilename();//获取file图片名称
+            String endFileName = originalFilename.substring(originalFilename.lastIndexOf("."));
+            if (!endFileName.equalsIgnoreCase(".jpg") && !endFileName.equalsIgnoreCase(".jpeg") && !endFileName.equalsIgnoreCase(".bmp") && !endFileName.equalsIgnoreCase(".gif") && !endFileName.equalsIgnoreCase(".png")) {
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "文件类型不正确");
+                return resultMap;
+            }
+
+            String imgPath= IMG_PATH + imgType + "/";
+            String newFileName = orderId + endFileName;
+            String realPath = imgPath + newFileName;
+            File dest = new File(imgPath);
+            if(!dest.exists()){
+                dest.mkdir();
+            }
+            FileOutputStream out = new FileOutputStream(realPath);
+            out.write(file.getBytes());
+            out.flush();
+            out.close();
+            resultMap.put("msg", realPath);
+        } catch (Exception e) {
+            logger.error("## 文件上传异常", e);
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "文件上传异常");
+            return resultMap;
+        }
+        return resultMap;
+    }
+
+    @Override
+    public String getImageStrFromPath(String imgPath) {
+        InputStream in = null;
+        byte[] data = null;
+
+        // 读取图片字节数组 
+        try {
+            in = new FileInputStream(imgPath);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        } catch (IOException e) {
+            logger.error("## 图片读取失败{}", imgPath);
+            return null;
+        }
+        // 对字节数组Base64编码  
+        BASE64Encoder encoder = new BASE64Encoder();
+        // 返回Base64编码过的字节数组字符串  
+        return encoder.encode(data);
+    }
+
 }

@@ -24,12 +24,12 @@
 	<select id="getBaseDictList" parameterType="BaseDict" resultType="BaseDict">
 		select 
 		   <include refid="BaseDictColumns" />
-		    from tb_base_dict
+		from tb_base_dict
 	    where data_stat  = '0'
-			 <if test="dictName != null and dictName !='' ">
-			 	 and dict_name like '%' || #{dictName} || '%'
-			 </if>
-			     order by update_time desc
+		<if test="dictName != null and dictName !='' ">
+			and dict_name like "%"#{dictName}"%"
+		</if>
+		order by update_time desc
 	</select>
 	
 </mapper>

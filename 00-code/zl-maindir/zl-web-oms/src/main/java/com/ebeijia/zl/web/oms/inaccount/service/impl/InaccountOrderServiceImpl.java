@@ -5,6 +5,7 @@ import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -37,6 +38,9 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
     @Autowired
     private InaccountOrderMapper inaccountOrderMapper;
 
+    @Autowired
+    private CommonService commonService;
+
     @Override
     public List<InaccountOrder> getInaccountOrderByOrder(InaccountOrder inaccountOrder) {
         return inaccountOrderMapper.getInaccountOrderByOrder(inaccountOrder);
@@ -52,6 +56,14 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
                     o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
                 }
                 o.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInaccountAmt().toString())));
+                if (!StringUtil.isNullOrEmpty(o.getEvidenceUrl())) {
+                    String imgUrl = commonService.getImageStrFromPath(o.getEvidenceUrl());
+                    if (!StringUtil.isNullOrEmpty(imgUrl)) {
+                        o.setEvidenceUrl(imgUrl);
+                    } else {
+                        o.setEvidenceUrl("");
+                    }
+                }
             }
         }
         PageInfo<InaccountOrder> page = new PageInfo<InaccountOrder>(orderList);

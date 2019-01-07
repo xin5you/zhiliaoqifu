@@ -45,7 +45,7 @@
 				                    <td>
 				                    <c:if test="${role.isdefault != '0' && role.dataStat != '1'}">
 										<sec:authorize access="hasRole('ROLE_SYS_ROLE_INTOAUTHO')">
-											<a orderId="${role.id}" title="授权" class="btn-grant-role" href="#"><i class="icon-plus"></i></a>&nbsp;
+											<a orderId="${role.id}" title="授权" class="btn-grant-role" href="#"><i class="icon-plus"></i></a>
 										</sec:authorize>
 				                    	<sec:authorize access="hasRole('ROLE_SYS_ROLE_INTOEDIT')">
 										<a orderId="${role.id}" title="编辑" class="btn-edit-role" href="#"><i class="icon-edit"></i></a>

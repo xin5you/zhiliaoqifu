@@ -27,7 +27,7 @@
 		from tb_company_inf c
 		where c.data_stat = '0'
 		<if test="name !=null and name !='' ">
-			and c.name like '%' || #{name,jdbcType=VARCHAR} || '%'
+			and c.name like "%"#{name,jdbcType=VARCHAR}"%"
 		</if>
 		<if test="contacts !=null and contacts !='' ">
 			and c.contacts = #{contacts,jdbcType=VARCHAR}

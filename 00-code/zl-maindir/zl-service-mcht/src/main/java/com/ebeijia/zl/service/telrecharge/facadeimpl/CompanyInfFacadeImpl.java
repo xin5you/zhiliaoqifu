@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 
 import java.util.List;
 
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
+import com.ebeijia.zl.service.telrecharge.service.CompanyBillingTypeInfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +18,9 @@ public class CompanyInfFacadeImpl implements CompanyInfFacade {
 
 	@Autowired
 	private CompanyInfService companyInfService;
+
+	@Autowired
+	private CompanyBillingTypeInfService companyBillingTypeInfService;
 
 	@Override
 	public CompanyInf getCompanyInfById(String companyId) {
@@ -57,5 +62,39 @@ public class CompanyInfFacadeImpl implements CompanyInfFacade {
 		return companyInfService.getCompanyInfByIsPlatform(isPlatform);
 	}
 
+	@Override
+	public CompanyBillingTypeInf getCompanyBillingTypeInfById(String id) {
+		return companyBillingTypeInfService.getById(id);
+	}
+
+	@Override
+	public List<CompanyBillingTypeInf> getCompanyBillingTypeInfList(CompanyBillingTypeInf companyBillingTypeInf) {
+		return companyBillingTypeInfService.getCompanyBillingTypeInfList(companyBillingTypeInf);
+	}
+
+	@Override
+	public PageInfo<CompanyBillingTypeInf> getCompanyBillingTypeInfPage(int startNum, int pageSize, CompanyBillingTypeInf companyBillingTypeInf) {
+		return companyBillingTypeInfService.getCompanyBillingTypeInfPage(startNum, pageSize, companyBillingTypeInf);
+	}
+
+	@Override
+	public CompanyBillingTypeInf getCompanyBillingTypeInfByBIdAndCompanyId(CompanyBillingTypeInf companyBillingTypeInf) {
+		return companyBillingTypeInfService.getCompanyBillingTypeInfByBIdAndCompanyId(companyBillingTypeInf);
+	}
+
+	@Override
+	public boolean insertCompanyBillingTypeInf(CompanyBillingTypeInf companyBillingTypeInf) {
+		return companyBillingTypeInfService.save(companyBillingTypeInf);
+	}
+
+	@Override
+	public boolean updateCompanyBillingTypeInf(CompanyBillingTypeInf companyBillingTypeInf) {
+		return companyBillingTypeInfService.updateById(companyBillingTypeInf);
+	}
+
+	@Override
+	public boolean deleteCompanyBillingTypeInf(String id) {
+		return companyBillingTypeInfService.removeById(id);
+	}
 
 }

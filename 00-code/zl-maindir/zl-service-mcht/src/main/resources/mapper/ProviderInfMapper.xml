@@ -40,7 +40,7 @@
 			<include refid="TableName" />
 		where data_stat='0'
 		<if test="providerName !=null and providerName !='' ">
-			and provider_name like '%' || #{providerName} || '%'
+			and provider_name like "%"#{providerName}"%"
 		</if>
 		<if test="defaultRoute !=null and defaultRoute !='' ">
 			and default_route = #{defaultRoute}

@@ -80,6 +80,48 @@ public class CompanyInfFacadeConfig extends DubboProviderConfig {
         methodConfig.setRetries(0);
         methods.add(methodConfig); //
 
+        methodConfig=new MethodConfig();
+        methodConfig.setName("getCompanyBillingTypeInfById");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("getCompanyBillingTypeInfList");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("getCompanyBillingTypeInfPage");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("getCompanyBillingTypeInfByBIdAndCompanyId");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("insertCompanyBillingTypeInf");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("updateCompanyBillingTypeInf");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("deleteCompanyBillingTypeInf");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
         return serviceBean;
     }
 }

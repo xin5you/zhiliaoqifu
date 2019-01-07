@@ -196,7 +196,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			logger.error("## 上传图片为空");
 			return 0;
 		}
-		FTPImageVo imgVo = new FTPImageVo();
+		/*FTPImageVo imgVo = new FTPImageVo();
 		imgVo.setImgId(order.getOrderId());
 		imgVo.setService(IMG_SERVER);
 		imgVo.setNewPath(FILE_NEW_PATH);
@@ -215,14 +215,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		} catch (Exception e) {
 			logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
 			return 0;
-		}
+		}*/
 
-		/*Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
-		if (resultMap.get("status").equals(Boolean.FALSE)) {
+		Map<String, Object> resultMap = commonService.uploadImage(evidenceUrlFile, req, ImageTypeEnum.ImageTypeEnum_03.getValue(), order.getOrderId());
+		if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
 			logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+			order.setEvidenceUrl("");
 			return 0;
+		} else {
+			order.setEvidenceUrl(resultMap.get("msg").toString());
 		}
-		order.setEvidenceUrl(resultMap.get("msg").toString());*/
 
 		List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
 		if (!StringUtil.isNullOrEmpty(A00)) {
@@ -614,7 +616,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(order.getLockVersion() + 1);
 
-		if (evidenceUrlFile != null && !evidenceUrlFile.isEmpty()) {
+		/*if (evidenceUrlFile != null && !evidenceUrlFile.isEmpty()) {
 			FTPImageVo imgVo = new FTPImageVo();
 			imgVo.setImgId(order.getOrderId());
 			imgVo.setService(IMG_SERVER);
@@ -635,16 +637,17 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
 				return 0;
 			}
-		}
-
-		/*if (StringUtils.isNotBlank(evidenceUrlFile.getOriginalFilename())) {
-			Map<String, Object> resultMap = commonService.saveFile(evidenceUrlFile, req, order.getOrderId());
-			if (resultMap.get("status").equals(Boolean.FALSE)) {
-				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
-				return 0;
-			}
-			order.setEvidenceUrl(resultMap.get("msg").toString());
 		}*/
+		if (evidenceUrlFile != null && !evidenceUrlFile.isEmpty()) {
+			Map<String, Object> resultMap = commonService.uploadImage(evidenceUrlFile, req, ImageTypeEnum.ImageTypeEnum_03.getValue(), order.getOrderId());
+			if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
+				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
+				order.setEvidenceUrl("");
+				return 0;
+			} else {
+				order.setEvidenceUrl(resultMap.get("msg").toString());
+			}
+		}
 
 		List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();

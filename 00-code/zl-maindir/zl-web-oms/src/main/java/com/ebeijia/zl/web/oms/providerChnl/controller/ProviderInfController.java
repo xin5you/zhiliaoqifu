@@ -342,7 +342,8 @@ public class ProviderInfController {
 			}
 
 			BigDecimal providerFee = provider.getProviderRate().add(new BigDecimal(1));
-			BigDecimal inAccountAmt = new BigDecimal(remitAmt).divide(providerFee, 4);
+			BigDecimal inAccountAmt = new BigDecimal(remitAmt).divide(providerFee, 2, BigDecimal.ROUND_HALF_UP);
+			//inAccountAmt = inAccountAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
 			if (!inAccountAmt.toString().equals(inaccountAmt)) {
 				logger.error("## 供应商{}上账{}金额不正确，应上账{}", providerId, inaccountAmt, inAccountAmt);
 				resultMap.put("status", Boolean.FALSE);
@@ -525,6 +526,14 @@ public class ProviderInfController {
 				order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 				order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
 				order.setCompanyCode(company.getLawCode());
+				if (!StringUtil.isNullOrEmpty(order.getEvidenceUrl())) {
+					String imgUrl = commonService.getImageStrFromPath(order.getEvidenceUrl());
+					if (!StringUtil.isNullOrEmpty(imgUrl)) {
+						order.setEvidenceUrl(imgUrl);
+					} else {
+						order.setEvidenceUrl("");
+					}
+				}
 			}
 			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
 			if (orderDetail != null && orderDetail.size() >= 1) {

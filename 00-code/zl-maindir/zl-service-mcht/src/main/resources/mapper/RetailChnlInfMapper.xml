@@ -39,7 +39,7 @@
 		from tb_retail_chnl_inf
 		where data_stat='0'
 		<if test="channelName != null and channelName != '' ">
-			and channel_name like '%' || #{channelName} || '%'
+			and channel_name like "%"#{channelName}"%"
 		</if>
 		order by update_time desc
 	</select>

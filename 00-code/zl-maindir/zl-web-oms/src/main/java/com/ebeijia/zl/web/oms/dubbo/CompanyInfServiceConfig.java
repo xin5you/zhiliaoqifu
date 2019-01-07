@@ -30,7 +30,6 @@ public class CompanyInfServiceConfig extends DubboCustomerConfig {
 		
 		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 
-		
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfById");
 		methodConfig.setTimeout(3000);
@@ -43,7 +42,6 @@ public class CompanyInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
-		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("updateCompanyInf");
 		methodConfig.setTimeout(3000);
@@ -55,7 +53,6 @@ public class CompanyInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfList");
@@ -77,6 +74,48 @@ public class CompanyInfServiceConfig extends DubboCustomerConfig {
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfByIsplatform");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getCompanyBillingTypeInfById");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getCompanyBillingTypeInfList");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getCompanyBillingTypeInfPage");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getCompanyBillingTypeInfByBIdAndCompanyId");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("insertCompanyBillingTypeInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("updateCompanyBillingTypeInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("deleteCompanyBillingTypeInf");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //

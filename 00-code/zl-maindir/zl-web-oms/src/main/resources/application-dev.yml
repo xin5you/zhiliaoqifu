@@ -80,6 +80,9 @@ IMG_SERVER: http://192.168.2.110:8880
 FILE_UPLAOD_PATH: /imgfile
 FILE_UPLAOD_SEPARATOR: /
 FILE_NEW_PATH: /oms/
+
+IMG_PATH: C:/app_oms/images/
+
 pagehelper:
   helperDialect: mysql
   reasonable: true

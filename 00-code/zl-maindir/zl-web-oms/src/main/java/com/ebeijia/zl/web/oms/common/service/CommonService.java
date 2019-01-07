@@ -13,7 +13,9 @@ public interface CommonService {
 
 	Map<String, Object> getAccountLogInfPage(HttpServletRequest req);
 
-	Map<String, Object> saveFile(MultipartFile file, HttpServletRequest request, String orderId);
+	Map<String, Object> uploadImage(MultipartFile file, HttpServletRequest request, String imgType, String orderId);
+
+	String getImageStrFromPath(String imgPath);
 
 	/**
 	 * 文件上传
@@ -21,7 +23,7 @@ public interface CommonService {
 	 * @param file
 	 * @throws Exception
 	 */
-	Map<String, Object> uploadImange(FTPImageVo imgVo, MultipartFile file) throws Exception;
+	Map<String, Object> uploadImage(FTPImageVo imgVo, MultipartFile file) throws Exception;
 
 	/**
 	 * 文件上传返回文件名
@@ -30,14 +32,14 @@ public interface CommonService {
 	 * @return
 	 * @throws Exception
 	 */
-	Map<String, Object> uploadImangeName(FTPImageVo imgVo, MultipartFile file) throws Exception;
+	Map<String, Object> uploadImageName(FTPImageVo imgVo, MultipartFile file) throws Exception;
 
 	/**
 	 *  删除图片
 	 * @param imgVo
 	 * @param fileName
 	 */
-	void deleteImange(FTPImageVo imgVo, String fileName);
+	void deleteImage(FTPImageVo imgVo, String fileName);
 
 	/**
 	 * 查看文件是否已存在

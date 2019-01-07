@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
@@ -69,8 +70,6 @@ public class CompanyController {
 		String name = StringUtil.nullToString(req.getParameter("name"));
 		String transFlag = StringUtil.nullToString(req.getParameter("transFlag"));
 		String contacts = StringUtil.nullToString(req.getParameter("contacts"));
-		/*System.out.println("====================================================="+
-		req.getServletContext() + "excel/batchRecharge.xlxs");*/
 		CompanyInf companyInf = new CompanyInf();//通过封装类将前台查询条件用对象接收
 		companyInf.setName(name);
 		companyInf.setTransFlag(transFlag);
@@ -389,4 +388,175 @@ public class CompanyController {
 		return mv;
 	}
 
+	/**
+	 * 添加企业专项费率信息
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/listCompanyFee")
+	public ModelAndView listCompanyFee(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("company/addCompanyFee");
+		String operStatus = StringUtil.nullToString(request.getParameter("operStatus"));
+		String companyId = StringUtil.nullToString(request.getParameter("companyId"));
+		String bName = StringUtil.nullToString(request.getParameter("bName"));
+		CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+		cbt.setCompanyId(companyId);
+		cbt.setBName(bName);
+		PageInfo<CompanyBillingTypeInf> pageList = null;
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			pageList = companyInfFacade.getCompanyBillingTypeInfPage(startNum, pageSize, cbt);
+		} catch (Exception e) {
+			logger.error("## 企业账户列表查询异常", e);
+		}
+		mv.addObject("operStatus", operStatus);
+		mv.addObject("companyId", companyId);
+		mv.addObject("pageInfo", pageList);
+		mv.addObject("billingTypeList", SpecAccountTypeEnum.values());
+		return mv;
+	}
+
+	/**
+	 * 根据主键查询企业专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/getCompanyFee")
+	@ResponseBody
+	public CompanyBillingTypeInf getCompanyFee(HttpServletRequest req, HttpServletResponse resp) {
+		String id = StringUtil.nullToString(req.getParameter("companyBillingId"));
+		CompanyBillingTypeInf cbt = companyInfFacade.getCompanyBillingTypeInfById(id);
+		return cbt;
+	}
+
+	/**
+	 * 添加企业专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/addCompanyFee")
+	@ResponseBody
+	public Map<String, Object> addCompanyFee(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		String bId = StringUtil.nullToString(req.getParameter("bId"));
+		CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+		cbt.setCompanyId(companyId);
+		cbt.setBId(bId);
+		CompanyBillingTypeInf companyBType = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+		if (!StringUtil.isNullOrEmpty(companyBType)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "企业专项类型费率信息已存在，请重新输入");
+			return resultMap;
+		}
+		CompanyBillingTypeInf companyBillingTypeInf = getCompanyBillingTypeInf(req);
+		try {
+			if (!companyInfFacade.insertCompanyBillingTypeInf(companyBillingTypeInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增企业专项类型费率信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 新增企业专项类型费率信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增企业专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 编辑企业专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/editCompanyFee")
+	@ResponseBody
+	public Map<String, Object> editCompanyFee(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		CompanyBillingTypeInf companyBillingTypeInf = getCompanyBillingTypeInf(req);
+		try {
+			if (!companyInfFacade.updateCompanyBillingTypeInf(companyBillingTypeInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑企业专项类型费率信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 编辑企业专项类型费率信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑企业专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 删除企业专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteCompanyFee")
+	@ResponseBody
+	public Map<String, Object> deleteCompanyFee(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		String id = StringUtil.nullToString(req.getParameter("companyBillingId"));
+
+		try {
+			if (!companyInfFacade.deleteCompanyBillingTypeInf(id)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除企业专项类型费率信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 删除企业专项类型费率信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "删除企业专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 企业专项类型信息封装类
+	 * @param req
+	 * @return
+	 */
+	private CompanyBillingTypeInf getCompanyBillingTypeInf(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+		CompanyBillingTypeInf cbt = null;
+		String id = StringUtil.nullToString(req.getParameter("companyBillingTypeId"));
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		String bId = StringUtil.nullToString(req.getParameter("bId"));
+		String fee = StringUtil.nullToString(req.getParameter("fee"));
+		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
+		if (!StringUtil.isNullOrEmpty(id)) {
+			cbt = companyInfFacade.getCompanyBillingTypeInfById(id);
+			cbt.setLockVersion(cbt.getLockVersion() + 1);
+		} else {
+			cbt = new CompanyBillingTypeInf();
+			cbt.setId(IdUtil.getNextId());
+			cbt.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			cbt.setCreateUser(user.getId());
+			cbt.setCreateTime(System.currentTimeMillis());
+			cbt.setLockVersion(0);
+		}
+		cbt.setCompanyId(companyId);
+		if (!StringUtil.isNullOrEmpty(bId)) {
+			cbt.setBId(bId);
+		}
+		cbt.setFee(fee);
+		cbt.setRemarks(remarks);
+		cbt.setUpdateUser(user.getId());
+		cbt.setUpdateTime(System.currentTimeMillis());
+		return cbt;
+	}
 }
