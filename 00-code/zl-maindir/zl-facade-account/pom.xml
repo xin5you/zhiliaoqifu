@@ -38,16 +38,6 @@
 	       <artifactId>lombok</artifactId>
 	       <version>${lombok.version}</version>
 	   </dependency>
-		   
-		   	    <!-- https://mvnrepository.com/artifact/io.swagger/swagger-core -->
-		<dependency>
-		    <groupId>io.swagger</groupId>
-		    <artifactId>swagger-core</artifactId>
-		    <version>1.5.16</version>
-		</dependency>
-		
-		
-	    
   </dependencies>
 
 </project>
