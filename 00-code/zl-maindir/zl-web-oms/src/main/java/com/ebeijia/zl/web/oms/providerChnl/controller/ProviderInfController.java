@@ -346,7 +346,7 @@ public class ProviderInfController {
 			BigDecimal providerFee = provider.getProviderRate().add(new BigDecimal(1));
 			BigDecimal inAccountAmt = new BigDecimal(remitAmt).divide(providerFee, 2, BigDecimal.ROUND_HALF_UP);
 			//inAccountAmt = inAccountAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-			if (!inAccountAmt.toString().equals(inaccountAmt)) {
+			if (inAccountAmt.compareTo(new BigDecimal(inaccountAmt)) != 0) {
 				logger.error("## 供应商{}上账{}金额不正确，应上账{}", providerId, inaccountAmt, inAccountAmt);
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加上账信息失败，供应商上账金额不正确");
@@ -693,4 +693,8 @@ public class ProviderInfController {
 		providerInf.setUpdateTime(System.currentTimeMillis());
 		return providerInf;
 	}
+
+	public static void mian(String[] args) {
+
+    }
 }

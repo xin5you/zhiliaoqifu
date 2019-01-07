@@ -23,8 +23,8 @@ var addTelProviderInfTransfer = {
         $('.btn-delete').on('click', addTelProviderInfTransfer.intoDeleteProviderTransfer);
         $('.btn-delete-submit').on('click', addTelProviderInfTransfer.deleteProviderTransferCommit);
         $('#remitAmt').on('change', addTelProviderInfTransfer.getInaccountAmtSum);
-        $("#evidenceUrlDiv1").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
-        $("#evidenceUrlDiv2").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
+        $(".evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
+        $("#evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
     },
     intoAddProviderTransfer : function() {
         var orderId = $(this).attr("orderId");
@@ -35,6 +35,7 @@ var addTelProviderInfTransfer = {
         $('#addTransferModal').modal({
             backdrop : "static"
         });
+        $("#evidenceUrlDiv").hide();
     },
     fileUpload : function () {
         var imgUrl = $("#evidenceUrlFile").val();
@@ -217,6 +218,7 @@ var addTelProviderInfTransfer = {
         location.href=url;
     },
     intoEditProviderTransfer : function () {
+        $("#evidenceUrlDiv").show();
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $.ajax({
@@ -232,7 +234,7 @@ var addTelProviderInfTransfer = {
                     $("#inaccountAmt").val(data.order.inaccountAmt);
                     $("#companyCode").val(data.order.companyCode);
                     $("#evidenceUrlImg").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
-                    $("#evidenceUrlDiv2").attr("evidenceImage", data.order.evidenceUrl);
+                    $("#evidenceUrlDiv").attr("evidenceImage", data.order.evidenceUrl);
                     $("#evidenceUrl").val(data.order.evidenceUrl);
                     $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
