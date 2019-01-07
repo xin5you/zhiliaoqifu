@@ -2,10 +2,6 @@ package com.ebeijia.zl.facade.account.service;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 import java.util.List;
 
 /**
@@ -21,7 +17,6 @@ import java.util.List;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
-@Api(value = "账户实现接口")
 public interface AccountManageFacade {
 
 	
@@ -38,7 +33,6 @@ public interface AccountManageFacade {
 	*-------------------------------------*
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
-	@ApiOperation(value = "开户接口", notes = "")
 	BaseResult createAccount(AccountOpenReqVo req) throws Exception;
 
 
@@ -55,7 +49,6 @@ public interface AccountManageFacade {
 	 *-------------------------------------*
 	 * 2018年12月4日     zhuqi           v1.0.0
 	 */
-	@ApiOperation(value = "批量开户接口", notes = "")
 	public BaseResult createAccountList(String dmsRelatedKey,String transChnl,String userType,List<AccountOpenReqVo> list) throws Exception;
 
 }

@@ -62,7 +62,7 @@ public class ProviderInf extends Model<ProviderInf> {
      */
     @TableField("default_route")
     private String defaultRoute;
- 
+
     /**
      * 折扣率
      */
