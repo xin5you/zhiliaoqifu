@@ -77,7 +77,7 @@
                             <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
                         <td>
                             <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
-                                <div id="evidenceUrlDiv1" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
+                                <div class="evidenceUrlDiv" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
                                     <img src="data:image/jpg;base64,${entity.evidenceUrl}" style="height: 100%; width: 100%"/>
                                 </div>
                             </c:if>
@@ -141,7 +141,7 @@
                 <div class="control-group">
                     <label class="control-label">请选择打款凭证：</label>
                     <div class="controls">
-                        <div id="evidenceUrlDiv2" style="height: 200px; width: 200px">
+                        <div id="evidenceUrlDiv" style="height: 200px; width: 200px">
                             <img id="evidenceUrlImg" name="evidenceUrl" style="height: 100%; width: 100%"/>
                         </div>
                         <input id="evidenceUrl" name="evidenceUrl" class="span3" type="hidden">

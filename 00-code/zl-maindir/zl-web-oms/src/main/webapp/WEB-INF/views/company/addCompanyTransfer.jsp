@@ -70,7 +70,7 @@
                                          <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
                                      <td>
                                         <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
-                                            <div id="evidenceUrlDiv1" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
+                                            <div id="evidenceUrlDiv" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
                                                 <img style="height: 100%; width: 100%" src="data:image/jpg;base64,${entity.evidenceUrl}" />
                                             </div>
                                         </c:if>
