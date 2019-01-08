@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebeijia.zl.service.telrecharge.mapper.ProviderBillingTypeInfMapper">
+
+	<sql id="providerBillingTypeInfColumns">
+		c.id,
+		c.provider_id,
+		c.b_id,
+		c.fee,
+		c.remarks,
+		c.create_user,
+		c.update_user,
+		c.create_time,
+		c.update_time,
+		c.lock_version
+	</sql>
+
+	<sql id="tableName">
+		tb_provider_billingtype_inf c
+	</sql>
+
+	<select id="getProviderBillingTypeInfList" parameterType="ProviderBillingTypeInf" resultType="ProviderBillingTypeInf">
+		select
+			<include refid="providerBillingTypeInfColumns"/>,
+			p.name as providerName,
+			t.b_name as bName
+		from
+			tb_provider_inf p inner join tb_provider_billingtype_inf c on p.provider_id = c.provider_id
+			inner join tb_billing_type t on c.b_id = t.b_id
+		where c.data_stat = '0'
+			and c.provider_id = #{providerId}
+		<if test="bName != null and bName != '' ">
+			and t.b_name like "%"#{bName}"%"
+		</if>
+		order by t.b_id asc
+	</select>
+
+	<select id="getProviderBillingTypeInfByBIdAndProviderId" parameterType="ProviderBillingTypeInf" resultType="ProviderBillingTypeInf">
+		select
+			<include refid="providerBillingTypeInfColumns"/>
+		from
+			<include refid="tableName"/>
+		where c.data_stat = '0'
+			and c.b_id = #{BId}
+			and c.provider_id = #{providerId}
+	</select>
+
+</mapper>

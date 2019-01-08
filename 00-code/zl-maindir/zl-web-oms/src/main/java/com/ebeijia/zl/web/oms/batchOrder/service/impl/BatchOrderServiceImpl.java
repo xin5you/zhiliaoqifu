@@ -352,20 +352,25 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		if (UserType.TYPE100.getCode().equals(accountType)) {
 			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getMobilePhone))), ArrayList::new));
 			try {
+				logger.info("远程调用开户接口请求参数---》orderId{},transChnl{},accountType{},reqVoList{}",
+						orderId, TransChnl.CHANNEL0.toString(), accountType, JSONArray.toJSONString(reqVoList));
 				result = accountManageFacade.createAccountList(orderId, TransChnl.CHANNEL0.toString(), accountType, reqVoList);
 			} catch (Exception e) {
 				logger.error("## 远程调用开户接口出错,dmsRelatedKey--->{},transChnl--->{},userType--->{},reqVoList--->{}",
 						order.getOrderId(), TransChnl.CHANNEL0.toString(), accountType, JSONArray.toJSONString(reqVoList), e);
 			}
+			logger.info("远程调用开户接口返回参数---》{}", JSONArray.toJSONString(result));
 			try {
 				if (StringUtil.isNullOrEmpty(result.getCode())) {
+					logger.info("远程调用查询接口请求参数---》orderId{},transChnl{}", order.getOrderId(), TransChnl.CHANNEL0.toString());
 					result = accountTransactionFacade.executeQuery(order.getOrderId(), TransChnl.CHANNEL0.toString());
+					logger.info("远程调用查询接口返回参数---》{}", JSONArray.toJSONString(result));
 				}
 			} catch (Exception e) {
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", order.getOrderId(), TransChnl.CHANNEL0.toString(), e);
 				return 0;
 			}
-			logger.info("远程调用开户接口返回参数---》{}", JSONArray.toJSONString(result));
+
 			for (BatchOrderList batchOrder : batchOrderList) {
 				if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 					batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
@@ -391,19 +396,23 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			reqVoList = reqVoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AccountOpenReqVo::getUserName))), ArrayList::new));
 			for (AccountOpenReqVo req : reqVoList) {
 				try {
+					logger.info("远程调用开户接口请求参数{}", JSONArray.toJSONString(req));
 					result = accountManageFacade.createAccount(req);
 				} catch (Exception e) {
 					logger.error("## 远程调用开户接口出错,reqVot--->{}", JSONArray.toJSONString(req), e);
 				}
+				logger.info("远程调用开户接口返回参数{}", JSONArray.toJSONString(result));
 				try {
 					if (StringUtil.isNullOrEmpty(result.getCode())) {
+						logger.info("远程调用查询接口请求参数dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl());
 						result = accountTransactionFacade.executeQuery(req.getDmsRelatedKey(), req.getTransChnl());
+						logger.info("远程调用查询接口返回参数{}", JSONArray.toJSONString(result));
 					}
 				} catch (Exception e) {
 					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
 					return 0;
 				}
-				logger.info("远程调用开户接口返回参数---》{}", JSONArray.toJSONString(result));
+
 				List<BatchOrderList> batchOrderLists = batchOrderListMapper.getBatchOrderListByOrderId(orderId);
 				for (BatchOrderList oLists : batchOrderLists) {
 					if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
@@ -482,27 +491,36 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			BaseResult result = new BaseResult();
 			if (batchOrderList.size() > 1) {
 				try {
+					logger.info("远程调用批量充值接口请求参数{}", reqVoList);
 					result = accountTransactionFacade.executeRecharge(reqVoList);
 				} catch (Exception e) {
 					logger.error("## 远程调用批量充值接口出错{}", reqVoList, e);
 				}
+				logger.info("远程调用批量充值接口返回参数{}", JSONArray.toJSONString(result));
 				try {
 					if (StringUtil.isNullOrEmpty(result.getCode())) {
+						logger.info("远程调用查询接口请求参数dmsRelatedKey{},transChnl{}", reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl());
 						result = accountTransactionFacade.executeQuery(reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl());
+						logger.info("远程调用查询接口返回参数{}", JSONArray.toJSONString(result));
 					}
 				} catch (Exception e) {
 					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl(), e);
 					return 0;
 				}
+
 			} else {
 				try {
+					logger.info("远程调用充值接口请求参数{}", reqVoList.get(0));
 					result = accountTransactionFacade.executeRecharge(reqVoList.get(0));
 				} catch (Exception e) {
 					logger.error("## 远程调用充值接口出错{}", reqVoList.get(0), e);
 				}
+				logger.info("远程调用充值接口返回参数{}", JSONArray.toJSONString(result));
 				try {
 					if (StringUtil.isNullOrEmpty(result.getCode())) {
+						logger.info("远程调用查询接口请求参数dmsRelatedKey{},transChnl{}", reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl());
 						result = accountTransactionFacade.executeQuery(reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl());
+						logger.info("远程调用查询接口返回参数{}", JSONArray.toJSONString(result));
 					}
 				} catch (Exception e) {
 					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVoList.get(0).getDmsRelatedKey(), reqVoList.get(0).getTransChnl(), e);
@@ -574,19 +592,22 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			reqVo.setDmsRelatedKey(batchOrder.getOrderListId());
 			BaseResult result = new BaseResult();
 			try {
+				logger.info("远程调用转账接口请求参数--->{}", JSONArray.toJSONString(reqVo));
 				result = accountTransactionFacade.executeTransfer(reqVo);
 			} catch (Exception e) {
 				logger.error("## 远程调用转账接口出错,入参--->{}", JSONArray.toJSONString(reqVo), e);
 			}
+			logger.info("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 			try {
 				if (StringUtil.isNullOrEmpty(result.getCode())) {
+					logger.info("远程调用查询接口请求参数--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
 					result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+					logger.info("远程调用查询接口返回参数--->{}", JSONArray.toJSONString(result));
 				}
 			} catch (Exception e) {
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
 				return 0;
 			}
-			logger.info("远程调用转账接口返回参数---》{}", JSONArray.toJSONString(result));
 			if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 				batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
 				successResult = successResult + 1;
@@ -596,7 +617,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				failResult = failResult + 1;
 			}
 			if (batchOrderListMapper.updateBatchOrderList(batchOrder) < 1) {
-				logger.error("更新转账订单明细{}状态{}失败", batchOrder.getOrderListId(), result.getCode());
+				logger.error("## 更新转账订单明细{}状态{}失败", batchOrder.getOrderListId(), result.getCode());
 			}
 		}
 		if (successResult == batchOrderList.size()) {

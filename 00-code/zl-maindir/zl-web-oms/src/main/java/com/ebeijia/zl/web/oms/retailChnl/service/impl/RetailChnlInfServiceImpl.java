@@ -509,24 +509,27 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
         reqVo.setTransDesc(order.getRemarks());
         reqVo.setTransNumber(1);
-        logger.error("远程调用充值接口请求参数--->{}", JSONArray.toJSONString(reqVo));
+        logger.info("分销商充值，远程调用充值接口请求参数--->{}", JSONArray.toJSONString(reqVo));
         BaseResult result = new BaseResult();
         try {
             result = accountTransactionFacade.executeRecharge(reqVo);
         } catch (Exception e) {
-            logger.error("## 远程调用充值接口异常", e);
+            logger.error("## 分销商充值，远程调用充值接口异常", e);
         }
+        logger.info("分销商充值，远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
         try {
             if (StringUtil.isNullOrEmpty(result.getCode())) {
+                logger.info("分销商充值，远程调用查询接口请求参数--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
                 result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+                logger.info("分销商充值，远程调用查询接口返回参数--->{}", JSONArray.toJSONString(result));
             }
         } catch (Exception e) {
-            logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
+            logger.error("## 分销商充值，远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
             return 0;
         }
-        logger.info("远程调用充值接口返回参数--->{}", JSONArray.toJSONString(result));
+
         if (result == null) {
-            logger.error("## 远程调用充值接口失败，返回参数为空，orderId--->{},channelId--->{}", orderId, channelId);
+            logger.error("## 分销商充值，远程调用充值接口失败，返回参数为空，orderId--->{},channelId--->{}", orderId, channelId);
             return 0;
         }
 

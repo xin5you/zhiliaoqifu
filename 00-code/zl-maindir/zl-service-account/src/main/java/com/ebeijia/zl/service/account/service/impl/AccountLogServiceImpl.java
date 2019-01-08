@@ -4,6 +4,7 @@ import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -24,6 +25,7 @@ import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.service.account.mapper.AccountLogMapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,8 +75,8 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 		entity.setTransChnl(transLog.getTransChnl()); //交易渠道
 		entity.setAccType(transLog.getCardAttr());
 		entity.setTransId(transLog.getTransId());
-		entity.setTxnDate(accountInf.getLastTxnDate());
-		entity.setTxnTime(accountInf.getLastTxnTime());
+		entity.setTxnDate(DateUtil.COMPAT.getDateText(new Date()));
+		entity.setTxnTime(DateUtil.getCurrentTimeStr());
 		entity.setAccTotalBal(accountInf.getAccBal()); //賬戶總金額
 		entity.setRemarks(transLog.getRemarks());
 		
