@@ -264,6 +264,7 @@ public class PayService implements IPayService {
                 case "1":
                 case "2":
                     req.setAccType(method);
+                    logger.info("交易类型筛选流水[{}]",req);
                     break;
                 default:
             }
@@ -302,6 +303,7 @@ public class PayService implements IPayService {
         startDate = calendar.getTimeInMillis();
         req.setSDate(startDate);
         req.setEDate(System.currentTimeMillis());
+        logger.info("时间筛选流水[{}]",req);
         return req;
     }
 

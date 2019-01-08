@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -31,7 +32,7 @@ public class TbCouponProduct extends Model<TbCouponProduct> {
      */
     @TableField(exist = false)
     @ApiModelProperty(value = "折损率")
-    private Integer fee;
+    private BigDecimal fee;
 
     /**
      * 产品号
