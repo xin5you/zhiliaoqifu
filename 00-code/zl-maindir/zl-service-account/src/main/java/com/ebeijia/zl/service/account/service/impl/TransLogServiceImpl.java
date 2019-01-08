@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.SnowFlake;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
@@ -33,6 +37,7 @@ import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.service.account.mapper.TransLogMapper;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
+import redis.clients.jedis.JedisCluster;
 
 /**
  *
@@ -56,6 +61,10 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 	@Autowired
 	private IAccountWithdrawDetailService accountWithdrawDetailService;
+
+	@Autowired
+	private JedisCluster jedisCluster;
+
 	/**
 	* 
 	* @Description: 创建账户交易流水
@@ -266,9 +275,21 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				addToVoList(voList,transLog2,order);
 				order++;
 			}
-		 }else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
-
-
+		 }else if (TransCode.CW90.getCode().equals(intfaceTransLog.getTransId())){
+		 	 //卡券转卖 充值到托管账户
+			 BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
+			 List<AccountTxnVo> addList = intfaceTransLog.getAddList();
+			 if (addList != null && addList.size() > 0) {
+				 for (AccountTxnVo accountTxnVo : addList) {
+					 BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
+					 if (billingType != null) {
+						 loseFee = billingType.getLoseFee(); //指的是账户转卖代金券的折损率，
+					 }
+					 BigDecimal transAmt = AmountUtil.mul(accountTxnVo.getTxnAmt(), AmountUtil.sub(new BigDecimal(1), loseFee)); //扣除折损率后，到账金额
+					 this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), transAmt,accountTxnVo.getUpLoadAmt());
+				 }
+			 }
+		}else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
 			 AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
 			 AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
 			 accountWithdrawOrder.setBatchNo(String.valueOf(SnowFlake.getInstance().nextId()));
@@ -423,5 +444,11 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		transLog.setUpdateTime(System.currentTimeMillis());
 		transLog.setUpdateUser("99999999");
 		transLog.setLockVersion(0);
+	}
+
+	private BillingType getBillingTypeForCache(String bId){
+		String billingTypeSting=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE,bId);
+		BillingType billingType=JSONObject.parseObject(billingTypeSting,BillingType.class);
+		return  billingType;
 	}
 }

@@ -130,6 +130,8 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
 	public boolean execute(List<TransLog> voList){
+
+
 		if(voList !=null && voList.size()>0){
 			for(TransLog transLog:voList){
 				if (AccountCardAttrEnum.OPER.getValue().equals(transLog.getCardAttr())) {
@@ -198,17 +200,29 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 
 		if(UserType.TYPE100.equals(account.getAccountType())){
 			//非 员工通用福利账户 并且 非现金账户
-			if(! SpecAccountTypeEnum.A00.equals(account.getBId()) && ! SpecAccountTypeEnum.A01.equals(account.getBId())){
-				//所有的专用类型的账户充值 都需要按比例划分到消费额度里
-				BigDecimal coupon_rate=new BigDecimal(0.9); //默认折扣率
-				String billingTypeSting=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE,account.getBId());
-				BillingType billingType=JSONObject.parseObject(billingTypeSting,BillingType.class);
+			BillingType billingType=null;
+			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
+				//通用账户充值，暂无特定需求
+			}else if(SpecAccountTypeEnum.A01.getCode().equals(account.getBId())) {
+/*				BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
+				billingType=getBillingTypeForCache(account.getBId());
 
 				if(billingType !=null){
-					coupon_rate=billingType.getBuyFee(); //可购率，指的是购买代金券的比例
+					loseFee=billingType.getLoseFee(); //指的是账户转卖代金券的折损率，
 				}
-				BigDecimal couponBalAmt=AmountUtil.mul(transLog.getTransAmt(),coupon_rate); //加入消费比例是coupon_rate 即可购买的代金券的值
+				BigDecimal transAmt=AmountUtil.mul(transLog.getTransAmt(),AmountUtil.sub(new BigDecimal(1),loseFee)); //扣除折损率后，到账金额
+				if(TransCode.CW90.getCode().equals(transLog.getTransId())){
+					transLog.setTransAmt(transAmt);
+				}*/
+			}else{
 				if(TransCode.MB50.getCode().equals(transLog.getTransId())){
+					//所有的专用类型的账户充值 都需要按比例划分到消费额度里
+					BigDecimal coupon_rate=new BigDecimal(0.9); //默认折扣率
+					billingType=getBillingTypeForCache(account.getBId());
+					if(billingType !=null){
+						coupon_rate=billingType.getBuyFee(); //可购率，指的是购买代金券的比例
+					}
+					BigDecimal couponBalAmt=AmountUtil.mul(transLog.getTransAmt(),coupon_rate); //加入消费比例是coupon_rate 即可购买的代金券的值
 					//账户充值
 					account.setCouponBal(AmountUtil.add(account.getCouponBal(), couponBalAmt));
 				}
@@ -218,8 +232,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
             account.setCouponBal(new BigDecimal(0));
         }
 		/****** consumerBal set end ***/
-		
-		
+
 		/****** 操作余额 ***/
 		this.credit(account, transLog.getTransAmt());
 		boolean flag=accountLogService.save(account, transLog);
@@ -329,6 +342,12 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		} else {
 			return false;
 		}
+	}
+
+	private BillingType getBillingTypeForCache(String bId){
+		String billingTypeSting=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE,bId);
+		BillingType billingType=JSONObject.parseObject(billingTypeSting,BillingType.class);
+		return  billingType;
 	}
 
 	@Override
