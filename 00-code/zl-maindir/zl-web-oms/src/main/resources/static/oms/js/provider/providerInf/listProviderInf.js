@@ -114,7 +114,7 @@ var listTelProviderInf = {
         var url = Helper.getRootPath()+"/provider/providerInf/listProviderAccBal.do?providerId=" + providerId;
         location.href = url;
     },
-    intoAddCompanyFee : function () {
+    intoAddProviderFee : function () {
         var providerId = $(this).attr('providerId');
         var url = Helper.getRootPath()+"/provider/providerInf/listProviderFee.do?providerId="+providerId;
         location.href=url;

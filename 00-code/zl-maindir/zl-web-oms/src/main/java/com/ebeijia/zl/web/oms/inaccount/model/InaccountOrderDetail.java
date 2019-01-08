@@ -45,6 +45,10 @@ public class InaccountOrderDetail extends Model<InaccountOrderDetail> {
     @TableField("trans_amt")
     @ApiModelProperty(value = "trans_amt")
     private BigDecimal transAmt;
+
+    @TableField("inaccount_amt")
+    @ApiModelProperty(value = "inaccount_amt")
+    private BigDecimal inaccountAmt;
  
     @TableField("b_id")
     @ApiModelProperty(value = "b_id")

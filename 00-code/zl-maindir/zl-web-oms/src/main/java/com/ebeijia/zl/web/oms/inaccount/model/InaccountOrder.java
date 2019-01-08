@@ -60,9 +60,9 @@ public class InaccountOrder extends Model<InaccountOrder> {
     /**
      * 上账金额
      */
-    @TableField("inaccount_amt")
-    @ApiModelProperty(value = "inaccount_amt")
-    private BigDecimal inaccountAmt;
+    @TableField("inaccount_sum_amt")
+    @ApiModelProperty(value = "inaccount_sum_amt")
+    private BigDecimal inaccountSumAmt;
 
     /**
      * 平台收款金额

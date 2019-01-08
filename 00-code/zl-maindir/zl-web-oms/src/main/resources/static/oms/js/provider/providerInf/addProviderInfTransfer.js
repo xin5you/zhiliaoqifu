@@ -22,7 +22,7 @@ var addTelProviderInfTransfer = {
         $('.btn-edit-submit').on('click', addTelProviderInfTransfer.editProviderTransferCommit);
         $('.btn-delete').on('click', addTelProviderInfTransfer.intoDeleteProviderTransfer);
         $('.btn-delete-submit').on('click', addTelProviderInfTransfer.deleteProviderTransferCommit);
-        $('#remitAmt').on('change', addTelProviderInfTransfer.getInaccountAmtSum);
+        /*$('#remitAmt').on('change', addTelProviderInfTransfer.getInaccountAmtSum);*/
         $(".evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
         $("#evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
     },
@@ -46,7 +46,7 @@ var addTelProviderInfTransfer = {
         var remitAmt = $("#remitAmt").val();
         var evidenceUrl = $("#evidenceUrl").val();
         var companyCode = $("#companyCode").val();
-        var inaccountAmt = $("#inaccountAmt").val();
+        /*var inaccountAmt = $("#inaccountAmt").val();*/
         var remarks = $("#remarks").val();
         var A00 = $("#A00").val();
         var B01 = $("#B01").val();
@@ -69,21 +69,25 @@ var addTelProviderInfTransfer = {
             Helper.alert("企业识别为空");
             return false;
         }
-        if(inaccountAmt=='' || inaccountAmt == '0'){
+        /*if(inaccountAmt=='' || inaccountAmt == '0'){
             Helper.alert("上账金额不能为空");
             return false;
-        }
+        }*/
         if (A00 == '' && B01 == '' && B02 == '' && B03 == '' && B04 == '' && B05 == '' && B06 == '' && B07 == '' && B08 == '') {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
         }
-        if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
+        /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
             Helper.alert("上账金额不能大于打款金额");
             return false;
-        }
+        }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
-        if ((sum - 0) != (inaccountAmt - 0)) {
+        /*if ((sum - 0) != (inaccountAmt - 0)) {
             Helper.alert("所有专项金额总和必须等于上账金额");
+            return false;
+        }*/
+        if ((sum - 0) != (remitAmt - 0)) {
+            Helper.alert("所有专项金额总和必须等于打款金额");
             return false;
         }
         $.ajax({
@@ -231,7 +235,7 @@ var addTelProviderInfTransfer = {
             success: function (data) {
                 if(data.status){
                     $("#remitAmt").val(data.order.remitAmt);
-                    $("#inaccountAmt").val(data.order.inaccountAmt);
+                   /* $("#inaccountAmt").val(data.order.inaccountAmt);*/
                     $("#companyCode").val(data.order.companyCode);
                     $("#evidenceUrlImg").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
                     $("#evidenceUrlDiv").attr("evidenceImage", data.order.evidenceUrl);
@@ -263,7 +267,7 @@ var addTelProviderInfTransfer = {
         var remitAmt = $("#remitAmt").val();
         var evidenceUrl = $("#evidenceUrl").val();
         var companyCode = $("#companyCode").val();
-        var inaccountAmt = $("#inaccountAmt").val();
+        /*var inaccountAmt = $("#inaccountAmt").val();*/
         var remarks = $("#remarks").val();
         var A00 = $("#A00").val();
         var B01 = $("#B01").val();
@@ -286,21 +290,25 @@ var addTelProviderInfTransfer = {
             Helper.alert("企业识别为空");
             return false;
         }
-        if(inaccountAmt=='' || inaccountAmt == '0'){
+        /*if(inaccountAmt=='' || inaccountAmt == '0'){
             Helper.alert("上账金额不能为空");
             return false;
-        }
+        }*/
         if (A00 == '' && B01 == '' && B02 == '' && B03 == '' && B04 == '' && B05 == '' && B06 == '' && B07 == '' && B08 == '') {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
         }
-        if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
+        /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
             Helper.alert("上账金额不能大于打款金额");
             return false;
-        }
+        }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
-        if ((sum - 0) != (inaccountAmt - 0)) {
+        /*if ((sum - 0) != (inaccountAmt - 0)) {
             Helper.alert("所有专项金额总和必须等于上账金额");
+            return false;
+        }*/
+        if ((sum - 0) != (remitAmt - 0)) {
+            Helper.alert("所有专项金额总和必须等于打款金额");
             return false;
         }
         $.ajax({
@@ -356,14 +364,14 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    getInaccountAmtSum: function () {
+    /*getInaccountAmtSum: function () {
         var remitAmt = $("#remitAmt").val();
         var providerRate = $("#providerRate").val();
         var fee = 1 + parseFloat(providerRate);
         var inaccountAmt = (parseFloat(remitAmt)/parseFloat(fee)).toFixed(4);
         inaccountAmt = Math.round(inaccountAmt * 100) / 100;
         $("#inaccountAmt").val(inaccountAmt);
-    },
+    },*/
     showEvidenceUrlDiv : function () {
        var image = $(this).attr("evidenceImage");
        $("#bigImage").attr("src","data:image/jpg;base64,"+image);

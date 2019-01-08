@@ -456,11 +456,7 @@ public class RetailChnlInfController {
 				resultMap.put("msg", "添加上账信息失败，该分销商信息不存在或未开户");
 				return resultMap;
 			}
-			int i = retailChnlInfService.addRetailChnlTransfer(req, evidenceUrlFile);
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请稍后再试");
-			}
+			resultMap = retailChnlInfService.addRetailChnlTransfer(req, evidenceUrlFile);
 		} catch (Exception e) {
 			logger.error(" ## 添加分销商上账信息出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
@@ -545,7 +541,7 @@ public class RetailChnlInfController {
 			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
 			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
 			/*order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));*/
-			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
+			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
 		}
 
 		try {
@@ -570,7 +566,7 @@ public class RetailChnlInfController {
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		try {
 			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
-			order.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountAmt().toString())));
+			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
 			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
 			if (orderDetail != null && orderDetail.size() >= 1) {
 				for (InaccountOrderDetail d : orderDetail) {
@@ -602,11 +598,7 @@ public class RetailChnlInfController {
 				resultMap.put("msg", "编辑上账信息失败，该分销商信息不存在或未开户");
 				return resultMap;
 			}
-			int i = retailChnlInfService.editRetailChnlTransfer(req, evidenceUrlFile);
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请稍后再试");
-			}
+			resultMap = retailChnlInfService.editRetailChnlTransfer(req, evidenceUrlFile);
 		} catch (Exception e) {
 			logger.error(" ## 编辑分销商上账信息出错 ", e);
 			resultMap.put("status", Boolean.FALSE);

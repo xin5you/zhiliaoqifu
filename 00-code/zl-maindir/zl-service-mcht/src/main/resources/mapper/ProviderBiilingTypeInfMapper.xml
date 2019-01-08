@@ -22,7 +22,7 @@
 	<select id="getProviderBillingTypeInfList" parameterType="ProviderBillingTypeInf" resultType="ProviderBillingTypeInf">
 		select
 			<include refid="providerBillingTypeInfColumns"/>,
-			p.name as providerName,
+			p.provider_name as providerName,
 			t.b_name as bName
 		from
 			tb_provider_inf p inner join tb_provider_billingtype_inf c on p.provider_id = c.provider_id

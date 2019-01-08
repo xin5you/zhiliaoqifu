@@ -13,13 +13,13 @@ public interface ProviderInfService {
 
 	int providerOpenAccount(HttpServletRequest req);
 
-	int addProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+	Map<String, Object> addProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
 	int addProviderTransferCommit(HttpServletRequest req);
 
 	Map<String, Object> updateProviderRemitStatCommit(HttpServletRequest req);
 
-	int editProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+	Map<String, Object> editProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
 	Map<String, Object> deleteProviderTransfer(HttpServletRequest req);
 }

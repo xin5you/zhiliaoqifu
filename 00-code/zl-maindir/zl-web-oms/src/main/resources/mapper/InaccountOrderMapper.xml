@@ -9,7 +9,7 @@
         o.order_type,
         o.check_stat,
         o.remit_amt,
-        o.inaccount_amt,
+        o.inaccount_sum_amt,
         o.platform_in_sum_amt,
         o.company_in_sum_amt,
         o.provider_id,

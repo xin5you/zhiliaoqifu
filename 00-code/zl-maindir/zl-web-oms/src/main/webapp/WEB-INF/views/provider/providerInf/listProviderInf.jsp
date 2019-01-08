@@ -35,9 +35,6 @@
 					<sec:authorize access="hasRole('ROLE_PROVIDER_INTOADD')">
 						<button type="button" class="btn btn-primary btn-add">新增供应商</button>
 					</sec:authorize>
-					<sec:authorize access="hasRole('ROLE_PROVIDER_FEE_LIST')">
-						<a providerId="${provider.providerId}" title="添加费率" class="btn-mini btn-add-fee" href="#"><i class="icon-plus"></i></a>
-					</sec:authorize>
 				</div>
 			</div>
 
@@ -95,6 +92,9 @@
 									<a providerId="${entity.providerId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
 								</sec:authorize>
 							</c:if>
+							<sec:authorize access="hasRole('ROLE_PROVIDER_FEE_LIST')">
+								<a providerId="${entity.providerId}" title="添加费率" class="btn-mini btn-add-fee" href="#"><i class="icon-plus"></i></a>
+							</sec:authorize>
 						</td>
 					</tr>
 				</c:forEach>

@@ -41,6 +41,9 @@ public class InaccountOrderDetailServiceImpl extends ServiceImpl<InaccountOrderD
         List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailMapper.getInaccountOrderDetailByOrderId(inaccountOrderDetail.getOrderId());
         for (InaccountOrderDetail o : orderDetailList) {
             o.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getTransAmt().toString())));
+            if (!StringUtil.isNullOrEmpty(o.getInaccountAmt())) {
+                o.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInaccountAmt().toString())));
+            }
             o.setBName(SpecAccountTypeEnum.findByBId(o.getBId()).getName());
             if (!StringUtil.isNullOrEmpty(o.getPlatformInAmt())) {
                 o.setPlatformInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getPlatformInAmt().toString())));

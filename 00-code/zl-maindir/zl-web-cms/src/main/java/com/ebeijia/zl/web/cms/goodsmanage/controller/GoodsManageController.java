@@ -40,6 +40,11 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "goodsManage")
 public class GoodsManageController {
 
+	public static void main(String[] args) {
+
+	}
+
+
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired

@@ -88,7 +88,7 @@
 					<div class="controls">
 						<select name="bId" id="bId" class="span3">
 							<c:forEach var="b" items="${billingTypeList}" varStatus="st">
-								<option value="${b.bId}">${b.name}</option>
+								<option value="${b.BId}">${b.BName}</option>
 							</c:forEach>
 						</select>
 						<span class="help-block"></span>

@@ -55,7 +55,7 @@
                                         <c:if test="${entity.checkStat == '1'}">已审核</c:if>
                                     </td>
 									<td>${entity.remitAmt}</td>
-                                     <td>${entity.inaccountAmt}</td>
+                                     <td>${entity.inaccountSumAmt}</td>
                                      <td>${entity.companyName}</td>
                                      <td>
                                          <c:if test="${entity.inaccountCheck == '0'}">未上账</c:if>

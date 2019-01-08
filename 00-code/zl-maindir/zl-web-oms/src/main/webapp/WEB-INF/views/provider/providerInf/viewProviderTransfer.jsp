@@ -42,7 +42,7 @@
 									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">上账总金额(元)：</label>
-										<label style="color: red;">${order.inaccountAmt }</label>
+										<label style="color: red;">${order.inaccountSumAmt }</label>
 									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">收款企业：</label>
@@ -71,8 +71,9 @@
 				             <tr>
 				               <th>序号</th>
 				               <th>订单明细号</th>
-                                 <th>账户名称</th>
-				               <th>交易金额(元)</th>
+								 <th>账户名称</th>
+				               	<%--<th>交易金额(元)</th>--%>
+								 <th>上账金额(元)</th>
                                  <th>平台收入金额(元)</th>
                                  <th>企业收入金额(元)</th>
                                  <%--<th>开票状态</th>
@@ -85,7 +86,8 @@
 				                 	<td>${st.index+1 }</td>
 				                 	<td>${entity.orderListId}</td>
 									<td>${entity.BName}</td>
-									<td>${entity.transAmt}</td>
+									<%--<td>${entity.transAmt}</td>--%>
+									 <td>${entity.inaccountAmt}</td>
                                      <td>${entity.platformInAmt}</td>
                                      <td>${entity.companyInAmt}</td>
                                      <%--<td>

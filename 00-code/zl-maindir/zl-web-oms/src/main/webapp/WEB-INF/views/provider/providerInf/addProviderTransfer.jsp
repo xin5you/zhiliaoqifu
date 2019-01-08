@@ -62,7 +62,7 @@
                             <c:if test="${entity.checkStat == '1'}">已审核</c:if>
                         </td>
                         <td>${entity.remitAmt}</td>
-                        <td>${entity.inaccountAmt}</td>
+                        <td>${entity.inaccountSumAmt}</td>
                         <td>${entity.companyName}</td>
                         <td>
                             <c:if test="${entity.inaccountCheck == '0'}">未上账</c:if>
@@ -156,13 +156,13 @@
                         <span class="help-block"></span>
                     </div>
                 </div>
-                <div class="control-group">
+                <%--<div class="control-group">
                     <label class="control-label">上账金额(元)：</label>
                     <div class="controls">
                         <input type="text" class="span3" id="inaccountAmt" name ="inaccountAmt" onkeyup="checkPrice(this)" readonly="readonly"/>
                         <span class="help-block"></span>
                     </div>
-                </div>
+                </div>--%>
                 <div class="control-group">
                     <label class="control-label">通用账户金额(元)：</label>
                     <div class="controls">

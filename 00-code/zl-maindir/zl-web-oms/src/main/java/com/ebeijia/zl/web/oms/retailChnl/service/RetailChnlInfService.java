@@ -28,11 +28,11 @@ public interface RetailChnlInfService {
 	
 	int retailChnlOpenAccount(HttpServletRequest req);
 
-	int addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+	Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
 	int addRetailChnlTransferCommit(HttpServletRequest req);
 
-	int editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+	Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
 	Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req);
 }

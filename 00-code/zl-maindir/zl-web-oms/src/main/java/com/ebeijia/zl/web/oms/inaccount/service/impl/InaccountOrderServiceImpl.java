@@ -55,7 +55,7 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
                 if (!StringUtil.isNullOrEmpty(o.getRemitAmt())) {
                     o.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRemitAmt().toString())));
                 }
-                o.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInaccountAmt().toString())));
+                o.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getInaccountSumAmt().toString())));
                 if (!StringUtil.isNullOrEmpty(o.getEvidenceUrl())) {
                     String imgUrl = commonService.getImageStrFromPath(o.getEvidenceUrl());
                     if (!StringUtil.isNullOrEmpty(imgUrl)) {

@@ -252,7 +252,9 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
     }
 
     @Override
-    public int addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile) {
+    public Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
         HttpSession session = req.getSession();
         User user = (User)session.getAttribute(Constants.SESSION_USER);
 
@@ -271,12 +273,48 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         String B08 = StringUtil.nullToString(req.getParameter("B08"));
         String remarks = StringUtil.nullToString(req.getParameter("remarks"));
 
+        BigDecimal inaccountAmtSum = new BigDecimal(0);
+        if (!StringUtil.isNullOrEmpty(A00)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(A00));
+        }
+        if (!StringUtil.isNullOrEmpty(B01)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B01));
+        }
+        if (!StringUtil.isNullOrEmpty(B02)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B02));
+        }
+        if (!StringUtil.isNullOrEmpty(B03)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B03));
+        }
+        if (!StringUtil.isNullOrEmpty(B04)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B04));
+        }
+        if (!StringUtil.isNullOrEmpty(B05)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B05));
+        }
+        if (!StringUtil.isNullOrEmpty(B06)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B06));
+        }
+        if (!StringUtil.isNullOrEmpty(B07)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B07));
+        }
+        if (!StringUtil.isNullOrEmpty(B08)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B08));
+        }
+
+        if (inaccountAmtSum.compareTo(new BigDecimal(inaccountAmt)) != 0) {
+            logger.error("## 分销商{}上账金额{}与专项金额总和{}不正确", channelId, inaccountAmt, inaccountAmtSum);
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "添加上账信息失败，供应商上账金额不正确");
+            return resultMap;
+        }
+
         InaccountOrder order = new InaccountOrder();
         order.setOrderId(IdUtil.getNextId());
         order.setOrderType(UserType.TYPE400.getCode());
         order.setCheckStat(CheckStatEnum.CHECK_FALSE.getCode());
        /* order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));*/
-        order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+        order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
         order.setProviderId(channelId);
         order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
         order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_FALSE.getCode());
@@ -328,6 +366,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("A00");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -343,6 +382,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B01");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -358,6 +398,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B02");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -373,6 +414,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B03");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -388,6 +430,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B04");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -403,6 +446,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B05");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -418,6 +462,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B06");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -433,6 +478,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B07");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -448,6 +494,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetail.setOrderId(order.getOrderId());
             orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
             orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
+            orderDetail.setInaccountAmt(orderDetail.getTransAmt());
             orderDetail.setBId("B08");
             orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
             orderDetail.setCreateUser(user.getId());
@@ -458,16 +505,24 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             orderDetailList.add(orderDetail);
         }
 
+       /* BigDecimal inaccountInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getInaccountAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_CEILING, 0), BigDecimal::add);
+        order.setInaccountSumAmt(inaccountInAmtSum);*/
         if (!inaccountOrderService.save(order)) {
-            logger.error("## 新增入账订单信息失败");
-            return 0;
+            logger.error("## 新增上账订单信息失败");
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "添加上账订单信息失败");
+            return resultMap;
         }
 
         if (!inaccountOrderDetailService.saveBatch(orderDetailList)) {
-            logger.error("## 新增入账订单明细失败");
-            return 0;
+            logger.error("## 新增上账订单明细失败");
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "添加上账订单明细信息失败");
+            return resultMap;
         }
-        return 1;
+
+        resultMap.put("status", Boolean.TRUE);
+        return resultMap;
     }
 
     @Override
@@ -488,16 +543,16 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         for (InaccountOrderDetail d : orderDetail) {
             AccountTxnVo txnVo = new AccountTxnVo();
             txnVo.setTxnBId(d.getBId());
-            txnVo.setTxnAmt(d.getTransAmt());
-            txnVo.setUpLoadAmt(d.getTransAmt());
+            txnVo.setTxnAmt(d.getInaccountAmt());
+            txnVo.setUpLoadAmt(d.getInaccountAmt());
             transList.add(txnVo);
             bIds.add(d.getBId());
         }
 
         AccountRechargeReqVo reqVo = new AccountRechargeReqVo();
         reqVo.setFromCompanyId(channelId);
-        reqVo.setTransAmt(order.getInaccountAmt());
-        reqVo.setUploadAmt(order.getInaccountAmt());
+        reqVo.setTransAmt(order.getInaccountSumAmt());
+        reqVo.setUploadAmt(order.getInaccountSumAmt());
         reqVo.setTransList(transList);
         reqVo.setTransId(TransCode.MB20.getCode());
         reqVo.setTransChnl(TransChnl.CHANNEL0.toString());
@@ -547,7 +602,9 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
     }
 
     @Override
-    public int editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile) {
+    public Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
         HttpSession session = req.getSession();
         User user = (User)session.getAttribute(Constants.SESSION_USER);
 
@@ -567,13 +624,51 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         String B08 = StringUtil.nullToString(req.getParameter("B08"));
         String remarks = StringUtil.nullToString(req.getParameter("remarks"));
 
+        BigDecimal inaccountAmtSum = new BigDecimal(0);
+        if (!StringUtil.isNullOrEmpty(A00)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(A00));
+        }
+        if (!StringUtil.isNullOrEmpty(B01)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B01));
+        }
+        if (!StringUtil.isNullOrEmpty(B02)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B02));
+        }
+        if (!StringUtil.isNullOrEmpty(B03)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B03));
+        }
+        if (!StringUtil.isNullOrEmpty(B04)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B04));
+        }
+        if (!StringUtil.isNullOrEmpty(B05)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B05));
+        }
+        if (!StringUtil.isNullOrEmpty(B06)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B06));
+        }
+        if (!StringUtil.isNullOrEmpty(B07)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B07));
+        }
+        if (!StringUtil.isNullOrEmpty(B08)) {
+            inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B08));
+        }
+
+        if (inaccountAmtSum.compareTo(new BigDecimal(inaccountAmt)) != 0) {
+            logger.error("## 分销商{}上账金额{}与专项金额总和{}不正确", channelId, inaccountAmt, inaccountAmtSum);
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "编辑上账信息失败，供应商上账金额不正确");
+            return resultMap;
+        }
+
         InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
         if (order == null) {
             logger.error("## 根据上账订单号{}查询订单信息为空", orderId);
-            return 0;
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "编辑上账信息失败，查询上帐订单信息为空");
+            return resultMap;
         }
        /* order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));*/
-        order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+        /*order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));*/
         order.setRemarks(remarks);
         order.setUpdateUser(user.getId());
         order.setUpdateTime(System.currentTimeMillis());
@@ -625,6 +720,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailA00.setOrderId(order.getOrderId());
                 orderDetailA00.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
+                orderDetailA00.setInaccountAmt(orderDetailA00.getTransAmt());
                 orderDetailA00.setBId("A00");
                 orderDetailA00.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailA00.setCreateUser(user.getId());
@@ -637,6 +733,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(A00)) {
                 orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
+                orderDetailA00.setInaccountAmt(orderDetailA00.getTransAmt());
                 orderDetailA00.setUpdateUser(user.getId());
                 orderDetailA00.setUpdateTime(System.currentTimeMillis());
                 orderDetailA00.setLockVersion(orderDetailA00.getLockVersion() + 1);
@@ -656,6 +753,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB01.setOrderId(order.getOrderId());
                 orderDetailB01.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
+                orderDetailB01.setInaccountAmt(orderDetailB01.getTransAmt());
                 orderDetailB01.setBId("B01");
                 orderDetailB01.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB01.setCreateUser(user.getId());
@@ -668,6 +766,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B01)) {
                 orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
+                orderDetailB01.setInaccountAmt(orderDetailB01.getTransAmt());
                 orderDetailB01.setUpdateUser(user.getId());
                 orderDetailB01.setUpdateTime(System.currentTimeMillis());
                 orderDetailB01.setLockVersion(orderDetailB01.getLockVersion() + 1);
@@ -687,6 +786,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB02.setOrderId(order.getOrderId());
                 orderDetailB02.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
+                orderDetailB02.setInaccountAmt(orderDetailB02.getTransAmt());
                 orderDetailB02.setBId("B02");
                 orderDetailB02.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB02.setCreateUser(user.getId());
@@ -699,6 +799,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B02)) {
                 orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
+                orderDetailB02.setInaccountAmt(orderDetailB02.getTransAmt());
                 orderDetailB02.setUpdateUser(user.getId());
                 orderDetailB02.setUpdateTime(System.currentTimeMillis());
                 orderDetailB02.setLockVersion(orderDetailB02.getLockVersion() + 1);
@@ -718,6 +819,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB03.setOrderId(order.getOrderId());
                 orderDetailB03.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
+                orderDetailB03.setInaccountAmt(orderDetailB03.getTransAmt());
                 orderDetailB03.setBId("B03");
                 orderDetailB03.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB03.setCreateUser(user.getId());
@@ -730,6 +832,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B03)) {
                 orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
+                orderDetailB03.setInaccountAmt(orderDetailB03.getTransAmt());
                 orderDetailB03.setUpdateUser(user.getId());
                 orderDetailB03.setUpdateTime(System.currentTimeMillis());
                 orderDetailB03.setLockVersion(orderDetailB03.getLockVersion() + 1);
@@ -749,6 +852,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB04.setOrderId(order.getOrderId());
                 orderDetailB04.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
+                orderDetailB04.setInaccountAmt(orderDetailB04.getTransAmt());
                 orderDetailB04.setBId("B04");
                 orderDetailB04.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB04.setCreateUser(user.getId());
@@ -761,6 +865,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B04)) {
                 orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
+                orderDetailB04.setInaccountAmt(orderDetailB04.getTransAmt());
                 orderDetailB04.setUpdateUser(user.getId());
                 orderDetailB04.setUpdateTime(System.currentTimeMillis());
                 orderDetailB04.setLockVersion(orderDetailB04.getLockVersion() + 1);
@@ -780,6 +885,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB05.setOrderId(order.getOrderId());
                 orderDetailB05.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
+                orderDetailB05.setInaccountAmt(orderDetailB05.getTransAmt());
                 orderDetailB05.setBId("B05");
                 orderDetailB05.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB05.setCreateUser(user.getId());
@@ -792,6 +898,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B05)) {
                 orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
+                orderDetailB05.setInaccountAmt(orderDetailB05.getTransAmt());
                 orderDetailB05.setUpdateUser(user.getId());
                 orderDetailB05.setUpdateTime(System.currentTimeMillis());
                 orderDetailB05.setLockVersion(orderDetailB05.getLockVersion() + 1);
@@ -811,6 +918,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB06.setOrderId(order.getOrderId());
                 orderDetailB06.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
+                orderDetailB06.setInaccountAmt(orderDetailB06.getTransAmt());
                 orderDetailB06.setBId("B06");
                 orderDetailB06.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB06.setCreateUser(user.getId());
@@ -823,6 +931,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B06)) {
                 orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
+                orderDetailB06.setInaccountAmt(orderDetailB06.getTransAmt());
                 orderDetailB06.setUpdateUser(user.getId());
                 orderDetailB06.setUpdateTime(System.currentTimeMillis());
                 orderDetailB06.setLockVersion(orderDetailB06.getLockVersion() + 1);
@@ -842,6 +951,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB07.setOrderId(order.getOrderId());
                 orderDetailB07.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
+                orderDetailB07.setInaccountAmt(orderDetailB07.getTransAmt());
                 orderDetailB07.setBId("B07");
                 orderDetailB07.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB07.setCreateUser(user.getId());
@@ -854,6 +964,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B07)) {
                 orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
+                orderDetailB07.setInaccountAmt(orderDetailB07.getTransAmt());
                 orderDetailB07.setUpdateUser(user.getId());
                 orderDetailB07.setUpdateTime(System.currentTimeMillis());
                 orderDetailB07.setLockVersion(orderDetailB07.getLockVersion() + 1);
@@ -873,6 +984,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
                 orderDetailB08.setOrderId(order.getOrderId());
                 orderDetailB08.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
                 orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
+                orderDetailB08.setInaccountAmt(orderDetailB08.getTransAmt());
                 orderDetailB08.setBId("B08");
                 orderDetailB08.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
                 orderDetailB08.setCreateUser(user.getId());
@@ -885,6 +997,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         } else {
             if (!StringUtil.isNullOrEmpty(B08)) {
                 orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
+                orderDetailB08.setInaccountAmt(orderDetailB08.getTransAmt());
                 orderDetailB08.setUpdateUser(user.getId());
                 orderDetailB08.setUpdateTime(System.currentTimeMillis());
                 orderDetailB08.setLockVersion(orderDetailB08.getLockVersion() + 1);
@@ -895,21 +1008,27 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         }
 
         if (!inaccountOrderService.updateById(order)) {
-            logger.error("## 更新入账订单信息失败");
-            return 0;
+            logger.error("## 更新上账订单信息失败");
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "编辑上账订单信息失败");
+            return resultMap;
         }
 
         if (addOrderDetailList != null && addOrderDetailList.size() >= 1) {
             if (!inaccountOrderDetailService.saveBatch(addOrderDetailList)) {
-                logger.error("## 新增入账订单明细失败");
-                return 0;
+                logger.error("## 编辑上账订单明细失败");
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "编辑上账订单明细信息失败");
+                return resultMap;
             }
         }
 
         if (editOrderDetailList != null && editOrderDetailList.size() >= 1) {
             if (!inaccountOrderDetailService.updateBatchById(editOrderDetailList)) {
-                logger.error("## 编辑入账订单明细失败");
-                return 0;
+                logger.error("## 编辑上账订单明细失败");
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "编辑上账订单明细信息失败");
+                return resultMap;
             }
         }
 
@@ -917,13 +1036,17 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             if (delOrderDetailList != null && delOrderDetailList.size() >= 1) {
                 for (InaccountOrderDetail d : delOrderDetailList) {
                     if (!inaccountOrderDetailService.removeById(d)) {
-                        logger.error("## 删除入账订单明细失败");
-                        return 0;
+                        logger.error("## 删除上账订单明细失败");
+                        resultMap.put("status", Boolean.FALSE);
+                        resultMap.put("msg", "编辑上账订单明细信息失败");
+                        return resultMap;
                     }
                 }
             }
         }
-        return 1;
+
+        resultMap.put("status", Boolean.TRUE);
+        return resultMap;
     }
 
     @Override
