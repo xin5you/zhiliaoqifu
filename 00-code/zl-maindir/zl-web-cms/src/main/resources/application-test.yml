@@ -50,6 +50,13 @@ spring:
     password: admin
     pool:
       max-connections: 50
+  dubbo:
+    application:
+      name: zl-web-cms
+    consumer:
+      check: false
+    registry:
+      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
 mybatis-plus:
   mapper-locations: classpath*:mapper/*/*Mapper.xml,classpath*:mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml

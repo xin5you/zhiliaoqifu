@@ -983,4 +983,6 @@ public class GoodsManageController {
 		return goodsProduct;
 	}
 
+
+
 }
