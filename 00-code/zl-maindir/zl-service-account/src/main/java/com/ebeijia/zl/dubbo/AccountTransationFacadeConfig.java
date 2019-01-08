@@ -33,20 +33,20 @@ public class AccountTransationFacadeConfig extends DubboProviderConfig {
 
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("executeRechargeByOneBId");
-		methodConfig.setTimeout(5000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("executeRecharge");
-		methodConfig.setTimeout(5000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("executeConsume");
-		methodConfig.setTimeout(5000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
@@ -59,7 +59,7 @@ public class AccountTransationFacadeConfig extends DubboProviderConfig {
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("executeRefund");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 

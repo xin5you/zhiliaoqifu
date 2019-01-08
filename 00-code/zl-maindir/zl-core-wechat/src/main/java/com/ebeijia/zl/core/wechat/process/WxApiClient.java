@@ -116,23 +116,17 @@ public class WxApiClient {
 
 	// 获取OAuthAccessToken
 	public  OAuthAccessToken getOAuthAccessToken(MpAccount mpAccount, String code) {
-		// 获取唯一的accessToken，如果是多账号，请自行处理
-		OAuthAccessToken token = wxMemoryCacheClient.getSingleOAuthAccessToken(mpAccount.getAccount());
-		if (token != null && !token.isExpires()) {// 不为空，并且没有过期
-			return token;
-		} else {
-			token = WxApi.getOAuthAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret(), code);
+
+			OAuthAccessToken token = WxApi.getOAuthAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret(), code);
 			if (token != null) {
 				if (token.getErrcode() != null) {// 获取失败
 					logger.error("## getOAuthAccessToken Error [{}]", token.getErrmsg());
 				} else {
 					token.setOpenid(null);// 获取OAuthAccessToken的时候设置openid为null；不同用户openid缓存
-					wxMemoryCacheClient.addOAuthAccessToken(mpAccount.getAccount(), token);
 					return token;
 				}
 			}
 			return null;
-		}
 	}
 
 	// 获取openId
@@ -434,8 +428,8 @@ public class WxApiClient {
 	/**
 	 * 发送模板消息
 	 * 
-	 * @param openid
-	 * @param content
+	 * @param tplMsg
+	 * @param mpAccount
 	 *            消息内容
 	 * @return
 	 */

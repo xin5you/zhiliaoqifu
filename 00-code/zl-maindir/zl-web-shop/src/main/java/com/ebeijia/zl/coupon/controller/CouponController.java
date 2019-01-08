@@ -59,8 +59,8 @@ public class CouponController {
     @TokenCheck(force = true)
     @ApiOperation("列出某类型的卡券持有情况")
     @RequestMapping(value = "/list/holder/{bId}",method = RequestMethod.GET)
-    public JsonResult<PageInfo<TbCouponHolder>> getHolder(@PathVariable String bId) {
-        PageInfo<TbCouponHolder> holder = couponService.getHolder(bId);
+    public JsonResult<PageInfo<TbCouponHolder>> getHolder(@PathVariable String bId, Integer start, Integer limit) {
+        PageInfo<TbCouponHolder> holder = couponService.getHolder(bId,start,limit);
         return new JsonResult<>(holder);
     }
 

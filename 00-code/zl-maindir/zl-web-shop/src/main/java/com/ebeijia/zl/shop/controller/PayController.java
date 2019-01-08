@@ -13,14 +13,16 @@ import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.utils.TokenCheck;
-import com.ebeijia.zl.shop.vo.*;
+import com.ebeijia.zl.shop.vo.CardBindInfo;
+import com.ebeijia.zl.shop.vo.CardInfo;
+import com.ebeijia.zl.shop.vo.JsonResult;
+import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -112,17 +114,26 @@ public class PayController {
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-
-        PageInfo<AccountLogVO> deals = payService.listDeals(range, type, start, limit);
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, type,null, start, limit);
         return new JsonResult<>(deals);
     }
+
+    @TokenCheck(force = true)
+    @ApiOperation("列出交易流水记录")
+    @RequestMapping(value = "/deal/list/common/{type}", method = RequestMethod.GET)
+    public JsonResult<PageInfo<AccountLogVO>> listAccountDealsForAType(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range,@RequestParam(value = "method",required = false) String method, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, type, method ,start, limit);
+        return new JsonResult<>(deals);
+    }
+
 
     //交易流水
     @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-        PageInfo<AccountLogVO> deals = payService.listDeals(range, null, start, limit);
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, null,null, start, limit);
         return new JsonResult<>(deals);
     }
 
@@ -148,7 +159,7 @@ public class PayController {
             @ApiResponse(code = ResultState.FORBIDDEN, message = "权限不足"),
             @ApiResponse(code = ResultState.UNAUTHORIZED, message = "请重新登录")})
     @RequestMapping(value = "/deal/transfer", method = RequestMethod.POST)
-    public JsonResult transferToCard(@RequestParam("deal") Long dealInfo, @RequestParam String vaildCode, @RequestParam(value = "session") Double session) {
+    public JsonResult transferToCard(@RequestParam("deal") Long dealInfo, @RequestParam(required = false) String vaildCode, @RequestParam(value = "session") Double session) {
         if (session == null) {
             session = 0D;
         }

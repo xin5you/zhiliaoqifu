@@ -229,6 +229,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			addToVoList(voList,transLog2,1);
 		}else if( TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.CW10.getCode().equals(intfaceTransLog.getTransId())
+				 || TransCode.CW20.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){
 
 			if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
@@ -266,12 +267,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				order++;
 			}
 		 }else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
-		 	//用户或者商户withdraw操作
-			 this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), 0);
+
 
 			 AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
-
-
 			 AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
 			 accountWithdrawOrder.setBatchNo(String.valueOf(SnowFlake.getInstance().nextId()));
 			 accountWithdrawOrder.setTotalAmount(withdrawDetail.getTransAmount());
@@ -295,6 +293,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			 if(!eflag) {
 				 throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
 			 }
+			 //用户或者商户withdraw操作
+			 this.withDarwAddToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), accountWithdrawOrder.getBatchNo());
+
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
 			 List<AccountTxnVo> addList = intfaceTransLog.getAddList();
 			 if (addList != null && addList.size() > 0) {
@@ -307,7 +308,16 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		}
 		return voList;
 	}
-	
+
+	/**
+	 *
+	 * @param voList  交易日志列表
+	 * @param intfaceTransLog  交易流水记录表
+	 * @param userId  用户ID
+	 * @param bId  专项类型
+	 * @param cardAttr  操作类型
+	 * @param order 操作顺序
+	 */
 	private void addToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,int order){
 		TransLog transLog=new TransLog();
 		transLog.setTxnPrimaryKey(IdUtil.getNextId());
@@ -324,6 +334,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		addToVoList(voList,transLog,order);
 	}
 
+	/**
+	 * @param voList  交易日志列表
+	 * @param intfaceTransLog  交易流水记录表
+	 * @param userId  用户ID
+	 * @param bId  专项类型
+	 * @param cardAttr  操作类型
+	 * @param transAmt  上送金额
+	 * @param upLoadAmt  交易金额
+	 */
 	private void addToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,BigDecimal transAmt,BigDecimal upLoadAmt){
 		TransLog transLog=new TransLog();
 		transLog.setTxnPrimaryKey(IdUtil.getNextId());
@@ -344,6 +363,32 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			transLog.setUploadAmt(upLoadAmt);
 		}
 		addToVoList(voList,transLog,voList.size());
+	}
+
+	/**
+	 *  提现操作
+	 * @param voList  交易日志列表
+	 * @param intfaceTransLog  交易流水记录表
+	 * @param userId  用户ID
+	 * @param bId  专项类型
+	 * @param cardAttr  操作类型
+	 * @param batchNo
+	 */
+	private void withDarwAddToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,String batchNo){
+		TransLog transLog=new TransLog();
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		transLog.setBatchNo(batchNo);
+		this.newTransLog(intfaceTransLog, transLog);
+		if(StringUtil.isNotEmpty(userId)){
+			transLog.setUserId(userId);
+		}
+		if(StringUtil.isNotEmpty(bId)){
+			transLog.setPriBId(bId);
+		}
+		if(StringUtil.isNotEmpty(cardAttr)){
+			transLog.setCardAttr(cardAttr);
+		}
+		addToVoList(voList,transLog,0);
 	}
 
 	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){

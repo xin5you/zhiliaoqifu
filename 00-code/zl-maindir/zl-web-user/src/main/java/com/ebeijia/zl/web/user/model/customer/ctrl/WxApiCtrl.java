@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ebeijia.zl.core.wechat.process.*;
 import com.ebeijia.zl.web.user.model.utils.JsonView;
 import com.ebeijia.zl.web.user.model.utils.UploadUtil;
 import com.ebeijia.zl.web.user.model.wxapi.service.BizService;
@@ -26,11 +27,6 @@ import com.ebeijia.zl.basics.wechat.domain.AccountFans;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.RedisDictProperties;
 import com.ebeijia.zl.core.wechat.aes.WXBizMsgCrypt;
-import com.ebeijia.zl.core.wechat.process.MpAccount;
-import com.ebeijia.zl.core.wechat.process.MsgXmlUtil;
-import com.ebeijia.zl.core.wechat.process.WxApiClient;
-import com.ebeijia.zl.core.wechat.process.WxMemoryCacheClient;
-import com.ebeijia.zl.core.wechat.process.WxSign;
 import com.ebeijia.zl.core.wechat.util.WxSignUtil;
 import com.ebeijia.zl.core.wechat.vo.MsgRequest;
 import com.ebeijia.zl.core.wechat.vo.SemaphoreMap;
@@ -80,9 +76,6 @@ public class WxApiCtrl {
 			String timestamp = request.getParameter("timestamp");// 时间戳
 			String nonce = request.getParameter("nonce");// 随机数
 			echostr = request.getParameter("echostr");// 随机字符串
-
-
-
 			// 校验成功返回 echostr，成功成为开发者；否则返回error，接入失败
 			if (WxSignUtil.validSign(signature, token, timestamp, nonce)) {
 				return echostr;
@@ -166,6 +159,28 @@ public class WxApiCtrl {
 		JsonView jv = new JsonView();
 		jv.setData(sign);
 		return jv;
+	}
+
+
+	/**
+	 * 获取微信公众号openId
+	 *
+	 * @param request
+	 * @param code
+	 * @return
+	 */
+	@ApiOperation("获取微信公众号openId")
+	@ApiImplicitParam(name="code",required = true,dataType = "String")
+	@RequestMapping(value = "/getOpenId", method = RequestMethod.POST)
+	@ResponseBody
+	public String getOpenId(HttpServletRequest request, @RequestParam("code")String code) {
+		MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
+		OAuthAccessToken token=wxApiClient.getOAuthAccessToken(mpAccount,code);
+		String openId="";
+		if(token !=null){
+			openId=token.getOpenid();
+		}
+		return openId;
 	}
 
 }

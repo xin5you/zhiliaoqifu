@@ -25,7 +25,6 @@ import java.io.Serializable;
 @ApiModel("记录用户持有的代金券商品")
 public class TbCouponHolder extends Model<TbCouponHolder> {
 
-
     /**
      * 代金券id
      */
