@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class CardInfo {
 
+
+
     private String cardType;
 
     private String bank;
