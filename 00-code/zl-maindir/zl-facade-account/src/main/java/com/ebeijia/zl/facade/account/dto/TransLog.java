@@ -217,6 +217,12 @@ public class TransLog extends Model<TransLog> {
     @TableField(exist=false)
     private Integer order;
 
+    /**
+     * 提现批次号
+     */
+    @TableField(exist=false)
+    private String batchNo;
+
     @Override
     protected Serializable pkVal() { 
         return this.txnPrimaryKey;

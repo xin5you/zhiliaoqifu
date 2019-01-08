@@ -252,9 +252,8 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 
             }else if(SpecAccountTypeEnum.A01.getCode().equals(account.getBId())) {
 				//托管账户提现
-				if(TransCode.CW91.getCode().equals(transLog.getTransId()) || TransCode.MB90.getCode().equals(transLog.getTransId())){
-					//TODO 发送消息
-
+			   if(TransCode.CW91.getCode().equals(transLog.getTransId()) || TransCode.MB90.getCode().equals(transLog.getTransId())){
+					mqProducerService.sendWithDrawBatchNo(transLog.getBatchNo());
 				}
             }else {
                 //非 员工通用福利账户 并且 非现金账户
