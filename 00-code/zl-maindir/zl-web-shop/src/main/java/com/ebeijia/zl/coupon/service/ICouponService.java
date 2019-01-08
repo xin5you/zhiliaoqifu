@@ -18,7 +18,7 @@ public interface ICouponService {
 
     TbCouponProduct couponDetail(String couponCode);
 
-    PageInfo<TbCouponHolder> getHolder(String bId);
+    PageInfo<TbCouponHolder> getHolder(String bId,Integer start, Integer limit);
 
 
     TbCouponHolder getHolderByCouponCode(String couponCode, Long price);

@@ -245,7 +245,8 @@ public class ProductService implements IProductService {
         TbEcomGoodsDetail detail = new TbEcomGoodsDetail();
         detail.setGoodsId(product.getGoodsId());
         TbEcomGoodsDetail update = goodsDetailDao.getOne(new QueryWrapper<>(detail));
-        update.setBuyCount(update.getBuyCount() + i);
+        //调整了购买量
+        update.setBuyCount(update.getBuyCount() - i);
         if (update.getBuyCount() >= 0) {
             goodsDetailDao.updateById(update);
         }

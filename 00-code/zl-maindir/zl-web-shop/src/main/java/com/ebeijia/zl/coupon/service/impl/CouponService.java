@@ -23,6 +23,7 @@ import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.MemberInfo;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,14 +152,37 @@ public class CouponService implements ICouponService {
         accountTxnVo.setTxnAmt(BigDecimal.valueOf(sum));
         accountTxnVo.setTxnBId(query.getBId());
 
-        payService.payCoupon(accountTxnVo, memberInfo.getOpenId(), dmsKey, String.format("购买卡券%s", query.getCouponName()));
+        int i = payService.payCoupon(accountTxnVo, memberInfo.getOpenId(), dmsKey, String.format("购买卡券%s", query.getCouponName()));
+        if (i == 200) {
+            TbCouponHolder h = new TbCouponHolder();
+            h.setTransStat("0");
+            h.setDataStat("0");
+            h.setMemberId(memberInfo.getMemberId());
+            h.setLockVersion(0);
+            //TODO
+            h.setCouponCode(query.getCouponCode());
+            h.setCouponName(query.getCouponName());
+            h.setPrice(query.getPrice());
+            h.setBId(query.getBId());
+            h.setCreateTime(System.currentTimeMillis());
+            h.setCreateUser("CouponSystem");
+            for (int k = 0; k < amount; k++) {
+                h.setCouponId(IdUtil.getNextId());
+                holderDao.save(h);
+            }
+        }
         //TODO DMS
         return 200;
     }
 
     @Override
     public PageInfo<TbCouponProduct> listProduct(String bId, String order, Integer start, Integer limit) {
-
+        if (limit == null || limit > 100) {
+            limit = Integer.valueOf(20);
+        }
+        if (start == null) {
+            start = Integer.valueOf(0);
+        }
         TbCouponProduct query = new TbCouponProduct();
         SpecAccountTypeEnum type = SpecAccountTypeEnum.findByBId(bId);
         if (type == null) {
@@ -166,6 +190,7 @@ public class CouponService implements ICouponService {
         }
         query.setBId(type.getbId());
         query.setDataStat("0");
+        PageHelper.startPage(start, limit);
         List<TbCouponProduct> list = couponProductDao.list(new QueryWrapper<>(query));
 
         return new PageInfo<>(list);
@@ -185,8 +210,15 @@ public class CouponService implements ICouponService {
     }
 
     @Override
-    public PageInfo<TbCouponHolder> getHolder(String bId) {
+    public PageInfo<TbCouponHolder> getHolder(String bId, Integer start, Integer limit) {
+        if (limit == null || limit > 100) {
+            limit = Integer.valueOf(20);
+        }
+        if (start == null) {
+            start = Integer.valueOf(0);
+        }
 
+        PageHelper.startPage(start, limit);
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");

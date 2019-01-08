@@ -49,7 +49,7 @@ public class DubboCustomerConfig {
 	public ConsumerConfig customer(){
 		ConsumerConfig consumerConfig=new ConsumerConfig();
 		consumerConfig.setCheck(dubboCustomerProperies.isCheck());
-		consumerConfig.setTimeout(1000);
+		consumerConfig.setTimeout(10000);
 		return consumerConfig;
 	}
 }

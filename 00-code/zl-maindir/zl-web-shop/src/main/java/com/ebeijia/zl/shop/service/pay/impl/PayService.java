@@ -77,6 +77,9 @@ public class PayService implements IPayService {
 
     @Override
     public int transferToCard(Long dealInfo, String validCode, Double session) {
+        if (dealInfo<=0){
+            throw new BizException(ResultState.NOT_ACCEPTABLE,"提现金额有误");
+        }
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
@@ -107,10 +110,12 @@ public class PayService implements IPayService {
         try {
             baseResult = accountTransactionFacade.executeWithDraw(req);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("支付失败", e);
+            throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
-        if (baseResult == null || baseResult.getCode() != "OK") {
-            throw new BizException(ResultState.ERROR, "网络不稳定，请稍后再试");
+        //判断result
+        if (!baseResult.getCode().equals("00")) {
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
         }
         throw new AdviceMessenger(ResultState.OK, "成功！信息已提交");
     }
@@ -202,7 +207,7 @@ public class PayService implements IPayService {
         try {
             baseResult = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
-            logger.error("支付失败",e);
+            logger.error("支付失败", e);
             logger.error("支付失败,参数%s,%s,%s,%s,%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc);
             throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
@@ -245,7 +250,10 @@ public class PayService implements IPayService {
         if ("B".equals(type)) {
             req.setBId(null);
             PageInfo<AccountLogVO> result = accountQueryFacade.getAccountLogPage(0, 2000, req);
-            result.getList().removeIf(accountLogVO -> accountLogVO.getPriBId().charAt(0) == 'A');
+            List<AccountLogVO> list = result.getList();
+            if (list == null) {
+                list.removeIf(accountLogVO -> accountLogVO.getPriBId().charAt(0) == 'A');
+            }
             //扩大查询范围
             return result;
         }
@@ -350,7 +358,7 @@ public class PayService implements IPayService {
         try {
             result = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
-            logger.error("远端连接异常",e);
+            logger.error("远端连接异常", e);
             throw new BizException(500, "服务器连接中断，请稍后再试");
         }
         return result;
@@ -365,7 +373,7 @@ public class PayService implements IPayService {
     private List<AccountTxnVo> buildTxnVo(PayInfo payInfo) {
         ArrayList<AccountTxnVo> result = new ArrayList<>();
         SpecAccountTypeEnum typeA = SpecAccountTypeEnum.findByBId(payInfo.getTypeA());
-        if (typeA != null) {
+        if (typeA != null && payInfo.getCostA() != null && payInfo.getCostA() != 0) {
             AccountTxnVo accountTxnVo = new AccountTxnVo();
             accountTxnVo.setTxnBId(typeA.getbId());
             accountTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostA()));
@@ -373,7 +381,7 @@ public class PayService implements IPayService {
             result.add(accountTxnVo);
         }
         SpecAccountTypeEnum typeB = SpecAccountTypeEnum.findByBId(payInfo.getTypeB());
-        if (typeB != null) {
+        if (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0) {
             AccountTxnVo accountTxnVo = new AccountTxnVo();
             accountTxnVo.setTxnBId(typeB.getbId());
             accountTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostB()));

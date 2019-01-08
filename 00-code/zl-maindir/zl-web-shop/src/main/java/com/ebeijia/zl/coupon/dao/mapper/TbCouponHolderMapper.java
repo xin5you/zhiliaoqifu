@@ -21,7 +21,7 @@ public interface TbCouponHolderMapper extends BaseMapper<TbCouponHolder> {
 			"FROM tb_coupon_holder h\n" +
 			"LEFT JOIN tb_coupon_product p ON p.coupon_code=h.coupon_code\n" +
 			"WHERE h.member_id='${memberId}' and h.b_id='${bId}' and h.trans_stat=0 AND h.data_stat=0\n" +
-			"GROUP BY h.coupon_code,h.price;")
+			"GROUP BY h.coupon_code,h.price")
 	List<TbCouponHolder> listCouponHolder(TbCouponHolder holder);
 
 
@@ -29,7 +29,7 @@ public interface TbCouponHolderMapper extends BaseMapper<TbCouponHolder> {
 			"FROM tb_coupon_holder h\n" +
 			"LEFT JOIN tb_coupon_product p ON p.coupon_code=h.coupon_code\n" +
 			"WHERE h.member_id='${memberId}' and h.coupon_code='${couponCode}' and h.price='${price}' and h.trans_stat=0 AND h.data_stat=0\n" +
-			"GROUP BY h.coupon_code;")
+			"GROUP BY h.coupon_code")
 	TbCouponHolder getCouponHolder(TbCouponHolder holder);
 
 }
