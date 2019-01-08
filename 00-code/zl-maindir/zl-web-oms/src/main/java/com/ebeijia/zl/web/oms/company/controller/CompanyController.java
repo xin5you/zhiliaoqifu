@@ -2,13 +2,18 @@ package com.ebeijia.zl.web.oms.company.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
+import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
@@ -54,6 +59,9 @@ public class CompanyController {
 
 	@Autowired
 	private InaccountOrderDetailService inaccountOrderDetailService;
+
+	@Autowired
+	private BillingTypeService billingTypeInfService;
 
 	/**
 	 * 企业信息列表查询
@@ -402,16 +410,19 @@ public class CompanyController {
 		cbt.setCompanyId(companyId);
 		cbt.setBName(bName);
 		PageInfo<CompanyBillingTypeInf> pageList = null;
+		List<BillingType> billingTypeList = new ArrayList<>();
 		try {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 			pageList = companyInfFacade.getCompanyBillingTypeInfPage(startNum, pageSize, cbt);
+			List<BillingType> bList = billingTypeInfService.getBillingTypeInfList(new BillingType());
+			billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getbId().equals(t.getBId())).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error("## 企业专项费率信息列表查询异常", e);
 		}
 		mv.addObject("companyId", companyId);
 		mv.addObject("pageInfo", pageList);
-		mv.addObject("billingTypeList", SpecAccountTypeEnum.values());
+		mv.addObject("billingTypeList", billingTypeList);
 		mv.addObject("companyBillingTypeInf", cbt);
 		return mv;
 	}

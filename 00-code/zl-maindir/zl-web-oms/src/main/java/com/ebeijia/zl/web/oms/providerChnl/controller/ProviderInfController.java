@@ -1,15 +1,21 @@
 package com.ebeijia.zl.web.oms.providerChnl.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
+import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingTypeInf;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
@@ -63,6 +69,9 @@ public class ProviderInfController {
 
 	@Autowired
 	private InaccountOrderDetailService inaccountOrderDetailService;
+
+	@Autowired
+	private BillingTypeService billingTypeInfService;
 
 	/**
 	 * 供应商列表 信息
@@ -694,7 +703,178 @@ public class ProviderInfController {
 		return providerInf;
 	}
 
-	public static void mian(String[] args) {
+	/**
+	 * 添加供应商专项费率信息
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/listProviderFee")
+	public ModelAndView listProviderFee(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderFee");
+		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
+		String bName = StringUtil.nullToString(request.getParameter("bName"));
+		ProviderBillingTypeInf cbt = new ProviderBillingTypeInf();
+		cbt.setProviderId(providerId);
+		cbt.setBName(bName);
+		PageInfo<ProviderBillingTypeInf> pageList = null;
+		List<BillingType> billingTypeList = new ArrayList<>();
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			pageList = providerInfFacade.getProviderBillingTypeInfPage(startNum, pageSize, cbt);
+			List<BillingType> bList = billingTypeInfService.getBillingTypeInfList(new BillingType());
+			billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getbId().equals(t.getBId())).collect(Collectors.toList());
+		} catch (Exception e) {
+			logger.error("## 供应商专项费率信息列表查询异常", e);
+		}
+		mv.addObject("providerId", providerId);
+		mv.addObject("pageInfo", pageList);
+		mv.addObject("billingTypeList", billingTypeList);
+		mv.addObject("providerBillingTypeInf", cbt);
+		return mv;
+	}
 
-    }
+	/**
+	 * 根据主键查询供应商专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/getProviderFee")
+	@ResponseBody
+	public ProviderBillingTypeInf getProviderFee(HttpServletRequest req, HttpServletResponse resp) {
+		String id = StringUtil.nullToString(req.getParameter("providerBillingId"));
+		ProviderBillingTypeInf cbt = providerInfFacade.getProviderBillingTypeInfById(id);
+		return cbt;
+	}
+
+	/**
+	 * 添加供应商专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/addProviderFee")
+	@ResponseBody
+	public Map<String, Object> addProviderFee(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String bId = StringUtil.nullToString(req.getParameter("bId"));
+		ProviderBillingTypeInf cbt = new ProviderBillingTypeInf();
+		cbt.setProviderId(providerId);
+		cbt.setBId(bId);
+		ProviderBillingTypeInf providerBType = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(cbt);
+		if (!StringUtil.isNullOrEmpty(providerBType)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "供应商专项类型费率信息已存在，请重新输入");
+			return resultMap;
+		}
+		ProviderBillingTypeInf providerBillingTypeInf = getProviderBillingTypeInf(req);
+		try {
+			if (!providerInfFacade.insertProviderBillingTypeInf(providerBillingTypeInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增供应商专项类型费率信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 新增供应商专项类型费率信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增供应商专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 编辑供应商专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/editProviderFee")
+	@ResponseBody
+	public Map<String, Object> editProviderFee(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		ProviderBillingTypeInf providerBillingTypeInf = getProviderBillingTypeInf(req);
+		try {
+			if (!providerInfFacade.updateProviderBillingTypeInf(providerBillingTypeInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑供应商专项类型费率信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 编辑供应商专项类型费率信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑供应商专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 删除供应商专项类型信息
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteProviderFee")
+	@ResponseBody
+	public Map<String, Object> deleteProviderFee(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		String id = StringUtil.nullToString(req.getParameter("providerBillingId"));
+
+		try {
+			if (!providerInfFacade.deleteProviderBillingTypeInf(id)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "删除供应商专项类型费率信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 删除供应商专项类型费率信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "删除供应商专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 供应商专项类型信息封装类
+	 * @param req
+	 * @return
+	 */
+	private ProviderBillingTypeInf getProviderBillingTypeInf(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+		ProviderBillingTypeInf cbt = null;
+		String id = StringUtil.nullToString(req.getParameter("providerBillingTypeId"));
+		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
+		String bId = StringUtil.nullToString(req.getParameter("bId"));
+		String fee = StringUtil.nullToString(req.getParameter("fee"));
+		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
+		if (!StringUtil.isNullOrEmpty(id)) {
+			cbt = providerInfFacade.getProviderBillingTypeInfById(id);
+			cbt.setLockVersion(cbt.getLockVersion());
+		} else {
+			cbt = new ProviderBillingTypeInf();
+			cbt.setId(IdUtil.getNextId());
+			cbt.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			cbt.setCreateUser(user.getId());
+			cbt.setCreateTime(System.currentTimeMillis());
+			cbt.setLockVersion(0);
+		}
+		cbt.setProviderId(providerId);
+		if (!StringUtil.isNullOrEmpty(bId)) {
+			cbt.setBId(bId);
+		}
+		cbt.setFee(fee);
+		cbt.setRemarks(remarks);
+		cbt.setUpdateUser(user.getId());
+		cbt.setUpdateTime(System.currentTimeMillis());
+		return cbt;
+	}
+
 }

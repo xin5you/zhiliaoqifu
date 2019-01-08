@@ -42,7 +42,6 @@ public class ProviderInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
-		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("updateProviderInf");
 		methodConfig.setTimeout(3000);
@@ -54,7 +53,6 @@ public class ProviderInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderInfList");
@@ -68,12 +66,54 @@ public class ProviderInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
-		/*methodConfig=new MethodConfig();
+		methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderInfByLawCode");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
-		methods.add(methodConfig); //*/
-		
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderBillingTypeInfById");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderBillingTypeInfList");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderBillingTypeInfPage");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderBillingTypeInfByBIdAndProviderId");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("insertProviderBillingTypeInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("updateProviderBillingTypeInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("deleteProviderBillingTypeInf");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
 		return referenceBean;
 	}
 }

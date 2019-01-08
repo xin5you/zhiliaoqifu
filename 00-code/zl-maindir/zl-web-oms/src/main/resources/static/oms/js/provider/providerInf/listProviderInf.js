@@ -18,6 +18,7 @@ var listTelProviderInf = {
         $('.btn-openAccount-submit').on('click', listTelProviderInf.telProviderOpenAccount);
         $('.btn-transfer').on('click', listTelProviderInf.intoAddProviderTransfer);
         $('.btn-accbal').on('click', listTelProviderInf.listProviderAccBal);
+        $('.btn-add-fee').on('click', listTelProviderInf.intoAddProviderFee);
     },
     searchData: function(){
         document.forms['searchForm'].submit();
@@ -112,5 +113,10 @@ var listTelProviderInf = {
         var providerId = $(this).attr('providerId');
         var url = Helper.getRootPath()+"/provider/providerInf/listProviderAccBal.do?providerId=" + providerId;
         location.href = url;
+    },
+    intoAddCompanyFee : function () {
+        var providerId = $(this).attr('providerId');
+        var url = Helper.getRootPath()+"/provider/providerInf/listProviderFee.do?providerId="+providerId;
+        location.href=url;
     }
 }

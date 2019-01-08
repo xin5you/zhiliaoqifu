@@ -16,7 +16,8 @@
 		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlItemList" alias="RetailChnlItemList" />
 		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf"   alias="RetailChnlOrderInf" />
 		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf" alias="RetailChnlProductInf" />
-		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf" alias="CompanyBillingTypeInf" />
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf" alias="CompanyBillingTypeInf"/>
+		<typeAlias type="com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingTypeInf" alias="ProviderBillingTypeInf" />
 	</typeAliases>
 
 	<mappers>

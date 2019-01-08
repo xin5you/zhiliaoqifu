@@ -2,6 +2,8 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 
 import java.util.List;
 
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingTypeInf;
+import com.ebeijia.zl.service.telrecharge.service.ProviderBillingTypeInfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +22,9 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 
 	@Autowired
 	private ProviderInfService providerInfService;
+
+	@Autowired
+	private ProviderBillingTypeInfService providerBillingTypeInfService;
 	
 	@Override
 	public ProviderInf getProviderInfById(String providerId) throws Exception {
@@ -93,5 +98,40 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	@Override
 	public ProviderInf getProviderInfByLawCode(String lawCode) throws Exception {
 		return providerInfService.getProviderInfByLawCode(lawCode);
+	}
+
+	@Override
+	public ProviderBillingTypeInf getProviderBillingTypeInfById(String id) {
+		return providerBillingTypeInfService.getById(id);
+	}
+
+	@Override
+	public List<ProviderBillingTypeInf> getProviderBillingTypeInfList(ProviderBillingTypeInf providerBillingTypeInf) {
+		return providerBillingTypeInfService.getProviderBillingTypeInfList(providerBillingTypeInf);
+	}
+
+	@Override
+	public PageInfo<ProviderBillingTypeInf> getProviderBillingTypeInfPage(int startNum, int pageSize, ProviderBillingTypeInf providerBillingTypeInf) {
+		return providerBillingTypeInfService.getProviderBillingTypeInfPage(startNum, pageSize, providerBillingTypeInf);
+	}
+
+	@Override
+	public ProviderBillingTypeInf getProviderBillingTypeInfByBIdAndProviderId(ProviderBillingTypeInf providerBillingTypeInf) {
+		return providerBillingTypeInfService.getProviderBillingTypeInfByBIdAndProviderId(providerBillingTypeInf);
+	}
+
+	@Override
+	public boolean insertProviderBillingTypeInf(ProviderBillingTypeInf providerBillingTypeInf) {
+		return providerBillingTypeInfService.save(providerBillingTypeInf);
+	}
+
+	@Override
+	public boolean updateProviderBillingTypeInf(ProviderBillingTypeInf providerBillingTypeInf) {
+		return providerBillingTypeInfService.updateById(providerBillingTypeInf);
+	}
+
+	@Override
+	public boolean deleteProviderBillingTypeInf(String id) {
+		return providerBillingTypeInfService.removeById(id);
 	}
 }

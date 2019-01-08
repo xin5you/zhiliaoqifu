@@ -171,23 +171,26 @@ public class CompanyServiceImpl implements CompanyService{
 			reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 			reqVo.setTransDesc(order.getRemarks());
 			reqVo.setTransNumber(1);
-			logger.info("远程调用转账接口请求参数--->{}", JSONArray.toJSONString(reqVo));
+			logger.info("平台转账，远程调用转账接口请求参数--->{}", JSONArray.toJSONString(reqVo));
 			BaseResult result = new BaseResult();
 			try {
 				result = accountTransactionFacade.executeTransfer(reqVo);
 			} catch (Exception e) {
 				logger.error("## 远程调用转账接口异常", e);
 			}
+			logger.info("平台转账，远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
 			try {
 				if (StringUtil.isNullOrEmpty(result.getCode())) {
+					logger.info("平台转账，远程调用查询接口请求参数--->dmsRelatedKe{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
 					result = accountTransactionFacade.executeQuery(reqVo.getDmsRelatedKey(), reqVo.getTransChnl());
+					logger.info("平台转账，远程调用查询接口返回参数--->{}", JSONArray.toJSONString(result));
 				}
 			} catch (Exception e) {
-				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
+				logger.error("## 平台转账，远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "网络异常，请稍后再试");
 			}
-			logger.error("远程调用转账接口返回参数--->{}", JSONArray.toJSONString(result));
+
 			if (result != null && Constants.SUCCESS_CODE.toString().equals(result.getCode())) {
 				order.setCompanyReceiverCheck(ReceiverEnum.RECEIVER_TRUE.getCode());
 			}
