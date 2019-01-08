@@ -40,11 +40,7 @@ public class WxMemoryCacheClient {
 	private  Map<String, JSTicket> accountJSTicketMap = new HashMap<String, JSTicket>();
 	public final  String JS_TICKET_KEY = "JS_TICKET_KEY_";
 
-	// 微信OAuth认证的时候，服务器内存的方式缓存openid; key=sessionid ，value=openid
-	// private  Map<String,String> sessionOpenIdMap = new
-	// HashMap<String,String>();
-	private  Map<String, OAuthAccessToken> accountOAuthTokenMap = new HashMap<String, OAuthAccessToken>();
-	public final  String ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY_";
+
 
 	public  void addMpAccount(MpAccount account) {
 		if (account != null && !mpAccountMap.containsKey(account.getAccount())) {
@@ -160,37 +156,7 @@ public class WxMemoryCacheClient {
 		return openid;
 	}
 
-	// 处理OAuth的Token
-	public  AccessToken addOAuthAccessToken(String account, OAuthAccessToken token) {
-		if (token != null) {
-			
-			jedisCluster.set(ACCESS_TOKEN_KEY + account, JSONObject.fromObject(token).toString());
-			
-		}
-		return token;
-	}
 
-	/**
-	 * OAuthAccessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * 
-	 * @param account
-	 * @return
-	 */
-	public  OAuthAccessToken getOAuthAccessToken(String account) {
-		String jsonStr = jedisCluster.get(ACCESS_TOKEN_KEY + account);
-		return (OAuthAccessToken) JSONObject.toBean(JSONObject.fromObject(jsonStr), OAuthAccessToken.class);
-	}
-
-	/**
-	 * 获取唯一的公众号的accessToken,如果需要多账号，请自行处理
-	 * OAuthAccessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * 
-	 * @return
-	 */
-	public  OAuthAccessToken getSingleOAuthAccessToken(String account) {
-			String jsonStr = jedisCluster.get(ACCESS_TOKEN_KEY + account);
-			return (OAuthAccessToken) JSONObject.toBean(JSONObject.fromObject(jsonStr), OAuthAccessToken.class);
-	}
 
 	/**
 	 * 获取所有的公众号号 All MpAccount的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
