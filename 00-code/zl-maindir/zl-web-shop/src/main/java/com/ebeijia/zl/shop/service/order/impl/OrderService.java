@@ -10,6 +10,7 @@ import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsBilling;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsBillingService;
+import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsDetailService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
 import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
 import com.ebeijia.zl.shop.dao.order.domain.*;
@@ -56,6 +57,9 @@ public class OrderService implements IOrderService {
 
     @Autowired
     private ITbEcomGoodsBillingService goodsBillingDao;
+
+    @Autowired
+    private ITbEcomGoodsDetailService detailDao;
 
     @Autowired
     private ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
@@ -419,6 +423,7 @@ public class OrderService implements IOrderService {
      * @param sOrderId
      * @return
      */
+
     private List<TbEcomOrderProductItem> processOrder(HashMap<TbEcomGoodsProduct, Integer> productInfo, String ecom, String sOrderId) {
         List<TbEcomOrderProductItem> orderProductItemList = new LinkedList<>();
         Iterator<TbEcomGoodsProduct> productIterator = productInfo.keySet().iterator();

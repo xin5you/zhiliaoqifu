@@ -155,7 +155,7 @@ public class ValidCodeService implements IValidCodeService {
         String key = sb.toString();
         JedisCluster resource = jedis.getJedis().getResource();
         Long result = resource.setnx(key, method);
-        if (result != 0) {
+        if (result != 1) {
             throw new BizException(ResultState.FORBIDDEN, "请求太频繁了");
         }
         resource.expire(key, ShopConfig.SUBMIT_INTERVAL);

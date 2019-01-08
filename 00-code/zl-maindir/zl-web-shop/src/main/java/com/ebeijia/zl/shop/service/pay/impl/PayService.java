@@ -15,9 +15,7 @@ import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
-import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
-import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomPayCardService;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrder;
@@ -33,7 +31,6 @@ import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
-import com.sun.org.glassfish.external.amx.AMX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +40,8 @@ import org.springframework.transaction.annotation.Propagation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
-
-import static com.ebeijia.zl.shop.constants.ResultState.NOT_ACCEPTABLE;
-import static com.ebeijia.zl.shop.constants.ResultState.OK;
 
 @Service
 public class PayService implements IPayService {
@@ -86,10 +81,11 @@ public class PayService implements IPayService {
         if (memberInfo == null) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
-        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, memberInfo.getMobilePhoneNo(), validCode);
-        if (!valid) {
-            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
-        }
+//        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, memberInfo.getMobilePhoneNo(), validCode);
+//        if (!valid) {
+        //TODO
+//            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
+//        }
         validCodeService.checkSession("transferToCard", session.toString());
         TbEcomPayCard payCard = new TbEcomPayCard();
         payCard.setMemberId(memberInfo.getMemberId());
@@ -113,10 +109,10 @@ public class PayService implements IPayService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (baseResult==null || baseResult.getCode()!="OK"){
-            throw new BizException(ResultState.ERROR,"网络不稳定，请稍后再试");
+        if (baseResult == null || baseResult.getCode() != "OK") {
+            throw new BizException(ResultState.ERROR, "网络不稳定，请稍后再试");
         }
-        throw new AdviceMessenger(ResultState.OK,"成功！信息已提交");
+        throw new AdviceMessenger(ResultState.OK, "成功！信息已提交");
     }
 
     @Override
@@ -181,13 +177,54 @@ public class PayService implements IPayService {
     }
 
     @Override
-    public PageInfo<AccountLogVO> listDeals(String range, String type, String start, String limit) {
+    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    public int payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc) {
+        //请求支付
+        String result = "";
+        List<AccountTxnVo> txnList = new LinkedList<>();
+        txnList.add(vo);
+
+        AccountConsumeReqVo req = new AccountConsumeReqVo();
+        //交易与渠道
+        req.setTransId(TransCode.CW20.getCode());
+        req.setTransChnl(TransChnl.CHANNEL9.toString());
+        //消费端用户识别
+        req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+        req.setUserChnlId(openId);
+        req.setUserType(UserType.TYPE100.getCode());
+        req.setTransList(txnList);
+        req.setDmsRelatedKey(dmsRelatedKey);
+        if (desc == null) {
+            desc = "商城消费";
+        }
+        req.setTransDesc(desc);
+        BaseResult baseResult = null;
+        try {
+            baseResult = accountTransactionFacade.executeConsume(req);
+        } catch (Exception e) {
+            logger.error("支付失败",e);
+            logger.error("支付失败,参数%s,%s,%s,%s,%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc);
+            throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
+        }
+        //判断result
+        if (!baseResult.getCode().equals("00")) {
+            logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
+        }
+        logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
+        return 200;
+    }
+
+    @Override
+    public PageInfo<AccountLogVO> listDeals(String range, String type, String method, String start, String limit) {
 
         MemberInfo memberInfo = shopUtils.getSession();
         String openId = memberInfo.getOpenId();
+
         AccountQueryReqVo req = new AccountQueryReqVo();
-        setQueryDateRange(req, range);
+        req = setQueryDateRange(req, range);
         SpecAccountTypeEnum bId = SpecAccountTypeEnum.findByBId(type);
+
         if (bId != null) {
             req.setBId(bId.getbId());
         }
@@ -212,12 +249,23 @@ public class PayService implements IPayService {
             //扩大查询范围
             return result;
         }
+        if (method != null) {
+            switch (method) {
+                //交易类型 0：开户 1：加款 2：减款
+                case "0":
+                case "1":
+                case "2":
+                    req.setAccType(method);
+                    break;
+                default:
+            }
+        }
         return accountQueryFacade.getAccountLogPage(startNum, pageSize, req);
     }
 
-    private void setQueryDateRange(AccountQueryReqVo req, String range) {
+    private AccountQueryReqVo setQueryDateRange(AccountQueryReqVo req, String range) {
         if (range == null) {
-            return;
+            return req;
         }
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -241,11 +289,12 @@ public class PayService implements IPayService {
                 calendar.add(Calendar.YEAR, -1);
                 break;
             default:
-                return;
+                return req;
         }
         startDate = calendar.getTimeInMillis();
         req.setSDate(startDate);
         req.setEDate(System.currentTimeMillis());
+        return req;
     }
 
 
@@ -301,7 +350,7 @@ public class PayService implements IPayService {
         try {
             result = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
-            logger.error(e.getStackTrace().toString());
+            logger.error("远端连接异常",e);
             throw new BizException(500, "服务器连接中断，请稍后再试");
         }
         return result;
