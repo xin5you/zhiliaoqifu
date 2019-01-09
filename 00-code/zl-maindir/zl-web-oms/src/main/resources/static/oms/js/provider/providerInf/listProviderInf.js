@@ -106,7 +106,7 @@ var listTelProviderInf = {
     },
     intoAddProviderTransfer : function () {
         var providerId = $(this).attr('providerId');
-        var url = Helper.getRootPath()+"/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId=" + providerId;
+        var url = Helper.getRootPath()+"/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_=" + providerId;
         location.href = url;
     },
     listProviderAccBal : function () {

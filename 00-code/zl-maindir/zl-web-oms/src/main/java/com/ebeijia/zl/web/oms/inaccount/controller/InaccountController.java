@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.inaccount.controller;
 
+import com.ebeijia.zl.common.utils.enums.IsInvoiceEnum;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -64,6 +65,10 @@ public class InaccountController {
 			if (orderDetail != null) {
 				orderDetail.setBName(SpecAccountTypeEnum.findByBId(orderDetail.getBId()).getName());
 				orderDetail.setCompanyInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(orderDetail.getCompanyInAmt().toString())));
+				orderDetail.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(orderDetail.getInaccountAmt().toString())));
+				orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(orderDetail.getTransAmt().toString())));
+				orderDetail.setPlatformInAmt(new BigDecimal(NumberUtils.RMBCentToYuan(orderDetail.getPlatformInAmt().toString())));
+				orderDetail.setIsInvoice(IsInvoiceEnum.findByBId(orderDetail.getIsInvoice()).getName());
 				resultMap.put("msg", orderDetail);
 			}
 		} catch (Exception e) {

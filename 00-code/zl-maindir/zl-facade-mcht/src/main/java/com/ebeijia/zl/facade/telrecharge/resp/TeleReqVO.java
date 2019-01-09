@@ -2,6 +2,8 @@ package com.ebeijia.zl.facade.telrecharge.resp;
 
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -10,18 +12,23 @@ import lombok.Data;
  * @author zhuqiuyou
  *
  */
+@ApiModel("支付信息")
 @Data
 public class TeleReqVO extends TeleBaseDomain {
 
 	private static final long serialVersionUID = -1005301884642435185L;
 
+    @ApiModelProperty("充值的电话号码")
 	private String rechargePhone; // 充值的电话号码
 
+    @ApiModelProperty("充值金额")
 	private String rechargeAmount; // 充值金额
 
+    @ApiModelProperty("分销商订单Id")
 	private String outerTid; // 分销商订单Id
 
-	private String callback; // 外部分销商订单
+    @ApiModelProperty("外部分销商回调地址")
+	private String callback; // 外部分销商回调地址
 
 	private String productId; // 产品编号
 

@@ -101,7 +101,7 @@ var addTelProviderInfTransfer = {
             dataType : "json",
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
                 } else {
                     Helper.alert(result.msg);
                     return false;
@@ -128,7 +128,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -165,7 +165,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -202,7 +202,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -323,7 +323,7 @@ var addTelProviderInfTransfer = {
 
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId='+providerId;
+                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
                 } else {
                     Helper.alert(result.msg);
                     return false;
@@ -353,7 +353,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=4&providerId='+providerId;
+                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=4&providerId_='+providerId;
                 } else {
                     Helper.alert(result.msg);
                     return false;

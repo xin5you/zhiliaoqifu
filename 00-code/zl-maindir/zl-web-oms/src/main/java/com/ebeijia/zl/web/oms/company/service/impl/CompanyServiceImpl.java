@@ -1,6 +1,8 @@
 package com.ebeijia.zl.web.oms.company.service.impl;
 
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -8,10 +10,12 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.web.oms.common.util.OrderConstants;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
@@ -233,4 +237,92 @@ public class CompanyServiceImpl implements CompanyService{
 		return resultMap;
 	}
 
+	@Override
+	public Map<String, Object> editCompanyInAmtCommit(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+		String orderListId = StringUtil.nullToString(req.getParameter("orderListId"));
+		String companyInAmt = StringUtil.nullToString(req.getParameter("companyInAmt"));
+		if (StringUtil.isNullOrEmpty(companyInAmt)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "请输入企业收款金额");
+			return resultMap;
+		}
+
+		//查询当前编辑收款订单明细信息
+		InaccountOrderDetail orderDetail = inaccountOrderDetailService.getById(orderListId);
+		if (orderDetail == null) {
+			logger.error("## 查询企业收款订单明细{}为空", orderListId);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询订单明细信息异常");
+			return resultMap;
+		}
+
+		//查询收款订单信息
+		InaccountOrder order = inaccountOrderService.getById(orderDetail.getOrderId());
+		if (orderDetail == null) {
+			logger.error("## 查询企业收款订单{}为空", orderDetail.getOrderId());
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询订单信息异常");
+			return resultMap;
+		}
+
+		//查询订单所有明细信息
+		List<InaccountOrderDetail> orderDetail1List = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderDetail.getOrderId());
+		if (orderDetail1List == null && orderDetail1List.size() < 1) {
+			logger.error("## 查询企业收款所有订单{}明细信息为空", orderDetail.getOrderId());
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询订单明细信息异常");
+			return resultMap;
+		}
+
+		//过滤掉当前修改的企业收款金额记录
+		orderDetail1List = 	orderDetail1List.stream().filter(t -> !orderListId.equals(t.getOrderListId())).collect(Collectors.toList());
+		//计算出企业所有收款金额总和
+		BigDecimal companyInAmtSum = orderDetail1List.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+		companyInAmtSum = companyInAmtSum.add(new BigDecimal(NumberUtils.RMBYuanToCent(companyInAmt))).setScale(0, BigDecimal.ROUND_UP);
+		if (companyInAmtSum.compareTo(order.getPlatformInSumAmt()) == 1) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "企业收款金额不合法，请重新输入");
+			return resultMap;
+		}
+
+
+		orderDetail.setCompanyInAmt(new BigDecimal(NumberUtils.RMBYuanToCent(companyInAmt)));
+		orderDetail.setUpdateTime(System.currentTimeMillis());
+		orderDetail.setUpdateUser(user.getId());
+		orderDetail.setLockVersion(orderDetail.getLockVersion() + 1);
+
+		order.setCompanyInSumAmt(companyInAmtSum);
+		order.setUpdateTime(System.currentTimeMillis());
+		order.setUpdateUser(user.getId());
+		order.setLockVersion(order.getLockVersion() + 1);
+
+		if (!inaccountOrderDetailService.updateById(orderDetail)) {
+			logger.error("## 编辑企业收款金额{}订单明细{}失败", companyInAmt, orderDetail.getOrderListId());
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑企业收款金额失败，请稍后再试");
+			return resultMap;
+		}
+
+		if (!inaccountOrderService.updateById(order)) {
+			logger.error("## 编辑企业收款金额{}订单{}失败", new BigDecimal(NumberUtils.RMBCentToYuan(companyInAmtSum.toString())).toString(), order.getOrderId());
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑企业收款金额失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/*public static void main(String[] args) {
+		BigDecimal a = new BigDecimal("2.00");
+		BigDecimal b = new BigDecimal(1);
+		if(a.compareTo(b) == 1){
+			System.out.print("aaa");
+		}
+	}*/
 }

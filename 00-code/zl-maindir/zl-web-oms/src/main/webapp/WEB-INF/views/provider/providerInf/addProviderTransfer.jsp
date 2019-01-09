@@ -28,7 +28,7 @@
         </nav>
         <form id="pageMainForm" action="${ctx}/provider/providerInf/intoAddProviderTransfer.do" class="form-inline form_validation_tip" method="post">
             <h3 class="heading">上账信息列表</h3>
-
+            <input type="hidden" id="providerId_" name="providerId_"  value="${providerId }"/>
             <div>
                 <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_INTOADD')">
                     <button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
