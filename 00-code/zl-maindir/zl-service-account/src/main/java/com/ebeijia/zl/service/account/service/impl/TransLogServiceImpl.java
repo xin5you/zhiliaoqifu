@@ -51,8 +51,8 @@ import redis.clients.jedis.JedisCluster;
 public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> implements ITransLogService{
 
 	private  final Logger log = LoggerFactory.getLogger(TransLogServiceImpl.class);
-	
-	
+
+
 	@Autowired
 	private IAccountInfService accountInfService;
 
@@ -66,29 +66,29 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	private JedisCluster jedisCluster;
 
 	/**
-	* 
-	* @Description: 创建账户交易流水
-	* @param:intfaceTransLog 接口層流水
-	*
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月3日 上午11:35:33 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月3日     zhuqi           v1.0.0
+	 *
+	 * @Description: 创建账户交易流水
+	 * @param:intfaceTransLog 接口層流水
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月3日 上午11:35:33
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月3日     zhuqi           v1.0.0
 	 */
 	public boolean execute(IntfaceTransLog intfaceTransLog) throws AccountBizException{
 		log.info("==>execute create transLog begin...");
-		
+
 		/**
 		 * 创建交易流水记录
 		 */
 		List<TransLog> voList=doTransLog(intfaceTransLog);
-		
+
 		boolean b=this.execute(voList);
-		
+
 		log.info("==>execute create transLog end...<==");
 		return b;
 	}
@@ -122,32 +122,32 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		log.info("==>execute create transLog end...<==");
 		return true;
 	}
-	
+
 	/**
-	* @Description: 交易流水批量操作账户
-	* @param:voList 交易记录列表
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月3日 下午1:08:48 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月3日     zhuqi           v1.0.0
+	 * @Description: 交易流水批量操作账户
+	 * @param:voList 交易记录列表
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月3日 下午1:08:48
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月3日     zhuqi           v1.0.0
 	 */
 	public boolean execute(List<TransLog> voList) throws AccountBizException{
-		
+
 		List<TransLog> sortList = new ArrayList<>();
 		if(voList !=null && voList.size()>1){
-	    	//交易流水顺序执行
-	    	voList.stream().sorted((e1, e2) -> {
+			//交易流水顺序执行
+			voList.stream().sorted((e1, e2) -> {
 				return Integer.compare(e1.getOrder(), e2.getOrder());
 			}).forEach(e -> sortList.add(e));
 		}else{
 			sortList.addAll(voList);
 		}
 		voList.clear();
-		
+
 		boolean f=	this.saveBatch(sortList); //批量保存交易流水
 
 		if(f){
@@ -155,23 +155,23 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		}
 		return f;
 	}
-	
+
 	/**
-	* @param:intfaceTransLog 接口调用流水信息
-	*
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月3日 下午2:06:03 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月3日     zhuqi           v1.0.0
+	 * @param:intfaceTransLog 接口调用流水信息
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月3日 下午2:06:03
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月3日     zhuqi           v1.0.0
 	 */
 	private List<TransLog> doTransLog(IntfaceTransLog intfaceTransLog)throws AccountBizException{
-		
+
 		List<TransLog> voList=new ArrayList<TransLog>();
-		
+
 		/**
 		 MB10("B10", "商户消费"),
 		 MB20("B20", "商户充值"),
@@ -192,8 +192,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 CW90("W90", "权益转让"),
 		 CW91("W91", "用户收款");
 		 */
-		
-		 if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
+
+		if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
 			List<AccountTxnVo> transList=intfaceTransLog.getTransList();
 			if(transList !=null && transList.size()>0){
 				//商户 多账户类型充值
@@ -204,7 +204,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				//商户充值
 				this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);
 			}
-			
+
 		}else if (TransCode.MB40.getCode().equals(intfaceTransLog.getTransId())) {
 			List<AccountTxnVo> transList = intfaceTransLog.getTransList();
 			if (transList != null && transList.size() > 0) {
@@ -220,13 +220,13 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
 			}
 		}
-		 else if (TransCode.CW50.getCode().equals(intfaceTransLog.getTransId())){
-			 this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
+		else if (TransCode.CW50.getCode().equals(intfaceTransLog.getTransId())){
+			this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
 
-		 }else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
+		}else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
 			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
-			
+
 			TransLog transLog2=new TransLog();
 			this.newTransLog(intfaceTransLog, transLog2);
 			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
@@ -238,7 +238,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			addToVoList(voList,transLog2,1);
 		}else if( TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.CW10.getCode().equals(intfaceTransLog.getTransId())
-				 || TransCode.CW20.getCode().equals(intfaceTransLog.getTransId())
+				|| TransCode.CW20.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){
 
 			if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
@@ -260,7 +260,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.SUB.getValue(), 0);
 			}
 
-			
+
 		}else if (TransCode.CW80.getCode().equals(intfaceTransLog.getTransId()) || TransCode.MB80.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工开户，多个专项类型开户
 			TransLog transLog2=null;
@@ -275,56 +275,61 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				addToVoList(voList,transLog2,order);
 				order++;
 			}
-		 }else if (TransCode.CW90.getCode().equals(intfaceTransLog.getTransId())){
-		 	 //卡券转卖 充值到托管账户
-			 BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
-			 List<AccountTxnVo> addList = intfaceTransLog.getTransList();
-			 if (addList != null && addList.size() > 0) {
-				 for (AccountTxnVo accountTxnVo : addList) {
-					 BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
-					 if (billingType != null) {
-						 loseFee = billingType.getLoseFee(); //指的是账户转卖代金券的折损率，
-					 }
-					 BigDecimal transAmt = AmountUtil.mul(accountTxnVo.getTxnAmt(), AmountUtil.sub(new BigDecimal(1), loseFee)); //扣除折损率后，到账金额
-					 this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), transAmt,accountTxnVo.getUpLoadAmt());
-				 }
-			 }
+		}else if (TransCode.CW90.getCode().equals(intfaceTransLog.getTransId())){
+			//卡券转卖 充值到托管账户
+			BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
+			List<AccountTxnVo> addList = intfaceTransLog.getTransList();
+			if (addList != null && addList.size() > 0) {
+				for (AccountTxnVo accountTxnVo : addList) {
+					BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
+					if (billingType != null) {
+						loseFee = billingType.getLoseFee(); //指的是账户转卖代金券的折损率，
+					}
+					BigDecimal transAmt = AmountUtil.mul(accountTxnVo.getTxnAmt(), AmountUtil.sub(new BigDecimal(1), loseFee)); //扣除折损率后，到账金额
+					this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), transAmt,accountTxnVo.getUpLoadAmt());
+				}
+			}
 		}else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
-			 AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
-			 AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
-			 accountWithdrawOrder.setBatchNo(String.valueOf(SnowFlake.getInstance().nextId()));
-			 accountWithdrawOrder.setTotalAmount(withdrawDetail.getTransAmount());
-			 accountWithdrawOrder.setTxnPrimaryKey(voList.get(0).getTxnPrimaryKey());
-			 accountWithdrawOrder.setTotalNum(1);
-			 accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status00.getCode()); //新建状态
 
-			 withdrawDetail.setBatchNo(accountWithdrawOrder.getBatchNo());
-			 withdrawDetail.setReceiverCurrency("CNY"); //人民币标识
-			 withdrawDetail.setSuccess(WithDrawSuccessEnum.Processing.getCode()); //提现中
+			String batchNO=String.valueOf(SnowFlake.getInstance().nextId());
+			//用户或者商户withdraw操作
+			this.withDarwAddToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), batchNO);
 
-			 if(TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
-				 withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.PERSON.toString()); //用户提现
-			 }else{
-				 withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.CORP.toString());//企业提现
-			 }
-			 boolean eflag=accountWithdrawOrderService.save(accountWithdrawOrder);
-			 if(eflag) {
-				 eflag=accountWithdrawDetailService.save(withdrawDetail);
-			 }
-			 if(!eflag) {
-				 throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
-			 }
-			 //用户或者商户withdraw操作
-			 this.withDarwAddToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), accountWithdrawOrder.getBatchNo());
+			AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
+			AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
+			accountWithdrawOrder.setBatchNo(batchNO);
+			accountWithdrawOrder.setTotalAmount(withdrawDetail.getTransAmount());
+			accountWithdrawOrder.setTxnPrimaryKey(voList.get(0).getTxnPrimaryKey());
+			accountWithdrawOrder.setTotalNum(1);
+			accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status00.getCode()); //新建状态
+
+			withdrawDetail.setBatchNo(accountWithdrawOrder.getBatchNo());
+			withdrawDetail.setReceiverCurrency("CNY"); //人民币标识
+			withdrawDetail.setSuccess(WithDrawSuccessEnum.Processing.getCode()); //提现中
+
+			if(TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
+				withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.PERSON.toString()); //用户提现
+			}else{
+				withdrawDetail.setReceiverType(WithDrawReceiverTypeEnum.CORP.toString());//企业提现
+			}
+			boolean eflag=accountWithdrawOrderService.save(accountWithdrawOrder);
+			if(eflag) {
+				eflag=accountWithdrawDetailService.save(withdrawDetail);
+			}
+			if(!eflag) {
+				throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
+			}
+
+
 
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
-			 List<AccountTxnVo> addList = intfaceTransLog.getAddList();
-			 if (addList != null && addList.size() > 0) {
-				 for (AccountTxnVo accountTxnVo : addList) {
-					 this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getTxnAmt());
-				 }
-			 }
-		 }else{
+			List<AccountTxnVo> addList = intfaceTransLog.getAddList();
+			if (addList != null && addList.size() > 0) {
+				for (AccountTxnVo accountTxnVo : addList) {
+					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getTxnAmt());
+				}
+			}
+		}else{
 			this.addToVoList(voList, intfaceTransLog, null, null, null, 0);
 		}
 		return voList;
