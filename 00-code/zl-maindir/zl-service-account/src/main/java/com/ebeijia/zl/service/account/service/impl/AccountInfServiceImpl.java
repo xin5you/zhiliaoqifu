@@ -260,7 +260,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		/****** setCouponBal set begin ***/
 		//员工账户消费 扣款
 		if(UserType.TYPE100.getCode().equals(account.getAccountType())){
-
 			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
 
             }else if(SpecAccountTypeEnum.A01.getCode().equals(account.getBId())) {
