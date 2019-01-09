@@ -2,9 +2,10 @@ package org.zl.service.account;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
-import com.ebeijia.zl.facade.account.req.AccountWithDrawReqVo;
+import com.ebeijia.zl.facade.account.req.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,6 @@ import com.ebeijia.zl.common.utils.enums.TransChnl;
 import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.enums.UserType;
-import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
-import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 
 @RunWith(SpringRunner.class)
@@ -34,24 +33,24 @@ public class AccountTransTest {
 
 	/**
 	 * 给供应商充值
-	 * 
-	* @Description: 该函数的功能描述
-	*
-	* @param:描述1描述
-	*
-	* @version: v1.0.0
-	* @author: zhuqi
-	* @date: 2018年12月14日 上午9:41:38 
-	*
-	* Modification History:
-	* Date         Author          Version
-	*-------------------------------------*
-	* 2018年12月14日     zhuqi           v1.0.0
+	 *
+	 * @Description: 该函数的功能描述
+	 *
+	 * @param:描述1描述
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月14日 上午9:41:38
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月14日     zhuqi           v1.0.0
 	 */
 /*    @Test
    public void executeRechargeToPrivoder() throws Exception{
     	AccountRechargeReqVo req=new AccountRechargeReqVo();
-    	
+
     	req.setTransId(TransCode.MB20.getCode());
     	req.setTransChnl(TransChnl.CHANNEL0.toString());
     	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
@@ -63,7 +62,7 @@ public class AccountTransTest {
     	req.setDmsRelatedKey(IdUtil.getNextId());
     	req.setPriBId(SpecAccountTypeEnum.A00.getbId());
     	req.setTransDesc("供应商上账");
-    	
+
     	accountTransactionFacade.executeRecharge(req);
    }*/
 
@@ -88,34 +87,34 @@ public class AccountTransTest {
     	req.setTransDesc("分销商充值");
     	accountTransactionFacade.executeRecharge(req);
    }*/
-	
-	
-	
- /**
-  * 
- * @Description: 供应商转账给ZL平台
- *
- * @param:描述1描述
- *
- * @version: v1.0.0
- * @author: zhuqi
- * @date: 2018年12月14日 上午10:04:34 
- *
- * Modification History:
- * Date         Author          Version
- *-------------------------------------*
- * 2018年12月14日     zhuqi           v1.0.0
-  */
+
+
+
+	/**
+	 *
+	 * @Description: 供应商转账给ZL平台
+	 *
+	 * @param:描述1描述
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月14日 上午10:04:34
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月14日     zhuqi           v1.0.0
+	 */
 //  @Test
 // public void executePrivoderTransferToZL() throws Exception{
 //	  AccountTransferReqVo req=new AccountTransferReqVo();
-//  	
+//
 //  	req.setTransId(TransCode.MB40.getCode());
 //  	req.setTransChnl(TransChnl.CHANNEL0.toString());
 //  	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 //  	req.setUserChnlId("300000000000000000000000");
 //  	req.setUserType(UserType.TYPE300.getCode());
-//  
+//
 //  	req.setTransAmt(new BigDecimal(500000));
 //  	req.setUploadAmt(new BigDecimal(500000));
 //  	req.setDmsRelatedKey(IdUtil.getNextId());
@@ -123,36 +122,36 @@ public class AccountTransTest {
 //	req.setTfrOutBId(SpecAccountTypeEnum.A00.getbId());
 //	req.setTfrInUserId("200000000000000000000000");
 //	req.setTfrInBId(SpecAccountTypeEnum.A00.getbId());
-//  	
+//
 //  	accountTransactionFacade.executeTransfer(req);
 // }
-	
-	
- /**
-  * 
- * @Description: 知了转账给企业
- *
- * @param:描述1描述
- *
- * @version: v1.0.0
- * @author: zhuqi
- * @date: 2018年12月14日 上午10:25:31 
- *
- * Modification History:
- * Date         Author          Version
- *-------------------------------------*
- * 2018年12月14日     zhuqi           v1.0.0
-  */
+
+
+	/**
+	 *
+	 * @Description: 知了转账给企业
+	 *
+	 * @param:描述1描述
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月14日 上午10:25:31
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月14日     zhuqi           v1.0.0
+	 */
 //  @Test
 // public void executePrivoderTransferToZL() throws Exception{
 //	  AccountTransferReqVo req=new AccountTransferReqVo();
-//  	
+//
 //  	req.setTransId(TransCode.MB40.getCode());
 //  	req.setTransChnl(TransChnl.CHANNEL0.toString());
 //  	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 //  	req.setUserChnlId("200000000000000000000000");
 //  	req.setUserType(UserType.TYPE200.getCode());
-//  
+//
 //  	req.setTransAmt(new BigDecimal(500000));
 //  	req.setUploadAmt(new BigDecimal(500000));
 //  	req.setDmsRelatedKey(IdUtil.getNextId());
@@ -160,13 +159,13 @@ public class AccountTransTest {
 //	req.setTfrOutBId(SpecAccountTypeEnum.A00.getbId());
 //	req.setTfrInUserId("200000000000000000000001");
 //	req.setTfrInBId(SpecAccountTypeEnum.A00.getbId());
-//  	
+//
 //	BaseResult<Object> result= accountTransactionFacade.executeTransfer(req);
-//	
+//
 //	System.out.println(JSONArray.toJSONString(result));
 // }
-	
-	
+
+
 
 /*  @Test
  public void executeRechargeToUser() throws Exception{
@@ -211,7 +210,7 @@ public class AccountTransTest {
 	 * 用户提现操作
 	 * @throws Exception
 	 */
-  @Test
+/*  @Test
  public void executeWithdrawToUser() throws Exception{
   	AccountWithDrawReqVo req=new AccountWithDrawReqVo();
 
@@ -225,7 +224,7 @@ public class AccountTransTest {
 	req.setDmsRelatedKey(IdUtil.getNextId());
 	req.setTransDesc("员工提现到卡");
 
-	  req.setReceiverCardNo("6214830215284406"); //收款卡号
+	  req.setReceiverCardNo("6214830215284123"); //收款卡号
 	  req.setReceiverName("朱秋友");
 	  req.setBankName("招商银行");  //开户行
 	  req.setBankCode("CMB");  //开户行编号
@@ -235,6 +234,40 @@ public class AccountTransTest {
 	 BaseResult<Object> result= accountTransactionFacade.executeWithDraw(req);
 
 	System.out.println(JSONArray.toJSONString(result));
- }
-	
+ }*/
+
+
+
+	/**
+	 * 权益转让
+	 * @throws Exception
+	 */
+	@Test
+	public void executeRechargeToA01() throws Exception{
+
+		AccountRechargeReqVo req=new AccountRechargeReqVo();
+		req.setTransId(TransCode.CW90.getCode());
+		req.setTransChnl(TransChnl.CHANNEL0.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+		req.setUserChnlId("b03976d2-8319-4c64-b9d7-5b8c5756ef6f");
+		req.setUserType(UserType.TYPE100.getCode());
+		req.setDmsRelatedKey(IdUtil.getNextId());
+		req.setPriBId(SpecAccountTypeEnum.A01.getbId());
+		req.setTransAmt(new BigDecimal(1234));
+		req.setUploadAmt(new BigDecimal(1234));
+		req.setTransDesc("办公用品权益转让");
+		req.setTransNumber(1);
+
+		List list=new ArrayList();
+		AccountTxnVo txnvo=new AccountTxnVo();
+		txnvo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
+		txnvo.setTxnAmt(new BigDecimal(1234));
+		txnvo.setUpLoadAmt(new BigDecimal(1234));
+		list.add(txnvo);
+
+		req.setTransList(list);
+
+		accountTransactionFacade.executeRecharge(req);
+	}
+
 }
