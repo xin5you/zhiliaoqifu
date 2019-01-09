@@ -323,14 +323,16 @@ public class CompanyController {
 		}
 		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
 		if (order != null) {
-			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
-			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
-			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
-			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
-			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
+			order.setCheckStatName(CheckStatEnum.findByBId(order.getCheckStat()).getName());
+			order.setRemitCheckName(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
+			order.setInaccountCheckName(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
+			order.setTransferCheckName(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			order.setPlatformReceiverCheckName(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
 			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
+			order.setPlatformInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getPlatformInSumAmt().toString())));
+			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));
 		}
 		try {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
@@ -529,6 +531,28 @@ public class CompanyController {
 			logger.error("## 删除企业专项类型费率信息出错", e);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "删除企业专项类型费率信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 编辑企业收款金额
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	@RequestMapping(value = "/editCompanyInAmtCommit")
+	@ResponseBody
+	public Map<String, Object> editCompanyInAmtCommit(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		try {
+			resultMap = companyService.editCompanyInAmtCommit(req);
+		} catch (Exception e) {
+			logger.error("## 编辑企业收款金额出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑企业收款金额失败");
 			return resultMap;
 		}
 		return resultMap;

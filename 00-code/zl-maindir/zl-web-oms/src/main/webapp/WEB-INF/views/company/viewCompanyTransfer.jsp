@@ -36,7 +36,7 @@
 								<tr>
 									<td>
 										<label class="control-label" style="font-weight: bold;">审核状态：</label>
-										<label style="color: red;">${order.checkStat }</label>
+										<label style="color: red;">${order.checkStatName }</label>
 									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">打款总金额(元)：</label>
@@ -47,19 +47,29 @@
 										<label style="color: red;">${order.inaccountSumAmt }</label>
 									</td>
 									<td>
-										<label class="control-label" style="font-weight: bold;">收款企业：</label>
-										<label style="color: red;">${order.companyName }</label>
+										<label class="control-label" style="font-weight: bold;">平台收款总金额(元)：</label>
+										<label style="color: red;">${order.platformInSumAmt }</label>
 									</td>
 								</tr>
 								<tr>
 									<td>
+										<label class="control-label" style="font-weight: bold;">企业收款总金额(元)：</label>
+										<label style="color: red;">${order.companyInSumAmt }</label>
+									</td>
+									<td>
+										<label class="control-label" style="font-weight: bold;">收款企业：</label>
+										<label style="color: red;">${order.companyName }</label>
+									</td>
+									<td>
 										<label class="control-label" style="font-weight: bold;">上账状态：</label>
-										<label style="color: red;">${order.inaccountCheck }</label>
+										<label style="color: red;">${order.inaccountCheckName }</label>
 									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">平台收款状态：</label>
-										<label style="color: red;">${order.platformReceiverCheck }</label>
+										<label style="color: red;">${order.platformReceiverCheckName }</label>
 									</td>
+								</tr>
+								<tr>
 									<td>
 										<label class="control-label" style="font-weight: bold;">企业收款状态：</label>
 										<label style="color: red;">${order.companyReceiverCheckName }</label>
@@ -74,7 +84,7 @@
 				               <th>序号</th>
 				               <th>订单明细号</th>
                                  <th>账户名称</th>
-				               <%--<th>交易金额(元)</th>--%>
+				               <th>交易金额(元)</th>
 								 <th>上帐金额(元)</th>
                                  <th>平台收入金额(元)</th>
                                  <th>企业收入金额(元)</th>
@@ -89,7 +99,7 @@
 				                 	<td>${st.index+1 }</td>
 				                 	<td>${entity.orderListId}</td>
 									<td>${entity.BName}</td>
-									<%--<td>${entity.transAmt}</td>--%>
+									<td>${entity.transAmt}</td>
 									 <td>${entity.inaccountAmt}</td>
                                      <td>${entity.platformInAmt}</td>
                                      <td>${entity.companyInAmt}</td>
@@ -99,6 +109,11 @@
                                      </td>
                                      <td>${entity.invoiceInfo}</td>
 									 <td>
+											 <c:if test="${order.transferCheck == '1' && order.platformReceiverCheck == '1' && order.companyReceiverCheck == '0' && company.isPlatform == '1'}">
+                                                 <sec:authorize access="hasRole('ROLE_PLATFORM_EDIT_INAMT')">
+												 <a orderListId="${entity.orderListId}" title="编辑企业收款金额" class="btn-mini btn-edit-inAmt" href="#"><i class="icon-edit"></i></a>
+											 </sec:authorize>
+										 </c:if>
 										<c:if test="${order.companyReceiverCheck == '1' && company.isPlatform == '0' && entity.isInvoice == '0'}">
 											<sec:authorize access="hasRole('ROLE_COMPANY_INVOICE_INTO')">
 												<a orderListId="${entity.orderListId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>
@@ -124,6 +139,81 @@
 		   </div>
 		   <br/><br/><br/>
 		   <h3 align="center">信息正在处理......</h3>
+	   </div>
+
+	   <div id="editInAmtModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		   <form class="form-horizontal">
+			   <div class="modal-header">
+				   <button class="close" data-dismiss="modal">&times;</button>
+				   <h3 id="commodityInfModal_h5">编辑企业收款金额</h3>
+			   </div>
+			   <div class="modal-body">
+				   <fieldset>
+					   <div class="control-group">
+						   <label class="control-label">订单明细号：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="orderListId_" name="orderListId_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">账户名称：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="bName_" name="bName_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">交易金额(元)：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="transAmt_" name="transAmt_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">上帐金额(元)：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="inaccountAmt_" name="inaccountAmt_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">平台收入金额(元)：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="platformInAmt_" name="platformInAmt_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">企业收入金额(元)：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="companyInAmt_" name="companyInAmt_" onkeyup="checkPrice(this)"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">开票状态：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="isInvoice_" name="isInvoice_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+					   <div class="control-group">
+						   <label class="control-label">开票附加信息：</label>
+						   <div class="controls">
+							   <input type="text" class="span3" id="invoiceInfo_" name="invoiceInfo_" readonly="readonly"/>
+							   <span class="help-block"></span>
+						   </div>
+					   </div>
+				   </fieldset>
+			   </div>
+		   </form>
+		   <div class="modal-footer" style="text-align: center;">
+			   <sec:authorize access="hasRole('ROLE_PLATFORM_EDIT_INAMT_COMMIT')">
+				   <button class="btn btn-primary btn-edit-inAmt-submit">确 定  </button>
+			   </sec:authorize>
+			   <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
+		   </div>
 	   </div>
 
 	   <div id="addInvoiceModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -167,4 +257,17 @@
 		   </div>
 	   </div>
 </body>
+<script type="text/javascript">
+    //验证价格（带有小数点，小数点最多是两位）
+    function checkPrice(obj){
+        obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字而不是
+        obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d).*$/,'$2$1.$2');//只能输入两个小数
+        if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+            obj.value= parseFloat(obj.value);
+        }
+    }
+</script>
 </html>

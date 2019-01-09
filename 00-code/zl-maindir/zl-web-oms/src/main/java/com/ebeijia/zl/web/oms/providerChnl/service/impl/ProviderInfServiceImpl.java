@@ -312,7 +312,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("A00");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -359,7 +359,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B01");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -406,7 +406,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B02");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -453,7 +453,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B03");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -500,7 +500,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B04");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -547,7 +547,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B05");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -594,7 +594,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B06");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -641,7 +641,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B07");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -688,7 +688,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 			orderDetail.setBId("B08");
 			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 			orderDetail.setCompanyInAmt(companyInAmt);
 			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			orderDetail.setCreateUser(user.getId());
@@ -1065,7 +1065,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailA00.setInaccountAmt(orderDetailA00.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailA00.setBId("A00");
 				orderDetailA00.setPlatformInAmt(orderDetailA00.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailA00.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailA00.setCompanyInAmt(companyInAmt);
 				orderDetailA00.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailA00.setCreateUser(user.getId());
@@ -1080,7 +1080,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
 				orderDetailA00.setInaccountAmt(orderDetailA00.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailA00.setPlatformInAmt(orderDetailA00.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailA00.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailA00.setCompanyInAmt(companyInAmt);
 				orderDetailA00.setUpdateUser(user.getId());
 				orderDetailA00.setUpdateTime(System.currentTimeMillis());
@@ -1135,7 +1135,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB01.setInaccountAmt(orderDetailB01.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB01.setBId("B01");
 				orderDetailB01.setPlatformInAmt(orderDetailB01.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB01.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB01.setCompanyInAmt(companyInAmt);
 				orderDetailB01.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB01.setCreateUser(user.getId());
@@ -1150,7 +1150,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
 				orderDetailB01.setInaccountAmt(orderDetailB01.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB01.setPlatformInAmt(orderDetailB01.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB01.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB01.setCompanyInAmt(companyInAmt);
 				orderDetailB01.setUpdateUser(user.getId());
 				orderDetailB01.setUpdateTime(System.currentTimeMillis());
@@ -1205,7 +1205,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB02.setInaccountAmt(orderDetailB02.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB02.setBId("B02");
 				orderDetailB02.setPlatformInAmt(orderDetailB02.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB02.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB02.setCompanyInAmt(companyInAmt);
 				orderDetailB02.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB02.setCreateUser(user.getId());
@@ -1220,7 +1220,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
 				orderDetailB02.setInaccountAmt(orderDetailB02.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB02.setPlatformInAmt(orderDetailB02.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB02.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB02.setCompanyInAmt(companyInAmt);
 				orderDetailB02.setUpdateUser(user.getId());
 				orderDetailB02.setUpdateTime(System.currentTimeMillis());
@@ -1275,7 +1275,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB03.setInaccountAmt(orderDetailB03.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB03.setBId("B03");
 				orderDetailB03.setPlatformInAmt(orderDetailB03.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB03.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB03.setCompanyInAmt(companyInAmt);
 				orderDetailB03.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB03.setCreateUser(user.getId());
@@ -1290,7 +1290,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
 				orderDetailB03.setInaccountAmt(orderDetailB03.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB03.setPlatformInAmt(orderDetailB03.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB03.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB03.setCompanyInAmt(companyInAmt);
 				orderDetailB03.setUpdateUser(user.getId());
 				orderDetailB03.setUpdateTime(System.currentTimeMillis());
@@ -1345,7 +1345,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB04.setInaccountAmt(orderDetailB04.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB04.setBId("B04");
 				orderDetailB04.setPlatformInAmt(orderDetailB04.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB04.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB04.setCompanyInAmt(companyInAmt);
 				orderDetailB04.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB04.setCreateUser(user.getId());
@@ -1360,7 +1360,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
 				orderDetailB04.setInaccountAmt(orderDetailB04.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB04.setPlatformInAmt(orderDetailB04.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB04.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB04.setCompanyInAmt(companyInAmt);
 				orderDetailB04.setUpdateUser(user.getId());
 				orderDetailB04.setUpdateTime(System.currentTimeMillis());
@@ -1415,7 +1415,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB05.setInaccountAmt(orderDetailB05.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB05.setBId("B05");
 				orderDetailB05.setPlatformInAmt(orderDetailB05.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB05.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB05.setCompanyInAmt(companyInAmt);
 				orderDetailB05.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB05.setCreateUser(user.getId());
@@ -1430,7 +1430,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
 				orderDetailB05.setInaccountAmt(orderDetailB05.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB05.setPlatformInAmt(orderDetailB05.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB05.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB05.setCompanyInAmt(companyInAmt);
 				orderDetailB05.setUpdateUser(user.getId());
 				orderDetailB05.setUpdateTime(System.currentTimeMillis());
@@ -1485,7 +1485,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB06.setInaccountAmt(orderDetailB06.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB06.setBId("B06");
 				orderDetailB06.setPlatformInAmt(orderDetailB06.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB06.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB06.setCompanyInAmt(companyInAmt);
 				orderDetailB06.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB06.setCreateUser(user.getId());
@@ -1500,7 +1500,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
 				orderDetailB06.setInaccountAmt(orderDetailB06.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB06.setPlatformInAmt(orderDetailB06.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB06.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB06.setCompanyInAmt(companyInAmt);
 				orderDetailB06.setUpdateUser(user.getId());
 				orderDetailB06.setUpdateTime(System.currentTimeMillis());
@@ -1555,7 +1555,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB07.setInaccountAmt(orderDetailB07.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB07.setBId("B07");
 				orderDetailB07.setPlatformInAmt(orderDetailB07.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB07.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB07.setCompanyInAmt(companyInAmt);
 				orderDetailB07.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB07.setCreateUser(user.getId());
@@ -1570,7 +1570,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
 				orderDetailB07.setInaccountAmt(orderDetailB07.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB07.setPlatformInAmt(orderDetailB07.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB07.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB07.setCompanyInAmt(companyInAmt);
 				orderDetailB07.setUpdateUser(user.getId());
 				orderDetailB07.setUpdateTime(System.currentTimeMillis());
@@ -1625,7 +1625,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB08.setInaccountAmt(orderDetailB08.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB08.setBId("B08");
 				orderDetailB08.setPlatformInAmt(orderDetailB08.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB08.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB08.setCompanyInAmt(companyInAmt);
 				orderDetailB08.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 				orderDetailB08.setCreateUser(user.getId());
@@ -1640,7 +1640,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
 				orderDetailB08.setInaccountAmt(orderDetailB08.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
 				orderDetailB08.setPlatformInAmt(orderDetailB08.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB08.getInaccountAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
 				orderDetailB08.setCompanyInAmt(companyInAmt);
 				orderDetailB08.setUpdateUser(user.getId());
 				orderDetailB08.setUpdateTime(System.currentTimeMillis());

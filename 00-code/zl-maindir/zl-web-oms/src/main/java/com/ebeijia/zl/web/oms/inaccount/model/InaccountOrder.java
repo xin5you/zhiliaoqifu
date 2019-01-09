@@ -168,6 +168,21 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @TableField(exist = false)
     private String companyReceiverCheckName;
 
+    @TableField(exist = false)
+    private String checkStatName;
+
+    @TableField(exist = false)
+    private String remitCheckName;
+
+    @TableField(exist = false)
+    private String inaccountCheckName;
+
+    @TableField(exist = false)
+    private String transferCheckName;
+
+    @TableField(exist = false)
+    private String platformReceiverCheckName;
+
     @Override
     protected Serializable pkVal() { 
         return this.orderId;

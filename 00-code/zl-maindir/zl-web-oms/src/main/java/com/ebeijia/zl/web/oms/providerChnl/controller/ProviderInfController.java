@@ -490,14 +490,16 @@ public class ProviderInfController {
 		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
 		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
 		if (order != null) {
-			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
-			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
-			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
-			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
-			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
-			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setCheckStatName(CheckStatEnum.findByBId(order.getCheckStat()).getName());
+			order.setRemitCheckName(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
+			order.setInaccountCheckName(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
+			order.setTransferCheckName(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			order.setPlatformReceiverCheckName(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
+			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
+			order.setPlatformInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getPlatformInSumAmt().toString())));
+			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));
 		}
 
 		try {

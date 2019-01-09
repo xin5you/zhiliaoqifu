@@ -13,4 +13,11 @@ public interface CompanyService {
 
 	Map<String, Object> updateCompanyTransferStat(HttpServletRequest req);
 
+	/**
+	 * 编辑企业收款金额
+	 * @param req
+	 * @return
+	 */
+	Map<String, Object> editCompanyInAmtCommit(HttpServletRequest req);
+
 }
