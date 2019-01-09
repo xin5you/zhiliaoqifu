@@ -11,8 +11,8 @@ public class CardBindInfo {
     @ApiModelProperty("持卡人")
     String userName;//
 
-//    @ApiModelProperty("手机号")
-//    String phoneNo;//手机号
+    @ApiModelProperty("手机号")
+    String phoneNo;//手机号
 
     @ApiModelProperty("省")
     String province;//省

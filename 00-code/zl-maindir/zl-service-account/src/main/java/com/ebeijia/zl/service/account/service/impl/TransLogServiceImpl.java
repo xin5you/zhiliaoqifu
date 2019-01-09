@@ -278,7 +278,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 }else if (TransCode.CW90.getCode().equals(intfaceTransLog.getTransId())){
 		 	 //卡券转卖 充值到托管账户
 			 BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
-			 List<AccountTxnVo> addList = intfaceTransLog.getAddList();
+			 List<AccountTxnVo> addList = intfaceTransLog.getTransList();
 			 if (addList != null && addList.size() > 0) {
 				 for (AccountTxnVo accountTxnVo : addList) {
 					 BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
