@@ -44,12 +44,12 @@
 		<artifactId>druid</artifactId>
 		<version>1.0.27</version>
 	</dependency>
-	<dependency>
-		<groupId>oracle</groupId>
-		<artifactId>ojdbc</artifactId>
-		<version>6</version>
-		<type>jar</type>
-	</dependency>
+	<!--<dependency>-->
+		<!--<groupId>oracle</groupId>-->
+		<!--<artifactId>ojdbc</artifactId>-->
+		<!--<version>6</version>-->
+		<!--<type>jar</type>-->
+	<!--</dependency>-->
 	<dependency>
 		<groupId>com.github.jsqlparser</groupId>
 		<artifactId>jsqlparser</artifactId>
