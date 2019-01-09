@@ -104,8 +104,17 @@ public class PayService implements IPayService {
         req.setOrderName("转账");
         req.setReceiverCardNo(payCard.getCardNumber());
         req.setReceiverName(payCard.getUserName());
+        //构造员工信息
+        req.setUserChnlId(memberInfo.getOpenId());
+        req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+        req.setUserType(UserType.TYPE100.getCode());
+
+        //构造操作渠道信息
+        req.setTransChnl(TransChnl.CHANNEL9.toString());
         req.setTransAmt(BigDecimal.valueOf(dealInfo));
         req.setUploadAmt(BigDecimal.valueOf(dealInfo));
+        req.setTransId(TransCode.CW91.getCode());
+
         BaseResult baseResult = null;
         try {
             baseResult = accountTransactionFacade.executeWithDraw(req);

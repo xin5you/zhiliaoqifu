@@ -162,9 +162,9 @@ public class CouponService implements ICouponService {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
         String phoneNo = memberInfo.getMobilePhoneNo();
-//        if (!validCodeService.checkValidCode(PhoneValidMethod.PAY, phoneNo, vaildCode)) {
-//            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码无效");
-//        }
+        if (!validCodeService.checkValidCode(PhoneValidMethod.PAY, phoneNo, vaildCode)) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码错误");
+        }
         String dmsKey = IdUtil.getNextId();
         TbCouponProduct query = new TbCouponProduct();
         query.setCouponCode(couponCode);

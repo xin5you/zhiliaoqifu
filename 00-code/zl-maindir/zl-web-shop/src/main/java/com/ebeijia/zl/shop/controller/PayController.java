@@ -54,7 +54,7 @@ public class PayController {
         if (memberInfo == null) {
             throw new AdviceMessenger(406, "参数异常");
         }
-        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, memberInfo.getMobilePhoneNo(), validCode);
+        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, card.getPhoneNo(), validCode);
         if (!valid) {
             throw new AdviceMessenger(403, "验证码有误");
         }
