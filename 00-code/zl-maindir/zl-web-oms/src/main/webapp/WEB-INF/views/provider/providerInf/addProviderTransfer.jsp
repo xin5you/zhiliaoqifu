@@ -69,12 +69,12 @@
                             <c:if test="${entity.inaccountCheck == '1'}">已上账</c:if>
                         </td>
                         <td>
-                            <c:if test="${entity.platformReceiverCheck == '0'}">未到账</c:if>
-                            <c:if test="${entity.platformReceiverCheck == '1'}">已到账</c:if>
+                            <c:if test="${entity.platformReceiverCheck == '0'}">未收款</c:if>
+                            <c:if test="${entity.platformReceiverCheck == '1'}">已收款</c:if>
                         </td>
                         <td>
-                            <c:if test="${entity.companyReceiverCheck == '0'}">未到账</c:if>
-                            <c:if test="${entity.companyReceiverCheck == '1'}">已到账</c:if>
+                            <c:if test="${entity.companyReceiverCheck == '0'}">未收款</c:if>
+                            <c:if test="${entity.companyReceiverCheck == '1'}">已收款</c:if>
                         <td>
                             <c:if test="${entity.evidenceUrl != null && entity.evidenceUrl != ''}">
                                 <div class="evidenceUrlDiv" evidenceImage="${entity.evidenceUrl}" style="height: 200px; width: 200px">
