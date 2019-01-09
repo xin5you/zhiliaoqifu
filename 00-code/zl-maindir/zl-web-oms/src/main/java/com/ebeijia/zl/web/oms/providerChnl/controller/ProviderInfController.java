@@ -303,7 +303,7 @@ public class ProviderInfController {
 	public ModelAndView intoAddProviderTransfer(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("provider/providerInf/addProviderTransfer");
 
-		String providerId = StringUtil.nullToString(request.getParameter("providerId"));
+		String providerId = StringUtil.nullToString(request.getParameter("providerId_"));
 		InaccountOrder order = new InaccountOrder();
 		order.setProviderId(providerId);
 		order.setOrderType(UserType.TYPE300.getCode());
