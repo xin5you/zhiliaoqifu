@@ -198,7 +198,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		/****** consumerBal set begin ***/
 		//员工账户充值 专用专项账户的按比例设置强制消费额度
 
-		if(UserType.TYPE100.equals(account.getAccountType())){
+		if(UserType.TYPE100.getCode().equals(account.getAccountType())){
 			//非 员工通用福利账户 并且 非现金账户
 			BillingType billingType=null;
 			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
@@ -215,7 +215,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 					transLog.setTransAmt(transAmt);
 				}*/
 			}else{
-				if(TransCode.MB50.getCode().equals(transLog.getTransId())){
+				if(TransCode.CW50.getCode().equals(transLog.getTransId())){
 					//所有的专用类型的账户充值 都需要按比例划分到消费额度里
 					BigDecimal coupon_rate=new BigDecimal(0.9); //默认折扣率
 					billingType=getBillingTypeForCache(account.getBId());
@@ -259,7 +259,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		
 		/****** setCouponBal set begin ***/
 		//员工账户消费 扣款
-		if(UserType.TYPE100.equals(account.getAccountType())){
+		if(UserType.TYPE100.getCode().equals(account.getAccountType())){
 
 			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
 
