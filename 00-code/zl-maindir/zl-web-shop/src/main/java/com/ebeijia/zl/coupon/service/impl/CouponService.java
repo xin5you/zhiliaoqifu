@@ -105,7 +105,8 @@ public class CouponService implements ICouponService {
 
         BigDecimal feeDecimal = billingType.getLoseFee();
         feeDecimal = BigDecimal.ONE.add(feeDecimal.negate());
-        BigDecimal txnAmt = BigDecimal.valueOf(sumAmount).multiply(feeDecimal);
+        BigDecimal sumDecimal = BigDecimal.valueOf(sumAmount);
+        BigDecimal txnAmt = sumDecimal.multiply(feeDecimal);
         if (txnAmt.compareTo(BigDecimal.valueOf(0.01D))<0){
             throw new BizException(ResultState.NOT_ACCEPTABLE,"您可得到的金额为0");
         }
@@ -113,7 +114,6 @@ public class CouponService implements ICouponService {
         //提交事务，通讯远端账务系统
 
         try {
-
             AccountRechargeReqVo vo = new AccountRechargeReqVo();
             vo.setMobilePhone(memberInfo.getMobilePhoneNo());
             vo.setFromCompanyId("Coupon Trans");
@@ -121,14 +121,14 @@ public class CouponService implements ICouponService {
 
             AccountTxnVo txnVo = new AccountTxnVo();
             txnVo.setTxnBId(holderExample.getBId());
-            txnVo.setTxnAmt(txnAmt);
-            txnVo.setUpLoadAmt(BigDecimal.valueOf(sumAmount));
+            txnVo.setTxnAmt(sumDecimal);
+            txnVo.setUpLoadAmt(sumDecimal);
             logger.info(String.format("提交卡券转让请求，金额%s，总计卡券数量%s，用户ID%s，卡券类型%s", txnAmt, amount, memberInfo.getMemberId(), couponCode));
             List<AccountTxnVo> transList = new ArrayList<>();
             transList.add(txnVo);
 
             vo.setTransList(transList);
-            vo.setTransId(TransCode.CW50.getCode());
+            vo.setTransId(TransCode.CW90.getCode());
             vo.setTransChnl(TransChnl.CHANNEL9.toString());
 
             vo.setUserType(UserType.TYPE100.getCode());
@@ -137,7 +137,6 @@ public class CouponService implements ICouponService {
             vo.setDmsRelatedKey(dmsKey);
 
             baseResult = accountTransactionFacade.executeRecharge(vo);
-
         } catch (Exception e) {
             logger.error("远端通讯异常", e);
             holderDao.couponShareRollback(holders);

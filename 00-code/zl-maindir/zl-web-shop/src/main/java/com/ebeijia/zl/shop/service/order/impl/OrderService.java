@@ -322,12 +322,12 @@ public class OrderService implements IOrderService {
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
-
+        logger.info(String.format("前端请求入参%s,%s,%s",orderStat,start,limit));
         if (limit == null || limit > 100) {
-            limit = Integer.valueOf(20);
+            limit = 20;
         }
         if (start == null) {
-            start = Integer.valueOf(0);
+            start = 1;
         }
 
         TbEcomPlatfOrder query = new TbEcomPlatfOrder();

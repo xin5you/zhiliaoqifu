@@ -70,6 +70,9 @@ spring:
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.ebeijia.zl.shop.dao.*.domain
+#  config-location: classpath:conf/mybatis-config.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   #typeAliasesPackage: com.cn.thinx.ecom_cms.test.domain
 logging:
   config: classpath:conf/logback-ecom.xml
@@ -185,6 +188,6 @@ HKB_H5_URL: http://hkb.tao-lue.com
 BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/ecom/recharge/mobileRechargeBack
 OPEN_BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/hkb/recharge/mobileRechargeBack
 pagehelper:
-  reasonable: true
+  reasonable: false
   supportMethodsArguments: true
   params: count=countSql
