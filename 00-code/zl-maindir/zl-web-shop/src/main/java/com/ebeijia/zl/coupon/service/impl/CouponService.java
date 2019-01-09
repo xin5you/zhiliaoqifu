@@ -114,13 +114,13 @@ public class CouponService implements ICouponService {
         //提交事务，通讯远端账务系统
 
         try {
+
             AccountRechargeReqVo vo = new AccountRechargeReqVo();
             vo.setMobilePhone(memberInfo.getMobilePhoneNo());
             vo.setFromCompanyId("Coupon Trans");
-            vo.setPriBId(holderExample.getBId());
 
             AccountTxnVo txnVo = new AccountTxnVo();
-            txnVo.setTxnBId(holderExample.getBId());
+            txnVo.setTxnBId(bId);
             txnVo.setTxnAmt(sumDecimal);
             txnVo.setUpLoadAmt(sumDecimal);
             logger.info(String.format("提交卡券转让请求，金额%s，总计卡券数量%s，用户ID%s，卡券类型%s", txnAmt, amount, memberInfo.getMemberId(), couponCode));
@@ -131,10 +131,14 @@ public class CouponService implements ICouponService {
             vo.setTransId(TransCode.CW90.getCode());
             vo.setTransChnl(TransChnl.CHANNEL9.toString());
 
-            vo.setUserType(UserType.TYPE100.getCode());
             vo.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
             vo.setUserChnlId(memberInfo.getOpenId());
+            vo.setUserType(UserType.TYPE100.getCode());
             vo.setDmsRelatedKey(dmsKey);
+            vo.setPriBId(bId);
+            vo.setUploadAmt(sumDecimal);
+            vo.setTransAmt(sumDecimal);
+            vo.setTransNumber(1);
 
             baseResult = accountTransactionFacade.executeRecharge(vo);
         } catch (Exception e) {
