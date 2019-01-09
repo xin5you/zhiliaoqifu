@@ -27,6 +27,7 @@ var addTelProviderInfTransfer = {
         $("#evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
     },
     intoAddProviderTransfer : function() {
+        $("#addTransferFrom").get(0).reset();
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $("#btn-submit").addClass("btn-add-submit");
@@ -222,6 +223,7 @@ var addTelProviderInfTransfer = {
         location.href=url;
     },
     intoEditProviderTransfer : function () {
+        $("#addTransferFrom").get(0).reset();
         $("#evidenceUrlDiv").show();
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
@@ -242,7 +244,8 @@ var addTelProviderInfTransfer = {
                     $("#evidenceUrl").val(data.order.evidenceUrl);
                     $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
-                        $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
+                        //$('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
+                        $('.span3[id=' + item.bid + ']').val(item.transAmt);
                     });
                 }else{
                     Helper.alter(data.msg);
