@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @Date 2019-01-05
  */
 @Service
-public class TbCouponTransLogService extends ServiceImpl<TbCouponTransLogMapper, TbCouponTransLog> implements ITbCouponTransLogService{
+public class TbCouponTransLogService extends ServiceImpl<TbCouponTransLogMapper, TbCouponTransLog> implements ITbCouponTransLogService {
 
 }

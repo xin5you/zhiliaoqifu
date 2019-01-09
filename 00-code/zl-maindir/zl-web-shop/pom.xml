@@ -77,6 +77,11 @@
         </dependency>
         <dependency>
             <groupId>com.ebeijia</groupId>
+            <artifactId>zl-basics-coupon</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ebeijia</groupId>
             <artifactId>zl-basics-member</artifactId>
             <version>${ebj.zl.version}</version>
         </dependency>

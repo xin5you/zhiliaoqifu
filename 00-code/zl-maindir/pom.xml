@@ -72,6 +72,7 @@
         <module>zl-basics-goods</module>
         <module>zl-basics-order</module>
         <module>zl-basics-member</module>
+        <module>zl-basics-coupon</module>
         <module>zl-basics-wechat</module>
         <module>zl-basics-billingtype</module>
         <module>zl-basics-system</module>

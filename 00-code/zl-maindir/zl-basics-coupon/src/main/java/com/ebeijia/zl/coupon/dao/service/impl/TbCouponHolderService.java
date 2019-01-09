@@ -22,7 +22,7 @@ import java.util.List;
  * @Date 2019-01-05
  */
 @Service
-public class TbCouponHolderService extends ServiceImpl<TbCouponHolderMapper, TbCouponHolder> implements ITbCouponHolderService{
+public class TbCouponHolderService extends ServiceImpl<TbCouponHolderMapper, TbCouponHolder> implements ITbCouponHolderService {
 
     private static Logger logger = LoggerFactory.getLogger(TbCouponHolderService.class);
 
