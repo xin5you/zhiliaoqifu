@@ -124,6 +124,7 @@ public class PayController {
     public JsonResult<PageInfo<AccountLogVO>> listAccountDealsForAType(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range,@RequestParam(value = "method",required = false) String method, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
 
         PageInfo<AccountLogVO> deals = payService.listDeals(range, type, method ,start, limit);
+
         return new JsonResult<>(deals);
     }
 
@@ -134,6 +135,7 @@ public class PayController {
     @RequestMapping(value = "/deal/list", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         PageInfo<AccountLogVO> deals = payService.listDeals(range, null,null, start, limit);
+
         return new JsonResult<>(deals);
     }
 

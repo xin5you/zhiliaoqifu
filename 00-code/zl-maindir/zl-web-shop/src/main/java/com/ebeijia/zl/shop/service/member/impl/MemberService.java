@@ -71,6 +71,7 @@ public class MemberService implements IMemberService {
                 throw new AdviceMessenger(500, "数据插入失败，请重试");
             }
         }
+
         return 200;
     }
 

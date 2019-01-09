@@ -46,4 +46,8 @@ public class MemberInfo implements Serializable {
      */
     private String openId;
 
+    private boolean hasAddress;
+
+    private boolean hasCard;
+
 }

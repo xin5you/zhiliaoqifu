@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -86,21 +87,21 @@ public class TbCouponTransLog extends Model<TbCouponTransLog> {
      */
     @TableField("trans_amt")
     @ApiModelProperty(value = "实际交易金额")
-    private Long transAmt;
+    private BigDecimal transAmt;
  
     /**
      * 原交易金额
      */
     @TableField("org_trans_amt")
     @ApiModelProperty(value = "原交易金额")
-    private Long orgTransAmt;
+    private BigDecimal orgTransAmt;
  
     /**
      * 手续费
      */
     @TableField("trans_fee")
     @ApiModelProperty(value = "手续费")
-    private Long transFee;
+    private BigDecimal transFee;
  
     /**
      * 手续费类型NA

@@ -8,6 +8,7 @@ import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponProduct;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponTransLog;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponProductService;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponTransLogService;
@@ -50,8 +51,6 @@ public class CouponService implements ICouponService {
     @Autowired
     private ITbCouponTransLogService transLogDao;
 
-    @Autowired
-    private ITbCouponTransFeeService feeDao;
 
     @Autowired
     private ValidCodeService validCodeService;
@@ -85,10 +84,9 @@ public class CouponService implements ICouponService {
         String dmsKey = IdUtil.getNextId();
 
         List<TbCouponHolder> holders = holderDao.couponShare(memberInfo.getMemberId(), couponCode, price, amount);
+
         TbCouponHolder holderExample = holders.get(0);
-        TbCouponTransFee queryFee = new TbCouponTransFee();
         String bId = SpecAccountTypeEnum.findByBId(holderExample.getBId()).getbId();
-        queryFee.setBId(bId);
 
         String redisResult = jedis.hget("TB_BILLING_TYPE", bId);
         if (redisResult == null) {
@@ -100,17 +98,38 @@ public class CouponService implements ICouponService {
         } catch (IOException e) {
             logger.error("缓存解析异常", e);
         }
-
         BigDecimal feeDecimal = billingType.getLoseFee();
         feeDecimal = BigDecimal.ONE.add(feeDecimal.negate());
         BigDecimal sumDecimal = BigDecimal.valueOf(sumAmount);
         BigDecimal txnAmt = sumDecimal.multiply(feeDecimal);
+
+
+
         if (txnAmt.compareTo(BigDecimal.valueOf(0.01D))<0){
             throw new BizException(ResultState.NOT_ACCEPTABLE,"您可得到的金额为0");
         }
+        //记录交易请求，默认记录失败
+        TbCouponHolder holder = holders.get(0);
+        TbCouponTransLog transLog = new TbCouponTransLog();
+        transLog.setCouponTxnId(IdUtil.getNextId());
+        transLog.setDataStat("0");
+        transLog.setLockVersion(0);
+        transLog.setMemberId(memberInfo.getMemberId());
+        transLog.setCreateTime(System.currentTimeMillis());
+        transLog.setCreateUser("CouponSystem");
+        //TODO DMS
+        transLog.setTransResult("99");
+        transLog.setCouponCode(couponCode);
+        transLog.setCouponAmt(amount);
+        transLog.setTransAmt(txnAmt);
+        transLog.setOrgTransAmt(sumDecimal);
+        transLog.setTransFee(billingType.getLoseFee());
+        transLog.setTransFeeType(billingType.getbId());
+
+        transLogDao.save(transLog);
+
         BaseResult baseResult = null;
         //提交事务，通讯远端账务系统
-
         try {
 
             AccountRechargeReqVo vo = new AccountRechargeReqVo();
@@ -150,6 +169,10 @@ public class CouponService implements ICouponService {
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
         }
         //检查结果，处理异常回滚
+        transLog.setTransResult(baseResult.getCode());
+        transLog.setOrderId(baseResult.getObject().toString());
+        transLogDao.updateById(transLog);
+
         return 200;
     }
 
@@ -228,8 +251,6 @@ public class CouponService implements ICouponService {
         query.setDataStat("0");
         query = couponProductDao.getOne(new QueryWrapper<>(query));
         String bId = SpecAccountTypeEnum.findByBId(query.getBId()).getbId();
-        TbCouponTransFee queryFee = new TbCouponTransFee();
-        queryFee.setBId(bId);
         String redisResult = jedis.hget("TB_BILLING_TYPE", bId);
         if (redisResult == null) {
             throw new BizException(ResultState.ERROR, "缓存异常");

@@ -44,7 +44,7 @@ public class ShopAop {
     @Around(value = "@annotation(com.ebeijia.zl.shop.utils.TokenCheck)")
     public Object tokenAccess(ProceedingJoinPoint pj) throws Throwable {
         //TODO 优化性能，避免执行不必要的逻辑
-        doLog(pj);
+//        doLog(pj);
         String token = getToken();
         if (!token.contains(":")) {
             throw new AdviceMessenger(ResultState.UNAUTHORIZED, "请登录");

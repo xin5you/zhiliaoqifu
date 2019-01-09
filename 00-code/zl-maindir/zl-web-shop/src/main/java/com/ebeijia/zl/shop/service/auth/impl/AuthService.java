@@ -17,7 +17,11 @@ import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomMember;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomMemberAddress;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
+import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberAddressService;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomMemberService;
+import com.ebeijia.zl.shop.dao.member.service.ITbEcomPayCardService;
 import com.ebeijia.zl.shop.service.auth.IAuthService;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
@@ -49,6 +53,12 @@ public class AuthService implements IAuthService {
 
     @Autowired
     private UserInfFacade userInfFacade;
+
+    @Autowired
+    private ITbEcomMemberAddressService addressDao;
+
+    @Autowired
+    private ITbEcomPayCardService cardDao;
 
     @Override
     @ShopTransactional
@@ -87,6 +97,19 @@ public class AuthService implements IAuthService {
         memberInfo.setMobilePhoneNo(phone);
         memberInfo.setUserName(userInf.getUserName());
         memberInfo.setOpenId(member.getOpenId());
+
+        TbEcomMemberAddress temp = new TbEcomMemberAddress();
+        temp.setMemberId(memberId);
+        //检查是否存在地址
+        int count = addressDao.count(new QueryWrapper<>(temp));
+
+        memberInfo.setHasAddress(count>0);
+
+        TbEcomPayCard card = new TbEcomPayCard();
+        card.setMemberId(memberId);
+        count = cardDao.count(new QueryWrapper<>(card));
+
+        memberInfo.setHasCard(count>0);
         //将获取到的token存入redis缓存;
 
         try {
@@ -96,7 +119,7 @@ public class AuthService implements IAuthService {
             e.printStackTrace();
         }
         //前端测试用
-        return new Token(token);
+        return new Token(token,memberInfo);
     }
 
     private TbEcomMember localRegister(String phone, String openId) {

@@ -15,9 +15,12 @@ public class Token implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String token;
-//    private String userId;
+    //    private String userId;
+    private MemberInfo info;
 
-    public Token(String token) {
+    public Token(String token, MemberInfo memberInfo) {
         this.token = token;
+        this.info = memberInfo;
     }
+
 }
