@@ -269,7 +269,10 @@ public class PayService implements IPayService {
                 default:
             }
         }
-        return accountQueryFacade.getAccountLogPage(startNum, pageSize, req);
+        PageInfo<AccountLogVO> accountLogPage = accountQueryFacade.getAccountLogPage(startNum, pageSize, req);
+//        accountLogPage.
+        //TODO
+        return accountLogPage;
     }
 
     private AccountQueryReqVo setQueryDateRange(AccountQueryReqVo req, String range) {

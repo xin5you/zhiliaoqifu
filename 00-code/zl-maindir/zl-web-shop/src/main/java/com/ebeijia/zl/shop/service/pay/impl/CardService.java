@@ -116,6 +116,7 @@ public class CardService implements ICardService {
         temp.setRegion(card.getCounty());
         temp.setIdCard(card.getIdCard());
         temp.setBankName(cardInfo.getBankName());
+        temp.setMobile(card.getPhoneNo());
         //如果没有则添加
         if (one == null) {
             one = temp;
