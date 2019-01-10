@@ -2,4 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.service.account.mapper.IntfaceTransLogMapper">
 
+    <select id="getItfTransLogDmsChannelTransId" parameterType="java.lang.String" resultType="IntfaceTransLog">
+        SELECT
+            itf_primary_key,
+            settle_date,
+            org_itf_primary_key,
+            dms_related_key,
+            org_dms_related_key,
+            trans_desc,
+            trans_number,
+            trans_id,
+            trans_st,
+            ins_code,
+            mchnt_code,
+            shop_code,
+            resp_code,
+            pri_b_id,
+            user_type,
+            user_id,
+            user_chnl,
+            user_chnl_id,
+            product_code,
+            trans_amt,
+            upload_amt,
+            trans_curr_cd,
+            trans_chnl,
+            trans_fee,
+            trans_fee_type,
+            tfr_in_user_id,
+            tfr_in_b_id,
+            tfr_out_user_id,
+            tfr_out_b_id,
+            additional_info,
+            data_stat,
+            remarks,
+            create_user,
+            update_user,
+            create_time,
+            update_time,
+            lock_version
+        FROM
+            tb_intface_trans_log
+        WHERE
+             dms_related_key = #{dmsRelatedKey}
+            AND trans_chnl=#{transChnl}
+            AND data_stat = '0'
+	</select>
 </mapper>

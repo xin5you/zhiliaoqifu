@@ -70,12 +70,7 @@ public class IntfaceTransLogServiceImpl extends ServiceImpl<IntfaceTransLogMappe
 	* 2018年12月4日     zhuqi           v1.0.0
 	 */
 	public IntfaceTransLog getItfTransLogDmsChannelTransId(String dmsRelatedKey,String transChnl){
-		QueryWrapper<IntfaceTransLog> queryWrapper = new QueryWrapper<IntfaceTransLog>();
-		queryWrapper.eq("dms_related_key", dmsRelatedKey);
-		queryWrapper.eq("trans_chnl", transChnl);
-		queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
-		IntfaceTransLog intfaceTransLog= intfaceTransLogMapper.selectOne(queryWrapper);
-		return intfaceTransLog;
+		return intfaceTransLogMapper.getItfTransLogDmsChannelTransId(dmsRelatedKey,transChnl);
 	}
 
 	/**
