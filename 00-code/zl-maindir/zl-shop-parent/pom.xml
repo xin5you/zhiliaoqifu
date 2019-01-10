@@ -14,6 +14,7 @@
         <module>../zl-basics-goods</module>
         <module>../zl-basics-order</module>
         <module>../zl-basics-member</module>
+        <module>../zl-basics-coupon</module>
         <module>../zl-web-shop</module>
         <module>../zl-core-rocketmq</module>
     </modules>

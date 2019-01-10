@@ -12,8 +12,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "/mapper/coupon", description = "用于定义卡券类商品接口")
-@RequestMapping("/mapper/coupon")
+@Api(value = "/coupon", description = "用于定义卡券类商品接口")
+@RequestMapping("/coupon")
 @RestController
 public class CouponController {
 

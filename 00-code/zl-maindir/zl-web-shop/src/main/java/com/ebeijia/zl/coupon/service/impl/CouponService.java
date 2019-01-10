@@ -13,6 +13,7 @@ import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponProductService;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponTransLogService;
 import com.ebeijia.zl.coupon.service.ICouponService;
+import com.ebeijia.zl.coupon.service.ICouponShareService;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
@@ -49,6 +50,9 @@ public class CouponService implements ICouponService {
     private ITbCouponHolderService holderDao;
 
     @Autowired
+    private ICouponShareService shareService;
+
+    @Autowired
     private ITbCouponTransLogService transLogDao;
 
 
@@ -83,7 +87,7 @@ public class CouponService implements ICouponService {
         }
         String dmsKey = IdUtil.getNextId();
 
-        List<TbCouponHolder> holders = holderDao.couponShare(memberInfo.getMemberId(), couponCode, price, amount);
+        List<TbCouponHolder> holders = shareService.couponShare(memberInfo.getMemberId(), couponCode, price, amount);
 
         TbCouponHolder holderExample = holders.get(0);
         String bId = SpecAccountTypeEnum.findByBId(holderExample.getBId()).getbId();
@@ -102,8 +106,6 @@ public class CouponService implements ICouponService {
         feeDecimal = BigDecimal.ONE.add(feeDecimal.negate());
         BigDecimal sumDecimal = BigDecimal.valueOf(sumAmount);
         BigDecimal txnAmt = sumDecimal.multiply(feeDecimal);
-
-
 
         if (txnAmt.compareTo(BigDecimal.valueOf(0.01D))<0){
             throw new BizException(ResultState.NOT_ACCEPTABLE,"您可得到的金额为0");
