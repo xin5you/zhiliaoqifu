@@ -124,7 +124,11 @@ public class PayService implements IPayService {
         }
         //判断result
         if (!baseResult.getCode().equals("00")) {
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
+            if (baseResult.getCode().equals("99")) {
+                throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
+            }else {
+                throw new BizException(ResultState.BALANCE_NOT_ENOUGH,baseResult.getMsg());
+            }
         }
         throw new AdviceMessenger(ResultState.OK, "成功！信息已提交");
     }
