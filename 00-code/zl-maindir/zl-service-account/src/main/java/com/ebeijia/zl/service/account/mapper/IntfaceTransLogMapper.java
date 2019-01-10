@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
+import org.apache.ibatis.annotations.Param;
 
 /**
  *
@@ -15,4 +16,5 @@ import com.ebeijia.zl.facade.account.dto.IntfaceTransLog;
 @Mapper
 public interface IntfaceTransLogMapper extends BaseMapper<IntfaceTransLog> {
 
+    IntfaceTransLog getItfTransLogDmsChannelTransId(@Param("dmsRelatedKey")String dmsRelatedKey,@Param("transChnl")String transChnl);
 }

@@ -10,6 +10,7 @@ import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.req.*;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
+import com.ebeijia.zl.service.account.utils.ITFRespCode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,21 +334,26 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		//如果当前用户已经有提现操作
 		if(AmountUtil.bigger(txnAmt,new BigDecimal(0))){
 
+			//用户当月提现金额比较
+			BigDecimal withDrawCardAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_MONTH_TOTAL_AMT"));
+			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawCardAmt)){
+				return ResultsUtil.error(ITFRespCode.CODE1068.getCode(), ITFRespCode.CODE1068.getValue());
+			}
+
 			//单月提现次数
 			int total=accountWithdrawDetailService.getWithdrawTotalToMonthByUserId(fromUserInf.getUserId(),sDate,eDate);
 			int withDrawTotal=Integer.parseInt(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_MONTH_TOTAL_NUM"));
 			if(total>=withDrawTotal){
-				return ResultsUtil.error("99", "用户单月提现次数已经超过限额");
+				return ResultsUtil.error(ITFRespCode.CODE1065.getCode(), ITFRespCode.CODE1065.getValue());
 			}
 
 			//单日提现金额
 			sDate=DateUtil.getStartTimeInMillis();
 			eDate=DateUtil.getEndTimeInMillis();
 			txnAmt=accountWithdrawDetailService.getWithdrawAmtByUserIdAndTime(fromUserInf.getUserId(),sDate,eDate);
-
 			BigDecimal withDrawDayAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_DAY_TOTAL_AMT"));
 			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawDayAmt)){
-				return ResultsUtil.error("99", "用户单日提现金额已经超过限额");
+				return ResultsUtil.error(ITFRespCode.CODE1067.getCode(), ITFRespCode.CODE1067.getValue());
 			}
 		}
 
@@ -360,7 +366,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		if(AmountUtil.bigger(txnAmt,new BigDecimal(0))){
 			BigDecimal withDrawCardAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_CARD_MONTH_TOTAL_AMT"));
 			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawCardAmt)){
-				return ResultsUtil.error("99", "单张银行卡当月提现金额已经超过限额");
+				return ResultsUtil.error(ITFRespCode.CODE1069.getCode(), ITFRespCode.CODE1069.getValue());
 			}
 			//银行卡单日提现金额
 			sDate=DateUtil.getStartTimeInMillis();
@@ -369,7 +375,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 
 			withDrawCardAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_CARD_DAY_TOTAL_AMT"));
 			if(AmountUtil.bigger(AmountUtil.add(txnAmt,req.getTransAmt()),withDrawCardAmt)){
-				return ResultsUtil.error("99", "单张银行卡当日提现金额已经超过限额");
+				return ResultsUtil.error(ITFRespCode.CODE1069.getCode(), ITFRespCode.CODE1069.getValue());
 			}
 		}
 
