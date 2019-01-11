@@ -62,9 +62,15 @@ public class AccountQueryReqVo implements Serializable {
 
 
 	/**
-	 * 交易类型 0：开户 1：加款 2：减款
+	 * 交易 0：开户 1：加款 2：减款
 	 */
 	private  String accType;
+
+	/**
+	 * 交易类型数组
+	 */
+	private  String[] transIds;
+
 
 	/**
 	 * 开始时间 时间戳
