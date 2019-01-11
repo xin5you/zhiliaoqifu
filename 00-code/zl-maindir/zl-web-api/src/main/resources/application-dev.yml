@@ -28,7 +28,7 @@ spring:
     send-msg-timeout: 5000
   dubbo:
     application:
-      name: zl-web-wechat
+      name: zl-web-api
     consumer:
       check: false
     registry:

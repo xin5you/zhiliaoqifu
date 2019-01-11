@@ -1,5 +1,6 @@
 package com.ebeijia.zl;
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
+import com.maihaoche.starter.mq.annotation.EnableMQConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ import org.springframework.web.WebApplicationInitializer;
 @EnableAutoConfiguration
 @EnableTransactionManagement
 @SpringBootApplication
+@EnableMQConfiguration
 public class WebApiApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
