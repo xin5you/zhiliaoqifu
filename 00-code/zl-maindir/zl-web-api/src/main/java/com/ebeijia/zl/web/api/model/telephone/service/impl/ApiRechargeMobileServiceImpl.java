@@ -6,7 +6,7 @@ import java.util.Date;
 
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.core.activemq.service.MQProducerService;
+import com.ebeijia.zl.core.rocketmq.service.MQProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
