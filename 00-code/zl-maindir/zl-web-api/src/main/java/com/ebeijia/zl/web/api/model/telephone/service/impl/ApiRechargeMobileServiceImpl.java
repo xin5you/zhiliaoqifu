@@ -20,7 +20,6 @@ import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleReqVO;
-import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
@@ -43,7 +42,6 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 	private RetailChnlOrderInfFacade retailChnlOrderInfFacade;
 
 	@Autowired
-	@Qualifier("mqProducerService")
 	private MQProducerService mqProducerService;
 
 	@Autowired

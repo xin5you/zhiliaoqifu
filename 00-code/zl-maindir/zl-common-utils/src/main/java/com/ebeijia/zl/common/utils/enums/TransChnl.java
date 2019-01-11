@@ -20,7 +20,11 @@ public enum TransChnl {
 	CHANNEL10("40007002"),//手机充值（流量充值）
 	CHANNEL11("40009001");//电商平台发起组合支付
 
-	private final String value;
+	private  String value;
+
+	public String getValue() {
+		return value;
+	}
 
 	TransChnl(String value) {
 		this.value = value;
