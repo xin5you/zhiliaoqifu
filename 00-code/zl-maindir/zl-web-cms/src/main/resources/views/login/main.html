@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html class="login_page" xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body>
 		<header th:include="main/navbar::navbar" />
 		<div id="contentwrapper">

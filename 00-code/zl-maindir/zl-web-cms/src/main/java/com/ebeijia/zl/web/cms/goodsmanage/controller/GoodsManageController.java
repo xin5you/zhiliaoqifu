@@ -2,7 +2,9 @@ package com.ebeijia.zl.web.cms.goodsmanage.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.crypto.Data;
 
+import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
@@ -39,11 +41,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "goodsManage")
 public class GoodsManageController {
-
-	public static void main(String[] args) {
-
-	}
-
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -124,6 +121,16 @@ public class GoodsManageController {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomSpecification ecomSpecification = getTbEcomSpecification(req);
+			TbEcomSpecification specOrder = ecomSpecificationService.getGoodsSpecBySpecOrder(ecomSpecification.getSpecOrder());
+			if (specOrder != null) {
+				logger.error("## 商品规格添加失败，规格序号{}已存在", ecomSpecification.getSpecOrder());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getMsg());
+			}
+			TbEcomSpecification specName = ecomSpecificationService.getGoodsSpecBySpecName(ecomSpecification.getSpecName());
+			if (specName != null) {
+				logger.error("## 商品规格添加失败，规格名称{}已存在", ecomSpecification.getSpecName());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getMsg());
+			}
 			result = goodsManageService.addGoodsSpec(ecomSpecification, specImgFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品规格图片上传异常", e.getMessage());
@@ -146,6 +153,16 @@ public class GoodsManageController {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomSpecification ecomSpecification = getTbEcomSpecification(req);
+			TbEcomSpecification specInf = ecomSpecificationService.getGoodsSpecBySpecOrder(ecomSpecification.getSpecOrder());
+			if (specInf != null && !ecomSpecification.getSpecId().equals(specInf.getSpecId())) {
+				logger.error("## 商品规格编辑失败，规格序号{}已存在", ecomSpecification.getSpecOrder());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getMsg());
+			}
+			TbEcomSpecification specName = ecomSpecificationService.getGoodsSpecBySpecName(ecomSpecification.getSpecName());
+			if (specName != null && !ecomSpecification.getSpecId().equals(specInf.getSpecId())) {
+				logger.error("## 商品规格编辑失败，规格名称{}已存在", ecomSpecification.getSpecName());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getMsg());
+			}
 			result = goodsManageService.editGoodsSpec(ecomSpecification, specImgFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品规格图片上传异常", e.getMessage());
@@ -269,6 +286,16 @@ public class GoodsManageController {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomSpecValues specValues = getTbEcomSpecValues(req);
+			TbEcomSpecValues specOrder = ecomSpecValuesService.getGoodsSpecValueBySpecOrder(specValues);
+			if (specOrder != null) {
+				logger.error("## 商品规格值添加失败，规格值序号{}已存在", specValues.getSpecOrder());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getMsg());
+			}
+			TbEcomSpecValues specValueName = ecomSpecValuesService.getGoodsSpecValueBySpecValueName(specValues);
+			if (specValueName != null) {
+				logger.error("## 商品规格值添加失败，规格值名称{}已存在", specValues.getSpecName());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getMsg());
+			}
 			result = goodsManageService.addGoodsSpecValues(specValues, specImageFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品规格值图片上传异常", e.getMessage());
@@ -291,6 +318,16 @@ public class GoodsManageController {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomSpecValues specValues = getTbEcomSpecValues(req);
+			TbEcomSpecValues spec = ecomSpecValuesService.getGoodsSpecValueBySpecOrder(specValues);
+			if (spec != null && !specValues.getSpecValueId().equals(spec.getSpecValueId())) {
+				logger.error("## 商品规格值编辑失败，规格值序号{}已存在", specValues.getSpecOrder());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews14.getMsg());
+			}
+			TbEcomSpecValues specValueName = ecomSpecValuesService.getGoodsSpecValueBySpecValueName(specValues);
+			if (specValueName != null && !specValues.getSpecValueId().equals(spec.getSpecValueId())) {
+				logger.error("## 商品规格值添加失败，规格值名称{}已存在", specValues.getSpecName());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews25.getMsg());
+			}
 			result = goodsManageService.editGoodsSpecValues(specValues, specImageFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品规格值图片上传异常", e.getMessage());
@@ -326,7 +363,7 @@ public class GoodsManageController {
 	}
 
 	/**
-	 * 根据规格ID查询规格值信息
+	 * 根据规格ID查询规格值列表信息
 	 * @param req
 	 * @return
 	 */
@@ -339,6 +376,29 @@ public class GoodsManageController {
 		}
 		TbEcomSpecValues goodsSpecValues = new TbEcomSpecValues();
 		goodsSpecValues.setSpecId(specId);
+		List<TbEcomSpecValues> goodsSpecValueList = ecomSpecValuesService.getGoodsSpecValuesList(goodsSpecValues);
+		return goodsSpecValueList;
+	}
+
+	/**
+	 * 根据productID查询规格值列表信息
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsSpec/getSpecValuesByProductId")
+	public List<TbEcomSpecValues> getSpecValuesByProductId(HttpServletRequest req) {
+		String productId = req.getParameter("productId");
+		if (StringUtil.isNullOrEmpty(productId)) {
+			logger.error("## 查询sku信息失败，productID为空");
+			return null;
+		}
+		TbEcomGoodsSpec goodsSpec = ecomGoodsSpecService.getGoodsSpecByProductId(productId);
+		if (goodsSpec == null) {
+			logger.error("## 根据productID查询sku信息为空");
+			return null;
+		}
+		TbEcomSpecValues goodsSpecValues = new TbEcomSpecValues();
+		goodsSpecValues.setSpecId(goodsSpec.getSpecId());
 		List<TbEcomSpecValues> goodsSpecValueList = ecomSpecValuesService.getGoodsSpecValuesList(goodsSpecValues);
 		return goodsSpecValueList;
 	}
@@ -437,13 +497,27 @@ public class GoodsManageController {
 	@PostMapping(value = "/goodsInf/getGoodsInf")
 	public TbEcomGoods getGoodsInf(HttpServletRequest req) {
 		String goodsId = req.getParameter("goodsId");
-		TbEcomGoods goods = new TbEcomGoods();
 		try {
-			goods = ecomGoodsService.getById(goodsId);
+			TbEcomGoods goods = ecomGoodsService.getById(goodsId);
+			if (goods == null) {
+				logger.error("## 查询商品{}信息为空", goodsId);
+				return null;
+			}
+			if (!StringUtil.isNullOrEmpty(goods.getDefaultSkuCode())) {
+				TbEcomGoodsProduct goodsProduct = ecomGoodsProductService.getGoodsProductBySkuCode(goods.getDefaultSkuCode());
+				if (goodsProduct != null) {
+					goods.setSkuCodeName(goodsProduct.getPageTitle());
+				}
+			}
+			TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getGoodsDetailByGoodsId(goodsId);
+			if (goodsDetail != null) {
+				goods.setDetailName(goodsDetail.getDetailName());
+			}
+			return goods;
 		} catch (Exception e) {
 			logger.error("## 查询商品Spu{}信息异常", goodsId, e);
 		}
-		return goods;
+		return null;
 	}
 
 	/**
@@ -457,6 +531,11 @@ public class GoodsManageController {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomGoods goods = getTbEcomGoodsInf(req);
+			TbEcomGoods goodsSpu = ecomGoodsService.getGoodsBySpuCode(goods.getSpuCode());
+			if (goodsSpu != null) {
+				logger.error("## 商品信息添加失败，SpuCde{}已存在", goods.getSpuCode());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews26.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews26.getMsg());
+			}
 			result = goodsManageService.addGoodsInf(goods, goodsImgFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品信息图片上传异常", e.getMessage());
@@ -479,6 +558,11 @@ public class GoodsManageController {
 		BaseResult<Object> result = new BaseResult<>();
 		try {
 			TbEcomGoods goods = getTbEcomGoodsInf(req);
+			TbEcomGoods goodsSpu = ecomGoodsService.getGoodsBySpuCode(goods.getSpuCode());
+			if (goodsSpu != null && !goods.getGoodsId().equals(goodsSpu.getGoodsId())) {
+				logger.error("## 商品信息编辑失败，SpuCde{}已存在", goods.getSpuCode());
+				return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews26.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews26.getMsg());
+			}
 			result = goodsManageService.editGoodsInf(goods, goodsImgFile);
 		} catch (BizHandlerException e) {
 			logger.error("## 商品信息图片上传异常", e.getMessage());
@@ -988,6 +1072,202 @@ public class GoodsManageController {
 		return goodsProduct;
 	}
 
+	/**
+	 * 商品详情列表（分页）
+	 * @param req
+	 * @param ecomGoodsDetail
+	 * @return
+	 */
+	@RequestMapping(value = "/goodsInf/getGoodsDetailList")
+	public ModelAndView getGoodsDetailList(HttpServletRequest req, TbEcomGoodsDetail ecomGoodsDetail) {
+		ModelAndView mv = new ModelAndView("goodsManage/listGoodsDetail");
 
+		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 
+		String goodsId = req.getParameter("goodsId");
+
+		PageInfo<TbEcomGoodsDetail> pageInfo = new PageInfo<>();
+		TbEcomGoods goodsInf = new TbEcomGoods();
+
+		try {
+			ecomGoodsDetail.setGoodsId(goodsId);
+			pageInfo = goodsManageService.getGoodsDetailListPage(startNum, pageSize, ecomGoodsDetail);
+			goodsInf = ecomGoodsService.getGoodsInfByGoodsId(goodsId);
+		} catch (Exception e) {
+			logger.error("## 查询商品{}详情信息异常", goodsId, e);
+		}
+		mv.addObject("pageInfo", pageInfo);
+		mv.addObject("ecomGoodsDetail", ecomGoodsDetail);
+		mv.addObject("goodsInf", goodsInf);
+		return mv;
+	}
+
+	/**
+	 * 查询商品详情信息
+	 * @param req
+	 * @param ecomSpecification
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/getGoodsDetail")
+	public TbEcomGoodsDetail getGoodsDetail(HttpServletRequest req, TbEcomGoodsDetail ecomGoodsDetail) {
+		TbEcomGoodsDetail goodsDetail = new TbEcomGoodsDetail();
+		try {
+			goodsDetail = ecomGoodsDetailService.getById(ecomGoodsDetail.getDetailId());
+		} catch (Exception e) {
+			logger.error("## 查询主键为[{}]的商品详情信息出错", ecomGoodsDetail.getDetailId(), e);
+		}
+		return goodsDetail;
+	}
+
+	/**
+	 * 商品详情添加
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/addGoodsDetail")
+	public BaseResult<Object> addGoodsDetail(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		String goodsId = req.getParameter("goodsId");
+		if (StringUtil.isNullOrEmpty(goodsId)) {
+			logger.error("## 新增商品详情信息失败,goodsId为空");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		TbEcomGoodsDetail goodsDetail = getTbEcomGoodsDetail(req);
+		if (!ecomGoodsDetailService.save(goodsDetail)) {
+			logger.error("## 新增商品详情信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	/**
+	 * 商品详情编辑
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/editGoodsDetail")
+	public BaseResult<Object> editGoodsDetail(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		String goodsId = req.getParameter("goodsId");
+		String detailId = req.getParameter("detailId");
+		if (StringUtil.isNullOrEmpty(goodsId) || StringUtil.isNullOrEmpty(detailId)) {
+			logger.error("## 编辑商品详情信息失败，goodsId{}或detailId{}为空", goodsId, detailId);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews22.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews22.getMsg());
+		}
+		TbEcomGoodsDetail goodsDetail = getTbEcomGoodsDetail(req);
+		if (!ecomGoodsDetailService.updateById(goodsDetail)) {
+			logger.error("## 编辑商品详情信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews22.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews22.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	/**
+	 * 商品详情删除
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/deleteGoodsDetail")
+	public BaseResult<Object> deleteGoodsDetail(HttpServletRequest req) {
+		BaseResult<Object> result = new BaseResult<>();
+		String detailId = req.getParameter("detailId");
+		if (StringUtil.isNullOrEmpty(detailId)) {
+			logger.error("## 删除商品详情信息失败，detailId{}为空", detailId);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getMsg());
+		}
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+		TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getById(detailId);
+		goodsDetail.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
+		goodsDetail.setUpdateTime(System.currentTimeMillis());
+		goodsDetail.setUpdateUser(user.getId());
+		goodsDetail.setLockVersion(goodsDetail.getLockVersion() + 1);
+
+		if (!ecomGoodsDetailService.updateById(goodsDetail)) {
+			logger.error("## 删除商品详情信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	/**
+	 * 跳转添加商品详情富文本页面
+	 * @param req
+	 * @param ecomGoodsProduct
+	 * @return
+	 */
+	@RequestMapping(value = "/goodsInf/intoAddGoodsIntro")
+	public ModelAndView intoAddGoodsIntro(HttpServletRequest req, TbEcomGoodsProduct ecomGoodsProduct) {
+		ModelAndView mv = new ModelAndView("goodsManage/addGoodsDetailIntro");
+		try {
+			TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getById(ecomGoodsProduct.getDetailId());
+			mv.addObject("goodsDetail", goodsDetail);
+		} catch (Exception e) {
+			logger.error("## 查询商品{}详情信息异常", ecomGoodsProduct.getDetailId(), e);
+		}
+		return mv;
+	}
+
+    /**
+     * 添加商品详情富文本信息
+     * @param req
+     * @return
+     */
+    @PostMapping(value = "/goodsInf/addGoodsDetailIntro")
+    public BaseResult<Object> addGoodsDetailIntro(HttpServletRequest req) {
+        BaseResult<Object> result = new BaseResult<>();
+        String detailId = req.getParameter("detailId");
+		String intro = req.getParameter("intro");
+		TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getById(detailId);
+		if (goodsDetail == null) {
+			logger.error("## 添加商品详情{}富文本信息失败,查询商品详情信息为空", detailId);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews24.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews24.getMsg());
+		}
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+		goodsDetail.setIntro(intro);
+		goodsDetail.setUpdateUser(user.getId());
+		goodsDetail.setUpdateTime(System.currentTimeMillis());
+		goodsDetail.setLockVersion(goodsDetail.getLockVersion() + 1);
+		if (!ecomGoodsDetailService.updateById(goodsDetail)) {
+			logger.error("## 添加商品详情{}富文本信息失败", detailId);
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews24.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews24.getMsg());
+		}
+		return ResultsUtil.success();
+    }
+
+	/**
+	 * 商品详情对象封装
+	 * @param req
+	 * @return
+	 */
+	private TbEcomGoodsDetail getTbEcomGoodsDetail(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String goodsId = req.getParameter("goodsId");
+		String detailId = req.getParameter("detailId");
+		String detailName = req.getParameter("detailName");
+		String remarks = req.getParameter("remarks");
+
+		TbEcomGoodsDetail detail = null;
+		if (!StringUtil.isNullOrEmpty(detailId)) {
+			detail = ecomGoodsDetailService.getById(detailId);
+			detail.setLockVersion(detail.getLockVersion() + 1);
+		} else {
+			detail = new TbEcomGoodsDetail();
+			detail.setDetailId(IdUtil.getNextId());
+			detail.setCreateUser(user.getId());
+			detail.setCreateTime(System.currentTimeMillis());
+			detail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			detail.setLockVersion(0);
+		}
+		detail.setGoodsId(goodsId);
+		detail.setDetailName(detailName);
+		detail.setRemarks(remarks);
+		detail.setUpdateUser(user.getId());
+		detail.setUpdateTime(System.currentTimeMillis());
+		return detail;
+	}
 }

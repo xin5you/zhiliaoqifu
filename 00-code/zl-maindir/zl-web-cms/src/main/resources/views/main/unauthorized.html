@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header"/>
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	
 	<body class="error_page">
 		<div class="error_box">

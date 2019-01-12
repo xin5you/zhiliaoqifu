@@ -20,11 +20,13 @@ import java.util.List;
 @Service
 public class TbEcomGoodsDetailService extends ServiceImpl<TbEcomGoodsDetailMapper, TbEcomGoodsDetail> implements ITbEcomGoodsDetailService{
 
-    @Autowired
-    private TbEcomGoodsDetailMapper ecomGoodsDetailMapper;
-
     @Override
     public List<TbEcomGoodsDetail> getGoodsDetailList(TbEcomGoodsDetail ecomGoodsDetail) {
-        return ecomGoodsDetailMapper.getGoodsDetailList(ecomGoodsDetail);
+        return baseMapper.getGoodsDetailList(ecomGoodsDetail);
+    }
+
+    @Override
+    public TbEcomGoodsDetail getGoodsDetailByGoodsId(String goodsId) {
+        return baseMapper.getGoodsDetailByGoodsId(goodsId);
     }
 }

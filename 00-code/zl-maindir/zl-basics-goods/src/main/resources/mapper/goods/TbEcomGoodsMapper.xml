@@ -376,4 +376,13 @@
  		(SELECT P.PRODUCT_ID FROM TB_ECOM_GOODS_PRODUCT P WHERE P.GOODS_ID = #{goodsId})
  		AND PSO.SUB_ORDER_STATUS = '14'
 	</select>
+
+    <select id="getGoodsBySpuCode" parameterType="String" resultType="TbEcomGoods">
+        select
+          <include refid="ecomGoodsColumns" />
+        from
+          <include refid="tableName" />
+        where g.data_stat = '0'
+        and g.spu_code = #{spuCode}
+    </select>
 </mapper>

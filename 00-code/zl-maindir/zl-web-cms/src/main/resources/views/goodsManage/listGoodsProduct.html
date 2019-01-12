@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body>
 		<header th:include="main/navbar::navbar" />
 		<div id="contentwrapper">
@@ -66,7 +67,8 @@
 						</tbody>
 					</table>
 				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
-			    </form>
+					<button type="button" class="btn btn-primary btn-backGoodsInf">返 回</button>
+				</form>
 			</div>
 		</div>
 		<div id="modal2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

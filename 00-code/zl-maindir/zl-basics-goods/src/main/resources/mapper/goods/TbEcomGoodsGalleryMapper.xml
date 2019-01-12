@@ -33,6 +33,7 @@
           <include refid="tableName"/>
         left join tb_ecom_goods d on d.goods_id = g.goods_id
         where g.data_stat = '0'
+          and g.goods_id = #{goodsId}
         order by g.create_time desc
     </select>
 
@@ -46,13 +47,14 @@
         order by g.create_time desc
     </select>
 
-    <select id="getGoodsGalleryBySort" parameterType="Integer" resultType="TbEcomGoodsGallery">
+    <select id="getGoodsGalleryBySort" parameterType="TbEcomGoodsGallery" resultType="TbEcomGoodsGallery">
         select
           <include refid="goodsGalleryColumns"/>
         from
           <include refid="tableName"/>
         where g.data_stat = '0'
-        and g.sort = #{sort}
+          and g.goods_id = #{goodsId}
+          and g.sort = #{sort}
     </select>
 
 </mapper>

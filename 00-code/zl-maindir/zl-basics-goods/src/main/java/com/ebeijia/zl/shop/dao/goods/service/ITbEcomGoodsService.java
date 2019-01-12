@@ -22,8 +22,6 @@ public interface ITbEcomGoodsService extends IService<TbEcomGoods> {
      */
     List<Goods> getGoodsList(Goods goods);
 
-
-
     /**
      * 查看商品信息
      * @param goods
@@ -61,4 +59,11 @@ public interface ITbEcomGoodsService extends IService<TbEcomGoods> {
      * @return
      */
     TbEcomGoods getGoodsInfByGoodsId(String goodsId);
+
+    /**
+     * 根据spuCode查询商品信息
+     * @param spuCode
+     * @return
+     */
+    TbEcomGoods getGoodsBySpuCode(String spuCode);
 }

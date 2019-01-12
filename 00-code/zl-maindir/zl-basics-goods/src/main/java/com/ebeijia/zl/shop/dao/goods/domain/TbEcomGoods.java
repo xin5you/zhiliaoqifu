@@ -200,6 +200,12 @@ public class TbEcomGoods extends Model<TbEcomGoods> {
     @TableField(exist = false)
     private String bName;
 
+    @TableField(exist = false)
+    private String skuCodeName;
+
+    @TableField(exist = false)
+    private String detailName;
+
     @Override
     protected Serializable pkVal() { 
         return this.goodsId;

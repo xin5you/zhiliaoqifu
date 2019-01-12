@@ -3,34 +3,46 @@
 <mapper namespace="com.ebeijia.zl.shop.dao.goods.mapper.TbEcomGoodsDetailMapper">
 
     <sql id="goodsDetailColumns">
-        detail_id,
-        goods_id,
-        detail_name,
-        intro,
-        params,
-        specs,
-        view_count,
-        buy_count,
-        data_stat,
-        remarks,
-        create_user,
-        update_user,
-        create_time,
-        update_time,
-        lock_version
+        d.detail_id,
+        d.goods_id,
+        d.detail_name,
+        d.intro,
+        d.params,
+        d.specs,
+        d.view_count,
+        d.buy_count,
+        d.data_stat,
+        d.remarks,
+        d.create_user,
+        d.update_user,
+        d.create_time,
+        d.update_time,
+        d.lock_version
     </sql>
 
     <sql id="tableName">
-      tb_ecom_goods_detail
+      tb_ecom_goods_detail d
     </sql>
 
     <select id="getGoodsDetailList" parameterType="TbEcomGoodsDetail" resultType="TbEcomGoodsDetail">
         select
+          <include refid="goodsDetailColumns"/>,
+          g.goods_name as goodsName
+        from
+          <include refid="tableName"/>
+        inner join tb_ecom_goods g on g.goods_id = d.goods_id
+        where d.data_stat = '0'
+          and d.goods_id = #{goodsId}
+        order by d.create_time desc
+    </select>
+
+    <select id="getGoodsDetailByGoodsId" parameterType="String" resultType="TbEcomGoodsDetail">
+        select
           <include refid="goodsDetailColumns"/>
         from
           <include refid="tableName"/>
-        where data_stat = '0'
-        order by create_time desc
+        where d.data_stat = '0'
+        and d.goods_id = #{goodsId}
     </select>
 
 </mapper>

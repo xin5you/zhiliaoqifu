@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body>
 		<header th:include="main/navbar::navbar" />
 		<div id="contentwrapper">
@@ -18,13 +19,10 @@
 				<form id="searchForm" th:action="@{/goodsManage/goodsSpec/getGoodsSpecValuesList}" th:object="${ecomSpecValues}" class="form-inline" method="post">
 					<div class="row-fluid searchForm" id="h_search">
 						<div class="span12">
+							<input type="hidden" id="specId" name="specId" th:value="${ecomSpecValues.specId}"/>
 							<div class="input-prepend">
-								<span class="add-on">规格名称</span>
-								<input id="specName" name="specName" type="text" class="input-medium" th:value="*{specName}" maxlength="50"/>
-							</div>
-							<div class="input-prepend">
-								<span class="add-on">规格值</span>
-								<input id="specValue" name="specValue" type="text" class="input-medium" th:value="*{specValue}" maxlength="100"/>
+								<span class="add-on">规格值名称</span>
+								<input id="specValueName" name="specValueName" type="text" class="input-medium" th:value="*{specValueName}" maxlength="100"/>
 							</div>
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
@@ -39,7 +37,7 @@
 								<th></th>
 								<th>规格值Id</th>
 								<th>所属规格</th>
-								<th>规格名称</th>
+								<th>规格值名称</th>
 								<th>规格值</th>
 				                <th>规格值图片</th>
 								<th>规格值类型</th>

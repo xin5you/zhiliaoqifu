@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body>
 		<header th:include="main/navbar::navbar" />
 		<div id="contentwrapper">
@@ -246,14 +247,13 @@
 									<span class="help-block"></span>
 								</div>
 						</div>
-						<!--<div class="control-group">
-								<label class="control-label">默认sku代码：</label>
+						<div id="skuCodeDiv" class="control-group">
+								<label class="control-label">默认sku：</label>
 								<div class="controls">
-									<select name="default_sku_code" id="default_sku_code" class="span3">
-									</select>
+									<input type="text" class="span3" name="default_sku_code" id="default_sku_code"/>
 									<span class="help-block"></span>
 								</div>
-						</div>-->
+						</div>
 
 						<div class="control-group">
 								<label class="control-label">简介：</label>
@@ -262,14 +262,10 @@
 									<span class="help-block"></span>
 								</div>
 							</div>
-						<div class="control-group">
-								<label class="control-label"><span class="f_req">* </span>商品详情：</label>
+						<div id="detailNameDiv" class="control-group">
+								<label class="control-label">商品详情：</label>
 								<div class="controls">
-									<select name="goods_detail" id="goods_detail" class="span3">
-										<option th:each="g,gStat : ${goodsDetailList}" th:value="${g.detailId}">
-											<span th:text="${g.detailName}"></span>
-										</option>
-									</select>
+									<input type="text" class="span3" name="detail_name" id="detail_name"/>
 									<span class="help-block"></span>
 								</div>
 						</div>
