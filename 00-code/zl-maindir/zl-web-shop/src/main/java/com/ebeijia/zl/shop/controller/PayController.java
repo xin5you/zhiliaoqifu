@@ -1,10 +1,13 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
+import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.service.pay.ICardService;
@@ -13,10 +16,7 @@ import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.utils.TokenCheck;
-import com.ebeijia.zl.shop.vo.CardBindInfo;
-import com.ebeijia.zl.shop.vo.CardInfo;
-import com.ebeijia.zl.shop.vo.JsonResult;
-import com.ebeijia.zl.shop.vo.MemberInfo;
+import com.ebeijia.zl.shop.vo.*;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,8 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Api(value = "/pay", description = "用于定义支付、信用卡相关接口")
 @RequestMapping(value = "/pay")
@@ -41,10 +40,13 @@ public class PayController {
     private ICardService cardService;
 
     @Autowired
-    ValidCodeService validCodeService;
+    private ValidCodeService validCodeService;
 
     @Autowired
-    ShopUtils shopUtils;
+    private ShopUtils shopUtils;
+
+    @Autowired
+    private ITbEcomItxLogDetailService logDetailService;
 
     @TokenCheck(force = true)
     @ApiOperation("绑定银行卡")
@@ -70,6 +72,7 @@ public class PayController {
         return new JsonResult<>(cardInfo);
     }
 
+
     @TokenCheck(force = true)
     @ApiOperation("列出银行卡")
     @RequestMapping(value = "/card/list", method = RequestMethod.GET)
@@ -85,7 +88,6 @@ public class PayController {
 //    public void payOrder(@PathVariable("orderid") String orderId, PayInfo payInfo, @RequestParam("session") String session) {
 //        payService.payOrder(payInfo, session);
 //    }
-
 
     @ApiOperation("列出所有专项账户类型的ID")
     @RequestMapping(value = "/billingtype/list", method = RequestMethod.GET)
@@ -109,23 +111,49 @@ public class PayController {
         return new JsonResult<>(accountVOS);
     }
 
+
     //交易流水
     @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
-    public JsonResult<PageInfo<AccountLogVO>> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+    public JsonResult<LogDetail> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         PageInfo<AccountLogVO> deals = payService.listDeals(range, type,null, start, limit);
-        return new JsonResult<>(deals);
+        LogDetail logDetail = dumb(deals);
+        return new JsonResult<>(logDetail);
     }
+
 
     @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/common/{type}", method = RequestMethod.GET)
-    public JsonResult<PageInfo<AccountLogVO>> listAccountDealsForAType(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range,@RequestParam(value = "method",required = false) String method, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-
+    public JsonResult<LogDetail> listAccountDealsForAType(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range,@RequestParam(value = "method",required = false) String method, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         PageInfo<AccountLogVO> deals = payService.listDeals(range, type, method ,start, limit);
+        LogDetail logDetail = dumb(deals);
+        return new JsonResult<>(logDetail);
+    }
 
-        return new JsonResult<>(deals);
+
+    private LogDetail dumb(PageInfo<AccountLogVO> deals){
+        Map<String,TbEcomItxLogDetail> map = new HashMap<>();
+        deals.getList().stream().forEach(deal -> {
+            TbEcomItxLogDetail id = logDetailService.getById(deal.getItfPrimaryKey());
+            if (id==null){
+                id = new TbEcomItxLogDetail();
+                id.setAmount(10);
+                id.setTitle("来一份大礼包");
+                id.setDescinfo("中号 跳跳糖...");
+                id.setImg("/image");
+                id.setItxKey(deal.getTxnPrimaryKey());
+                id.setPrice((long) (Math.random() * 100000));
+                id.setOutId(IdUtil.getNextId());
+                id.setSourceBid("A00");
+            }
+            map.put(id.getItxKey(),id);
+        });
+        LogDetail logDetail = new LogDetail();
+        logDetail.setDeals(deals);
+        logDetail.setList(map);
+        return logDetail;
     }
 
 
@@ -135,7 +163,6 @@ public class PayController {
     @RequestMapping(value = "/deal/list", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
         PageInfo<AccountLogVO> deals = payService.listDeals(range, null,null, start, limit);
-
         return new JsonResult<>(deals);
     }
 

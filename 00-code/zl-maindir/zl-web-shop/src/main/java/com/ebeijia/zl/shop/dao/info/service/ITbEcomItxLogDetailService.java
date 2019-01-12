@@ -1,6 +1,6 @@
-package com.ebeijia.zl.shop.dao.service;
+package com.ebeijia.zl.shop.dao.info.service;
 
-import com.ebeijia.zl.shop.domain.TbEcomItxLogDetail;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

@@ -2,17 +2,15 @@ package com.ebeijia.zl.shop.service.order.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.shop.constants.ResultState;
-import com.ebeijia.zl.shop.dao.goods.domain.Goods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoods;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsBilling;
-import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsProduct;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsBillingService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsDetailService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsProductService;
-import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsService;
+import com.ebeijia.zl.shop.dao.goods.domain.*;
+import com.ebeijia.zl.shop.dao.goods.service.*;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
+import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
 import com.ebeijia.zl.shop.dao.order.domain.*;
 import com.ebeijia.zl.shop.dao.order.service.*;
 import com.ebeijia.zl.shop.service.goods.IProductService;
@@ -65,6 +63,12 @@ public class OrderService implements IOrderService {
     private ITbEcomDmsRelatedDetailService dmsRelatedDetailDao;
 
     @Autowired
+    private ITbEcomSpecificationService specificationDao;
+
+    @Autowired
+    private ITbEcomSpecValuesService specValuesDao;
+
+    @Autowired
     private IProductService productService;
 
     @Autowired
@@ -72,6 +76,9 @@ public class OrderService implements IOrderService {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private ITbEcomItxLogDetailService logDetailDao;
 
     private static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
@@ -175,6 +182,8 @@ public class OrderService implements IOrderService {
         TbEcomOrderProductItem productItem = orderProductItemDao.getOne(new QueryWrapper<>(queryItem));
         productService.productStoreRecover(productItem.getProductId(), productItem.getProductNum());
         //执行操作
+
+
         return order;
     }
 
@@ -225,6 +234,14 @@ public class OrderService implements IOrderService {
         //创建订单简介，用于账务流水
         StringBuilder descBuilder = new StringBuilder("购买");
 
+        String title = "";
+        String descinfo = "";
+        Long price = 0L;
+        String image = "";
+        Integer amount = 0;
+        String outId = "";
+        String itxKey = "";
+
         //免费订单逻辑
         if (payAmount == 0) {
             //TODO
@@ -236,8 +253,33 @@ public class OrderService implements IOrderService {
                 platfShopOrder.setDmsRelatedKey(dmsRelatedKey);
                 String sOrderId = platfShopOrder.getSOrderId();
                 TbEcomOrderProductItem item = orderProductItemDao.getOrderProductItemBySOrderId(sOrderId);
+                Goods goods = new Goods();
+                goods.setProductId(item.getProductId());
+                goods = goodsDao.getGoods(goods);
+                String ecomName = "";
+                if (goods != null) {
+                    ecomName = "[" + goods.getEcomName() + "]";
+                }
                 itemList.add(item);
                 TbEcomGoodsProduct product = productDao.getById(item.getProductId());
+                TbEcomGoodsProduct goodsProductBySkuCode = productDao.getGoodsProductBySkuCode(product.getSkuCode());
+
+                //TODO INF
+                title = item.getProductName();
+
+                TbEcomSpecValues specValues = null;
+                if (goodsProductBySkuCode != null) {
+                    specValues = specValuesDao.getById(goodsProductBySkuCode.getSpecValueId());
+                }
+                if (specValues != null) {
+                    descinfo = ecomName + product.getPageTitle() + "  " + specValues.getSpecName() + ":" + specValues.getSpecValueName();
+                } else {
+                    descinfo = ecomName + product.getPageTitle();
+                }
+                image = product.getPicUrl();
+                price = item.getProductPrice();
+                amount = item.getProductNum();
+
                 descBuilder.append(item.getProductName());
                 if (iterator.hasNext()) {
                     descBuilder.append(",");
@@ -262,11 +304,30 @@ public class OrderService implements IOrderService {
             }
 
             //处理订单支付过程，调用了payService
-            if (ResultState.OK != payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString())) {
+            BaseResult baseResult = payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString());
+            if (!baseResult.getCode().equals("00")) {
                 logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
                 throw new BizException(ResultState.NOT_ACCEPTABLE, "参数异常");
             }
+            //INF
+            itxKey = (String) baseResult.getObject();
         }
+        //TODO INF
+        TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setTitle(title);
+        log.setPrice(price);
+        log.setDescinfo(descinfo);
+        log.setOutId(payInfo.getOrderId());
+        log.setItxKey(itxKey);
+        log.setAmount(amount);
+        log.setImg(image);
+
+        String bId = payInfo.getTypeB() == null ? payInfo.getTypeA() : payInfo.getTypeB();
+        bId = SpecAccountTypeEnum.findByBId(bId).getbId();
+
+        log.setSourceBid(bId);
+        logDetailDao.save(log);
+
         //修改订单状态
         order.setPayStatus("2");
         //持久化并且锁版本加1
@@ -322,7 +383,7 @@ public class OrderService implements IOrderService {
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
-        logger.info(String.format("前端请求入参%s,%s,%s",orderStat,start,limit));
+        logger.info(String.format("前端请求入参%s,%s,%s", orderStat, start, limit));
         if (limit == null || limit > 100) {
             limit = 20;
         }
@@ -346,6 +407,11 @@ public class OrderService implements IOrderService {
             }
         }
         return new PageInfo<>(result);
+    }
+
+    @Override
+    public Integer disableOrder(String orderId) {
+        return null;
     }
 
     private TbEcomPlatfOrder orderUpdateLocker(TbEcomPlatfOrder order) {
@@ -576,7 +642,7 @@ public class OrderService implements IOrderService {
         productItem.setProductId(sku.getProductId());
         productItem.setProductName(goods.getGoodsName());
         productItem.setProductNum(amounts);
-        productItem.setProductPrice(Integer.valueOf(sku.getGoodsPrice()));
+        productItem.setProductPrice(Long.valueOf(sku.getGoodsPrice()));
         productItem.setDataStat("0");
         productItem.setLockVersion(0);
         //记录操作

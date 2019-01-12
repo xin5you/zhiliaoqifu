@@ -16,6 +16,8 @@ import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
+import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
 import com.ebeijia.zl.shop.dao.member.service.ITbEcomPayCardService;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrder;
@@ -73,10 +75,15 @@ public class PayService implements IPayService {
     @Autowired
     private JedisUtilsWithNamespace jedis;
 
+    @Autowired
+    private ITbEcomItxLogDetailService logDetailDao;
+
+
     Logger logger = LoggerFactory.getLogger(PayService.class);
 
     @Override
     public int transferToCard(Long dealInfo, String validCode, Double session) {
+        String dmsKey = IdUtil.getNextId();
         if (dealInfo<=0){
             throw new BizException(ResultState.NOT_ACCEPTABLE,"提现金额有误");
         }
@@ -114,7 +121,7 @@ public class PayService implements IPayService {
         req.setTransAmt(BigDecimal.valueOf(dealInfo));
         req.setUploadAmt(BigDecimal.valueOf(dealInfo));
         req.setTransId(TransCode.CW91.getCode());
-
+        req.setDmsRelatedKey(dmsKey);
         BaseResult baseResult = null;
         try {
             baseResult = accountTransactionFacade.executeWithDraw(req);
@@ -122,6 +129,27 @@ public class PayService implements IPayService {
             logger.error("支付失败", e);
             throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
+
+        //TODO INF
+        String title = payCard.getUserName();
+        String descinfo = payCard.getCardNumber();
+        String image = "";
+        String outId = dmsKey;
+        String itxKey = (String) baseResult.getObject();
+
+
+        //TODO DMS
+        TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setTitle(title);
+        log.setPrice(dealInfo);
+        log.setDescinfo(descinfo);
+        log.setOutId(outId);
+        log.setItxKey(itxKey);
+        log.setAmount(0);
+        log.setImg(image);
+        log.setSourceBid(SpecAccountTypeEnum.A01.getbId());
+        logDetailDao.save(log);
+
         //判断result
         if (!baseResult.getCode().equals("00")) {
             if (baseResult.getCode().equals("99")) {
@@ -135,7 +163,7 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    public int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
+    public BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
 
         //请求支付
         String result = "";
@@ -173,7 +201,7 @@ public class PayService implements IPayService {
             payOrderDetailsDao.save(payOrderDetails);
         }
 
-        return ResultState.OK;
+        return baseResult;
     }
 
     private TbEcomPayOrderDetails initPayOrderDetailObject() {
@@ -196,7 +224,7 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    public int payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc) {
+    public BaseResult payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc) {
         //请求支付
         String result = "";
         List<AccountTxnVo> txnList = new LinkedList<>();
@@ -230,7 +258,7 @@ public class PayService implements IPayService {
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
         }
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
-        return 200;
+        return baseResult;
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.ebeijia.zl.shop.dao.mapper;
+package com.ebeijia.zl.shop.dao.info.mapper;
 
-	import com.ebeijia.zl.shop.domain.TbEcomItxLogDetail;
+	import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
 

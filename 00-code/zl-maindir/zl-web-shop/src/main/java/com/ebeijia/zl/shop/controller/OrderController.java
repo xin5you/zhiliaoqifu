@@ -75,6 +75,14 @@ public class OrderController {
     }
 
     @TokenCheck(force = true)
+    @ApiOperation("订单删除")
+    @RequestMapping(value = "/goods/disable",method = RequestMethod.POST)
+    public JsonResult<Integer> orderDisable(String orderId){
+        Integer result = orderService.disableOrder(orderId);
+        return new JsonResult<>(result);
+    }
+
+    @TokenCheck(force = true)
     @ApiOperation("订单详情")
     @RequestMapping(value = "/goods/detail/{orderid}",method = RequestMethod.POST)
     public JsonResult<OrderDetailInfo> goodsOrderDetail(@PathVariable("orderid") String orderId){

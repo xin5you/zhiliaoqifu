@@ -1,7 +1,6 @@
 package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
-import com.ebeijia.zl.shop.vo.ChannelOrder;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +22,7 @@ public class ValidCodeController {
     IValidCodeService validCodeService;
 
     @ApiOperation("根据手机号获取验证码，返回发送状态"+
-            "登录：PHONE_VALID_LOGIN\n" + "支付：PHONE_VALID_PAY")
+            "登录：PHONE_VALID_LOGIN\n" + "支付：PHONE_VALID_PAY" + "卡券：PHONE_VALID_COUPON")
     @RequestMapping(value = "/phone",method = RequestMethod.POST)
     public JsonResult<Object> phoneValidCode(@RequestParam("phone")String phoneNum, @RequestParam("method") String method){
         validCodeService.checkFrequency(phoneNum,method);

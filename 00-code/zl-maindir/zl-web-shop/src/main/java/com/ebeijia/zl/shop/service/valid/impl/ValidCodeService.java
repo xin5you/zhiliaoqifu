@@ -128,6 +128,8 @@ public class ValidCodeService implements IValidCodeService {
             return;
         } else if (PhoneValidMethod.PAY.equals(method)) {
             return;
+        }else if(PhoneValidMethod.COUPON.equals(method)){
+            return;
         }
         throw new AdviceMessenger(NOT_ACCEPTABLE, "参数无效");
     }

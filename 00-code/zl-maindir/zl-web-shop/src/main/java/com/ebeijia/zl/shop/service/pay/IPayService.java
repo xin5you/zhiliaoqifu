@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.service.pay;
 
+import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
@@ -15,10 +16,10 @@ public interface IPayService {
     int transferToCard(Long dealInfo,String validCode, Double session);
 
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    int payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc);
+    BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc);
 
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    int payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc);
+    BaseResult payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc);
 
     PageInfo<AccountLogVO> listDeals(String range, String type, String method, String start, String limit);
 

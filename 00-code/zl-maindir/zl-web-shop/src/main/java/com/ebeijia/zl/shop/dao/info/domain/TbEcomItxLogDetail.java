@@ -1,4 +1,4 @@
-package com.ebeijia.zl.shop.domain;
+package com.ebeijia.zl.shop.dao.info.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -37,9 +37,9 @@ public class TbEcomItxLogDetail extends Model<TbEcomItxLogDetail> {
     @ApiModelProperty(value = "title")
     private String title;
  
-    @TableField("desc")
-    @ApiModelProperty(value = "desc")
-    private String desc;
+    @TableField("descinfo")
+    @ApiModelProperty(value = "descinfo")
+    private String descinfo;
  
     @TableField("price")
     @ApiModelProperty(value = "price")
@@ -48,11 +48,14 @@ public class TbEcomItxLogDetail extends Model<TbEcomItxLogDetail> {
     @TableField("amount")
     @ApiModelProperty(value = "amount")
     private Integer amount;
- 
+
     @TableField("out_id")
     @ApiModelProperty(value = "out_id")
     private String outId;
 
+    @TableField("source_bid")
+    @ApiModelProperty(value = "source_bid")
+    private String sourceBid;
 
     @Override
     protected Serializable pkVal() { 
