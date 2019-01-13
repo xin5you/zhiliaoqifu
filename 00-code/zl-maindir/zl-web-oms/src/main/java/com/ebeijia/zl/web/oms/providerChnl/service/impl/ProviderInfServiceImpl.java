@@ -275,23 +275,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		BigDecimal providerFee = new BigDecimal(0);
 		List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
 		if (!StringUtil.isNullOrEmpty(A00)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("A00");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			}
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("A00");
@@ -303,6 +286,24 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("A00");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			}
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -328,22 +329,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B01)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B01");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B01");
@@ -355,6 +340,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B01");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -380,22 +382,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B02)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B02");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B02");
@@ -407,6 +393,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B02");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -432,22 +435,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B03)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B03");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B03");
@@ -459,6 +446,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B03");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -484,22 +488,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B04)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B04");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B04");
@@ -511,6 +499,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B04");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -536,22 +541,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B05)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B05");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B05");
@@ -563,6 +552,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B05");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -588,22 +594,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B06)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B06");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B06");
@@ -615,6 +605,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B06");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -640,22 +647,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B07)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B07");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B07");
@@ -667,6 +658,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B07");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -692,22 +700,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			orderDetailList.add(orderDetail);
 		}
 		if (!StringUtil.isNullOrEmpty(B08)) {
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B08");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(new BigDecimal(1));
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
 			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
 			pbt.setProviderId(providerId);
 			pbt.setBId("B08");
@@ -719,6 +711,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				return resultMap;
 			}
 			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId("B08");
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			if (companyBillingTypeInf == null) {
+				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+				return resultMap;
+			}
+			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+			/*if (companyBillingTypeInf == null) {
+				companyFee = new BigDecimal(platformFee);
+			} else {
+				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
+			}*/
 
 			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
 			orderDetail.setOrderListId(IdUtil.getNextId());
@@ -1097,8 +1106,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfA00.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfA00.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfA00.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfA00 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1177,8 +1186,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB01.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB01 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1257,8 +1266,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB02.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB02.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB02.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB02 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1337,8 +1346,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB03.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB03.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB03.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB03 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1417,8 +1426,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB04.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB04 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1497,8 +1506,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB05.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB05.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB05.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB05 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1577,8 +1586,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB06.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB06 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1657,8 +1666,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB07.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB07 == null) {
 			companyFee = new BigDecimal(platformFee);
@@ -1737,8 +1746,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 				return resultMap;
 			}
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(new BigDecimal(1));
 			providerFee = new BigDecimal(providerBillingTypeInfB08.getFee()).add(new BigDecimal(1));
+			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
 		}
 		/*if (companyBillingTypeInfB08 == null) {
 			companyFee = new BigDecimal(platformFee);
