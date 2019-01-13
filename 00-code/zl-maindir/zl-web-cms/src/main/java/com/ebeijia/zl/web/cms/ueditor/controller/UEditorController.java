@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 @Controller
-@RequestMapping(value = "/ueditor")
+@RequestMapping(value = "ueditor")
 public class UEditorController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -48,6 +48,9 @@ public class UEditorController {
     @Value("${FILE_NEW_PATH}")
     private String FILE_NEW_PATH;
 
+    @Value("${UEDITOR_ROOTPATH}")
+    private String UEDITOR_ROOTPATH;
+
     @Autowired
     private ImageService imageService;
 
@@ -63,9 +66,8 @@ public class UEditorController {
     public void config(HttpServletRequest request, HttpServletResponse response) {
 //        response.setContentType("application/json");
         response.setHeader("Content-Type" , "text/html");
-        //String rootPath = request.getSession().getServletContext().getRealPath("/");
-        //rootPath = rootPath.replace("webapp\\", "resources\\static\\ueditor\\jsp\\");
-        String rootPath = "src/main/resources/static/ueditor/jsp/";
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        rootPath = rootPath + UEDITOR_ROOTPATH;
         try {
             String exec = new ActionEnter(request, rootPath).exec();
             PrintWriter writer = response.getWriter();

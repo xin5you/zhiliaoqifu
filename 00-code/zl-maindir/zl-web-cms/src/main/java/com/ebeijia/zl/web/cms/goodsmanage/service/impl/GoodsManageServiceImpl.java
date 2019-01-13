@@ -926,4 +926,59 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		PageInfo<TbEcomGoodsDetail> page = new PageInfo<TbEcomGoodsDetail>(goodsDetailList);
 		return page;
 	}
+
+	@Override
+	public BaseResult<Object> addGoodsDetail(TbEcomGoodsDetail goodsDetail) {
+		if (!ecomGoodsDetailService.save(goodsDetail)) {
+			logger.error("## 新增商品详情信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		TbEcomGoods goods = ecomGoodsService.getById(goodsDetail.getGoodsId());
+		if (goods == null) {
+			logger.error("## 新增商品详情信息失败,查询商品{}信息为空", goodsDetail.getGoodsId());
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		goods.setGoodsDetail(goodsDetail.getDetailId());
+		goods.setUpdateUser(goodsDetail.getUpdateUser());
+		goods.setUpdateTime(System.currentTimeMillis());
+		goods.setLockVersion(goodsDetail.getLockVersion() + 1);
+		if (!ecomGoodsService.updateById(goods)) {
+			logger.error("## 新增商品详情信息失败,更新商品{}信息失败", goods.getGoodsId());
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		return ResultsUtil.success();
+	}
+
+	@Override
+	public BaseResult<Object> deleteGoodsDetail(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER);
+
+		String detailId = req.getParameter("detailId");
+		TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getById(detailId);
+		goodsDetail.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
+		goodsDetail.setUpdateTime(System.currentTimeMillis());
+		goodsDetail.setUpdateUser(user.getId());
+		goodsDetail.setLockVersion(goodsDetail.getLockVersion() + 1);
+
+		if (!ecomGoodsDetailService.updateById(goodsDetail)) {
+			logger.error("## 删除商品详情信息失败");
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getMsg());
+		}
+
+		TbEcomGoods goods = ecomGoodsService.getById(goodsDetail.getGoodsId());
+		if (goods == null) {
+			logger.error("## 删除商品详情信息失败,查询商品{}信息为空", goodsDetail.getGoodsId());
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		goods.setGoodsDetail("");
+		goods.setUpdateUser(goodsDetail.getUpdateUser());
+		goods.setUpdateTime(System.currentTimeMillis());
+		goods.setLockVersion(goodsDetail.getLockVersion() + 1);
+		if (!ecomGoodsService.updateById(goods)) {
+			logger.error("## 删除商品详情信息失败,更新商品{}信息失败", goods.getGoodsId());
+			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
+		}
+		return ResultsUtil.success();
+	}
 }

@@ -178,4 +178,17 @@ public interface GoodsManageService {
      */
     PageInfo<TbEcomGoodsDetail> getGoodsDetailListPage(int startNum, int pageSize, TbEcomGoodsDetail entity);
 
+    /**
+     * 新增商品详情
+     * @param goodsDetail
+     * @return
+     */
+    BaseResult<Object> addGoodsDetail(TbEcomGoodsDetail goodsDetail);
+
+    /**
+     * 更新商品详情
+     * @param req
+     * @return
+     */
+    BaseResult<Object> deleteGoodsDetail(HttpServletRequest req);
 }

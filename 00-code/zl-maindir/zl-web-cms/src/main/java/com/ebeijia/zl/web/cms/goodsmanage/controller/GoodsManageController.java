@@ -1134,11 +1134,8 @@ public class GoodsManageController {
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
 		}
 		TbEcomGoodsDetail goodsDetail = getTbEcomGoodsDetail(req);
-		if (!ecomGoodsDetailService.save(goodsDetail)) {
-			logger.error("## 新增商品详情信息失败");
-			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews21.getMsg());
-		}
-		return ResultsUtil.success();
+		result = goodsManageService.addGoodsDetail(goodsDetail);
+		return result;
 	}
 
 	/**
@@ -1176,19 +1173,8 @@ public class GoodsManageController {
 			logger.error("## 删除商品详情信息失败，detailId{}为空", detailId);
 			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getMsg());
 		}
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute(Constants.SESSION_USER);
-		TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getById(detailId);
-		goodsDetail.setDataStat(DataStatEnum.FALSE_STATUS.getCode());
-		goodsDetail.setUpdateTime(System.currentTimeMillis());
-		goodsDetail.setUpdateUser(user.getId());
-		goodsDetail.setLockVersion(goodsDetail.getLockVersion() + 1);
-
-		if (!ecomGoodsDetailService.updateById(goodsDetail)) {
-			logger.error("## 删除商品详情信息失败");
-			return ResultsUtil.error(ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getCode(), ExceptionEnum.GoodsSpecNews.GoodsSpecNews23.getMsg());
-		}
-		return ResultsUtil.success();
+		result = goodsManageService.deleteGoodsDetail(req);
+		return result;
 	}
 
 	/**
