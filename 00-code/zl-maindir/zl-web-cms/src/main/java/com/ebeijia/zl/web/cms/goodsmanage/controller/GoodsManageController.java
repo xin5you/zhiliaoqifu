@@ -1256,4 +1256,5 @@ public class GoodsManageController {
 		detail.setUpdateTime(System.currentTimeMillis());
 		return detail;
 	}
+
 }

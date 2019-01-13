@@ -49,10 +49,6 @@
 	<script th:src="@{/ecom/js/common.js}"></script>
 	<script th:src="@{/ecom/js/helper.js}"></script>
 
-	<!--<script th:src="@{/ueditor/ueditor.config.js}"></script>
-	<script th:src="@{/ueditor/ueditor.all.js}"></script>
-	<script th:src="@{/ueditor/ueditor.parse.js}"></script>-->
-	<!--<th:block th:replace="${scripts}"/>-->
     <script th:if="${not #strings.isEmpty(scripts)}" th:each="s,status:${#strings.setSplit(scripts,',')}" th:src="@{${s}}"></script>
 
 	<script>
