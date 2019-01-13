@@ -60,7 +60,12 @@
 			<if test="bId != null and bId != ''">
 				and ai.b_id=#{bId}
 			</if>
-
+			<if test="transIds != null">
+				AND tl.trans_id in
+				<foreach item="transId" index="index" collection="transIds" open="(" separator="," close=")">
+					#{transId}
+				</foreach>
+			</if>
 			<if test="bCode != null and bCode != ''">
 				and bt.`code`=#{bCode}
 			</if>

@@ -1,8 +1,6 @@
 package com.ebeijia.zl.service.account.service.impl;
 
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
-import com.ebeijia.zl.common.utils.enums.TransCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.facade.account.dto.AccountInf;
 import com.ebeijia.zl.facade.account.dto.AccountLog;
 import com.ebeijia.zl.facade.account.dto.TransLog;
@@ -108,7 +105,9 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 			}
 
 			//公司名称
-			if (TransCode.MB50.getCode().equals(s.getTransId()) && UserType.TYPE100.getCode().equals(s.getUserType())){
+			if (TransCode.CW50.getCode().equals(s.getTransId())
+					&& UserType.TYPE100.getCode().equals(s.getUserType())
+					&& TransChnl.CHANNEL0.getValue().equals(s.getTransChnl())){
 				CompanyInf companyInf=companyInfFacade.getCompanyInfById(s.getMchntCode());
 				if(companyInf !=null) {
 					s.setMchntName(companyInf.getName());

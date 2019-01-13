@@ -32,8 +32,8 @@ public interface TbEcomGoodsGalleryMapper extends BaseMapper<TbEcomGoodsGallery>
 
 	/**
 	 * 根据sort查询商品相册时候已存在该序号值
-	 * @param sort
+	 * @param ecomGoodsGallery
 	 * @return
 	 */
-	TbEcomGoodsGallery getGoodsGalleryBySort(Integer sort);
+	TbEcomGoodsGallery getGoodsGalleryBySort(TbEcomGoodsGallery ecomGoodsGallery);
 }

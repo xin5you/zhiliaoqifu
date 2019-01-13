@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="main/header::header('/ueditor/ueditor.config.js,'
+		+'/ueditor/ueditor.all.js,'
+		+'/ueditor/ueditor.parse.js')">
+	</head>
+	<body>
+		<header th:include="main/navbar::navbar" />
+		<div id="contentwrapper">
+ 			<div class="main_content">
+ 				<nav>
+		            <div id="jCrumbs" class="breadCrumb module">
+		                <ul>
+		                    <li><a href="#"><i class="icon-home"></i></a></li>
+		                    <li>商品管理</li>
+		                    <li>商品详情管理</li>
+							<li>富文本添加</li>
+		                </ul>
+		            </div>
+	        	</nav>
+				<form id="searchForm" class="form-inline" method="post">
+					<input type="hidden" id="detailId" name="detailId" th:value="${goodsDetail.detailId}"/>
+					<input type="hidden" id="goodsId" name="goodsId" th:value="${goodsDetail.goodsId}"/>
+					<input type="hidden" id="intro" name="intro" th:value="${goodsDetail.intro}"/>
+					<div id="container" type="text/plain" style="width: 80%;margin-left: auto;margin-top: 5%;"></div>
+					<div class="modal-footer" style="text-align: center;" id="btnDiv">
+						<button type="button" class="btn btn-primary btn-add-detailIntro">提 交</button>
+						<button type="button" class="btn btn-primary btn-backGoodsDetail">返 回</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script th:src="@{/ecom/js/goodsManage/addGoodsDetailIntro.js}"></script>
+	</body>
+</html>
+

@@ -291,7 +291,6 @@ public class CompanyServiceImpl implements CompanyService{
 			return resultMap;
 		}
 
-
 		orderDetail.setCompanyInAmt(new BigDecimal(NumberUtils.RMBYuanToCent(companyInAmt)));
 		orderDetail.setUpdateTime(System.currentTimeMillis());
 		orderDetail.setUpdateUser(user.getId());

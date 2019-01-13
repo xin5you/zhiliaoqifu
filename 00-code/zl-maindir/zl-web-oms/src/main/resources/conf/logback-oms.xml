@@ -2,12 +2,12 @@
 
 <configuration>
 	<!-- to console 控制台输出 --> 
-	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+	<!--<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符
 			<pattern>%d{yyyy-MM-dd HH:mm:ss}|%thread|%-5level|%logger{80}|%method|%line -> %msg%n</pattern>
 		</encoder>
-	</appender>
+	</appender>-->
 	
 	<!--定义本地目录路径，系统自动生成-->
 	<property name="ACCESS_LOG_HOME" value="../logs/oms" />
@@ -55,7 +55,7 @@
 	<root level="info">
 		<appender-ref ref="file—info"/>
 		<appender-ref ref="file—error"/>
-		<appender-ref ref="stdout"/>
+		<!--<appender-ref ref="stdout"/>-->
 	</root>
   
 </configuration>

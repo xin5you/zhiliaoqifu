@@ -20,4 +20,18 @@ public interface ITbEcomSpecValuesService extends IService<TbEcomSpecValues> {
      * @return
      */
     List<TbEcomSpecValues> getGoodsSpecValuesList(TbEcomSpecValues entity);
+
+    /**
+     * 根据specOrder查询规格值信息
+     * @param entity
+     * @return
+     */
+    TbEcomSpecValues getGoodsSpecValueBySpecOrder(TbEcomSpecValues entity);
+
+    /**
+     * 根据SpecValueName查询规格值信息
+     * @param entity
+     * @return
+     */
+    TbEcomSpecValues getGoodsSpecValueBySpecValueName(TbEcomSpecValues entity);
 }

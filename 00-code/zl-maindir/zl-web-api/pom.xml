@@ -10,6 +10,7 @@
   <groupId>com.ebeijia</groupId>
   <artifactId>zl-web-api</artifactId>
   <name>zl-web-api</name>
+	<packaging>war</packaging>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,7 +54,7 @@
         
         <dependency>
             <groupId>com.ebeijia</groupId>
-            <artifactId>zl-core-activemq</artifactId>
+            <artifactId>zl-core-rocketmq</artifactId>
             <version>${ebj.zl.version}</version>
         </dependency>
 
@@ -102,6 +103,7 @@
 	</repositories>
 
 	<build>
+		<finalName>web-api</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

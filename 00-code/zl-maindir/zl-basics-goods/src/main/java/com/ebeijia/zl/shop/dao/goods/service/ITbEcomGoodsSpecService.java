@@ -18,4 +18,11 @@ public interface ITbEcomGoodsSpecService extends IService<TbEcomGoodsSpec> {
      * @return
      */
     TbEcomGoodsSpec getGoodsSpecByGoodsIdAndProductId(TbEcomGoodsSpec ecomGoodsSpec);
+
+    /**
+     * 根据productId查询商品规格关联表信息
+     * @param productId
+     * @return
+     */
+    TbEcomGoodsSpec getGoodsSpecByProductId(String productId);
 }

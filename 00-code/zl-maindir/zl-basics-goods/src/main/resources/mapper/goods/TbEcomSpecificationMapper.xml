@@ -32,4 +32,22 @@
       </if>
       order by create_time desc
     </select>
+
+    <select id="getGoodsSpecBySpecOrder" parameterType="Integer" resultType="TbEcomSpecification">
+        select
+          <include refid="EcomSpecColumns" />
+        from
+          <include refid="tableName" />
+        where data_stat = '0'
+          and spec_order = #{specOrder}
+    </select>
+
+    <select id="getGoodsSpecBySpecName" parameterType="String" resultType="TbEcomSpecification">
+        select
+          <include refid="EcomSpecColumns" />
+        from
+          <include refid="tableName" />
+        where data_stat = '0'
+          and spec_name = #{specName}
+    </select>
 </mapper>

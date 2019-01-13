@@ -22,4 +22,11 @@ public interface TbEcomGoodsDetailMapper extends BaseMapper<TbEcomGoodsDetail> {
 	 * @return
 	 */
 	List<TbEcomGoodsDetail> getGoodsDetailList(TbEcomGoodsDetail ecomGoodsDetail);
+
+	/**
+	 * 根据goodsId查询商品详情信息
+	 * @param goodsId
+	 * @return
+	 */
+	TbEcomGoodsDetail getGoodsDetailByGoodsId(String goodsId);
 }

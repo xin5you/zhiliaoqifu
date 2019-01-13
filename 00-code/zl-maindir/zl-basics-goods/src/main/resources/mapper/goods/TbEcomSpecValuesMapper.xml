@@ -32,15 +32,34 @@
         <include refid="tableName"/>
       left join tb_ecom_specification s on s.spec_id = v.spec_id
       where v.data_stat='0'
-      <if test="specId != null and specId != ''">
-        and s.spec_id = #{specId}
-      </if>
-      <if test="specName != null and specName != ''">
-        and s.spec_name like "%"#{specName}"%"
-      </if>
-      <if test="specValue != null and specValue != ''">
-        and v.spec_value like "%"#{specValue}"%"
+        and v.spec_id = #{specId}
+      <if test="specValueName != null and specValueName != ''">
+        and v.spec_value_name like "%"#{specValueName}"%"
       </if>
       order by v.create_time desc
+    </select>
+
+    <select id="getGoodsSpecValueBySpecOrder" parameterType="Integer" resultType="TbEcomSpecValues">
+        select
+          <include refid="EcomSpecValuesColumns" />
+        from
+          <include refid="tableName" />
+        where v.data_stat = '0'
+        <if test="specId != null and specId != ''">
+            and v.spec_id = #{specId}
+        </if>
+          and v.spec_order = #{specOrder}
+    </select>
+
+    <select id="getGoodsSpecValueBySpecValueName" parameterType="String" resultType="TbEcomSpecValues">
+        select
+          <include refid="EcomSpecValuesColumns" />
+        from
+          <include refid="tableName" />
+        where v.data_stat = '0'
+        <if test="specId != null and specId != ''">
+            and v.spec_id = #{specId}
+        </if>
+        and v.spec_value_name = #{specValueName}
     </select>
 </mapper>

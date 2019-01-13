@@ -30,7 +30,7 @@ public class TbEcomGoodsGalleryService extends ServiceImpl<TbEcomGoodsGalleryMap
     }
 
     @Override
-    public TbEcomGoodsGallery getGoodsGalleryBySort(Integer sort) {
-        return baseMapper.getGoodsGalleryBySort(sort);
+    public TbEcomGoodsGallery getGoodsGalleryBySort(TbEcomGoodsGallery ecomGoodsGallery) {
+        return baseMapper.getGoodsGalleryBySort(ecomGoodsGallery);
     }
 }

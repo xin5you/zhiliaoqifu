@@ -106,6 +106,9 @@ public class TbEcomGoodsDetail extends Model<TbEcomGoodsDetail> {
     @ApiModelProperty(value = "商品详情名称")
     private String detailName;
 
+    @TableField(exist = false)
+    private String goodsName;
+
     @Override
     protected Serializable pkVal() { 
         return this.detailId;

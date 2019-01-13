@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 public class EcomInterceptor extends HandlerInterceptorAdapter {
 
 	private static String[] COMMON_AUTH_URL = { "/logout", "/main", "/error", "/login", "/unauthorized",
-			"/system/user/updatePwdCommit", "/unifiedOrder" };
+			"/system/user/updatePwdCommit", "/unifiedOrder", "/ueditor"};
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
