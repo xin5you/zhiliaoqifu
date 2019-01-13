@@ -147,6 +147,7 @@ public class ValidCodeService implements IValidCodeService {
     }
 
 
+    @Override
     public void checkSession(String method,String session){
         StringBuilder sb = new StringBuilder();
         sb.append(ShopConfig.ID);

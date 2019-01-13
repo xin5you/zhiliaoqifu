@@ -1,6 +1,6 @@
-package com.ebeijia.zl.shop.dao.info.mapper;
+package com.ebeijia.zl.shop.dao.member.mapper;
 
-	import com.ebeijia.zl.shop.dao.info.domain.TbEcomBanner;
+	import com.ebeijia.zl.shop.dao.member.domain.TbEcomBanner;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
 

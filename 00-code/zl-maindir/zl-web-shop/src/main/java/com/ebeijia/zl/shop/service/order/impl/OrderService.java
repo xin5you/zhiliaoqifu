@@ -212,7 +212,7 @@ public class OrderService implements IOrderService {
         if (!memberInfo.getMemberId().equals(order.getMemberId())) {
             throw new BizException(NOT_ACCEPTABLE, "验证失败");
         }
-        if (!order.getPayStatus().equals("0")) {
+        if (!order.getPayStatus().equals("0")||("1").equals(order.getDataStat())) {
             throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
         }
         //乐观锁
@@ -393,6 +393,7 @@ public class OrderService implements IOrderService {
 
         TbEcomPlatfOrder query = new TbEcomPlatfOrder();
         query.setMemberId(memberInfo.getMemberId());
+        query.setDataStat("0");
         if (!StringUtils.isEmpty(orderStat)) {
             query.setPayStatus(orderStat);
         }
@@ -411,7 +412,23 @@ public class OrderService implements IOrderService {
 
     @Override
     public Integer disableOrder(String orderId) {
-        return null;
+        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
+        if (memberInfo == null) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        //获取订单对象
+        TbEcomPlatfOrder order = platfOrderDao.getById(orderId);
+        if (order == null||("1").equals(order.getDataStat())) {
+            throw new BizException(NOT_FOUND, "找不到订单");
+        }
+        //校验身份
+        String memberId = memberInfo.getMemberId();
+        if (StringUtils.isEmpty(memberId) || !memberId.equals(order.getMemberId())) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        order.setDataStat("1");
+        orderUpdateLocker(order);
+        return 200;
     }
 
     private TbEcomPlatfOrder orderUpdateLocker(TbEcomPlatfOrder order) {
@@ -421,7 +438,7 @@ public class OrderService implements IOrderService {
         order.setLockVersion(order.getLockVersion() + 1);
         boolean update = platfOrderDao.update(order, new QueryWrapper<>(query));
         if (!update) {
-            throw new BizException(NOT_ACCEPTABLE, "锁状态异常");
+            throw new BizException(NOT_ACCEPTABLE, "状态异常,请重试");
         }
         return order;
     }

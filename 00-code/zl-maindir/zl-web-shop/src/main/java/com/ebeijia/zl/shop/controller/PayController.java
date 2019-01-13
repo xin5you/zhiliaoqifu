@@ -139,12 +139,11 @@ public class PayController {
             TbEcomItxLogDetail id = logDetailService.getById(deal.getItfPrimaryKey());
             if (id==null){
                 id = new TbEcomItxLogDetail();
-                id.setAmount(10);
-                id.setTitle("来一份大礼包");
-                id.setDescinfo("中号 跳跳糖...");
-                id.setImg("/image");
+                id.setAmount(1);
+                id.setTitle("交易流水");
+                id.setDescinfo("如果您对此流水有疑问，请联系HR");
+                id.setImg("/image/none");
                 id.setItxKey(deal.getTxnPrimaryKey());
-                id.setPrice((long) (Math.random() * 100000));
                 id.setOutId(IdUtil.getNextId());
                 id.setSourceBid("A00");
             }

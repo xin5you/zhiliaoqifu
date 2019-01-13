@@ -10,4 +10,6 @@ public interface IValidCodeService {
     boolean checkValidCode(String method, String phone, String pwd);
 
     boolean discardValidCode(String phoneNum, String method);
+
+    void checkSession(String method, String session);
 }

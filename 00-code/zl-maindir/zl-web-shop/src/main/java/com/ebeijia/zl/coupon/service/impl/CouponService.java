@@ -82,7 +82,7 @@ public class CouponService implements ICouponService {
             throw new BizException(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
         String phoneNo = memberInfo.getMobilePhoneNo();
-        if (!validCodeService.checkValidCode(PhoneValidMethod.PAY, phoneNo, vaildCode)) {
+        if (!validCodeService.checkValidCode(PhoneValidMethod.COUPON, phoneNo, vaildCode)) {
             throw new BizException(ResultState.NOT_ACCEPTABLE, "验证码错误");
         }
 
@@ -219,7 +219,7 @@ public class CouponService implements ICouponService {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
         String phoneNo = memberInfo.getMobilePhoneNo();
-        if (!validCodeService.checkValidCode(PhoneValidMethod.PAY, phoneNo, vaildCode)) {
+        if (!validCodeService.checkValidCode(PhoneValidMethod.COUPON, phoneNo, vaildCode)) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码错误");
         }
         String dmsKey = IdUtil.getNextId();

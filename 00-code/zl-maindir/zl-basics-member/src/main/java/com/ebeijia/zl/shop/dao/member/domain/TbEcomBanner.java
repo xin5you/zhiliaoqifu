@@ -1,4 +1,4 @@
-package com.ebeijia.zl.shop.dao.info.domain;
+package com.ebeijia.zl.shop.dao.member.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

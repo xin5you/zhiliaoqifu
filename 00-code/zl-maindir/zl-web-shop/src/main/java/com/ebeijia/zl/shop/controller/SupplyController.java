@@ -1,9 +1,13 @@
 package com.ebeijia.zl.shop.controller;
 
 import com.ebeijia.zl.shop.service.supply.ISupplyService;
+import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.JsonResult;
+import com.ebeijia.zl.shop.vo.PayInfo;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,8 +18,11 @@ public class SupplyController {
     private ISupplyService supplyService;
 
     //直充接口
-    public JsonResult<Integer> phoneCharge(String phone,Integer amount,String session){
-        Integer i = supplyService.phoneCharge(phone,amount,session);
+    @TokenCheck(force = true)
+    @ApiOperation("手机充值接口")
+    @RequestMapping(value = "/phone/charge", method = RequestMethod.POST)
+    public JsonResult<Integer> phoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo,String session){
+        Integer i = supplyService.phoneCharge(phone,amount,validCode,payInfo,session);
         return new JsonResult<>(i);
     }
 

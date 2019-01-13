@@ -1,8 +1,8 @@
-package com.ebeijia.zl.shop.dao.info.service.impl;
+package com.ebeijia.zl.shop.dao.member.service.impl;
 
-import com.ebeijia.zl.shop.dao.info.domain.TbEcomBanner;
-import com.ebeijia.zl.shop.dao.info.mapper.TbEcomBannerMapper;
-import com.ebeijia.zl.shop.dao.info.service.ITbEcomBannerService;
+import com.ebeijia.zl.shop.dao.member.domain.TbEcomBanner;
+import com.ebeijia.zl.shop.dao.member.mapper.TbEcomBannerMapper;
+import com.ebeijia.zl.shop.dao.member.service.ITbEcomBannerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
