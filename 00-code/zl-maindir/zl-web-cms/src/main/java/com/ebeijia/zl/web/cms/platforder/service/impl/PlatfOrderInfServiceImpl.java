@@ -49,11 +49,9 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 	private ITbEcomOrderExpressPlatfService ecomOrderExpressPlatfService;
 
 	@Override
-	public PageInfo<TbEcomPlatfOrder> getPlatforderListPage(int startNum, int pageSize, TbEcomPlatfOrder entity) {
-		List<TbEcomPlatfOrder> platfOrderList = new ArrayList<TbEcomPlatfOrder>();
-
+	public PageInfo<TbEcomPlatfOrder> getPlatfOrderListPage(int startNum, int pageSize, TbEcomPlatfOrder entity) {
 		PageHelper.startPage(startNum, pageSize);
-		platfOrderList = platfOrderService.getPlatfOrderList(entity);
+		List<TbEcomPlatfOrder> platfOrderList = platfOrderService.getPlatfOrderList(entity);
 		if (platfOrderList != null && platfOrderList.size() > 0) {
 			for (TbEcomPlatfOrder platfOrder : platfOrderList) {
 				platfOrder.setPayStatus(PlatfOrderPayStatEnum.findByCode(platfOrder.getPayStatus()).getValue());
@@ -65,13 +63,11 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 
 	@Override
 	public PageInfo<TbEcomPlatfShopOrder> getPlatfShopOrderListPageByPlatOrder(int startNum, int pageSize, TbEcomPlatfShopOrder entity) {
-		List<TbEcomPlatfShopOrder> platfShopOrderList = new ArrayList<TbEcomPlatfShopOrder>();
-
 		PageHelper.startPage(startNum, pageSize);
-		platfShopOrderList = platfShopOrderService.getPlatfShopOrderListByPlatfOrder(entity);
+		List<TbEcomPlatfShopOrder> platfShopOrderList = platfShopOrderService.getPlatfShopOrderListByPlatfOrder(entity);
 		if (platfShopOrderList != null && platfShopOrderList.size() > 0) {
 			for (TbEcomPlatfShopOrder platfShopOrder : platfShopOrderList) {
-				platfShopOrder.setEcomCode(GoodsEcomCodeTypeEnum.findByCode(platfShopOrder.getEcomCode()).getValue());
+				//platfShopOrder.setEcomCode(GoodsEcomCodeTypeEnum.findByCode(platfShopOrder.getEcomCode()).getValue());
 				platfShopOrder.setSubOrderStatusName(SubOrderStatusEnum.findByCode(platfShopOrder.getSubOrderStatus()).getValue());
 			}
 		}
@@ -87,7 +83,6 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 		platfShopOrderList = platfShopOrderService.getPlatfShopOrderList(entity);
 		if (platfShopOrderList != null && platfShopOrderList.size() > 0) {
 			for (TbEcomPlatfShopOrder platfShopOrder : platfShopOrderList) {
-				platfShopOrder.setEcomCode(GoodsEcomCodeTypeEnum.findByCode(platfShopOrder.getEcomCode()).getValue());
 				platfShopOrder.setSubOrderStatusName(SubOrderStatusEnum.findByCode(platfShopOrder.getSubOrderStatus()).getValue());
 				platfShopOrder.setPayStatus(PlatfOrderPayStatEnum.findByCode(platfShopOrder.getPayStatus()).getValue());
 			}
@@ -122,13 +117,13 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 		ecpressPlatf.setDeliveryTime(System.currentTimeMillis());
 		ecpressPlatf.setPackageStat(PackageStatEnum.packageStat_10.getCode());
 		ecpressPlatf.setIsSign(IsSignEnum.packageStat_0.getCode());
-		ecpressPlatf.setEcomCode(GoodsEcomCodeTypeEnum.ECOM00.getCode());
+		ecpressPlatf.setEcomCode(platfShopOrder.getEcomCode());
 		//封装二级订单物流关联信息
 		TbEcomOrderExpressPlatf orderExpressPlatf = new TbEcomOrderExpressPlatf();
 		orderExpressPlatf.setOPackId(IdUtil.getNextId());
 		orderExpressPlatf.setOItemId(orderProductItem.getOItemId());
 		orderExpressPlatf.setSkuCode(orderProductItem.getProductId());
-		orderExpressPlatf.setSaleCount(orderProductItem.getProductPrice());
+		orderExpressPlatf.setSaleCount(orderProductItem.getProductNum());
 		orderExpressPlatf.setPackId(ecpressPlatf.getPackId());
 		//新增二级订单物流信息
 		if (!ecomExpressPlatfService.save(ecpressPlatf)) {

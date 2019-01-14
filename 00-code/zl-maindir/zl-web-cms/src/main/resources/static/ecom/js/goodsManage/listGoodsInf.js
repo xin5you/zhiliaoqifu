@@ -45,7 +45,7 @@ var listGoodsInf = {
                 /*default_sku_code: { required: true},*/
                 /*market_enable: { required: true},*/
                 /*brief: { required: true},*/
-                goods_detail: { required: true},
+                /*goods_detail: { required: true},*/
                 have_groups: { required: true},
                 is_disabled: { required: true},
                 is_hot: { required: true}
@@ -62,7 +62,7 @@ var listGoodsInf = {
                 /*default_sku_code: { required: "请选择默认的Sku"},*/
                 /*market_enable: { required: "请选择上下架状态"},*/
                 /*brief: { required: "请输入商品简介"},*/
-                goods_detail: { required: "请选择商品富文本ID"},
+                /*goods_detail: { required: "请选择商品富文本ID"},*/
                 have_groups: { required: "请选择商品组合状态"},
                 is_disabled: { required: "请选择商品禁用状态"},
                 is_hot: { required: "请选择商品热销状态"}
@@ -246,10 +246,16 @@ var listGoodsInf = {
 		});
 		if(type == 1){
 			$('#modal_h').html("新增商品信息");
+			$("#skuCodeDiv").hide();
+            $("#detailNameDiv").hide();
 			return;
 		}else if(type == 2){
 			$('#modal_h').html("编辑商品信息");
+            $("#skuCodeDiv").hide();
+            $("#detailNameDiv").hide();
 		} else if(type == 3){
+            $("#skuCodeDiv").show();
+            $("#detailNameDiv").show();
             $('#modal_h').html("商品信息详情");
             $("#goods_name").attr("readonly","readonly");
             $("#goodsImgFile").hide();
@@ -265,6 +271,8 @@ var listGoodsInf = {
             $("#is_disabled").attr("disabled","true");
             $("#is_hot").attr("disabled","true");
             $("#remarks").attr("readonly","readonly");
+            $("#default_sku_code").attr("readonly","readonly");
+            $("#detail_name").attr("readonly","readonly");
             $(".btn-submit").attr("disabled","true");
         }
 
@@ -285,8 +293,8 @@ var listGoodsInf = {
                 $('#b_id').val(data.bid);
                 $('#unit').val(data.unit);
                 $('#weight').val(data.weight);
-                /*$('#default_sku_code').val(data.defaultSkuCode);*/
-                /*$('#market_enable').val(data.marketEnable);*/
+                $('#default_sku_code').val(data.skuCodeName);
+                $('#detail_name').val(data.detailName);
                 $('#brief').val(data.brief);
                 $('#goods_detail').val(data.goodsDetail);
                 $('#have_groups').val(data.haveGroups);
@@ -308,8 +316,8 @@ var listGoodsInf = {
             $("#b_id").removeAttr('disabled');
             $("#unit").removeAttr('disabled');
             $("#weight").removeAttr('readonly');
-            /*$("#default_sku_code").removeAttr('readonly');*/
-            /*$("#market_enable").removeAttr('readonly');*/
+            $("#default_sku_code").removeAttr('readonly');
+            $("#detail_name").removeAttr('readonly');
             $("#brief").removeAttr('readonly');
             $("#goods_detail").removeAttr('disabled');
             $("#have_groups").removeAttr('disabled');
@@ -342,7 +350,7 @@ var listGoodsInf = {
         });
     },
     updateGoodsEnable : function () {
-        $("#btn-updateEnableCommit").attr('disabled',"true");
+        $(".btn-updateEnableCommit").attr('disabled',"true");
         var goodsId = $("#goodsId_").val();
         var marketEnable = $("#marketEnable_").val();
         $.ajax({

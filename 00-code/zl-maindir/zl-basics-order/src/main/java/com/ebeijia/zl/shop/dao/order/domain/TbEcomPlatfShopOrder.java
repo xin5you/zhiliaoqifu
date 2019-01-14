@@ -171,6 +171,9 @@ public class TbEcomPlatfShopOrder extends Model<TbEcomPlatfShopOrder> {
     @TableField(exist = false)
     private String goodsType;
 
+    @TableField(exist = false)
+    private String providerName;
+
     @Override
     protected Serializable pkVal() { 
         return this.sOrderId;

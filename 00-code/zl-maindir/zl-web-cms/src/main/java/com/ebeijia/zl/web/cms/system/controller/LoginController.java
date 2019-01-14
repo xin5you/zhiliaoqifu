@@ -26,6 +26,8 @@ import com.ebeijia.zl.common.utils.enums.LoginType;
 import com.ebeijia.zl.common.utils.tools.MD5Utils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController

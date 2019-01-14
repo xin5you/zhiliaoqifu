@@ -56,6 +56,15 @@
 		where data_stat='0'
 			and law_code = #{lawCode}
 	</select>
+
+	<select id="getProviderInfByOperSolr" parameterType="Integer" resultType="ProviderInf">
+		select
+			<include refid="ColumnResult" />
+		from
+			<include refid="TableName" />
+		where data_stat = '0'
+			and oper_solr = #{operSolr}
+	</select>
 	
 	<update id="updateByDefaultRoute">
 		update

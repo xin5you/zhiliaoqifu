@@ -22,4 +22,18 @@ public interface TbEcomSpecificationMapper extends BaseMapper<TbEcomSpecificatio
 	 * @return
 	 */
 	List<TbEcomSpecification> getGoodsSpecList(TbEcomSpecification ecomSpecification);
+
+	/**
+	 * 根据specOrder查询规格信息
+	 * @param specOrder
+	 * @return
+	 */
+	TbEcomSpecification getGoodsSpecBySpecOrder(Integer specOrder);
+
+	/**
+	 * 根据specName查询规格信息
+	 * @param specName
+	 * @return
+	 */
+	TbEcomSpecification getGoodsSpecBySpecName(String specName);
 }

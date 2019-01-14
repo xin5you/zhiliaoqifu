@@ -65,4 +65,11 @@ public interface TbEcomGoodsMapper extends BaseMapper<TbEcomGoods> {
 	 */
 	TbEcomGoods getGoodsInfByGoodsId(String goodsId);
 
+	/**
+	 * 根据spuCode查询商品信息
+	 * @param spuCode
+	 * @return
+	 */
+	TbEcomGoods getGoodsBySpuCode(String spuCode);
+
 }

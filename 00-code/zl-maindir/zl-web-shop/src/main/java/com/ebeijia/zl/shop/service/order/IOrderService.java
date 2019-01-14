@@ -22,4 +22,6 @@ public interface IOrderService {
     OrderDetailInfo orderDetail(String orderId);
 
     PageInfo<OrderDetailInfo> listOrderDetail(String orderStat, Integer start, Integer limit);
+
+    Integer disableOrder(String orderId);
 }

@@ -31,7 +31,7 @@
 								 <h3 class="heading">编辑账户类型</h3>
 								  <input type="hidden" name="bId" id="bId" value="${billingType.BId }">
 								       <div class="control-group formSep">
-							             <label class="control-label">账户类型名称<span style="color:red">*</span></label>
+										   <label class="control-label">账户类型代码<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="bName" name="bName" value="${billingType.BName }" maxlength="20"/>
 							                 <span class="help-block"></span>

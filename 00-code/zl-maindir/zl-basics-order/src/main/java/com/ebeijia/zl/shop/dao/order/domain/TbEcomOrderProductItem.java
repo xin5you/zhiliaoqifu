@@ -108,7 +108,7 @@ public class TbEcomOrderProductItem extends Model<TbEcomOrderProductItem> {
      */
     @TableField("product_price")
     @ApiModelProperty(value = "价格")
-    private Integer productPrice;
+    private Long productPrice;
  
     @TableField("remarks")
     @ApiModelProperty(value = "remarks")

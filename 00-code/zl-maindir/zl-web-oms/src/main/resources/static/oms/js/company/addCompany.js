@@ -17,7 +17,7 @@ var addCompany = {
         var contacts = $("#contacts").val();
         var phoneNo = $("#phoneNo").val();
         var remarks = $("#remarks").val();
-        var transFlag = $("#transFlag").val();
+        /*var transFlag = $("#transFlag").val();*/
         var isPlatform = $("#isPlatform").val();
         if(name ==''){
             Helper.alert("请输入企业名称");
@@ -50,10 +50,10 @@ var addCompany = {
                 }
             }
         }
-        if (transFlag == null || transFlag == "") {
+        /*if (transFlag == null || transFlag == "") {
             Helper.alert("请选择交易开关");
             return false;
-        }
+        }*/
         if (isPlatform == null || isPlatform == "") {
             Helper.alert("请选择平台标识");
             return false;
@@ -68,7 +68,7 @@ var addCompany = {
                 "address" : address,
                 "contacts" : contacts,
                 "phoneNo" : phoneNo,
-                "transFlag" : transFlag,
+                /*"transFlag" : transFlag,*/
                 "isPlatform" : isPlatform,
                 "remarks" : remarks
             },

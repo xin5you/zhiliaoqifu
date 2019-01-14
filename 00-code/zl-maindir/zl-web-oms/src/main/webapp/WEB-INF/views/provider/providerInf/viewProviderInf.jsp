@@ -69,13 +69,13 @@
 			                                </select>
 						             </div>
 					     		</div>
-					     		<div class="control-group formSep">
+					     		<%--<div class="control-group formSep">
 	                                  <label class="control-label">供应商折扣</label>
 	                                  <div class="controls">
 	                                      <input type="text" class="span6" id="providerRate" name="providerRate" maxlength="8" value="${providerInf.providerRate}" readonly="readonly"/>
 	                                      <span class="help-block"></span>
 	                                  </div>
-                                 </div>
+                                 </div>--%>
 								<%-- <div class="control-group formSep">
 	                                  <label class="control-label">专项类型</label>
 	                                  <div class="controls">

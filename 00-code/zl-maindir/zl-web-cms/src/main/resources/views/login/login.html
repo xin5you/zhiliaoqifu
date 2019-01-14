@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body class="login_page">
 	    <div class="login_box">
 	        <form th:action="@{/doLogin}" th:method="post" id="login_form">

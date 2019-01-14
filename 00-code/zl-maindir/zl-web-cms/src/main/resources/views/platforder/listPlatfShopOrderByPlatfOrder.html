@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body>
 		<header th:include="main/navbar::navbar" />
 		<div id="contentwrapper">
@@ -28,12 +29,9 @@
 								<input id="dmsRelatedKey" name="dmsRelatedKey" type="text" class="input-large" th:value="*{dmsRelatedKey}" maxlength="40"/>
 							</div>
 							<div class="input-prepend">
-	           			   	   	<span class="add-on">电商名称</span>
-	           			   	   	<select id="ecomCode" name="ecomCode" class="input-135">
-	           			   	   		<option value=""><span th:text="请选择" /></option>
-									<option th:each="c,cStat : ${ecomCodeList}" th:value="${c.code}" ><span th:text="${c.value}" /><span th:text="${c.code}" /></option>
-								</select>
-	                     	</div>
+	           			   	   	<span class="add-on">供应商名称</span>
+								<input id="providerName" name="providerName" type="text" class="input-medium" th:value="*{providerName}" maxlength="20"/>
+							</div>
 							<div class="input-prepend">
 	           			   	   	<span class="add-on">订单状态</span>
 	           			   	   	<select id="subOrderStatus" name="subOrderStatus" class="input-135">
@@ -53,7 +51,7 @@
 								<th></th>
 								<th>二级订单编号</th>
 								<th>一级订单编号</th>
-								<th>电商名称</th>
+								<th>供应商名称</th>
 								<th>外部交易流水</th>
 				                <th>订单金额(元)</th>
 				                <th>配送费用(元)</th>
@@ -67,10 +65,10 @@
 								<td><span th:text="${platfShopOrderStat.count}"></span></td>
 								<td><span th:text="${platfShopOrder.sOrderId}"></span></td>
 								<td><span th:text="${platfShopOrder.orderId}"></span></td>
-								<td><span th:text="${platfShopOrder.ecomCode}"></span></td>
+								<td><span th:text="${platfShopOrder.providerName}"></span></td>
 								<td><span th:text="${platfShopOrder.dmsRelatedKey}"></span></td>
-				                <td><span th:text="${platfShopOrder.payAmt  / 100}"></span></td>
-								<td><span th:text="${platfShopOrder.shippingFreightPrice  / 100}"></span></td>
+				                <td><span th:if="${not #strings.isEmpty(platfShopOrder.payAmt)}" th:text="${platfShopOrder.payAmt  / 100}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfShopOrder.shippingFreightPrice)}" th:text="${platfShopOrder.shippingFreightPrice  / 100}"></span></td>
 								<td><span th:text="${platfShopOrder.subOrderStatusName}"></span></td>
 								<td><span th:text="${#dates.format(platfShopOrder.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 <!-- 				                <td> -->
@@ -87,7 +85,6 @@
 		</div>
 		<script th:src="@{/ecom/js/platforder/listPlatfShopOrderByPlatfOrder.js}"></script>
 		<script th:inline="javascript">
-			$("#ecomCode").val(/*[[${platfShopOrder.ecomCode}]]*/);
 			$("#subOrderStatus").val(/*[[${platfShopOrder.subOrderStatus}]]*/);
 		</script>
 	</body>

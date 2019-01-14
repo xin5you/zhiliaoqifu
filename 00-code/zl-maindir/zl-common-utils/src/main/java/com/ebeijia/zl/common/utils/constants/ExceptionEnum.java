@@ -343,7 +343,13 @@ public class ExceptionEnum {
 		GoodsSpecNews17("17", "删除商品Sku失败"),
 		GoodsSpecNews18("18", "SkuCode已存在，请重新输入"),
 		GoodsSpecNews19("19", "必须设置一个Sku为默认"),
-		GoodsSpecNews20("20", "该Sku为默认，不能删除");
+		GoodsSpecNews20("20", "该Sku为默认，不能删除"),
+		GoodsSpecNews21("21", "新增商品详情信息失败"),
+		GoodsSpecNews22("22", "编辑商品详情信息失败"),
+		GoodsSpecNews23("23", "删除商品详情信息失败"),
+		GoodsSpecNews24("24", "添加商品详情富文本信息失败"),
+		GoodsSpecNews25("25", "名称已存在，请重新输入"),
+		GoodsSpecNews26("26", "SpuCode已存在，请重新输入");
 
 		private String code;
 		private String msg;

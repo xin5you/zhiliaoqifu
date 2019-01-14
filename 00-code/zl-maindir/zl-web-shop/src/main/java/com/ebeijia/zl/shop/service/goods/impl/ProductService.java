@@ -110,6 +110,13 @@ public class ProductService implements IProductService {
 
         //获取最大最小金额
         List<TbEcomGoodsProduct> products = productDao.list(new QueryWrapper<>(query));
+        goodsDetailInfo.setHasStore(false);
+        for (TbEcomGoodsProduct p : products) {
+            if (p.getIsStore().compareTo(0) > 0) {
+                goodsDetailInfo.setHasStore(true);
+                break;
+            }
+        }
         products.sort(Comparator.comparing(TbEcomGoodsProduct::getGoodsPrice));
         goodsDetailInfo.setMinPrice(Long.valueOf(products.get(0).getGoodsPrice()));
         goodsDetailInfo.setMaxPrice(Long.valueOf(products.get(products.size() - 1).getGoodsPrice()));

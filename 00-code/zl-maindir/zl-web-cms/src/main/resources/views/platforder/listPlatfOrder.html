@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="main/header::header" />
+<!--<head th:include="main/header::header"/>-->
+<head th:replace="main/header::header('')"/>
 	<body>
 		<header th:include="main/navbar::navbar" />
 		<div id="contentwrapper">
@@ -88,13 +89,13 @@
 								<td><span th:text="${platfOrder.memberId}"></span></td>
 								<td><span th:text="${platfOrder.mobilePhoneNo}"></span></td>
 								<td><span th:text="${platfOrder.personalName}"></span></td>
-				                <td><span th:text="${platfOrder.orderPrice  / 100}"></span></td>
-				                <td><span th:text="${platfOrder.orderFreightAmt  / 100}"></span></td>
+				                <td><span th:if="${not #strings.isEmpty(platfOrder.orderPrice)}" th:text="${platfOrder.orderPrice / 100}"></span></td>
+				                <td><span th:if="${not #strings.isEmpty(platfOrder.orderFreightAmt)}" th:text="${platfOrder.orderFreightAmt / 100}"></span></td>
 								<td><span th:text="${platfOrder.payType}"></span></td>
-								<td><span th:text="${platfOrder.payAmt  / 100}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfOrder.payAmt)}" th:text="${platfOrder.payAmt / 100}"></span></td>
 								<td><span th:text="${platfOrder.payStatus}"></span></td>
 								<td><span th:text="${#dates.format(platfOrder.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
-								<td><span th:text="${#dates.format(platfOrder.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfOrder.payTime)}" th:text="${#dates.format(platfOrder.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 				                <td>
 									<span th:if="${platfOrder.dataStat == '0'}">
 										<a th:attr="orderId=${platfOrder.orderId}" title="二级订单管理" class="btn-mini btn-edit" href="#"><i class="icon-search"></i></a>

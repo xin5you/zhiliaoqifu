@@ -23,16 +23,17 @@
           <include refid="MemberInfColumns" />,
           p.personal_name as personalName,
           p.mobile_phone_no as mobilePhoneNo
-        from tb_ecom_member m, tb_person_inf p
-        where m.person_id = p.personal_id
+        from tb_ecom_member m, tb_user_inf u, tb_person_inf p
+        where u.user_id = m.user_id
+        and p.user_id = u.user_id
           and m.data_stat = '0'
           and p.data_stat = '0'
         <if test="personalName != null and personalName != '' ">
-          and p.personal_name like '%' || #{personalName} || '%'
+          and p.personal_name like "%"#{personalName}"%"
         </if>
 
         <if test="mobilePhoneNo != null and mobilePhoneNo != '' ">
-          and p.mobile_phone_no =#{mobilePhoneNo}
+          and p.mobile_phone_no = #{mobilePhoneNo}
         </if>
         order by m.update_time desc
     </select>

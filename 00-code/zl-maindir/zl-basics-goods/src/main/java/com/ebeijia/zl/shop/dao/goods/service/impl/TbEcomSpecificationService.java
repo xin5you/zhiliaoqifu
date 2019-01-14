@@ -20,11 +20,18 @@ import java.util.List;
 @Service
 public class TbEcomSpecificationService extends ServiceImpl<TbEcomSpecificationMapper, TbEcomSpecification> implements ITbEcomSpecificationService{
 
-    @Autowired
-    private TbEcomSpecificationMapper ecomSpecificationMapper;
-
     @Override
     public List<TbEcomSpecification> getGoodsSpecList(TbEcomSpecification ecomSpecification) {
-        return ecomSpecificationMapper.getGoodsSpecList(ecomSpecification);
+        return baseMapper.getGoodsSpecList(ecomSpecification);
+    }
+
+    @Override
+    public TbEcomSpecification getGoodsSpecBySpecOrder(Integer specOrder) {
+        return baseMapper.getGoodsSpecBySpecOrder(specOrder);
+    }
+
+    @Override
+    public TbEcomSpecification getGoodsSpecBySpecName(String specName) {
+        return baseMapper.getGoodsSpecBySpecName(specName);
     }
 }

@@ -58,7 +58,7 @@ public class BillingTypeController {
 		try {
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-			pageList = billingTypeInfService.getBillingTypeInfListPage(startNum, pageSize, billingTypeInf);//将创建的专用账户类型对象传入查询专用账户类型列表的参数中，实现通过专用账户类型名称来模糊查询列表的功能，name为空则为查询所有
+			pageList = billingTypeInfService.getBillingTypeInfListPage(startNum, pageSize, billingTypeInf);
 
 		} catch (Exception e) {
 			logger.error("## 查询专用账户类型列表信息出错", e);
@@ -70,6 +70,12 @@ public class BillingTypeController {
 		return mv;
 	}
 
+	/**
+	 * 跳转新增专项类型信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoAddBillingType")
 	public ModelAndView intoAddBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("billingType/addBillingType");
@@ -77,6 +83,12 @@ public class BillingTypeController {
 		return mv;
 	}
 
+	/**
+	 * 新增专项类型信息提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addBillingType")
 	@ResponseBody
 	public Map<String, Object> addBillingType(HttpServletRequest req, HttpServletResponse response) {
@@ -99,6 +111,12 @@ public class BillingTypeController {
 		return resultMap;
 	}
 
+	/**
+	 * 跳转编辑专项类型信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoEditBillingType")
 	public ModelAndView intoEditBillingType(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("billingType/editBillingType");
@@ -111,6 +129,12 @@ public class BillingTypeController {
 		return mv;
 	}
 
+	/**
+	 * 编辑专项类型信息提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/editBillingType")
 	@ResponseBody
 	public Map<String, Object> editBillingType(HttpServletRequest req, HttpServletResponse response) {
@@ -137,6 +161,12 @@ public class BillingTypeController {
 		return resultMap;
 	}
 
+	/**
+	 * 删除专项类型提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/deleteBillingTypeCommit")
 	@ResponseBody
 	public Map<String, Object> deleteUserCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -160,6 +190,11 @@ public class BillingTypeController {
 		return resultMap;
 	}
 
+	/**
+	 * 专项类型基本信息封装方法
+	 * @param req
+	 * @return
+	 */
 	private BillingType getBillingTypeInf(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);

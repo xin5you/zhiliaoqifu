@@ -21,9 +21,6 @@ import com.ebeijia.zl.service.telrecharge.service.ProviderInfService;
  */
 @Service
 public class ProviderInfServiceImpl extends ServiceImpl<ProviderInfMapper, ProviderInf> implements ProviderInfService{
-	
-	@Autowired
-	private ProviderInfMapper providerInfMapper;
 
 	@Override
 	public boolean save(ProviderInf entity) {
@@ -41,16 +38,21 @@ public class ProviderInfServiceImpl extends ServiceImpl<ProviderInfMapper, Provi
 	}
 
 	public int updateByDefaultRoute(){
-		return providerInfMapper.updateByDefaultRoute();
+		return baseMapper.updateByDefaultRoute();
 	}
 	
 	public List<ProviderInf> getProviderInfList(ProviderInf providerInf){
 		
-		return providerInfMapper.getList(providerInf);
+		return baseMapper.getList(providerInf);
 	}
 
 	@Override
 	public ProviderInf getProviderInfByLawCode(String lawCode) {
-		return providerInfMapper.getProviderInfByLawCode(lawCode);
+		return baseMapper.getProviderInfByLawCode(lawCode);
+	}
+
+	@Override
+	public ProviderInf getProviderInfByOperSolr(Integer operSolr) {
+		return baseMapper.getProviderInfByOperSolr(operSolr);
 	}
 }

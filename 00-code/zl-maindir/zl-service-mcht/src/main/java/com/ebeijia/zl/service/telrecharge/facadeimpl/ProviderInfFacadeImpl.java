@@ -101,6 +101,11 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	}
 
 	@Override
+	public ProviderInf getProviderInfByOperSolr(Integer operSolr) throws Exception {
+		return providerInfService.getProviderInfByOperSolr(operSolr);
+	}
+
+	@Override
 	public ProviderBillingTypeInf getProviderBillingTypeInfById(String id) {
 		return providerBillingTypeInfService.getById(id);
 	}

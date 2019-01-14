@@ -19,6 +19,8 @@ import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
+import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
@@ -42,6 +44,9 @@ public class CouponService implements ICouponService {
 
     @Autowired
     private ShopUtils shopUtils;
+
+    @Autowired
+    private ITbEcomItxLogDetailService logDetailDao;
 
     @Autowired
     private ITbCouponProductService couponProductDao;
@@ -77,9 +82,15 @@ public class CouponService implements ICouponService {
             throw new BizException(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
         String phoneNo = memberInfo.getMobilePhoneNo();
-        if (!validCodeService.checkValidCode(PhoneValidMethod.PAY, phoneNo, vaildCode)) {
+        if (!validCodeService.checkValidCode(PhoneValidMethod.COUPON, phoneNo, vaildCode)) {
             throw new BizException(ResultState.NOT_ACCEPTABLE, "验证码错误");
         }
+
+        TbCouponHolder couponHolder = new TbCouponHolder();
+        couponHolder.setMemberId(memberInfo.getMemberId());
+        couponHolder.setPrice(price);
+        couponHolder.setCouponCode(couponCode);
+        couponHolder = holderDao.getCouponHolder(couponHolder);
         //判断金额
         Long sumAmount = price * amount.longValue();
         if (sumAmount <= 0L) {
@@ -90,6 +101,7 @@ public class CouponService implements ICouponService {
         List<TbCouponHolder> holders = shareService.couponShare(memberInfo.getMemberId(), couponCode, price, amount);
 
         TbCouponHolder holderExample = holders.get(0);
+
         String bId = SpecAccountTypeEnum.findByBId(holderExample.getBId()).getbId();
 
         String redisResult = jedis.hget("TB_BILLING_TYPE", bId);
@@ -107,11 +119,10 @@ public class CouponService implements ICouponService {
         BigDecimal sumDecimal = BigDecimal.valueOf(sumAmount);
         BigDecimal txnAmt = sumDecimal.multiply(feeDecimal);
 
-        if (txnAmt.compareTo(BigDecimal.valueOf(0.01D))<0){
-            throw new BizException(ResultState.NOT_ACCEPTABLE,"您可得到的金额为0");
+        if (txnAmt.compareTo(BigDecimal.valueOf(0.01D)) < 0) {
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "您可得到的金额为0");
         }
         //记录交易请求，默认记录失败
-        TbCouponHolder holder = holders.get(0);
         TbCouponTransLog transLog = new TbCouponTransLog();
         transLog.setCouponTxnId(IdUtil.getNextId());
         transLog.setDataStat("0");
@@ -120,6 +131,14 @@ public class CouponService implements ICouponService {
         transLog.setCreateTime(System.currentTimeMillis());
         transLog.setCreateUser("CouponSystem");
         //TODO DMS
+
+        //TODO INF
+        String title = couponHolder.getCouponName();
+        String descinfo = couponHolder.getCouponDesc();
+        String image = couponHolder.getIconImage();
+        String outId = dmsKey;
+        String itxKey = "";
+
         transLog.setTransResult("99");
         transLog.setCouponCode(couponCode);
         transLog.setCouponAmt(amount);
@@ -127,7 +146,6 @@ public class CouponService implements ICouponService {
         transLog.setOrgTransAmt(sumDecimal);
         transLog.setTransFee(billingType.getLoseFee());
         transLog.setTransFeeType(billingType.getbId());
-
         transLogDao.save(transLog);
 
         BaseResult baseResult = null;
@@ -160,6 +178,7 @@ public class CouponService implements ICouponService {
             vo.setTransNumber(1);
 
             baseResult = accountTransactionFacade.executeRecharge(vo);
+            itxKey = (String) baseResult.getObject();
         } catch (Exception e) {
             logger.error("远端通讯异常", e);
             holderDao.couponShareRollback(holders);
@@ -170,6 +189,20 @@ public class CouponService implements ICouponService {
             holderDao.couponShareRollback(holders);
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
         }
+
+        //TODO DMS
+        TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setTitle(title);
+        log.setPrice(price);
+        log.setDescinfo(descinfo);
+        log.setOutId(outId);
+        log.setItxKey(itxKey);
+        log.setAmount(amount);
+        log.setImg(image);
+        log.setSourceBid(bId);
+        logDetailDao.save(log);
+        logger.info("记录日志详情：", log);
+
         //检查结果，处理异常回滚
         transLog.setTransResult(baseResult.getCode());
         transLog.setOrderId(baseResult.getObject().toString());
@@ -180,18 +213,30 @@ public class CouponService implements ICouponService {
 
     @Override
     public int buyCoupon(String vaildCode, String couponCode, Integer amount) {
+
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
         }
         String phoneNo = memberInfo.getMobilePhoneNo();
-        if (!validCodeService.checkValidCode(PhoneValidMethod.PAY, phoneNo, vaildCode)) {
+        if (!validCodeService.checkValidCode(PhoneValidMethod.COUPON, phoneNo, vaildCode)) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码错误");
         }
         String dmsKey = IdUtil.getNextId();
         TbCouponProduct query = new TbCouponProduct();
+
         query.setCouponCode(couponCode);
         query = couponProductDao.getOne(new QueryWrapper<>(query));
+
+
+        //TODO INF
+        String title = query.getCouponName();
+        String descinfo = query.getCouponDesc();
+        Long price = query.getPrice();
+        String image = query.getIconImage();
+        String bId = query.getBId();
+        String outId = "";
+        String itxKey = "";
         long sum = query.getPrice() * amount;
         if (sum < 0) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "您购买的数量有误");
@@ -201,9 +246,9 @@ public class CouponService implements ICouponService {
         accountTxnVo.setTxnAmt(BigDecimal.valueOf(sum));
         accountTxnVo.setTxnBId(query.getBId());
 
-        int i = payService.payCoupon(accountTxnVo, memberInfo.getOpenId(), dmsKey, String.format("购买卡券%s", query.getCouponName()));
-
-        if (i == 200) {
+        BaseResult baseResult = payService.payCoupon(accountTxnVo, memberInfo.getOpenId(), dmsKey, String.format("购买卡券%s", query.getCouponName()));
+        itxKey = (String) baseResult.getObject();
+        if (baseResult.getCode().equals("00")) {
             TbCouponHolder h = new TbCouponHolder();
             h.setTransStat("0");
             h.setDataStat("0");
@@ -217,11 +262,23 @@ public class CouponService implements ICouponService {
             h.setCreateTime(System.currentTimeMillis());
             h.setCreateUser("CouponSystem");
             for (int k = 0; k < amount; k++) {
-                h.setCouponId(IdUtil.getNextId());
+                outId = IdUtil.getNextId();
+                h.setCouponId(outId);
                 holderDao.save(h);
             }
         }
         //TODO DMS
+        TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setTitle(title);
+        log.setPrice(price);
+        log.setDescinfo(descinfo);
+        log.setOutId(outId);
+        log.setItxKey(itxKey);
+        log.setAmount(amount);
+        log.setImg(image);
+        log.setSourceBid(bId);
+        logDetailDao.save(log);
+
         return 200;
     }
 

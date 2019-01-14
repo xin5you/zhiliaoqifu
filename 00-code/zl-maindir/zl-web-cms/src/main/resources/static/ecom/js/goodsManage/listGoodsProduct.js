@@ -262,6 +262,29 @@ var listGoodsProduct = {
             $(".btn-submit").attr("disabled","true");
         }
 
+        $.ajax({
+            url: Helper.getRootPath() + '/goodsManage/goodsSpec/getSpecValuesByProductId',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "productId": productId
+            },
+            success : function (data) {
+                if (data == null || data == '') {
+                    Helper.alert("网络异常，请稍后再试");
+                    return false;
+                }
+                $("#specValueId").empty();
+                $("#specValueId").append("<option value=''>"+"---请选择---"+"</option>");
+                for(var i = 0; i < data.length; i++){
+                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValue+"</option>");//新增
+                }
+            },
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
+            }
+        });
+
 		$.ajax({
             url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProduct',
             type: 'post',
@@ -282,7 +305,6 @@ var listGoodsProduct = {
                 $('#pic_url').val(data.picUrl);
                 $('#default_sku_code').val(data.isDefault);
                 $('#specId').val(data.specId);
-                console.log(data.specValueId);
                 $('#specValueId').val(data.specValueId);
                 $('#remarks').val(data.remarks);
             },
@@ -353,7 +375,6 @@ var listGoodsProduct = {
                 "specId": specId
             },
             success : function (data) {
-                console.log(data);
                 if (data == null || data == '') {
                     Helper.alert("网络异常，请稍后再试");
                     return false;

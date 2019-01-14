@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
@@ -88,12 +89,8 @@ public class ProviderInfController {
 		try {
 			ProviderInf providerInf = this.getProviderInf(request);
 			PageInfo<ProviderInf> pageList = providerInfFacade.getProviderInfPage(startNum, pageSize, providerInf);
-			CompanyInf company = new CompanyInf();
-			company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
-			List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 			mv.addObject("pageInfo", pageList);
 			mv.addObject("providerInf", providerInf);
-			mv.addObject("companyList", companyList);
 		} catch (Exception e) {
 			logger.error("## 供应商信息列表查询异常", e);
 		}
@@ -140,12 +137,18 @@ public class ProviderInfController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
 			ProviderInf providerInf = this.getProviderInf(req);
-			/*ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
-			if (provider != null) {
+			ProviderInf providerLawCode = providerInfFacade.getProviderInfByLawCode(providerInf.getLawCode());
+			if (providerLawCode != null) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "供应商代码已存在，请重新输入");
 				return resultMap;
-			}*/
+			}
+			ProviderInf providerOperSolr = providerInfFacade.getProviderInfByOperSolr(providerInf.getOperSolr());
+			if (providerOperSolr != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "操作顺序已存在，请重新输入");
+				return resultMap;
+			}
 			if(!providerInfFacade.saveProviderInf(providerInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "新增供应商失败，请稍后再试");
@@ -200,12 +203,18 @@ public class ProviderInfController {
 			}
 			
 			ProviderInf providerInf = this.getProviderInf(req);
-			/*ProviderInf provider = providerInfFacade.getProviderInfBylawCode(providerInf.getLawCode());
-			if (provider != null && !provider.getProviderId().equals(provider.getProviderId())) {
+			ProviderInf providerLawCode = providerInfFacade.getProviderInfByLawCode(providerInf.getLawCode());
+			if (providerLawCode != null && !providerLawCode.getProviderId().equals(providerInf.getProviderId())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "供应商代码已存在，请重新输入");
 				return resultMap;
-			}*/
+			}
+			ProviderInf providerOperSolr = providerInfFacade.getProviderInfByOperSolr(providerInf.getOperSolr());
+			if (providerOperSolr != null && !providerOperSolr.getProviderId().equals(providerInf.getProviderId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "操作顺序已存在，请重新输入");
+				return resultMap;
+			}
 			if (!providerInfFacade.updateProviderInf(providerInf)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑失败，请联系管理员");
@@ -255,7 +264,7 @@ public class ProviderInfController {
 		try {
 			if (StringUtil.isNullOrEmpty(providerId)) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "删除失败,供应商id为空");
+				resultMap.put("msg", "删除失败,供应商信息不存在");
 				logger.error("## 删除供应商信息异常,供应商providerId:[{}]为空", providerId);
 			}
 			providerInfFacade.deleteProviderInfById(providerId);

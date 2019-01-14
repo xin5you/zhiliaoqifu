@@ -170,4 +170,25 @@ public interface GoodsManageService {
      * @return
      */
     BaseResult<Object> deleteGoodsProduct(HttpServletRequest req);
+
+    /**
+     * 查询商品详情信息列表（分页）
+     * @param entity
+     * @return
+     */
+    PageInfo<TbEcomGoodsDetail> getGoodsDetailListPage(int startNum, int pageSize, TbEcomGoodsDetail entity);
+
+    /**
+     * 新增商品详情
+     * @param goodsDetail
+     * @return
+     */
+    BaseResult<Object> addGoodsDetail(TbEcomGoodsDetail goodsDetail);
+
+    /**
+     * 更新商品详情
+     * @param req
+     * @return
+     */
+    BaseResult<Object> deleteGoodsDetail(HttpServletRequest req);
 }

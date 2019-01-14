@@ -21,4 +21,9 @@ public class TbEcomGoodsSpecService extends ServiceImpl<TbEcomGoodsSpecMapper, T
     public TbEcomGoodsSpec getGoodsSpecByGoodsIdAndProductId(TbEcomGoodsSpec ecomGoodsSpec) {
         return baseMapper.getGoodsSpecByGoodsIdAndProductId(ecomGoodsSpec);
     }
+
+    @Override
+    public TbEcomGoodsSpec getGoodsSpecByProductId(String productId) {
+        return baseMapper.getGoodsSpecByProductId(productId);
+    }
 }

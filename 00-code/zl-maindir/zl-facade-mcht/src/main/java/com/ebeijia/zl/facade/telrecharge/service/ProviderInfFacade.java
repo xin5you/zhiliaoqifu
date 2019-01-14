@@ -8,7 +8,7 @@ import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.github.pagehelper.PageInfo;
 
 /**
- * 分销商 可购买的产品表
+ * 供应商信息接口
  * @author zhuqiuyou
  *
  */						 
@@ -26,7 +26,19 @@ public interface ProviderInfFacade {
 	
 	PageInfo<ProviderInf> getProviderInfPage(int startNum, int pageSize, ProviderInf providerInf) throws Exception;
 
+	/**
+	 * 根据供应商代码查询供应商信息
+	 * @param lawCode
+	 * @return
+	 */
 	ProviderInf getProviderInfByLawCode(String lawCode) throws Exception;
+
+	/**
+	 * 根据操作顺序查询供应商信息
+	 * @param operSolr
+	 * @return
+	 */
+	ProviderInf getProviderInfByOperSolr(Integer operSolr) throws Exception;
 
 	/**
 	 * 根据主键查询供应商专项类型信息
@@ -76,4 +88,6 @@ public interface ProviderInfFacade {
 	 * @return
 	 */
 	public boolean deleteProviderBillingTypeInf(String id);
+
+
 }

@@ -14,6 +14,7 @@ public class GoodsDetailInfo implements Serializable {
 
     Long minPrice;
     Long maxPrice;
+    Boolean hasStore;
     TbEcomGoods info;
     TbEcomGoodsDetail detail;
 
