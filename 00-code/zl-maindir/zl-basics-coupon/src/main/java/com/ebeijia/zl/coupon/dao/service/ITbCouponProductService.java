@@ -1,7 +1,9 @@
 package com.ebeijia.zl.coupon.dao.service;
 
-import com.ebeijia.zl.coupon.dao.domain.TbCouponProduct;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponProduct;
+
+import java.util.List;
 
 /**
  *
@@ -12,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbCouponProductService extends IService<TbCouponProduct> {
 
+
+    /**
+     * 根据条件查询商品规格信息
+     * @param couponProduct
+     * @return
+     */
+    List<TbCouponProduct> getCouponList(TbCouponProduct couponProduct);
 }

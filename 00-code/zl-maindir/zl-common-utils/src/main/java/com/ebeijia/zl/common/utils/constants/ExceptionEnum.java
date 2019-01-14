@@ -271,6 +271,55 @@ public class ExceptionEnum {
 		}
 	}
 
+	/*
+		图片上传枚举值
+	 */
+	public enum CouponNews {
+		CouponNews01("01", "删除卡券信息失败"),
+		CouponNews02("02", "新增卡券值信息出错"),
+		CouponNews03("03", "修改卡券值信息失败");
+
+
+		private String code;
+		private String msg;
+
+		private CouponNews(String code, String msg) {
+			this.code = code;
+			this.msg = msg;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+
+		public static ImageNews findByCode(String code) {
+			for (ImageNews t : ImageNews.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
+
+
+
+
+
+
+
 	/**
 	 * 商品规格枚举
 	 */

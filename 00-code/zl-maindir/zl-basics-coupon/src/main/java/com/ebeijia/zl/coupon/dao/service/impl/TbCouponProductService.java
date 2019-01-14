@@ -4,7 +4,10 @@ import com.ebeijia.zl.coupon.dao.domain.TbCouponProduct;
 import com.ebeijia.zl.coupon.dao.mapper.TbCouponProductMapper;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -17,4 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbCouponProductService extends ServiceImpl<TbCouponProductMapper, TbCouponProduct> implements ITbCouponProductService{
 
+    @Autowired
+    private TbCouponProductMapper couponProductMapper;
+
+    @Override
+    public List<TbCouponProduct> getCouponList(TbCouponProduct couponProduct) {
+        return couponProductMapper.getCouponList(couponProduct);
+    }
 }
