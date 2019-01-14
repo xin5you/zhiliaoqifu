@@ -55,14 +55,14 @@
 							     		<div class="control-group formSep">
 							             <label class="control-label">折损率<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="loseFee" name="loseFee" maxlength="6"/>
+							                 <input type="text" class="span6" id="loseFee" name="loseFee" maxlength="5"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>
 							             <div class="control-group formSep">
 							             <label class="control-label">可购率<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="buyFee" name="buyFee" maxlength="6"/>
+							                 <input type="text" class="span6" id="buyFee" name="buyFee" maxlength="5"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>

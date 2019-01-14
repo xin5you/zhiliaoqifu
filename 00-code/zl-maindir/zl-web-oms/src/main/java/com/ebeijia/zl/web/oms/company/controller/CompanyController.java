@@ -80,7 +80,7 @@ public class CompanyController {
 		String contacts = StringUtil.nullToString(req.getParameter("contacts"));
 		CompanyInf companyInf = new CompanyInf();//通过封装类将前台查询条件用对象接收
 		companyInf.setName(name);
-		companyInf.setTransFlag(transFlag);
+		/*companyInf.setTransFlag(transFlag);*/
 		companyInf.setContacts(contacts);
 
 		PageInfo<CompanyInf> pageList = null;
@@ -213,6 +213,11 @@ public class CompanyController {
 		return resultMap;
 	}
 
+	/**
+	 * 企业基本信息封装方法
+	 * @param req
+	 * @return
+	 */
 	private CompanyInf getCompanyInf(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
@@ -220,10 +225,11 @@ public class CompanyController {
 		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		if (!StringUtil.isNullOrEmpty(companyId)) {
 			companyInf = companyInfFacade.getCompanyInfById(companyId);
-			companyInf.setLockVersion(companyInf.getLockVersion() + 1);
+			//companyInf.setLockVersion(companyInf.getLockVersion() + 1);
 		} else {
 			companyInf = new CompanyInf();
 			companyInf.setCompanyId(IdUtil.getNextId());
+			companyInf.setTransFlag("0");
 			companyInf.setIsOpen(IsOpenAccountEnum.ISOPEN_FALSE.getCode());
 			companyInf.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			companyInf.setCreateUser(user.getId());
@@ -232,12 +238,15 @@ public class CompanyController {
 		}
 		companyInf.setLawCode(StringUtil.nullToString(req.getParameter("lawCode")));
 		companyInf.setName(StringUtil.nullToString(req.getParameter("name")));
-		companyInf.setTransFlag(StringUtil.nullToString(req.getParameter("transFlag")));
+		//companyInf.setTransFlag(StringUtil.nullToString(req.getParameter("transFlag")));
 		companyInf.setAddress(StringUtil.nullToString(req.getParameter("address")));
 		companyInf.setRemarks(StringUtil.nullToString(req.getParameter("remarks")));
 		companyInf.setPhoneNo(StringUtil.nullToString(req.getParameter("phoneNo")));
 		companyInf.setContacts(StringUtil.nullToString(req.getParameter("contacts")));
-		companyInf.setIsPlatform(StringUtil.nullToString(req.getParameter("isPlatform")));
+		String isPlatForm = StringUtil.nullToString(req.getParameter("isPlatform"));
+		if (!StringUtil.isNullOrEmpty(isPlatForm)) {
+			companyInf.setIsPlatform(isPlatForm);
+		}
 		companyInf.setUpdateUser(user.getId());
 		companyInf.setUpdateTime(System.currentTimeMillis());
 		return companyInf;

@@ -19,5 +19,17 @@ public interface ProviderInfService extends IService<ProviderInf> {
 	
 	public List<ProviderInf> getProviderInfList(ProviderInf providerInf);
 
+	/**
+	 * 根据供应商代码查询供应商信息
+	 * @param lawCode
+	 * @return
+	 */
 	ProviderInf getProviderInfByLawCode(String lawCode);
+
+	/**
+	 * 根据操作顺序查询供应商信息
+	 * @param operSolr
+	 * @return
+	 */
+	ProviderInf getProviderInfByOperSolr(Integer operSolr);
 }

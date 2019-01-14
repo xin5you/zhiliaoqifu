@@ -73,6 +73,12 @@ public class ProviderInfServiceConfig extends DubboCustomerConfig {
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderInfByOperSolr");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
 		methodConfig.setName("getProviderBillingTypeInfById");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
