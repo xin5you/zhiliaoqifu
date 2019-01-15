@@ -65,6 +65,7 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 			retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(reqVo.getChannelId());
 		} catch (Exception e) {
 			logger.error("## 查询分销商异常", e);
+			return ResultsUtil.error("110603", "订单异常");
 		}
 		try {
 			if (retailChnlInf == null || !apiRechangeMobileValid.rechargeSignValid(reqVo, retailChnlInf.getChannelKey())) {
@@ -72,6 +73,7 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 			}
 		} catch (ParseException e) {
 			logger.error("## 分销商签名验证异常 key[{}]", retailChnlInf.getChannelKey(), e);
+			return ResultsUtil.error("110603", "订单异常");
 		}
 
 		RetailChnlOrderInf retailChnlOrderInf = null;
@@ -80,6 +82,7 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 				retailChnlOrderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(), reqVo.getChannelId());
 			} catch (Exception e) {
 				logger.error("## 查询外部订单[{}]异常", reqVo.getOuterTid(), e);
+				return ResultsUtil.error("110603", "订单异常");
 			}
 		}
 
@@ -99,7 +102,7 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 
 		// step4:获取运营商类型  1:移动，2：联通，3：电信
 	   //	String operId = TelePhoneCheckUtils.isChinaMobilePhoneNum(reqVo.getRechargePhone());
-		
+
 		// step5:获取归属地
 		// String areaName=TelePhoneCheckUtils.getPhoneMessage(reqVo.getRechargePhone());
 
@@ -108,15 +111,16 @@ public class ApiRechargeMobileServiceImpl implements ApiRechargeMobileService {
 		try {
 			respTxn = retailChnlOrderInfFacade.proTelChannelOrder(retailChnlOrderInf, null, "ALL");
 		} catch (Exception ex) {
-			logger.error("## 创建充值订单{}异常", retailChnlOrderInf.toString(), ex);
+			logger.error("## 创建充值订单{}异常，{}", retailChnlOrderInf.toString(), ex);
 		}
-		logger.info("创建订单返回respTxn-->{}",JSONObject.toJSONString(respTxn));
+
 		if (respTxn == null || !"00".equals(respTxn.getCode())) {
 			RetailChnlOrderInf orderInf = null;
 			try {
 				orderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfByOuterId(reqVo.getOuterTid(), reqVo.getChannelId());
 			} catch (Exception e) {
 				logger.error("## 查询外部订单[{}]异常 channelId[{}]", reqVo.getOuterTid(), reqVo.getChannelId(), e);
+				return ResultsUtil.error("110603", "订单异常");
 			}
 			if (orderInf != null) {
 				TeleRespVO respVo = new TeleRespVO();
