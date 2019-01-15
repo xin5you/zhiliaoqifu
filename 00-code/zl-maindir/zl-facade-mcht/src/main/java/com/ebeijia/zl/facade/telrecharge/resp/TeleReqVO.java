@@ -36,14 +36,14 @@ public class TeleReqVO extends TeleBaseDomain {
 
     public static void main(String[] args) {
             TeleReqVO t = new TeleReqVO();
-            t.setChannelId("0e04cf948e2af629a334c7c71fa3f8888");
+            t.setChannelId("a5a41d8e-66a7-4ebe-bac2-7c280d666666");
             t.setMethod("hkb.api.mobile.charge");
             t.setV("1.0");
-            t.setTimestamp("2018-12-25 13:50:14");
+            t.setTimestamp("2019-01-15 17:10:14");
             t.setRechargePhone("13501755206");
             t.setRechargeAmount("1");
             t.setOuterTid(IdUtil.getNextId());
-            t.setCallback("http://zlqfwebapi.free.idcfengye.com/web-api/api/recharge/notify/bmHKbCallBack");
-            System.out.println(MD5SignUtils.genSign(t, "key", "0e04cf948e2af629a334c7c71fa3f8888", new String[] { "sign", "serialVersionUID" }, null));
+            t.setCallback("http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack");
+            System.out.println(MD5SignUtils.genSign(t, "key", "a5a41d8e-66a7-4ebe-bac2-7c280d888888", new String[] { "sign", "serialVersionUID" }, null));
     }
 }

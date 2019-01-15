@@ -163,9 +163,9 @@ public abstract class AmountUtil {
 	}
 
 	public static void main(String[] args) {
-			BigDecimal a=new BigDecimal("1.2");
+			BigDecimal a=new BigDecimal("");
 		    BigDecimal b=new BigDecimal("1.1");
 
-		System.out.println(AmountUtil.bigger(a,b));
+		System.out.println(AmountUtil.add(a,b));
 	}
 }

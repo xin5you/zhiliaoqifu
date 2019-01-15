@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
@@ -23,6 +24,7 @@ import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.service.account.mapper.AccountLogMapper;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +78,12 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 		entity.setTxnDate(DateUtil.COMPAT.getDateText(new Date()));
 		entity.setTxnTime(DateUtil.getCurrentTimeStr());
 		entity.setAccTotalBal(accountInf.getAccBal()); //賬戶總金額
+		entity.setCancelFlag("0");
+		entity.setRevsalFlag("0");
+		entity.setReturnFlag("0");
+		entity.setReturnAmt(new BigDecimal(0));
+		entity.setAdjustFlag("0");
+		entity.setAdjustAmt(new BigDecimal(0));
 		entity.setRemarks(transLog.getRemarks());
 		
 		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
@@ -118,5 +126,16 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 			}
 		});
 		return  list;
+	}
+
+	/**
+	 * 查找交易日志对应的账户流水信息
+	 * @param txnPriKey
+	 * @return
+	 */
+	public AccountLog getAccountLogByTxnPriKey(String txnPriKey){
+		QueryWrapper<AccountLog> queryWrapper = new QueryWrapper<AccountLog>();
+		queryWrapper.eq("txn_primary_key", txnPriKey);
+		return accountLogMapper.selectOne(queryWrapper);
 	}
 }
