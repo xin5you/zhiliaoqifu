@@ -1,6 +1,7 @@
 package com.ebeijia.zl.web.cms.couponManage.controller;
 
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponTransLog;
 import com.ebeijia.zl.web.cms.couponManage.service.CouponTransService;
 import com.github.pagehelper.PageInfo;
@@ -35,6 +36,10 @@ public class CouponTransManage {
         int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
         int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
         PageInfo<TbCouponTransLog> pageInfo = new PageInfo<>();
+        String orderId = req.getParameter("orderId");
+        if(!StringUtil.isNullOrEmpty(orderId)){
+            couponTransLog.setOrderId(orderId);
+        }
 
         try {
             pageInfo = couponTransService.getCouponListPage(startNum, pageSize, couponTransLog);
@@ -43,7 +48,7 @@ public class CouponTransManage {
         }
 
         mv.addObject("pageInfo", pageInfo);
-        mv.addObject("couponProduct", couponTransLog);
+        mv.addObject("couponTransLog", couponTransLog);
 
         return mv;
     }

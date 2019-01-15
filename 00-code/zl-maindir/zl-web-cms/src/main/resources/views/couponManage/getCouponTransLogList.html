@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="main/header::header" />
+<head th:include="main/header::header('')" />
 <body>
 <header th:include="main/navbar::navbar" />
 <div id="contentwrapper">
@@ -17,9 +17,9 @@
         <form id="searchForm" th:action="@{/couponTransManage/getCouponTransLogList}" th:object="${couponTransLog}"  class="form-inline" method="post">
             <div class="row-fluid searchForm" id="h_search">
                 <div class="span12">
-                    <div class="input-prepend">
-                        <span class="add-on">交易流水号</span>
-                      <!-- <input id="couponTxnId" name="couponTxnId" type="text" class="input-medium" th:value="*{couponTxnId}" maxlength="20"/>-->
+                    <div class="input-prepend">i
+                        <span class="add-on">订单号</span>
+                        <input id="orderId" name="orderId" type="text" class="input-medium" th:value="*{orderId}" maxlength="50"/>
                     </div>
                     <div class="pull-right">
                         <button type="submit" class="btn btn-search">查 询</button>
@@ -40,25 +40,24 @@
                     <th>实际交易金额</th>
                     <th>原交易金额</th>
                     <th>手续费</th>
-                    <th>手续费类型</th>
                 </tr>
                 </thead>
                 <tbody>
                <tr th:each="coupon, couponStat : ${pageInfo.list}" th:inline="text">
                     <td><span th:text="${couponStat.count}"></span></td>
                     <td><span th:text="${coupon.couponTxnId}"></span></td>
+                   <td><span th:text="${coupon.orderId}"></span></td>
                     <td><span th:text="${coupon.memberName}"></span></td>
                     <td><span th:text="${coupon.couponName}"></span></td>
                     <td><span th:text="${coupon.couponAmt}"></span></td>
-                    <td><span th:text="${coupon.transAmt}"></span></td>
-                    <td><span th:text="${coupon.orgTransAmt}"></span></td>
+                    <td><span th:text="${#numbers.formatDecimal(coupon.transAmt, 0, 2)}"></span></td>
+                    <td><span th:text="${#numbers.formatDecimal(coupon.orgTransAmt, 0, 2)}"></span></td>
                     <td><span th:text="${coupon.transFee}"></span></td>
-                    <td><span th:text="${coupon.transFeeType}"></span></td>
-                    <td>
+                                        <!--<td>
                         <a th:attr="couponCode=${coupon.couponCode}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
                         <a th:attr="couponCode=${coupon.couponCode}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
-                       <!-- <a th:attr="couponCode=${coupon.couponCode}" title="添加卡券" class="btn-mini btn-addCouponValues" href="#"><i class="icon-plus"></i></a>-->
-                    </td>
+                        <a th:attr="couponCode=${coupon.couponCode}" title="添加卡券" class="btn-mini btn-addCouponValues" href="#"><i class="icon-plus"></i></a>
+                    </td>-->
                 </tr>
                 </tbody>
             </table>

@@ -6,8 +6,8 @@
     g.coupon_txn_id,
 	g.order_id,
 	g.coupon_amt,
-	g.trans_amt,
-	g.org_trans_amt,
+	g.trans_amt/100 trans_amt,
+	g.org_trans_amt/100 org_trans_amt,
 	g.trans_fee,
 	g.lock_version
     </sql>
@@ -19,15 +19,15 @@
     <select id="getTransLog" parameterType="TbCouponTransLog" resultType="TbCouponTransLog">
         select
             <include refid="CouponTranLogColumns" />,
-            m.person_id AS memberName,
+            m.person_id memberName,
             p.coupon_name couponName
         from
           <include refid="tableName" />
         LEFT JOIN tb_coupon_product p ON g.coupon_code = p.coupon_code
         LEFT JOIN tb_ecom_member m ON g.member_id = m.member_id
         where g.data_stat = '0'
-        <if test="couponTxnId != null and couponTxnId != ''">
-            and g.coupon_txn_id=#{couponTxnId}
+        <if test="orderId != null and orderId != ''">
+            and g.order_id=#{orderId}
         </if>
         order by g.create_time desc
     </select>

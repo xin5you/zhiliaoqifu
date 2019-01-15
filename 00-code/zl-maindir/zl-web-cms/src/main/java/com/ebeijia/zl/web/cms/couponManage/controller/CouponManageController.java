@@ -109,7 +109,7 @@ public class CouponManageController {
 
         String couponCode = req.getParameter("couponCode");
         String couponName = req.getParameter("coupon_Name");
-        String price = req.getParameter("price");
+        Long price = Long.parseLong(req.getParameter("price"));
         //产品类型暂时没用,默认为1
        // String couponType = req.getParameter("couponType");
         String bId = req.getParameter("b_id");
@@ -134,7 +134,7 @@ public class CouponManageController {
         }
         couponProduct.setBId(bId);
         couponProduct.setCouponName(couponName);
-        couponProduct.setPrice(Long.parseLong(price));
+        couponProduct.setPrice(price*100);
         couponProduct.setCouponType("1");
         couponProduct.setCouponDesc(couponDesc);
         couponProduct.setIconImage(iconImage);
@@ -159,6 +159,7 @@ public class CouponManageController {
     public TbCouponProduct getGoodsSpec(HttpServletRequest req, TbCouponProduct couponProduct) {
         try {
             couponProduct = iTbCouponProductService.getById(couponProduct.getCouponCode());
+            couponProduct.setPrice(couponProduct.getPrice()/100);
         } catch (Exception e) {
             logger.error("## 查询主键为[{}]的商品规格信息出错", couponProduct.getCouponCode(), e);
         }

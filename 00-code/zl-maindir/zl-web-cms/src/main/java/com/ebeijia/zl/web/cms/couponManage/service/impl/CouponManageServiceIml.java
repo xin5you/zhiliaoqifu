@@ -71,7 +71,7 @@ public class CouponManageServiceIml implements CouponManageService{
         imgVo.setNewPath(FILE_NEW_PATH);
         imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
         imgVo.setUploadPath(FILE_UPLAOD_PATH);
-        imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_02.getValue());
+        imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_08.getValue());
 
         try {
             String imageUrl = imageService.uploadImangeName(imgVo, iconImageFile);
@@ -97,7 +97,6 @@ public class CouponManageServiceIml implements CouponManageService{
     @Override
     public BaseResult<Object> editCouponValues(TbCouponProduct couponProduct, MultipartFile iconImageFile) {
         if (iconImageFile == null || iconImageFile.isEmpty()) {
-           /* return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews03.getCode(), ExceptionEnum.ImageNews.ImageNews03.getMsg());*/
             if (!couponProductService.updateById(couponProduct)) {
                 logger.error("## 修改卡券值信息失败");
                 return ResultsUtil.error(ExceptionEnum.CouponNews.CouponNews03.getCode(), ExceptionEnum.CouponNews.CouponNews03.getMsg());
