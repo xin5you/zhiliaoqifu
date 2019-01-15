@@ -76,4 +76,4 @@ withdraw:
     goodsType: 290054
     privateKeyUrl: /data/app/app_itf/itfapp/config/private.key
     bathWithdrawUrl: https://wag.yifubao.com/epps-wag/withdraw.htm
-    yfbNotifyUrl: http://zlqfwebapi.free.idcfengye.com/web-api/api/withdraw/suning-yfb/notify
+    yfbNotifyUrl: http://api.happy8888.com.cn/web-api/api/withdraw/suning-yfb/notify
