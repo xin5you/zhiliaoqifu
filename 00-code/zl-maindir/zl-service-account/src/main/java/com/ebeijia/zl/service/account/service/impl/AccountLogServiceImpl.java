@@ -3,6 +3,7 @@ package com.ebeijia.zl.service.account.service.impl;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
@@ -108,9 +109,11 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 			if (TransCode.CW50.getCode().equals(s.getTransId())
 					&& UserType.TYPE100.getCode().equals(s.getUserType())
 					&& TransChnl.CHANNEL0.getValue().equals(s.getTransChnl())){
-				CompanyInf companyInf=companyInfFacade.getCompanyInfById(s.getMchntCode());
-				if(companyInf !=null) {
-					s.setMchntName(companyInf.getName());
+				if(StringUtil.isNotEmpty(s.getMchntCode())) {
+					CompanyInf companyInf = companyInfFacade.getCompanyInfById(s.getMchntCode());
+					if(companyInf !=null) {
+						s.setMchntName(companyInf.getName());
+					}
 				}
 			}
 		});
