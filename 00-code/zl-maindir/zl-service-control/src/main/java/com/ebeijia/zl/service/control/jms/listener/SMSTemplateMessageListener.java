@@ -41,7 +41,7 @@ import java.util.Map;
  * @since 2018-12-27 11:21:23
  *
  */
-@MQConsumer(topic = RocketTopicEnums.smsTopic,tag=RocketTopicEnums.smsTag, consumerGroup = "${spring.rocketmq.producer-group}")
+@MQConsumer(topic = RocketTopicEnums.smsTopic, consumerGroup = "zlqf_group")
 public class SMSTemplateMessageListener  extends AbstractMQPushConsumer {
 	private Logger logger = LoggerFactory.getLogger(SMSTemplateMessageListener.class);
 

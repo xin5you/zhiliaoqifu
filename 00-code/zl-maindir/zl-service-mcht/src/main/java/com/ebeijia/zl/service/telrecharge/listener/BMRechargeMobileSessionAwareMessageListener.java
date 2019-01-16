@@ -45,7 +45,7 @@ import redis.clients.jedis.JedisCluster;
  * @since 2018-07-10 11:21:23
  *  
  */
-@MQConsumer(topic = RocketTopicEnums.mobileRechangeTopic,tag=RocketTopicEnums.mobileRechangeTag, consumerGroup = "${spring.rocketmq.producer-group}")
+@MQConsumer(topic = RocketTopicEnums.mobileRechangeTopic, consumerGroup = "zlqf_group")
 public class BMRechargeMobileSessionAwareMessageListener extends AbstractMQPushConsumer {
 	
 	private Logger logger = LoggerFactory.getLogger(BMRechargeMobileSessionAwareMessageListener.class);
@@ -85,6 +85,11 @@ public class BMRechargeMobileSessionAwareMessageListener extends AbstractMQPushC
 				  }
 			} catch (Exception e) {
 				logger.error("## 查询话费充值订单异常-->{}", e);
+			}
+
+			if(telProviderOrderInf==null){
+				logger.error("## 未查询到供应商充值订单，渠道订单{}", message);
+				return true;
 			}
 			
 			RetailChnlInf retailChnlInf=null;
