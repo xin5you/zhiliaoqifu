@@ -86,6 +86,11 @@ public class BMRechargeMobileSessionAwareMessageListener extends AbstractMQPushC
 			} catch (Exception e) {
 				logger.error("## 查询话费充值订单异常-->{}", e);
 			}
+
+			if(telProviderOrderInf==null){
+				logger.error("## 未查询到供应商充值订单，渠道订单{}", message);
+				return true;
+			}
 			
 			RetailChnlInf retailChnlInf=null;
 			try{
