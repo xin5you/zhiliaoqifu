@@ -407,21 +407,12 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
-	@RequestMapping("/listRetailChnlAccBal")
-	public ModelAndView listRetailChnlAccBal(HttpServletRequest request) {
-		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlAccBal");
-		String channelId = StringUtil.nullToString(request.getParameter("channelId"));
-
-		try {
-			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
-			mv.addObject("pageInfo", resultMap.get("pageInfo"));
-		} catch (Exception e) {
-			logger.error("## 分销商账户列表查询异常", e);
-		}
-		mv.addObject("channelId", channelId);
-		return mv;
-	}
-
+	/**
+	 * 跳转分销商上账列表页
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "intoAddRetailChnlTransfer")
 	public ModelAndView intoAddRetailChnlTransfer(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/addRetailChnlTransfer");
@@ -442,6 +433,13 @@ public class RetailChnlInfController {
 		return mv;
 	}
 
+	/**
+	 * 分销商上账记录添加
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
 	@RequestMapping(value = "/addRetailChnlTransfer")
 	@ResponseBody
 	public Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
@@ -466,6 +464,12 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 分销商上账记录提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addRetailChnlTransferCommit")
 	@ResponseBody
 	public Map<String, Object> addRetailChnlTransferCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -485,6 +489,12 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 更新分销商上账审核状态
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/updateRetailChnlCheckStatCommit")
 	@ResponseBody
 	public Map<String, Object> updateRetailChnlCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -529,6 +539,12 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 跳转分销商上账详情页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "viewRetailChnlTransferDetail")
 	public ModelAndView viewRetailChnlTransferDetail(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/viewRetailChnlTransfer");
@@ -558,6 +574,12 @@ public class RetailChnlInfController {
 		return mv;
 	}
 
+	/**
+	 * 跳转分销商上账页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoEditRetailChnlTransfer")
 	@ResponseBody
 	public Map<String, Object> intoEditRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response) {
@@ -584,6 +606,13 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 编辑分销商上账记录
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
 	@RequestMapping(value = "/editRetailChnlTransfer")
 	@ResponseBody
 	public Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
@@ -607,6 +636,12 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 删除分销商上账记录
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/deleteRetailChnlTransfer")
 	@ResponseBody
 	public Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response) {
@@ -614,6 +649,56 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 分销商余额列表页
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/listRetailChnlAccBal")
+	public ModelAndView listRetailChnlAccBal(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlAccBal");
+		String channelId = StringUtil.nullToString(request.getParameter("channelId"));
+
+		try {
+			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
+			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+		} catch (Exception e) {
+			logger.error("## 分销商账户列表查询异常", e);
+		}
+		mv.addObject("channelId", channelId);
+		return mv;
+	}
+
+	/**
+	 * 查询分销商余额账单明细
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/listRetailChnlAccBalDetail")
+	public ModelAndView listRetailChnlAccBalDetail(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlAccBalDetail");
+		String channelId = StringUtil.nullToString(request.getParameter("channelId"));
+
+		try {
+			Map<String, Object> resultMap = commonService.getAccountLogInfPage(request);
+			if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
+				mv.addObject("pageInfo", resultMap.get("pageInfo"));
+			} else {
+				logger.error("## 远程调用查询账户余额明细失败，msg--->{}", resultMap.get("msg"));
+			}
+		} catch (Exception e) {
+			logger.error("## 分销商账户列表查询异常", e);
+		}
+		mv.addObject("channelId", channelId);
+		return mv;
+	}
+
+	/**
+	 * 分销商实体类封装
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
 	private RetailChnlInf getRetailChnlInf(HttpServletRequest req) throws Exception {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);

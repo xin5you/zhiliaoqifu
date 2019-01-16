@@ -206,6 +206,9 @@ public class TbEcomGoods extends Model<TbEcomGoods> {
     @TableField(exist = false)
     private String detailName;
 
+    @TableField(exist = false)
+    private String marketEnableName;
+
     @Override
     protected Serializable pkVal() { 
         return this.goodsId;

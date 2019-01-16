@@ -46,7 +46,7 @@
 								<span class="add-on">所属专项类型</span>
 								<select id="BId" name="BId" class="input-medium">
 									<option value=""><span th:text="请选择" /></option>
-									<option th:each="s,sStat : ${specAccountTypeList}" th:value="${s.bId}"><span th:text="${s.name}" /></option>
+									<option th:each="s,sStat : ${billingTypeList}" th:value="${s.BId}"><span th:text="${s.BName}" /></option>
 								</select>
 							</div>
 							</div>
@@ -94,7 +94,7 @@
 								<th>商品名称</th>
 								<th>商品图片</th>
 								<th>SPU代码</th>
-								<th>供应商代码</th>
+								<th>所属供应商</th>
 				                <th>商品类型</th>
 				                <th>专项类型</th>
 								<th>上下架状态</th>
@@ -109,23 +109,23 @@
 								<td><span th:text="${goodsStat.count}"></span></td>
 								<td><span th:text="${goods.goodsName}"></span></td>
 								<td>
-									<span  th:if="${goods.goodsImg} != null">
-										<a th:href="${goods.goodsImg}">[[${goods.goodsImg}]]</a>
-									</span>
+									<img th:if="${goods.goodsImg} != null" th:src="${goods.goodsImg}" style="height: 200px; width: 200px;"/>
 								</td>
 								<td><span th:text="${goods.spuCode}"></span></td>
 								<td><span th:text="${goods.ecomCode}"></span></td>
 								<td><span th:text="${goods.goodsType}"></span></td>
 								<td><span th:text="${goods.BName}"></span></td>
-								<td><span th:text="${goods.marketEnable}"></span></td>
+								<td><span th:text="${goods.marketEnableName}"></span></td>
 								<td><span th:text="${goods.haveGroups}"></span></td>
 								<td><span th:text="${goods.isDisabled}"></span></td>
 								<td><span th:text="${goods.isHot}"></span></td>
 				                <td>
 									<a th:attr="goodsId=${goods.goodsId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-									<a th:attr="goodsId=${goods.goodsId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<a th:attr="goodsId=${goods.goodsId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="上下架" class="btn-mini btn-updateEnable" href="#"><i class="icon-edit"></i></a>
+									<span th:if="${goods.marketEnable == '0'}">
+										<a th:attr="goodsId=${goods.goodsId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+										<a th:attr="goodsId=${goods.goodsId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									</span>
 									<a th:attr="goodsId=${goods.goodsId}" title="添加商品相册" class="btn-mini btn-addGoodsImg" href="#"><i class="icon-plus"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="添加商品详情" class="btn-mini btn-addGoodsView" href="#"><i class="icon-plus"></i></a>
 									<a th:attr="goodsId=${goods.goodsId}" title="添加商品SKU" class="btn-mini btn-addGoodsSku" href="#"><i class="icon-plus"></i></a>
@@ -192,7 +192,7 @@
 						<div class="control-group">
 								<label class="control-label"><span class="f_req">* </span>SPU代码：</label>
 								<div class="controls">
-									<input type="text" class="span3" name="spu_code" id="spu_code" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+									<input type="text" class="span3" name="spu_code" id="spu_code" maxlength="10" />
 									<span class="help-block"></span>
 								</div>
 							</div>
@@ -222,17 +222,18 @@
 								<label class="control-label"><span class="f_req">* </span>所属专项类型：</label>
 								<div class="controls">
 									<select name="b_id" id="b_id" class="span3">
-										<option th:each="b,bStat : ${specAccountTypeList}" th:value="${b.bId}">
-											<span th:text="${b.name}"></span>
+										<option th:each="b,bStat : ${billingTypeList}" th:value="${b.BId}">
+											<span th:text="${b.BName}"></span>
 										</option>
 									</select>
 									<span class="help-block"></span>
 								</div>
 						</div>
 						<div class="control-group">
-								<label class="control-label"><span class="f_req">* </span>单位：</label>
+								<label class="control-label">单位：</label>
 								<div class="controls">
 									<select name="unit" id="unit" class="span3">
+										<option th:value="0">---请选择---</option>
 										<option th:each="u,uStat : ${goodsUnitList}" th:value="${u.code}">
 											<span th:text="${u.name}"></span>
 										</option>
@@ -241,7 +242,7 @@
 								</div>
 							</div>
 						<div class="control-group">
-								<label class="control-label"><span class="f_req">* </span>重量：</label>
+								<label class="control-label">重量：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="weight" id="weight" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 									<span class="help-block"></span>
@@ -256,7 +257,7 @@
 						</div>
 
 						<div class="control-group">
-								<label class="control-label">商品参数(json格式)：</label>
+								<label class="control-label"><span class="f_req">* </span>商品参数(json格式)：</label>
 								<div class="controls">
 									<input type="text" class="span3" name="brief" id="brief" maxlength="255"/>
 									<span class="help-block"></span>

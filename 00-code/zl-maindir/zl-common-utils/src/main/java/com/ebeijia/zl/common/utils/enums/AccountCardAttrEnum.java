@@ -50,4 +50,13 @@ public enum AccountCardAttrEnum {
 		return value;
 	}
 
+	public static AccountCardAttrEnum findByValue(String value) {
+		for (AccountCardAttrEnum t : AccountCardAttrEnum.values()) {
+			if (t.value.equalsIgnoreCase(value)) {
+				return t;
+			}
+		}
+		return null;
+	}
+
 }

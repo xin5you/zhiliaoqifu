@@ -28,7 +28,7 @@
         g.data_stat,
         g.remarks,
         g.create_user,
-        g.update_u
+        g.update_user,
         g.create_time,
         g.update_time,
         g.lock_version
@@ -73,6 +73,7 @@
         <if test="isHot != null and isHot != ''">
             and g.is_hot = #{isHot}
         </if>
+        order by g.create_time desc
     </select>
 
     <select id="getGoodsInfByGoodsId" parameterType="String" resultType="TbEcomGoods">
@@ -95,7 +96,7 @@
         g.ecom_code,
         pro.provider_name ecom_name,
         g.market_enable,
-        g.goods_img pic_url,
+        p.pic_url,
         b.b_id,
         c.cat_name,
         pc.cat_name as parent_cat_name,
@@ -121,8 +122,6 @@
         and pc.data_stat = '0'
         where g.data_stat = '0'
         and p.data_stat = '0'
-        and g.market_enable = '1'
-        and g.is_disabled = '0'
         <if test="ecomCode != null and ecomCode != '' ">
             and	 g.ecom_code = #{ecomCode}
         </if>
@@ -144,9 +143,6 @@
         <if test="bId != null and bId != '' ">
             and	 b.b_id = #{bId}
         </if>
-        <if test="isHot != null and isHot != ''">
-            and g.is_hot = #{isHot}
-        </if>
         group by g.goods_id
     </select>
 
@@ -159,7 +155,7 @@
         g.ecom_code,
         pro.provider_name ecom_name,
         g.market_enable,
-        g.goods_img pic_url,
+        p.pic_url,
         b.b_id,
         c.cat_name,
         pc.cat_name as parent_cat_name,

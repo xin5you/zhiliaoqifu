@@ -1,14 +1,14 @@
 $(document).ready(function () {
-    listProviderAccBalDetail.init();
+    listProviderAccBal.init();
 })
 
-var listProviderAccBalDetail = {
+var listProviderAccBal = {
     init : function() {
-        listProviderAccBalDetail.initEvent();
+        listProviderAccBal.initEvent();
     },
 
     initEvent:function(){
-        $('.btn-accBal').on('click', listProviderAccBalDetail.listProviderAccBalDetail);
+        $('.btn-accBal').on('click', listProviderAccBal.listProviderAccBalDetail);
     },
     listProviderAccBalDetail : function () {
         var bId = $(this).attr("bId");

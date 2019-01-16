@@ -3,6 +3,8 @@ package com.ebeijia.zl.shop.dao.goods.service;
 import com.ebeijia.zl.shop.dao.goods.domain.TbEcomGoodsSpec;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  *
  * SKU规格对照表 Service 接口类
@@ -25,4 +27,11 @@ public interface ITbEcomGoodsSpecService extends IService<TbEcomGoodsSpec> {
      * @return
      */
     TbEcomGoodsSpec getGoodsSpecByProductId(String productId);
+
+    /**
+     * 根据goodsId查询商品规格关联表信息
+     * @param goodsId
+     * @return
+     */
+    List<TbEcomGoodsSpec> getGoodsSpecByGoodsId(String goodsId);
 }

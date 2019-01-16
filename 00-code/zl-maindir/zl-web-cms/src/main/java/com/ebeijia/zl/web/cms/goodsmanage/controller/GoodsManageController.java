@@ -5,7 +5,9 @@ import javax.servlet.http.HttpSession;
 import javax.xml.crypto.Data;
 
 import com.alibaba.fastjson.JSONArray;
+import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
+import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
@@ -67,6 +69,9 @@ public class GoodsManageController {
 
 	@Autowired
 	private ITbEcomGoodsSpecService ecomGoodsSpecService;
+
+	@Autowired
+	private BillingTypeService billingTypeInfService;
 
 	@Autowired
 	private ProviderInfFacade providerInfFacade;
@@ -471,6 +476,9 @@ public class GoodsManageController {
 			providerInf.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 			providerInfList = providerInfFacade.getProviderInfList(providerInf);
 			goodsDetailList = ecomGoodsDetailService.getGoodsDetailList(new TbEcomGoodsDetail());
+			List<BillingType> bList = billingTypeInfService.getBillingTypeInfList(new BillingType());
+			List<BillingType> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getCode().equals(t.getCode())).collect(Collectors.toList());
+			mv.addObject("billingTypeList", billingTypeList);
 		} catch (Exception e) {
 			logger.error("## 查询商品Spu信息异常{}", e);
 		}
@@ -482,10 +490,8 @@ public class GoodsManageController {
 		mv.addObject("haveGroupsList", HaveGroupsEnum.values());
 		mv.addObject("marketEnableList", MarketEnableEnum.values());
 		mv.addObject("goodsTypeList", GoodsTypeEnum.values());
-		mv.addObject("specAccountTypeList", SpecAccountTypeEnum.values());
 		mv.addObject("goodsUnitList", GoodsUnitEnum.values());
 		mv.addObject("goodsDetailList", goodsDetailList);
-
 		return mv;
 	}
 
@@ -661,11 +667,15 @@ public class GoodsManageController {
 		goods.setEcomCode(ecomCode);
 		goods.setGoodsType(goodsType);
 		goods.setBId(bId);
-		goods.setUnit(unit);
-		goods.setWeight(new BigDecimal(weight));
+		if (!StringUtil.isNullOrEmpty(unit) && !"0".equals(unit)) {
+			goods.setUnit(unit);
+		}
+		if (!StringUtil.isNullOrEmpty(weight)) {
+			goods.setWeight(new BigDecimal(weight));
+		}
 		/*goods.setDefaultSkuCode(defaultSkuCode);*/
 		/*goods.setMarketEnable(marketEnable);*/
-		goods.setMarketEnable(MarketEnableEnum.MarketEnableEnum_1.getCode());
+		goods.setMarketEnable(MarketEnableEnum.MarketEnableEnum_0.getCode());
 		goods.setBrief(brief);
 		goods.setGoodsDetail(goodsDetail);
 		goods.setHaveGroups(haveGroups);
@@ -710,13 +720,14 @@ public class GoodsManageController {
 		try {
 			ecomGoodsGallery.setGoodsId(goodsId);
 			pageInfo = goodsManageService.getGoodsGalleryListPage(startNum, pageSize, ecomGoodsGallery);
+			TbEcomGoods goodsInf = ecomGoodsService.getGoodsInfByGoodsId(goodsId);
+			mv.addObject("goodsInf", goodsInf);
 		} catch (Exception e) {
 			logger.error("## 查询商品{}相册信息异常", goodsId, e);
 		}
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("ecomGoodsGallery", ecomGoodsGallery);
 		mv.addObject("isDefaultList", IsDefaultEnum.values());
-		mv.addObject("goodsId", goodsId);
 		return mv;
 	}
 
@@ -902,7 +913,7 @@ public class GoodsManageController {
 				goodsProduct.setGoodsCost(NumberUtils.RMBCentToYuan(goodsProduct.getGoodsCost()));
 				goodsProduct.setMktPrice(NumberUtils.RMBCentToYuan(goodsProduct.getMktPrice()));
 				TbEcomGoods goods = ecomGoodsService.getById(goodsProduct.getGoodsId());
-				if (!StringUtil.isNullOrEmpty(goods.getDefaultSkuCode()) && goods.getDefaultSkuCode().equals(goodsProduct.getSkuCode())) {
+				if (!StringUtil.isNullOrEmpty(goods.getDefaultSkuCode()) && goods.getDefaultSkuCode().equals(goodsProduct.getProductId())) {
 					goodsProduct.setIsDefault(IsDefaultEnum.IsDefaultEnum_0.getCode());
 				} else {
 					goodsProduct.setIsDefault(IsDefaultEnum.IsDefaultEnum_1.getCode());
@@ -1010,6 +1021,18 @@ public class GoodsManageController {
 	}
 
 	/**
+	 * 根据goodsId查询商品sku信息列表
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/goodsInf/getGoodsProductListByGoodsId")
+	public List<TbEcomGoodsProduct> getGoodsProductListByGoodsId (HttpServletRequest req) {
+		String goodsId = req.getParameter("goodsId");
+		List<TbEcomGoodsProduct> goodsproductlist = ecomGoodsProductService.getGoodsProductListByGoodsId(goodsId);
+		return goodsproductlist;
+	}
+
+	/**
 	 * 商品Sku信息封装类方法
 	 * @param req
 	 * @return
@@ -1034,7 +1057,7 @@ public class GoodsManageController {
 		String picUrl = req.getParameter("pic_url");
 		String remarks = req.getParameter("remarks");
 		String defaultSkuCode = req.getParameter("default_sku_code");
-		String specId = req.getParameter("specId");
+		String specId = req.getParameter("spec_id");
 		String specValueId = req.getParameter("specValueId");
 
 		TbEcomGoodsProduct goodsProduct = null;
@@ -1066,7 +1089,7 @@ public class GoodsManageController {
 		goodsProduct.setPicUrl(picUrl);
 		goodsProduct.setRemarks(remarks);
 		goodsProduct.setIsDefault(defaultSkuCode);
-		goodsProduct.setProductEnable(Integer.valueOf(MarketEnableEnum.MarketEnableEnum_1.getCode()));
+		//goodsProduct.setProductEnable(Integer.valueOf(MarketEnableEnum.MarketEnableEnum_0.getCode()));
 		goodsProduct.setSpecId(specId);
 		goodsProduct.setSpecValueId(specValueId);
 		return goodsProduct;
@@ -1188,6 +1211,8 @@ public class GoodsManageController {
 		ModelAndView mv = new ModelAndView("goodsManage/addGoodsDetailIntro");
 		try {
 			TbEcomGoodsDetail goodsDetail = ecomGoodsDetailService.getById(ecomGoodsProduct.getDetailId());
+			TbEcomGoods goodsInf = ecomGoodsService.getGoodsInfByGoodsId(goodsDetail.getGoodsId());
+			mv.addObject("goodsInf", goodsInf);
 			mv.addObject("goodsDetail", goodsDetail);
 		} catch (Exception e) {
 			logger.error("## 查询商品{}详情信息异常", ecomGoodsProduct.getDetailId(), e);

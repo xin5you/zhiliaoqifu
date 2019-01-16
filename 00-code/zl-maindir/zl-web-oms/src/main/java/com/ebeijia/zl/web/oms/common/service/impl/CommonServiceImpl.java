@@ -2,8 +2,7 @@ package com.ebeijia.zl.web.oms.common.service.impl;
 
 import com.ebeijia.zl.FtpProps;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
-import com.ebeijia.zl.common.utils.enums.UserChnlCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
@@ -14,6 +13,7 @@ import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.common.util.FTPUtil;
 import com.ebeijia.zl.web.oms.common.util.FileUtil;
+import com.ebeijia.zl.web.oms.common.util.TransChnlEnum;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
@@ -28,6 +28,8 @@ import sun.misc.BASE64Encoder;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +75,11 @@ public class CommonServiceImpl implements CommonService {
         }
         try {
             PageInfo<AccountVO> pageList = accountQueryFacade.getAccountInfPage(startNum, pageSize, reqVo);
+            /*if (pageList != null) {
+                for (AccountVO vo : pageList.getList()) {
+                    vo.setBId(SpecAccountTypeEnum.findByBId(vo.getBId()).getName());
+                }
+            }*/
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额列表异常");
@@ -100,7 +107,7 @@ public class CommonServiceImpl implements CommonService {
         } else if (!StringUtil.isNullOrEmpty(companyId)) {
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(companyId);
-            reqVo.setUserType(UserType.TYPE300.getCode());
+            reqVo.setUserType(UserType.TYPE200.getCode());
         } else if (!StringUtil.isNullOrEmpty(channelId)) {
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(channelId);
@@ -113,6 +120,20 @@ public class CommonServiceImpl implements CommonService {
         reqVo.setBId(bId);
         try {
             PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
+            if (pageList != null) {
+                for (AccountLogVO log : pageList.getList()) {
+                    Date date = new SimpleDateFormat("yyyyMMdd").parse(log.getTxnDate());
+                    String txnDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                    Date time = new SimpleDateFormat("hhmmss").parse(log.getTxnTime());
+                    String txnTime = new SimpleDateFormat("hh:mm:ss").format(date);
+                    log.setTxnDate(txnDate);
+                    log.setTxnTime(txnTime);
+                    log.setAccType(AccountCardAttrEnum.findByValue(log.getAccType()).getDesc());
+                    log.setTransId(TransCode.findByCode(log.getTransId()).getValue());
+                    log.setTransChnl(TransChnlEnum.findByCode(log.getTransChnl()).getName());
+                    log.setPriBId(SpecAccountTypeEnum.findByBId(log.getPriBId()).getName());
+                }
+            }
             resultMap.put("pageInfo", pageList);
         } catch (Exception e) {
             logger.error("## 查询账户余额明细列表异常");

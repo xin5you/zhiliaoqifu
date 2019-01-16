@@ -40,4 +40,13 @@
         and product_id = #{productId}
     </select>
 
+    <select id="getGoodsSpecByGoodsId" parameterType="String" resultType="TbEcomGoodsSpec">
+        select
+        <include refid="goodsSpecColumns"/>
+        from
+        <include refid="tableName"/>
+        where data_stat = '0'
+        and goods_id = #{goodsId}
+    </select>
+
 </mapper>

@@ -4,6 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
+	<script src="${ctx}/static/oms/js/retailChnl/retailChnlInf/listRetailChnlAccBal.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -44,7 +45,7 @@
 					               <th>分销商名称</th>
 					               <th>账户名称</th>
 					               <th>账户余额(元)</th>
-									 <%--<th>操作</th>--%>
+									<th>操作</th>
 								 </tr>
 				             </thead>
 				             <tbody>
@@ -55,15 +56,16 @@
 									<td>${entity.personalName}</td>
 									<td>${entity.BId}</td>
 				                    <td>${entity.accBal}</td>
-										 <%--<td>
-                                             <a bId="${entity.BId}" title="账单详情" class="btn-mini btn-accBal" href="#"><i class="icon-search"></i></a>
-                                         </td>--%>
+									 <td>
+										 <a bId="${entity.BId}" title="账单详情" class="btn-mini btn-accBal" href="#"><i class="icon-search"></i></a>
+									 </td>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>
 				         </table>
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
-				      </form>
+						<a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do"><button class="btn btn-primary" type="button">返 回</button></a>
+					</form>
 			   </div>
 	    </div>
 </body>
