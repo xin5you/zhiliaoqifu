@@ -58,7 +58,6 @@ public class MQProducerService extends AbstractMQProducer {
     public void sendWithDrawBatchNo(final String batchNo){
         logger.info("提现操作，batchNo={}",batchNo);
         Message message=new Message(RocketTopicEnums.withDrawTopic,RocketTopicEnums.withDrawTag,batchNo.getBytes());
-        message.setDelayTimeLevel(2);
         super.syncSend(message);
     }
 
