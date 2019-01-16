@@ -36,4 +36,18 @@ public interface TbEcomGoodsSpecMapper extends BaseMapper<TbEcomGoodsSpec> {
 	 * @return
 	 */
 	List<TbEcomGoodsSpec> getGoodsSpecByGoodsId(String goodsId);
+
+	/**
+	 * 根据specId查询商品规格关联信息
+	 * @param specId
+	 * @return
+	 */
+	List<TbEcomGoodsSpec> getGoodsSpecBySpecId(String specId);
+
+	/**
+	 * 根据specValueId查询商品规格关联信息
+	 * @param specId
+	 * @return
+	 */
+	List<TbEcomGoodsSpec> getGoodsSpecBySpecValueId(String specValueId);
 }

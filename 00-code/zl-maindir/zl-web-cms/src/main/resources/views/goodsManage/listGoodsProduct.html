@@ -155,7 +155,7 @@
                                 <select name="specValueId" id="specValueId" class="span3">
 									<option value="">---请选择---</option>
 									<option th:each="g,gStat : ${goodsSpecValuesList}" th:value="${g.specValueId}">
-                                        <span th:text="${g.specValueName}"></span>
+                                        <span th:text="${g.specValue}"></span>
                                     </option>
                                 </select>
                                 <span class="help-block"></span>

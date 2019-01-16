@@ -391,7 +391,7 @@ var listGoodsProduct = {
                 $("#specValueId").empty();
                 $("#specValueId").append("<option value=''>"+"---请选择---"+"</option>");
                 for(var i = 0; i < data.length; i++){
-                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValueName+"</option>");
+                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValue+"</option>");
                 }
                 $.ajax({
                     url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProduct',
@@ -497,7 +497,7 @@ var listGoodsProduct = {
                 $("#specValueId").empty();
                 $("#specValueId").append("<option value=''>"+"---请选择---"+"</option>");
                 for(var i = 0; i < data.length; i++){
-                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValueName+"</option>");//新增
+                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValue+"</option>");//新增
                 }
                 /*$("#specValueId option:eq(0)").attr('selected', 'selected');//选中第一个*/
             },

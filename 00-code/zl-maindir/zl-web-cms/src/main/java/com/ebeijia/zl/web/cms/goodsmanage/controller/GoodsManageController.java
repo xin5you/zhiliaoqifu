@@ -2,9 +2,7 @@ package com.ebeijia.zl.web.cms.goodsmanage.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.crypto.Data;
 
-import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.core.domain.BillingType;
@@ -17,9 +15,7 @@ import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
-import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.shop.dao.goods.domain.*;
 import com.ebeijia.zl.shop.dao.goods.service.*;
 import com.ebeijia.zl.web.cms.base.exception.BizHandlerException;
@@ -213,7 +209,7 @@ public class GoodsManageController {
 
 		String specId = req.getParameter("spec_id");
 		String specName = req.getParameter("spec_name");
-		String specImg = req.getParameter("spec_img");
+		/*String specImg = req.getParameter("spec_img");*/
 		String specOrder = req.getParameter("spec_order");
 		String remarks = req.getParameter("remarks");
 
@@ -233,7 +229,7 @@ public class GoodsManageController {
 		spec.setUpdateUser(user.getId());
 		spec.setUpdateTime(System.currentTimeMillis());
 		spec.setSpecName(specName);
-		spec.setSpecImg(specImg);
+		/*spec.setSpecImg(specImg);*/
 		spec.setSpecOrder(Integer.valueOf(specOrder));
 		spec.setRemarks(remarks);
 		return spec;
@@ -421,9 +417,9 @@ public class GoodsManageController {
 		String specValueId = req.getParameter("spec_value_id");
 		String specValueName = req.getParameter("spec_value_name");
 		String specValue = req.getParameter("spec_value");
-		String specImage = req.getParameter("spec_image");
+		/*String specImage = req.getParameter("spec_image");*/
 		String specOrder = req.getParameter("spec_order");
-		String specType = req.getParameter("spec_type");
+		/*String specType = req.getParameter("spec_type");*/
 		String remarks = req.getParameter("remarks");
 
 		TbEcomSpecValues specValues = null;
@@ -442,16 +438,18 @@ public class GoodsManageController {
 		specValues.setUpdateUser(user.getId());
 		specValues.setUpdateTime(System.currentTimeMillis());
 		specValues.setSpecOrder(Integer.valueOf(specOrder));
-		specValues.setSpecType(specType);
+		/*specValues.setSpecType(specType);*/
+		specValues.setSpecType(GoodsSpecTypeEnum.GoodsSpecTypeEnum_0.getCode());
 		specValues.setSpecValueName(specValueName);
-		if (GoodsSpecTypeEnum.GoodsSpecTypeEnum_1.getCode().equals(specType)) {
+		/*if (GoodsSpecTypeEnum.GoodsSpecTypeEnum_1.getCode().equals(specType)) {
 			specValues.setSpecImage(specImage);
 			specValues.setSpecValue("");
 		}
 		if (GoodsSpecTypeEnum.GoodsSpecTypeEnum_0.getCode().equals(specType)) {
 			specValues.setSpecValue(specValue);
 			specValues.setSpecImage("");
-		}
+		}*/
+		specValues.setSpecValue(specValue);
 		specValues.setRemarks(remarks);
 		return specValues;
 	}
@@ -750,7 +748,7 @@ public class GoodsManageController {
 
 	/**
 	 * 新增商品相册信息
-	 * @param thumbnailFile
+	 * @param originalFile
 	 * @param req
 	 * @return
 	 */

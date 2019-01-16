@@ -39,8 +39,8 @@
 								<th>所属规格</th>
 								<th>规格值名称</th>
 								<th>规格值</th>
-				                <th>规格值图片</th>
-								<th>规格值类型</th>
+				               <!-- <th>规格值图片</th>-->
+								<!--<th>规格值类型</th>-->
 				                <th>规格值排序号</th>
 				                <th>操作</th>
 							</tr>
@@ -52,12 +52,12 @@
 								<td><span th:text="${spec.specName}"></span></td>
 								<td><span th:text="${spec.specValueName}"></span></td>
 								<td><span th:text="${spec.specValue}"></span></td>
-								<td>
+								<!--<td>
 									<span  th:if="${spec.specImage} != null">
 										<a th:href="${spec.specImage}">[[${spec.specImage}]]</a>
 									</span>
-								</td>
-								<td><span th:text="${spec.specType}"></span></td>
+								</td>-->
+								<!--<td><span th:text="${spec.specType}"></span></td>-->
 								<td><span th:text="${spec.specOrder}"></span></td>
 				                <td>
 									<a th:attr="specValueId=${spec.specValueId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
@@ -67,6 +67,7 @@
 						</tbody>
 					</table>
 				    <div class="page-div row-fluid" style="margin-top:10px;" th:include="main/pagination::page" />
+					<button type="button" class="btn btn-primary btn-backGoodsSpec">返 回</button>
 			    </form>
 			</div>
 		</div>
@@ -80,17 +81,17 @@
 					<input type="hidden" id="spec_id" name="spec_id" th:value="${ecomSpecValues.specId}"/>
 					<input type="hidden" id="spec_value_id" name="spec_value_id"/>
 					<fieldset>
-						<div class="control-group">
+						<!--<div class="control-group">
 							<label class="control-label">规格类型：</label>
 							<div class="controls">
-								<!--<input type="text" class="span3" name="spec_type" id="spec_type" maxlength="4"/>-->
-								<select id="spec_type" name="spec_type" class="span3">
-									<option value="">--请选择--</option>
+								&lt;!&ndash;<input type="text" class="span3" name="spec_type" id="spec_type" maxlength="4" readonly="readonly"/>&ndash;&gt;
+								&lt;!&ndash;<select id="spec_type" name="spec_type" class="span3">
+									<option value="">&#45;&#45;请选择&#45;&#45;</option>
 									<option th:each="g,gStat : ${goodsSpecTypeList}" th:value="${g.code}"><span th:text="${g.value}" /></option>
-								</select>
+								</select>&ndash;&gt;
 								<span class="help-block"></span>
 							</div>
-						</div>
+						</div>-->
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格值名称：</label>
 							<div class="controls">
@@ -105,17 +106,18 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
-						<div class="control-group">
+						<input type="file" class="span3" name="specImageFile" id="specImageFile"/>
+						<!--<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格图片：</label>
 							<div class="controls">
 								<input type="text" class="span3" name="spec_image" id="spec_image" readonly="readonly"/>
 								<input type="file" class="span3" name="specImageFile" id="specImageFile"/>
 								<span class="help-block"></span>
 							</div>	
-						</div>
+						</div>-->
 
 						<div class="control-group">
-							<label class="control-label"><span class="f_req">* </span>规格排序：</label>
+							<label class="control-label"><span class="f_req">* </span>规格值排序号：</label>
 							<div class="controls">
 								<input type="text" class="span3" name="spec_order" id="spec_order" maxlength="20" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 								<span class="help-block"></span>

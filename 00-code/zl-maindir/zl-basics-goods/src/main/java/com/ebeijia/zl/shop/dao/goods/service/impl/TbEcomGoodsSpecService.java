@@ -33,4 +33,14 @@ public class TbEcomGoodsSpecService extends ServiceImpl<TbEcomGoodsSpecMapper, T
     public List<TbEcomGoodsSpec> getGoodsSpecByGoodsId(String goodsId) {
         return baseMapper.getGoodsSpecByGoodsId(goodsId);
     }
+
+    @Override
+    public List<TbEcomGoodsSpec> getGoodsSpecBySpecId(String specId) {
+        return baseMapper.getGoodsSpecBySpecId(specId);
+    }
+
+    @Override
+    public List<TbEcomGoodsSpec> getGoodsSpecBySpecValueId(String specValueId) {
+        return baseMapper.getGoodsSpecBySpecValueId(specValueId);
+    }
 }

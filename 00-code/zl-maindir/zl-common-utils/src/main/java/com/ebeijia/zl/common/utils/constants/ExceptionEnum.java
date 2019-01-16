@@ -314,14 +314,8 @@ public class ExceptionEnum {
 		}
 	}
 
-
-
-
-
-
-
 	/**
-	 * 商品规格枚举
+	 * 商品管理模块枚举
 	 */
 	public enum GoodsSpecNews {
 		GoodsSpecNews01("01", "新增商品规格失败"),
@@ -354,7 +348,9 @@ public class ExceptionEnum {
 		GoodsSpecNews28("28", "该商品的相册信息不完整，请重新操作"),
 		GoodsSpecNews29("29", "该商品的详情信息不完整，请重新操作"),
 		GoodsSpecNews30("30", "Spu下的Sku规格必须相同"),
-		GoodsSpecNews31("31", "Spu下的Sku规格值不能相同");
+		GoodsSpecNews31("31", "Spu下的Sku规格值不能相同"),
+		GoodsSpecNews32("32", "该规格已被使用，不能删除"),
+		GoodsSpecNews33("33", "该规格值已被引用，不能删除");
 
 		private String code;
 		private String msg;
