@@ -21,6 +21,9 @@ public interface IPayService {
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     BaseResult payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc);
 
+    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    BaseResult payPhone(PayInfo vo, String openId, String dmsRelatedKey, String desc);
+
     PageInfo<AccountLogVO> listDeals(String range, String type, String method, String start, String limit);
 
     List<AccountVO> listAccountDetail(String openId, String session);

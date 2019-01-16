@@ -69,6 +69,8 @@ public class ProductService implements IProductService {
             //TODO 优化sql
             String bId = type.getbId();
             goods.setBId(bId);
+        }else {
+            goods.setIsHot("1");
         }
 
         if (catid != null) {
@@ -107,7 +109,7 @@ public class ProductService implements IProductService {
         //构建查询器
         TbEcomGoodsProduct query = new TbEcomGoodsProduct();
         query.setGoodsId(goodsId);
-
+        query.setDataStat("0");
         //获取最大最小金额
         List<TbEcomGoodsProduct> products = productDao.list(new QueryWrapper<>(query));
         goodsDetailInfo.setHasStore(false);
@@ -190,7 +192,10 @@ public class ProductService implements IProductService {
         }
         TbEcomGoodsGallery gallery = new TbEcomGoodsGallery();
         gallery.setGoodsId(goodsId);
-        return galleryDao.list(new QueryWrapper<>(gallery));
+        gallery.setDataStat("0");
+        QueryWrapper<TbEcomGoodsGallery> tbEcomGoodsGalleryQueryWrapper = new QueryWrapper<>(gallery);
+        tbEcomGoodsGalleryQueryWrapper.orderByAsc("sort");
+        return galleryDao.list(tbEcomGoodsGalleryQueryWrapper);
     }
 
     @Override

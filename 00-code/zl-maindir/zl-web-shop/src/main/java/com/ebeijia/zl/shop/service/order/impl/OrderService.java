@@ -212,7 +212,7 @@ public class OrderService implements IOrderService {
         if (!memberInfo.getMemberId().equals(order.getMemberId())) {
             throw new BizException(NOT_ACCEPTABLE, "验证失败");
         }
-        if (!order.getPayStatus().equals("0")||("1").equals(order.getDataStat())) {
+        if (!order.getPayStatus().equals("0") || ("1").equals(order.getDataStat())) {
             throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
         }
         //乐观锁
@@ -418,7 +418,7 @@ public class OrderService implements IOrderService {
         }
         //获取订单对象
         TbEcomPlatfOrder order = platfOrderDao.getById(orderId);
-        if (order == null||("1").equals(order.getDataStat())) {
+        if (order == null || ("1").equals(order.getDataStat())) {
             throw new BizException(NOT_FOUND, "找不到订单");
         }
         //校验身份

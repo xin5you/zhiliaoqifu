@@ -3,7 +3,10 @@ package com.ebeijia.zl.shop.service.pay.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.TransChnl;
+import com.ebeijia.zl.common.utils.enums.UserChnlCode;
+import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
@@ -45,6 +48,10 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.ebeijia.zl.common.utils.enums.TransCode.*;
+import static com.ebeijia.zl.facade.account.exceptions.AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH;
+import static com.ebeijia.zl.facade.account.exceptions.AccountBizException.ACCOUNT_COUPONBAL_IS_NOT_ENOUGH;
+
 @Service
 public class PayService implements IPayService {
 
@@ -84,8 +91,8 @@ public class PayService implements IPayService {
     @Override
     public int transferToCard(Long dealInfo, String validCode, Double session) {
         String dmsKey = IdUtil.getNextId();
-        if (dealInfo<=0){
-            throw new BizException(ResultState.NOT_ACCEPTABLE,"提现金额有误");
+        if (dealInfo <= 0) {
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "提现金额有误");
         }
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
@@ -120,7 +127,7 @@ public class PayService implements IPayService {
         req.setTransChnl(TransChnl.CHANNEL9.toString());
         req.setTransAmt(BigDecimal.valueOf(dealInfo));
         req.setUploadAmt(BigDecimal.valueOf(dealInfo));
-        req.setTransId(TransCode.CW91.getCode());
+        req.setTransId(CW91.getCode());
         req.setDmsRelatedKey(dmsKey);
         BaseResult baseResult = null;
         try {
@@ -154,8 +161,8 @@ public class PayService implements IPayService {
         if (!baseResult.getCode().equals("00")) {
             if (baseResult.getCode().equals("99")) {
                 throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
-            }else {
-                throw new BizException(ResultState.BALANCE_NOT_ENOUGH,baseResult.getMsg());
+            } else {
+                throw new BizException(ResultState.BALANCE_NOT_ENOUGH, baseResult.getMsg());
             }
         }
         throw new AdviceMessenger(ResultState.OK, "成功！信息已提交");
@@ -204,6 +211,9 @@ public class PayService implements IPayService {
         return baseResult;
     }
 
+
+
+
     private TbEcomPayOrderDetails initPayOrderDetailObject() {
         TbEcomPayOrderDetails payOrderDetails = new TbEcomPayOrderDetails();
         payOrderDetails.setPayDetailsId(IdUtil.getNextId());
@@ -232,7 +242,7 @@ public class PayService implements IPayService {
 
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         //交易与渠道
-        req.setTransId(TransCode.CW20.getCode());
+        req.setTransId(CW20.getCode());
         req.setTransChnl(TransChnl.CHANNEL9.toString());
         //消费端用户识别
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
@@ -253,13 +263,61 @@ public class PayService implements IPayService {
             throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
         //判断result
-        if (!baseResult.getCode().equals("00")) {
+        if (baseResult.getCode().equals(ACCOUNT_COUPONBAL_IS_NOT_ENOUGH.getCode())) {
             logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "余额不足");
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，账户余额中可购买代金券的余额不足了");
+        }else if (!baseResult.getCode().equals("00")){
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，余额不足了");
+
         }
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
         return baseResult;
     }
+
+
+
+    @Override
+    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    public BaseResult payPhone(PayInfo vo, String openId, String dmsRelatedKey, String desc) {
+        //请求支付
+        String result = "";
+        List<AccountTxnVo> accountTxnVos = buildTxnVo(vo);
+
+        AccountConsumeReqVo req = new AccountConsumeReqVo();
+        //交易与渠道
+        req.setTransId(CW10.getCode());
+        req.setTransChnl(TransChnl.CHANNEL8.toString());
+        //消费端用户识别
+        req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+        req.setUserChnlId(openId);
+        req.setUserType(UserType.TYPE100.getCode());
+        req.setTransList(accountTxnVos);
+        req.setDmsRelatedKey(dmsRelatedKey);
+        if (desc == null) {
+            desc = "商城消费";
+        }
+        req.setTransDesc(desc);
+        BaseResult baseResult = null;
+        try {
+            baseResult = accountTransactionFacade.executeConsume(req);
+        } catch (Exception e) {
+            logger.error("支付失败", e);
+            logger.error("支付失败,参数%s,%s,%s,%s,%s", vo.getCostA()+vo.getTypeA(), vo.getCostB()+vo.getTypeB(), openId, dmsRelatedKey, desc);
+            throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
+        }
+        //判断result
+        if (baseResult.getCode().equals(ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.getCode())) {
+            logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA()+vo.getTypeA(), vo.getCostB()+vo.getTypeB(), openId, dmsRelatedKey, desc, result));
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，余额不足");
+        }else if (!baseResult.getCode().equals("00")){
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, baseResult.getMsg());
+
+        }
+        logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA()+vo.getTypeA(), vo.getCostB()+vo.getTypeB(), openId, dmsRelatedKey, desc, result));
+        return baseResult;
+    }
+
+
 
     @Override
     public PageInfo<AccountLogVO> listDeals(String range, String type, String method, String start, String limit) {
@@ -303,12 +361,16 @@ public class PayService implements IPayService {
                 //交易类型 0：开户 1：加款 2：减款
                 case "0":
                 case "1":
-                case "2":
                     req.setAccType(method);
-                    logger.info("交易类型筛选流水[{}]",req);
                     break;
+                case "2":
+                    req.setTransIds(new String[]{CW10.getCode(),CW20.getCode(),CW71.getCode(),MB10.getCode()});
+                    break;
+                case "3":
+                    req.setTransIds(new String[]{CW40.getCode(), MB40.getCode(),CW91.getCode()});
                 default:
             }
+            logger.info("交易类型筛选流水[{}]", req);
         }
         PageInfo<AccountLogVO> accountLogPage = accountQueryFacade.getAccountLogPage(startNum, pageSize, req);
 //        accountLogPage.
@@ -347,7 +409,7 @@ public class PayService implements IPayService {
         startDate = calendar.getTimeInMillis();
         req.setSDate(startDate);
         req.setEDate(System.currentTimeMillis());
-        logger.info("时间筛选流水[{}]",req);
+        logger.info("时间筛选流水[{}]", req);
         return req;
     }
 
@@ -388,7 +450,7 @@ public class PayService implements IPayService {
     private BaseResult executeConsume(List<AccountTxnVo> consumeList, String openId, String dmsRelatedKey, String desc) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         //交易与渠道
-        req.setTransId(TransCode.CW10.getCode());
+        req.setTransId(CW10.getCode());
         req.setTransChnl(TransChnl.CHANNEL6.toString());
         //消费端用户识别
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
