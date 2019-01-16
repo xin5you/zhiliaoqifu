@@ -33,7 +33,7 @@ public interface ITransLogService extends IService<TransLog> {
 	*-------------------------------------*
 	* 2018年12月3日     zhuqi           v1.0.0
 	 */
-	public boolean execute(IntfaceTransLog intfaceTransLog) throws AccountBizException;
+	 boolean execute(IntfaceTransLog intfaceTransLog) throws AccountBizException;
 
 	/**
 	 *
@@ -51,5 +51,14 @@ public interface ITransLogService extends IService<TransLog> {
 	 *-------------------------------------*
 	 * 2018年12月3日     zhuqi           v1.0.0
 	 */
-	public boolean executeList(List<IntfaceTransLog> intfaceTransLogs) throws AccountBizException;
+	 boolean executeList(List<IntfaceTransLog> intfaceTransLogs) throws AccountBizException;
+
+	 /**
+	 *  查找原交易的交易日志
+	 * @param itfPrikey
+	  *@param cardAttr 交易类型
+	 * @return
+	 * @throws AccountBizException
+	 */
+	 List<TransLog> getTransLogListByItfPrikey(String itfPrikey,String cardAttr)throws AccountBizException;
 }

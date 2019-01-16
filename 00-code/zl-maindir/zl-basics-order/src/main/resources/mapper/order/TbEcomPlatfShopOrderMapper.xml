@@ -30,33 +30,35 @@
     <select id="getPlatfShopOrderListByPlatfOrder" parameterType="TbEcomPlatfShopOrder" resultType="TbEcomPlatfShopOrder">
         select
           <include refid="platfShopOrderColumns" />,
-          g.goods_type as goodsType
+          g.goods_type as goodsType,
+          p.provider_name as providerName
         from
           <include refid="tableName" />
           inner join tb_ecom_order_product_item item on item.s_order_id = pso.s_order_id
           left join tb_ecom_goods_product pro on pro.product_id = item.product_id
           left join tb_ecom_goods g on g.spu_code = pro.spu_code
+          left join tb_provider_inf p on pso.ecom_code = p.law_code
         where pso.data_stat = '0'
-        <if test="sOrderId !=null and sOrderId !='' ">
+        <if test="sOrderId != null and sOrderId != '' ">
             and pso.s_order_id = #{sOrderId}
         </if>
-        <if test="orderId !=null and orderId !='' ">
+        <if test="orderId != null and orderId != '' ">
             and pso.order_id = #{orderId}
         </if>
-        <if test="dmsRelatedKey !=null and dmsRelatedKey !='' ">
+        <if test="dmsRelatedKey != null and dmsRelatedKey != '' ">
             and pso.dms_related_key = #{dmsRelatedKey}
         </if>
-        <if test="memberId !=null and memberId !='' ">
+        <if test="memberId != null and memberId != '' ">
             and pso.member_id = #{memberId}
         </if>
-        <if test="subOrderStatus !=null and subOrderStatus !='' ">
+        <if test="subOrderStatus != null and subOrderStatus != '' ">
             and pso.sub_order_status = #{subOrderStatus}
         </if>
-        <if test="orderRemark !=null and orderRemark !='' ">
-            and pso.order_remark = #{orderRemark}
+        <if test="orderRemark != null and orderRemark != '' ">
+            and pso.order_remark like "%"#{orderRemark}"%"
         </if>
-        <if test="ecomCode !=null and ecomCode !='' ">
-            and pso.ecom_code = #{ecomCode}
+        <if test="providerName != null and providerName != '' ">
+            and p.provider_name like "%"#{providerName}"%"
         </if>
         order by pso.update_time desc
     </select>

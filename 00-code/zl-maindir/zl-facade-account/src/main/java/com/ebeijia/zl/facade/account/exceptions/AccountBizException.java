@@ -46,6 +46,12 @@ public class AccountBizException extends BizException {
 	public static final AccountBizException ACCOUNT_POS_TRXTYPE_INVALID = new AccountBizException(20080112, "POS交易类型无效");
 
 	public static final AccountBizException ACCOUNT_WITHDRID_SAVE_FAILED = new AccountBizException(20080113, "账户提现保存数据异常");
+
+	public static final AccountBizException ACCOUNT_REFUND_FAILED= new AccountBizException(20080114, "退款失败");
+
+	public static final AccountBizException ORG_ACCOUNT_LOG_NOT_EXIT = new AccountBizException(20080115, "原交易账户日志不存在");
+
+	public static final AccountBizException ACCOUNT_REFUND_NOT_ENOUGH = new AccountBizException(20080116, "退款金额大于原交易金额");
 	
 	public static final AccountBizException ACCOUNT_CARD_ATTR_ERROR = new AccountBizException(20089999, "当前交易类型未知");
 

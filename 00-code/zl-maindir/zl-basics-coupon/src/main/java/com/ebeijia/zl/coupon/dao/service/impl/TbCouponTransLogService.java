@@ -1,10 +1,13 @@
 package com.ebeijia.zl.coupon.dao.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponTransLog;
 import com.ebeijia.zl.coupon.dao.mapper.TbCouponTransLogMapper;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponTransLogService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -17,4 +20,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbCouponTransLogService extends ServiceImpl<TbCouponTransLogMapper, TbCouponTransLog> implements ITbCouponTransLogService {
 
+
+    @Autowired
+    private TbCouponTransLogMapper couponTransLogMapper;
+
+
+    @Override
+    public List<TbCouponTransLog> getCouponTransLogs(TbCouponTransLog couponTransLog) {
+        return couponTransLogMapper.getTransLog(couponTransLog);
+    }
 }

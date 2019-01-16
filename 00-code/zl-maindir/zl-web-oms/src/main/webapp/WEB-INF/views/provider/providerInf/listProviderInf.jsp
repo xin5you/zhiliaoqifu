@@ -48,7 +48,7 @@
 					<th>app_Secret</th>
 					<th>access_token</th>--%>
 					<th>默认路由标识</th>
-					<th>供应商折扣</th>
+					<%--<th>供应商折扣</th>--%>
 					<th>操作顺序</th>
 					<th>是否开户</th>
 					<th>操作</th>
@@ -63,7 +63,7 @@
 						<td>${entity.appSecret}</td>
 						<td>${entity.accessToken}</td>--%>
 						<td>${entity.defaultRoute}</td>
-						<td>${entity.providerRate}</td>
+						<%--<td>${entity.providerRate}</td>--%>
 						<td>${entity.operSolr}</td>
 						<td>
 							<c:if test="${entity.isOpen == '0'}">未开户</c:if>

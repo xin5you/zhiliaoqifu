@@ -19,7 +19,7 @@ public interface PlatfOrderInfService {
 	 * @param entity
 	 * @return
 	 */
-	PageInfo<TbEcomPlatfOrder> getPlatforderListPage(int startNum, int pageSize, TbEcomPlatfOrder entity);
+	PageInfo<TbEcomPlatfOrder> getPlatfOrderListPage(int startNum, int pageSize, TbEcomPlatfOrder entity);
 
 	/**
 	 * 查看电商平台二级订单通过一级订单查询（含分页）

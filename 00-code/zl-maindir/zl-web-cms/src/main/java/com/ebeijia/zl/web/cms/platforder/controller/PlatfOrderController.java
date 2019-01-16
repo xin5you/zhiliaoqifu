@@ -48,7 +48,7 @@ public class PlatfOrderController {
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 		PageInfo<TbEcomPlatfOrder> pageInfo = new PageInfo<>();
 		try {
-			pageInfo = platfOrderInfService.getPlatforderListPage(startNum, pageSize, platfOrder);
+			pageInfo = platfOrderInfService.getPlatfOrderListPage(startNum, pageSize, platfOrder);
 		} catch (Exception e) {
 			logger.error("## 查询商城一级订单异常[{}]", e);
 		}
@@ -83,7 +83,6 @@ public class PlatfOrderController {
 				logger.error("## 根据一级订单查询商城二级订单异常[{}]", e);
 			}
 		}
-		mv.addObject("ecomCodeList", GoodsEcomCodeTypeEnum.values());
 		mv.addObject("subOrderStatusList", SubOrderStatusEnum.values());
 		mv.addObject("orderId", orderId);
 		mv.addObject("pageInfo", pageInfo);

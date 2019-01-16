@@ -17,7 +17,7 @@ package com.ebeijia.zl.shop.dao.goods.mapper;
 public interface TbEcomSpecificationMapper extends BaseMapper<TbEcomSpecification> {
 
 	/**
-	 * 根据条件查询商品规格信息
+	 * 根据条件查询卡券信息
 	 * @param ecomSpecification
 	 * @return
 	 */

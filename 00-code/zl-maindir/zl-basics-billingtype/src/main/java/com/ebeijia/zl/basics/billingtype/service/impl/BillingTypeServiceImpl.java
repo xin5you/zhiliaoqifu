@@ -56,9 +56,6 @@ public class BillingTypeServiceImpl extends ServiceImpl<BillingTypeMapper, Billi
 	public PageInfo<BillingType> getBillingTypeInfListPage(int startNum, int pageSize, BillingType billingTypeInf) {
 		PageHelper.startPage(startNum, pageSize);
 		List<BillingType> list = billingTypeMapper.getBillingTypeInfList(billingTypeInf);
-		for (BillingType b : list) {
-			b.setCode(SpecAccountTypeEnum.findByBId(b.getBId()).getCode());
-		}
 		PageInfo<BillingType> page = new PageInfo<BillingType>(list);
 		return page;
 	}

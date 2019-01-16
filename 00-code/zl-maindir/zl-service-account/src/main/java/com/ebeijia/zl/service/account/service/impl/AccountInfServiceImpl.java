@@ -194,7 +194,21 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (account == null) {
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
 		}
-		
+		//账户退款操作
+		if(TransCode.CW11.getCode().equals(transLog.getTransId()) || TransCode.CW71.getCode().equals(transLog.getTransId())){
+			AccountLog orgAccountLog=accountLogService.getAccountLogByTxnPriKey(transLog.getOrgTxnPrimaryKey());
+			if(orgAccountLog==null){
+				throw AccountBizException.ORG_ACCOUNT_LOG_NOT_EXIT.newInstance("原账户交易日志{%s}不存在", transLog.getOrgTxnPrimaryKey()).print();
+			}
+			//如果原交易金額小于 已退款金额+本次交易金额
+			if(AmountUtil.lessThan(orgAccountLog.getTxnAmt(),AmountUtil.add(orgAccountLog.getReturnAmt(),transLog.getTransAmt()))){
+				throw AccountBizException.ACCOUNT_REFUND_NOT_ENOUGH.newInstance("退款失败，本次退款大于可退款金额", null).print();
+			}
+
+			orgAccountLog.setReturnFlag("1");
+			orgAccountLog.setReturnAmt(AmountUtil.add(orgAccountLog.getReturnAmt(),transLog.getTransAmt()));
+			boolean f=accountLogService.updateById(orgAccountLog);
+		}
 		/****** consumerBal set begin ***/
 		//员工账户充值 专用专项账户的按比例设置强制消费额度
 

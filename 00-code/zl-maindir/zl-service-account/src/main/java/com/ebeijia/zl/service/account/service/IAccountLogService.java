@@ -28,4 +28,11 @@ public interface IAccountLogService extends IService<AccountLog> {
 	 * @return
 	 */
 	List<AccountLogVO> getAccountLogVoList(AccountQueryReqVo req);
+
+	/**
+	 * 查找交易日志对应的账户流水信息
+	 * @param txnPriKey
+	 * @return
+	 */
+	AccountLog getAccountLogByTxnPriKey(String txnPriKey);
 }

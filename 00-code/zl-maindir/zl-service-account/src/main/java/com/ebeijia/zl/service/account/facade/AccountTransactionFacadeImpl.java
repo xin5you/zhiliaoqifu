@@ -328,8 +328,14 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 
 		long sDate=DateUtil.getMonthBeginInMillis();
 		long eDate=DateUtil.getMonthEndInMillis();
+
+		//单个账户单笔消费限额
+		BigDecimal txnAmt=new BigDecimal(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_DAY_TIME_AMT"));
+		if(AmountUtil.greaterThanOrEqualTo(req.getTransAmt(),txnAmt)){
+			return ResultsUtil.error(ITFRespCode.CODE1061.getCode(), ITFRespCode.CODE1061.getValue());
+		}
 		//step2: 当前用户当月提现金额
-		BigDecimal txnAmt=accountWithdrawDetailService.getWithdrawAmtByUserIdAndTime(fromUserInf.getUserId(),sDate,eDate);
+		 txnAmt=accountWithdrawDetailService.getWithdrawAmtByUserIdAndTime(fromUserInf.getUserId(),sDate,eDate);
 
 		//如果当前用户已经有提现操作
 		if(AmountUtil.bigger(txnAmt,new BigDecimal(0))){

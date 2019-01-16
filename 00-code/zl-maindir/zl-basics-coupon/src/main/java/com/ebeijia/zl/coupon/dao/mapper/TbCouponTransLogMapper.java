@@ -4,6 +4,8 @@ package com.ebeijia.zl.coupon.dao.mapper;
 	import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 	import org.apache.ibatis.annotations.Mapper;
 
+    import java.util.List;
+
 /**
  *
  * 包含卡密消费、转卖交易 Mapper 接口
@@ -13,5 +15,6 @@ package com.ebeijia.zl.coupon.dao.mapper;
  */
 @Mapper
 public interface TbCouponTransLogMapper extends BaseMapper<TbCouponTransLog> {
-	
+
+    List<TbCouponTransLog> getTransLog(TbCouponTransLog couponTransLog);
 }

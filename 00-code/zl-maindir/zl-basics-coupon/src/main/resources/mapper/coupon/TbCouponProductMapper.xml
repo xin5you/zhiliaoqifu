@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="TbCouponProductMapper">
+<mapper namespace="com.ebeijia.zl.coupon.dao.mapper.TbCouponProductMapper">
+    <sql id="CouponColumns">
+        coupon_code,
+        b_id,
+        price,
+        coupon_name,
+        coupon_type,
+        coupon_desc,
+        icon_image,
+        total_num,
+        available_num,
+        data_stat,
+        remarks,
+        lock_version
+    </sql>
 
+    <sql id="tableName">
+        tb_coupon_product
+    </sql>
+
+    <select id="getCouponList" parameterType="TbCouponProduct" resultType="TbCouponProduct">
+        select
+        <include refid="CouponColumns" />
+        from
+        <include refid="tableName" />
+        where data_stat = '0'
+      <if test="couponName != null and couponName != ''">
+            and coupon_name like "%"#{couponName}"%"
+        </if>
+        order by create_time desc
+    </select>
 </mapper>

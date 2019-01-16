@@ -27,16 +27,16 @@
 								<input type="hidden" name="providerId" id="providerId" value="${providerInf.providerId}"/>
 								<h3 class="heading">编辑供应商信息</h3>
 					     		<div class="control-group formSep">
-					             	<label class="control-label">供应商名称</label>
+					             	<label class="control-label">供应商名称<span style="color:red">*</span></label>
 						             <div class="controls">
 											<input type="text" class="span6" id="providerName" name="providerName" maxlength="32" value="${providerInf.providerName}"/>
 						                 	<span class="help-block"></span>
 						             </div>
 					     		</div>
 								<div class="control-group formSep">
-									<label class="control-label">供应商代码</label>
+									<label class="control-label">供应商代码<span style="color:red">*</span></label>
 									<div class="controls">
-										<input type="text" class="span6" id="lawCode" name="lawCode" maxlength="32" value="${providerInf.lawCode}"/>
+										<input type="text" class="span6" id="lawCode" name="lawCode" maxlength="32" value="${providerInf.lawCode}" <c:if test="${'1'==providerInf.isOpen }">readonly="readonly"</c:if>/>
 										<span class="help-block"></span>
 									</div>
 								</div>
@@ -53,48 +53,48 @@
 					     		</div>
 					     		</c:if> --%>
 					     		<div class="control-group formSep">
-						             <label class="control-label">app_url</label>
+						             <label class="control-label">app_url<span style="color:red">*</span></label>
 						             <div class="controls">
 											<input type="text" class="span6" name="appUrl" id="appUrl" maxlength="128" value="${providerInf.appUrl}"/>
 						                 	<span class="help-block"></span>
 						             </div>
 					     		</div>
 					     		<div class="control-group formSep">
-						             <label class="control-label">app_Secret</label>
+						             <label class="control-label">app_Secret<span style="color:red">*</span></label>
 						             <div class="controls">
 											<input type="text" class="span6" name="appSecret" id="appSecret" maxlength="64" value="${providerInf.appSecret}"/>
 						                 	<span class="help-block"></span>
 						             </div>
 					     		</div>
 					     		<div class="control-group formSep">
-						             <label class="control-label">access_token</label>
+						             <label class="control-label">access_token<span style="color:red">*</span></label>
 						             <div class="controls">
 											<input type="text" class="span6" name="accessToken" id="accessToken" maxlength="64" value="${providerInf.accessToken}"/>
 						                 	<span class="help-block"></span>
 						             </div>
 					     		</div>
 					     		<div class="control-group formSep">
-						             <label class="control-label">默认路由标识</label>
+						             <label class="control-label">默认路由标识<span style="color:red">*</span></label>
 						             <div class="controls">
 						               		<select name="defaultRoute" id="defaultRoute" class="span6" <c:if test="${providerInf.defaultRoute == '0' }"> readonly="readonly" disabled="disabled" </c:if> >
 											 <c:forEach var="drList" items="${defaultRouteList}" varStatus="st">
-											 		<option value="${drList.code}" <c:if test="${drList.code == providerInf.defaultRoute }">selected="selected""</c:if> >${drList.value}</option>
+											 		<option value="${drList.code}" <c:if test="${drList.code == providerInf.defaultRoute }">selected="selected"</c:if> >${drList.value}</option>
 											 </c:forEach>
 			                                </select>
 						             </div>
 					     		</div>
-					     		<div class="control-group formSep">
+					     		<%--<div class="control-group formSep">
 	                                  <label class="control-label">供应商折扣</label>
 	                                  <div class="controls">
 	                                      <input type="text" class="span6" id="providerRate" name="providerRate" maxlength="8" onkeyup="checkPrice(this)" value="${providerInf.providerRate}"/>
 	                                      <span class="help-block"></span>
 	                                  </div>
-                                 </div>
+                                 </div>--%>
 
                                 <div class="control-group formSep">
-                                    <label class="control-label">操作顺序</label>
+                                    <label class="control-label">操作顺序<span style="color:red">*</span></label>
                                     <div class="controls">
-                                          <input type="text" class="span6" id="operSolr" name="operSolr" value="${providerInf.operSolr}" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+                                          <input type="text" class="span6" id="operSolr" name="operSolr" value="${providerInf.operSolr}" onkeyup="this.value=this.value.replace(/\D/g,'')" maxlength="10"/>
                                           <span class="help-block"></span>
                                     </div>
                                 </div>

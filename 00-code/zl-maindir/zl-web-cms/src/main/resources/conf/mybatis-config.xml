@@ -19,7 +19,7 @@
 		<package name="com.ebeijia.zl.shop.dao.member.domain"/>
 		<package name="com.ebeijia.zl.shop.dao.goods.domain"/>
 		<package name="com.ebeijia.zl.shop.dao.order.domain"/>
-
+		<package name="com.ebeijia.zl.coupon.dao.domain"/>
 	</typeAliases>
 
 </configuration>

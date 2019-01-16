@@ -41,7 +41,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">统一社会信用代码<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="lawCode" name="lawCode" value="${companyInf.lawCode }" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="lawCode" name="lawCode" value="${companyInf.lawCode }" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" <c:if test="${'1'==companyInf.isOpen }">readonly="readonly"</c:if>/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -73,7 +73,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">平台标识<span style="color:red">*</span></label>
 						<div class="controls">
-							<select id="isPlatform" name="isPlatform" class="chzn_a span6" <c:if test="${'1'==companyInf.isOpen }">readonly="readonly" </c:if> >
+							<select id="isPlatform" name="isPlatform" class="chzn_a span6" <c:if test="${'1'==companyInf.isOpen }">disabled="disabled"</c:if> >
 								<option value="" >---请选择---</option>
 								<option value="0" <c:if test="${'0'==companyInf.isPlatform }">selected="selected"</c:if>>否</option>
 								<option value="1" <c:if test="${'1'==companyInf.isPlatform }">selected="selected"</c:if>>是</option>
@@ -82,7 +82,7 @@
 						</div>
 					</div>
 
-					<div class="control-group formSep">
+					<%--<div class="control-group formSep">
 						<label class="control-label">交易开关<span style="color:red">*</span></label>
 						<div class="controls">
 							<select id="transFlag" name="transFlag" class="chzn_a span6">
@@ -92,7 +92,7 @@
 							</select>
 							<span class="help-block"></span>
 						</div>
-					</div>
+					</div>--%>
 
 					<div class="control-group">
 						<label class="control-label">备注</label>

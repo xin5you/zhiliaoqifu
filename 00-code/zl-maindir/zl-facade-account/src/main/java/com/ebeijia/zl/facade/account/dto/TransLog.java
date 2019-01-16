@@ -144,10 +144,9 @@ public class TransLog extends Model<TransLog> {
     private String transCurrCd;
  
     /**
-     * A 账户加
-            D 账户减
-            O 开户操作
-            
+     * 0 开户操作
+     * 1 账户加
+     * 2 账户减
      */
     @TableField("card_attr")
     private String cardAttr;

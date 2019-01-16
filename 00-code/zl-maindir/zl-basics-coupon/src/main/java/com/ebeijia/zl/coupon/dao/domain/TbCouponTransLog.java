@@ -173,6 +173,11 @@ public class TbCouponTransLog extends Model<TbCouponTransLog> {
     @ApiModelProperty(value = "乐观锁版本")
     private Integer lockVersion;
 
+    @TableField(exist = false)
+    private String memberName;
+    @TableField(exist = false)
+    private String couponName;
+
 
     @Override
     protected Serializable pkVal() { 

@@ -85,7 +85,7 @@
 						</div>
 					</div>
 
-					<div class="control-group formSep">
+					<%--<div class="control-group formSep">
 						<label class="control-label">交易开关<span style="color:red">*</span></label>
 						<div class="controls">
 							<select id="transFlag" name="transFlag" class="chzn_a span6">
@@ -95,7 +95,7 @@
 							</select>
 							<span class="help-block"></span>
 						</div>
-					</div>
+					</div>--%>
 
 					<div class="control-group">
 						<label class="control-label">备注</label>

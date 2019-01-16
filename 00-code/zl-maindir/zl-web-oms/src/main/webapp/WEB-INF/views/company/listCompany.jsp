@@ -28,14 +28,14 @@
 					<div class="input-prepend">
 						<span class="add-on">企业名称</span><input id="name" name="name" type="text" class="input-medium" value="${companyInf.name }" />
 					</div>
-					<div class="input-prepend">
+					<%--<div class="input-prepend">
 						<span class="add-on">交易开关状态</span>
 						<select name="transFlag" id="transFlag" class="input-medium">
 							<option value="">--请选择--</option>
 							<option <c:if test="${companyInf.transFlag == '0' }">selected="selected"</c:if> value="0">开</option>
 							<option <c:if test="${companyInf.transFlag == '1' }">selected="selected"</c:if> value="1">关</option>
 						</select>
-					</div>
+					</div>--%>
 					<div class="input-prepend">
 						<span class="add-on">联系人</span><input id="contacts" name="contacts" type="text" class="input-medium" value="${companyInf.contacts }" />
 					</div>
@@ -59,7 +59,7 @@
 					<th>联系人</th>
 					<th>联系电话</th>
 					<th>平台标识</th>
-					<th>交易开关状态</th>
+					<%--<th>交易开关状态</th>--%>
 					<th>开户状态</th>
 					<th>备注</th>
 					<th>操作</th>
@@ -77,22 +77,22 @@
 							<c:if test="${company.isPlatform=='1'}">是</c:if>
 							<c:if test="${company.isPlatform=='0'}">否</c:if>
 						</td>
-						<td>
+						<%--<td>
 							<c:if test="${company.transFlag=='1'}">关</c:if>
 							<c:if test="${company.transFlag=='0'}">开</c:if>
-						</td>
+						</td>--%>
 						<td>
 							<c:if test="${company.isOpen=='1'}">已开户</c:if>
 							<c:if test="${company.isOpen=='0'}">未开户</c:if>
 						</td>
 						<td>${company.remarks}</td>
 						<td>
+							<sec:authorize access="hasRole('ROLE_COMPANY_INTOEDIT')">
+								<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+							</sec:authorize>
 							<c:if test="${company.isOpen=='0'}">
 								<sec:authorize access="hasRole('ROLE_COMPANY_OPENACCOUNT')">
 									<a companyId="${company.companyId}" title="开户" class="btn-mini btn-open" href="#"><i class="icon-pencil"></i></a>
-								</sec:authorize>
-								<sec:authorize access="hasRole('ROLE_COMPANY_INTOEDIT')">
-									<a companyId="${company.companyId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 								</sec:authorize>
 								<sec:authorize access="hasRole('ROLE_COMPANY_DELETE')">
 									<a companyId="${company.companyId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>

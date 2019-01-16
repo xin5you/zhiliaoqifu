@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
@@ -16,6 +17,7 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
 import com.ebeijia.zl.facade.account.enums.WithDrawStatusEnum;
 import com.ebeijia.zl.facade.account.enums.WithDrawSuccessEnum;
+import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
 import org.slf4j.Logger;
@@ -64,6 +66,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 	@Autowired
 	private JedisCluster jedisCluster;
+
+	@Autowired
+	private TransLogMapper transLogMapper;
 
 	/**
 	 *
@@ -319,15 +324,26 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			if(!eflag) {
 				throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
 			}
-
-
-
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
 			List<AccountTxnVo> addList = intfaceTransLog.getAddList();
-			if (addList != null && addList.size() > 0) {
+			List<TransLog>  transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),AccountCardAttrEnum.SUB.getValue());
+
+			if (addList != null && addList.size() > 0 && transLogs!=null && transLogs.size()>0) {
+				boolean priBidVal=false;
 				for (AccountTxnVo accountTxnVo : addList) {
-					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getTxnAmt());
+					priBidVal=false;
+					for (TransLog orgTransLog: transLogs) {
+						if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
+							priBidVal=true;
+							this.addToVoListOrgTransLog(voList, intfaceTransLog, orgTransLog, accountTxnVo.getTxnAmt(), accountTxnVo.getTxnAmt());
+						}
+					}
+					if(!priBidVal){
+						throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易类型{%s}不存在",intfaceTransLog.getOrgItfPrimaryKey(),accountTxnVo.getTxnBId()).print();
+					}
 				}
+			}else {
+				throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
 			}
 		}else{
 			this.addToVoList(voList, intfaceTransLog, null, null, null, 0);
@@ -388,6 +404,27 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		if(upLoadAmt !=null){
 			transLog.setUploadAmt(upLoadAmt);
 		}
+		addToVoList(voList,transLog,voList.size());
+	}
+
+	/**
+	 *
+	 * @param voList  交易日志列表
+	 * @param intfaceTransLog  交易流水记录表
+	 * @param orgTransLog  原交易日志
+	 * @param transAmt  交易金额
+	 * @param upLoadAmt 上送金额
+	 */
+	private void addToVoListOrgTransLog(List<TransLog> voList,IntfaceTransLog intfaceTransLog,TransLog orgTransLog,BigDecimal transAmt,BigDecimal upLoadAmt){
+		TransLog transLog=new TransLog();
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		this.newTransLog(intfaceTransLog, transLog);
+		transLog.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+		transLog.setUserId(orgTransLog.getUserId());
+		transLog.setOrgTxnPrimaryKey(orgTransLog.getTxnPrimaryKey());
+		transLog.setPriBId(orgTransLog.getPriBId());
+		transLog.setTransAmt(transAmt);
+		transLog.setUploadAmt(upLoadAmt);
 		addToVoList(voList,transLog,voList.size());
 	}
 
@@ -455,5 +492,20 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		String billingTypeSting=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BILLING_TYPE,bId);
 		BillingType billingType=JSONObject.parseObject(billingTypeSting,BillingType.class);
 		return  billingType;
+	}
+	/**
+	 *  查找原交易的交易日志
+	 * @param itfPrikey
+	 * @param cardAttr 交易类型
+	 * @return
+	 * @throws AccountBizException
+	 */
+	public List<TransLog> getTransLogListByItfPrikey(String itfPrikey,String cardAttr)throws AccountBizException{
+		QueryWrapper<TransLog> queryWrapper = new QueryWrapper<TransLog>();
+		queryWrapper.eq("itf_primary_key", itfPrikey);
+		if(StringUtil.isNotEmpty(cardAttr)){
+			queryWrapper.eq("card_attr", cardAttr);
+		}
+		return transLogMapper.selectList(queryWrapper);
 	}
 }
