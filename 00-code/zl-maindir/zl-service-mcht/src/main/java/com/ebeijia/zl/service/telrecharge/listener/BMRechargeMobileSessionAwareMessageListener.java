@@ -45,7 +45,7 @@ import redis.clients.jedis.JedisCluster;
  * @since 2018-07-10 11:21:23
  *  
  */
-@MQConsumer(topic = RocketTopicEnums.mobileRechangeTopic,tag=RocketTopicEnums.mobileRechangeTag, consumerGroup = "${spring.rocketmq.producer-group}")
+@MQConsumer(topic = RocketTopicEnums.mobileRechangeTopic, consumerGroup = "zlqf_group")
 public class BMRechargeMobileSessionAwareMessageListener extends AbstractMQPushConsumer {
 	
 	private Logger logger = LoggerFactory.getLogger(BMRechargeMobileSessionAwareMessageListener.class);

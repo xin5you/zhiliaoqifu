@@ -34,7 +34,7 @@ import java.util.UUID;
  * @since 2018-07-10 11:21:23
  *  
  */
-@MQConsumer(topic = RocketTopicEnums.withDrawTopic,tag=RocketTopicEnums.withDrawTag, consumerGroup = "${spring.rocketmq.producer-group}")
+@MQConsumer(topic = RocketTopicEnums.withDrawTopic,consumerGroup = "zlqf_group")
 public class WithDrawSessionAwareMessageListener extends AbstractMQPushConsumer {
 	
 	private Logger logger = LoggerFactory.getLogger(WithDrawSessionAwareMessageListener.class);
