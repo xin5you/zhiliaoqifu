@@ -22,10 +22,6 @@ spring:
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
-  rocketmq:
-    name-server-address: 192.168.2.110:9876
-    producer-group: zlqf_group
-    send-msg-timeout: 5000
   dubbo:
     application:
       name: zl-web-api

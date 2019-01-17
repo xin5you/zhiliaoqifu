@@ -26,7 +26,9 @@
 							<div class="pull-right">
 								<!--<button type="submit" class="btn btn-search">查 询</button>
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>-->
-								<button id="btn-add" type="button" class="btn btn-primary btn-add">新增商品详情</button>
+								<span th:if="${goodsInf.marketEnable == '0'}">
+									<button id="btn-add" type="button" class="btn btn-primary btn-add">新增商品详情</button>
+								</span>
 							</div>
 						</div>
 					</div>
@@ -37,7 +39,7 @@
 								<th></th>
 								<th>所属商品名称</th>
 								<th>商品详情名称</th>
-				                <th>浏览量</th>
+				                <!--<th>浏览量</th>-->
 				                <th>购买量</th>
 								<th>备注</th>
 				                <th>操作</th>
@@ -48,12 +50,14 @@
 								<td><span th:text="${detailStat.count}"></span></td>
 								<td><span th:text="${detail.goodsName}"></span></td>
 								<td><span th:text="${detail.detailName}"></span></td>
-								<td><span th:text="${detail.viewCount}"></span></td>
+								<!--<td><span th:text="${detail.viewCount}"></span></td>-->
 								<td><span th:text="${detail.buyCount}"></span></td>
 								<td><span th:text="${detail.remarks}"></span></td>
 				                <td>
-									<a th:attr="detailId=${detail.detailId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<a th:attr="detailId=${detail.detailId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									<span th:if="${goodsInf.marketEnable == '0'}">
+										<a th:attr="detailId=${detail.detailId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+										<a th:attr="detailId=${detail.detailId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									</span>
 									<a th:attr="detailId=${detail.detailId}" title="添加富文本" class="btn-mini btn-add-intro" href="#"><i class="icon-plus"></i></a>
 								</td>
 							</tr>

@@ -28,7 +28,7 @@
         g.data_stat,
         g.remarks,
         g.create_user,
-        g.update_u
+        g.update_user,
         g.create_time,
         g.update_time,
         g.lock_version
@@ -59,7 +59,7 @@
             and g.goods_type = #{goodsType}
         </if>
         <if test="BId != null and BId != ''">
-            and g.b_id = #{BId}
+            and g.b_id  = #{BId}
         </if>
         <if test="marketEnable != null and marketEnable != ''">
             and g.market_enable = #{marketEnable}
@@ -73,6 +73,7 @@
         <if test="isHot != null and isHot != ''">
             and g.is_hot = #{isHot}
         </if>
+        order by g.create_time desc
     </select>
 
     <select id="getGoodsInfByGoodsId" parameterType="String" resultType="TbEcomGoods">
@@ -125,25 +126,25 @@
         and g.market_enable = '1'
         and g.is_disabled = '0'
         <if test="ecomCode != null and ecomCode != '' ">
-            and g.ecom_code = #{ecomCode}
+            and	 g.ecom_code = #{ecomCode}
         </if>
         <if test="spuCode != null and spuCode != '' ">
-            and g.spu_code = #{spuCode}
+            and	 g.spu_code = #{spuCode}
         </if>
         <if test="goodsName != null and goodsName != '' ">
-            and g.goods_name like '%' || #{goodsName} || '%'
+            and	 g.goods_name like '%' || #{goodsName} || '%'
         </if>
         <if test="marketEnable != null and marketEnable != '' ">
-            and g.market_enable = #{marketEnable}
+            and	 g.market_enable = #{marketEnable}
         </if>
         <if test="skuCode != null and skuCode != '' ">
-            and p.sku_code = #{skuCode}
+            and	 p.sku_code = #{skuCode}
         </if>
         <if test="productId != null and productId != '' ">
-            and p.product_id = #{productId}
+            and	 p.product_id = #{productId}
         </if>
         <if test="bId != null and bId != '' ">
-            and b.b_id = #{bId}
+            and	 b.b_id = #{bId}
         </if>
         <if test="isHot != null and isHot != ''">
             and g.is_hot = #{isHot}

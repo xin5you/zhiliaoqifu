@@ -24,7 +24,9 @@
 					<input type="hidden" id="intro" name="intro" th:value="${goodsDetail.intro}"/>
 					<div id="container" type="text/plain" style="width: 80%;margin-left: auto;margin-top: 5%;"></div>
 					<div class="modal-footer" style="text-align: center;" id="btnDiv">
-						<button type="button" class="btn btn-primary btn-add-detailIntro">提 交</button>
+						<span th:if="${goodsInf.marketEnable == '0'}">
+							<button type="button" class="btn btn-primary btn-add-detailIntro">提 交</button>
+						</span>
 						<button type="button" class="btn btn-primary btn-backGoodsDetail">返 回</button>
 					</div>
 				</form>

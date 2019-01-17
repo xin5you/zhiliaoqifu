@@ -35,7 +35,7 @@
 								<th></th>
 								<th>规格Id</th>
 								<th>规格名称</th>
-				                <th>规格图片</th>
+				                <!--<th>规格图片</th>-->
 				                <th>规格排序号</th>
 				                <th>操作</th>
 							</tr>
@@ -45,7 +45,7 @@
 								<td><span th:text="${specStat.count}"></span></td>
 								<td><span th:text="${spec.specId}"></span></td>
 								<td><span th:text="${spec.specName}"></span></td>
-								<td><a th:href="${spec.specImg}">[[${spec.specImg}]]</a></td>
+								<!--<td><a th:href="${spec.specImg}">[[${spec.specImg}]]</a></td>-->
 								<td><span th:text="${spec.specOrder}"></span></td>
 				                <td>
 									<a th:attr="specId=${spec.specId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
@@ -75,14 +75,15 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
-						<div class="control-group">
+                        <input type="file" class="span3" name="specImgFile" id="specImgFile"/>
+						<!--<div id="specImgFileDiv" class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格图片：</label>
 							<div class="controls">
 								<input type="text" class="span3" name="spec_img" id="spec_img" readonly="readonly"/>
 								<input type="file" class="span3" name="specImgFile" id="specImgFile"/>
 								<span class="help-block"></span>
 							</div>	
-						</div>
+						</div>-->
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格排序：</label>
 							<div class="controls">

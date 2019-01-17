@@ -652,7 +652,11 @@ public class ProviderInfController {
 
 		try {
 			Map<String, Object> resultMap = commonService.getAccountLogInfPage(request);
-			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+			if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
+				mv.addObject("pageInfo", resultMap.get("pageInfo"));
+			} else {
+				logger.error("## 远程调用查询账户余额明细失败，msg--->{}", resultMap.get("msg"));
+			}
 		} catch (Exception e) {
 			logger.error("## 供应商账户列表查询异常", e);
 		}

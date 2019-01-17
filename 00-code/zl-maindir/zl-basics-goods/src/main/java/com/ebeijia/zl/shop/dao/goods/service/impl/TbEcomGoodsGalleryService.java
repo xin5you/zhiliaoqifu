@@ -25,8 +25,8 @@ public class TbEcomGoodsGalleryService extends ServiceImpl<TbEcomGoodsGalleryMap
     }
 
     @Override
-    public TbEcomGoodsGallery getGoodsGalleryByIsDefault(String isDefault) {
-        return baseMapper.getGoodsGalleryByIsDefault(isDefault);
+    public TbEcomGoodsGallery getGoodsGalleryByIsDefault(TbEcomGoodsGallery ecomGoodsGallery) {
+        return baseMapper.getGoodsGalleryByIsDefault(ecomGoodsGallery);
     }
 
     @Override

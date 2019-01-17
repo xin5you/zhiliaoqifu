@@ -46,9 +46,14 @@ spring:
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
   rocketmq:
-    name-server-address: 192.168.2.110:9876
-    producer-group: zlqf_group
-    send-msg-timeout: 5000
+    groupName: zlqf_group
+    namesrvAddr: 192.168.2.110:9876
+    sendMsgTimeout: 3000
+    retryTimesWhenSendFailed: 2
+    maxMessageSize: 4096
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    consumeMessageBatchMaxSize: 1
   dubbo:
     application:
       name: zl-service-mcht

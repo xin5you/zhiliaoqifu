@@ -8,5 +8,5 @@ public interface UserRoleResourceService {
 	
 	int updateUserRole(User user, String[] roleIds);
 	
-	int updateRoleResource(String roleId ,String[] resourceIds);
+	int updateRoleResource(String roleId, String[] resourceIds);
 }

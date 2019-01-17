@@ -4,7 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
-	<script src="${ctx}/static/oms/js/provider/providerInf/listProviderAccBalDetail.js"></script>
+	<script src="${ctx}/static/oms/js/retailChnl/retailChnlInf/listRetailChnlAccBalDetail.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -14,17 +14,17 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>供应商管理</li>
-			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
-			                    <li>供应商信息列表</li>
-								<li><a href="${ctx }/provider/providerInf/listProviderAccBal.do?providerId=${providerId}">供应商账户余额列表</a></li>
-								<li>供应商账户余额明细列表</li>
+			                    <li>分销商管理</li>
+			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
+			                    <li>分销商信息列表</li>
+								<li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlAccBal.do?channelId=${channelId}">分销商账户余额列表</a></li>
+								<li>分销商账户余额明细列表</li>
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="searchForm" action="${ctx }/provider/providerInf/listProviderAccBalDetail.do" class="form-inline" method="post">
-						<h3 class="heading">供应商账户余额明细列表</h3>
-						<input type="hidden" id="providerId" name="providerId" value="${providerId}"/>
+					<form id="searchForm" action="${ctx }/retailChnl/retailChnlInf/listRetailChnlAccBalDetail.do" class="form-inline" method="post">
+						<h3 class="heading">分销商账户余额明细列表</h3>
+						<input type="hidden" id="channelId" name="channelId" value="${channelId}"/>
 						<%--<div class="row-fluid" id="h_search">
 							 <div class="span10">
 		                       	<div class="input-prepend">
@@ -80,7 +80,7 @@
 				             </tbody>
 				         </table>
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
-						<a href="${ctx }/provider/providerInf/listProviderAccBal.do?providerId=${providerId}"><button class="btn btn-primary" type="button">返 回</button></a>
+						<a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlAccBal.do?channelId=${channelId}"><button class="btn btn-primary" type="button">返 回</button></a>
 					</form>
 			   </div>
 	    </div>
