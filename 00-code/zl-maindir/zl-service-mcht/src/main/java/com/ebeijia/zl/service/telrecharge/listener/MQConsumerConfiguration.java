@@ -39,7 +39,7 @@ public class MQConsumerConfiguration {
     @Bean(" rechargeMobileSessionAwareMQConsumer")
     public DefaultMQPushConsumer rechargeMobileSessionAwareMQConsumer() throws RocketMQException {
 
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("zlqf_group");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("zlqf_rechargemobile_group");
         consumer.setNamesrvAddr(namesrvAddr);
         consumer.setConsumeThreadMin(consumeThreadMin);
         consumer.setConsumeThreadMax(consumeThreadMax);

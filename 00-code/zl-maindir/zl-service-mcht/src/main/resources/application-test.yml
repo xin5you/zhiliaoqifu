@@ -46,7 +46,7 @@ spring:
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
   rocketmq:
-    groupName: zlqf_group
+    groupName: zlqf_mcht_group
     namesrvAddr: 192.168.2.110:9876
     sendMsgTimeout: 3000
     retryTimesWhenSendFailed: 2

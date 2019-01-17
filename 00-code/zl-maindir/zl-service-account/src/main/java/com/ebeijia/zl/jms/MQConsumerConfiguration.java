@@ -44,7 +44,7 @@ public class MQConsumerConfiguration {
     @Bean("withDrawSessionAwareMQConsumer")
     public DefaultMQPushConsumer withDrawSessionAwareMQConsumer() throws RocketMQException {
 
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("zlqf_group");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("zlqf_withdraw_group");
         consumer.setNamesrvAddr(namesrvAddr);
         consumer.setConsumeThreadMin(consumeThreadMin);
         consumer.setConsumeThreadMax(consumeThreadMax);

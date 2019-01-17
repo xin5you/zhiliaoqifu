@@ -42,7 +42,7 @@ public class MQProducerConfiguration {
 
     @Bean
     public DefaultMQProducer defaultMQProducer() throws Exception {
-        DefaultMQProducer producer=new DefaultMQProducer("zlqf_group");
+        DefaultMQProducer producer=new DefaultMQProducer(groupName);
         producer.setNamesrvAddr(this.namesrvAddr);
         //如果需要同一个jvm中不同的producer往不同的mq集群发送消息，需要设置不同的instanceName
         //producer.setInstanceName(instanceName);
