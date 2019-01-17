@@ -2,6 +2,8 @@ package com.ebeijia.zl.web.cms.banner.service.impl;
 
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.BannerPositionEnum;
+import com.ebeijia.zl.common.utils.enums.BannerSpecEnum;
 import com.ebeijia.zl.common.utils.enums.ImageTypeEnum;
 import com.ebeijia.zl.common.utils.enums.IsDisabledEnum;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
@@ -52,6 +54,12 @@ public class BannerServiceImpl implements BannerService {
 	public PageInfo<TbEcomBanner> getBannerListPage(int startNum, int pageSize, TbEcomBanner entity) {
 		PageHelper.startPage(startNum, pageSize);
 		List<TbEcomBanner> bannerList = ecomBannerService.getBannerList(entity);
+		if (bannerList != null && bannerList.size() > 0) {
+			for (TbEcomBanner b : bannerList) {
+				b.setPosition(BannerPositionEnum.findByBId(b.getPosition()).getName());
+				b.setSpec(BannerSpecEnum.findByBId(b.getSpec()).getName());
+			}
+		}
 		PageInfo<TbEcomBanner> bannerPage = new PageInfo<TbEcomBanner>(bannerList);
 		return bannerPage;
 	}

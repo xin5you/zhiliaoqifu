@@ -5,6 +5,8 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.BannerPositionEnum;
+import com.ebeijia.zl.common.utils.enums.BannerSpecEnum;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.IsDisabledEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
@@ -57,6 +59,8 @@ public class BannerController {
 		try {
 			PageInfo<TbEcomBanner> pageInfo = bannerService.getBannerListPage(startNum, pageSize, banner);
 			mv.addObject("pageInfo", pageInfo);
+			mv.addObject("bannerPositionList", BannerPositionEnum.values());
+			mv.addObject("bannerSpecList", BannerSpecEnum.values());
 		} catch (Exception e) {
 			logger.error("## 会员信息查询出错", e);
 		}
