@@ -385,4 +385,46 @@ public class ExceptionEnum {
 			return null;
 		}
 	}
+
+	/*
+		banner异常枚举值
+	 */
+	public enum BannerNews {
+		BannerNews01("01", "新增banner信息异常"),
+		BannerNews02("02", "编辑banner信息异常"),
+		BannerNews03("03", "删除banner信息异常");
+
+		private String code;
+		private String msg;
+
+		private BannerNews(String code, String msg) {
+			this.code = code;
+			this.msg = msg;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+
+		public static BannerNews findByCode(String code) {
+			for (BannerNews t : BannerNews.values()) {
+				if (t.code.equalsIgnoreCase(code)) {
+					return t;
+				}
+			}
+			return null;
+		}
+	}
 }
