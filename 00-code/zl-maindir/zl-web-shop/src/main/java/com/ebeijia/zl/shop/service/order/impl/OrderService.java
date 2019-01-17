@@ -259,6 +259,10 @@ public class OrderService implements IOrderService {
                 String ecomName = "";
                 if (goods != null) {
                     ecomName = "[" + goods.getEcomName() + "]";
+                    if (goods.getIsDisabled().equals("1") ||
+                            goods.getMarketEnable().equals("0")) {
+                       throw new BizException(ResultState.STAT_ERROR,"该订单商品已下架");
+                    }
                 }
                 itemList.add(item);
                 TbEcomGoodsProduct product = productDao.getById(item.getProductId());
@@ -607,10 +611,10 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "错误的商品");
         }
         if ("1".equals(sku.getDataStat())) {
-            throw new BizException(NOT_ACCEPTABLE, "有一些商品下架了");
+            throw new BizException(STAT_ERROR, "该商品下架了");
         }
         if ("0".equals(sku.getProductEnable())) {
-            throw new BizException(NOT_ACCEPTABLE, "有一些商品下架了");
+            throw new BizException(STAT_ERROR, "该商品下架了");
         }
         //TODO 使用Redis记录库存
         Integer enableStore = sku.getEnableStore();

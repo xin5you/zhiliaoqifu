@@ -185,7 +185,7 @@ HKB_H5_URL: http://hkb.tao-lue.com
 BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/ecom/recharge/mobileRechargeBack
 OPEN_BM_NOTIFY_URL: http://ecm.tao-lue.com/ecom-front/hkb/recharge/mobileRechargeBack
 pagehelper:
-  reasonable: true
+  reasonable: false
   supportMethodsArguments: true
   params: count=countSql
 sms:

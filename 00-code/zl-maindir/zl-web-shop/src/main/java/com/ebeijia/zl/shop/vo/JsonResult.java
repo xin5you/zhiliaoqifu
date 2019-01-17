@@ -2,10 +2,12 @@ package com.ebeijia.zl.shop.vo;
 
 import com.ebeijia.zl.shop.constants.ResultState;
 import io.swagger.annotations.ApiModel;
+import lombok.Data;
 
 import java.io.Serializable;
 
 @ApiModel("结果")
+@Data
 public class JsonResult<T> implements Serializable {
 
     private static final long serialVersionUID = -62401379125965102L;

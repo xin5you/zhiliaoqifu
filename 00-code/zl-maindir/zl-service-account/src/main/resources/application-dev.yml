@@ -41,9 +41,14 @@ spring:
     registry:
       address: zookeeper://127.0.0.1:2181
   rocketmq:
-    name-server-address: 192.168.2.110:9876
-    producer-group: zlqf_group
-    send-msg-timeout: 5000
+    groupName: zlqf_account_group
+    namesrvAddr: 192.168.2.110:9876
+    sendMsgTimeout: 3000
+    retryTimesWhenSendFailed: 2
+    maxMessageSize: 4096
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    consumeMessageBatchMaxSize: 1
   redis:
     timeout: 3000
     cluster:

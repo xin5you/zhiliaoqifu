@@ -38,7 +38,7 @@ public class Goods extends Model<Goods> {
 	private String goodsImg;
 	private String bId;
 	private String skuCode;
-	
+	private String dataStat;
 	private String productId; //货品Id
 	private String pageTitle; //货品名称
 	private String ecomType;

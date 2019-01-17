@@ -78,6 +78,8 @@ public class ProductService implements IProductService {
             goodsList = goodsDao.getGoodsByCategory(goods);
         } else {
             //TODO 跨服务域
+            goods.setIsDisabled("0");
+            goods.setMarketEnable("1");
             goodsList = goodsDao.getGoodsList(goods);
         }
         PageInfo<Goods> page = new PageInfo<>(goodsList);
@@ -100,18 +102,24 @@ public class ProductService implements IProductService {
         if (!vaildId(goodsId)) {
             return null;
         }
+        TbEcomGoods byId = goodsDao.getById(goodsId);
+        if(byId==null||"1".equals(byId.getDataStat())||"0".equals(byId.getMarketEnable())||"1".equals(byId.getIsDisabled())){
+            throw new BizException(ResultState.STAT_ERROR,"商品已经下架了");
+        }
         TbEcomGoodsDetail detail = new TbEcomGoodsDetail();
         detail.setGoodsId(goodsId);
         GoodsDetailInfo goodsDetailInfo = new GoodsDetailInfo();
         goodsDetailInfo.setDetail(detailDao.getOne(new QueryWrapper<>(detail)));
         goodsDetailInfo.setInfo(goodsDao.getById(goodsId));
-
         //构建查询器
         TbEcomGoodsProduct query = new TbEcomGoodsProduct();
         query.setGoodsId(goodsId);
         query.setDataStat("0");
         //获取最大最小金额
         List<TbEcomGoodsProduct> products = productDao.list(new QueryWrapper<>(query));
+        if (products.size()==0){
+            throw new BizException(ResultState.STAT_ERROR,"商品已经下架了");
+        }
         goodsDetailInfo.setHasStore(false);
         for (TbEcomGoodsProduct p : products) {
             if (p.getIsStore().compareTo(0) > 0) {
@@ -127,6 +135,7 @@ public class ProductService implements IProductService {
 
         TbEcomGoodsSpec tbEcomGoodsSpec = new TbEcomGoodsSpec();
         tbEcomGoodsSpec.setGoodsId(goodsId);
+        tbEcomGoodsSpec.setDataStat("0");
         List<TbEcomGoodsSpec> goodsSpecs = goodsSpecDao.list(new QueryWrapper<>(tbEcomGoodsSpec));
         makeSpecAndValueNames(goodsDetailInfo, goodsSpecs);
         makeSpecsMap(goodsDetailInfo, goodsSpecs);
