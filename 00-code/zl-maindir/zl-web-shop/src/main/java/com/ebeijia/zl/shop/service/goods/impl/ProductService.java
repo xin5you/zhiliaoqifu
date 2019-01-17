@@ -78,6 +78,8 @@ public class ProductService implements IProductService {
             goodsList = goodsDao.getGoodsByCategory(goods);
         } else {
             //TODO 跨服务域
+            goods.setIsDisabled("0");
+            goods.setMarketEnable("1");
             goodsList = goodsDao.getGoodsList(goods);
         }
         PageInfo<Goods> page = new PageInfo<>(goodsList);
