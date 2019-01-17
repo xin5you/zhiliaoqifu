@@ -8,8 +8,10 @@ package com.ebeijia.zl.service.account.utils;
 	public enum ITFRespCode {
 		CODE00("00", "交易成功"),
 		CODE1001("1001", "查发卡行"),
+		CODE1002("1002", "用户不存在"),
 		CODE1003("1003", "无效商户"),
 		CODE1004("1004", "受限商户"),
+		CODE1005("1005", "商户不存在"),
 		CODE1006("1006", "无效合同"),
 		CODE1007("1007", "终端已经下载过TMK"),
 		CODE1008("1008", "终端未签到"),

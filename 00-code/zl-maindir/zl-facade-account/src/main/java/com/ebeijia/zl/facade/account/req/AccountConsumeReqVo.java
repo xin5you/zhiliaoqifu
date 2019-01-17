@@ -47,6 +47,10 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 	 */
 	private List<AccountTxnVo> addList; //快捷支付填写
 
+	private String mchntCode; //商户
+
+	private String shopCode; //门店
+
 	public String getPriBId() {
 		return priBId;
 	}
@@ -70,6 +74,22 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 		this.uploadAmt = uploadAmt;
 	}
 
+	public String getMchntCode() {
+		return mchntCode;
+	}
+
+	public void setMchntCode(String mchntCode) {
+		this.mchntCode = mchntCode;
+	}
+
+	public String getShopCode() {
+		return shopCode;
+	}
+
+	public void setShopCode(String shopCode) {
+		this.shopCode = shopCode;
+	}
+
 	public List<AccountTxnVo> getTransList() {
 		return transList;
 	}
@@ -85,4 +105,6 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 	public void setAddList(List<AccountTxnVo> addList) {
 		this.addList = addList;
 	}
+
+
 }
