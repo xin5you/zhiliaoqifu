@@ -102,8 +102,12 @@
 			<include refid="goodsProductColumns"/>
 		from
 			<include refid="tableName"/>
+			inner join tb_ecom_goods_spec s on s.product_id = p.product_id
 		where p.data_stat = '0'
 			and p.goods_id = #{goodsId}
+		<if test="productId !=null and productId !='' ">
+			and p.product_id = #{productId}
+		</if>
 		order by p.create_time desc
 	</select>
 

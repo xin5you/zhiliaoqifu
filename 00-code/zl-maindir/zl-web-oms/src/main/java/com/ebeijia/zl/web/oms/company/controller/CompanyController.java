@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
@@ -392,6 +393,11 @@ public class CompanyController {
 		return resultMap;
 	}
 
+	/**
+	 * 查询企业专项余额列表
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/listCompanyAccBal")
 	public ModelAndView listCompanyAccBal(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("company/listCompanyAccBal");
@@ -399,7 +405,11 @@ public class CompanyController {
 
 		try {
 			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
-			mv.addObject("pageInfo", resultMap.get("pageInfo"));
+            if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
+                mv.addObject("pageInfo", resultMap.get("pageInfo"));
+            } else {
+                logger.error("## 远程调用查询账户余额失败，msg--->{}", resultMap.get("msg"));
+            }
 		} catch (Exception e) {
 			logger.error("## 企业账户列表查询异常", e);
 		}
@@ -602,4 +612,31 @@ public class CompanyController {
 		cbt.setUpdateTime(System.currentTimeMillis());
 		return cbt;
 	}
+
+    /**
+     * 查询企业专项余额明细
+     * @param req
+     * @param response
+     * @return
+     * @throws IOException
+     */
+	@RequestMapping(value = "/listCompanyAccBalDetail")
+	public ModelAndView listCompanyAccBalDetaillistCompanyAccBal(HttpServletRequest req, HttpServletResponse response) throws IOException {
+		ModelAndView mv = new ModelAndView("company/listCompanyAccBalDetail");
+		String companyId = req.getParameter("companyId");
+		try {
+            Map<String, Object> resultMap = commonService.getAccountLogInfPage(req);
+            if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
+                mv.addObject("pageInfo", resultMap.get("pageInfo"));
+            } else {
+                logger.error("## 远程调用查询账户余额明细失败，msg--->{}", resultMap.get("msg"));
+            }
+		} catch (Exception e) {
+			logger.error("## 查询企业列表信息出错", e);
+		}
+        mv.addObject("companyId", companyId);
+		return mv;
+	}
+
+
 }

@@ -19,6 +19,9 @@ public interface ResultState {
     //账户资源不足
     int BALANCE_NOT_ENOUGH = 414;
 
+    //账户资源不足
+    int STAT_ERROR = 424;
+
     //用户或者参数不匹配
     int NOT_ACCEPTABLE = 406;
 

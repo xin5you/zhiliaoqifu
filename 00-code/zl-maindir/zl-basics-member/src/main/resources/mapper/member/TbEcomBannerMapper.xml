@@ -2,4 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ebeijia.zl.shop.dao.member.mapper.TbEcomBannerMapper">
 
+    <sql id="bannerColumns">
+        id,
+        image_url,
+        banner_url,
+        spec,
+        position,
+        banner_text,
+        sort,
+        disable
+    </sql>
+
+    <sql id="tableName">
+        tb_ecom_banner
+    </sql>
+
+    <select id="getBannerList" parameterType="TbEcomBanner" resultType="TbEcomBanner">
+        select
+          <include refid="bannerColumns"/>
+        from
+          <include refid="tableName"/>
+        where disable = '0'
+        <if test="bannerText != null and bannerText != ''">
+            and banner_text like "%"#{bannerText}"%"
+        </if>
+        <!--<if test="disable != null and disable != ''">
+            and disable = #{disable}
+        </if>-->
+        order by sort asc
+    </select>
+
+    <select id="getBannerBySort" parameterType="Integer" resultType="TbEcomBanner">
+        select
+          <include refid="bannerColumns"/>
+        from
+          <include refid="tableName"/>
+        where disable = '0'
+          and sort = #{sort}
+    </select>
+
 </mapper>

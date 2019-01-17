@@ -15,7 +15,7 @@ public interface BatchOrderMapper extends BaseMapper<BatchOrder> {
 
 	List<BatchOrder> getBatchOrderList(BatchOrder order);
 	
-	PageInfo<BatchOrder> getBatchOrderPage(int startNum, int pageSize, BatchOrder order,HttpServletRequest req);
+	PageInfo<BatchOrder> getBatchOrderPage(int startNum, int pageSize, BatchOrder order, HttpServletRequest req);
 	
 	int addBatchOrder(BatchOrder order);
 	

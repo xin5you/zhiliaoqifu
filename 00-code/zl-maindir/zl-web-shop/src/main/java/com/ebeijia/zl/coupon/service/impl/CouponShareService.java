@@ -1,6 +1,7 @@
 package com.ebeijia.zl.coupon.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;

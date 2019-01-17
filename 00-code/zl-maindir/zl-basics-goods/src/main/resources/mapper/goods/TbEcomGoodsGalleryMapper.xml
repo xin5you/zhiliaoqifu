@@ -37,14 +37,14 @@
         order by g.create_time desc
     </select>
 
-    <select id="getGoodsGalleryByIsDefault" parameterType="String" resultType="TbEcomGoodsGallery">
+    <select id="getGoodsGalleryByIsDefault" parameterType="TbEcomGoodsGallery" resultType="TbEcomGoodsGallery">
         select
           <include refid="goodsGalleryColumns"/>
         from
           <include refid="tableName"/>
         where g.data_stat = '0'
+          and g.goods_id = #{goodsId}
           and g.is_default = #{isDefault}
-        order by g.create_time desc
     </select>
 
     <select id="getGoodsGalleryBySort" parameterType="TbEcomGoodsGallery" resultType="TbEcomGoodsGallery">

@@ -54,8 +54,8 @@ var listGoodsProduct = {
                 goods_price: { required: "请输入商品价格"},
                 goods_cost: { required: "请输入商品成本价"},
                 mkt_price: { required: "请输入商品市场价"},
-                page_title: { required: "请输入页面标题"},
-                meta_description: { required: "请输入页面描述"},
+                page_title: { required: "请输入货品标题"},
+                meta_description: { required: "请输入货品描述"},
                 pic_url: { required: "请选择图片"}
             },
             invalidHandler: function(form, validator) {
@@ -241,6 +241,50 @@ var listGoodsProduct = {
 		});
 		if(type == 1){
 			$('#modal_h').html("新增商品Sku信息信息");
+            /*var goodsId = $("#goods_id").val();
+            $.ajax({
+                url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProductListByGoodsId',
+                type: 'post',
+                dataType : "json",
+                data: {
+                    "goodsId": goodsId
+                },
+                success : function (data1) {
+                    console.log(data1);
+                    if (data1 != null && data1.length >= 1) {
+                        $('#specId').val(data1[0].TbEcomGoodsProduct.specId);
+                        $('#spec_id').val(data1[0].TbEcomGoodsProduct.specId);
+                        $("#specId").attr("disabled","true");
+                        $.ajax({
+                            url : Helper.getRootPath() + '/goodsManage/goodsSpec/getSpecValuesBySpecId',
+                            type : 'post',
+                            dataType : "json",
+                            data : {
+                                "specId": data1[0].specId
+                            },
+                            success : function (data2) {
+                                console.log(data2);
+                                if (data2 == null || data2 == '') {
+                                    Helper.alert("网络异常，请稍后再试");
+                                    return false;
+                                }
+                                $("#specValueId").empty();
+                                $("#specValueId").append("<option value=''>"+"---请选择---"+"</option>");
+                                for(var i = 0; i < data2.length; i++){
+                                    $("#specValueId").append("<option value='"+data2[i].specValueId+"'>"+data2[i].specValue+"</option>");//新增
+                                }
+                            },
+                            error : function() {
+                                Helper.alert("网络异常，请稍后再试");
+                                return false;
+                            }
+                        });
+                    }
+                },
+                error : function() {
+                    Helper.alert("网络异常，请稍后再试");
+                }
+            });*/
 			return;
 		}else if(type == 2){
 			$('#modal_h').html("编辑商品Sku信息信息");
@@ -262,7 +306,7 @@ var listGoodsProduct = {
             $(".btn-submit").attr("disabled","true");
         }
 
-        $.ajax({
+        /*$.ajax({
             url: Helper.getRootPath() + '/goodsManage/goodsSpec/getSpecValuesByProductId',
             type: 'post',
             dataType : "json",
@@ -305,14 +349,84 @@ var listGoodsProduct = {
                 $('#pic_url').val(data.picUrl);
                 $('#default_sku_code').val(data.isDefault);
                 $('#specId').val(data.specId);
+                $('#spec_id').val(data.specId);
                 $('#specValueId').val(data.specValueId);
                 $('#remarks').val(data.remarks);
+                var goodsId = $("#goods_id").val();
+                $.ajax({
+                    url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProductListByGoodsId',
+                    type: 'post',
+                    dataType : "json",
+                    data: {
+                        "goodsId": goodsId
+                    },
+                    success : function (result) {
+                        if (result != null && result.length > 1) {
+                            $("#specId").attr("disabled","true");
+                        }
+                    },
+                    error : function() {
+                        Helper.alert("网络异常，请稍后再试");
+                    }
+                });
             },
             error : function() {
                 Helper.alert("网络异常，请稍后再试");
             }
-	    });
-		
+	    });*/
+
+        $.ajax({
+            url: Helper.getRootPath() + '/goodsManage/goodsSpec/getSpecValuesByProductId',
+            type: 'post',
+            dataType : "json",
+            data: {
+                "productId": productId
+            },
+            success : function (data) {
+                console.log(data);
+                if (data == null || data == '') {
+                    Helper.alert("网络异常，请稍后再试");
+                    return false;
+                }
+                $("#specValueId").empty();
+                $("#specValueId").append("<option value=''>"+"---请选择---"+"</option>");
+                for(var i = 0; i < data.length; i++){
+                    $("#specValueId").append("<option value='"+data[i].specValueId+"'>"+data[i].specValue+"</option>");
+                }
+                $.ajax({
+                    url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProduct',
+                    type: 'post',
+                    dataType : "json",
+                    data: {
+                        "productId": productId
+                    },
+                    success : function (data) {
+                        $('#product_id').val(data.productId);
+                        $('#is_store').val(data.isStore);
+                        $('#sku_code').val(data.skuCode);
+                        $('#enable_store').val(data.enableStore);
+                        $('#goods_price').val(data.goodsPrice);
+                        $('#goods_cost').val(data.goodsCost);
+                        $('#mkt_price').val(data.mktPrice);
+                        $('#page_title').val(data.pageTitle);
+                        $('#meta_description').val(data.metaDescription);
+                        $('#pic_url').val(data.picUrl);
+                        $('#default_sku_code').val(data.isDefault);
+                        $('#specId').val(data.specId);
+                        $('#spec_id').val(data.specId);
+                        $('#specValueId').val(data.specValueId);
+                        $('#remarks').val(data.remarks);
+                    },
+                    error : function() {
+                        Helper.alert("网络异常，请稍后再试");
+                    }
+                });
+            },
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
+            }
+        });
+
 		$("#modal").on("hidden.bs.modal", function(e) {
 			$("#sku_code").removeAttr('readonly');
             $("#is_store").removeAttr('readonly');
@@ -367,6 +481,7 @@ var listGoodsProduct = {
     },
     getSpecValuesBySpecId : function () {
         var specId = $("#specId").val();
+        $("#spec_id").val(specId);
         $.ajax({
             url : Helper.getRootPath() + '/goodsManage/goodsSpec/getSpecValuesBySpecId',
             type : 'post',

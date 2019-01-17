@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	listGoodsSpecValues.init();
+    $("#specImageFile").hide();
 })
 
 var listGoodsSpecValues = {
@@ -13,8 +14,9 @@ var listGoodsSpecValues = {
 		$('.btn-edit').on('click', listGoodsSpecValues.intoEditGoodsSpecValues);
 		$('.btn-delete').on('click', listGoodsSpecValues.deleteGoodsSpecValues);
 		$('.btn-close').on('click',listGoodsSpecValues.searchReset);
-        $('#spec_type').on('change', listGoodsSpecValues.goodsSpecValuesType);
-        $('#specImageFile').on('change', listGoodsSpecValues.imageUpload);
+        /*$('#spec_type').on('change', listGoodsSpecValues.goodsSpecValuesType);*/
+       /* $('#specImageFile').on('change', listGoodsSpecValues.imageUpload);*/
+        $('.btn-backGoodsSpec').on('click',listGoodsSpecValues.intoBackGoodsSpec);
 	},
 	
 	initTip: function (intoType) {
@@ -30,13 +32,13 @@ var listGoodsSpecValues = {
             },
             rules:{
                 spec_value_name: { required: true},
-                spec_order: { required: true},
-                spec_type: { required: true}
+                spec_order: { required: true}
+                /*spec_type: { required: true}*/
             },
             messages: {
                 spec_value_name: { required: "请输入规格值名称"},
-                spec_order: { required: "请输入规格值序号"},
-                spec_type: { required: "请选择规格值类型"}
+                spec_order: { required: "请输入规格值序号"}
+                /*spec_type: { required: "请选择规格值类型"}*/
             },
             invalidHandler: function(form, validator) {
             },
@@ -230,18 +232,18 @@ var listGoodsSpecValues = {
             success : function (data) {
             	$('#spec_value_id').val(data.specValueId);
                 $('#spec_value_name').val(data.specValueName);
-                $('#spec_type').val(data.specType);
+                /*$('#spec_type').val(data.specType);*/
                 $('#spec_order').val(data.specOrder);
             	$('#spec_value').val(data.specValue);
-            	$('#spec_image').val(data.specImage);
+            	/*$('#spec_image').val(data.specImage);*/
                 $('#remarks').val(data.remarks);
-                if ($('#spec_type').val() == '0') {
+                /*if ($('#spec_type').val() == '0') {
                     $("#specImageFile").hide();
                     $("#spec_value").removeAttr('disabled');
                 } else {
                     $("#specImageFile").show();
                     $("#spec_value").attr('disabled', "true");
-                }
+                }*/
             },
             error : function(){
             	Helper.alert("系统故障，请稍后再试");
@@ -251,9 +253,9 @@ var listGoodsSpecValues = {
 		$("#modal").on("hidden.bs.modal", function(e) {
             $("#spec_value_name").removeAttr('readonly');
 			$("#spec_value").removeAttr('readonly');
-			$("#spec_type").removeAttr('readonly');
+			/*$("#spec_type").removeAttr('readonly');*/
 			$("#spec_order").removeAttr('readonly');
-            $("#spec_image").removeAttr('readonly');
+            /*$("#spec_image").removeAttr('readonly');*/
             $("#remarks").removeAttr('readonly');
 			$(".btn-submit").removeAttr('disabled');
 		});
@@ -269,5 +271,8 @@ var listGoodsSpecValues = {
             $("#spec_image").removeAttr('disabled');
             $("#specImageFile").show();
         }
+    },
+    intoBackGoodsSpec : function () {
+        Helper.post('/goodsManage/goodsSpec/getGoodsSpecList');
     }
 }

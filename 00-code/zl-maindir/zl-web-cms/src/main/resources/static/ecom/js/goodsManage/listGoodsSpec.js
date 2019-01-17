@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	listGoodsSpec.init();
+	$("#specImgFile").hide();
 })
 
 var listGoodsSpec = {
@@ -13,7 +14,7 @@ var listGoodsSpec = {
 		$('.btn-edit').on('click', listGoodsSpec.intoEditGoodsSpec);
 		$('.btn-delete').on('click', listGoodsSpec.deleteGoodsSpec);
 		$('.btn-close').on('click',listGoodsSpec.searchReset);
-        $('#specImgFile').on('change', listGoodsSpec.imageUpload);
+        /*$('#specImgFile').on('change', listGoodsSpec.imageUpload);*/
         $('.btn-addSpecValues').on('click',listGoodsSpec.intoAddSpecValues);
 	},
 	
@@ -30,12 +31,12 @@ var listGoodsSpec = {
             },
             rules:{
                 spec_name: { required: true},
-                spec_img: { required: true},
+                /*spec_img: { required: true},*/
                 spec_order: { required: true}
             },
             messages: {
                 spec_name: { required: "请输入规格名称"},
-                spec_img: { required: "请选择规格图片"},
+                /*spec_img: { required: "请选择规格图片"},*/
                 spec_order: { required: "请输入规格序号"}
             },
             invalidHandler: function(form, validator) {
@@ -229,7 +230,7 @@ var listGoodsSpec = {
             	$('#spec_id').val(data.specId);
             	$('#spec_name').val(data.specName);
             	$('#spec_order').val(data.specOrder);
-            	$('#spec_img').val(data.specImg);
+            	/*$('#spec_img').val(data.specImg);*/
                 $('#remarks').val(data.remarks);
             },
             error : function() {
@@ -239,7 +240,7 @@ var listGoodsSpec = {
 		
 		$("#modal").on("hidden.bs.modal", function(e) {
 			$("#spec_name").removeAttr('readonly');
-			$("#spec_img").removeAttr('readonly');
+			/*$("#spec_img").removeAttr('readonly');*/
 			$("#spec_order").removeAttr('readonly');
             $("#remarks").removeAttr('readonly');
 			$(".btn-submit").removeAttr('disabled');

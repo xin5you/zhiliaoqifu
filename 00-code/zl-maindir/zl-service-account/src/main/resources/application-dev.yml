@@ -41,9 +41,14 @@ spring:
     registry:
       address: zookeeper://127.0.0.1:2181
   rocketmq:
-    name-server-address: 192.168.2.110:9876
-    producer-group: zlqf_group
-    send-msg-timeout: 5000
+    groupName: zlqf_account_group
+    namesrvAddr: 192.168.2.110:9876
+    sendMsgTimeout: 3000
+    retryTimesWhenSendFailed: 2
+    maxMessageSize: 4096
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    consumeMessageBatchMaxSize: 1
   redis:
     timeout: 3000
     cluster:
@@ -74,6 +79,6 @@ withdraw:
     merchantNo: 70235957
     productCode: 01070000042
     goodsType: 290054
-    privateKeyUrl: /data/app/app_itf/itfapp/config/private.key
+    privateKeyUrl: D:/app_itf/config/private.key
     bathWithdrawUrl: https://wag.yifubao.com/epps-wag/withdraw.htm
     yfbNotifyUrl: http://api.happy8888.com.cn/web-api/api/withdraw/suning-yfb/notify

@@ -26,7 +26,9 @@
 							<div class="pull-right">
 								<!--<button type="submit" class="btn btn-search">查 询</button>
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>-->
-								<button type="button" class="btn btn-primary btn-add">新增商品相册</button>
+								<span th:if="${goodsInf.marketEnable == '0'}">
+									<button type="button" class="btn btn-primary btn-add">新增商品相册</button>
+								</span>
 							</div>
 						</div>
 					</div>
@@ -64,8 +66,10 @@
 								<td><span th:text="${gallery.sort}"></span></td>
 				                <td>
 									<a th:attr="imgId=${gallery.imgId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-									<a th:attr="imgId=${gallery.imgId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
-									<a th:attr="imgId=${gallery.imgId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									<span th:if="${goodsInf.marketEnable == '0'}">
+										<a th:attr="imgId=${gallery.imgId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
+										<a th:attr="imgId=${gallery.imgId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+									</span>
 								</td>
 							</tr>
 						</tbody>
@@ -83,7 +87,7 @@
 				</div>
 				<div class="modal-body">
 					<input type="hidden" id="img_id" name="img_id"/>
-					<input type="hidden" id="goodsId" name="goodsId" th:value="${goodsId}"/>
+					<input type="hidden" id="goodsId" name="goodsId" th:value="${goodsInf.goodsId}"/>
 					<fieldset>
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>相册列表图：</label>

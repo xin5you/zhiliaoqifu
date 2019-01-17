@@ -6,6 +6,8 @@ import com.ebeijia.zl.shop.dao.goods.service.ITbEcomGoodsSpecService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  *
@@ -25,5 +27,20 @@ public class TbEcomGoodsSpecService extends ServiceImpl<TbEcomGoodsSpecMapper, T
     @Override
     public TbEcomGoodsSpec getGoodsSpecByProductId(String productId) {
         return baseMapper.getGoodsSpecByProductId(productId);
+    }
+
+    @Override
+    public List<TbEcomGoodsSpec> getGoodsSpecByGoodsId(String goodsId) {
+        return baseMapper.getGoodsSpecByGoodsId(goodsId);
+    }
+
+    @Override
+    public List<TbEcomGoodsSpec> getGoodsSpecBySpecId(String specId) {
+        return baseMapper.getGoodsSpecBySpecId(specId);
+    }
+
+    @Override
+    public List<TbEcomGoodsSpec> getGoodsSpecBySpecValueId(String specValueId) {
+        return baseMapper.getGoodsSpecBySpecValueId(specValueId);
     }
 }

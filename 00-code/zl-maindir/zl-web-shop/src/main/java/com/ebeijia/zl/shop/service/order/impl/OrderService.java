@@ -212,7 +212,7 @@ public class OrderService implements IOrderService {
         if (!memberInfo.getMemberId().equals(order.getMemberId())) {
             throw new BizException(NOT_ACCEPTABLE, "验证失败");
         }
-        if (!order.getPayStatus().equals("0")||("1").equals(order.getDataStat())) {
+        if (!order.getPayStatus().equals("0") || ("1").equals(order.getDataStat())) {
             throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
         }
         //乐观锁
@@ -259,6 +259,10 @@ public class OrderService implements IOrderService {
                 String ecomName = "";
                 if (goods != null) {
                     ecomName = "[" + goods.getEcomName() + "]";
+                    if (goods.getIsDisabled().equals("1") ||
+                            goods.getMarketEnable().equals("0")) {
+                       throw new BizException(ResultState.STAT_ERROR,"该订单商品已下架");
+                    }
                 }
                 itemList.add(item);
                 TbEcomGoodsProduct product = productDao.getById(item.getProductId());
@@ -418,7 +422,7 @@ public class OrderService implements IOrderService {
         }
         //获取订单对象
         TbEcomPlatfOrder order = platfOrderDao.getById(orderId);
-        if (order == null||("1").equals(order.getDataStat())) {
+        if (order == null || ("1").equals(order.getDataStat())) {
             throw new BizException(NOT_FOUND, "找不到订单");
         }
         //校验身份
@@ -607,10 +611,10 @@ public class OrderService implements IOrderService {
             throw new BizException(NOT_ACCEPTABLE, "错误的商品");
         }
         if ("1".equals(sku.getDataStat())) {
-            throw new BizException(NOT_ACCEPTABLE, "有一些商品下架了");
+            throw new BizException(STAT_ERROR, "该商品下架了");
         }
         if ("0".equals(sku.getProductEnable())) {
-            throw new BizException(NOT_ACCEPTABLE, "有一些商品下架了");
+            throw new BizException(STAT_ERROR, "该商品下架了");
         }
         //TODO 使用Redis记录库存
         Integer enableStore = sku.getEnableStore();

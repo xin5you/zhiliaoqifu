@@ -31,7 +31,7 @@
 								 <h3 class="heading">编辑账户类型</h3>
 								  <input type="hidden" name="bId" id="bId" value="${billingType.BId }">
 								       <div class="control-group formSep">
-										   <label class="control-label">账户类型代码<span style="color:red">*</span></label>
+										   <label class="control-label">账户类型名称<span style="color:red">*</span></label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="bName" name="bName" value="${billingType.BName }" maxlength="20"/>
 							                 <span class="help-block"></span>
@@ -40,11 +40,12 @@
 							     		<div class="control-group formSep">
 							             <label class="control-label">账户类型代码</label>
 							             <div class="controls">
-							                 <select id="code" name="code" class="chzn_a span6">
+											 <input type="text" class="span6" id="code" name="code" value="${billingType.code}" maxlength="2" readonly="readonly"/>
+							                 <%--<select id="code" name="code" class="chzn_a span6">
 								                 <c:forEach var="c" items="${billingTypeCodeList}" varStatus="st">
 													<option value="${c.code}" <c:if test="${c.BId==billingType.BId }">selected="selected"</c:if>>${c.code }类</option>
 												 </c:forEach>
-							                 </select>
+							                 </select>--%>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>

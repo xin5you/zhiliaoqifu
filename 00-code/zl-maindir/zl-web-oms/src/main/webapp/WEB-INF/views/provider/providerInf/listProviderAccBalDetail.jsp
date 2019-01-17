@@ -4,6 +4,7 @@
 <head>
     <%@ include file="/WEB-INF/views/common/init.jsp"%>
     <%@ include file="/WEB-INF/views/common/head.jsp"%>
+	<script src="${ctx}/static/oms/js/provider/providerInf/listProviderAccBalDetail.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -16,12 +17,12 @@
 			                    <li>供应商管理</li>
 			                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
 			                    <li>供应商信息列表</li>
-								<li><a href="${ctx }/provider/providerInf/listProviderInfAccBal.do?providerId=${providerId}">供应商账户余额列表</a></li>
+								<li><a href="${ctx }/provider/providerInf/listProviderAccBal.do?providerId=${providerId}">供应商账户余额列表</a></li>
 								<li>供应商账户余额明细列表</li>
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="searchForm" action="${ctx }/provider/providerInf/listProviderAccBal.do" class="form-inline" method="post">
+					<form id="searchForm" action="${ctx }/provider/providerInf/listProviderAccBalDetail.do" class="form-inline" method="post">
 						<h3 class="heading">供应商账户余额明细列表</h3>
 						<input type="hidden" id="providerId" name="providerId" value="${providerId}"/>
 						<%--<div class="row-fluid" id="h_search">
@@ -39,39 +40,48 @@
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 					             <tr>
-					               <th>交易流水号</th>
-					               <th>交易日期</th>
-					               <th>交易时间</th>
-					               <th>交易类型</th>
-					               <th>交易金额</th>
-					               <th>交易后余额</th>
-									<th>交易描述</th>
+									 <th>交易日志主键</th>
+									 <th>交易日期</th>
+									 <th>交易时间</th>
+									 <th>当前交易类型</th>
+									 <th>交易金额(元)</th>
+									 <th>交易后余额(元)</th>
+									 <th>交易描述</th>
 									 <th>交易数量</th>
 									 <th>交易类型</th>
 									 <th>专项类型</th>
-									 <th>商户名称</th>
-									 <th>用户类型</th>
-									 <th>操作</th>
+									 <th>交易渠道</th>
+									 <th>交易流水号</th>
+									 <th>专项类型分类</th>
+									 <%--<th>操作</th>--%>
 					             </tr>
 				             </thead>
 				             <tbody>
 				             <c:forEach var="entity" items="${pageInfo.list}" varStatus="st">
 				                 <tr>
-				                 	<td>${entity.accountNo}</td>
-				                 	<td>${entity.userId}</td>
-									<td>${entity.userName}</td>
-									<td>${entity.BId}</td>
-				                    <td>${entity.accBal}</td>
-				                    <td>${entity.couponBal}</td>
-									 <td>
-										 <a bId="${entity.BId}" title="账单详情" class="btn-mini btn-accBal" href="#"><i class="icon-search"></i></a>
-									 </td>
+									 <td>${entity.txnPrimaryKey}</td>
+									 <td>${entity.txnDate}</td>
+									 <td>${entity.txnTime}</td>
+									 <td>${entity.accType}</td>
+									 <td>${entity.txnAmt}</td>
+									 <td>${entity.accTotalBal}</td>
+									 <td>${entity.transDesc}</td>
+									 <td>${entity.transNumber}</td>
+									 <td>${entity.transId}</td>
+									 <td>${entity.priBId}</td>
+									 <td>${entity.transChnl}</td>
+									 <td>${entity.itfPrimaryKey}</td>
+									 <td>${entity.code}类</td>
+										 <%--<td>
+                                             <a bId="${entity.priBId}" title="账单详情" class="btn-mini btn-accBal-detail" href="#"><i class="icon-search"></i></a>
+                                         </td>--%>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>
 				         </table>
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
-				      </form>
+						<a href="${ctx }/provider/providerInf/listProviderAccBal.do?providerId=${providerId}"><button class="btn btn-primary" type="button">返 回</button></a>
+					</form>
 			   </div>
 	    </div>
 </body>

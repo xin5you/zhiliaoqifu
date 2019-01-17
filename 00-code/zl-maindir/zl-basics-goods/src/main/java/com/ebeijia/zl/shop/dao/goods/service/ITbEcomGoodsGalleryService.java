@@ -23,10 +23,10 @@ public interface ITbEcomGoodsGalleryService extends IService<TbEcomGoodsGallery>
 
     /**
      * 根据isDefault查询商品相册信息是否有默认的标识
-     * @param isDefault
+     * @param ecomGoodsGallery
      * @return
      */
-    TbEcomGoodsGallery getGoodsGalleryByIsDefault(String isDefault);
+    TbEcomGoodsGallery getGoodsGalleryByIsDefault(TbEcomGoodsGallery ecomGoodsGallery);
 
     /**
      * 根据sort查询商品相册时候已存在该序号值

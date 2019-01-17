@@ -40,11 +40,11 @@ var listGoodsInf = {
                 ecom_code: { required: true},
                 goods_type: { required: true},
                 b_id: { required: true},
-                unit: { required: true},
-                weight: { required: true},
+                /*unit: { required: true},
+                weight: { required: true},*/
                 /*default_sku_code: { required: true},*/
                 /*market_enable: { required: true},*/
-                /*brief: { required: true},*/
+                brief: { required: true},
                 /*goods_detail: { required: true},*/
                 have_groups: { required: true},
                 is_disabled: { required: true},
@@ -57,11 +57,11 @@ var listGoodsInf = {
                 ecom_code: { required: "请选择分销商代码"},
                 goods_type: { required: "请选择商品类型"},
                 b_id: { required: "请选择所属专项类型"},
-                unit: { required: "请选择商品单位"},
-                weight: { required: "请输入商品重量"},
+                /*unit: { required: "请选择商品单位"},
+                weight: { required: "请输入商品重量"},*/
                 /*default_sku_code: { required: "请选择默认的Sku"},*/
                 /*market_enable: { required: "请选择上下架状态"},*/
-                /*brief: { required: "请输入商品简介"},*/
+                brief: { required: "请输入商品参数"},
                 /*goods_detail: { required: "请选择商品富文本ID"},*/
                 have_groups: { required: "请选择商品组合状态"},
                 is_disabled: { required: "请选择商品禁用状态"},
