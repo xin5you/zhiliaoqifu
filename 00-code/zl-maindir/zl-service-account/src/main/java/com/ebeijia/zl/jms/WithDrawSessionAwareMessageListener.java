@@ -97,12 +97,13 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
                 WithdrawBodyVO bodyVO = new WithdrawBodyVO();
                 bodyVO.setBatchNo(accountWithdrawOrder.getBatchNo());
                 bodyVO.setTotalNum(accountWithdrawOrder.getTotalNum());
-
+                bodyVO.setTotalAmount(accountWithdrawOrder.getTotalAmount().setScale(0).longValue());
                 List<WithdrawDetailDataVO> list = new ArrayList<WithdrawDetailDataVO>();
                 WithdrawDetailDataVO detailDataVO = null;
                 for (AccountWithdrawDetail accountWithdrawDetail : detailList) { //遍历账户详情
                     detailDataVO = new WithdrawDetailDataVO();
                     detailDataVO.setSerialNo(accountWithdrawDetail.getSerialNo());
+                    detailDataVO.setReceiverType(accountWithdrawDetail.getReceiverType());
                     detailDataVO.setReceiverCardNo(accountWithdrawDetail.getReceivercardNo()); //收款卡号
                     detailDataVO.setReceiverName(accountWithdrawDetail.getReceiverName());
                     detailDataVO.setBankName(accountWithdrawDetail.getBankName());  //开户行

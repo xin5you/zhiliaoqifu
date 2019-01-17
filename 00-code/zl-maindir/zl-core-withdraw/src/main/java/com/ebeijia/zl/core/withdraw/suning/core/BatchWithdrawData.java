@@ -32,11 +32,11 @@ public class BatchWithdrawData {
 
     @Autowired
     private YFBWithdrawConfig yfbWithdrawConfig;
-/*
     private String publicKeyIndex = "0001";
     private String signAlgorithm = "RSA";
     private String merchantNo = "70235957";
-    private String inputCharset = "UTF-8";*/
+    private String inputCharset = "UTF-8";
+    private String productCode="01070000042";
 
 
 
@@ -56,7 +56,7 @@ public class BatchWithdrawData {
 
         String bussinessParam = createBatchData(body).toJSONString();
         String singnature = calculateSign(bussinessParam);
-        String responseStr = HttpClientUtil.post(yfbWithdrawConfig.getPublicKeyIndex(),
+        String responseStr = HttpClientUtil.post(publicKeyIndex,
                 "RSA",
                 yfbWithdrawConfig.getMerchantNo(),
                 "UTF-8",
@@ -79,7 +79,7 @@ public class BatchWithdrawData {
             InvalidKeyException, SignatureException, java.security.InvalidKeyException {
         Map<String, String> signMap = new HashMap<String, String>();
         signMap.put("merchantNo",yfbWithdrawConfig.getMerchantNo());
-        signMap.put("publicKeyIndex",yfbWithdrawConfig.getPublicKeyIndex());
+        signMap.put("publicKeyIndex",publicKeyIndex);
         signMap.put("inputCharset", "UTF-8");
         signMap.put("body", body);
         String digest = Digest.digest(Digest.mapToString(Digest.treeMap(signMap)));
@@ -114,7 +114,7 @@ public class BatchWithdrawData {
         JSONObject contentObject = new JSONObject();
         contentObject.put("batchNo", SnowFlake.getInstance().nextId());
         contentObject.put("merchantNo", yfbWithdrawConfig.getMerchantNo());// 70057241;70056575
-        contentObject.put("productCode",yfbWithdrawConfig.getProductCode() );
+        contentObject.put("productCode",productCode );
         contentObject.put("totalNum", body.getTotalNum());
         contentObject.put("totalAmount", body.getTotalAmount());
         contentObject.put("currency", "CNY");

@@ -183,7 +183,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 MB80("B80", "商户开户"),
 		 MB40("B40", "商户转账"),
 		 MB50("B50", "企业员工充值"),
-		 MB90("B90", "商户收款"),
+		 MB90("B90", "商户提款"),
+		 MB95("B95", "商户收款"),
 
 		 CW80("W80", "企业员工开户"),
 		 CW81("W81", "密码重置"),
@@ -195,7 +196,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 CW74("W74", "微信退款"),
 		 CW40("W40", "员工转账"),
 		 CW90("W90", "权益转让"),
-		 CW91("W91", "用户收款");
+		 CW91("W91", "用户提款");
 		 */
 
 		if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
@@ -257,12 +258,34 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			}
 			//消费扣款
 			List<AccountTxnVo> transList = intfaceTransLog.getTransList();
+			TransLog transLog2=null;
 			if (transList != null && transList.size() > 0) {
+
 				for (AccountTxnVo accountTxnVo : transList) {
 					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt());
+
+					transLog2=new TransLog();
+					this.newTransLog(intfaceTransLog, transLog2);
+					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+					transLog2.setUserId(intfaceTransLog.getTfrInUserId());
+					transLog2.setPriBId(accountTxnVo.getTxnBId());
+					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+					transLog2.setTransId(TransCode.MB95.getCode());
+					transLog2.setUserType(UserType.TYPE200.getCode());
+					addToVoList(voList,transLog2,voList.size());
 				}
 			}else{
 				this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.SUB.getValue(), 0);
+
+				transLog2=new TransLog();
+				this.newTransLog(intfaceTransLog, transLog2);
+				transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+				transLog2.setUserId(intfaceTransLog.getTfrInUserId());
+				transLog2.setPriBId(intfaceTransLog.getPriBId());
+				transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+				transLog2.setTransId(TransCode.MB95.getCode());
+				transLog2.setUserType(UserType.TYPE200.getCode());
+				addToVoList(voList,transLog2,voList.size());
 			}
 
 

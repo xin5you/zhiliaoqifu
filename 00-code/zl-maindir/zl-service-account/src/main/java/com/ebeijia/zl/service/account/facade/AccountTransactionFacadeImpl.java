@@ -207,10 +207,10 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												null,
 												null, 
 												null,
-				                                 formUserInf.getUserId(),
-												null,
+												formUserInf.getUserId(),
+												req.getPriBId(),
 												toUserInf.getUserId(),
-												null,
+												req.getPriBId(),
 												null);
 		
 		//保存消费类型信息 重要数据存储 重要 重要
