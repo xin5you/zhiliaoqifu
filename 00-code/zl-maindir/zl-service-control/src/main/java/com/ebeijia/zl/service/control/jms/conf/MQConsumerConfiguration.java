@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MQConsumerConfiguration {
 
-    public static final Logger logger = LoggerFactory.getLogger(MQConsumerConfiguration.class);
+    public  Logger logger = LoggerFactory.getLogger(MQConsumerConfiguration.class);
 
     @Value("${spring.rocketmq.namesrvAddr}")
     private String namesrvAddr;

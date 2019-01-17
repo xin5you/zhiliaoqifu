@@ -30,7 +30,7 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class WithDrawSessionAwareMessageListener implements MessageListenerConcurrently {
 
-    private static final Logger logger = LoggerFactory.getLogger(WithDrawSessionAwareMessageListener.class);
+    private Logger logger = LoggerFactory.getLogger(WithDrawSessionAwareMessageListener.class);
 
     @Autowired
     private JedisClusterUtils jedisClusterUtils;
