@@ -8,6 +8,7 @@
 	g.coupon_amt,
 	g.trans_amt/100 trans_amt,
 	g.org_trans_amt/100 org_trans_amt,
+	(org_trans_amt-trans_amt)/100 serviceFree,
 	g.trans_fee,
 	g.lock_version
     </sql>

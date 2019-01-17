@@ -177,6 +177,8 @@ public class TbCouponTransLog extends Model<TbCouponTransLog> {
     private String memberName;
     @TableField(exist = false)
     private String couponName;
+    @TableField(exist = false)
+    private String serviceFree;
 
 
     @Override

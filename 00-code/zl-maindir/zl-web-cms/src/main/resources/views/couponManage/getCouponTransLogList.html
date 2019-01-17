@@ -52,7 +52,7 @@
                     <td><span th:text="${coupon.couponAmt}"></span></td>
                     <td><span th:text="${#numbers.formatDecimal(coupon.transAmt, 0, 2)}"></span></td>
                     <td><span th:text="${#numbers.formatDecimal(coupon.orgTransAmt, 0, 2)}"></span></td>
-                    <td><span th:text="${coupon.transFee}"></span></td>
+                    <td><span th:text="${#numbers.formatDecimal(coupon.serviceFree, 0, 2)}"></span></td>
                                         <!--<td>
                         <a th:attr="couponCode=${coupon.couponCode}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
                         <a th:attr="couponCode=${coupon.couponCode}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
