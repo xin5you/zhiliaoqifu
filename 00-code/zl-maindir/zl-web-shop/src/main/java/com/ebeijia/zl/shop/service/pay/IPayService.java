@@ -4,6 +4,7 @@ import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.vo.PayInfo;
@@ -29,4 +30,6 @@ public interface IPayService {
     List<AccountVO> listAccountDetail(String openId, String session);
 
     List<TbEcomPayOrderDetails> getDeal(String dms);
+
+    void phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey);
 }

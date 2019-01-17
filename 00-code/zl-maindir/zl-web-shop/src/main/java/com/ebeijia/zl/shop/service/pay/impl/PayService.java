@@ -3,17 +3,11 @@ package com.ebeijia.zl.shop.service.pay.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
-import com.ebeijia.zl.common.utils.enums.TransChnl;
-import com.ebeijia.zl.common.utils.enums.UserChnlCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
-import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
-import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
-import com.ebeijia.zl.facade.account.req.AccountTxnVo;
-import com.ebeijia.zl.facade.account.req.AccountWithDrawReqVo;
+import com.ebeijia.zl.facade.account.req.*;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
@@ -147,6 +141,7 @@ public class PayService implements IPayService {
 
         //TODO DMS
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setMemberId(memberInfo.getMemberId());
         log.setTitle(title);
         log.setPrice(dealInfo);
         log.setDescinfo(descinfo);
@@ -212,8 +207,6 @@ public class PayService implements IPayService {
     }
 
 
-
-
     private TbEcomPayOrderDetails initPayOrderDetailObject() {
         TbEcomPayOrderDetails payOrderDetails = new TbEcomPayOrderDetails();
         payOrderDetails.setPayDetailsId(IdUtil.getNextId());
@@ -266,14 +259,13 @@ public class PayService implements IPayService {
         if (baseResult.getCode().equals(ACCOUNT_COUPONBAL_IS_NOT_ENOUGH.getCode())) {
             logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，账户余额中可购买代金券的余额不足了");
-        }else if (!baseResult.getCode().equals("00")){
+        } else if (!baseResult.getCode().equals("00")) {
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，余额不足了");
 
         }
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getTxnAmt(), vo.getTxnBId(), openId, dmsRelatedKey, desc, result));
         return baseResult;
     }
-
 
 
     @Override
@@ -302,21 +294,20 @@ public class PayService implements IPayService {
             baseResult = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
             logger.error("支付失败", e);
-            logger.error("支付失败,参数%s,%s,%s,%s,%s", vo.getCostA()+vo.getTypeA(), vo.getCostB()+vo.getTypeB(), openId, dmsRelatedKey, desc);
+            logger.error("支付失败,参数%s,%s,%s,%s,%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), openId, dmsRelatedKey, desc);
             throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
         //判断result
         if (baseResult.getCode().equals(ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.getCode())) {
-            logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA()+vo.getTypeA(), vo.getCostB()+vo.getTypeB(), openId, dmsRelatedKey, desc, result));
+            logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), openId, dmsRelatedKey, desc, result));
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，余额不足");
-        }else if (!baseResult.getCode().equals("00")){
+        } else if (!baseResult.getCode().equals("00")) {
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, baseResult.getMsg());
 
         }
-        logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA()+vo.getTypeA(), vo.getCostB()+vo.getTypeB(), openId, dmsRelatedKey, desc, result));
+        logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), openId, dmsRelatedKey, desc, result));
         return baseResult;
     }
-
 
 
     @Override
@@ -364,10 +355,10 @@ public class PayService implements IPayService {
                     req.setAccType(method);
                     break;
                 case "2":
-                    req.setTransIds(new String[]{CW10.getCode(),CW20.getCode(),CW71.getCode(),MB10.getCode()});
+                    req.setTransIds(new String[]{CW10.getCode(), CW20.getCode(), CW71.getCode(), MB10.getCode()});
                     break;
                 case "3":
-                    req.setTransIds(new String[]{CW40.getCode(), MB40.getCode(),CW91.getCode()});
+                    req.setTransIds(new String[]{CW40.getCode(), MB40.getCode(), CW91.getCode()});
                 default:
             }
             logger.info("交易类型筛选流水[{}]", req);
@@ -425,6 +416,43 @@ public class PayService implements IPayService {
         TbEcomPayOrderDetails details = new TbEcomPayOrderDetails();
         details.setDmsRelatedKey(dms);
         return payOrderDetailsDao.list(new QueryWrapper<>(details));
+    }
+
+    @Override
+    public void phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey) {
+        AccountRefundReqVo vo = new AccountRefundReqVo();
+        vo.setOrgItfPrimaryKey(log.getItxKey());
+        vo.setDmsRelatedKey(dmsKey);
+        vo.setTransChnl(TransChnl.CHANNEL8.getValue());
+        vo.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+        vo.setUserChnlId(shopUtils.getSession().getOpenId());
+        vo.setTransId(TransCode.CW10.getCode());
+        vo.setUserType(UserType.TYPE100.getCode());
+        vo.setTransDesc(String.format("手机%s充值失败退款", log.getDescinfo()));
+        vo.setTransList(buildTxnVo(payInfo));
+        logger.info("手机充值退款开始：[{}]", vo);
+        //TODO
+        try {
+            BaseResult baseResult = accountTransactionFacade.executeRefund(vo);
+            if (baseResult==null){
+                throw new BizException(ResultState.ERROR, "参数异常");
+            }
+            if (!baseResult.getCode().equals("00")) {
+                throw new BizException(ResultState.ERROR, "参数异常");
+            }
+            logger.info("退款返回值：[{}]",baseResult.getObject());
+            //INF
+            log.setItxKey((String) baseResult.getObject());
+            //TODO INF
+            log = new TbEcomItxLogDetail();
+            log.setTitle("充值失败退款");
+            log.setMemberId(shopUtils.getSession().getMemberId());
+            log.setOutId(payInfo.getOrderId());
+            logDetailDao.save(log);
+        } catch (Exception e) {
+            logger.error("手机充值退款失败：[{}]", e);
+        }
+
     }
 
 

@@ -1,9 +1,9 @@
 package com.ebeijia.zl.shop.dao.info.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import com.ebeijia.zl.shop.dao.info.mapper.TbEcomItxLogDetailMapper;
 import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 
@@ -17,4 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbEcomItxLogDetailService extends ServiceImpl<TbEcomItxLogDetailMapper, TbEcomItxLogDetail> implements ITbEcomItxLogDetailService{
 
+    @Override
+    public String getPhoneChargeProvider(){
+        return baseMapper.getPhoneChargeProvider();
+    }
 }

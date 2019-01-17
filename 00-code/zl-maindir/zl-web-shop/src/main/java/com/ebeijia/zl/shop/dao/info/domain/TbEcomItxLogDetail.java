@@ -57,6 +57,10 @@ public class TbEcomItxLogDetail extends Model<TbEcomItxLogDetail> {
     @ApiModelProperty(value = "source_bid")
     private String sourceBid;
 
+    @TableField("member_id")
+    @ApiModelProperty(value = "会员ID")
+    private String memberId;
+
     @Override
     protected Serializable pkVal() { 
         return this.itxKey;

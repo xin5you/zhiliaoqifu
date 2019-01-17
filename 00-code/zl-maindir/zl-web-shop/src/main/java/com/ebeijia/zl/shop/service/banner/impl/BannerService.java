@@ -28,6 +28,9 @@ public class BannerService implements IBannerService {
         queryWrapper.orderByAsc("sort");
 
         List<TbEcomBanner> list = bannerService.list(queryWrapper);
+        if (list == null || list.size()==0){
+            throw new AdviceMessenger(200, "no-image");
+        }
         TbEcomBanner tbEcomBanner = list.get(index);
         if (tbEcomBanner == null) {
             tbEcomBanner = list.get(0);

@@ -318,6 +318,7 @@ public class OrderService implements IOrderService {
         }
         //TODO INF
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setMemberId(memberInfo.getMemberId());
         log.setTitle(title);
         log.setPrice(price);
         log.setDescinfo(descinfo);

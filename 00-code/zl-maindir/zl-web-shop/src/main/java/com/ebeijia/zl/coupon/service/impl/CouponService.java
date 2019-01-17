@@ -192,6 +192,7 @@ public class CouponService implements ICouponService {
 
         //TODO DMS
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setMemberId(memberInfo.getMemberId());
         log.setTitle(title);
         log.setPrice(price);
         log.setDescinfo(descinfo);
@@ -269,6 +270,7 @@ public class CouponService implements ICouponService {
         }
         //TODO DMS
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
+        log.setMemberId(memberInfo.getMemberId());
         log.setTitle(title);
         log.setPrice(price);
         log.setDescinfo(descinfo);
