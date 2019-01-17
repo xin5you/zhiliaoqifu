@@ -17,6 +17,6 @@ var listTelProviderInf = {
 		document.forms['searchForm'].submit();
 	},
 	searchReset: function(){
-		location = Helper.getRootPath() + '/provider/providerOrder/listProviderOrderInf.do';
+		location = Helper.getRootPath() + '/provider/providerOrderInf/listProviderOrderInf.do';
 	}
 }

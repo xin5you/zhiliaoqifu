@@ -1,28 +1,19 @@
 package com.ebeijia.zl.service.telrecharge.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
+import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.facade.telrecharge.domain.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
@@ -33,6 +24,16 @@ import com.ebeijia.zl.service.telrecharge.service.RetailChnlOrderInfService;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlProductInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -192,16 +193,16 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	 */
      public PageInfo<RetailChnlOrderInf> getRetailChnlOrderInfPage(int startNum, int pageSize, RetailChnlOrderInf RetailChnlOrderInf) throws Exception{
     		PageHelper.startPage(startNum, pageSize);
-    		List<RetailChnlOrderInf> RetailChnlOrderInfList = getRetailChnlOrderInfList(RetailChnlOrderInf);
-    		for (RetailChnlOrderInf RetailChnlOrderInf2 : RetailChnlOrderInfList) {
-				if(!StringUtil.isNullOrEmpty(RetailChnlOrderInf2.getRechargeType()))
-					RetailChnlOrderInf2.setRechargeType(TelRechargeConstants.ShopType.findByCode(RetailChnlOrderInf2.getRechargeType()));
-				if(!StringUtil.isNullOrEmpty(RetailChnlOrderInf2.getOrderStat()))
-					RetailChnlOrderInf2.setOrderStat(TelRechargeConstants.ChannelOrderStat.findByCode(RetailChnlOrderInf2.getOrderStat()));
-				if(!StringUtil.isNullOrEmpty(RetailChnlOrderInf2.getNotifyStat()))
-					RetailChnlOrderInf2.setNotifyStat(TelRechargeConstants.ChannelOrderNotifyStat.findByCode(RetailChnlOrderInf2.getNotifyStat()));
+    		List<RetailChnlOrderInf> retailChnlOrderInfList = getRetailChnlOrderInfList(RetailChnlOrderInf);
+    		for (RetailChnlOrderInf chnlOrderInf : retailChnlOrderInfList) {
+				if(!StringUtil.isNullOrEmpty(chnlOrderInf.getRechargeType()))
+					chnlOrderInf.setRechargeType(TelRechargeConstants.ShopType.findByCode(chnlOrderInf.getRechargeType()));
+				if(!StringUtil.isNullOrEmpty(chnlOrderInf.getOrderStat()))
+					chnlOrderInf.setOrderStat(TelRechargeConstants.ChannelOrderStat.findByCode(chnlOrderInf.getOrderStat()));
+				if(!StringUtil.isNullOrEmpty(chnlOrderInf.getNotifyStat()))
+					chnlOrderInf.setNotifyStat(TelRechargeConstants.ChannelOrderNotifyStat.findByCode(chnlOrderInf.getNotifyStat()));
 			}
-    		PageInfo<RetailChnlOrderInf> RetailChnlOrderInfPage = new PageInfo<RetailChnlOrderInf>(RetailChnlOrderInfList);
+    		PageInfo<RetailChnlOrderInf> RetailChnlOrderInfPage = new PageInfo<RetailChnlOrderInf>(retailChnlOrderInfList);
     		return RetailChnlOrderInfPage;
      }
 

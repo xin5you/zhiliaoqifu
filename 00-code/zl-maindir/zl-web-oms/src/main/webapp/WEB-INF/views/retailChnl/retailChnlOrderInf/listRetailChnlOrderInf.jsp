@@ -21,8 +21,8 @@
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="searchForm" action="${ctx }/retailChnl/retailChnlOrderInf/listRetailChnlOrderInf.do" class="form-inline" method="post">
-						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+					<form id="searchForm" action="${ctx }/retailChnl/retailChnlOrder/listRetailChnlOrderInf.do" class="form-inline" method="post">
+						<input type="hidden" id="channelOrderId"  value="${channelOrderId }"/>
 						<h3 class="heading">分销商订单列表</h3>
 						<div class="row-fluid" id="h_search">
 							<div class="span12">
@@ -34,6 +34,10 @@
 		           			   	   	<span class="add-on">外部订单号</span>
 		           			   	   	<input id="outerTid" name="outerTid" type="text" class="input-medium" value="${retailChnlOrderInf.outerTid }"/>
 		                       	</div>
+								<div class="input-prepend">
+									<span class="add-on">充值手机号</span>
+									<input id="rechargePhone" name="rechargePhone" type="text" class="input-medium" value="${retailChnlOrderInf.rechargePhone }"/>
+								</div>
 		                       	<div class="input-prepend">
 		           			   	   	<span class="add-on">分销商名称</span>
 		           			   	   	<input id="channelName" name="channelName" type="text" class="input-medium" value="${retailChnlOrderInf.channelName }" />
@@ -89,7 +93,7 @@
 				                <th>支付金额</th>
 				                <th>订单状态</th>
 				                <th>通知状态</th>
-				                <th>操作</th>
+				                <%--<th>操作</th>--%>
 				             </tr>
 				             </thead>
 				             <tbody>
@@ -104,13 +108,13 @@
 				                    <td>${entity.payAmt}</td>
 				                    <td>${entity.orderStat}</td>
 				                    <td>${entity.notifyStat}</td>
-				                    <td>
-				                    <%-- <c:if test="${entity.notifyStat=='处理失败' }">
+				                  <%--  <td>
+				                    &lt;%&ndash; <c:if test="${entity.notifyStat=='处理失败' }">
 									<a channelOrderId="${entity.channelOrderId}" title="回调通知分销商" class="btn-mini btn-again-submit" href="#"><i class="icon-ok"></i></a>
 									</c:if>
-									<a eShopId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a> --%>
+									<a eShopId="${entity.channelId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a> &ndash;%&gt;
 									<a eShopId="${entity.channelId}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-				                    </td>
+				                    </td>--%>
 				                 </tr>
 				             </c:forEach>
 				             </tbody>

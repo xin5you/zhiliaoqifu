@@ -1,13 +1,12 @@
 package com.ebeijia.zl.facade.telrecharge.domain;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -68,19 +67,19 @@ public class ProviderOrderInf extends Model<ProviderOrderInf> {
      */
     @TableField("recharge_state")
     private String rechargeState;
- 
+
     /**
      * 预计成本价
      */
     @TableField("item_cost")
     private BigDecimal itemCost;
- 
+
     /**
      * 实际成本价
      */
     @TableField("trans_cost")
     private BigDecimal transCost;
- 
+
     /**
      * 撤销原因
      */
@@ -178,6 +177,8 @@ public class ProviderOrderInf extends Model<ProviderOrderInf> {
     @TableField("lock_version")
     private Integer lockVersion;
 
+    @TableField(exist = false)
+    private String providerName;
 
     @Override
     protected Serializable pkVal() { 

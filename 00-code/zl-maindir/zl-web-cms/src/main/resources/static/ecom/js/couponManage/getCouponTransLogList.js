@@ -115,7 +115,7 @@ var listCoupon = {
         $("#iconImage").val(iconImageFile);
     },
 	searchReset : function(){
-		Helper.post('/couponManage/getCouponsInfList');
+		Helper.post('/couponTransManage/getCouponTransLogList');
 	},
 	intoAddCoupon : function(){
         listCoupon.loadModal(1, $(this).attr('couponCode'));

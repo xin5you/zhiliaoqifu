@@ -1,11 +1,5 @@
 package com.ebeijia.zl.service.telrecharge.facadeimpl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
@@ -13,6 +7,10 @@ import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
 import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration  
 @com.alibaba.dubbo.config.annotation.Service(interfaceName="providerOrderInfFacade")
@@ -44,8 +42,7 @@ public class ProviderOrderInfFacadeImpl implements ProviderOrderInfFacade {
 	@Override
 	public List<ProviderOrderInf> getProviderOrderInfList(ProviderOrderInf providerOrderInf)
 			throws Exception {
-		QueryWrapper<ProviderOrderInf> queryWrapper=new QueryWrapper<ProviderOrderInf>(providerOrderInf);
-		return providerOrderInfService.list(queryWrapper);
+		return providerOrderInfService.getProviderOrderInfList(providerOrderInf);
 	}
 
 	@Override

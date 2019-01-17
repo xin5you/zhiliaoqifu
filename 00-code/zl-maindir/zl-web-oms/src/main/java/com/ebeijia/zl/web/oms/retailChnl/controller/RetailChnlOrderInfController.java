@@ -1,16 +1,5 @@
 package com.ebeijia.zl.web.oms.retailChnl.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelOrderNotifyStat;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ChannelOrderStat;
 import com.ebeijia.zl.common.utils.enums.TelRechargeConstants.ShopType;
@@ -20,6 +9,16 @@ import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.web.oms.retailChnl.service.RetailChnlInfService;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "retailChnl/retailChnlOrder")
@@ -52,6 +51,7 @@ public class RetailChnlOrderInfController {
 		orderInf.setRechargeType(StringUtil.nullToString(request.getParameter("rechargeType")));
 		orderInf.setOrderStat(StringUtil.nullToString(request.getParameter("orderStat")));
 		orderInf.setNotifyStat(StringUtil.nullToString(request.getParameter("notifyStat")));
+		orderInf.setRechargePhone(StringUtil.nullToString(request.getParameter("rechargePhone")));
 		try {
 			PageInfo<RetailChnlOrderInf> pageList = retailChnlOrderInfFacade.getRetailChnlOrderInfPage(startNum, pageSize, orderInf);
 			mv.addObject("pageInfo", pageList);

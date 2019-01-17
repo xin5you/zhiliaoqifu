@@ -34,6 +34,44 @@
 		update_time,
 		lock_version
 	</sql>
+
+	<sql id="providerResult">
+		p.reg_order_id,
+		p.channel_order_id,
+		p.reg_order_amt,
+		p.pay_state,
+		p.recharge_state,
+		p.trans_cost,
+		p.revoke_message,
+		p.bill_id,
+		p.operate_time,
+		p.oper_num
+	</sql>
+
+
+
+	<select id="getProviderOrderInfList" parameterType="ProviderOrderInf" resultType="ProviderOrderInf">
+		select
+		<include refid="providerResult" />,
+		i.provider_name providerName
+		from  <include refid="TableName" /> p
+		left join tb_provider_inf i ON i.provider_id = p.provider_id
+		where p.data_stat='0'
+		<if test="regOrderId !=null and regOrderId !='' ">
+			and p.reg_order_id = #{regOrderId}
+		</if>
+		<if test="channelOrderId !=null and channelOrderId !='' ">
+			and p.channel_order_id = #{channelOrderId}
+		</if>
+		<if test="billId !=null and billId !='' ">
+			and p.bill_id = #{billId}
+		</if>
+		<if test="rechargeState !=null and rechargeState !='' ">
+			and p.recharge_state = #{rechargeState}
+		</if>
+		order by p.update_time desc
+	</select>
+
 	
 	<select id="getList" parameterType="ProviderOrderInf" resultType="ProviderOrderInf">
 		select 

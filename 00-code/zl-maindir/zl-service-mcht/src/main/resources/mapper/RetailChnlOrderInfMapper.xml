@@ -103,40 +103,43 @@
 		              WHERE m.data_stat='0' AND m.outer_tid=#{outerId} AND m.channel_id=#{channelId}
 	</select>
 	
-	<select id="getRetailChnlOrderInfList" parameterType="RetailChnlProductInf" resultType="RetailChnlProductInf">
-		select o.channel_order_id,
-		       p.oper_name,
-		       o.recharge_phone,
-		       o.item_num,
-		       o.recharge_value,
-		       o.pay_amt,
-		       pr.recharge_state,
-		       o.create_time
-		  from tb_retail_chnl_order_inf   o,
-		       tb_retail_chnl_product_inf p,
-		       tb_retail_chnl_inf         c,
-		       tb_provider_order_inf  pr
-		 where o.product_id = p.product_id
-		   and o.channel_id = c.channel_id
-		   and o.channel_order_id = pr.channel_order_id
-		   and o.data_stat = '0'
-		   and p.data_stat = '0'
-		   and c.data_stat = '0'
-		   and pr.data_stat = '0'
+	<select id="getRetailChnlOrderInfList" parameterType="RetailChnlOrderInf" resultType="RetailChnlOrderInf">
+		select
+		o.channel_order_id,
+		c.channel_name,
+		o.outer_tid,
+		o.recharge_phone,
+		o.recharge_type,
+		o.item_num,
+		o.pay_amt,
+		o.order_stat,
+		o.notify_stat
+		FROM
+		tb_retail_chnl_order_inf o
+		LEFT JOIN tb_retail_chnl_inf c ON o.channel_id = c.channel_id
+		 where
+		    o.data_stat = '0'
 		   <if test="channelOrderId != null and channelOrderId != '' ">
 		   and o.channel_order_id = #{channelOrderId}
 		   </if>
+			<if test="outerTid != null and outerTid != '' ">
+			and o.outer_tid = #{outerTid}
+			</if>
 		   <if test="rechargePhone != null and rechargePhone != '' ">
 		   and o.recharge_phone = #{rechargePhone}
 		   </if>
-		   <if test="rechargeState != null and rechargeState != '' ">
-		   and pr.recharge_state = #{rechargeState}
+			<if test="channelName != null and channelName != '' ">
+			and c.channel_name = #{channelName}
+			</if>
+		   <if test="rechargeType != null and rechargeType != '' ">
+		   and o.recharge_type = #{rechargeType}
 		   </if>
-		   <if test="startDate != null and startDate != '' ">
-		   and o.create_time &gt;= #{startDate}
+
+		  <if test="orderStat != null and orderStat != '' ">
+		   and o.order_stat = #{orderStat}
 		   </if>
-		   <if test="endDate != null and endDate != '' ">
-		   and o.create_time &lt;= #{endDate})
+		   <if test="notifyStat != null and notifyStat != '' ">
+		   and o.notify_stat = #{notifyStat}
 		   </if>
 		 order by o.create_time desc
 	</select>

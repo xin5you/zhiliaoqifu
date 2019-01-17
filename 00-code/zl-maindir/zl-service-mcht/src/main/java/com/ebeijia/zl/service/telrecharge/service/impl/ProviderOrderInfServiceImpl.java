@@ -1,21 +1,18 @@
 package com.ebeijia.zl.service.telrecharge.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
+import com.ebeijia.zl.service.telrecharge.mapper.ProviderOrderInfMapper;
+import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
-import com.ebeijia.zl.service.telrecharge.mapper.ProviderOrderInfMapper;
-import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -32,8 +29,7 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 
 	@Override
 	public List<ProviderOrderInf> getProviderOrderInfList(ProviderOrderInf providerOrderInf) {
-		QueryWrapper<ProviderOrderInf> queryWrapper=new QueryWrapper<ProviderOrderInf>(providerOrderInf);
-		return this.list(queryWrapper);
+		return providerOrderInfMapper.getProviderOrderInfList(providerOrderInf);
 	}
 
 	@Override

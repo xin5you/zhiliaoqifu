@@ -7,7 +7,8 @@
 		<link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
 		<script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
 		<script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-		<script src="${ctx}/static/oms/js/phoneRecharge/listPhoneRecharge.js"></script>
+		<script src="${ctx}/static/oms/js/provider/providerOrderInf/listProviderOrderInf.js"></script>
+
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -84,9 +85,13 @@
 				                    <td>${entity.transCost}</td>
 				                    <td>${entity.revokeMessage}</td>
 				                    <td>${entity.billId}</td>
-				                    <td>${entity.providerId}</td>
+				                    <td>${entity.providerName}</td>
 				                    <td>${entity.operNum}</td>
-				                    <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss"  value="${entity.operateTime}"/></td>
+									<td>
+										<jsp:useBean id="createTime" class="java.util.Date"/>
+										<jsp:setProperty name="createTime" property="time" value="${entity.createTime}"/>
+										<fmt:formatDate value="${entitery.opateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+									</td>
 				                 </tr>
 							</c:forEach>
 						</tbody>
