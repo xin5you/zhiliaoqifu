@@ -50,7 +50,7 @@ public class MQConsumerConfiguration {
          * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
          * 如果非第一次启动，那么按照上次消费的位置继续消费
          */
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
         /**
          * 设置消费模型，集群还是广播，默认为集群
          */
@@ -63,7 +63,7 @@ public class MQConsumerConfiguration {
             /**
              * 设置该消费者订阅的主题和tag，如果是订阅该主题下的所有tag，则tag使用*；如果需要指定订阅该主题下的某些tag，则使用||分割，例如tag1||tag2||tag3
              */
-            consumer.subscribe(RocketTopicEnums.withDrawTopic,"*");
+            consumer.subscribe(RocketTopicEnums.smsTopic,"*");
             consumer.start();
             logger.info("consumer is start !!! groupName:{},namesrvAddr:{}",groupName,namesrvAddr);
         }catch (MQClientException e){
