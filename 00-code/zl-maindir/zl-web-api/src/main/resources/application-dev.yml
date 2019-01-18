@@ -52,3 +52,13 @@ spring:
        minEvictableIdleTimeMillis: 60000
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
+withdraw:
+  yfb:
+    publicKeyIndex: 0001
+    wagKeyString:
+    merchantNo: 70235957
+    productCode: 01070000042
+    goodsType: 290054
+    privateKeyUrl: D:/app_itf/itfapp/config/private.key
+    bathWithdrawUrl: https://wag.yifubao.com/epps-wag/withdraw.htm
+    yfbNotifyUrl: http://api.happy8888.com.cn/web-api/api/withdraw/suning-yfb/notify
