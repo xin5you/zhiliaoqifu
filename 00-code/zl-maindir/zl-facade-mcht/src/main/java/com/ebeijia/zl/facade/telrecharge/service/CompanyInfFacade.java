@@ -77,4 +77,11 @@ public interface CompanyInfFacade {
 	 * @return
 	 */
 	public boolean deleteCompanyBillingTypeInf(String id);
+
+	/**
+	 * 根据企业名称查询企业信息
+	 * @param companyName
+	 * @return
+	 */
+	public CompanyInf getCompanyInfByName(String companyName);
 }
