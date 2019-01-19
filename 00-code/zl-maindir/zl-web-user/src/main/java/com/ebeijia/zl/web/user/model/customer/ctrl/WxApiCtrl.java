@@ -99,8 +99,11 @@ public class WxApiCtrl {
 			String timestamp = request.getParameter("timestamp");// 时间戳
 			String nonce = request.getParameter("nonce");// 随机数
 
-			WXBizMsgCrypt pc = new WXBizMsgCrypt(token, wxAESKey, appId);
-			MsgRequest msgRequest = MsgXmlUtil.parseXml(request, pc, wxAESKey, appId, token, signature, timestamp, nonce);// 获取发送的消息
+			//WXBizMsgCrypt pc = new WXBizMsgCrypt(token, wxAESKey, appId);
+			MsgRequest msgRequest = MsgXmlUtil.parseXml(request, null, wxAESKey, appId, token, signature, timestamp, nonce);// 获取发送的消息
+
+			logger.info(JSONObject.toJSONString(msgRequest));
+
 			String msgId = msgRequest.getMsgId();
 			String createTimeAndFromUserName = msgRequest.getCreateTime() + msgRequest.getFromUserName();
 			if (!StringUtil.isNullOrEmpty(msgId)) {
@@ -132,8 +135,8 @@ public class WxApiCtrl {
 			} else if ("success".equals(rtnXml) || "error".equals(rtnXml)) {
 				return rtnXml;
 			} else {
-				String encryptXml = pc.encryptMsg(rtnXml, timestamp, nonce);// 返回消息加密
-				return encryptXml;
+				//String encryptXml = pc.encryptMsg(rtnXml, timestamp, nonce);// 返回消息加密
+				return rtnXml;
 			}
 		} catch (Exception e) {
 			logger.error("## 公众号消息处理发生异常：", e);
