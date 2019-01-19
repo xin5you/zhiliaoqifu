@@ -1,11 +1,6 @@
 server:
   port: 9998
   contextPath: /oms
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain:
 mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml

@@ -1,11 +1,6 @@
 server:
   port: 10101
   contextPath: /oms
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain:
 spring:
   mvc:
     view: 
