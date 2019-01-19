@@ -89,5 +89,12 @@ public interface ProviderInfFacade {
 	 */
 	public boolean deleteProviderBillingTypeInf(String id);
 
+	/**根据供应商名称查询供应商信息
+	 *
+	 * @param providerName
+	 * @return
+	 */
+	public ProviderInf getProviderInfByProviderName(String providerName);
+
 
 }

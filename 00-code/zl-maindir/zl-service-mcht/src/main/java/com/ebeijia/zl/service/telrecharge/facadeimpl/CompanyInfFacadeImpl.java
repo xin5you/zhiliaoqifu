@@ -97,4 +97,9 @@ public class CompanyInfFacadeImpl implements CompanyInfFacade {
 		return companyBillingTypeInfService.removeById(id);
 	}
 
+	@Override
+	public CompanyInf getCompanyInfByName(String companyName) {
+		return companyInfService.getCompanyInfByName(companyName);
+	}
+
 }

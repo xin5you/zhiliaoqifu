@@ -139,4 +139,9 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 	public boolean deleteProviderBillingTypeInf(String id) {
 		return providerBillingTypeInfService.removeById(id);
 	}
+
+	@Override
+	public ProviderInf getProviderInfByProviderName(String providerName) {
+		return providerInfService.getProviderInfByProviderName(providerName);
+	}
 }

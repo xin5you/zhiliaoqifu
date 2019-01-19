@@ -2,8 +2,10 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,5 +79,13 @@ public class CompanyInfServiceImpl extends ServiceImpl<CompanyInfMapper, Company
 	@Override
 	public CompanyInf getCompanyInfByIsPlatform(String isPlatform) {
 		return companyInfMapper.getCompanyInfByIsPlatform(isPlatform);
+	}
+
+	@Override
+	public CompanyInf getCompanyInfByName(String companyName) {
+		QueryWrapper<CompanyInf> queryWrapper = new QueryWrapper<CompanyInf>();
+		queryWrapper.eq("name", companyName);
+		queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
+		return baseMapper.selectOne(queryWrapper);
 	}
 }

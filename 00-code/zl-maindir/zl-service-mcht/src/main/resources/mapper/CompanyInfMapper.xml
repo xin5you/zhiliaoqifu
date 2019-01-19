@@ -26,16 +26,16 @@
 			<include refid="CompanyInfColumns" />
 		from tb_company_inf c
 		where c.data_stat = '0'
-		<if test="name !=null and name !='' ">
+		<if test="name != null and name != '' ">
 			and c.name like "%"#{name,jdbcType=VARCHAR}"%"
 		</if>
-		<if test="contacts !=null and contacts !='' ">
+		<if test="contacts != null and contacts != '' ">
 			and c.contacts = #{contacts,jdbcType=VARCHAR}
 		</if>
-		<if test="transFlag !=null and transFlag !='' ">
+		<if test="transFlag != null and transFlag != '' ">
 			and c.trans_flag = #{transFlag,jdbcType=VARCHAR}
 		</if>
-		<if test="isOpen !=null and isOpen !='' ">
+		<if test="isOpen != null and isOpen != '' ">
 			and c.is_open = #{isOpen,jdbcType=VARCHAR}
 		</if>
 		order by c.is_platform desc,c.create_time desc

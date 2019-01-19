@@ -2,6 +2,7 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,13 @@ public class ProviderInfServiceImpl extends ServiceImpl<ProviderInfMapper, Provi
 	@Override
 	public ProviderInf getProviderInfByOperSolr(Integer operSolr) {
 		return baseMapper.getProviderInfByOperSolr(operSolr);
+	}
+
+	@Override
+	public ProviderInf getProviderInfByProviderName(String providerName) {
+		QueryWrapper<ProviderInf> queryWrapper = new QueryWrapper<ProviderInf>();
+		queryWrapper.eq("provider_name", providerName);
+		queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
+		return baseMapper.selectOne(queryWrapper);
 	}
 }
