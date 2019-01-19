@@ -92,7 +92,7 @@ public class WxApiCtrl {
 	public @ResponseBody String doPost(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();
-			String wxAESKey = redisDictProperties.getdictValueByCode("WX_AES_KEY");// 加密密钥
+			//String wxAESKey = redisDictProperties.getdictValueByCode("WX_AES_KEY");// 加密密钥
 			String token = mpAccount.getToken();// token
 			String appId = mpAccount.getAppid();
 			String signature = request.getParameter("msg_signature");// 微信加密签名
@@ -100,7 +100,7 @@ public class WxApiCtrl {
 			String nonce = request.getParameter("nonce");// 随机数
 
 			//WXBizMsgCrypt pc = new WXBizMsgCrypt(token, wxAESKey, appId);
-			MsgRequest msgRequest = MsgXmlUtil.parseXml(request, null, wxAESKey, appId, token, signature, timestamp, nonce);// 获取发送的消息
+			MsgRequest msgRequest = MsgXmlUtil.parseXml(request, null, null, appId, token, signature, timestamp, nonce);// 获取发送的消息
 
 			logger.info(JSONObject.toJSONString(msgRequest));
 

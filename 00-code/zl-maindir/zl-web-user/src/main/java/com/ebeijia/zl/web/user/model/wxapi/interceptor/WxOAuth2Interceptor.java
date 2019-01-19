@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ebeijia.zl.web.user.model.utils.HttpWebUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -18,13 +19,14 @@ import com.ebeijia.zl.core.wechat.process.WxMemoryCacheClient;
 /**
  * 微信客户端用户请求验证拦截器
  */
+@Component
 public class WxOAuth2Interceptor extends HandlerInterceptorAdapter {
 
 	/**
 	 * 开发者自行处理拦截逻辑， 方便起见，此处只处理includes
 	 */
 	private String[] excludes;// 不需要拦截的
-	private String[] includes;// 需要拦截的
+
 	
 	
 	@Autowired
@@ -37,15 +39,10 @@ public class WxOAuth2Interceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String uri = request.getRequestURI();
 
-		boolean oauthFlag = false;// 为方便展示的参数，开发者自行处理
-		for (String s : includes) {
-			if (uri.contains(s)) {// 如果包含，就拦截
-				oauthFlag = true;
-				break;
+		for (String s : excludes) {
+			if (uri.contains(s)) {// 如果不需要包含
+				return true;
 			}
-		}
-		if (!oauthFlag) {// 如果不需要oauth认证
-			return true;
 		}
 
 		String openid = wxMemoryCacheClient.getOpenid(request);// 先从缓存中获取openid
@@ -87,24 +84,7 @@ public class WxOAuth2Interceptor extends HandlerInterceptorAdapter {
 			// System.out.println("#### WxOAuth2Interceptor Session : openid = " + openid);
 			return true;
 		}
-		HttpWebUtil.redirectUrl(request, response, "/base/404.html");
 		return false;
-	}
-
-	public String[] getExcludes() {
-		return excludes;
-	}
-
-	public void setExcludes(String[] excludes) {
-		this.excludes = excludes;
-	}
-
-	public String[] getIncludes() {
-		return includes;
-	}
-
-	public void setIncludes(String[] includes) {
-		this.includes = includes;
 	}
 
 }
