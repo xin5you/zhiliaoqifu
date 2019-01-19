@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
@@ -44,7 +45,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
     @Autowired
     private AccountLogMapper accountLogMapper;
 
-	@Autowired
+	@Reference(check = false)
     private CompanyInfFacade companyInfFacade;
 
 	/**

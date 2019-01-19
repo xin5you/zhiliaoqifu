@@ -74,6 +74,18 @@ public class RetailChnlOrderInf extends Model<RetailChnlOrderInf> {
      */
     @TableField("pay_amt")
     private BigDecimal payAmt;
+
+    /**
+     * 平台交易金额
+     */
+    @TableField("txn_amt")
+    private BigDecimal txnAmt;
+
+    /**
+     * 系统交易流水号
+     */
+    @TableField("itf_primary_key")
+    private String itfPrimaryKey;
  
     /**
      * 0:待扣款
@@ -123,13 +135,13 @@ public class RetailChnlOrderInf extends Model<RetailChnlOrderInf> {
     private BigDecimal channelRate;
  
     /**
-     * RESV1
+     * RESV1 平台消费扣款流水Id
      */
     @TableField("resv1")
     private String resv1;
  
     /**
-     * RESV2
+     * RESV2  账户流水Id
      */
     @TableField("resv2")
     private String resv2;

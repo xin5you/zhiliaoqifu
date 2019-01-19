@@ -17,6 +17,8 @@
 		recharge_value, 
 		item_num, 
 		pay_amt,
+		txn_amt,
+		itf_primary_key,
 		order_stat, 
 		notify_stat, 
 		notify_flag, 

@@ -162,6 +162,15 @@ public abstract class AmountUtil {
 		return v1.divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN);
 	}
 
+	/**
+	 * 人民币 分转元
+	 * @param v1
+	 * @return
+	 */
+	public static BigDecimal RMBYuanToCent(BigDecimal v1){
+		return v1.multiply(new BigDecimal("100")).setScale(4);
+	}
+
 	public static void main(String[] args) {
 			BigDecimal a=new BigDecimal("");
 		    BigDecimal b=new BigDecimal("1.1");
