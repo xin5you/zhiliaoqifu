@@ -149,6 +149,12 @@ public class BatchOrder extends Model<BatchOrder> {
 	private String disposeFail;                   //处理失败
 	
     @TableField(exist = false)
-	private String companyName;
+	private String companyName;                    //企业名称
+
+    @TableField(exist = false)
+    private String createUserName;                    //创建人名称
+
+    @TableField(exist = false)
+    private String updateUserName;                    //修改人名称
 	
 }

@@ -39,7 +39,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商编号<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelCode" name="channelCode" value="${retailChnlInf.channelCode }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							                 <input type="text" class="span6" id="channelCode" name="channelCode" value="${retailChnlInf.channelCode }" maxlength="18" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" <c:if test="${'1'==retailChnlInf.isOpen }">readonly="readonly"</c:if>/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -47,7 +47,7 @@
 										<div class="control-group">
 											<label class="control-label">分销商代码<span style="color:red">*</span></label>
 											<div class="controls">
-												<input type="text" class="span6" id="lawCode" name="lawCode" value="${retailChnlInf.lawCode }" maxlength="32"/>
+												<input type="text" class="span6" id="lawCode" name="lawCode" value="${retailChnlInf.lawCode }" maxlength="18" <c:if test="${'1'==retailChnlInf.isOpen }">readonly="readonly"</c:if>/>
 												<span class="help-block"></span>
 											</div>
 										</div>
@@ -55,7 +55,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商KEY<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelKey" name="channelKey" value="${retailChnlInf.channelKey }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							                 <input type="text" class="span6" id="channelKey" name="channelKey" value="${retailChnlInf.channelKey }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -88,16 +88,15 @@
 							     		<div class="control-group">
 							             <label class="control-label">邮箱</label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="email" name="email" value="${retailChnlInf.email }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							                 <input type="text" class="span6" id="email" name="email" value="${retailChnlInf.email }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
-                                        
-                                        
+
                                         <div class="control-group">
                                              <label class="control-label">备注</label>
                                              <div class="controls">
-                                                  <textarea  rows="4" class="span6" name="remarks" maxlength="256" id="remarks">${retailChnlInf.remarks }</textarea>
+                                                  <textarea  rows="4" class="span6" name="remarks" maxlength="125" id="remarks">${retailChnlInf.remarks }</textarea>
                                              </div>
                                         </div>
 							     		

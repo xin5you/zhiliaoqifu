@@ -74,11 +74,11 @@
 					     		<div class="control-group formSep">
 						             <label class="control-label">默认路由标识<span style="color:red">*</span></label>
 						             <div class="controls">
-						               		<select name="defaultRoute" id="defaultRoute" class="span6" <c:if test="${defaultRouteState == '0' }">readonly="readonly"</c:if> >
-											 <c:forEach var="drList" items="${defaultRouteList}" varStatus="st">
-											 		<option value="${drList.code}">${drList.value}</option>
-											 </c:forEach>
-			                                </select>
+										<select name="defaultRoute" id="defaultRoute" class="span6" <c:if test="${defaultRouteState == '0' }">readonly="readonly"</c:if> >
+										 <c:forEach var="drList" items="${defaultRouteList}" varStatus="st">
+											<option value="${drList.code}">${drList.value}</option>
+										 </c:forEach>
+										</select>
 						             </div>
 					     		</div>
 					     		<%--<div class="control-group formSep">

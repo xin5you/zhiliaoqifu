@@ -18,7 +18,6 @@ import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 @Configuration
 public class CompanyInfFacadeConfig extends DubboProviderConfig {
 
-
     @Bean
     public ServiceBean<CompanyInfFacade> companyInfFacade(CompanyInfFacade companyInfFacade) {
 
@@ -42,7 +41,6 @@ public class CompanyInfFacadeConfig extends DubboProviderConfig {
         methodConfig.setRetries(0);
         methods.add(methodConfig); //
 
-
         methodConfig=new MethodConfig();
         methodConfig.setName("updateCompanyInf");
         methodConfig.setTimeout(3000);
@@ -54,7 +52,6 @@ public class CompanyInfFacadeConfig extends DubboProviderConfig {
         methodConfig.setTimeout(3000);
         methodConfig.setRetries(0);
         methods.add(methodConfig); //
-
 
         methodConfig=new MethodConfig();
         methodConfig.setName("getCompanyInfList");
@@ -118,6 +115,12 @@ public class CompanyInfFacadeConfig extends DubboProviderConfig {
 
         methodConfig=new MethodConfig();
         methodConfig.setName("deleteCompanyBillingTypeInf");
+        methodConfig.setTimeout(3000);
+        methodConfig.setRetries(0);
+        methods.add(methodConfig); //
+
+        methodConfig=new MethodConfig();
+        methodConfig.setName("getCompanyInfByName");
         methodConfig.setTimeout(3000);
         methodConfig.setRetries(0);
         methods.add(methodConfig); //

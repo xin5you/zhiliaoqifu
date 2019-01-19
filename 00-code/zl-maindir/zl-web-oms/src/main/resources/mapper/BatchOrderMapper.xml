@@ -36,17 +36,25 @@
 			(select sum(l.amount)
 				from tb_batch_order_list l
 				where l.data_stat = '0' and l.order_id = o.order_id
-			) as sumAmount
-		from tb_batch_order o left join tb_company_inf c 
-			on o.company_id = c.company_id
-		where o.data_stat = '0' 
+			) as sumAmount,
+			(select user_name
+				from tb_web_user u
+				where u.id = o.create_user
+			) as createUserName,
+			(select user_name
+				from tb_web_user u
+				where u.id = o.update_user
+			) as updateUserName
+		from tb_batch_order o
+			left join tb_company_inf c on o.company_id = c.company_id
+		where o.data_stat = '0'
 			and c.data_stat = '0'
 			and o.order_type = #{orderType}
 		<if test="orderId != null and orderId != '' ">
 			and o.order_id = #{orderId}
 		</if>
 		<if test="orderName !=null and orderName != '' ">
-			and o.order_name like '%'|| #{orderName} ||'%'
+			and o.order_name like "%"#{orderName}"%"
 		</if>
 		<if test="orderStat !=null and orderStat != '' ">
 			and o.order_stat = #{orderStat}
@@ -61,7 +69,6 @@
 			and o.create_time &lt;= #{endTime}
 		</if>
 		order by o.update_time desc
-
 	</select>
 
 	<select id="getBatchOrderByOrderId" parameterType="string" resultType="BatchOrder">

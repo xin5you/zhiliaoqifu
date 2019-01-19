@@ -82,6 +82,9 @@ FILE_UPLAOD_SEPARATOR: /
 FILE_NEW_PATH: /oms/
 
 IMG_PATH: C:/app_oms/images/
+#模板下载路径
+EXCEL_OPEN_ACCOUNT: /WEB-INF/excel/batchOpenAccount.xlsx
+EXCEL_RECHARGE_ACCOUNT: /WEB-INF/excel/batchRecharge.xlsx
 
 pagehelper:
   helperDialect: mysql

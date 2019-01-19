@@ -28,14 +28,14 @@
 							
 								 <h3 class="heading">编辑资源</h3>
 						         <div class="control-group">
-						             <label class="control-label">资源名称</label>
+						             <label class="control-label">资源名称<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="name" name="name" value="${resource.resourceName }"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">资源KEY</label>
+						             <label class="control-label">资源KEY<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="key" name="key" value="${resource.resourceKey }"/>
 						                 <span class="help-block"></span>
@@ -60,10 +60,10 @@
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">排序</label>
+						             <label class="control-label">排序<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="seq" name="seq" value="${resource.seq }" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
-						                 <span class="help-block" style="color: red;">请输入整数</span>
+						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         

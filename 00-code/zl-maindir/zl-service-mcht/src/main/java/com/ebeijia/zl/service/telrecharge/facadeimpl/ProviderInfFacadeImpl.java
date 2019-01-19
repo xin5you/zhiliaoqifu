@@ -51,6 +51,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 			providerInfService.updateByDefaultRoute();
 		}
 		tpInf.setProviderName(ProviderInf.getProviderName());
+		tpInf.setLawCode(ProviderInf.getLawCode());
 		tpInf.setAppUrl(ProviderInf.getAppUrl());
 		tpInf.setAppSecret(ProviderInf.getAppSecret());
 		tpInf.setAccessToken(ProviderInf.getAccessToken());

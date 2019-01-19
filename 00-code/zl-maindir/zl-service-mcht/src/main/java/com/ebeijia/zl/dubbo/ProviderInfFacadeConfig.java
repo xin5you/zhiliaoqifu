@@ -18,7 +18,6 @@ import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 @Configuration
 public class ProviderInfFacadeConfig extends DubboProviderConfig {
 
-	
 	@Bean
 	public ServiceBean<ProviderInfFacade> providerInfFacade(ProviderInfFacade providerInfFacade) {
 		
@@ -119,7 +118,13 @@ public class ProviderInfFacadeConfig extends DubboProviderConfig {
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getProviderInfByProviderName");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
 		return serviceBean;
 	}
 }

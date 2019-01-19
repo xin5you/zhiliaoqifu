@@ -49,6 +49,7 @@
                     <th>平台收款状态</th>
                     <th>企业收款状态</th>
                     <th>打款凭证</th>
+                    <th>备注</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -82,6 +83,7 @@
                                 </div>
                             </c:if>
                         </td>
+                        <td>${entity.remarks}</td>
                         <td>
                             <c:if test="${entity.checkStat == '0'}">
                                 <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTOEDIT')">
@@ -129,7 +131,6 @@
         <div class="modal-body">
             <input type="hidden" id="orderId" name="orderId"/>
             <input type="hidden" id="providerId" name="providerId"  value="${providerId }"/>
-            <input type="hidden" id="providerRate" name="providerRate"  value="${providerRate }"/>
             <fieldset>
                 <div class="control-group">
                     <label class="control-label">打款金额(元)：</label>
@@ -150,9 +151,14 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">企业识别码：</label>
+                    <label class="control-label">企业识别码(统一社会信用代码)：</label>
                     <div class="controls">
-                        <input type="text" class="span3" id="companyCode" name ="companyCode" />
+                        <select name="companyCode" id="companyCode" class="span3">
+                            <c:forEach var="c" items="${companyInfList}" varStatus="st">
+                                <option value="${c.companyId}">${c.name}</option>
+                            </c:forEach>
+                        </select>
+                        <%--<input type="text" class="span3" id="companyCode" name ="companyCode" />--%>
                         <span class="help-block"></span>
                     </div>
                 </div>

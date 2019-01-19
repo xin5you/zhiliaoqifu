@@ -43,7 +43,8 @@ var listResource = {
 	            	if(result.status){
 	            		location.href=Helper.getRootPath() + '/sys/resource/listResource.do?operStatus=4';
 	            	}else{
-	            		Helper.alter(result.msg);
+	            		Helper.alert(result.msg);
+	            		return false;
 	            	}
 	            },
 	            error:function(){

@@ -73,10 +73,26 @@ public class BatchOpenAccountController {
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		
+
+		String orderId = req.getParameter("orderId");
+		String orderName = req.getParameter("orderName");
+		String orderStat = req.getParameter("orderStat");
+		String companyId = req.getParameter("companyId");
+
 		BatchOrder order = new BatchOrder();
 		order.setOrderType(TransCode.CW80.getCode());
-		
+		if (!StringUtil.isNullOrEmpty(orderId)) {
+			order.setOrderId(orderId);
+		}
+		if (!StringUtil.isNullOrEmpty(orderName)) {
+			order.setOrderName(orderName);
+		}
+		if (!StringUtil.isNullOrEmpty(orderStat)) {
+			order.setOrderStat(orderStat);
+		}
+		if (!StringUtil.isNullOrEmpty(companyId)) {
+			order.setCompanyId(companyId);
+		}
 		PageInfo<BatchOrder> pageList = null;
 		try {
 			pageList = batchOrderService.getBatchOrderPage(startNum, pageSize, order, req);
