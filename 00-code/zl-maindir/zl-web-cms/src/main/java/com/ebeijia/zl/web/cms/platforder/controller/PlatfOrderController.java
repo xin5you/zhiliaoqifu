@@ -1,17 +1,16 @@
 package com.ebeijia.zl.web.cms.platforder.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.GoodsEcomCodeTypeEnum;
 import com.ebeijia.zl.common.utils.enums.PlatfOrderPayStatEnum;
 import com.ebeijia.zl.common.utils.enums.SubOrderStatusEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
-import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfOrder;
 import com.ebeijia.zl.shop.dao.order.domain.TbEcomPlatfShopOrder;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPlatfShopOrderService;
 import com.ebeijia.zl.web.cms.platforder.service.PlatfOrderInfService;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.github.pagehelper.PageInfo;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("platforder")
@@ -111,7 +110,7 @@ public class PlatfOrderController {
 		}
 		mv.addObject("ecomCodeList", GoodsEcomCodeTypeEnum.values());
 		mv.addObject("subOrderStatusList", SubOrderStatusEnum.values());
-		mv.addObject("payStatusList", GoodsEcomCodeTypeEnum.values());
+		mv.addObject("payStatusList", PlatfOrderPayStatEnum.values());
 		mv.addObject("pageInfo", pageInfo);
 		mv.addObject("platfShopOrder", platfShopOrder);
 		return mv;

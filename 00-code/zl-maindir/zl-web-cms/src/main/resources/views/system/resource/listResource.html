@@ -46,7 +46,7 @@
 								<td><span th:text="${entity.resourceName}"></span></td>
 								<td><span th:text="${entity.url}"></span></td>
 								<td><span th:text="${entity.dataStat}"></span></td>
-								<td><span th:text="${entity.createTime}"></span></td>
+								<td><span th:text="${#dates.format(entity.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 								<td>
 									<span th:if="${entity.dataStat eq '0'}">
 										<a th:attr="resourceId=${entity.id}" title="编辑" href="javascript:void(0)" class="btn-mini btn-edit"><i class="icon-edit"></i></a> 
