@@ -28,14 +28,14 @@
 								<input type="hidden" class="span6" name="id" id="roleId" value="${role.id}"/>
 								 <h3 class="heading">编辑角色</h3>
 						         <div class="control-group">
-						             <label class="control-label">角色名称</label>
+						             <label class="control-label">角色名称<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" name="roleName" id="roleName" value="${role.roleName }"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">排序</label>
+						             <label class="control-label">排序<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="seq" name="seq" value="${role.seq }" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						                 <span class="help-block"></span>

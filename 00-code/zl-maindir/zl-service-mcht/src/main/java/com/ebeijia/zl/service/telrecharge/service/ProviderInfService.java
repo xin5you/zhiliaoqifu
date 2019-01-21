@@ -32,4 +32,11 @@ public interface ProviderInfService extends IService<ProviderInf> {
 	 * @return
 	 */
 	ProviderInf getProviderInfByOperSolr(Integer operSolr);
+
+	/**
+	 * 根据供应商名称查询供应商信息
+	 * @param providerName
+	 * @return
+	 */
+	ProviderInf getProviderInfByProviderName(String providerName);
 }

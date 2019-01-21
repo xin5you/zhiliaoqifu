@@ -29,6 +29,9 @@
 		<if test="dictName != null and dictName !='' ">
 			and dict_name like "%"#{dictName}"%"
 		</if>
+		<if test="dictCode != null and dictCode !='' ">
+			and dict_code like "%"#{dictCode}"%"
+		</if>
 		order by update_time desc
 	</select>
 	

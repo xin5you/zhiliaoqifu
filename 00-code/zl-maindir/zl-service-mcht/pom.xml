@@ -37,7 +37,7 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		
 		 <dependency>
             <groupId>com.ebeijia</groupId>
@@ -84,6 +84,12 @@
 		<dependency>
 			<groupId>com.ebeijia</groupId>
 			<artifactId>zl-facade-mcht</artifactId>
+			<version>${ebj.zl.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ebeijia</groupId>
+			<artifactId>zl-facade-account</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
 

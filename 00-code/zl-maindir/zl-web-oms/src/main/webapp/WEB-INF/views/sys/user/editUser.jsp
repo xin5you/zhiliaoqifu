@@ -29,21 +29,21 @@
 						         <div class="control-group">
 						             <label class="control-label">登录名</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="loginname" name="loginname" value="${currUser.loginName }" />
+						                 <input type="text" class="span6" id="loginname" name="loginname" value="${currUser.loginName }" maxlength="20"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
 						             <label class="control-label">姓名</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="name" name="name" value="${currUser.userName }"/>
+						                 <input type="text" class="span6" id="name" name="name" value="${currUser.userName }" maxlength="20"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 								<div class="control-group">
 						             <label class="control-label">密码</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="password" name="password" value="${currUser.password }"/>
+						                 <input type="text" class="span6" id="password" name="password" value="${currUser.password }" minlength="6" maxlength="32"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>

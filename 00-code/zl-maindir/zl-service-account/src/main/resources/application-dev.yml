@@ -26,6 +26,7 @@ spring:
     testOnReturn: false
   dubbo:
     application:
+      id: zl-service-account
       name: zl-service-account
     protocol:
       name: dubbo

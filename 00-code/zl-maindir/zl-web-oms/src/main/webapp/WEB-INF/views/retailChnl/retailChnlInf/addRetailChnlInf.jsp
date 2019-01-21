@@ -38,7 +38,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商编号<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelCode" name="channelCode" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="32"/>
+							                 <input type="text" class="span6" id="channelCode" name="channelCode" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="18"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -46,7 +46,7 @@
 										<div class="control-group">
 											<label class="control-label">分销商代码<span style="color:red">*</span></label>
 											<div class="controls">
-												<input type="text" class="span6" id="lawCode" name="lawCode" maxlength="32"/>
+												<input type="text" class="span6" id="lawCode" name="lawCode" maxlength="18"/>
 												<span class="help-block"></span>
 											</div>
 										</div>
@@ -54,7 +54,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商KEY<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelKey" name="channelKey" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="64"/>
+							                 <input type="text" class="span6" id="channelKey" name="channelKey" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" maxlength="32"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -87,7 +87,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">邮箱</label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="email" name="email" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							                 <input type="text" class="span6" id="email" name="email" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -95,7 +95,7 @@
                                         <div class="control-group">
                                              <label class="control-label">备注</label>
                                              <div class="controls">
-                                                  <textarea  rows="4" class="span6" name="remarks"  id="remarks" maxlength="256"></textarea>
+                                                  <textarea  rows="4" class="span6" name="remarks"  id="remarks" maxlength="123"></textarea>
                                              </div>
                                         </div>
 							     		

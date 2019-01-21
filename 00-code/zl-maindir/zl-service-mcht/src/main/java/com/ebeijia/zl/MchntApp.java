@@ -1,5 +1,6 @@
 package com.ebeijia.zl;
 
+import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +19,7 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @SpringBootApplication
+@EnableDubboConfiguration
 public class MchntApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

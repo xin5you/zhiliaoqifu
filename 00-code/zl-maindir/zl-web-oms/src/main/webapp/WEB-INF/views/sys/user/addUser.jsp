@@ -28,14 +28,14 @@
 						         <div class="control-group">
 						             <label class="control-label">登录名</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="loginname" name="loginname" />
+						                 <input type="text" class="span6" id="loginname" name="loginname" maxlength="20"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
 						             <label class="control-label">姓名</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="name" name="name"/>
+						                 <input type="text" class="span6" id="name" name="name" maxlength="20"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
@@ -43,7 +43,7 @@
 						         <div class="control-group">
 						             <label class="control-label">密码</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="password" name="password"/>
+						                 <input type="text" class="span6" id="password" name="password" minlength="6" maxlength="15"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>

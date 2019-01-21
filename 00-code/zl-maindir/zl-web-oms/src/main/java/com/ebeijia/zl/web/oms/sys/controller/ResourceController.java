@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.system.domain.RoleResource;
+import com.ebeijia.zl.basics.system.service.RoleResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class ResourceController {
 	
 	@Autowired
 	private ResourceService resourceService;
+
+	@Autowired
+	private RoleResourceService roleResourceService;
 
 	@RequestMapping(value = "/listResource")
 	public ModelAndView listResource(HttpServletRequest req, HttpServletResponse response) {
@@ -223,6 +228,12 @@ public class ResourceController {
 		
 		String resourceId = req.getParameter("resourceId");
 		try {
+			List<RoleResource> roleResourceList = roleResourceService.getRoleResourceByResourceId(resourceId);
+			if (roleResourceList != null && roleResourceList.size() >= 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "该资源已被角色使用，不能删除");
+				return resultMap;
+			}
 			if (!resourceService.removeById(resourceId)) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "删除资源失败，请重新操作");

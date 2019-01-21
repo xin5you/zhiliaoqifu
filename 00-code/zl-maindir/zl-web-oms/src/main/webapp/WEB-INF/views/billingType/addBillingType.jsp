@@ -55,21 +55,21 @@
 							     		<div class="control-group formSep">
 							             <label class="control-label">折损率<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="loseFee" name="loseFee" maxlength="5"/>
+							                 <input type="text" class="span6" id="loseFee" name="loseFee" maxlength="10"onkeyup="checkPrice(this)" />
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>
 							             <div class="control-group formSep">
 							             <label class="control-label">可购率<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="buyFee" name="buyFee" maxlength="5"/>
+							                 <input type="text" class="span6" id="buyFee" name="buyFee" maxlength="10" onkeyup="checkPrice(this)"/>
 							                 <span class="help-block"></span>
 							             </div>
 							             </div>
 							     		<div class="control-group">
 							             <label class="control-label">备注</label>
 							             <div class="controls">
-							                  <textarea  rows="6" class="span6" id="remarks" name="remarks" maxlength="255"></textarea>
+							                  <textarea  rows="6" class="span6" id="remarks" name="remarks" maxlength="125"></textarea>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>
@@ -85,4 +85,17 @@
 				</div>
 		</div>
 </body>
+<script type="text/javascript">
+    //验证价格（带有小数点，小数点最多是三位）
+    function checkPrice(obj){
+        obj.value = obj.value.replace(/^\./g,""); //验证第一个字符是数字而不是
+        obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d\d).*$/,'$1$2.$3');//只能输入三个小数
+        if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+            obj.value= parseFloat(obj.value);
+        }
+    }
+</script>
 </html>

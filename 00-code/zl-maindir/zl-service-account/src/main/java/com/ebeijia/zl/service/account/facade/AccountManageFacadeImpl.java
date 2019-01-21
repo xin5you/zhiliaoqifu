@@ -37,8 +37,8 @@ import java.util.List;
 * 2018年11月30日     zhuqi           v1.0.0
 */
 
-@Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="accountManageFacade")
+
+@com.alibaba.dubbo.config.annotation.Service()
 public class AccountManageFacadeImpl implements AccountManageFacade {
 	
 	private final  Logger log = LoggerFactory.getLogger(AccountManageFacadeImpl.class);

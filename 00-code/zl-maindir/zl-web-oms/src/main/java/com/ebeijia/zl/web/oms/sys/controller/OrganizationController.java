@@ -63,7 +63,7 @@ public class OrganizationController {
 		mv.addObject("entityList", entityList);
 		return mv;
 	}
-	
+
 	/**
 	 * 部门添加提交
 	 * @param req

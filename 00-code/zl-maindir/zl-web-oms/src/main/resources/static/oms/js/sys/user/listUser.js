@@ -11,12 +11,14 @@ var listUser = {
 	},
 
 	initEvent:function(){
-
 		$('.btn-edit').on('click', listUser.intoEditUser);
 		$('.btn-delete').on('click', listUser.deleteUserCommit);
 		$('.btn-add').on('click', listUser.intoAddUser);
+        $('.btn-reset').on('click', listUser.searchReset);
 	},
-
+    searchReset: function(){
+        location = Helper.getRootPath() + '/sys/user/listUser.do';
+    },
 	intoAddUser:function(){
 		var url = Helper.getRootPath()+"/sys/user/intoAddUser.do";
 		location.href=url;

@@ -31,10 +31,10 @@
 						<div class="row-fluid" >
 							 <div class="span12">
 		                       	<div class="input-prepend">
-		           			   	   	<span class="add-on">订单号:</span><input id="orderId" name="orderId" type="text" class="input-medium" value="${order.orderId }"  maxlength="22" />
+		           			   	   	<span class="add-on">订单号:</span><input id="orderId" name="orderId" type="text" class="input-medium" value="${order.orderId }"  maxlength="36" />
 		                       	</div>
 		                       	<div class="input-prepend">
-		           			   	   	<span class="add-on">订单名称:</span><input id="orderName" name="orderName" type="text" class="input-medium" value="${order.orderName }"/>
+		           			   	   	<span class="add-on">订单名称:</span><input id="orderName" name="orderName" type="text" class="input-medium" value="${order.orderName }" maxlength="36"/>
 		                       	</div>
 		
 		                       	<div class="input-prepend">
@@ -50,10 +50,10 @@
 							 	<div class="input-prepend">
 		           			   	   	<span class="add-on">企业名称:</span>
 		           			   	   	<select name="companyId" id="companyId" class="input-medium">
-                                    <option value="">--请选择--</option>
-                                    <c:forEach var="c" items="${companyList}" varStatus="sta">
-                                        <option value="${c.companyId}"  <c:if test="${c.companyId==order.companyId}">selected</c:if>   >${c.name }</option>
-                                    </c:forEach>
+										<option value="">--请选择--</option>
+										<c:forEach var="c" items="${companyList}" varStatus="sta">
+											<option value="${c.companyId}"  <c:if test="${c.companyId==order.companyId}">selected</c:if>   >${c.name }</option>
+										</c:forEach>
                                     </select>
 		                       	</div>
 							<div class="pull-right">
@@ -103,13 +103,13 @@
 									<td>${entity.orderCount }</td>
 									<td>${entity.orderStat }</td>
 									<td>${entity.companyName }</td>
-				                    <td>${entity.createUser }</td>
+				                    <td>${entity.createUserName }</td>
 				                    <td>
 				                    	<jsp:useBean id="createTime" class="java.util.Date"/>
 										<jsp:setProperty name="createTime" property="time" value="${entity.createTime}"/>
 										<fmt:formatDate value="${createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				                    </td>
-                                    <td>${entity.updateUser }</td>
+                                    <td>${entity.updateUserName }</td>
                                     <td>
                                     	<jsp:useBean id="updateTime" class="java.util.Date"/>
 										<jsp:setProperty name="updateTime" property="time" value="${entity.updateTime}"/>

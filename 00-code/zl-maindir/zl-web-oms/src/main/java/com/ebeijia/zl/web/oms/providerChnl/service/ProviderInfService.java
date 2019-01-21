@@ -22,4 +22,18 @@ public interface ProviderInfService {
 	Map<String, Object> editProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 
 	Map<String, Object> deleteProviderTransfer(HttpServletRequest req);
+
+	/**
+	 * 新增供应商信息
+	 * @param req
+	 * @return
+	 */
+	ModelMap addProvider(ProviderInf providerInf);
+
+	/**
+	 * 编辑供应商信息
+	 * @param req
+	 * @return
+	 */
+	ModelMap editProvider(ProviderInf providerInf);
 }

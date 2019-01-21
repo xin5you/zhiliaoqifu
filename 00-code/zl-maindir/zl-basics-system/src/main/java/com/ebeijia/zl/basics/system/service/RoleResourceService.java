@@ -15,7 +15,24 @@ import com.ebeijia.zl.basics.system.domain.RoleResource;
  */
 public interface RoleResourceService extends IService<RoleResource> {
 
+	/**
+	 * 根据角色ID删除角色资源信息表数据
+	 * @param roleId
+	 * @return
+	 */
 	int deleteRoleResourceByRoleId(String roleId);
-	
+
+	/**
+	 * 根据角色ID查询角色资源表信息
+	 * @param roleId
+	 * @return
+	 */
 	List<RoleResource> getRoleResourceByRoleId(String roleId);
+
+	/**
+	 * 根据资源ID查询角色资源表信息
+	 * @param resourceId
+	 * @return
+	 */
+	List<RoleResource> getRoleResourceByResourceId(String resourceId);
 }

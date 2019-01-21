@@ -163,8 +163,8 @@ var addOpenAccount = {
 		});
 	},
 	loadMouldDownload:function(){
-		var url = Helper.getRootPath()+"/common/excelDownload/excelUpload.do?batchType=openAccount";
-		location.href=url;
+		var url = Helper.getRootPath()+"/common/excelDownload.do?batchType=openAccount";
+		location.href = url;
 	},
 	accountImport:function(){
 		$('.btn-import').addClass("disabled");
@@ -173,7 +173,7 @@ var addOpenAccount = {
 		});
 		$("#uploadMainForm").ajaxSubmit({
 			type:'post', // 提交方式 get/post
-            url: Helper.getRootPath() + '/common/excelImport/excelImp.do', // 需要提交的 url
+            url: Helper.getRootPath() + '/common/excelUpload.do', // 需要提交的 url
             dataType: 'json',
             data: {
 				"batchType":"openAccount"

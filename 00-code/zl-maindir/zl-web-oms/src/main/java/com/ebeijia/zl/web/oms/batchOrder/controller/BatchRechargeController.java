@@ -74,11 +74,27 @@ public class BatchRechargeController {
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
-		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);		
-		
+		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+
+		String orderId = req.getParameter("orderId");
+		String orderName = req.getParameter("orderName");
+		String orderStat = req.getParameter("orderStat");
+		String companyId = req.getParameter("companyId");
+
 		BatchOrder order = new BatchOrder();
 		order.setOrderType(TransCode.MB50.getCode());
-
+		if (!StringUtil.isNullOrEmpty(orderId)) {
+			order.setOrderId(orderId);
+		}
+		if (!StringUtil.isNullOrEmpty(orderName)) {
+			order.setOrderName(orderName);
+		}
+		if (!StringUtil.isNullOrEmpty(orderStat)) {
+			order.setOrderStat(orderStat);
+		}
+		if (!StringUtil.isNullOrEmpty(companyId)) {
+			order.setCompanyId(companyId);
+		}
 		PageInfo<BatchOrder> pageList = null;
 		try {
 			pageList = batchOrderService.getBatchOrderPage(startNum, pageSize, order, req);
@@ -309,7 +325,7 @@ public class BatchRechargeController {
 			int i = batchOrderService.batchTransferAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
 			if (i < 1) {
 				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "提交批量开户订单失败");
+				resultMap.put("msg", "提交批量充值订单失败");
 			}
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);

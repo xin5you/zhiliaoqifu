@@ -317,6 +317,83 @@ public class CompanyServiceImpl implements CompanyService{
 		return resultMap;
 	}
 
+	@Override
+	public Map<String, Object> addCompanyInf(CompanyInf companyInf) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		try {
+			CompanyInf companyInfLawCode = companyInfFacade.getCompanyInfByLawCode(companyInf.getLawCode());
+			if (companyInfLawCode != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "社会信用代码已存在，请重新输入");
+				return resultMap;
+			}
+			CompanyInf companyInfName = companyInfFacade.getCompanyInfByName(companyInf.getName());
+			if (companyInfName != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "企业名称已存在，请重新输入");
+				return resultMap;
+			}
+			if (IsPlatformEnum.IsPlatformEnum_1.getCode().equals(companyInf.getIsPlatform())) {
+				CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
+				if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "平台标识已有开户企业，请重新选择");
+					return resultMap;
+				}
+			}
+			if (!companyInfFacade.insertCompanyInf(companyInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增企业信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 新增企业信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增企业信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@Override
+	public Map<String, Object> editCompanyInf(CompanyInf companyInf) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		try {
+			CompanyInf companyLawCode = companyInfFacade.getCompanyInfByLawCode(companyInf.getLawCode());
+			if (companyLawCode != null && !companyLawCode.getCompanyId().equals(companyInf.getCompanyId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "社会信用代码已存在，请重新输入");
+				return resultMap;
+			}
+			CompanyInf companyInfName = companyInfFacade.getCompanyInfByName(companyInf.getName());
+			if (companyInfName != null && !companyInfName.getCompanyId().equals(companyInf.getCompanyId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "企业名称已存在，请重新输入");
+				return resultMap;
+			}
+			CompanyInf companyInfCode = companyInfFacade.getCompanyInfById(companyInf.getCompanyId());
+			if (!companyInfCode.getIsPlatform().equals(companyInf.getIsPlatform()) && !companyInf.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_0.getCode())) {
+				CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
+				if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "平台标识已有开户企业，请重新选择");
+					return resultMap;
+				}
+			}
+			if (!companyInfFacade.updateCompanyInf(companyInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "修改企业信息失败");
+			}
+		} catch (Exception e) {
+			logger.error("## 编辑企业信息出错", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑企业信息失败");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
 	/*public static void main(String[] args) {
 		BigDecimal a = new BigDecimal("2.00");
 		BigDecimal b = new BigDecimal(1);

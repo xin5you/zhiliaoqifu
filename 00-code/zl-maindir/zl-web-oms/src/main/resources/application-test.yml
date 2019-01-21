@@ -1,11 +1,6 @@
 server:
   port: 10101
   contextPath: /oms
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain:
 spring:
   mvc:
     view: 
@@ -80,6 +75,9 @@ FILE_UPLAOD_SEPARATOR: /
 FILE_NEW_PATH: /oms/
 
 IMG_PATH: /data/app/app_oms/images/
+#模板下载路径
+EXCEL_OPEN_ACCOUNT: /WEB-INF/excel/batchOpenAccount.xlsx
+EXCEL_RECHARGE_ACCOUNT: /WEB-INF/excel/batchRecharge.xlsx
 
 pagehelper:
   helperDialect: mysql

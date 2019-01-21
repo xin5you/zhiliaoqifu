@@ -43,6 +43,24 @@ public class ProviderOrderInf extends Model<ProviderOrderInf> {
      */
     @TableField("reg_order_amt")
     private BigDecimal regOrderAmt;
+
+    /**
+     * 交易扣款金额
+     */
+    @TableField("reg_txn_amt")
+    private BigDecimal regTxnAmt;
+
+    /**
+     * 系统交易订单状态
+     */
+    @TableField("order_state")
+    private String order_state;
+
+    /**
+     * 系统交易流水
+     */
+    @TableField("itf_primary_key")
+    private String itfPrimaryKey;
  
     /**
      * 订单处理时间

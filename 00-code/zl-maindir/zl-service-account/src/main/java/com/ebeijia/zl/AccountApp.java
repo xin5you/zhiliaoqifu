@@ -1,5 +1,6 @@
 package com.ebeijia.zl;
 
+import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,7 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @SpringBootApplication
+@EnableDubboConfiguration
 public class AccountApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
