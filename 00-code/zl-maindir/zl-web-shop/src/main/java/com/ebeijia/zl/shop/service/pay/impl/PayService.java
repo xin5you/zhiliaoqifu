@@ -38,10 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.ebeijia.zl.common.utils.enums.TransCode.*;
 import static com.ebeijia.zl.facade.account.exceptions.AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH;
@@ -120,6 +117,7 @@ public class PayService implements IPayService {
         req.setUserType(UserType.TYPE100.getCode());
         //构造操作渠道信息
         req.setTransChnl(TransChnl.CHANNEL9.toString());
+        req.setMchntCode(shopUtils.getBaseDict("ZLQF_MCHNT_CODE"));
         req.setTransAmt(BigDecimal.valueOf(dealInfo));
         req.setUploadAmt(BigDecimal.valueOf(dealInfo));
         req.setTransId(CW91.getCode());
@@ -138,7 +136,6 @@ public class PayService implements IPayService {
         String image = "";
         String outId = dmsKey;
         String itxKey = (String) baseResult.getObject();
-
 
         //TODO DMS
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
@@ -166,12 +163,12 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    public BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc,String mchntCode) {
+    public BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc, String mchntCode) {
 
         //请求支付
         String result = "";
         List<AccountTxnVo> txnList = buildTxnVo(payInfo);
-        BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc,mchntCode);
+        BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc, mchntCode);
         Object object = baseResult.getObject();
         if (object instanceof String) {
             result = (String) object;
@@ -203,7 +200,6 @@ public class PayService implements IPayService {
             payOrderDetails.setPayStatus("2");
             payOrderDetailsDao.save(payOrderDetails);
         }
-
         return baseResult;
     }
 
@@ -249,6 +245,7 @@ public class PayService implements IPayService {
         }
         req.setTransDesc(desc);
         //TODO 添加收款方代码
+        req.setMchntCode(shopUtils.getBaseDict("ZLQF_MCHNT_CODE"));
         BaseResult baseResult = null;
         try {
             baseResult = accountTransactionFacade.executeConsume(req);
@@ -291,6 +288,7 @@ public class PayService implements IPayService {
             desc = "商城消费";
         }
         req.setTransDesc(desc);
+        req.setMchntCode(shopUtils.getBaseDict("ZLQF_MCHNT_CODE"));
         BaseResult baseResult = null;
         try {
             baseResult = accountTransactionFacade.executeConsume(req);
@@ -307,6 +305,27 @@ public class PayService implements IPayService {
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, baseResult.getMsg());
 
         }
+        result = (String) baseResult.getObject();
+        //构造payOrder对象
+        String memberId = shopUtils.getSession().getMemberId();
+        String payOrderId = IdUtil.getNextId();
+        TbEcomPayOrder pay = initPayOrderObject();
+        pay.setMemberId(memberId);
+        pay.setDmsRelatedKey(dmsRelatedKey);
+        pay.setPayOrderId(payOrderId);
+        pay.setOutTransNo(result);
+        payOrderDao.save(pay);
+
+        //构造payOrderDetail对象
+        for (AccountTxnVo v : accountTxnVos) {
+            TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
+            payOrderDetails.setDebitAccountCode(v.getTxnBId());
+            payOrderDetails.setDebitAccountType(v.getTxnBId().substring(0, 1));
+            payOrderDetails.setDebitPrice(v.getTxnAmt().longValue());
+            payOrderDetails.setDmsRelatedKey(dmsRelatedKey);
+            payOrderDetailsDao.save(payOrderDetails);
+        }
+
         logger.info(String.format("支付成功,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), openId, dmsRelatedKey, desc, result));
         return baseResult;
     }
@@ -436,20 +455,20 @@ public class PayService implements IPayService {
         //TODO
         try {
             BaseResult baseResult = accountTransactionFacade.executeRefund(vo);
-            if (baseResult==null){
+            if (baseResult == null) {
                 throw new BizException(ResultState.ERROR, "参数异常");
             }
+            logger.info("退款返回值：[{}]", baseResult.getObject());
             if (!baseResult.getCode().equals("00")) {
                 throw new BizException(ResultState.ERROR, "参数异常");
             }
-            logger.info("退款返回值：[{}]",baseResult.getObject());
             //INF
             log.setItxKey((String) baseResult.getObject());
             //TODO INF
             log = new TbEcomItxLogDetail();
             log.setTitle("充值失败退款");
             log.setMemberId(shopUtils.getSession().getMemberId());
-            log.setOutId(payInfo.getOrderId());
+            log.setOutId(log.getItxKey());
             logDetailDao.save(log);
         } catch (Exception e) {
             logger.error("手机充值退款失败：[{}]", e);
@@ -477,7 +496,7 @@ public class PayService implements IPayService {
      * @return
      * @throws Exception
      */
-    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String openId, String dmsRelatedKey, String desc,String mchntCode) {
+    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String openId, String dmsRelatedKey, String desc, String mchntCode) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         //交易与渠道
         req.setTransId(CW10.getCode());
@@ -492,6 +511,7 @@ public class PayService implements IPayService {
             desc = "商城消费";
         }
         req.setTransDesc(desc);
+        req.setMchntCode(shopUtils.getBaseDict("ZLQF_MCHNT_CODE"));
         BaseResult result = null;
         try {
             result = accountTransactionFacade.executeConsume(req);
@@ -526,7 +546,7 @@ public class PayService implements IPayService {
             accountTxnVo.setTxnAmt(BigDecimal.valueOf(payInfo.getCostB()));
             result.add(accountTxnVo);
         }
-
         return result;
     }
+
 }
