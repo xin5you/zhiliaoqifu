@@ -7,6 +7,7 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
+import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
 import com.ebeijia.zl.facade.account.req.*;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
@@ -112,11 +113,11 @@ public class PayService implements IPayService {
         req.setOrderName("转账");
         req.setReceiverCardNo(payCard.getCardNumber());
         req.setReceiverName(payCard.getUserName());
+        req.setReceiverType(WithDrawReceiverTypeEnum.PERSON.getCode());
         //构造员工信息
         req.setUserChnlId(memberInfo.getOpenId());
         req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
         req.setUserType(UserType.TYPE100.getCode());
-
         //构造操作渠道信息
         req.setTransChnl(TransChnl.CHANNEL9.toString());
         req.setTransAmt(BigDecimal.valueOf(dealInfo));
@@ -165,12 +166,12 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    public BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc) {
+    public BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc,String mchntCode) {
 
         //请求支付
         String result = "";
         List<AccountTxnVo> txnList = buildTxnVo(payInfo);
-        BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc);
+        BaseResult baseResult = executeConsume(txnList, openId, dmsRelatedKey, desc,mchntCode);
         Object object = baseResult.getObject();
         if (object instanceof String) {
             result = (String) object;
@@ -247,6 +248,7 @@ public class PayService implements IPayService {
             desc = "商城消费";
         }
         req.setTransDesc(desc);
+        //TODO 添加收款方代码
         BaseResult baseResult = null;
         try {
             baseResult = accountTransactionFacade.executeConsume(req);
@@ -475,7 +477,7 @@ public class PayService implements IPayService {
      * @return
      * @throws Exception
      */
-    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String openId, String dmsRelatedKey, String desc) {
+    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String openId, String dmsRelatedKey, String desc,String mchntCode) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         //交易与渠道
         req.setTransId(CW10.getCode());

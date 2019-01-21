@@ -242,6 +242,8 @@ public class OrderService implements IOrderService {
         String outId = "";
         String itxKey = "";
 
+
+        String mchntCode = "";
         //免费订单逻辑
         if (payAmount == 0) {
             //TODO
@@ -251,11 +253,14 @@ public class OrderService implements IOrderService {
             while (iterator.hasNext()) {
                 TbEcomPlatfShopOrder platfShopOrder = iterator.next();
                 platfShopOrder.setDmsRelatedKey(dmsRelatedKey);
+                platfShopOrder.setSubOrderStatus("10");
                 String sOrderId = platfShopOrder.getSOrderId();
                 TbEcomOrderProductItem item = orderProductItemDao.getOrderProductItemBySOrderId(sOrderId);
                 Goods goods = new Goods();
                 goods.setProductId(item.getProductId());
                 goods = goodsDao.getGoods(goods);
+                //TODO 标注商户，目前仅处理一个商户
+                mchntCode = goods.getEcomCode();
                 String ecomName = "";
                 if (goods != null) {
                     ecomName = "[" + goods.getEcomName() + "]";
@@ -308,7 +313,7 @@ public class OrderService implements IOrderService {
             }
 
             //处理订单支付过程，调用了payService
-            BaseResult baseResult = payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString());
+            BaseResult baseResult = payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString(),mchntCode);
             if (!baseResult.getCode().equals("00")) {
                 logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
                 throw new BizException(ResultState.NOT_ACCEPTABLE, "参数异常");
