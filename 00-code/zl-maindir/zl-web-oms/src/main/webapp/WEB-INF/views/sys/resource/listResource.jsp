@@ -51,7 +51,12 @@
 				                 	<c:if test="${resource.pid !='0' && resource.resourceType=='0'}">class="parent child-of-${resource.pid }"</c:if>
 				                 	<c:if test="${resource.pid !='0' && resource.resourceType!='0'}">class="child-of-${resource.pid }"</c:if> 
 				                 >
-				                    <td style="text-align:left;"><span <c:if test="${resource.resourceType =='0'}">class='folder'</c:if> <c:if test="${resource.resourceType =='1'}">class='file'</c:if>>${resource.resourceName}</span></td>
+				                    <td style="text-align:left;">
+										<span <c:if test="${resource.resourceType =='0'}">class='folder'</c:if>
+											  <c:if test="${resource.resourceType =='1'}">class='file'</c:if>>
+												${resource.resourceName}
+										</span>
+									</td>
 				                    <td>${resource.resourceKey}</td>
 				                    <td>${resource.url}</td>
 									<td>${resource.seq}</td>

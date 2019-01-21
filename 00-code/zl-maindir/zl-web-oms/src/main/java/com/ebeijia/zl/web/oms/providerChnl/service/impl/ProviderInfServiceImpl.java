@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -196,7 +197,13 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return resultMap;
 		}
 
-		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+		//CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+		CompanyInf company = companyInfFacade.getCompanyInfById(companyCode);
+		if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
+			return resultMap;
+		}
 
 		/*String platformFee = jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, RedisConstants.PLATFORM_FEE);
 		if (StringUtil.isNullOrEmpty(platformFee)) {
@@ -1004,13 +1011,18 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return resultMap;
 		}
 
-		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-		if (company == null) {
-			logger.error("## 根据企业代码{}查询企业信息为空", companyCode);
+		CompanyInf company = companyInfFacade.getCompanyInfById(companyCode);
+		if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "编辑上账信息失败，供应商上账金额不正确");
+			resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 			return resultMap;
 		}
+		/*CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+		if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
+			return resultMap;
+		}*/
 
 		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
 		if (order == null) {
@@ -1900,5 +1912,79 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 	    return resultMap;
     }
+
+	@Override
+	public ModelMap addProvider(ProviderInf providerInf) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.put("status", Boolean.TRUE);
+
+		try {
+			ProviderInf providerLawCod = providerInfFacade.getProviderInfByLawCode(providerInf.getLawCode());
+			if (providerLawCod != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "供应商代码已存在，请重新输入");
+				return resultMap;
+			}
+			ProviderInf providerOperSolr = providerInfFacade.getProviderInfByOperSolr(providerInf.getOperSolr());
+			if (providerOperSolr != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "操作顺序已存在，请重新输入");
+				return resultMap;
+			}
+			ProviderInf providerName = providerInfFacade.getProviderInfByProviderName(providerInf.getProviderName());
+			if (providerName != null) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "供应商名称已存在，请重新输入");
+				return resultMap;
+			}
+			if(!providerInfFacade.saveProviderInf(providerInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "新增供应商失败，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error("## 新增供应商信息异常", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "新增供应商异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	@Override
+	public ModelMap editProvider(ProviderInf providerInf) {
+		ModelMap resultMap = new ModelMap();
+		resultMap.put("status", Boolean.TRUE);
+
+		try {
+			ProviderInf providerLawCode = providerInfFacade.getProviderInfByLawCode(providerInf.getLawCode());
+			if (providerLawCode != null && !providerLawCode.getProviderId().equals(providerInf.getProviderId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "供应商代码已存在，请重新输入");
+				return resultMap;
+			}
+			ProviderInf providerOperSolr = providerInfFacade.getProviderInfByOperSolr(providerInf.getOperSolr());
+			if (providerOperSolr != null && !providerOperSolr.getProviderId().equals(providerInf.getProviderId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "操作顺序已存在，请重新输入");
+				return resultMap;
+			}
+			ProviderInf providerName = providerInfFacade.getProviderInfByProviderName(providerInf.getProviderName());
+			if (providerName != null && !providerName.getProviderId().equals(providerInf.getProviderId())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "供应商名称已存在，请重新输入");
+				return resultMap;
+			}
+			if (!providerInfFacade.updateProviderInf(providerInf)) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑供应商失败，请联系管理员");
+			}
+		} catch (Exception e) {
+			logger.error("## 编辑供应商信息异常", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑供应商异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
 
 }

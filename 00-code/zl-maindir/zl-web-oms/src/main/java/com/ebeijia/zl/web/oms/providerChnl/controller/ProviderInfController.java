@@ -137,22 +137,7 @@ public class ProviderInfController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
 			ProviderInf providerInf = this.getProviderInf(req);
-			ProviderInf providerLawCode = providerInfFacade.getProviderInfByLawCode(providerInf.getLawCode());
-			if (providerLawCode != null) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "供应商代码已存在，请重新输入");
-				return resultMap;
-			}
-			ProviderInf providerOperSolr = providerInfFacade.getProviderInfByOperSolr(providerInf.getOperSolr());
-			if (providerOperSolr != null) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "操作顺序已存在，请重新输入");
-				return resultMap;
-			}
-			if(!providerInfFacade.saveProviderInf(providerInf)) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "新增供应商失败，请稍后再试");
-			}
+			resultMap = providerInfService.addProvider(providerInf);
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "系统异常，请稍后再试");
@@ -203,22 +188,7 @@ public class ProviderInfController {
 			}
 			
 			ProviderInf providerInf = this.getProviderInf(req);
-			ProviderInf providerLawCode = providerInfFacade.getProviderInfByLawCode(providerInf.getLawCode());
-			if (providerLawCode != null && !providerLawCode.getProviderId().equals(providerInf.getProviderId())) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "供应商代码已存在，请重新输入");
-				return resultMap;
-			}
-			ProviderInf providerOperSolr = providerInfFacade.getProviderInfByOperSolr(providerInf.getOperSolr());
-			if (providerOperSolr != null && !providerOperSolr.getProviderId().equals(providerInf.getProviderId())) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "操作顺序已存在，请重新输入");
-				return resultMap;
-			}
-			if (!providerInfFacade.updateProviderInf(providerInf)) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑失败，请联系管理员");
-			}
+			resultMap = providerInfService.editProvider(providerInf);
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑失败，请联系管理员");
@@ -320,9 +290,13 @@ public class ProviderInfController {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
 			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
-			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
+			//ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
+			CompanyInf company = new CompanyInf();
+			company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
+			List<CompanyInf> companyInfList = companyInfFacade.getCompanyInfList(company);
+			companyInfList = companyInfList.stream().filter(c -> !c.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_1.getCode())).collect(Collectors.toList());
 			mv.addObject("pageInfo", pageList);
-			mv.addObject("providerRate", provider.getProviderRate());
+			mv.addObject("companyInfList", companyInfList);
 		} catch (Exception e) {
 			logger.error("## 查询供应商上账信息详情异常", e);
 		}
@@ -354,12 +328,12 @@ public class ProviderInfController {
 				resultMap.put("msg", "添加上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
-			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+			/*CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
 			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;
-			}
+			}*/
 
 			/*BigDecimal providerFee = provider.getProviderRate().add(new BigDecimal(1));
 			BigDecimal inAccountAmt = new BigDecimal(remitAmt).divide(providerFee, 2, BigDecimal.ROUND_HALF_UP);
@@ -592,12 +566,12 @@ public class ProviderInfController {
 				resultMap.put("msg", "编辑上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
-			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
+			/*CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
 			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 				resultMap.put("status", Boolean.FALSE);
 				resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
 				return resultMap;
-			}
+			}*/
 			resultMap = providerInfService.editProviderTransfer(req, evidenceUrlFile);
 		} catch (Exception e) {
 			logger.error(" ## 编辑供应商上账信息出错 ", e);

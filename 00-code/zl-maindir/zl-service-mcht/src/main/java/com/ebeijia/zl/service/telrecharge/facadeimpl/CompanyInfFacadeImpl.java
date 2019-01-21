@@ -5,15 +5,13 @@ import java.util.List;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.service.telrecharge.service.CompanyBillingTypeInfService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.CompanyInfService;
 import com.github.pagehelper.PageInfo;
 
-@Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="companyInfFacade")
+@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
 public class CompanyInfFacadeImpl implements CompanyInfFacade {
 
 	@Autowired

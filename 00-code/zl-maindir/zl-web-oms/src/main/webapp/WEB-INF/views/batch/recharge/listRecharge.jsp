@@ -110,13 +110,13 @@
                                     <td>${entity.orderCount }</td>
                                     <td>${entity.sumAmount }</td>
                                     <td>${entity.orderStat }</td>
-                                    <td>${entity.createUser }</td>
+                                    <td>${entity.createUserName }</td>
                                     <td>
                                     	<jsp:useBean id="createTime" class="java.util.Date"/>
 										<jsp:setProperty name="createTime" property="time" value="${entity.createTime}"/>
 										<fmt:formatDate value="${createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
                                     </td>
-                                    <td>${entity.updateUser }</td>
+                                    <td>${entity.updateUserName }</td>
                                     <td>
                                     	<jsp:useBean id="updateTime" class="java.util.Date"/>
 										<jsp:setProperty name="updateTime" property="time" value="${entity.updateTime}"/>

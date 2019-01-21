@@ -3,6 +3,7 @@ package com.ebeijia.zl.service.telrecharge.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 
@@ -32,4 +33,13 @@ public interface ProviderOrderInfService extends IService<ProviderOrderInf> {
 	 * @param orderDetailInfo
 	 */
 	void updateOrderRechargeState(ProviderOrderInf telProviderOrderInf,OrderDetailInfo orderDetailInfo,String respCode);
+
+
+	/**
+	 *  调用供应商商接口，发起消费扣款
+	 * @param providerInf
+	 * @param telProviderOrderInf
+	 * @return
+	 */
+	boolean doMchntCustomerToProvider(ProviderInf providerInf, ProviderOrderInf telProviderOrderInf) throws Exception;
 }

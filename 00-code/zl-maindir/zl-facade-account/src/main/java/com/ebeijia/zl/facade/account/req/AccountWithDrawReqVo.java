@@ -24,6 +24,10 @@ public class AccountWithDrawReqVo extends BaseTxnReq{
 
 	private static final long serialVersionUID = 7273421483520332385L;
 
+	private String mchntCode; //商户
+
+	private String shopCode; //门店
+
 	/**
      * 实际交易金额 单位分
      */
@@ -79,6 +83,22 @@ public class AccountWithDrawReqVo extends BaseTxnReq{
 	 * 订单备注
 	 */
 	private String remarks;
+
+	public String getMchntCode() {
+		return mchntCode;
+	}
+
+	public void setMchntCode(String mchntCode) {
+		this.mchntCode = mchntCode;
+	}
+
+	public String getShopCode() {
+		return shopCode;
+	}
+
+	public void setShopCode(String shopCode) {
+		this.shopCode = shopCode;
+	}
 
 	public BigDecimal getTransAmt() {
 		return transAmt;

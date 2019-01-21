@@ -352,6 +352,10 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		if (AmountUtil.greaterThanOrEqualTo(account.getAccBal(), transAmt)) {
 			return true;
 		} else {
+			//商户账户允许为负
+			if(! UserType.TYPE100.getCode().equals(account.getAccountType())) {
+				return true;
+			}
 			return false;
 		}
 	}

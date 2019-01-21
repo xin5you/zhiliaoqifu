@@ -112,27 +112,9 @@ public class CompanyController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 
-		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
-		CompanyInf company = companyInfFacade.getCompanyInfByLawCode(lawCode);
-		if (!StringUtil.isNullOrEmpty(company)) {
-			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "社会信用代码已存在，请重新输入");
-			return resultMap;
-		}
 		CompanyInf companyInf = getCompanyInf(req);
-		if (IsPlatformEnum.IsPlatformEnum_1.getCode().equals(companyInf.getIsPlatform())) {
-			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
-			if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "平台标识已有开户企业，请重新选择");
-				return resultMap;
-			}
-		}
 		try {
-			if (!companyInfFacade.insertCompanyInf(companyInf)) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "新增企业信息失败");
-			}
+			resultMap = companyService.addCompanyInf(companyInf);
 		} catch (Exception e) {
 			logger.error("## 新增企业信息出错", e);
 			resultMap.put("status", Boolean.FALSE);
@@ -157,33 +139,14 @@ public class CompanyController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 
-		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
-		String lawCode = StringUtil.nullToString(req.getParameter("lawCode"));
-		CompanyInf companyInfCode = companyInfFacade.getCompanyInfById(companyId);
-		if (!companyInfCode.getLawCode().equals(lawCode)) {
-			CompanyInf company = companyInfFacade.getCompanyInfByLawCode(lawCode);
-			if (!StringUtil.isNullOrEmpty(company)) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "社会信用代码已存在，请重新输入");
-				return resultMap;
-			}
-		}
 		CompanyInf companyInf = getCompanyInf(req);
-		if (!companyInfCode.getIsPlatform().equals(companyInf.getIsPlatform()) && !companyInf.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_0.getCode())) {
-			CompanyInf c = companyInfFacade.getCompanyInfByIsPlatform(companyInf.getIsPlatform());
-			if (c != null && IsOpenAccountEnum.ISOPEN_TRUE.getCode().equals(c.getIsOpen())) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "平台标识已有开户企业，请重新选择");
-				return resultMap;
-			}
-		}
 		try {
-			if (!companyInfFacade.updateCompanyInf(companyInf)) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "修改企业信息失败");
-			}
+			resultMap = companyService.editCompanyInf(companyInf);
 		} catch (Exception e) {
-			logger.error("## 修改企业信息出错", e);
+			logger.error("## 编辑企业信息异常", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑企业信息失败");
+			return resultMap;
 		}
 		return resultMap;
 	}

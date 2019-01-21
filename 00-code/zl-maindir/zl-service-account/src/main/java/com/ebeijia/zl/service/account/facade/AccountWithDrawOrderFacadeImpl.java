@@ -20,8 +20,7 @@ import org.springframework.context.annotation.Configuration;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
-@Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="accountWithDrawOrderFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class AccountWithDrawOrderFacadeImpl implements AccountWithDrawOrderFacade {
 
 	@Autowired

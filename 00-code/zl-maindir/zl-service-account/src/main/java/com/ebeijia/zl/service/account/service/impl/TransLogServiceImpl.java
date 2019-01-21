@@ -461,6 +461,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	 * @param batchNo
 	 */
 	private void withDarwAddToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,String batchNo){
+		//用户提现 账户扣款
 		TransLog transLog=new TransLog();
 		transLog.setTxnPrimaryKey(IdUtil.getNextId());
 		transLog.setBatchNo(batchNo);
@@ -474,7 +475,18 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		if(StringUtil.isNotEmpty(cardAttr)){
 			transLog.setCardAttr(cardAttr);
 		}
-		addToVoList(voList,transLog,0);
+		addToVoList(voList,transLog,voList.size());
+
+		//商户收款
+		transLog=new TransLog();
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		transLog.setBatchNo(batchNo);
+		transLog.setUserId(intfaceTransLog.getTfrInUserId());
+		transLog.setTransId(TransCode.MB95.getCode());
+		transLog.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+		this.newTransLog(intfaceTransLog, transLog);
+		addToVoList(voList,transLog,voList.size());
+		transLog=null;
 	}
 
 	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){

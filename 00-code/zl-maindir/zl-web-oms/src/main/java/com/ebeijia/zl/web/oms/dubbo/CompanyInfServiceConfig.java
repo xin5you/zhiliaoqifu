@@ -119,6 +119,12 @@ public class CompanyInfServiceConfig extends DubboCustomerConfig {
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getCompanyInfByName");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
 		
 		return referenceBean;
 	}

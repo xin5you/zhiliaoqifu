@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.company.service;
 
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import org.springframework.ui.ModelMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,5 +20,19 @@ public interface CompanyService {
 	 * @return
 	 */
 	Map<String, Object> editCompanyInAmtCommit(HttpServletRequest req);
+
+	/**
+	 * 新增企业信息
+	 * @param companyInf
+	 * @return
+	 */
+	Map<String, Object> addCompanyInf(CompanyInf companyInf);
+
+	/**
+	 * 编辑企业信息
+	 * @param companyInf
+	 * @return
+	 */
+	Map<String, Object> editCompanyInf(CompanyInf companyInf);
 
 }
