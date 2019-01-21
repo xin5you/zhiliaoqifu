@@ -1,11 +1,14 @@
 package com.ebeijia.zl.shop.vo;
 
+import lombok.Data;
+
 /**
  * 话费充值返回数据
  *
  * @author zhuqiuyou
  *
  */
+@Data
 public class TeleRespVO extends TeleBaseDomain {
 
     private static final long serialVersionUID = 7835690664388502116L;

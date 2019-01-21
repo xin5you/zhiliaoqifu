@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.controller;
 
+import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.service.supply.ISupplyService;
 import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.JsonResult;
@@ -27,14 +28,18 @@ public class SupplyController {
         return new JsonResult<>(i);
     }
 
-
     //直充接口
     @ApiOperation("直充回调接口")
     @RequestMapping(value = "/phone/charge/callback", method = RequestMethod.POST)
-    public JsonResult<Integer> phoneChargeCallback(TeleRespVO respVO){
+    public String phoneChargeCallback(TeleRespVO respVO){
         Integer i = supplyService.phoneChargeCallback(respVO);
-        return new JsonResult<>(i);
+        if (ResultState.OK==i){
+            return "SUCCESS";
+        }
+        return "ERROR";
     }
+
+
 
 
 }
