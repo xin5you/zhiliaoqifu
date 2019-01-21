@@ -63,7 +63,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	@Autowired
 	private ProviderOrderInfService providerOrderInfService;
 
-	@Reference(check = false)
+	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
 
 	@Autowired

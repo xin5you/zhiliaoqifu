@@ -1,8 +1,8 @@
-package com.ebeijia.zl.web.api.dubbo;
+package com.ebeijia.zl.dubbo;
 
 import com.alibaba.dubbo.config.MethodConfig;
 import com.alibaba.dubbo.config.spring.ReferenceBean;
-import com.ebeijia.zl.facade.telrecharge.service.ProviderOrderInfFacade;
+import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,51 +15,55 @@ import java.util.List;
  *
  */
 @Configuration
-public class RetailChnlAreaInfServiceConfig extends DubboCustomerConfig {
+public class AccountTransationServiceConfig extends DubboCustomerConfig {
 
-	
 	@Bean
-	public ReferenceBean<ProviderOrderInfFacade> providerOrderInfFacade() {
+	public ReferenceBean<AccountTransactionFacade> accountTransactionFacade() {
 		
-		ReferenceBean<ProviderOrderInfFacade> referenceBean=new ReferenceBean<ProviderOrderInfFacade>();
-		referenceBean.setInterface(ProviderOrderInfFacade.class.getName());
+		ReferenceBean<AccountTransactionFacade> referenceBean=new ReferenceBean<AccountTransactionFacade>();
 		referenceBean.setVersion("1.0.0");
+		referenceBean.setInterface(AccountTransactionFacade.class.getName());
 		referenceBean.setCluster("failfast");
-		referenceBean.setCheck(false);
-		referenceBean.setTimeout(10000);
+		referenceBean.setTimeout(6000);
 		referenceBean.setRetries(0);
-		
-		List<MethodConfig> methods = new ArrayList<MethodConfig>();
+
+		List<MethodConfig> methods=new ArrayList<MethodConfig>();
 
 		
 		MethodConfig methodConfig=new MethodConfig();
-		methodConfig.setName("getRetailChnlAreaInfById");
-		methodConfig.setTimeout(3000);
+		methodConfig.setName("executeRechargeByOneBId");
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
-		methodConfig.setName("saveRetailChnlAreaInf");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("updateRetailChnlAreaInf");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
-		
-		methodConfig=new MethodConfig();
-		methodConfig.setName("deleteRetailChnlAreaInfById");
-		methodConfig.setTimeout(3000);
+		methodConfig.setName("executeRecharge");
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		
 		methodConfig=new MethodConfig();
-		methodConfig.setName("getRetailChnlAreaInfList");
+		methodConfig.setName("executeConsume");
+		methodConfig.setTimeout(10000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("executeTransfer");
+		methodConfig.setTimeout(10000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+		
+		
+		methodConfig=new MethodConfig();
+		methodConfig.setName("executeRefund");
+		methodConfig.setTimeout(10000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("executeQuery");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //

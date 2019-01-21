@@ -26,6 +26,8 @@ public class AccountQueryFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(accountQueryFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(10000);
+		serviceBean.setRetries(0);
 
 		List<MethodConfig> methods=new ArrayList<MethodConfig>();
 		MethodConfig methodConfig=new MethodConfig();

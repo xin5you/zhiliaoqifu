@@ -26,15 +26,89 @@ public class RetailChnlOrderInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(retailChnlOrderInfFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(6000);
+		serviceBean.setRetries(0);
+
 
 		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 
 		MethodConfig methodConfig=new MethodConfig();
-		methodConfig.setName("getRetailChnlOrderInfList");
-		methodConfig.setTimeout(3000);
+		methodConfig.setName("getRetailChnlOrderInfById");
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
+		methodConfig=new MethodConfig();
+		methodConfig.setName("saveRetailChnlOrderInf");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("updateRetailChnlOrderInf");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("deleteRetailChnlOrderInfById");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("proTelChannelOrder");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlOrderInfList");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("doRechargeMobileMsg");
+		methodConfig.setTimeout(2000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlOrderInfByOuterId");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlOrderInfPage");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlOrderInf");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlOrderInfCount");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("doTelRechargeBackNotify");
+		methodConfig.setTimeout(6000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
 
 		return serviceBean;
 	}

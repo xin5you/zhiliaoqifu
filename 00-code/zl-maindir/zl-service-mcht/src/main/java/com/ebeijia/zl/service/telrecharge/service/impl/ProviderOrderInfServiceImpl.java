@@ -38,7 +38,7 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 	@Autowired
 	private ProviderOrderInfMapper providerOrderInfMapper;
 
-	@Reference(check = false)
+	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
 
 	@Override

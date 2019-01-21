@@ -26,14 +26,9 @@ public class ProviderOrderInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(providerOrderInfFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(5000);
+		serviceBean.setRetries(0);
 
-		List<MethodConfig> methods = new ArrayList<MethodConfig>();
-
-		MethodConfig methodConfig=new MethodConfig();
-		methodConfig.setName("getProviderOrderInfList");
-		methodConfig.setTimeout(3000);
-		methodConfig.setRetries(0);
-		methods.add(methodConfig); //
 
 		return serviceBean;
 	}
