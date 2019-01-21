@@ -81,4 +81,14 @@ public class AccountQueryReqVo implements Serializable {
 	 * 结束时间 时间戳
 	 */
 	private Long eDate;
+
+	/**
+	 * 用户Id
+	 */
+	private String userId;
+
+	/**
+	 * 账户信息
+	 */
+	private String accountNo;
 }

@@ -1,5 +1,6 @@
 package com.ebeijia.zl.facade.account.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
@@ -81,4 +82,11 @@ public interface AccountQueryFacade {
 	 * @throws AccountBizException
 	 */
 	AccountLogVO getAccountLogVoByParams(AccountQueryReqVo req)throws AccountBizException;
+
+
+	/**
+	 * 查询账户余额
+	 * @return
+	 */
+	BigDecimal getAccountInfAccBal(String userType,String userChnlId,String userChnl,String bId);
 }

@@ -125,7 +125,7 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 		req.setUserType(UserType.TYPE200.getCode());
 		req.setTransAmt(telProviderOrderInf.getRegTxnAmt());
 		req.setUploadAmt(telProviderOrderInf.getRegTxnAmt());
-		req.setDmsRelatedKey(IdUtil.getNextId());
+		req.setDmsRelatedKey(telProviderOrderInf.getRegOrderId());
 		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
 		req.setTransDesc("分销商话费充值");
 		req.setTransNumber(1);

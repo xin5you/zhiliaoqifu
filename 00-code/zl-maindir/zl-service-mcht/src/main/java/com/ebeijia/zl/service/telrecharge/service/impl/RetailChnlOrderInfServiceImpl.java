@@ -308,7 +308,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		req.setUserType(UserType.TYPE400.getCode());
 		req.setTransAmt(retailChnlOrderInf.getTxnAmt());
 		req.setUploadAmt(retailChnlOrderInf.getTxnAmt());
-		req.setDmsRelatedKey(IdUtil.getNextId());
+		req.setDmsRelatedKey(retailChnlOrderInf.getChannelOrderId());
 		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
 		req.setTransDesc("分销商消费");
 		req.setTransNumber(1);

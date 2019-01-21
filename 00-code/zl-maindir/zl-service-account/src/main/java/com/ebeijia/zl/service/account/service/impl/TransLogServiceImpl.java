@@ -272,6 +272,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 					transLog2.setTransId(TransCode.MB95.getCode());
 					transLog2.setUserType(UserType.TYPE200.getCode());
+					transLog2.setTransAmt(accountTxnVo.getTxnAmt());
+					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
 					addToVoList(voList,transLog2,voList.size());
 				}
 			}else{

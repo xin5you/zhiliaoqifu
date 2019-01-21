@@ -209,9 +209,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												null,
 												null, 
 												null,
-												fromUserInf.getUserId(),
+				                                toMchntInf.getUserId(),
 												req.getPriBId(),
-				                               toMchntInf.getUserId(),
+												fromUserInf.getUserId(),
 												req.getPriBId(),
 												null);
 		
