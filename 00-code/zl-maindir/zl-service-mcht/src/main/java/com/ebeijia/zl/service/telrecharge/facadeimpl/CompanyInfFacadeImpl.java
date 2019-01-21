@@ -10,8 +10,10 @@ import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.CompanyInfService;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.annotation.Configuration;
 
-@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "companyInfFacade")
 public class CompanyInfFacadeImpl implements CompanyInfFacade {
 
 	@Autowired
@@ -95,7 +97,6 @@ public class CompanyInfFacadeImpl implements CompanyInfFacade {
 		return companyBillingTypeInfService.removeById(id);
 	}
 
-	@Override
 	public CompanyInf getCompanyInfByName(String companyName) {
 		return companyInfService.getCompanyInfByName(companyName);
 	}

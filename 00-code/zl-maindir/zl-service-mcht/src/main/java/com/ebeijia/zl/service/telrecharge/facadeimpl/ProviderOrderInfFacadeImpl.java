@@ -8,10 +8,12 @@ import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "providerOrderInfFacade")
 public class ProviderOrderInfFacadeImpl implements ProviderOrderInfFacade {
 
 	@Autowired

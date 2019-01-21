@@ -12,8 +12,10 @@ import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlProductInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.annotation.Configuration;
 
-@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "retailChnlProductInfFacade")
 public class RetailChnlProductInfFacadeImpl implements RetailChnlProductInfFacade {
 
 	@Autowired

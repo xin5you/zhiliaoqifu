@@ -14,8 +14,10 @@ import com.ebeijia.zl.facade.telrecharge.resp.TeleRespDomain;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlOrderInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlOrderInfService;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.annotation.Configuration;
 
-@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "retailChnlOrderInfFacade")
 public class RetailChnlOrderInfFacadeImpl  implements RetailChnlOrderInfFacade {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -48,7 +48,8 @@ import redis.clients.jedis.JedisCluster;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
-@com.alibaba.dubbo.config.annotation.Service()
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName ="accountManagementFacade")
 public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
 	

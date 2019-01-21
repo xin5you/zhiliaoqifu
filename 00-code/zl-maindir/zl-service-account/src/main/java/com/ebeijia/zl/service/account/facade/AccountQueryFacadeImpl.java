@@ -34,8 +34,8 @@ import com.github.pagehelper.PageInfo;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
 */
-
-@com.alibaba.dubbo.config.annotation.Service()
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service(interfaceName = "accountQueryFacade")
 public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	
 	private final  Logger log = LoggerFactory.getLogger(AccountQueryFacadeImpl.class);
