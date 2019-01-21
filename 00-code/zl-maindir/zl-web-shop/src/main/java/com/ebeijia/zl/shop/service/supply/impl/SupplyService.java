@@ -19,6 +19,7 @@ import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.ebeijia.zl.shop.vo.TeleReqVO;
+import com.ebeijia.zl.shop.vo.TeleRespVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,13 @@ public class SupplyService implements ISupplyService {
 
     private static Logger logger = LoggerFactory.getLogger(SupplyService.class);
 
-    @Value("${phone.charge.callback:http://192.168.2.110:10701/web-api/api/recharge/mobile/payment}")
+    @Value("${phone.charge.api:http://192.168.2.110:10701/web-api/api/recharge/mobile/payment}")
     private String phoneChargeUrl;
+
+    @Value("${phone.charge.callback:http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack}")
+    private String phoneChargeCallbackUrl;
+
+
 
     @Override
     public Integer phoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo, String session) {
@@ -93,7 +99,7 @@ public class SupplyService implements ISupplyService {
         log.setImg(image);
         log.setAmount(0);
         log.setSourceBid(SpecAccountTypeEnum.B06.getbId());
-        logger.info("记录日志详情：", log);
+        logger.info("手机直充记录日志详情：", log);
         BaseResult baseResult = payService.payPhone(payInfo, memberInfo.getOpenId(), dmsKey, "手机充值");
 
         if (!baseResult.getCode().equals("00")) {
@@ -123,7 +129,7 @@ public class SupplyService implements ISupplyService {
 //        vo.setOuterTid("3e7e344e-0ca9-4d4d-8aad-627daaed67eb");
         vo.setOuterTid(dmsKey);
         paramsMap.add("outerTid", vo.getOuterTid());
-        vo.setCallback("http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack");
+        vo.setCallback(phoneChargeCallbackUrl);
         paramsMap.add("callback", vo.getCallback());
         vo.setSign(MD5SignUtils.genSign(vo, "key", "a5a41d8e-66a7-4ebe-bac2-7c280d888888", new String[]{"sign", "serialVersionUID"}, null));
         paramsMap.add("sign", vo.getSign());
@@ -136,13 +142,13 @@ public class SupplyService implements ISupplyService {
             throw new BizException(ResultState.ERROR, "网络不稳定，请稍后");
         }
         log.setImg(postResult.getCode());
-        LinkedHashMap object = (LinkedHashMap) postResult.getObject();
-        Object channelOrderId = object.get("channelOrderId");
         if (!"00".equals(postResult.getCode())) {
             logDetailDao.updateById(log);
             payService.phoneChargeReturn(payInfo,log,dmsKey);
-            throw new BizException(ResultState.OK, "已提交，根据运营商不同到账时间约5-30分钟。");
+            throw new BizException(ResultState.OK, "支付成功，等待到账！\n预计1-10分钟到账");
         }
+        LinkedHashMap object = (LinkedHashMap) postResult.getObject();
+        Object channelOrderId = object.get("channelOrderId");
         log.setOutId(channelOrderId.toString());
         logDetailDao.updateById(log);
         //{channelId=a5a41d8e-66a7-4ebe-bac2-7c280d666666,
@@ -182,6 +188,15 @@ public class SupplyService implements ISupplyService {
             jedis.set("PHONE_CHARGE_PROVIDER", provider, 300);
         }
         return provider;
+    }
+
+    @Override
+    public Integer phoneChargeCallback(TeleRespVO respVO) {
+        //获取VO对应流水
+        //获取payinfo
+        //
+        respVO.getChannelOrderId();
+        return null;
     }
 
 }
