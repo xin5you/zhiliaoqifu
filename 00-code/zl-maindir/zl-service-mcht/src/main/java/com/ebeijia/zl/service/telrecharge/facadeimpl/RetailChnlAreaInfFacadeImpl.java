@@ -10,7 +10,7 @@ import com.ebeijia.zl.service.telrecharge.service.RetailChnlAreaInfService;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "retailChnlAreaInfFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class RetailChnlAreaInfFacadeImpl  implements RetailChnlAreaInfFacade {
 
 	@Autowired

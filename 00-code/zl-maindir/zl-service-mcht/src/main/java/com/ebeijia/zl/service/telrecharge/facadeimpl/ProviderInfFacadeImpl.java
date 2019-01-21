@@ -17,7 +17,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "providerInfFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class ProviderInfFacadeImpl implements ProviderInfFacade {
 
 	@Autowired

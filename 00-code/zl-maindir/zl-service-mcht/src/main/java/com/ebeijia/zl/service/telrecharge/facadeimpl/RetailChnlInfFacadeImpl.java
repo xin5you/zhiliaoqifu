@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "retailChnlInfFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class RetailChnlInfFacadeImpl  implements RetailChnlInfFacade {
 
 	@Autowired

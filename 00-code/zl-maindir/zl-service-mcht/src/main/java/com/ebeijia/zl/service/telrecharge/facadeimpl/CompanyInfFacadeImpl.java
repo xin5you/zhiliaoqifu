@@ -13,7 +13,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName = "companyInfFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class CompanyInfFacadeImpl implements CompanyInfFacade {
 
 	@Autowired
