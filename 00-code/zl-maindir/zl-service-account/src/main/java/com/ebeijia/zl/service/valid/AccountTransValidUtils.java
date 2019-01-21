@@ -209,7 +209,7 @@ public class AccountTransValidUtils {
             resp.setMsg("交易金额为空");
             return true;
         }
-        if(StringUtil.isNullOrEmpty(req.getOrgDmsRelatedKey()) || StringUtil.isNullOrEmpty(req.getOrgItfPrimaryKey())  ){
+        if(StringUtil.isNullOrEmpty(req.getOrgDmsRelatedKey()) && StringUtil.isNullOrEmpty(req.getOrgItfPrimaryKey())  ){
             resp.setMsg("平台原交易信息为空");
             return true;
         }

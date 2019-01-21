@@ -350,12 +350,12 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
 			}
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
-			List<AccountTxnVo> addList = intfaceTransLog.getAddList();
+			List<AccountTxnVo> transList = intfaceTransLog.getTransList();
 			List<TransLog>  transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),AccountCardAttrEnum.SUB.getValue());
 
-			if (addList != null && addList.size() > 0 && transLogs!=null && transLogs.size()>0) {
+			if (transLogs !=null && transLogs.size()>0) {
 				boolean priBidVal=false;
-				for (AccountTxnVo accountTxnVo : addList) {
+				for (AccountTxnVo accountTxnVo : transList) {
 					priBidVal=false;
 					for (TransLog orgTransLog: transLogs) {
 						if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {

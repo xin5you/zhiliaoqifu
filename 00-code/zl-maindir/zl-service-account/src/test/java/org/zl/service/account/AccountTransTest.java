@@ -272,7 +272,7 @@ public class AccountTransTest {
 	}*/
 
 
-	@Test
+/*	@Test
 	public void executeConsumeToUser() throws Exception{
 
 		AccountConsumeReqVo req=new AccountConsumeReqVo();
@@ -292,16 +292,41 @@ public class AccountTransTest {
 		req.setTransList(list);
 
 
-		/*req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+		*//*req.setPriBId(SpecAccountTypeEnum.B06.getbId());
 		req.setTransAmt(new BigDecimal(100));
-		req.setUploadAmt(new BigDecimal(100));*/
+		req.setUploadAmt(new BigDecimal(100));*//*
 		req.setDmsRelatedKey(IdUtil.getNextId());
 
 		req.setMchntCode("ba88a6d0-0f07-42d7-805c-735aa3c177bd");
 		req.setTransDesc("分销商消费");
 		BaseResult result=accountTransactionFacade.executeConsume(req);
 		System.out.println("分销商消费:"+JSONArray.toJSONString(result));
-	}
+	}*/
 
+
+		@Test
+	public void executeRefundToUser() throws Exception{
+
+			AccountRefundReqVo req=new AccountRefundReqVo();
+		req.setTransId(TransCode.CW11.getCode());
+		req.setTransChnl(TransChnl.CHANNEL8.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+		req.setUserChnlId("e6e37907-b437-4f5d-877c-1da6728fbb65");
+		req.setUserType(UserType.TYPE100.getCode());
+		req.setOrgItfPrimaryKey("848a3384-57db-4a4a-acf6-a4181c64966a");
+		AccountTxnVo vo=new AccountTxnVo();
+		vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+		vo.setTxnAmt(new BigDecimal(100));
+		vo.setUpLoadAmt(new BigDecimal(100));
+			req.setDmsRelatedKey(IdUtil.getNextId());
+
+		List list=new ArrayList();
+		list.add(vo);
+		req.setTransList(list);
+
+		req.setTransDesc("手机13761961111充值失败退款");
+		BaseResult result=accountTransactionFacade.executeRefund(req);
+		System.out.println("退款:"+JSONArray.toJSONString(result));
+	}
 
 }
