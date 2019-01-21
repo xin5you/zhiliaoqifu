@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlAreaInf;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlAreaInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlAreaInfService;
+import org.springframework.context.annotation.Configuration;
 
-@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service()
 public class RetailChnlAreaInfFacadeImpl  implements RetailChnlAreaInfFacade {
 
 	@Autowired

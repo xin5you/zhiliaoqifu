@@ -180,6 +180,12 @@ var listGoodsProduct = {
         });
     },
     editGoodsProduct:function(){
+        var enableStore = $("#enable_store").val();
+        var isStore = $("#is_store").val();
+	    if(parseInt(isStore)>parseInt(enableStore)){
+              Helper.alert("可用库存不能大于总库存");
+            return false;
+        }
         $.ajax({
             type : 'POST',
             url : Helper.getRootPath() + '/goodsManage/goodsInf/editGoodsProduct',

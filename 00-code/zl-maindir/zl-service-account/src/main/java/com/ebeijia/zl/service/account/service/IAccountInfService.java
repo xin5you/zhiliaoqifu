@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -90,4 +91,14 @@ public interface IAccountInfService extends IService<AccountInf> {
 	* 2018年12月14日     zhuqi           v1.0.0
 	 */
 	List<AccountVO> getAccountInfList(AccountQueryReqVo req);
+
+	/**
+	 * 查找账户余额
+	 * @param userType
+	 * @param userChnlId
+	 * @param userChnl
+	 * @param bId
+	 * @return
+	 */
+	BigDecimal getAccountInfAccBalByUser(String userType, String userChnlId, String userChnl, String bId);
 }

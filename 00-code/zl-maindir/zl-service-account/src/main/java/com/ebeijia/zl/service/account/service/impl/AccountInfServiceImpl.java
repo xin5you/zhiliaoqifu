@@ -288,7 +288,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		/****** setCouponBal set end ***/
 		
 		/****** 操作余额 ***/
-		this.debit(account, transLog.getTransAmt());
+		this.debit(account, transLog.getTransAmt(),transLog.getTransId());
 		boolean flag=accountLogService.save(account, transLog);
 		if(flag){
 			flag=this.updateById(account);//修改当前賬戶信息
@@ -329,11 +329,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 * @param account
 	 * @param transAmt
 	 */
-	public void debit(AccountInf account,BigDecimal transAmt) {
+	public void debit(AccountInf account,BigDecimal transAmt,String transId) {
 		if (! AccountStatusEnum.ACTIVE.getValue().equals(account.getAccountStat())) {
 			throw AccountBizException.ACCOUNT_STATUS_IS_INACTIVE.newInstance("账户状态异常,用户编号{%s},账户状态{%s}", account.getAccountNo(),account.getAccountStat()).print();
 		}
-		if (!this.availableBalanceIsEnough(account,transAmt)) {
+		if (!this.availableBalanceIsEnough(account,transAmt,transId)) {
 			throw AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.print();
 		}
 		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
@@ -348,12 +348,13 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 * @param transAmt 交易金额
 	 * @return
 	 */
-	public boolean availableBalanceIsEnough(AccountInf account,BigDecimal transAmt) {
+	public boolean availableBalanceIsEnough(AccountInf account,BigDecimal transAmt,String transId) {
 		if (AmountUtil.greaterThanOrEqualTo(account.getAccBal(), transAmt)) {
 			return true;
 		} else {
 			//商户账户允许为负
-			if(! UserType.TYPE100.getCode().equals(account.getAccountType())) {
+			if(! UserType.TYPE100.getCode().equals(account.getAccountType())
+					&& TransCode.MB40.getCode().equals(transId)) {
 				return true;
 			}
 			return false;
@@ -435,5 +436,17 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			}
 		});
 		 return list;
+	}
+
+	/**
+	 * 查找账户余额
+	 * @param userType
+	 * @param userChnlId
+	 * @param userChnl
+	 * @param bId
+	 * @return
+	 */
+	public BigDecimal getAccountInfAccBalByUser(String userType, String userChnlId, String userChnl, String bId){
+			return null;
 	}
 }

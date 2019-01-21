@@ -26,13 +26,15 @@ public class RetailChnlOrderInfServiceConfig extends DubboCustomerConfig {
 		referenceBean.setVersion("1.0.0");
 		referenceBean.setCluster("failfast");
 		referenceBean.setCheck(false);
+		referenceBean.setTimeout(10000);
+		referenceBean.setRetries(0);
 		
 		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 
 		
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlOrderInfById");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
@@ -58,43 +60,43 @@ public class RetailChnlOrderInfServiceConfig extends DubboCustomerConfig {
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("proChannelOrder");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlOrderInfList");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("doRechargeMobileMsg");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlOrderInfByOuterId");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlOrderInfPage");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlOrderInf");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlOrderInfCount");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(6000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		

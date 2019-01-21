@@ -48,6 +48,7 @@ import redis.clients.jedis.JedisCluster;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
  */
+@Configuration
 @com.alibaba.dubbo.config.annotation.Service()
 public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
@@ -208,9 +209,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												null,
 												null, 
 												null,
-												fromUserInf.getUserId(),
+				                                toMchntInf.getUserId(),
 												req.getPriBId(),
-				                               toMchntInf.getUserId(),
+												fromUserInf.getUserId(),
 												req.getPriBId(),
 												null);
 		

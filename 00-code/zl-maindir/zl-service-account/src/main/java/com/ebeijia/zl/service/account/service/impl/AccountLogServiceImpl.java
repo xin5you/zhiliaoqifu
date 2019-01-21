@@ -45,7 +45,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
     @Autowired
     private AccountLogMapper accountLogMapper;
 
-	@Reference(check = false)
+	@Autowired
     private CompanyInfFacade companyInfFacade;
 
 	/**
