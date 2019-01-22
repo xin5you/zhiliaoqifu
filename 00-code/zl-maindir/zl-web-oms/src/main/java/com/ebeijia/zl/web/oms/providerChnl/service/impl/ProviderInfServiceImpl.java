@@ -50,6 +50,16 @@ import java.util.*;
 public class ProviderInfServiceImpl implements ProviderInfService {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
+//	public static void main(String[] args) {
+//		BigDecimal b1 = new BigDecimal("1000");
+//		BigDecimal b2 = new BigDecimal("1.06");
+//		//ROUND_CEILING
+//		//ROUND_UP
+//		BigDecimal b3 = b1.divide(b2, 0, BigDecimal.ROUND_UP);
+//		System.out.println(b3);
+//
+//	}
+
 	@Value("${FILE_UPLAOD_PATH}")
 	private String FILE_UPLAOD_PATH;
 
@@ -148,8 +158,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
-		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
-		/*String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));*/
+		/*String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));*/
+		String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
 		String A00 = StringUtil.nullToString(req.getParameter("A00"));
 		String B01 = StringUtil.nullToString(req.getParameter("B01"));
 		String B02 = StringUtil.nullToString(req.getParameter("B02"));
@@ -160,61 +170,46 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		String B07 = StringUtil.nullToString(req.getParameter("B07"));
 		String B08 = StringUtil.nullToString(req.getParameter("B08"));
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
+		String formula = StringUtil.nullToString(req.getParameter("formula"));
+
+		if (StringUtil.isNullOrEmpty(formula)) {
+			logger.error("## 金额计算方式为空");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "添加上账信息失败，金额计算方式不能为空");
+			return resultMap;
+		}
+
+		Map<String, String> bMap = new HashMap<>();
+		bMap.put("A00", A00);
+		bMap.put("B01", B01);
+		bMap.put("B02", B02);
+		bMap.put("B03", B03);
+		bMap.put("B04", B04);
+		bMap.put("B05", B05);
+		bMap.put("B06", B06);
+		bMap.put("B07", B07);
+		bMap.put("B08", B08);
 
 		BigDecimal inaccountAmtSum = new BigDecimal(0);
-		if (!StringUtil.isNullOrEmpty(A00)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(A00));
-		}
-		if (!StringUtil.isNullOrEmpty(B01)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B01));
-		}
-		if (!StringUtil.isNullOrEmpty(B02)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B02));
-		}
-		if (!StringUtil.isNullOrEmpty(B03)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B03));
-		}
-		if (!StringUtil.isNullOrEmpty(B04)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B04));
-		}
-		if (!StringUtil.isNullOrEmpty(B05)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B05));
-		}
-		if (!StringUtil.isNullOrEmpty(B06)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B06));
-		}
-		if (!StringUtil.isNullOrEmpty(B07)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B07));
-		}
-		if (!StringUtil.isNullOrEmpty(B08)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B08));
+		for(Map.Entry<String, String> entry : bMap.entrySet()) {
+			if (!StringUtil.isNullOrEmpty(entry.getValue())) {
+				inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(entry.getValue()));
+			}
 		}
 
-		if (inaccountAmtSum.compareTo(new BigDecimal(remitAmt)) != 0) {
+		if (inaccountAmtSum.compareTo(new BigDecimal(inaccountAmt)) != 0) {
 			logger.error("## 供应商{}上账金额不正确，应上账总额{}", providerId, inaccountAmtSum);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "添加上账信息失败，供应商上账金额不正确");
 			return resultMap;
 		}
 
-		//CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
 		CompanyInf company = companyInfFacade.getCompanyInfById(companyCode);
 		if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
+			resultMap.put("msg", "添加上账信息失败，收款企业不存在或未开户");
 			return resultMap;
 		}
-
-		/*String platformFee = jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, RedisConstants.PLATFORM_FEE);
-		if (StringUtil.isNullOrEmpty(platformFee)) {
-            logger.error("## 新增供应商{}上账，获取平台费率失败", providerId);
-			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "添加上账信息失败，平台费率为空");
-			return resultMap;
-		}*/
-
-		//BigDecimal platformFeeSum = new BigDecimal(platformFee).add(new BigDecimal(1));
-		//BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
 
 		InaccountOrder order = new InaccountOrder();
 		order.setOrderId(IdUtil.getNextId());
@@ -222,10 +217,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setTfrCompanyOrderId(IdUtil.getNextId());
 		order.setOrderType(UserType.TYPE300.getCode());
 		order.setCheckStat(CheckStatEnum.CHECK_FALSE.getCode());
-		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
-		/*order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
-		order.setPlatformInSumAmt(order.getInaccountAmt());*/
-		//order.setCompanyInSumAmt(companyInAmtSum);
+		order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setPlatformInSumAmt(order.getInaccountSumAmt());
 		order.setProviderId(providerId);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemitCheck(RemitCheckEnum.REMIT_TRUE.getCode());
@@ -240,6 +233,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		order.setCreateTime(System.currentTimeMillis());
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(0);
+		order.setFormula(formula);
 
 		if (evidenceUrlFile == null || evidenceUrlFile.isEmpty()) {
 			logger.error("## 上传图片为空");
@@ -247,26 +241,6 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			resultMap.put("msg", "上传凭证图片为空");
 			return resultMap;
 		}
-		/*FTPImageVo imgVo = new FTPImageVo();
-		imgVo.setImgId(order.getOrderId());
-		imgVo.setService(IMG_SERVER);
-		imgVo.setNewPath(FILE_NEW_PATH);
-		imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
-		imgVo.setUploadPath(FILE_UPLAOD_PATH);
-		imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_03.getValue());
-		Map<String, Object> resultMap = new HashMap<>();
-		try {
-			resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
-			if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
-				order.setEvidenceUrl(resultMap.get("msg").toString());
-			} else {
-				logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
-				return 0;
-			}
-		} catch (Exception e) {
-			logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
-			return 0;
-		}*/
 
 		resultMap = commonService.uploadImage(evidenceUrlFile, req, ImageTypeEnum.ImageTypeEnum_03.getValue(), order.getOrderId());
 		if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
@@ -280,490 +254,73 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		BigDecimal companyFee = new BigDecimal(0);
 		BigDecimal providerFee = new BigDecimal(0);
+		BigDecimal companyInAmt = new BigDecimal(0);
+		BigDecimal transAmt = new BigDecimal(0);
 		List<InaccountOrderDetail> orderDetailList = new ArrayList<InaccountOrderDetail>();
-		if (!StringUtil.isNullOrEmpty(A00)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("A00");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
 
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("A00");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			}
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
+		for(Map.Entry<String, String> entry : bMap.entrySet()) {
+			if (!StringUtil.isNullOrEmpty(entry.getValue())) {
+				ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
+				pbt.setProviderId(providerId);
+				pbt.setBId(entry.getKey());
+				ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
+				if (providerBillingTypeInf == null) {
+					logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
+					return resultMap;
+				}
+				providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
 
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("A00");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B01)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B01");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+				CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+				cbt.setCompanyId(company.getCompanyId());
+				cbt.setBId(entry.getKey());
+				CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+				if (companyBillingTypeInf == null) {
+					logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
+					return resultMap;
+				}
+				if (InaccountFormulaEnum.InaccountFormulaEnum_1.getCode().equals(formula)) {
+					companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+					transAmt = new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())).multiply(providerFee);
+					companyInAmt = transAmt.divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				} else {
+					companyFee = new BigDecimal(1).subtract(providerFee).subtract(new BigDecimal(companyBillingTypeInf.getFee()));
+					transAmt = new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())).multiply(providerFee);
+					companyInAmt = transAmt.multiply(companyFee);
+				}
 
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B01");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
+				InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+				orderDetail.setOrderListId(IdUtil.getNextId());
+				orderDetail.setOrderId(order.getOrderId());
+				orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+				orderDetail.setTransAmt(transAmt);
+				orderDetail.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())));
+				orderDetail.setBId(entry.getKey());
+				orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
+				orderDetail.setCompanyInAmt(companyInAmt);
+				if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
+					resultMap.put("status", Boolean.FALSE);
+					resultMap.put("msg", "企业费率不合法，请重新调整");
+					return resultMap;
+				}
+				orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+				orderDetail.setCreateUser(user.getId());
+				orderDetail.setUpdateUser(user.getId());
+				orderDetail.setCreateTime(System.currentTimeMillis());
+				orderDetail.setUpdateTime(System.currentTimeMillis());
+				orderDetail.setLockVersion(0);
+				orderDetailList.add(orderDetail);
 			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B01");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B02)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B02");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B02");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B02");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B03)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B03");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B03");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B03");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B04)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B04");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B04");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B04");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B05)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B05");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B05");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B05");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B06)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B06");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B06");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B06");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B07)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B07");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B07");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B07");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
-		}
-		if (!StringUtil.isNullOrEmpty(B08)) {
-			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
-			pbt.setProviderId(providerId);
-			pbt.setBId("B08");
-			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
-			if (providerBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
-
-			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
-			cbt.setCompanyId(company.getCompanyId());
-			cbt.setBId("B08");
-			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
-			if (companyBillingTypeInf == null) {
-				logger.error("## 新增供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
-			/*if (companyBillingTypeInf == null) {
-				companyFee = new BigDecimal(platformFee);
-			} else {
-				companyFee = new BigDecimal(companyBillingTypeInf.getFee());
-			}*/
-
-			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
-			orderDetail.setOrderListId(IdUtil.getNextId());
-			orderDetail.setOrderId(order.getOrderId());
-			orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-			orderDetail.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
-			orderDetail.setInaccountAmt(orderDetail.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-			orderDetail.setBId("B08");
-			orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
-			BigDecimal companyInAmt = orderDetail.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-			orderDetail.setCompanyInAmt(companyInAmt);
-			if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "企业费率不合法，请重新调整");
-				return resultMap;
-			}
-			orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-			orderDetail.setCreateUser(user.getId());
-			orderDetail.setUpdateUser(user.getId());
-			orderDetail.setCreateTime(System.currentTimeMillis());
-			orderDetail.setUpdateTime(System.currentTimeMillis());
-			orderDetail.setLockVersion(0);
-			orderDetailList.add(orderDetail);
 		}
 
-		BigDecimal inaccountInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getInaccountAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+		BigDecimal remitInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
 		BigDecimal companyInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
-		order.setInaccountSumAmt(inaccountInAmtSum);
-		order.setPlatformInSumAmt(inaccountInAmtSum);
+		order.setRemitAmt(remitInAmtSum);
+		order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmtSum.toString())));
+		order.setPlatformInSumAmt(order.getInaccountSumAmt());
 		order.setCompanyInSumAmt(companyInAmtSum);
 		if (order.getCompanyInSumAmt().compareTo(order.getPlatformInSumAmt()) == 1) {
 			resultMap.put("status", Boolean.FALSE);
@@ -800,7 +357,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return 0;
 		}
 
-		List<AccountTxnVo> transList = new ArrayList<>();
+		/*List<AccountTxnVo> transList = new ArrayList<>();
 		Set<String> bIds = new TreeSet<>();
 		for (InaccountOrderDetail d : orderDetail) {
 			AccountTxnVo txnVo = new AccountTxnVo();
@@ -854,9 +411,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		} else {
 			order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_FALSE.getCode());
 			order.setRemarks(result.getMsg());
-		}
-
-		if (!inaccountOrderService.saveOrUpdate(order)) {
+		}*/
+		order.setInaccountCheck(InaccountCheckEnum.INACCOUNT_TRUE.getCode());
+		if (!inaccountOrderService.updateById(order)) {
 			logger.error("## 远程调用充值接口，更新订单失败orderId--->{},providerId--->{}", orderId, providerId);
 			return 0;
 		}
@@ -960,10 +517,10 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
-		String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
+		/*String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));*/
 		String evidenceUrl = StringUtil.nullToString(req.getParameter("evidenceUrl"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
-		/*String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));*/
+		String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));
 		String A00 = StringUtil.nullToString(req.getParameter("A00"));
 		String B01 = StringUtil.nullToString(req.getParameter("B01"));
 		String B02 = StringUtil.nullToString(req.getParameter("B02"));
@@ -974,37 +531,33 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		String B07 = StringUtil.nullToString(req.getParameter("B07"));
 		String B08 = StringUtil.nullToString(req.getParameter("B08"));
 		String remarks = StringUtil.nullToString(req.getParameter("remarks"));
+		String formula = StringUtil.nullToString(req.getParameter("formula"));
+		if (StringUtil.isNullOrEmpty(formula)) {
+			logger.error("## 金额计算方式为空");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑上账信息失败，金额计算方式不能为空");
+			return resultMap;
+		}
+
+		Map<String, String> bMap = new HashMap<>();
+		bMap.put("A00", A00);
+		bMap.put("B01", B01);
+		bMap.put("B02", B02);
+		bMap.put("B03", B03);
+		bMap.put("B04", B04);
+		bMap.put("B05", B05);
+		bMap.put("B06", B06);
+		bMap.put("B07", B07);
+		bMap.put("B08", B08);
 
 		BigDecimal inaccountAmtSum = new BigDecimal(0);
-		if (!StringUtil.isNullOrEmpty(A00)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(A00));
-		}
-		if (!StringUtil.isNullOrEmpty(B01)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B01));
-		}
-		if (!StringUtil.isNullOrEmpty(B02)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B02));
-		}
-		if (!StringUtil.isNullOrEmpty(B03)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B03));
-		}
-		if (!StringUtil.isNullOrEmpty(B04)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B04));
-		}
-		if (!StringUtil.isNullOrEmpty(B05)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B05));
-		}
-		if (!StringUtil.isNullOrEmpty(B06)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B06));
-		}
-		if (!StringUtil.isNullOrEmpty(B07)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B07));
-		}
-		if (!StringUtil.isNullOrEmpty(B08)) {
-			inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(B08));
+		for(Map.Entry<String, String> entry : bMap.entrySet()) {
+			if (!StringUtil.isNullOrEmpty(entry.getValue())) {
+				inaccountAmtSum = inaccountAmtSum.add(new BigDecimal(entry.getValue()));
+			}
 		}
 
-		if (inaccountAmtSum.compareTo(new BigDecimal(remitAmt)) != 0) {
+		if (inaccountAmtSum.compareTo(new BigDecimal(inaccountAmt)) != 0) {
 			logger.error("## 供应商{}上账金额不正确，应上账总额{}", providerId, inaccountAmtSum);
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑上账信息失败，供应商上账金额不正确");
@@ -1014,17 +567,14 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		CompanyInf company = companyInfFacade.getCompanyInfById(companyCode);
 		if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
 			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
+			resultMap.put("msg", "编辑上账信息失败，收款企业不存在或未开户");
 			return resultMap;
 		}
-		/*CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-		if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
-			resultMap.put("status", Boolean.FALSE);
-			resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
-			return resultMap;
-		}*/
 
-		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 		if (order == null) {
 			logger.error("## 根据上账订单号{}查询订单信息为空", orderId);
 			resultMap.put("status", Boolean.FALSE);
@@ -1032,46 +582,17 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			return resultMap;
 		}
 
-		/*String platformFee = jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV, RedisConstants.PLATFORM_FEE);
-		if (StringUtil.isNullOrEmpty(platformFee)) {
-		    logger.error("## 编辑供应商{}上账，获取平台费率失败", providerId);
-			return 0;
-		}*/
-		//BigDecimal platformFeeSum = new BigDecimal(platformFee).add(new BigDecimal(1));
-		//BigDecimal companyInAmtSum = new BigDecimal(inaccountAmt).divide(platformFeeSum, 0);
-
-		order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));
-		/*order.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
-		order.setPlatformInSumAmt(order.getInaccountAmt());*/
+		/*order.setRemitAmt(new BigDecimal(NumberUtils.RMBYuanToCent(remitAmt)));*/
+		order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmt)));
+		order.setPlatformInSumAmt(order.getInaccountSumAmt());
 		//order.setCompanyInSumAmt(companyInAmtSum);
 		order.setCompanyId(company.getCompanyId());
 		order.setRemarks(remarks);
 		order.setUpdateUser(user.getId());
 		order.setUpdateTime(System.currentTimeMillis());
 		order.setLockVersion(order.getLockVersion() + 1);
+		order.setFormula(formula);
 
-		/*if (evidenceUrlFile != null && !evidenceUrlFile.isEmpty()) {
-			FTPImageVo imgVo = new FTPImageVo();
-			imgVo.setImgId(order.getOrderId());
-			imgVo.setService(IMG_SERVER);
-			imgVo.setNewPath(FILE_NEW_PATH);
-			imgVo.setSeparator(FILE_UPLAOD_SEPARATOR);
-			imgVo.setUploadPath(FILE_UPLAOD_PATH);
-			imgVo.setImgType(ImageTypeEnum.ImageTypeEnum_03.getValue());
-			Map<String, Object> resultMap = new HashMap<>();
-			try {
-				resultMap = commonService.uploadImangeName(imgVo, evidenceUrlFile);
-				if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
-					order.setEvidenceUrl(resultMap.get("msg").toString());
-				} else {
-					logger.error("## 图片上传失败，msg--->{}", resultMap.get("msg"));
-					return 0;
-				}
-			} catch (Exception e) {
-				logger.error("## 图片上传异常，msg--->{}", resultMap.get("msg"));
-				return 0;
-			}
-		}*/
 		if (evidenceUrlFile != null && !evidenceUrlFile.isEmpty()) {
 			resultMap = commonService.uploadImage(evidenceUrlFile, req, ImageTypeEnum.ImageTypeEnum_03.getValue(), order.getOrderId());
 			if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
@@ -1087,738 +608,106 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
 		BigDecimal companyFee = new BigDecimal(0);
 		BigDecimal providerFee = new BigDecimal(0);
+		BigDecimal companyInAmt = new BigDecimal(0);
+		BigDecimal transAmt = new BigDecimal(0);
 
 		List<InaccountOrderDetail> editOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> addOrderDetailList = new ArrayList<>();
 		List<InaccountOrderDetail> delOrderDetailList = new ArrayList<InaccountOrderDetail>();
-		InaccountOrderDetail detailA00 = new InaccountOrderDetail();
-		detailA00.setBId("A00");
-		detailA00.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailA00 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailA00);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtA00 = new CompanyBillingTypeInf();
-		cbtA00.setCompanyId(company.getCompanyId());
-		cbtA00.setBId("A00");
-		CompanyBillingTypeInf companyBillingTypeInfA00 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtA00);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtA00 = new ProviderBillingTypeInf();
-		pbtA00.setProviderId(providerId);
-		pbtA00.setBId("A00");
-		ProviderBillingTypeInf providerBillingTypeInfA00 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtA00);
-		if (!StringUtil.isNullOrEmpty(A00)) {
-			if (companyBillingTypeInfA00 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfA00 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfA00.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfA00.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfA00 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfA00.getFee());
-		}*/
-		if (orderDetailA00 == null) {
-			if (!StringUtil.isNullOrEmpty(A00)) {
-				orderDetailA00 = new InaccountOrderDetail();
-				orderDetailA00.setOrderListId(IdUtil.getNextId());
-				orderDetailA00.setOrderId(order.getOrderId());
-				orderDetailA00.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
-				orderDetailA00.setInaccountAmt(orderDetailA00.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailA00.setBId("A00");
-				orderDetailA00.setPlatformInAmt(orderDetailA00.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailA00.setCompanyInAmt(companyInAmt);
-				if (orderDetailA00.getCompanyInAmt().compareTo(orderDetailA00.getPlatformInAmt()) == 1) {
+
+		for(Map.Entry<String, String> entry : bMap.entrySet()) {
+			//企业专项类型费率
+			CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
+			cbt.setCompanyId(company.getCompanyId());
+			cbt.setBId(entry.getKey());
+			CompanyBillingTypeInf companyBillingTypeInf = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbt);
+			//供应商专项类型费率
+			ProviderBillingTypeInf pbt = new ProviderBillingTypeInf();
+			pbt.setProviderId(providerId);
+			pbt.setBId(entry.getKey());
+			ProviderBillingTypeInf providerBillingTypeInf = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbt);
+			if (!StringUtil.isNullOrEmpty(entry.getValue())) {
+				if (companyBillingTypeInf == null) {
+					logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
 					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
+					resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
 					return resultMap;
 				}
-				orderDetailA00.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailA00.setCreateUser(user.getId());
-				orderDetailA00.setUpdateUser(user.getId());
-				orderDetailA00.setCreateTime(System.currentTimeMillis());
-				orderDetailA00.setUpdateTime(System.currentTimeMillis());
-				orderDetailA00.setLockVersion(0);
-				addOrderDetailList.add(orderDetailA00);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(A00)) {
-				orderDetailA00.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(A00)));
-				orderDetailA00.setInaccountAmt(orderDetailA00.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailA00.setPlatformInAmt(orderDetailA00.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailA00.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailA00.setCompanyInAmt(companyInAmt);
-				if (orderDetailA00.getCompanyInAmt().compareTo(orderDetailA00.getPlatformInAmt()) == 1) {
+				if (providerBillingTypeInf == null) {
+					logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
 					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
+					resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
 					return resultMap;
 				}
-				orderDetailA00.setUpdateUser(user.getId());
-				orderDetailA00.setUpdateTime(System.currentTimeMillis());
-				orderDetailA00.setLockVersion(orderDetailA00.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailA00);
+				providerFee = new BigDecimal(providerBillingTypeInf.getFee()).add(new BigDecimal(1));
+				if (InaccountFormulaEnum.InaccountFormulaEnum_1.getCode().equals(formula)) {
+					companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
+					transAmt = new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())).multiply(providerFee);
+					companyInAmt = transAmt.divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+				} else {
+					companyFee = new BigDecimal(1).subtract(providerFee).subtract(new BigDecimal(companyBillingTypeInf.getFee()));
+					transAmt = new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())).multiply(providerFee);
+					companyInAmt = transAmt.multiply(companyFee);
+				}
+			}
+
+			InaccountOrderDetail detail = new InaccountOrderDetail();
+			detail.setBId(entry.getKey());
+			detail.setOrderId(order.getOrderId());
+			InaccountOrderDetail orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detail);
+
+			if (orderDetail == null) {
+				if (!StringUtil.isNullOrEmpty(entry.getValue())) {
+					orderDetail = new InaccountOrderDetail();
+					orderDetail.setOrderListId(IdUtil.getNextId());
+					orderDetail.setOrderId(order.getOrderId());
+					orderDetail.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
+					orderDetail.setTransAmt(transAmt);
+					orderDetail.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())));
+					orderDetail.setBId(entry.getKey());
+					orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
+					orderDetail.setCompanyInAmt(companyInAmt);
+					if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
+						resultMap.put("status", Boolean.FALSE);
+						resultMap.put("msg", "企业费率不合法，请重新输入");
+						return resultMap;
+					}
+					orderDetail.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+					orderDetail.setCreateUser(user.getId());
+					orderDetail.setUpdateUser(user.getId());
+					orderDetail.setCreateTime(System.currentTimeMillis());
+					orderDetail.setUpdateTime(System.currentTimeMillis());
+					orderDetail.setLockVersion(0);
+					addOrderDetailList.add(orderDetail);
+				}
 			} else {
-				delOrderDetailList.add(orderDetailA00);
-			}
-		}
-		InaccountOrderDetail detailB01 = new InaccountOrderDetail();
-		detailB01.setBId("B01");
-		detailB01.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB01 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB01);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB01 = new CompanyBillingTypeInf();
-		cbtB01.setCompanyId(company.getCompanyId());
-		cbtB01.setBId("B01");
-		CompanyBillingTypeInf companyBillingTypeInfB01 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB01);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB01 = new ProviderBillingTypeInf();
-		pbtB01.setProviderId(providerId);
-		pbtB01.setBId("B01");
-		ProviderBillingTypeInf providerBillingTypeInfB01 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB01);
-		if (!StringUtil.isNullOrEmpty(B01)) {
-			if (companyBillingTypeInfB01 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB01 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB01.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB01 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee());
-		}*/
-		if (orderDetailB01 == null) {
-			if (!StringUtil.isNullOrEmpty(B01)) {
-				orderDetailB01 = new InaccountOrderDetail();
-				orderDetailB01.setOrderListId(IdUtil.getNextId());
-				orderDetailB01.setOrderId(order.getOrderId());
-				orderDetailB01.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
-				orderDetailB01.setInaccountAmt(orderDetailB01.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB01.setBId("B01");
-				orderDetailB01.setPlatformInAmt(orderDetailB01.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB01.setCompanyInAmt(companyInAmt);
-				if (orderDetailB01.getCompanyInAmt().compareTo(orderDetailB01.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
+				if (!StringUtil.isNullOrEmpty(entry.getValue())) {
+					orderDetail.setTransAmt(transAmt);
+					orderDetail.setInaccountAmt(new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())));
+					orderDetail.setPlatformInAmt(orderDetail.getInaccountAmt());
+					orderDetail.setCompanyInAmt(companyInAmt);
+					if (orderDetail.getCompanyInAmt().compareTo(orderDetail.getPlatformInAmt()) == 1) {
+						resultMap.put("status", Boolean.FALSE);
+						resultMap.put("msg", "企业费率不合法，请重新输入");
+						return resultMap;
+					}
+					orderDetail.setUpdateUser(user.getId());
+					orderDetail.setUpdateTime(System.currentTimeMillis());
+					orderDetail.setLockVersion(orderDetail.getLockVersion() + 1);
+					editOrderDetailList.add(orderDetail);
+				} else {
+					delOrderDetailList.add(orderDetail);
 				}
-				orderDetailB01.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB01.setCreateUser(user.getId());
-				orderDetailB01.setUpdateUser(user.getId());
-				orderDetailB01.setCreateTime(System.currentTimeMillis());
-				orderDetailB01.setUpdateTime(System.currentTimeMillis());
-				orderDetailB01.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB01);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B01)) {
-				orderDetailB01.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B01)));
-				orderDetailB01.setInaccountAmt(orderDetailB01.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB01.setPlatformInAmt(orderDetailB01.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB01.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB01.setCompanyInAmt(companyInAmt);
-				if (orderDetailB01.getCompanyInAmt().compareTo(orderDetailB01.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB01.setUpdateUser(user.getId());
-				orderDetailB01.setUpdateTime(System.currentTimeMillis());
-				orderDetailB01.setLockVersion(orderDetailB01.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB01);
-			} else {
-				delOrderDetailList.add(orderDetailB01);
-			}
-		}
-		InaccountOrderDetail detailB02 = new InaccountOrderDetail();
-		detailB02.setBId("B02");
-		detailB02.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB02 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB02);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB02 = new CompanyBillingTypeInf();
-		cbtB02.setCompanyId(company.getCompanyId());
-		cbtB02.setBId("B02");
-		CompanyBillingTypeInf companyBillingTypeInfB02 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB02);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB02 = new ProviderBillingTypeInf();
-		pbtB02.setProviderId(providerId);
-		pbtB02.setBId("B02");
-		ProviderBillingTypeInf providerBillingTypeInfB02 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB02);
-		if (!StringUtil.isNullOrEmpty(B02)) {
-			if (companyBillingTypeInfB02 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB02 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB02.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB02.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB02 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB02.getFee());
-		}*/
-		if (orderDetailB02 == null) {
-			if (!StringUtil.isNullOrEmpty(B02)) {
-				orderDetailB02 = new InaccountOrderDetail();
-				orderDetailB02.setOrderListId(IdUtil.getNextId());
-				orderDetailB02.setOrderId(order.getOrderId());
-				orderDetailB02.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
-				orderDetailB02.setInaccountAmt(orderDetailB02.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB02.setBId("B02");
-				orderDetailB02.setPlatformInAmt(orderDetailB02.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB02.setCompanyInAmt(companyInAmt);
-				if (orderDetailB02.getCompanyInAmt().compareTo(orderDetailB02.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB02.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB02.setCreateUser(user.getId());
-				orderDetailB02.setUpdateUser(user.getId());
-				orderDetailB02.setCreateTime(System.currentTimeMillis());
-				orderDetailB02.setUpdateTime(System.currentTimeMillis());
-				orderDetailB02.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB02);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B02)) {
-				orderDetailB02.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B02)));
-				orderDetailB02.setInaccountAmt(orderDetailB02.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB02.setPlatformInAmt(orderDetailB02.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB02.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB02.setCompanyInAmt(companyInAmt);
-				if (orderDetailB02.getCompanyInAmt().compareTo(orderDetailB02.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB02.setUpdateUser(user.getId());
-				orderDetailB02.setUpdateTime(System.currentTimeMillis());
-				orderDetailB02.setLockVersion(orderDetailB02.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB02);
-			} else {
-				delOrderDetailList.add(orderDetailB02);
-			}
-		}
-		InaccountOrderDetail detailB03 = new InaccountOrderDetail();
-		detailB03.setBId("B03");
-		detailB03.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB03 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB03);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB03 = new CompanyBillingTypeInf();
-		cbtB03.setCompanyId(company.getCompanyId());
-		cbtB03.setBId("B03");
-		CompanyBillingTypeInf companyBillingTypeInfB03 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB03);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB03 = new ProviderBillingTypeInf();
-		pbtB03.setProviderId(providerId);
-		pbtB03.setBId("B03");
-		ProviderBillingTypeInf providerBillingTypeInfB03 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB03);
-		if (!StringUtil.isNullOrEmpty(B03)) {
-			if (companyBillingTypeInfB03 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB03 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB03.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB03.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB03 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB03.getFee());
-		}*/
-		if (orderDetailB03 == null) {
-			if (!StringUtil.isNullOrEmpty(B03)) {
-				orderDetailB03 = new InaccountOrderDetail();
-				orderDetailB03.setOrderListId(IdUtil.getNextId());
-				orderDetailB03.setOrderId(order.getOrderId());
-				orderDetailB03.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
-				orderDetailB03.setInaccountAmt(orderDetailB03.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB03.setBId("B03");
-				orderDetailB03.setPlatformInAmt(orderDetailB03.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB03.setCompanyInAmt(companyInAmt);
-				if (orderDetailB03.getCompanyInAmt().compareTo(orderDetailB03.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB03.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB03.setCreateUser(user.getId());
-				orderDetailB03.setUpdateUser(user.getId());
-				orderDetailB03.setCreateTime(System.currentTimeMillis());
-				orderDetailB03.setUpdateTime(System.currentTimeMillis());
-				orderDetailB03.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB03);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B03)) {
-				orderDetailB03.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B03)));
-				orderDetailB03.setInaccountAmt(orderDetailB03.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB03.setPlatformInAmt(orderDetailB03.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB03.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB03.setCompanyInAmt(companyInAmt);
-				if (orderDetailB03.getCompanyInAmt().compareTo(orderDetailB03.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB03.setUpdateUser(user.getId());
-				orderDetailB03.setUpdateTime(System.currentTimeMillis());
-				orderDetailB03.setLockVersion(orderDetailB03.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB03);
-			} else {
-				delOrderDetailList.add(orderDetailB03);
-			}
-		}
-		InaccountOrderDetail detailB04 = new InaccountOrderDetail();
-		detailB04.setBId("B04");
-		detailB04.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB04 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB04);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB04 = new CompanyBillingTypeInf();
-		cbtB04.setCompanyId(company.getCompanyId());
-		cbtB04.setBId("B04");
-		CompanyBillingTypeInf companyBillingTypeInfB04 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB04);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB04 = new ProviderBillingTypeInf();
-		pbtB04.setProviderId(providerId);
-		pbtB04.setBId("B01");
-		ProviderBillingTypeInf providerBillingTypeInfB04 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB04);
-		if (!StringUtil.isNullOrEmpty(B04)) {
-			if (companyBillingTypeInfB01 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB04 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB04.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB04 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB04.getFee());
-		}*/
-		if (orderDetailB04 == null) {
-			if (!StringUtil.isNullOrEmpty(B04)) {
-				orderDetailB04 = new InaccountOrderDetail();
-				orderDetailB04.setOrderListId(IdUtil.getNextId());
-				orderDetailB04.setOrderId(order.getOrderId());
-				orderDetailB04.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
-				orderDetailB04.setInaccountAmt(orderDetailB04.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB04.setBId("B04");
-				orderDetailB04.setPlatformInAmt(orderDetailB04.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB04.setCompanyInAmt(companyInAmt);
-				if (orderDetailB04.getCompanyInAmt().compareTo(orderDetailB04.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB04.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB04.setCreateUser(user.getId());
-				orderDetailB04.setUpdateUser(user.getId());
-				orderDetailB04.setCreateTime(System.currentTimeMillis());
-				orderDetailB04.setUpdateTime(System.currentTimeMillis());
-				orderDetailB04.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB04);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B04)) {
-				orderDetailB04.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B04)));
-				orderDetailB04.setInaccountAmt(orderDetailB04.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB04.setPlatformInAmt(orderDetailB04.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB04.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB04.setCompanyInAmt(companyInAmt);
-				if (orderDetailB04.getCompanyInAmt().compareTo(orderDetailB04.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB04.setUpdateUser(user.getId());
-				orderDetailB04.setUpdateTime(System.currentTimeMillis());
-				orderDetailB04.setLockVersion(orderDetailB04.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB04);
-			} else {
-				delOrderDetailList.add(orderDetailB04);
-			}
-		}
-		InaccountOrderDetail detailB05 = new InaccountOrderDetail();
-		detailB05.setBId("B05");
-		detailB05.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB05 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB05);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB05 = new CompanyBillingTypeInf();
-		cbtB05.setCompanyId(company.getCompanyId());
-		cbtB05.setBId("B05");
-		CompanyBillingTypeInf companyBillingTypeInfB05 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB05);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB05 = new ProviderBillingTypeInf();
-		pbtB05.setProviderId(providerId);
-		pbtB05.setBId("B05");
-		ProviderBillingTypeInf providerBillingTypeInfB05 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB05);
-		if (!StringUtil.isNullOrEmpty(B05)) {
-			if (companyBillingTypeInfB05 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB05 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB05.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB05.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB05 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB05.getFee());
-		}*/
-		if (orderDetailB05 == null) {
-			if (!StringUtil.isNullOrEmpty(B05)) {
-				orderDetailB05 = new InaccountOrderDetail();
-				orderDetailB05.setOrderListId(IdUtil.getNextId());
-				orderDetailB05.setOrderId(order.getOrderId());
-				orderDetailB05.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
-				orderDetailB05.setInaccountAmt(orderDetailB05.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB05.setBId("B05");
-				orderDetailB05.setPlatformInAmt(orderDetailB05.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB05.setCompanyInAmt(companyInAmt);
-				if (orderDetailB05.getCompanyInAmt().compareTo(orderDetailB05.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB05.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB05.setCreateUser(user.getId());
-				orderDetailB05.setUpdateUser(user.getId());
-				orderDetailB05.setCreateTime(System.currentTimeMillis());
-				orderDetailB05.setUpdateTime(System.currentTimeMillis());
-				orderDetailB05.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB05);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B05)) {
-				orderDetailB05.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B05)));
-				orderDetailB05.setInaccountAmt(orderDetailB05.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB05.setPlatformInAmt(orderDetailB05.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB05.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB05.setCompanyInAmt(companyInAmt);
-				if (orderDetailB05.getCompanyInAmt().compareTo(orderDetailB05.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB05.setUpdateUser(user.getId());
-				orderDetailB05.setUpdateTime(System.currentTimeMillis());
-				orderDetailB05.setLockVersion(orderDetailB05.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB05);
-			} else {
-				delOrderDetailList.add(orderDetailB05);
-			}
-		}
-		InaccountOrderDetail detailB06 = new InaccountOrderDetail();
-		detailB06.setBId("B06");
-		detailB06.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB06 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB06);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB06 = new CompanyBillingTypeInf();
-		cbtB06.setCompanyId(company.getCompanyId());
-		cbtB06.setBId("B06");
-		CompanyBillingTypeInf companyBillingTypeInfB06 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB06);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB06 = new ProviderBillingTypeInf();
-		pbtB06.setProviderId(providerId);
-		pbtB06.setBId("B06");
-		ProviderBillingTypeInf providerBillingTypeInfB06 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB06);
-		if (!StringUtil.isNullOrEmpty(B06)) {
-			if (companyBillingTypeInfB06 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB06 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB06.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB06 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB06.getFee());
-		}*/
-		if (orderDetailB06 == null) {
-			if (!StringUtil.isNullOrEmpty(B06)) {
-				orderDetailB06 = new InaccountOrderDetail();
-				orderDetailB06.setOrderListId(IdUtil.getNextId());
-				orderDetailB06.setOrderId(order.getOrderId());
-				orderDetailB06.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
-				orderDetailB06.setInaccountAmt(orderDetailB06.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB06.setBId("B06");
-				orderDetailB06.setPlatformInAmt(orderDetailB06.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB06.setCompanyInAmt(companyInAmt);
-				if (orderDetailB06.getCompanyInAmt().compareTo(orderDetailB06.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB06.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB06.setCreateUser(user.getId());
-				orderDetailB06.setUpdateUser(user.getId());
-				orderDetailB06.setCreateTime(System.currentTimeMillis());
-				orderDetailB06.setUpdateTime(System.currentTimeMillis());
-				orderDetailB06.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB06);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B06)) {
-				orderDetailB06.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B06)));
-				orderDetailB06.setInaccountAmt(orderDetailB06.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB06.setPlatformInAmt(orderDetailB06.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB06.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB06.setCompanyInAmt(companyInAmt);
-				if (orderDetailB06.getCompanyInAmt().compareTo(orderDetailB06.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB06.setUpdateUser(user.getId());
-				orderDetailB06.setUpdateTime(System.currentTimeMillis());
-				orderDetailB06.setLockVersion(orderDetailB06.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB06);
-			} else {
-				delOrderDetailList.add(orderDetailB06);
-			}
-		}
-		InaccountOrderDetail detailB07 = new InaccountOrderDetail();
-		detailB07.setBId("B07");
-		detailB07.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB07 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB07);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB07 = new CompanyBillingTypeInf();
-		cbtB07.setCompanyId(company.getCompanyId());
-		cbtB07.setBId("B07");
-		CompanyBillingTypeInf companyBillingTypeInfB07 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB07);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB07 = new ProviderBillingTypeInf();
-		pbtB07.setProviderId(providerId);
-		pbtB07.setBId("B07");
-		ProviderBillingTypeInf providerBillingTypeInfB07 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB07);
-		if (!StringUtil.isNullOrEmpty(B07)) {
-			if (companyBillingTypeInfB07 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB07 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB07.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB07 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB07.getFee());
-		}*/
-		if (orderDetailB07 == null) {
-			if (!StringUtil.isNullOrEmpty(B07)) {
-				orderDetailB07 = new InaccountOrderDetail();
-				orderDetailB07.setOrderListId(IdUtil.getNextId());
-				orderDetailB07.setOrderId(order.getOrderId());
-				orderDetailB07.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
-				orderDetailB07.setInaccountAmt(orderDetailB07.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB07.setBId("B07");
-				orderDetailB07.setPlatformInAmt(orderDetailB07.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB07.setCompanyInAmt(companyInAmt);
-				if (orderDetailB07.getCompanyInAmt().compareTo(orderDetailB07.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB07.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB07.setCreateUser(user.getId());
-				orderDetailB07.setUpdateUser(user.getId());
-				orderDetailB07.setCreateTime(System.currentTimeMillis());
-				orderDetailB07.setUpdateTime(System.currentTimeMillis());
-				orderDetailB07.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB07);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B07)) {
-				orderDetailB07.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B07)));
-				orderDetailB07.setInaccountAmt(orderDetailB07.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB07.setPlatformInAmt(orderDetailB07.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB07.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB07.setCompanyInAmt(companyInAmt);
-				if (orderDetailB07.getCompanyInAmt().compareTo(orderDetailB07.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB07.setUpdateUser(user.getId());
-				orderDetailB07.setUpdateTime(System.currentTimeMillis());
-				orderDetailB07.setLockVersion(orderDetailB07.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB07);
-			} else {
-				delOrderDetailList.add(orderDetailB07);
-			}
-		}
-		InaccountOrderDetail detailB08 = new InaccountOrderDetail();
-		detailB08.setBId("B08");
-		detailB08.setOrderId(order.getOrderId());
-		InaccountOrderDetail orderDetailB08 = inaccountOrderDetailService.getInaccountOrderDetailByOrderIdAndBid(detailB08);
-		//企业专项类型费率
-		CompanyBillingTypeInf cbtB08 = new CompanyBillingTypeInf();
-		cbtB08.setCompanyId(company.getCompanyId());
-		cbtB08.setBId("B08");
-		CompanyBillingTypeInf companyBillingTypeInfB08 = companyInfFacade.getCompanyBillingTypeInfByBIdAndCompanyId(cbtB08);
-		//供应商专项类型费率
-		ProviderBillingTypeInf pbtB08 = new ProviderBillingTypeInf();
-		pbtB08.setProviderId(providerId);
-		pbtB08.setBId("B08");
-		ProviderBillingTypeInf providerBillingTypeInfB08 = providerInfFacade.getProviderBillingTypeInfByBIdAndProviderId(pbtB08);
-		if (!StringUtil.isNullOrEmpty(B08)) {
-			if (companyBillingTypeInfB08 == null) {
-				logger.error("## 编辑供应商{}上账，获取企业费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查企业费率信息是否正确");
-				return resultMap;
-			}
-			if (providerBillingTypeInfB08 == null) {
-				logger.error("## 编辑供应商{}上账，获取供应商费率失败", providerId);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，请检查供应商费率信息是否正确");
-				return resultMap;
-			}
-			providerFee = new BigDecimal(providerBillingTypeInfB08.getFee()).add(new BigDecimal(1));
-			companyFee = new BigDecimal(companyBillingTypeInfB01.getFee()).add(providerFee);
-		}
-		/*if (companyBillingTypeInfB08 == null) {
-			companyFee = new BigDecimal(platformFee);
-		} else {
-			companyFee = new BigDecimal(companyBillingTypeInfB08.getFee());
-		}*/
-		if (orderDetailB08 == null) {
-			if (!StringUtil.isNullOrEmpty(B08)) {
-				orderDetailB08 = new InaccountOrderDetail();
-				orderDetailB08.setOrderListId(IdUtil.getNextId());
-				orderDetailB08.setOrderId(order.getOrderId());
-				orderDetailB08.setIsInvoice(IsInvoiceEnum.INVOICE_FALSE.getCode());
-				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
-				orderDetailB08.setInaccountAmt(orderDetailB08.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB08.setBId("B08");
-				orderDetailB08.setPlatformInAmt(orderDetailB08.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB08.setCompanyInAmt(companyInAmt);
-				if (orderDetailB08.getCompanyInAmt().compareTo(orderDetailB08.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB08.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
-				orderDetailB08.setCreateUser(user.getId());
-				orderDetailB08.setUpdateUser(user.getId());
-				orderDetailB08.setCreateTime(System.currentTimeMillis());
-				orderDetailB08.setUpdateTime(System.currentTimeMillis());
-				orderDetailB08.setLockVersion(0);
-				addOrderDetailList.add(orderDetailB08);
-			}
-		} else {
-			if (!StringUtil.isNullOrEmpty(B08)) {
-				orderDetailB08.setTransAmt(new BigDecimal(NumberUtils.RMBYuanToCent(B08)));
-				orderDetailB08.setInaccountAmt(orderDetailB08.getTransAmt().divide(providerFee, 0, BigDecimal.ROUND_CEILING));
-				orderDetailB08.setPlatformInAmt(orderDetailB08.getInaccountAmt());
-				BigDecimal companyInAmt = orderDetailB08.getTransAmt().divide(companyFee, 0, BigDecimal.ROUND_CEILING);
-				orderDetailB08.setCompanyInAmt(companyInAmt);
-				if (orderDetailB08.getCompanyInAmt().compareTo(orderDetailB08.getPlatformInAmt()) == 1) {
-					resultMap.put("status", Boolean.FALSE);
-					resultMap.put("msg", "企业费率不合法，请重新输入");
-					return resultMap;
-				}
-				orderDetailB08.setUpdateUser(user.getId());
-				orderDetailB08.setUpdateTime(System.currentTimeMillis());
-				orderDetailB08.setLockVersion(orderDetailB08.getLockVersion() + 1);
-				editOrderDetailList.add(orderDetailB08);
-			} else {
-				delOrderDetailList.add(orderDetailB08);
 			}
 		}
 
 		BigDecimal companyInAmtSum = new BigDecimal(0);
-		BigDecimal inaccountInAmtSum = new BigDecimal(0);
+		BigDecimal remitInAmtSum = new BigDecimal(0);
 		if (addOrderDetailList != null && addOrderDetailList.size() >= 1) {
 			BigDecimal addOrderDetailCompanyInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
 			companyInAmtSum = addOrderDetailCompanyInAmtSum;
-			BigDecimal addOrderDetailAccountInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getInaccountAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
-			inaccountInAmtSum = addOrderDetailAccountInAmtSum;
+			BigDecimal addOrderDetailRemitInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+			remitInAmtSum = addOrderDetailRemitInAmtSum;
 			if (!inaccountOrderDetailService.saveBatch(addOrderDetailList)) {
 				logger.error("## 编辑上账订单明细失败");
 				resultMap.put("status", Boolean.FALSE);
@@ -1830,8 +719,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		if (editOrderDetailList != null && editOrderDetailList.size() >= 1) {
 			BigDecimal editOrderDetailCompanyInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
 			companyInAmtSum = companyInAmtSum.add(editOrderDetailCompanyInAmtSum);
-			BigDecimal editOrderDetailAccountInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getInaccountAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
-			inaccountInAmtSum = inaccountInAmtSum.add(editOrderDetailAccountInAmtSum);
+			BigDecimal editOrderDetailRemitInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+			remitInAmtSum = remitInAmtSum.add(editOrderDetailRemitInAmtSum);
 			if (!inaccountOrderDetailService.saveOrUpdateBatch(editOrderDetailList)) {
 				logger.error("## 编辑上账订单明细失败");
 				resultMap.put("status", Boolean.FALSE);
@@ -1851,15 +740,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			}
 		}
 
-		order.setInaccountSumAmt(inaccountInAmtSum.setScale(0, BigDecimal.ROUND_UP));
-		order.setPlatformInSumAmt(inaccountInAmtSum.setScale(0, BigDecimal.ROUND_UP));
+		order.setRemitAmt(remitInAmtSum.setScale(0, BigDecimal.ROUND_UP));
+		order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmtSum.toString())));
+		order.setPlatformInSumAmt(order.getInaccountSumAmt());
 		order.setCompanyInSumAmt(companyInAmtSum.setScale(0, BigDecimal.ROUND_UP));
 		if (order.getCompanyInSumAmt().compareTo(order.getPlatformInSumAmt()) == 1) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "企业费率不合法，请重新输入");
 			return resultMap;
 		}
-		if (!inaccountOrderService.saveOrUpdate(order)) {
+		if (!inaccountOrderService.updateById(order)) {
 			logger.error("## 更新上账订单信息失败");
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "编辑上账订单信息失败");
@@ -1880,7 +770,10 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 
         String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 
-        InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
+        InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
         List<InaccountOrderDetail> orderDetailList = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
 
         if (order == null || orderDetailList == null || orderDetailList.size() < 1) {

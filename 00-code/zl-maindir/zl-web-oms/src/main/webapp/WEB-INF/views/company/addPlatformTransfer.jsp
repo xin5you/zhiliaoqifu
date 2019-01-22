@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="${ctx}/static/oms/js/provider/providerInf/addProviderInfTransfer.js"></script>
+    <script src="${ctx}/static/oms/js/company/addPlatformTransfer.js"></script>
     <script src="${ctx}/static/jquery/jquery.form.js"></script>
 </head>
 <body>
@@ -18,17 +18,17 @@
             <div id="jCrumbs" class="breadCrumb module">
                 <ul>
                     <li><a href="#"><i class="icon-home"></i></a></li>
-                    <li>供应商管理</li>
-                    <li><a href="${ctx }/provider/providerInf/listProviderInf.do">供应商信息管理</a></li>
-                    <li>供应商信息列表</li>
+                    <li>企业管理</li>
+                    <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
+                    <li>企业信息列表</li>
                     <li>上账管理</li>
                     <li>上账信息列表</li>
                 </ul>
             </div>
         </nav>
-        <form id="pageMainForm" action="${ctx}/provider/providerInf/intoAddProviderTransfer.do" class="form-inline form_validation_tip" method="post">
+        <form id="pageMainForm" action="${ctx}/company/intoAddCompanyTransfer.do" class="form-inline form_validation_tip" method="post">
             <h3 class="heading">上账信息列表</h3>
-            <input type="hidden" id="providerId_" name="providerId_"  value="${providerId }"/>
+            <input type="hidden" id="orderType" name="orderType"  value="${order.orderType }"/>
             <div>
                 <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_INTOADD')">
                     <button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
@@ -44,10 +44,10 @@
                     <th>审核状态</th>
                     <th>打款金额(元)</th>
                     <th>上账金额(元)</th>
-                    <th>收款企业</th>
+                    <th>收款分销商</th>
                     <th>上账状态</th>
                     <th>平台收款状态</th>
-                    <th>企业收款状态</th>
+                    <th>分销商收款状态</th>
                     <th>打款凭证</th>
                     <th>备注</th>
                     <th>操作</th>
@@ -104,9 +104,9 @@
                             <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_DETAIL')">
                                 <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
                             </sec:authorize>
-                            <c:if test="${entity.inaccountCheck == '1'&& entity.transferCheck == '0'}">
+                            <c:if test="${entity.inaccountCheck == '1' && entity.transferCheck == '0'}">
                                 <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_COMPANY')">
-                                    <a orderId="${entity.orderId}" title="打款至平台" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
+                                    <a orderId="${entity.orderId}" title="打款至分销商" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
                                 </sec:authorize>
                             </c:if>
                         </td>
@@ -117,20 +117,20 @@
             <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
 
             <br/>
-            <a href="${ctx }/provider/providerInf/listProviderInf.do"><button class="btn btn-primary" type="button">返 回</button></a>
+            <a href="${ctx }/company/listCompany.do"><button class="btn btn-primary" type="button">返 回</button></a>
         </form>
     </div>
 </div>
 
 <div id="addTransferModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form id="addTransferFrom" class="form-horizontal" enctype="multipart/form-data" action="${ctx }/provider/providerInf/addProviderTransfer.do" method="post">
+    <form id="addTransferFrom" class="form-horizontal" enctype="multipart/form-data" action="${ctx }/company/addPlatformTransfer.do" method="post">
         <div class="modal-header">
             <button class="close" data-dismiss="modal">&times;</button>
             <h3 id="commodityInfModal_h">添加入账信息</h3>
         </div>
         <div class="modal-body">
             <input type="hidden" id="orderId" name="orderId"/>
-            <input type="hidden" id="providerId" name="providerId"  value="${providerId }"/>
+            <input type="hidden" id="companyId" name="companyId"  value="${company.companyId }"/>
             <fieldset>
                 <%--<div class="control-group">
                     <label class="control-label">打款金额(元)：</label>
@@ -139,17 +139,6 @@
                         <span class="help-block"></span>
                     </div>
                 </div>--%>
-                <div class="control-group">
-                    <label class="control-label">计算公式：</label>
-                    <div class="controls">
-                        <select name="formula" id="formula" class="span3">
-                            <c:forEach var="f" items="${formulaList}" varStatus="st">
-                                <option value="${f.code}">${f.name}</option>
-                            </c:forEach>
-                        </select>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
                 <div class="control-group">
                     <label class="control-label">请选择打款凭证：</label>
                     <div class="controls">
@@ -169,14 +158,13 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">收款企业：</label>
+                    <label class="control-label">收款分销商：</label>
                     <div class="controls">
-                        <select name="companyCode" id="companyCode" class="span3">
-                            <c:forEach var="c" items="${companyInfList}" varStatus="st">
-                                <option value="${c.companyId}">${c.name}</option>
+                        <select name="channelId" id="channelId" class="span3">
+                            <c:forEach var="c" items="${retailList}" varStatus="st">
+                                <option value="${c.channelId}">${c.channelName}</option>
                             </c:forEach>
                         </select>
-                        <%--<input type="text" class="span3" id="companyCode" name ="companyCode" />--%>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -300,13 +288,12 @@
 <div id="addRemitModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <form class="form-horizontal">
         <input type="hidden" id="order_id" name="order_id"/>
-        <input type="hidden" id="company_id" name="company_id"/>
         <div class="modal-header">
             <button class="close" data-dismiss="modal">&times;</button>
-            <h3 id="commodityInfModal_h4">打款至平台</h3>
+            <h3 id="commodityInfModal_h4">打款至分销商</h3>
         </div>
         <div class="modal-body">
-            <span id="company_name">确认打款至平台账户吗？</span>
+            <span id="company_name">确认打款至分销商账户吗？</span>
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">

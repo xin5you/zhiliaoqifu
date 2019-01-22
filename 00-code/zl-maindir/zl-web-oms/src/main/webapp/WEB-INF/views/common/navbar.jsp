@@ -98,27 +98,37 @@
                              </sec:authorize>
                              
                              <sec:authorize access="hasRole('ROLE_SYS_MANAGER')">
-                             <li class="dropdown">
-                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-wrench icon-white"></i>系统管理<b class="caret"></b></a>
-                                 <ul class="dropdown-menu">
-                                 	<sec:authorize access="hasRole('ROLE_SYS_USER')">
-                                     	<li><a href="${ctx }/sys/user/listUser.do">用户管理</a></li>
-                                     </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_SYS_ROLE')">
-                                     	<li><a href="${ctx }/sys/role/listRole.do">角色管理</a></li>
-                                     </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_SYS_RESORCE')">
-                                     	<li><a href="${ctx }/sys/resource/listResource.do">资源管理</a></li>
-                                     </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_SYS_ORGANIZATION')">
-                                     	<li><a href="${ctx }/sys/organization/listOrganization.do">部门管理</a></li>
-                                     </sec:authorize>
-                                     <sec:authorize access="hasRole('ROLE_SYS_BASE_DICT')">
-                                     <li><a href="${ctx }/baseDict/listBaseDict.do">字典管理</a></li>
-                                     </sec:authorize>
-                                 </ul>
-                             </li>
+                                 <li class="dropdown">
+                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-wrench icon-white"></i>系统管理<b class="caret"></b></a>
+                                     <ul class="dropdown-menu">
+                                        <sec:authorize access="hasRole('ROLE_SYS_USER')">
+                                            <li><a href="${ctx }/sys/user/listUser.do">用户管理</a></li>
+                                         </sec:authorize>
+                                         <sec:authorize access="hasRole('ROLE_SYS_ROLE')">
+                                            <li><a href="${ctx }/sys/role/listRole.do">角色管理</a></li>
+                                         </sec:authorize>
+                                         <sec:authorize access="hasRole('ROLE_SYS_RESORCE')">
+                                            <li><a href="${ctx }/sys/resource/listResource.do">资源管理</a></li>
+                                         </sec:authorize>
+                                         <sec:authorize access="hasRole('ROLE_SYS_ORGANIZATION')">
+                                            <li><a href="${ctx }/sys/organization/listOrganization.do">部门管理</a></li>
+                                         </sec:authorize>
+                                         <sec:authorize access="hasRole('ROLE_SYS_BASE_DICT')">
+                                         <li><a href="${ctx }/baseDict/listBaseDict.do">字典管理</a></li>
+                                         </sec:authorize>
+                                     </ul>
+                                 </li>
                              </sec:authorize>
+                            <%--<sec:authorize access="hasRole('ROLE_WX_MENU')">
+                                <li class="dropdown">
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-wrench icon-white"></i>系统管理<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <sec:authorize access="hasRole('ROLE_WX_MENU')">
+                                            <li><a href="${ctx }/wxMenu/listWxMenu">微信菜单管理</a></li>
+                                        </sec:authorize>
+                                    </ul>
+                                </li>
+                            </sec:authorize>--%>
                          </ul>
                      </div>
                  </div>

@@ -99,10 +99,13 @@
 
 	<select id="getGoodsProductList" parameterType="TbEcomGoodsProduct" resultType="TbEcomGoodsProduct">
 		select
-			<include refid="goodsProductColumns"/>
+			<include refid="goodsProductColumns"/>,
+			v.spec_value_name specValueName,
+			v.spec_value specValue
 		from
 			<include refid="tableName"/>
-			inner join tb_ecom_goods_spec s on s.product_id = p.product_id
+			LEFT JOIN tb_ecom_goods_spec s ON p.product_id = s.product_id
+			LEFT JOIN tb_ecom_spec_values v ON s.spec_id = v.spec_id AND s.spec_value_id = v.spec_value_id
 		where p.data_stat = '0'
 			and p.goods_id = #{goodsId}
 		<if test="productId !=null and productId !='' ">

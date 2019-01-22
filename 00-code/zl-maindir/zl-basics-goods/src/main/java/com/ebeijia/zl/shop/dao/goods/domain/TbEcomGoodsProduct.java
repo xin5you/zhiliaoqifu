@@ -180,6 +180,12 @@ public class TbEcomGoodsProduct extends Model<TbEcomGoodsProduct> {
     @TableField(exist = false)
     private String specValueId;
 
+    @TableField(exist = false)
+    private String specValueName;
+
+    @TableField(exist = false)
+    private String specValue;
+
     @Override
     protected Serializable pkVal() { 
         return this.productId;

@@ -297,6 +297,7 @@ public class ProviderInfController {
 			companyInfList = companyInfList.stream().filter(c -> !c.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_1.getCode())).collect(Collectors.toList());
 			mv.addObject("pageInfo", pageList);
 			mv.addObject("companyInfList", companyInfList);
+			mv.addObject("formulaList", InaccountFormulaEnum.values());
 		} catch (Exception e) {
 			logger.error("## 查询供应商上账信息详情异常", e);
 		}
@@ -319,8 +320,6 @@ public class ProviderInfController {
 		resultMap.put("status", Boolean.TRUE);
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		String companyCode = StringUtil.nullToString(req.getParameter("companyCode"));
-		/*String remitAmt = StringUtil.nullToString(req.getParameter("remitAmt"));
-		String inaccountAmt = StringUtil.nullToString(req.getParameter("inaccountAmt"));*/
 		try {
 			ProviderInf provider = providerInfFacade.getProviderInfById(providerId);
 			if (provider == null || provider.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
@@ -328,22 +327,6 @@ public class ProviderInfController {
 				resultMap.put("msg", "添加上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
-			/*CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，企业识别码"+companyCode+"不存在或未开户");
-				return resultMap;
-			}*/
-
-			/*BigDecimal providerFee = provider.getProviderRate().add(new BigDecimal(1));
-			BigDecimal inAccountAmt = new BigDecimal(remitAmt).divide(providerFee, 2, BigDecimal.ROUND_HALF_UP);
-			inAccountAmt = inAccountAmt.setScale(2, BigDecimal.ROUND_HALF_UP);
-			if (inAccountAmt.compareTo(new BigDecimal(inaccountAmt)) != 0) {
-				logger.error("## 供应商{}上账{}金额不正确，应上账{}", providerId, inaccountAmt, inAccountAmt);
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "添加上账信息失败，供应商上账金额不正确");
-				return resultMap;
-			}*/
 
 			resultMap = providerInfService.addProviderTransfer(req, evidenceUrlFile);
 		} catch (Exception e) {
@@ -396,8 +379,11 @@ public class ProviderInfController {
         User user = (User)session.getAttribute(Constants.SESSION_USER);
 
         String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
+        InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 
-        InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
         order.setCheckStat(CheckStatEnum.CHECK_TRUE.getCode());
         order.setUpdateUser(user.getId());
         order.setUpdateTime(System.currentTimeMillis());
@@ -422,10 +408,15 @@ public class ProviderInfController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
 		try {
-			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 			if (order != null) {
 				resultMap.put("msg", order);
+			} else {
+				resultMap.put("status", Boolean.FALSE);
 			}
 		} catch (Exception e) {
 			logger.error("## 查询供应商订单异常");
@@ -471,7 +462,10 @@ public class ProviderInfController {
 		ModelAndView mv = new ModelAndView("provider/providerInf/viewProviderTransfer");
 
 		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
-		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 		if (order != null) {
 			order.setCheckStatName(CheckStatEnum.findByBId(order.getCheckStat()).getName());
 			order.setRemitCheckName(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
@@ -479,10 +473,11 @@ public class ProviderInfController {
 			order.setTransferCheckName(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
 			order.setPlatformReceiverCheckName(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
 			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
-			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+			/*order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));*/
 			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
 			order.setPlatformInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getPlatformInSumAmt().toString())));
 			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));
+			/*order.setFormula(InaccountFormulaEnum.findByBId(order.getFormula()).getName());*/
 		}
 
 		try {
@@ -511,13 +506,16 @@ public class ProviderInfController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
 		try {
-			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 			CompanyInf company = companyInfFacade.getCompanyInfById(order.getCompanyId());
 			if (order != null) {
 				order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 				order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
-				order.setCompanyCode(company.getLawCode());
+				order.setCompanyCode(company.getCompanyId());
 				if (!StringUtil.isNullOrEmpty(order.getEvidenceUrl())) {
 					String imgUrl = commonService.getImageStrFromPath(order.getEvidenceUrl());
 					if (!StringUtil.isNullOrEmpty(imgUrl)) {
@@ -531,6 +529,7 @@ public class ProviderInfController {
 			if (orderDetail != null && orderDetail.size() >= 1) {
 				for (InaccountOrderDetail d : orderDetail) {
 					d.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getTransAmt().toString())));
+					d.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getInaccountAmt().toString())));
 				}
 			}
 			resultMap.put("order", order);
@@ -566,12 +565,6 @@ public class ProviderInfController {
 				resultMap.put("msg", "编辑上账信息失败，该供应商信息不存在或未开户");
 				return resultMap;
 			}
-			/*CompanyInf company = companyInfFacade.getCompanyInfByLawCode(companyCode);
-			if (company == null || company.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "编辑上账信息失败，企业识别码"+companyCode+"不存在或未开户");
-				return resultMap;
-			}*/
 			resultMap = providerInfService.editProviderTransfer(req, evidenceUrlFile);
 		} catch (Exception e) {
 			logger.error(" ## 编辑供应商上账信息出错 ", e);

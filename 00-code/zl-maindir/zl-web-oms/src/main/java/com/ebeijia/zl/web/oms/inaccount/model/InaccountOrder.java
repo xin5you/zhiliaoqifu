@@ -50,6 +50,10 @@ public class InaccountOrder extends Model<InaccountOrder> {
     @ApiModelProperty(value = "0：未审核，1：已审核")
     private String checkStat;
 
+    @TableField("formula")
+    @ApiModelProperty(value = "计算公式")
+    private String formula;
+
     /**
      * 打款金额
      */
