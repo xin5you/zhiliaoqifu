@@ -22,7 +22,7 @@ var listCompany = {
         $('.btn-accbal').on('click', listCompany.listCompanyAccBal);
         $('.btn-invoice').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-add-fee').on('click', listCompany.intoAddCompanyFee);
-        $('.btn-platform-InAccount').on('click', listCompany.intoAddPlatformTransfer);
+        $('.btn-platform-inAccount').on('click', listCompany.intoAddPlatformTransfer);
     },
     searchReset:function(){
         location = Helper.getRootPath() + '/company/listCompany.do';

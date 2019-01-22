@@ -30,7 +30,7 @@
             <h3 class="heading">上账信息列表</h3>
             <input type="hidden" id="orderType" name="orderType"  value="${order.orderType }"/>
             <div>
-                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_INTOADD')">
+                <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_ORDER_INTOADD')">
                     <button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
                 </sec:authorize>
             </div>
@@ -86,26 +86,26 @@
                         <td>${entity.remarks}</td>
                         <td>
                             <c:if test="${entity.checkStat == '0'}">
-                                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTOEDIT')">
+                                <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTOEDIT')">
                                     <a orderId="${entity.orderId}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
                                 </sec:authorize>
-                                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTODELETE')">
+                                <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTODELETE')">
                                     <a orderId="${entity.orderId}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
                                 </sec:authorize>
-                                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_CHECK_INTO')">
+                                <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_CHECK_INTO')">
                                     <a orderId="${entity.orderId}" title="审核" class="btn-mini btn-check" href="#"><i class="icon-pencil"></i></a>
                                 </sec:authorize>
                             </c:if>
                             <c:if test="${entity.checkStat == '1'&& entity.inaccountCheck == '0'}">
-                                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ADDCOMMIT')">
+                                <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_ADDCOMMIT')">
                                     <a orderId="${entity.orderId}" title="提交" class="btn-mini btn-addTransferSubmit" href="#"><i class="icon-ok"></i></a>
                                 </sec:authorize>
                             </c:if>
-                            <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_DETAIL')">
+                            <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_DETAIL')">
                                 <a orderId="${entity.orderId}" title="上账明细" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
                             </sec:authorize>
                             <c:if test="${entity.inaccountCheck == '1' && entity.transferCheck == '0'}">
-                                <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_COMPANY')">
+                                <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTORETAIL')">
                                     <a orderId="${entity.orderId}" title="打款至分销商" class="btn-mini btn-remit" href="#"><i class="icon-pencil"></i></a>
                                 </sec:authorize>
                             </c:if>
@@ -242,7 +242,7 @@
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">
-        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_ORDER_ADDCOMMIT')">
+        <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_ORDER_COMMIT')">
             <button id="btn-submit" class="btn btn-primary btn-submit">确 定  </button>
         </sec:authorize>
         <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
@@ -278,7 +278,7 @@
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">
-        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_CHECK_COMMIT')">
+        <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_CHECK_COMMIT')">
             <button class="btn btn-primary btn-checkStat-submit">确 定  </button>
         </sec:authorize>
         <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
@@ -297,7 +297,7 @@
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">
-        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_INTO_COMPANY_COMMIT')">
+        <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTO_RETAIL_COMMIT')">
             <button class="btn btn-primary btn-remit-submit">确 定  </button>
         </sec:authorize>
         <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
@@ -316,7 +316,7 @@
         </div>
     </form>
     <div class="modal-footer" style="text-align: center;">
-        <sec:authorize access="hasRole('ROLE_PROVIDER_TRANSFER_DELETE_COMMIT')">
+        <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_DELETE_COMMIT')">
             <button class="btn btn-primary btn-delete-submit">确 定  </button>
         </sec:authorize>
         <button class="btn" data-dismiss="modal" aria-hidden="true">取 消</button>
