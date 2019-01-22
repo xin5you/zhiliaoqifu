@@ -31,9 +31,6 @@ public class ValidCodeService implements IValidCodeService {
     @Autowired
     private MQProducerService mqProducerService;
 
-    @Value("${sms.enable:true}")
-    private Boolean smsEnable;
-
     @Value("${sms.debug:false}")
     private Boolean debug;
 
@@ -50,9 +47,7 @@ public class ValidCodeService implements IValidCodeService {
         validPhoneNumber(phoneNum);
         String code = generateCode();
         //TODO MockData
-        if (smsEnable==null||!smsEnable) {
-            deliverAndSave(phoneNum, method, code);
-        }
+        deliverAndSave(phoneNum, method, code);
         logger.info(String.format("向手机号%s发送%s验证码成功", phoneNum, method));
         throw new AdviceMessenger(OK, "发送成功");
     }
@@ -78,7 +73,7 @@ public class ValidCodeService implements IValidCodeService {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(v);
         stringBuffer.append("000000");
-        if (debug!=null && debug) {
+        if (debug != null && debug) {
             return "123456";
         }
         return stringBuffer.substring(0, 6);
@@ -128,7 +123,7 @@ public class ValidCodeService implements IValidCodeService {
             return;
         } else if (PhoneValidMethod.PAY.equals(method)) {
             return;
-        }else if(PhoneValidMethod.COUPON.equals(method)){
+        } else if (PhoneValidMethod.COUPON.equals(method)) {
             return;
         }
         throw new AdviceMessenger(NOT_ACCEPTABLE, "参数无效");
@@ -148,7 +143,7 @@ public class ValidCodeService implements IValidCodeService {
 
 
     @Override
-    public void checkSession(String method,String session){
+    public void checkSession(String method, String session) {
         StringBuilder sb = new StringBuilder();
         sb.append(ShopConfig.ID);
         sb.append("SESSION_LOCK_");

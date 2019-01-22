@@ -191,5 +191,12 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 sms:
-  enable: false
-  debug: true
+  enable: true
+  debug: false
+weixin:
+  api:
+    code: http://192.168.2.110:10501/web-user/w/getOpenId
+phone:
+  api:
+    charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
+    chargeCallback: http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack

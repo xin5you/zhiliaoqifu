@@ -522,15 +522,15 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),req.getOrgItfPrimaryKey());
 		intfaceTransLogService.addBizItfTransLog(
 				intfaceTransLog,
+				orgIntfaceTransLog.getTransAmt(),
+				orgIntfaceTransLog.getUploadAmt(),
 				null,
 				null,
 				null,
-				null,
-				null,
-				 null,
-				null,
-				null,
-				null,
+				orgIntfaceTransLog.getTfrOutUserId(),  //退款，退回到原来支出的userId
+				orgIntfaceTransLog.getTfrOutBId(), //从托管账户提现
+				orgIntfaceTransLog.getTfrInUserId(), //退款，原来收款的商户对应userId
+				orgIntfaceTransLog.getTfrInBId(),
 				null);
 		//企业信息
 		intfaceTransLog.setTransDesc(req.getTransDesc());

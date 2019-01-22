@@ -6,6 +6,7 @@ package com.ebeijia.zl.common.utils.enums;
 	 */
 	public enum UserChnlCode {
 		USERCHNL1001("1001","管理平台"),
+		USERCHNL1002("1002","知了商城"),
 		USERCHNL2001("2001","微信公众号"),
 		USERCHNL3001("3001","微信小程序"),
 		USERCHNL4001("4001","支付宝用户");

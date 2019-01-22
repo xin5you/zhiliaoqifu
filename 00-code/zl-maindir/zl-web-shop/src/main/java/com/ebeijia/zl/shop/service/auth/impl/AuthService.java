@@ -33,10 +33,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
 
 @Service
 public class AuthService implements IAuthService {
+    @Value("${weixin.api.code:http://user.happy8888.com.cn/web-user/w/getOpenId}")
+    private String wxCodeApi;
+
+    @Value("${weixin.api.userinfo:http://user.happy8888.com.cn/web-user/w/getOpenId}")
+    private String wxUserInfoApi;
+
     private static Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
@@ -60,10 +76,16 @@ public class AuthService implements IAuthService {
     @Autowired
     private ITbEcomPayCardService cardDao;
 
+    @Autowired
+    private ShopUtils shopUtils;
+
     @Override
     @ShopTransactional
-    public Token phoneLogin(String phone, String pwd) {
-        String userId = null;
+    public Token phoneLogin(String phone, String pwd, String code) {
+        String openId = null;
+        if (!StringUtils.isEmpty(code)) {
+            openId = getOpenId(code);
+        }
         boolean validCode = validCodeService.checkValidCode(PhoneValidMethod.LOGIN, phone, pwd);
         if (!validCode) {
             //TODO 验证码校验
@@ -73,15 +95,28 @@ public class AuthService implements IAuthService {
         member.setPersonId(phone);
         member = memberDao.getOne(new QueryWrapper<>(member));
         String memberId = null;
-
+        String name;
+        if (openId != null) {
+            logger.info("成功获取到了openId：[{}]", openId);
+            name = getUserName(openId);
+        } else {
+            name = "用户";
+        }
         if (member == null) {
             //TODO 获取openId
-            String openId = IdUtil.getNextId();
+            memberId = IdUtil.getNextId();
+            logger.info(String.format("用户注册开始：[%s,%s,%s]", phone, openId, memberId));
             //注册流程
-            remoteRegister(phone, openId);
-            member = localRegister(phone, openId);
+            remoteRegister(phone, name, memberId);
+            member = localRegister(phone, memberId, openId);
         }
-        memberId = member.getMemberId();
+        return buildMemberInfo(member);
+    }
+
+    private Token buildMemberInfo(TbEcomMember member) {
+
+        String memberId = member.getMemberId();
+        String phone = member.getPersonId();
 
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         if (userInf == null) {
@@ -90,7 +125,7 @@ public class AuthService implements IAuthService {
 
         String token = memberId + ":" + IdUtil.getNextId();
         //TODO
-        jedis2.del("TOKEN"+ memberId);
+        jedis2.del("TOKEN" + memberId);
         MemberInfo memberInfo = new MemberInfo();
         memberInfo.setUserId(userInf.getUserId());
         memberInfo.setMemberId(memberId);
@@ -103,33 +138,97 @@ public class AuthService implements IAuthService {
         //检查是否存在地址
         int count = addressDao.count(new QueryWrapper<>(temp));
 
-        memberInfo.setHasAddress(count>0);
+        memberInfo.setHasAddress(count > 0);
 
         TbEcomPayCard card = new TbEcomPayCard();
         card.setMemberId(memberId);
         count = cardDao.count(new QueryWrapper<>(card));
 
-        memberInfo.setHasCard(count>0);
+        memberInfo.setHasCard(count > 0);
         //将获取到的token存入redis缓存;
 
         try {
-            jedis2.hset("TOKEN"+ memberId, token ,ShopUtils.MAPPER.writeValueAsString(memberInfo));
-            jedis2.expire("TOKEN"+ memberId,3600*24);
+            jedis2.hset("TOKEN" + memberId, token, ShopUtils.MAPPER.writeValueAsString(memberInfo));
+            jedis2.expire("TOKEN" + memberId, 3600 * 24);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         //前端测试用
-        return new Token(token,memberInfo);
+        return new Token(token, memberInfo);
     }
 
-    private TbEcomMember localRegister(String phone, String openId) {
+    private String getUserName(String openId) {
+        RestTemplate template1 = new RestTemplate();
+        template1.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+
+        MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+        paramsMap.add("openId", openId);
+        ResponseEntity<LinkedHashMap> entity = template1.postForEntity(wxUserInfoApi, paramsMap, LinkedHashMap.class);
+        if (entity.getStatusCode() != HttpStatus.OK) {
+            return null;
+        }
+        return "用户";
+    }
+
+    @Override
+    public Token wxLogin(String code) {
+        String openId = getOpenId(code);
+        if (openId == null) {
+            throw new AdviceMessenger(ResultState.UNAUTHORIZED, "您还未登录");
+        }
+        TbEcomMember member = new TbEcomMember();
+        member.setOpenId(openId);
+        member = memberDao.getOne(new QueryWrapper<>(member));
+        if (member == null) {
+            throw new BizException(ResultState.UNAUTHORIZED, "您还未登录");
+        }
+        member.setOpenId(openId);
+        memberDao.updateById(member);
+        return buildMemberInfo(member);
+    }
+
+    @Override
+    public Integer logout() {
+        MemberInfo memberInfo = shopUtils.getSession();
+        if (memberInfo == null) {
+            throw new BizException(ResultState.UNAUTHORIZED, "您还未登录");
+        }
+        jedis2.del("TOKEN" + memberInfo.getMemberId());
+        TbEcomMember query = new TbEcomMember();
+        query.setMemberId(memberInfo.getMemberId());
+        TbEcomMember one = memberDao.getOne(new QueryWrapper<>(query));
+        if (one == null) {
+            return 404;
+        }
+        one.setOpenId(IdUtil.getNextId());
+        memberDao.updateById(one);
+        return 200;
+    }
+
+    private String getOpenId(String code) {
+        RestTemplate template1 = new RestTemplate();
+        template1.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+
+        MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+        paramsMap.add("code", code);
+        ResponseEntity<String> stringResponseEntity = template1.postForEntity(wxCodeApi, paramsMap, String.class);
+        if (stringResponseEntity.getStatusCode() != HttpStatus.OK) {
+            return null;
+        }
+        return stringResponseEntity.getBody();
+    }
+
+
+    private TbEcomMember localRegister(String phone, String newMember, String openId) {
+        if (openId == null) {
+            openId = IdUtil.getNextId();
+        }
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
         TbEcomMember member = new TbEcomMember();
         //TODO 测试用
-        String memberId = IdUtil.getNextId();
         member.setPersonId(phone);
-        member.setMemberId(memberId);
-        member.setOpenId(openId);
+        member.setMemberId(newMember);
+        member.setOpenId(IdUtil.getNextId());
         member.setUserId(userInf.getUserId());
         member.setCreateTime(System.currentTimeMillis());
         boolean save = memberDao.save(member);
@@ -139,21 +238,20 @@ public class AuthService implements IAuthService {
         return member;
     }
 
-    private String remoteRegister(String phone, String openId) {
+    private String remoteRegister(String phone, String name, String memberId) {
         String userId = null;
-
         //构造VO对象
         OpenUserInfReqVo req = new OpenUserInfReqVo();
         req.setMobilePhone(phone);
         req.setTransId(TransCode.CW80.getCode());
         req.setTransChnl(TransChnl.CHANNEL6.toString());
         //TODO 获取用户ID
-        req.setUserName("用户");
+        req.setUserName(name);
         req.setUserType(UserType.TYPE100.getCode());
         //这里不应该是前端传递的
 //        req.setCompanyId("100000000000000000000000");
-        req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
-        req.setUserChnlId(openId);
+        req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
+        req.setUserChnlId(memberId);
 
         //执行注册
         BaseResult result = userInfFacade.registerUserInf(req);

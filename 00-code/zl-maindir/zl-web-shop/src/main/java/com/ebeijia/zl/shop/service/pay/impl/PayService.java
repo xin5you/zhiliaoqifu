@@ -370,7 +370,7 @@ public class PayService implements IPayService {
         }
         if (method != null) {
             switch (method) {
-                //交易类型 0：开户 1：加款 2：减款
+                //交易类型 0：开户 1：加款 2：减款 3：转账
                 case "0":
                 case "1":
                     req.setAccType(method);
@@ -440,14 +440,17 @@ public class PayService implements IPayService {
     }
 
     @Override
-    public void phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey) {
+    public String phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey) {
+        String newKey = IdUtil.getNextId();
         AccountRefundReqVo vo = new AccountRefundReqVo();
+        String itxKey = log.getItxKey();
         vo.setOrgItfPrimaryKey(log.getItxKey());
-        vo.setDmsRelatedKey(dmsKey);
+        vo.setOrgDmsRelatedKey(dmsKey);
+        vo.setDmsRelatedKey(newKey);
         vo.setTransChnl(TransChnl.CHANNEL8.getValue());
         vo.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
         vo.setUserChnlId(shopUtils.getSession().getOpenId());
-        vo.setTransId(TransCode.CW10.getCode());
+        vo.setTransId(TransCode.CW11.getCode());
         vo.setUserType(UserType.TYPE100.getCode());
         vo.setTransDesc(String.format("手机%s充值失败退款", log.getDescinfo()));
         vo.setTransList(buildTxnVo(payInfo));
@@ -462,18 +465,24 @@ public class PayService implements IPayService {
             if (!baseResult.getCode().equals("00")) {
                 throw new BizException(ResultState.ERROR, "参数异常");
             }
-            //INF
-            log.setItxKey((String) baseResult.getObject());
             //TODO INF
             log = new TbEcomItxLogDetail();
+            //INF
+            log.setSourceBid(SpecAccountTypeEnum.B06.getbId());
+            Long sum = payInfo.getCostA()==null ? payInfo.getCostA() : 0L;
+            sum +=  payInfo.getCostB()==null ? payInfo.getCostB() : 0L;
+            log.setPrice(sum);
+            log.setAmount(0);
+            log.setItxKey((String) baseResult.getObject());
             log.setTitle("充值失败退款");
             log.setMemberId(shopUtils.getSession().getMemberId());
-            log.setOutId(log.getItxKey());
+            log.setOutId(itxKey);
+            log.setDescinfo(newKey);
             logDetailDao.save(log);
         } catch (Exception e) {
             logger.error("手机充值退款失败：[{}]", e);
         }
-
+        return newKey;
     }
 
 

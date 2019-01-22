@@ -1,5 +1,8 @@
 package com.ebeijia.zl.common.utils.tools;
 
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+import org.apache.poi.ss.formula.functions.T;
+
 import java.math.BigDecimal;
 
 /**
@@ -172,9 +175,9 @@ public abstract class AmountUtil {
 	}
 
 	public static void main(String[] args) {
-			BigDecimal a=new BigDecimal("");
-		    BigDecimal b=new BigDecimal("1.1");
 
-		System.out.println(AmountUtil.add(a,b));
+
 	}
+
+
 }
