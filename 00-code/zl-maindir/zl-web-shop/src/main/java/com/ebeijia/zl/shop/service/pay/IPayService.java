@@ -5,8 +5,8 @@ import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
+import com.ebeijia.zl.shop.vo.PayDealInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,7 +29,7 @@ public interface IPayService {
 
     List<AccountVO> listAccountDetail(String openId, String session);
 
-    List<TbEcomPayOrderDetails> getDeal(String dms);
+    PayDealInfo getDeal(String dms);
 
     String phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey);
 

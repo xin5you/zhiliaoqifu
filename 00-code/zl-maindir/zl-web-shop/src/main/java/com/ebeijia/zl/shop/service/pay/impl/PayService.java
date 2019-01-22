@@ -13,6 +13,7 @@ import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.shop.constants.PayStatus;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
@@ -29,6 +30,7 @@ import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
 import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.MemberInfo;
+import com.ebeijia.zl.shop.vo.PayDealInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.ebeijia.zl.common.utils.enums.TransCode.*;
@@ -433,10 +436,30 @@ public class PayService implements IPayService {
     }
 
     @Override
-    public List<TbEcomPayOrderDetails> getDeal(String dms) {
+    public PayDealInfo getDeal(String dms) {
         TbEcomPayOrderDetails details = new TbEcomPayOrderDetails();
         details.setDmsRelatedKey(dms);
-        return payOrderDetailsDao.list(new QueryWrapper<>(details));
+        List<TbEcomPayOrderDetails> list = payOrderDetailsDao.list(new QueryWrapper<>(details));
+        if (list==null || list.size()==0){
+            throw new BizException(ResultState.NOT_FOUND,"找不到订单信息");
+        }
+        PayDealInfo result = new PayDealInfo();
+        result.setPayStatus(checkPayStatus(list));
+        TbEcomPayOrderDetails example = list.get(0);
+        result.setOutId(example.getOutOrderId());
+        SimpleDateFormat format = new SimpleDateFormat("YY/mm/DD HH:MM:SS");
+        result.setTime(format.format(new Date(example.getCreateTime())));
+        return result;
+    }
+
+    private String checkPayStatus(List<TbEcomPayOrderDetails> list) {
+        for (TbEcomPayOrderDetails detail : list){
+            //TODO Spec
+            if (!detail.getPayStatus().equals(PayStatus.PAYMENT_CONFIRM)){
+                return detail.getPayStatus();
+            }
+        }
+        return PayStatus.PAYMENT_CONFIRM;
     }
 
     @Override
@@ -444,6 +467,7 @@ public class PayService implements IPayService {
         String newKey = IdUtil.getNextId();
         AccountRefundReqVo vo = new AccountRefundReqVo();
         String itxKey = log.getItxKey();
+        String phone = log.getDescinfo();
         vo.setOrgItfPrimaryKey(log.getItxKey());
         vo.setOrgDmsRelatedKey(dmsKey);
         vo.setDmsRelatedKey(newKey);
@@ -477,7 +501,8 @@ public class PayService implements IPayService {
             log.setTitle("充值失败退款");
             log.setMemberId(shopUtils.getSession().getMemberId());
             log.setOutId(itxKey);
-            log.setDescinfo(newKey);
+            log.setDescinfo(phone);
+            log.setImg(newKey);
             logDetailDao.save(log);
         } catch (Exception e) {
             logger.error("手机充值退款失败：[{}]", e);

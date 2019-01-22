@@ -200,3 +200,4 @@ phone:
   api:
     charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
     chargeCallback: http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack
+    userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId
