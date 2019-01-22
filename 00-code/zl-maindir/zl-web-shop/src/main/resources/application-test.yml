@@ -57,7 +57,7 @@ spring:
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
   rocketmq:
-    groupName: zlqf_account_group
+    groupName: zlqf_shop_group
     namesrvAddr: 192.168.2.110:9876
     sendMsgTimeout: 3000
     retryTimesWhenSendFailed: 2
@@ -81,7 +81,6 @@ logging:
 
 #锁定短信验证码
 sms:
-  enable: false
   debug: true
 
 #知了企服加解密key（商城主页和订单）
@@ -193,3 +192,10 @@ pagehelper:
   reasonable: false
   supportMethodsArguments: true
   params: count=countSql
+weixin:
+  api:
+    code: http://192.168.2.110:10501/web-user/w/getOpenId
+phone:
+  api:
+    charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
+    chargeCallback: http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack

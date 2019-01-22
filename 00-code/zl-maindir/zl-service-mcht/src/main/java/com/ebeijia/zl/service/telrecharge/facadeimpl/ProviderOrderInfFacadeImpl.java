@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-@Configuration  
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="providerOrderInfFacade")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service()
 public class ProviderOrderInfFacadeImpl implements ProviderOrderInfFacade {
 
 	@Autowired

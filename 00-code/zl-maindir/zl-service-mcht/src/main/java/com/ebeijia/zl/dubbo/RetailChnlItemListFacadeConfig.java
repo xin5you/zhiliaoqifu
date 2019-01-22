@@ -23,6 +23,9 @@ public class RetailChnlItemListFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(retailChnlItemListFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(5000);
+		serviceBean.setRetries(0);
+
 		return serviceBean;
 	}
 }

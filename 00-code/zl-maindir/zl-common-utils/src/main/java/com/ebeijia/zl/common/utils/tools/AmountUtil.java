@@ -1,5 +1,8 @@
 package com.ebeijia.zl.common.utils.tools;
 
+import com.ebeijia.zl.common.utils.domain.BaseEntity;
+import org.apache.poi.ss.formula.functions.T;
+
 import java.math.BigDecimal;
 
 /**
@@ -162,10 +165,19 @@ public abstract class AmountUtil {
 		return v1.divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_DOWN);
 	}
 
-	public static void main(String[] args) {
-			BigDecimal a=new BigDecimal("");
-		    BigDecimal b=new BigDecimal("1.1");
-
-		System.out.println(AmountUtil.add(a,b));
+	/**
+	 * 人民币 分转元
+	 * @param v1
+	 * @return
+	 */
+	public static BigDecimal RMBYuanToCent(BigDecimal v1){
+		return v1.multiply(new BigDecimal("100")).setScale(4);
 	}
+
+	public static void main(String[] args) {
+
+
+	}
+
+
 }

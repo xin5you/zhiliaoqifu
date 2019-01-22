@@ -23,6 +23,9 @@ public class RetailChnlAreaInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(providerOrderInfFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(5000);
+		serviceBean.setRetries(0);
+
 		return serviceBean;
 	}
 }

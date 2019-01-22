@@ -26,6 +26,8 @@ public class UserInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(userInfFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(10000);
+		serviceBean.setRetries(0);
 		
 		List<MethodConfig> methods=new ArrayList<MethodConfig>();
 		

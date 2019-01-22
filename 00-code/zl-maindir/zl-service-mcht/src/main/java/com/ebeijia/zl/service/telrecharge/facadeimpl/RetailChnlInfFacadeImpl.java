@@ -2,16 +2,16 @@ package com.ebeijia.zl.service.telrecharge.facadeimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.annotation.Configuration;
 
-@Configuration  
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="retailChnlInfFacade")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service()
 public class RetailChnlInfFacadeImpl  implements RetailChnlInfFacade {
 
 	@Autowired

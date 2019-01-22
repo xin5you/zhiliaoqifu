@@ -27,6 +27,8 @@ public class AccountManageFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(accountManageFacade);
 		serviceBean.setCluster("failfast");
+		serviceBean.setTimeout(10000);
+		serviceBean.setRetries(0);
 		
 		List<MethodConfig> methods=new ArrayList<MethodConfig>();
 		/*** dubbo method registerUserInf config*/

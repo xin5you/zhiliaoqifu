@@ -17,6 +17,8 @@
 		recharge_value, 
 		item_num, 
 		pay_amt,
+		txn_amt,
+		itf_primary_key,
 		order_stat, 
 		notify_stat, 
 		notify_flag, 
@@ -96,7 +98,7 @@
 	
 
 	
-	<select id="getRetailChnlOrderInfByOuterId" parameterType="java.lang.String" resultType="RetailChnlProductInf">
+	<select id="getRetailChnlOrderInfByOuterId" parameterType="java.lang.String" resultType="RetailChnlOrderInf">
 		SELECT 
 	  		<include refid="ColumnResult" />
 		 		     FROM 	<include refid="TableName" /> m

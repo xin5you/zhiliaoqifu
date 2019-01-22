@@ -272,6 +272,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 					transLog2.setTransId(TransCode.MB95.getCode());
 					transLog2.setUserType(UserType.TYPE200.getCode());
+					transLog2.setTransAmt(accountTxnVo.getTxnAmt());
+					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
 					addToVoList(voList,transLog2,voList.size());
 				}
 			}else{
@@ -348,29 +350,49 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				throw AccountBizException.ACCOUNT_WITHDRID_SAVE_FAILED.newInstance("提现操作异常,用户Id{%s},当前交易请求订单号{%s}",withdrawDetail.getUserId(),intfaceTransLog.getDmsRelatedKey()).print();
 			}
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
-			List<AccountTxnVo> addList = intfaceTransLog.getAddList();
-			List<TransLog>  transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),AccountCardAttrEnum.SUB.getValue());
 
-			if (addList != null && addList.size() > 0 && transLogs!=null && transLogs.size()>0) {
-				boolean priBidVal=false;
-				for (AccountTxnVo accountTxnVo : addList) {
-					priBidVal=false;
-					for (TransLog orgTransLog: transLogs) {
-						if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
-							priBidVal=true;
-							this.addToVoListOrgTransLog(voList, intfaceTransLog, orgTransLog, accountTxnVo.getTxnAmt(), accountTxnVo.getTxnAmt());
+				List<AccountTxnVo> transList = intfaceTransLog.getTransList();
+
+				//退回到支付用户账户
+				List<TransLog>  transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),intfaceTransLog.getTfrInUserId(),AccountCardAttrEnum.SUB.getValue());
+				if (transLogs !=null && transLogs.size()>0) {
+
+					for (AccountTxnVo accountTxnVo : transList) {
+						boolean 	priBidVal=false;
+						for (TransLog orgTransLog: transLogs) {
+							if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
+								priBidVal=true;
+								this.addToVoListOrgTransLog(voList, intfaceTransLog, orgTransLog,AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(), accountTxnVo.getTxnAmt());
+							}
+						}
+						if(!priBidVal){
+							throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易类型{%s}不存在",intfaceTransLog.getOrgItfPrimaryKey(),accountTxnVo.getTxnBId()).print();
 						}
 					}
-					if(!priBidVal){
-						throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易类型{%s}不存在",intfaceTransLog.getOrgItfPrimaryKey(),accountTxnVo.getTxnBId()).print();
-					}
+				}else {
+					throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
 				}
-			}else {
-				throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
+
+				//从收款商户退款
+				transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),intfaceTransLog.getTfrOutUserId(),AccountCardAttrEnum.ADD.getValue());
+				if (transLogs !=null && transLogs.size()>0) {
+
+					for (AccountTxnVo accountTxnVo : transList) {
+						boolean priBidVal=false;
+						for (TransLog orgTransLog: transLogs) {
+							if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
+								priBidVal=true;
+								this.addToVoListOrgTransLog(voList, intfaceTransLog, orgTransLog,AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(), accountTxnVo.getTxnAmt());
+							}
+						}
+						if(!priBidVal){
+							throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易类型{%s}不存在",intfaceTransLog.getOrgItfPrimaryKey(),accountTxnVo.getTxnBId()).print();
+						}
+					}
+				}else {
+					throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
+				}
 			}
-		}else{
-			this.addToVoList(voList, intfaceTransLog, null, null, null, 0);
-		}
 		return voList;
 	}
 
@@ -435,14 +457,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	 * @param voList  交易日志列表
 	 * @param intfaceTransLog  交易流水记录表
 	 * @param orgTransLog  原交易日志
+	 * @param attr      交易类型
 	 * @param transAmt  交易金额
 	 * @param upLoadAmt 上送金额
 	 */
-	private void addToVoListOrgTransLog(List<TransLog> voList,IntfaceTransLog intfaceTransLog,TransLog orgTransLog,BigDecimal transAmt,BigDecimal upLoadAmt){
+	private void addToVoListOrgTransLog(List<TransLog> voList,IntfaceTransLog intfaceTransLog,TransLog orgTransLog,String attr,BigDecimal transAmt,BigDecimal upLoadAmt){
 		TransLog transLog=new TransLog();
 		transLog.setTxnPrimaryKey(IdUtil.getNextId());
 		this.newTransLog(intfaceTransLog, transLog);
-		transLog.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+		transLog.setCardAttr(attr);
 		transLog.setUserId(orgTransLog.getUserId());
 		transLog.setOrgTxnPrimaryKey(orgTransLog.getTxnPrimaryKey());
 		transLog.setPriBId(orgTransLog.getPriBId());
@@ -461,6 +484,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	 * @param batchNo
 	 */
 	private void withDarwAddToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,String batchNo){
+		//用户提现 账户扣款
 		TransLog transLog=new TransLog();
 		transLog.setTxnPrimaryKey(IdUtil.getNextId());
 		transLog.setBatchNo(batchNo);
@@ -474,7 +498,18 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		if(StringUtil.isNotEmpty(cardAttr)){
 			transLog.setCardAttr(cardAttr);
 		}
-		addToVoList(voList,transLog,0);
+		addToVoList(voList,transLog,voList.size());
+
+		//商户收款
+		transLog=new TransLog();
+		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		transLog.setBatchNo(batchNo);
+		transLog.setUserId(intfaceTransLog.getTfrInUserId());
+		transLog.setTransId(TransCode.MB95.getCode());
+		transLog.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+		this.newTransLog(intfaceTransLog, transLog);
+		addToVoList(voList,transLog,voList.size());
+		transLog=null;
 	}
 
 	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){
@@ -519,13 +554,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	/**
 	 *  查找原交易的交易日志
 	 * @param itfPrikey
+	 * @param userId
 	 * @param cardAttr 交易类型
 	 * @return
 	 * @throws AccountBizException
 	 */
-	public List<TransLog> getTransLogListByItfPrikey(String itfPrikey,String cardAttr)throws AccountBizException{
+	public List<TransLog> getTransLogListByItfPrikey(String itfPrikey,String userId,String cardAttr)throws AccountBizException{
 		QueryWrapper<TransLog> queryWrapper = new QueryWrapper<TransLog>();
 		queryWrapper.eq("itf_primary_key", itfPrikey);
+		queryWrapper.eq("user_id", userId);
 		if(StringUtil.isNotEmpty(cardAttr)){
 			queryWrapper.eq("card_attr", cardAttr);
 		}

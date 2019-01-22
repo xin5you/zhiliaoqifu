@@ -25,11 +25,9 @@ public class DubboProviderProperies {
 	private int protocolAccepts;
 
 
-	
 	@Value("${spring.dubbo.provider.id}")
 	private String providerId;
-	
-	
+
 	@Value("${spring.dubbo.provider.timeout}")
 	private int providerTimeout;
 	

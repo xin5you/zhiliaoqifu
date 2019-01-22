@@ -5,7 +5,6 @@ import java.util.List;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderBillingTypeInf;
 import com.ebeijia.zl.service.telrecharge.service.ProviderBillingTypeInfService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 
 import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
@@ -15,9 +14,10 @@ import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants.providerDef
 import com.ebeijia.zl.service.telrecharge.service.ProviderInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.annotation.Configuration;
 
-@Configuration  
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="providerInfFacade")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service()
 public class ProviderInfFacadeImpl implements ProviderInfFacade {
 
 	@Autowired
@@ -141,7 +141,7 @@ public class ProviderInfFacadeImpl implements ProviderInfFacade {
 		return providerBillingTypeInfService.removeById(id);
 	}
 
-	@Override
+
 	public ProviderInf getProviderInfByProviderName(String providerName) {
 		return providerInfService.getProviderInfByProviderName(providerName);
 	}

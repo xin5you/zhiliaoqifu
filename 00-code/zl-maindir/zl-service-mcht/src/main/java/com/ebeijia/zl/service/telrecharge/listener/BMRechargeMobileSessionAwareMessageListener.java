@@ -2,15 +2,17 @@ package com.ebeijia.zl.service.telrecharge.listener;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 import com.ebeijia.zl.api.bm001.api.req.PayBillReq;
 import com.ebeijia.zl.api.bm001.api.service.BMOpenApiService;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.core.rocketmq.enums.RocketTopicEnums;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
+import com.ebeijia.zl.service.telrecharge.service.ProviderInfService;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 import com.qianmi.open.api.response.BmOrderCustomGetResponse;
 import com.qianmi.open.api.response.BmRechargeMobilePayBillResponse;
@@ -52,13 +54,14 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 	private ProviderOrderInfService providerOrderInfService;
 
 	@Autowired
+	private ProviderInfService providerInfService;
+
+	@Autowired
 	private RetailChnlOrderInfService retailChnlOrderInfService;
 	
 	@Autowired
 	private RetailChnlInfService retailChnlInfService;
-	
-	@Autowired
-	private JedisClusterUtils jedisClusterUtils;
+
 
 	@Autowired
 	private BMOpenApiService bmOpenApiService;
@@ -89,6 +92,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 			//获取分销商订单
 			RetailChnlOrderInf retailChnlOrderInf = null;
 			ProviderOrderInf telProviderOrderInf = null;
+
 			try {
 
 				logger.info("待发起分销商充值的订单号-->{}", channelOrderId);
@@ -105,6 +109,17 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
 
+			ProviderInf providerInf=null;
+			try {
+				providerInf = providerInfService.getById(RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId());
+				if (providerInf == null) {
+					logger.error("## 未查询到供应商信息，专项类型供应商ID", RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId());
+					return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+				}
+			} catch (Exception e) {
+				logger.error("## 查询渠道信息异常-->{}", e);
+			}
+
 			RetailChnlInf retailChnlInf = null;
 			try {
 				retailChnlInf = retailChnlInfService.getById(retailChnlOrderInf.getChannelId());
@@ -113,11 +128,17 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 			}
 
 			//10分钟以后的数据订单不出来
-//			Date currDate=new Date();
 			if (System.currentTimeMillis() - retailChnlOrderInf.getCreateTime() < 1000 * 60 * 10) {
 				//待充值的订单发起外部充值
 				if (telProviderOrderInf != null && TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode().equals((telProviderOrderInf.getRechargeState()))) {
+					//商户扣款
+					try {
+						providerOrderInfService.doMchntCustomerToProvider(providerInf, telProviderOrderInf);
+					} catch (Exception e) {
+						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+					}
 
+					//请求立方
 					PayBillReq payBillReq = new PayBillReq();
 					payBillReq.setMobileNo(retailChnlOrderInf.getRechargePhone()); //手机号
 					payBillReq.setRechargeAmount(retailChnlOrderInf.getRechargeValue().setScale(0, BigDecimal.ROUND_HALF_DOWN).toString());
@@ -142,7 +163,6 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 						}
 						//修改供应商订单信息
 						providerOrderInfService.updateOrderRechargeState(telProviderOrderInf, orderDetailInfo, response.getErrorCode());
-
 						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 					} catch (Exception e) {
 						logger.error("##请求话费充值异常-->{}", e);

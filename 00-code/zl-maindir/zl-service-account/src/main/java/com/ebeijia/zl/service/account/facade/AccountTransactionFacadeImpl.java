@@ -49,7 +49,7 @@ import redis.clients.jedis.JedisCluster;
 * 2018年11月30日     zhuqi           v1.0.0
  */
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="accountTransactionFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
 	
@@ -182,18 +182,20 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			return ResultsUtil.error(ITFRespCode.CODE1094.getCode(), ITFRespCode.CODE1094.getValue());
 		}
 		/**获取用户数据*/
-		UserInf toUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
-		if(toUserInf==null){
+		UserInf fromUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
+		if(fromUserInf==null){
 			return ResultsUtil.error(ITFRespCode.CODE1002.getCode(),String.format("当前用户{%s}所属渠渠道{%s}未开户", req.getTransChnl(),req.getUserChnl()));
 		}
-		/**所有的商户收款，商户必须属于管理平台开户的账户*/
-		UserInf formUserInf= userInfService.getUserInfByExternalId(req.getMchntCode(),UserChnlCode.USERCHNL1001.getCode());
-
+		//所有的商户收款，商户必须属于管理平台开户的账户
+		UserInf toMchntInf= userInfService.getUserInfByExternalId(req.getMchntCode(),UserChnlCode.USERCHNL1001.getCode());
+		if(toMchntInf==null){
+			return ResultsUtil.error(ITFRespCode.CODE1005.getCode(),String.format("当前商户{%s}不存在", req.getTransChnl(),req.getUserChnl()));
+		}
 		/****实例化接口流水****/
 		intfaceTransLog=intfaceTransLogService.newItfTransLog(
 				intfaceTransLog,
 				req.getDmsRelatedKey(),
-				toUserInf.getUserId(),
+				fromUserInf.getUserId(),
 				req.getTransId(),
 				req.getPriBId(),
 				req.getUserType(), 
@@ -207,9 +209,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 												null,
 												null, 
 												null,
-												formUserInf.getUserId(),
+				                                toMchntInf.getUserId(),
 												req.getPriBId(),
-												toUserInf.getUserId(),
+												fromUserInf.getUserId(),
 												req.getPriBId(),
 												null);
 		
@@ -361,6 +363,13 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			return ResultsUtil.error(ITFRespCode.CODE1002.getCode(), "账户信息不存在{%s}"+req.getUserChnlId());
 		}
 
+		/**所有的商户收款，商户必须属于管理平台开户的账户*/
+		UserInf toMchntInf= userInfService.getUserInfByExternalId(req.getMchntCode(),UserChnlCode.USERCHNL1001.getCode());
+
+		if(toMchntInf==null){
+			return ResultsUtil.error(ITFRespCode.CODE1005.getCode(),String.format("当前商户{%s}不存在", req.getTransChnl(),req.getUserChnl()));
+		}
+
 		long sDate=DateUtil.getMonthBeginInMillis();
 		long eDate=DateUtil.getMonthEndInMillis();
 
@@ -440,13 +449,13 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				null,
 				 fromUserInf.getUserId(),
 				 SpecAccountTypeEnum.A01.getbId(), //从托管账户提现
-				 fromUserInf.getUserId(),
-				null,
+				 toMchntInf.getUserId(),
+				 SpecAccountTypeEnum.A01.getbId(),
 				null);
 
 		intfaceTransLog.setTransDesc(req.getTransDesc());
-		intfaceTransLog.setMchntCode(fromUserInf.getCompanyId());
-		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
+		intfaceTransLog.setMchntCode(req.getMchntCode());
+		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 
 		//执行操作
 		boolean eflag=false;
@@ -513,15 +522,15 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				req.getUserType(), req.getTransChnl(),req.getUserChnl(),req.getUserChnlId(),req.getOrgItfPrimaryKey());
 		intfaceTransLogService.addBizItfTransLog(
 				intfaceTransLog,
+				orgIntfaceTransLog.getTransAmt(),
+				orgIntfaceTransLog.getUploadAmt(),
 				null,
 				null,
 				null,
-				null,
-				null,
-				 null,
-				null,
-				null,
-				null,
+				orgIntfaceTransLog.getTfrOutUserId(),  //退款，退回到原来支出的userId
+				orgIntfaceTransLog.getTfrOutBId(), //从托管账户提现
+				orgIntfaceTransLog.getTfrInUserId(), //退款，原来收款的商户对应userId
+				orgIntfaceTransLog.getTfrInBId(),
 				null);
 		//企业信息
 		intfaceTransLog.setTransDesc(req.getTransDesc());

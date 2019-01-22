@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Propagation;
 import java.util.List;
 
 public interface IPayService {
-    int transferToCard(Long dealInfo,String validCode, Double session);
+    int transferToCard(Long dealInfo, String validCode, Double session);
 
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc);
+    BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc, String mchntCode);
 
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     BaseResult payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc);
@@ -31,5 +31,6 @@ public interface IPayService {
 
     List<TbEcomPayOrderDetails> getDeal(String dms);
 
-    void phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey);
+    String phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey);
+
 }

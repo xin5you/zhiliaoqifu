@@ -34,6 +34,9 @@ public class DubboProviderConfig {
 	@Bean
 	public ApplicationConfig application(){
 		ApplicationConfig applicationConfig = new ApplicationConfig();
+		applicationConfig.setQosEnable(true);
+		applicationConfig.setQosPort(33331);
+		applicationConfig.setQosAcceptForeignIp(false);
 		applicationConfig.setName(dubboProviderProperies.getApplicationName());
 		return applicationConfig;
 	}

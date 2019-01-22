@@ -1,9 +1,15 @@
 package com.ebeijia.zl.core.wechat.process;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.basics.wechat.domain.AccountFans;
+import com.ebeijia.zl.basics.wechat.domain.MsgNews;
+import com.ebeijia.zl.basics.wechat.enums.MsgType;
+import com.ebeijia.zl.core.wechat.vo.Material;
+import com.ebeijia.zl.core.wechat.vo.MaterialArticle;
+import com.ebeijia.zl.core.wechat.vo.MaterialItem;
+import com.ebeijia.zl.core.wechat.vo.TemplateMessage;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -11,16 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.ebeijia.zl.core.wechat.vo.Material;
-import com.ebeijia.zl.core.wechat.vo.MaterialArticle;
-import com.ebeijia.zl.core.wechat.vo.MaterialItem;
-import com.ebeijia.zl.core.wechat.vo.TemplateMessage;
-import com.ebeijia.zl.basics.wechat.domain.AccountFans;
-import com.ebeijia.zl.basics.wechat.domain.MsgNews;
-import com.ebeijia.zl.basics.wechat.enums.MsgType;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -412,7 +411,7 @@ public class WxApiClient {
 	 * 发送客服消息 -图文消息
 	 * 
 	 * @param openid
-	 * @param content
+	 * @param mpAccount
 	 *            消息内容
 	 * @return
 	 */

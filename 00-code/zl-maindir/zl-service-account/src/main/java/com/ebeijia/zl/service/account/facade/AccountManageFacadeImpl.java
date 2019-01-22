@@ -38,7 +38,7 @@ import java.util.List;
 */
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service(interfaceName="accountManageFacade")
+@com.alibaba.dubbo.config.annotation.Service()
 public class AccountManageFacadeImpl implements AccountManageFacade {
 	
 	private final  Logger log = LoggerFactory.getLogger(AccountManageFacadeImpl.class);

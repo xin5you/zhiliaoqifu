@@ -32,7 +32,7 @@ public class DubboCustomerConfig {
 	
 	@Bean
 	public ApplicationConfig application(){
-		ApplicationConfig applicationConfig = new ApplicationConfig();
+		com.alibaba.dubbo.config.ApplicationConfig applicationConfig=new com.alibaba.dubbo.config.ApplicationConfig();
 		applicationConfig.setName(dubboCustomerProperies.getApplicationName());
 		return applicationConfig;
 	}

@@ -68,4 +68,12 @@ public interface RetailChnlOrderInfService extends IService<RetailChnlOrderInf> 
 	 */
 	void doTelRechargeBackNotify(RetailChnlInf retailChnlInf, RetailChnlOrderInf retailChnlOrderInf, ProviderOrderInf telProviderOrderInf);
 
+	/**
+	 * 商户消费扣款
+	 * @param retailChnlInf
+	 * @param retailChnlOrderInf
+	 * @return
+	 */
+	boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf) throws Exception;
+
 }

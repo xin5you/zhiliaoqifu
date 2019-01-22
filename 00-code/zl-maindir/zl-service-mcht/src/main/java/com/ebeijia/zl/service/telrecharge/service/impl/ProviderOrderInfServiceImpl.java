@@ -1,13 +1,22 @@
 package com.ebeijia.zl.service.telrecharge.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.IdUtil;
+import com.ebeijia.zl.common.utils.domain.BaseResult;
+import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
+import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.service.telrecharge.mapper.ProviderOrderInfMapper;
 import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
 import com.qianmi.open.api.domain.elife.OrderDetailInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +33,13 @@ import java.util.List;
 @Service()
 public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMapper, ProviderOrderInf> implements ProviderOrderInfService{
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private ProviderOrderInfMapper providerOrderInfMapper;
+
+	@Autowired
+	private AccountTransactionFacade accountTransactionFacade;
 
 	@Override
 	public List<ProviderOrderInf> getProviderOrderInfList(ProviderOrderInf providerOrderInf) {
@@ -96,4 +110,36 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 		this.updateById(telProviderOrderInf);
 	}
 
+	/**
+	 *  调用供应商商接口，发起消费扣款
+	 * @param providerInf
+	 * @param telProviderOrderInf
+	 * @return
+	 */
+	public boolean doMchntCustomerToProvider(ProviderInf providerInf, ProviderOrderInf telProviderOrderInf) throws Exception{
+		AccountConsumeReqVo req=new AccountConsumeReqVo();
+		req.setTransId(TransCode.MB10.getCode());
+		req.setTransChnl(TransChnl.CHANNEL40011001.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+		req.setUserChnlId(providerInf.getProviderId());
+		req.setUserType(UserType.TYPE200.getCode());
+		req.setTransAmt(telProviderOrderInf.getRegTxnAmt());
+		req.setUploadAmt(telProviderOrderInf.getRegTxnAmt());
+		req.setDmsRelatedKey(telProviderOrderInf.getRegOrderId());
+		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+		req.setTransDesc("分销商话费充值");
+		req.setTransNumber(1);
+		req.setMchntCode(providerInf.getProviderId());
+		BaseResult result=accountTransactionFacade.executeConsume(req);
+		if(result !=null && "00".equals(result.getCode())){
+			telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode()); //已扣款
+			telProviderOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
+			this.updateById(telProviderOrderInf);
+			return true;
+		}else{
+			logger.info("#平台请求供应商消费扣款失败：{}",JSONArray.toJSONString(result));
+			throw new RuntimeException();
+		}
+
+	}
 }

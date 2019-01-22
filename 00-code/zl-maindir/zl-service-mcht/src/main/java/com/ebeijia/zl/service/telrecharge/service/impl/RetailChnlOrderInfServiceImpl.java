@@ -1,15 +1,18 @@
 package com.ebeijia.zl.service.telrecharge.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.enums.DataStatEnum;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
-import com.ebeijia.zl.common.utils.tools.DateUtil;
-import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
-import com.ebeijia.zl.common.utils.tools.ResultsUtil;
-import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.common.utils.tools.*;
+import com.ebeijia.zl.core.redis.constants.RedisDictKey;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
+import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
+import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
@@ -28,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -58,6 +62,12 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	
 	@Autowired
 	private ProviderOrderInfService providerOrderInfService;
+
+	@Autowired
+	private AccountTransactionFacade accountTransactionFacade;
+
+	@Autowired
+	private JedisCluster jedisCluster;
 
 	@Override
 	public boolean save(RetailChnlOrderInf entity) {
@@ -132,6 +142,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		}else{
 			retailChnlOrderInf.setNotifyFlag("1");
 		}
+		retailChnlOrderInf.setTxnAmt(AmountUtil.RMBYuanToCent(retailChnlOrderInf.getPayAmt()));
 		boolean resOper=this.save(retailChnlOrderInf); //保存分销商订单
 
 		ProviderOrderInf providerOrderInf=null;
@@ -140,11 +151,14 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			providerOrderInf.setRegOrderAmt(retailChnlOrderInf.getRechargeValue()); //充值面额
 			providerOrderInf.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 			providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
+			providerOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_0.getCode());
+			providerOrderInf.setRegTxnAmt(new BigDecimal(0));
+			providerOrderInf.setProviderId(RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId()); //话费充值供应商Id
 			providerOrderInf.setDataStat("0");
 			resOper=providerOrderInfService.save(providerOrderInf); //保存供应商订单
-
 			if(resOper){
-				//TODO 分銷商扣款
+				//分销商消费扣款
+				resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf);
 			}
 		}
 		if(!resOper){
@@ -233,16 +247,16 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		return retailChnlOrderInfMapper.getRetailChnlOrderInfCount(order);
 	}
 
-	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf){
-		if( "0".equals(retailChnlOrderInf.getNotifyFlag())){
-			try{
+	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf) {
+		if ("0".equals(retailChnlOrderInf.getNotifyFlag())) {
+			try {
 				//异步通知供应商
-				TeleRespVO respVo=new TeleRespVO();
+				TeleRespVO respVo = new TeleRespVO();
 				respVo.setSaleAmount(retailChnlOrderInf.getPayAmt().toString());
 				respVo.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 				respVo.setPayState(retailChnlOrderInf.getOrderStat());
 				respVo.setRechargeState(telProviderOrderInf.getRechargeState()); //充值状态
-				if(telProviderOrderInf.getOperateTime() !=null){
+				if (telProviderOrderInf.getOperateTime() != null) {
 					respVo.setOperateTime(DateUtil.COMMON_FULL.getDateText(new Date(telProviderOrderInf.getOperateTime())));
 				}
 				respVo.setOrderTime(DateUtil.COMMON_FULL.getDateText(new Date(retailChnlOrderInf.getCreateTime()))); //操作时间
@@ -254,28 +268,60 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				respVo.setV(retailChnlOrderInf.getAppVersion());
 				respVo.setTimestamp(DateUtil.COMMON_FULL.getDateText(new Date()));
 				respVo.setSubErrorCode(telProviderOrderInf.getResv1());
-				if(TeleConstants.ReqMethodCode.R1.getCode().equals(retailChnlOrderInf.getRechargeType())){
+				if (TeleConstants.ReqMethodCode.R1.getCode().equals(retailChnlOrderInf.getRechargeType())) {
 					respVo.setMethod(TeleConstants.ReqMethodCode.R1.getValue());
-				}else if(TeleConstants.ReqMethodCode.R2.getCode().equals(retailChnlOrderInf.getRechargeType())){
+				} else if (TeleConstants.ReqMethodCode.R2.getCode().equals(retailChnlOrderInf.getRechargeType())) {
 					respVo.setMethod(TeleConstants.ReqMethodCode.R2.getValue());
 				}
-				String psotToken=MD5SignUtils.genSign(respVo, "key",retailChnlInf.getChannelKey(), new String[]{"sign","serialVersionUID"}, null);
+				String psotToken = MD5SignUtils.genSign(respVo, "key", retailChnlInf.getChannelKey(), new String[]{"sign", "serialVersionUID"}, null);
 				respVo.setSign(psotToken);
 
 				//修改通知后 分销商的处理状态
-				logger.info("##发起分销商回调[{}],返回参数:[{}]",retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
-				String result=HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(),JSONObject.toJSONString(ResultsUtil.success(respVo)));
-				if(result !=null && "SUCCESS ".equals(result.toUpperCase() )){
+				logger.info("##发起分销商回调[{}],返回参数:[{}]", retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
+				String result = HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
+				if (result != null && "SUCCESS ".equals(result.toUpperCase())) {
 					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
-				}else{
+				} else {
 					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
 				}
 
-				} catch (Exception e) {
-					logger.error("##话费充值失败，回调分销商异常-->{}", e);
-				}
+			} catch (Exception e) {
+				logger.error("##话费充值失败，回调分销商异常-->{}", e);
+			}
 			this.updateById(retailChnlOrderInf);
 		}
 	}
 
+	/**
+	 * 商户消费扣款
+	 * @param retailChnlInf
+	 * @param retailChnlOrderInf
+	 * @return
+	 */
+	public boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf) throws Exception{
+
+		AccountConsumeReqVo req=new AccountConsumeReqVo();
+		req.setTransId(TransCode.MB10.getCode());
+		req.setTransChnl(TransChnl.CHANNEL40011001.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+		req.setUserChnlId(retailChnlInf.getChannelId());
+		req.setUserType(UserType.TYPE400.getCode());
+		req.setTransAmt(retailChnlOrderInf.getTxnAmt());
+		req.setUploadAmt(retailChnlOrderInf.getTxnAmt());
+		req.setDmsRelatedKey(retailChnlOrderInf.getChannelOrderId());
+		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+		req.setTransDesc("分销商消费");
+		req.setTransNumber(1);
+		req.setMchntCode(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code));
+		BaseResult result=accountTransactionFacade.executeConsume(req);
+		if(result !=null && "00".equals(result.getCode())){
+			retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode()); //已扣款
+			retailChnlOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
+			this.updateById(retailChnlOrderInf);
+			return true;
+		}else{
+			logger.info("#分销商消费扣款失败：{}",JSONArray.toJSONString(result));
+			throw new RuntimeException();
+		}
+	}
 }

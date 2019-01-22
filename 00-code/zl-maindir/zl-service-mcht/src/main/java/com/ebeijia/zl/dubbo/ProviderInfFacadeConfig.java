@@ -26,6 +26,7 @@ public class ProviderInfFacadeConfig extends DubboProviderConfig {
 		serviceBean.setVersion("1.0.0");
 		serviceBean.setRef(providerInfFacade);
 		serviceBean.setCluster("failfast");
+
 		
 		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 		
