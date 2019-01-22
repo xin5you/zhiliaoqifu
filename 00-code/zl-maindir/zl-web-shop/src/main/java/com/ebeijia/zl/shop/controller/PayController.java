@@ -9,7 +9,6 @@ import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
-import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.service.pay.ICardService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
@@ -26,7 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Api(value = "/pay", description = "用于定义支付、信用卡相关接口")
 @RequestMapping(value = "/pay")
@@ -139,13 +141,13 @@ public class PayController {
             TbEcomItxLogDetail id = logDetailService.getById(deal.getItfPrimaryKey());
             if (id==null){
                 id = new TbEcomItxLogDetail();
-                id.setAmount(1);
+                id.setAmount(0);
                 id.setTitle("交易流水");
                 id.setDescinfo("如果您对此流水有疑问，请联系HR");
-                id.setImg("/image/none");
+                id.setImg("");
                 id.setItxKey(deal.getTxnPrimaryKey());
                 id.setOutId(IdUtil.getNextId());
-                id.setSourceBid("A00");
+                id.setSourceBid(deal.getPriBId());
             }
             map.put(id.getItxKey(),id);
         });
@@ -170,9 +172,9 @@ public class PayController {
     @TokenCheck(force = true)
     @ApiOperation("获取订单DMS对应的流水记录")
     @RequestMapping(value = "/deal/get/{dms}", method = RequestMethod.GET)
-    public JsonResult<List<TbEcomPayOrderDetails>> getDealInfoByDms(@PathVariable("dms") String dms) {
-        List<TbEcomPayOrderDetails> deals = payService.getDeal(dms);
-        return new JsonResult<>(deals);
+    public JsonResult<PayDealInfo> getDealInfoByDms(@PathVariable("dms") String dms) {
+        PayDealInfo deal = payService.getDeal(dms);
+        return new JsonResult<>(deal);
     }
 
 
