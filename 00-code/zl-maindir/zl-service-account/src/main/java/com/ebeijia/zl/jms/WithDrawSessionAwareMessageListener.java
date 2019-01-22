@@ -17,6 +17,7 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.enums.WithDrawStatusEnum;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
+import com.ebeijia.zl.service.account.service.IAccountWithdrawTxnService;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -46,6 +47,9 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
 
     @Autowired
     private IAccountWithdrawOrderService accountWithdrawOrderService;
+
+    @Autowired
+    private IAccountWithdrawTxnService accountWithdrawTxnService;
 
     /**
      *  默认msgs里只有一条消息，可以通过设置consumeMessageBatchMaxSize参数来批量接收消息<br/>
@@ -92,7 +96,16 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
             //提现交易开关
             String switchFlag=jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_SWITCH_FLAG");
 
-            if("Y".equals(switchFlag)) {
+            //请求扣款
+            boolean debflag=false;
+            try {
+                 debflag = accountWithdrawTxnService.doWithdrowForMchtA01(accountWithdrawOrder);
+            }catch (Exception ex){
+                logger.error("用户提现，知了平台账户转供应商账户,批次号->{}",accountWithdrawOrder.getBatchNo());
+                debflag=false;
+            }
+
+            if("Y1".equals(switchFlag) && debflag) {
 
                 WithdrawBodyVO bodyVO = new WithdrawBodyVO();
                 bodyVO.setBatchNo(accountWithdrawOrder.getBatchNo());
@@ -126,12 +139,19 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
                     accountWithdrawOrder.setErrorCode(json.getString("responseCode"));
                 } catch (Exception ex) {
                     logger.error("苏宁代付请求失败->{}", ex);
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    accountWithdrawOrder.setErrorCode("99999");
                 }
-
-            }else{
-                accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status04.getCode());
             }
+
+            try {
+                if (!"0000".equals(accountWithdrawOrder.getErrorCode())) {
+                    accountWithdrawTxnService.doRefundAllForMchtA01ByZl(accountWithdrawOrder);
+                }
+            } catch (Exception ex) {
+                logger.error("#退款请求异常->{}", ex);
+            }
+
+            accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status04.getCode());
             accountWithdrawOrderService.updateById(accountWithdrawOrder);
         }
         // 如果没有return success ，consumer会重新消费该消息，直到return success

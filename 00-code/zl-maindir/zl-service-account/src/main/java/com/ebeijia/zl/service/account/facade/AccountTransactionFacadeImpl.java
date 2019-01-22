@@ -7,6 +7,7 @@ import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.req.*;
@@ -364,8 +365,8 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		}
 
 		/**所有的商户收款，商户必须属于管理平台开户的账户*/
-		UserInf toMchntInf= userInfService.getUserInfByExternalId(req.getMchntCode(),UserChnlCode.USERCHNL1001.getCode());
-
+		String mchtCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
+		UserInf toMchntInf= userInfService.getUserInfByExternalId(mchtCode,UserChnlCode.USERCHNL1001.getCode());
 		if(toMchntInf==null){
 			return ResultsUtil.error(ITFRespCode.CODE1005.getCode(),String.format("当前商户{%s}不存在", req.getTransChnl(),req.getUserChnl()));
 		}
@@ -435,7 +436,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				req.getDmsRelatedKey(),
 				fromUserInf.getUserId(),
 				req.getTransId(),
-				null,
+				SpecAccountTypeEnum.A01.getbId(),
 				req.getUserType(),
 				req.getTransChnl(),
 				req.getUserChnl(),
@@ -447,9 +448,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				null,
 				null,
 				null,
-				 fromUserInf.getUserId(),
-				 SpecAccountTypeEnum.A01.getbId(), //从托管账户提现
 				 toMchntInf.getUserId(),
+				 SpecAccountTypeEnum.A01.getbId(), //从托管账户提现
+				 fromUserInf.getUserId(),
 				 SpecAccountTypeEnum.A01.getbId(),
 				null);
 

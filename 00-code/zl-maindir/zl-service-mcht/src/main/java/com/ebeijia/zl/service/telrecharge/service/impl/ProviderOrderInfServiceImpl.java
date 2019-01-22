@@ -1,11 +1,12 @@
 package com.ebeijia.zl.service.telrecharge.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.core.redis.constants.RedisDictKey;
+import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,6 +42,9 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 
 	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
+
+	@Autowired
+	private JedisCluster jedisCluster;
 
 	@Override
 	public List<ProviderOrderInf> getProviderOrderInfList(ProviderOrderInf providerOrderInf) {
@@ -117,11 +122,13 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 	 * @return
 	 */
 	public boolean doMchntCustomerToProvider(ProviderInf providerInf, ProviderOrderInf telProviderOrderInf) throws Exception{
+
+
 		AccountConsumeReqVo req=new AccountConsumeReqVo();
 		req.setTransId(TransCode.MB10.getCode());
 		req.setTransChnl(TransChnl.CHANNEL40011001.toString());
 		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
-		req.setUserChnlId(providerInf.getProviderId());
+		req.setUserChnlId(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code));
 		req.setUserType(UserType.TYPE200.getCode());
 		req.setTransAmt(telProviderOrderInf.getRegTxnAmt());
 		req.setUploadAmt(telProviderOrderInf.getRegTxnAmt());

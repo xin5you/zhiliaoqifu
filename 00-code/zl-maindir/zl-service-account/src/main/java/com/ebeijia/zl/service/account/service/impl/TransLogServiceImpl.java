@@ -23,6 +23,7 @@ import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,7 +54,6 @@ import redis.clients.jedis.JedisCluster;
 public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> implements ITransLogService{
 
 	private  final Logger log = LoggerFactory.getLogger(TransLogServiceImpl.class);
-
 
 	@Autowired
 	private IAccountInfService accountInfService;
@@ -323,7 +323,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 			String batchNO=String.valueOf(SnowFlake.getInstance().nextId());
 			//用户或者商户withdraw操作
-			this.withDarwAddToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), batchNO);
+			this.withDarwAddToVoList(voList, intfaceTransLog,intfaceTransLog.getTfrOutUserId(),SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.SUB.getValue(), batchNO);
+
 
 			AccountWithdrawDetail withdrawDetail=intfaceTransLog.getWithdrawDetail();
 			AccountWithdrawOrder accountWithdrawOrder=new AccountWithdrawOrder();
@@ -504,12 +505,11 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		transLog=new TransLog();
 		transLog.setTxnPrimaryKey(IdUtil.getNextId());
 		transLog.setBatchNo(batchNo);
-		transLog.setUserId(intfaceTransLog.getTfrInUserId());
+		this.newTransLog(intfaceTransLog, transLog);
 		transLog.setTransId(TransCode.MB95.getCode());
 		transLog.setCardAttr(AccountCardAttrEnum.ADD.getValue());
-		this.newTransLog(intfaceTransLog, transLog);
+		transLog.setUserId(intfaceTransLog.getTfrInUserId());
 		addToVoList(voList,transLog,voList.size());
-		transLog=null;
 	}
 
 	private void addToVoList(List<TransLog> voList,TransLog transLog,int order){

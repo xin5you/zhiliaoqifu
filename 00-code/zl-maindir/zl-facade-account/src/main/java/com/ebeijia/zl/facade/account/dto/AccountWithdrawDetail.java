@@ -28,6 +28,12 @@ public class AccountWithdrawDetail extends Model<AccountWithdrawDetail> {
     private String serialNo;
 
     /**
+     * 退款交易流水号
+     */
+    @TableId(value = "ref_primary_key")
+    private String refPrimaryKey;
+
+    /**
      * 批次号
      */
     @TableField("batch_no")

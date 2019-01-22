@@ -111,9 +111,10 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 
 			ProviderInf providerInf=null;
 			try {
-				providerInf = providerInfService.getById(RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId());
+				String mchntId=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId());
+				providerInf = providerInfService.getById(mchntId);
 				if (providerInf == null) {
-					logger.error("## 未查询到供应商信息，专项类型供应商ID", RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId());
+					logger.error("## 未查询到供应商信息，专项类型供应商ID",mchntId);
 					return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 				}
 			} catch (Exception e) {

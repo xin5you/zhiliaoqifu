@@ -79,8 +79,8 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 
 		//企业账户所属用户信息注册
 		if (!UserType.TYPE100.getCode().equals(userType)) {
-			return this.registerUserInfForCompany(userName, userType, companyId);
-		}
+		return this.registerUserInfForCompany(userName, userType, companyId);
+	}
 
 		//企业员工用户注册
 		/*** 判断用户 手机号是否已经注册 ***/
@@ -108,6 +108,7 @@ public class UserInfServiceImpl extends ServiceImpl<UserInfMapper, UserInf> impl
 			personInf.setPersonalName(userName);
 			personInf.setPersonalCardType(cardType);
 			personInf.setPersonalCardNo(cardNo);
+			personInf.setRemarks("0");
 			personInfService.save(personInf);
 
 		} else {
