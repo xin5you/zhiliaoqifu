@@ -1,35 +1,26 @@
 package com.ebeijia.zl.web.user.model.customer.ctrl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.core.redis.utils.RedisDictProperties;
 import com.ebeijia.zl.core.wechat.process.*;
+import com.ebeijia.zl.core.wechat.util.WxSignUtil;
+import com.ebeijia.zl.core.wechat.vo.MsgRequest;
+import com.ebeijia.zl.core.wechat.vo.SemaphoreMap;
+import com.ebeijia.zl.web.user.model.utils.JsonResult;
 import com.ebeijia.zl.web.user.model.utils.JsonView;
-import com.ebeijia.zl.web.user.model.utils.UploadUtil;
 import com.ebeijia.zl.web.user.model.wxapi.service.BizService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ebeijia.zl.basics.wechat.domain.AccountFans;
-import com.ebeijia.zl.common.utils.tools.StringUtil;
-import com.ebeijia.zl.core.redis.utils.RedisDictProperties;
-import com.ebeijia.zl.core.wechat.aes.WXBizMsgCrypt;
-import com.ebeijia.zl.core.wechat.util.WxSignUtil;
-import com.ebeijia.zl.core.wechat.vo.MsgRequest;
-import com.ebeijia.zl.core.wechat.vo.SemaphoreMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -155,13 +146,15 @@ public class WxApiCtrl {
 	@ApiOperation("获取微信公众号jsTicket")
 	@RequestMapping(value = "/jsTicket", method = RequestMethod.POST)
 	@ResponseBody
-	public JsonView jsTicket(HttpServletRequest request, @RequestParam("url")String url) {
+	public JsonResult jsTicket(HttpServletRequest request, @RequestParam("url")String url) {
 		MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
 		String jsTicket = wxApiClient.getJSTicket(mpAccount);
 		WxSign sign = new WxSign(mpAccount.getAppid(), jsTicket, url);
 		JsonView jv = new JsonView();
 		jv.setData(sign);
-		return jv;
+		JsonResult result =new JsonResult<JsonView>();
+		result.setResult(jv);
+		return result;
 	}
 
 
@@ -178,12 +171,33 @@ public class WxApiCtrl {
 	@ResponseBody
 	public String getOpenId(HttpServletRequest request, @RequestParam("code")String code) {
 		MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
-		OAuthAccessToken token=wxApiClient.getOAuthAccessToken(mpAccount,code);
-		String openId="";
-		if(token !=null){
+	//	OAuthAccessToken token=wxApiClient.getOAuthAccessToken(mpAccount,code);
+        String oAuthOpenId = wxApiClient.getOAuthOpenId(mpAccount, code);
+       // String openId="";
+	/*	if(token !=null){
 			openId=token.getOpenid();
-		}
-		return openId;
+		}*/
+		return oAuthOpenId;
 	}
+
+    /**
+     * 获取微信公众号用户信息
+     *
+     * @param request
+     * @param openId
+     * @return
+     */
+    @ApiOperation("获取微信公众号用户信息")
+    @ApiImplicitParam(name="openId",required = true,dataType = "String")
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject getUserInfo(HttpServletRequest request, @RequestParam("openId")String openId) {
+        MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
+        AccessToken accessToken = WxApi.getAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret());
+        String userInfoUrl = WxApi.getFansInfoUrl(accessToken.getAccessToken(),openId);
+        JSONObject jsonObj = WxApi.httpsRequest(userInfoUrl, "GET", null);
+
+        return jsonObj;
+    }
 
 }
