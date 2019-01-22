@@ -56,9 +56,10 @@ public interface ITransLogService extends IService<TransLog> {
 	 /**
 	 *  查找原交易的交易日志
 	 * @param itfPrikey
+	  * @param userId
 	  *@param cardAttr 交易类型
 	 * @return
 	 * @throws AccountBizException
 	 */
-	 List<TransLog> getTransLogListByItfPrikey(String itfPrikey,String cardAttr)throws AccountBizException;
+	 List<TransLog> getTransLogListByItfPrikey(String itfPrikey,String userId,String cardAttr)throws AccountBizException;
 }

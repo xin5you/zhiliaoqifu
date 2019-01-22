@@ -213,6 +213,10 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		//员工账户充值 专用专项账户的按比例设置强制消费额度
 
 		if(UserType.TYPE100.getCode().equals(account.getAccountType())){
+
+			// 所有用户的加款采用的最小单位是分！采用平台利益优先规则 小数点直接舍弃
+			transLog.setTransAmt(transLog.getTransAmt().setScale(0,BigDecimal.ROUND_DOWN));
+
 			//非 员工通用福利账户 并且 非现金账户
 			BillingType billingType=null;
 			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
@@ -274,9 +278,13 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		/****** setCouponBal set begin ***/
 		//员工账户消费 扣款
 		if(UserType.TYPE100.getCode().equals(account.getAccountType())){
+
+			// 所有用户的扣款采用的最小单位是分！采用平台利益优先规则 小数点直接进位
+			transLog.setTransAmt(transLog.getTransAmt().setScale(0,BigDecimal.ROUND_UP));
+
 			//购买代金券
 			if(TransCode.CW20.getCode().equals(transLog.getTransId())){
-				//如果用户的代金券的额度小鱼用户的本次交易金额
+				//如果用户的代金券的额度小于用户的本次交易金额
 				if(AmountUtil.lessThan(account.getCouponBal(), transLog.getTransAmt())){
 					throw AccountBizException.ACCOUNT_COUPONBAL_IS_NOT_ENOUGH.newInstance("代金券额度不足,用户编号{%s}", transLog.getUserId()).print();
 				}else{
