@@ -8,8 +8,10 @@ import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.service.telrecharge.service.RetailChnlInfService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.context.annotation.Configuration;
 
-@com.alibaba.dubbo.config.annotation.Service(version="1.0.0")
+@Configuration
+@com.alibaba.dubbo.config.annotation.Service()
 public class RetailChnlInfFacadeImpl  implements RetailChnlInfFacade {
 
 	@Autowired

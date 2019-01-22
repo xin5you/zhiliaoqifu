@@ -26,6 +26,8 @@ public class RetailChnlItemListServiceConfig extends DubboCustomerConfig {
 		referenceBean.setVersion("1.0.0");
 		referenceBean.setCluster("failfast");
 		referenceBean.setCheck(false);
+		referenceBean.setTimeout(10000);
+		referenceBean.setRetries(0);
 		
 		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 

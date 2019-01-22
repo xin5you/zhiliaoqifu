@@ -94,4 +94,18 @@
 		and u.user_name=#{userChnlId}
 		and u.user_type=#{userType}
 	</select>
+
+
+	<select id="getAccountInfAccBalByUser" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+
+			SELECT
+		ai.acc_bal
+		FROM
+		tb_account_inf ai,
+		tb_user_inf u,
+		tb_channel_user_inf cui
+		where
+			ai.user_id=u.user_id
+		and u.user_id=cui.user_id
+	</select>
 </mapper>

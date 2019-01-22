@@ -27,6 +27,7 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 *-------------------------------------*
 * 2018年12月3日     zhuqi           v1.0.0
  */
+@Configuration
 @com.alibaba.dubbo.config.annotation.Service()
 public class UserInfFacadeImpl implements UserInfFacade {
 	

@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.facade;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
@@ -34,7 +35,7 @@ import com.github.pagehelper.PageInfo;
 *-------------------------------------*
 * 2018年11月30日     zhuqi           v1.0.0
 */
-
+@Configuration
 @com.alibaba.dubbo.config.annotation.Service()
 public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	
@@ -97,5 +98,15 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 			return null;
 		}
 		return accountLogService.getAccountLogVoList(req).get(0);
+	}
+
+	/**
+	 * 查询账户余额
+	 * @return
+	 */
+	@Override
+	public BigDecimal getAccountInfAccBal(String userType, String userChnlId, String userChnl, String bId){
+
+		return null;
 	}
 }

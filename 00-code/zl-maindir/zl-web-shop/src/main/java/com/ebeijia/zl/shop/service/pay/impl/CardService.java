@@ -34,7 +34,7 @@ public class CardService implements ICardService {
         try {
             bankMap = new ObjectMapper().readValue(bankKv, bankMap.getClass());
             bankKv = null;
-            logger.info(String.format("成功初始化了%s个银行简称",bankMap.size()));
+            logger.info(String.format("成功初始化了%s个银行简称", bankMap.size()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,8 +86,8 @@ public class CardService implements ICardService {
 
     @Override
     public Integer bindCard(CardBindInfo card) {
-        if (StringUtils.isAnyEmpty(card.getBankDetail(),card.getUserName(),card.getCardNumber(),card.getIdCard())){
-            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE,"缺少参数");
+        if (StringUtils.isAnyEmpty(card.getBankDetail(), card.getUserName(), card.getCardNumber(), card.getIdCard())) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "缺少参数");
         }
         MemberInfo memberInfo = shopUtils.getSession();
         if (memberInfo == null) {
@@ -100,8 +100,9 @@ public class CardService implements ICardService {
         TbEcomPayCard temp = new TbEcomPayCard();
         //检查是否有相同卡信息
         temp.setCardNumber(card.getCardNumber());
-        if (cardDao.getOne(new QueryWrapper<>(temp))!=null){
-            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE,"您输入的卡已被绑定");
+        TbEcomPayCard exist = cardDao.getOne(new QueryWrapper<>(temp));
+        if (exist != null && (!exist.getMemberId().equals(memberId))) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "您输入的卡已被绑定");
         }
         temp.setCardNumber(null);
         //检查用户是否存在记录

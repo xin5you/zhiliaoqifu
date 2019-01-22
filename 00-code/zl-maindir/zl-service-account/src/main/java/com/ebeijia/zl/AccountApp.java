@@ -1,6 +1,5 @@
 package com.ebeijia.zl;
 
-import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
 import org.springframework.boot.SpringApplication;
@@ -12,8 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.WebApplicationInitializer;
 
@@ -24,7 +21,6 @@ import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 @EnableTransactionManagement
 @EnableAutoConfiguration
 @SpringBootApplication
-@EnableDubboConfiguration
 public class AccountApp extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
