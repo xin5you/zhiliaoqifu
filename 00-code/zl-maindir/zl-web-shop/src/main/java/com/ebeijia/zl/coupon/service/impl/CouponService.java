@@ -201,6 +201,7 @@ public class CouponService implements ICouponService {
         log.setAmount(amount);
         log.setImg(image);
         log.setSourceBid(bId);
+        log.setMemberId(memberInfo.getMemberId());
         logDetailDao.save(log);
         logger.info("记录日志详情：", log);
 

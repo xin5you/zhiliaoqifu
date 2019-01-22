@@ -31,6 +31,6 @@ public interface IPayService {
 
     List<TbEcomPayOrderDetails> getDeal(String dms);
 
-    void phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey);
+    String phoneChargeReturn(PayInfo payInfo, TbEcomItxLogDetail log, String dmsKey);
 
 }

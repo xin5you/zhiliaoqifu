@@ -67,10 +67,10 @@ public class SupplyService implements ISupplyService {
 
     private static Logger logger = LoggerFactory.getLogger(SupplyService.class);
 
-    @Value("${phone.charge.api:http://192.168.2.110:10701/web-api/api/recharge/mobile/payment}")
+    @Value("${phone.api.charge:http://192.168.2.110:10701/web-api/api/recharge/mobile/payment}")
     private String phoneChargeUrl;
 
-    @Value("${phone.charge.callback:http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack}")
+    @Value("${phone.api.chargeCallback:http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack}")
     private String phoneChargeCallbackUrl;
 
 

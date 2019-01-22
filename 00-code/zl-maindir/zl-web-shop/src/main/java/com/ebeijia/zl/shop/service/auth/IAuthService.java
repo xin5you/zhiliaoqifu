@@ -5,5 +5,9 @@ import com.ebeijia.zl.shop.vo.Token;
 
 public interface IAuthService {
 
-    Token phoneLogin(String phone, String pwd);
+    Token phoneLogin(String phone, String pwd, String code);
+
+    Token wxLogin(String code);
+
+    Integer logout();
 }
