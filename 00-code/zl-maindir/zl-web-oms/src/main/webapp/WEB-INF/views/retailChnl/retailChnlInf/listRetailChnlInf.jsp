@@ -92,7 +92,7 @@
 											<a channelId="${entity.channelId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
 										</sec:authorize>
 										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOADD')">
-											<a channelId="${entity.channelId}" title="上账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+											<a channelId="${entity.channelId}" title="收款订单" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
 										</sec:authorize>
 									</c:if>
 				                    </td>

@@ -33,12 +33,14 @@ public class InaccountController {
 	@Autowired
 	private InaccountOrderDetailService inaccountOrderDetailService;
 
-	@RequestMapping(value = "/getInaccountByOrderId")
+	/*@RequestMapping(value = "/getInaccountByOrderId")
 	@ResponseBody
 	public Map<String, Object> getInaccountByOrderId(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String orderType = StringUtil.nullToString(req.getParameter("orderType"));
+		InaccountOrder orderInf = new InaccountOrder();
 		try {
 			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderId);
 			if (order != null) {
@@ -51,7 +53,7 @@ public class InaccountController {
 			return resultMap;
 		}
 		return resultMap;
-	}
+	}*/
 
 	@RequestMapping(value = "/getInaccountByOrderListId")
 	@ResponseBody

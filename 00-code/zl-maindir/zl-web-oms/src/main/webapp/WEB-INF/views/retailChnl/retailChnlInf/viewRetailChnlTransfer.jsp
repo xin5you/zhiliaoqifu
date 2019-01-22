@@ -20,14 +20,14 @@
 								<li>分销商管理</li>
 								<li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
 								<li>分销商信息列表</li>
-								<li>入账管理</li>
-                                <li><a href="${ctx }/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?channelId=${order.providerId }">入账信息列表</a></li>
-                                <li>入账明细列表</li>
+								<li>上账管理</li>
+                                <li><a href="${ctx }/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?channelId=${order.providerId }">上账信息列表</a></li>
+                                <li>上账明细列表</li>
 			                </ul>
 			            </div>
 			        </nav>
 					<form id="pageMainForm" class="form-inline form_validation_tip" method="post">
-						<h3 class="heading">入账明细列表</h3>
+						<h3 class="heading">上账明细列表</h3>
 
 						<div class="control-group formSep">
 							<table cellpadding="5px" style="width: 100%">
@@ -36,34 +36,34 @@
 										<label class="control-label" style="font-weight: bold;">审核状态：</label>
 										<label style="color: red;">${order.checkStat }</label>
 									</td>
-									<%--<td>
-										<label class="control-label" style="font-weight: bold;">打款总金额(元)：</label>
-										<label style="color: red;">${order.remitAmt }</label>
-									</td>--%>
-									<td>
-										<label class="control-label" style="font-weight: bold;">上账总金额(元)：</label>
-										<label style="color: red;">${order.inaccountSumAmt }</label>
-									</td>
 									<td>
 										<label class="control-label" style="font-weight: bold;">上账状态：</label>
 										<label style="color: red;">${order.inaccountCheck }</label>
 									</td>
-									<%--<td>
-										<label class="control-label" style="font-weight: bold;">收款企业：</label>
-										<label style="color: red;">${order.companyName }</label>
-									</td>--%>
-								</tr>
-								<%--<tr>
-
-									&lt;%&ndash;<td>
+									<td>
 										<label class="control-label" style="font-weight: bold;">平台收款状态：</label>
 										<label style="color: red;">${order.platformReceiverCheck }</label>
 									</td>
 									<td>
-										<label class="control-label" style="font-weight: bold;">企业收款状态：</label>
+										<label class="control-label" style="font-weight: bold;">分销商收款状态：</label>
 										<label style="color: red;">${order.companyReceiverCheck }</label>
-									</td>&ndash;%&gt;
-								</tr>--%>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label class="control-label" style="font-weight: bold;">收款分销商：</label>
+										<label style="color: red;">${order.companyName }</label>
+									</td>
+									<td>
+										<label class="control-label" style="font-weight: bold;">打款总金额(元)：</label>
+										<label style="color: red;">${order.remitAmt }</label>
+									</td>
+									<td>
+										<label class="control-label" style="font-weight: bold;">上账总金额(元)：</label>
+										<label style="color: red;">${order.inaccountSumAmt }</label>
+									</td>
+
+								</tr>
 							</table>
 						</div>
 						<br/>
@@ -73,9 +73,10 @@
 				               <th>序号</th>
 				               <th>订单明细号</th>
                                  <th>账户名称</th>
-				               <th>上账金额(元)</th>
-                                 <%--<th>平台收入金额(元)</th>
-                                 <th>企业收入金额(元)</th>--%>
+								 <th>交易金额(元)</th>
+				               	<th>上账金额(元)</th>
+                                 <th>平台收款金额(元)</th>
+                                 <th>分销商收款金额(元)</th>
                                  <%--<th>开票状态</th>
                                  <th>开票信息</th>--%>
 				             </tr>
@@ -86,9 +87,10 @@
 				                 	<td>${st.index+1 }</td>
 				                 	<td>${entity.orderListId}</td>
 									<td>${entity.BName}</td>
+									 <td>${entity.transAmt}</td>
 									<td>${entity.inaccountAmt}</td>
-                                    <%-- <td>${entity.platformInAmt}</td>
-                                     <td>${entity.companyInAmt}</td>--%>
+                                     <td>${entity.platformInAmt}</td>
+                                     <td>${entity.companyInAmt}</td>
                                      <%--<td>
                                          <c:if test="${entity.isInvoice == '0'}">未开票</c:if>
                                          <c:if test="${entity.isInvoice == '1'}">已开票</c:if>

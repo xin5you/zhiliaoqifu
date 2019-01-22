@@ -44,7 +44,7 @@ var addCompanyTransfer = {
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId;
+                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType=300";
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);

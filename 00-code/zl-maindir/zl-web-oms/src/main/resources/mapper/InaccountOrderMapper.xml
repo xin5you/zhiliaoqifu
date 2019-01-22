@@ -8,6 +8,7 @@
         o.tfr_company_order_id,
         o.order_type,
         o.check_stat,
+        o.formula,
         o.remit_amt,
         o.inaccount_sum_amt,
         o.platform_in_sum_amt,
@@ -36,10 +37,20 @@
     <select id="getInaccountOrderByOrder" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
           <include refid="InaccountOrderColumns"/>,
-          c.name as companyName
+            <if test="orderType == '200'">
+                r.channel_name as companyName
+            </if>
+            <if test="orderType == '300'">
+                c.name as companyName
+            </if>
         from
           <include refid="tableName"/>
-        left join tb_company_inf c on o.company_id = c.company_id
+            <if test="orderType == '200'">
+                left join tb_retail_chnl_inf r on r.channel_id = o.provider_id
+            </if>
+            <if test="orderType == '300'">
+                left join tb_company_inf c on c.company_id = o.company_id
+            </if>
         where o.data_stat = '0'
         <if test="providerId != null and providerId != ''">
             and o.provider_id = #{providerId}
@@ -59,26 +70,54 @@
         order by o.create_time desc
     </select>
 
-    <select id="getInaccountOrderByOrderId" parameterType="String" resultType="InaccountOrder">
+    <select id="getInaccountOrderByOrderId" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
           <include refid="InaccountOrderColumns"/>,
-        c.name as companyName
+            <if test="orderType == '200'">
+                r.channel_name as companyName
+            </if>
+            <if test="orderType == '300'">
+                c.name as companyName
+            </if>
         from
           <include refid="tableName"/>
-        left join tb_company_inf c on o.company_id = c.company_id
+            <if test="orderType == '200'">
+                left join tb_retail_chnl_inf r on r.channel_id = o.provider_id
+            </if>
+            <if test="orderType == '300'">
+                left join tb_company_inf c on c.company_id = o.company_id
+            </if>
         where o.data_stat = '0'
           and o.order_id = #{orderId}
+          and o.order_type = #{orderType}
     </select>
 
     <select id="getInaccountOrderByOrderIdAndCompanyId" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
-          <include refid="InaccountOrderColumns"/>,
-        c.name as companyName
+            <include refid="InaccountOrderColumns"/>,
+            <if test="orderType == '200'">
+                r.channel_name as companyName
+            </if>
+            <if test="orderType == '300'">
+                c.name as companyName
+            </if>
         from
           <include refid="tableName"/>
-        left join tb_company_inf c on o.company_id = c.company_id
+            <if test="orderType == '200'">
+                left join tb_retail_chnl_inf r on r.channel_id = o.provider_id
+            </if>
+            <if test="orderType == '300'">
+                left join tb_company_inf c on c.company_id = o.company_id
+            </if>
         where o.data_stat = '0'
         and o.order_id = #{orderId}
-        and o.company_id = #{companyId}
+        <if test="orderType == '200'">
+            and o.provider_id = #{providerId}
+        </if>
+        <if test="orderType == '300'">
+            and o.company_id = #{companyId}
+        </if>
+
     </select>
+
 </mapper>

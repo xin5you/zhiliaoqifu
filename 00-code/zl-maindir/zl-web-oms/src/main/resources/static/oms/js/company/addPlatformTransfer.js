@@ -1,37 +1,34 @@
 $(document).ready(function () {
-    addTelProviderInfTransfer.init();
+    addPlatformTransfer.init();
 })
 
-var addTelProviderInfTransfer = {
+var addPlatformTransfer = {
 
     init : function() {
-        addTelProviderInfTransfer.initEvent();
+        addPlatformTransfer.initEvent();
     },
 
     initEvent:function(){
-        $('.btn-addTransfer').on('click', addTelProviderInfTransfer.intoAddProviderTransfer);
-        $('.btn-add-submit').on('click', addTelProviderInfTransfer.addProviderTransfer);
-        $('#evidenceUrlFile').on('change', addTelProviderInfTransfer.fileUpload);
-        $('.btn-addTransferSubmit').on('click', addTelProviderInfTransfer.addProviderTransferCommit);
-        $('.btn-check').on('click', addTelProviderInfTransfer.intoUpdateProviderCheckStat);
-        $('.btn-checkStat-submit').on('click', addTelProviderInfTransfer.updateProviderCheckStatCommit);
-        $('.btn-remit').on('click', addTelProviderInfTransfer.intoAddProviderRemit);
-        $('.btn-remit-submit').on('click', addTelProviderInfTransfer.addProviderRemitCommit);
-        $('.btn-view').on('click', addTelProviderInfTransfer.viewProviderTransferDetail);
-        $('.btn-edit').on('click', addTelProviderInfTransfer.intoEditProviderTransfer);
-        $('.btn-edit-submit').on('click', addTelProviderInfTransfer.editProviderTransferCommit);
-        $('.btn-delete').on('click', addTelProviderInfTransfer.intoDeleteProviderTransfer);
-        $('.btn-delete-submit').on('click', addTelProviderInfTransfer.deleteProviderTransferCommit);
-        /*$('#remitAmt').on('change', addTelProviderInfTransfer.getInaccountAmtSum);*/
-        $(".evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
-        $("#evidenceUrlDiv").on('click', addTelProviderInfTransfer.showEvidenceUrlDiv);
+        $('.btn-addTransfer').on('click', addPlatformTransfer.intoAddPlatformTransfer);
+        $('.btn-add-submit').on('click', addPlatformTransfer.addPlatformTransfer);
+        $('#evidenceUrlFile').on('change', addPlatformTransfer.fileUpload);
+        $('.btn-addTransferSubmit').on('click', addPlatformTransfer.addPlatformTransferCommit);
+        $('.btn-check').on('click', addPlatformTransfer.intoUpdatePlatformCheckStat);
+        $('.btn-checkStat-submit').on('click', addPlatformTransfer.updatePlatformCheckStatCommit);
+        $('.btn-remit').on('click', addPlatformTransfer.intoAddPlatformRemit);
+        $('.btn-remit-submit').on('click', addPlatformTransfer.addPlatformRemitCommit);
+        $('.btn-view').on('click', addPlatformTransfer.viewPlatformTransferDetail);
+        $('.btn-edit').on('click', addPlatformTransfer.intoEditPlatformTransfer);
+        $('.btn-edit-submit').on('click', addPlatformTransfer.editPlatformTransferCommit);
+        $('.btn-delete').on('click', addPlatformTransfer.intoDeletePlatformTransfer);
+        $('.btn-delete-submit').on('click', addPlatformTransfer.deletePlatformTransferCommit);
+        $(".evidenceUrlDiv").on('click', addPlatformTransfer.showEvidenceUrlDiv);
+        $("#evidenceUrlDiv").on('click', addPlatformTransfer.showEvidenceUrlDiv);
     },
-    intoAddProviderTransfer : function() {
+    intoAddPlatformTransfer : function() {
         $("#addTransferFrom").get(0).reset();
-        var orderId = $(this).attr("orderId");
-        $("#orderId").val(orderId);
         $("#btn-submit").addClass("btn-add-submit");
-        $(".btn-add-submit").attr("onclick","addTelProviderInfTransfer.addProviderTransfer();");
+        $(".btn-add-submit").attr("onclick","addPlatformTransfer.addPlatformTransfer();");
         $("#commodityInfModal_h").text("添加入账信息");
         $('#addTransferModal').modal({
             backdrop : "static"
@@ -42,14 +39,14 @@ var addTelProviderInfTransfer = {
         var imgUrl = $("#evidenceUrlFile").val();
         $("#evidenceUrl").val(imgUrl);
     },
-    addProviderTransfer:function(){
-        var providerId = $("#providerId").val();
-        /*var remitAmt = $("#remitAmt").val();*/
+    addPlatformTransfer:function(){
+        var orderType = $("#orderType").val();
+        var companyId = $("#companyId").val();
         var evidenceUrl = $("#evidenceUrl").val();
-        var companyCode = $("#companyCode").val();
+        var channelId = $("#channelId").val();
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
-        var formula = $("#formula").val();
+        /*var formula = $("#formula").val();*/
         var A00 = $("#A00").val();
         var B01 = $("#B01").val();
         var B02 = $("#B02").val();
@@ -59,10 +56,10 @@ var addTelProviderInfTransfer = {
         var B06 = $("#B06").val();
         var B07 = $("#B07").val();
         var B08 = $("#B08").val();
-        if (formula == '' || formula == null) {
+        /*if (formula == '' || formula == null) {
             Helper.alert("请选择计算方式");
             return false;
-        }
+        }*/
         /*if(remitAmt=='' || remitAmt == '0'){
             Helper.alert("打款金额不能为空");
             return false;
@@ -71,8 +68,8 @@ var addTelProviderInfTransfer = {
             Helper.alert("打款凭证不能为空");
             return false;
         }
-        if(companyCode=='' || companyCode == '0'){
-            Helper.alert("请选择收款企业");
+        if(channelId=='' || channelId == '0'){
+            Helper.alert("请选择收款分销商");
             return false;
         }
         if(inaccountAmt == '' || inaccountAmt == '0'){
@@ -97,7 +94,7 @@ var addTelProviderInfTransfer = {
             return false;
         }*/
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/addProviderTransfer.do',
+            url: Helper.getRootPath() + '/company/addPlatformTransfer.do',
             type: 'post',
             data: new FormData($("#addTransferFrom")[0]),
             processData: false,
@@ -107,7 +104,7 @@ var addTelProviderInfTransfer = {
             dataType : "json",
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
+                    location = Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType="+orderType;
                 } else {
                     Helper.alert(result.msg);
                     return false;
@@ -118,23 +115,24 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    addProviderTransferCommit : function () {
+    addPlatformTransferCommit : function () {
         var orderId = $(this).attr("orderId");
-        var providerId = $('#providerId').val();
+        var companyId = $('#companyId').val();
+        var orderType = $('#orderType').val();
         $('#msg').modal({
             backdrop : "static"
         });
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/addProviderTransferCommit.do',
+            url: Helper.getRootPath() + '/company/addPlatformTransferCommit.do',
             type: 'post',
             dataType : "json",
             data: {
                 "orderId": orderId,
-                "providerId": providerId
+                "companyId": companyId
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
+                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType="+orderType;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -148,30 +146,31 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    intoUpdateProviderCheckStat : function () {
+    intoUpdatePlatformCheckStat : function () {
         var orderId = $(this).attr("orderId");
         $("#checkStatOrderId").val(orderId);
         $('#updateCheckStatModal').modal({
             backdrop : "static"
         });
     },
-    updateProviderCheckStatCommit : function () {
+    updatePlatformCheckStatCommit : function () {
         var orderId = $("#checkStatOrderId").val();
-        var providerId = $('#providerId').val();
+        var companyId = $('#companyId').val();
+        var orderType = $('#orderType').val();
         $('#msg').modal({
             backdrop : "static"
         });
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/updateProviderCheckStatCommit.do',
+            url: Helper.getRootPath() + '/company/updatePlatformCheckStatCommit.do',
             type: 'post',
             dataType : "json",
             data: {
                 "orderId": orderId,
-                "providerId": providerId
+                "companyId": companyId
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
+                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType="+orderType;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -185,30 +184,31 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    intoAddProviderRemit : function () {
+    intoAddPlatformRemit : function () {
         var orderId = $(this).attr("orderId");
         $('#order_id').val(orderId);
         $('#addRemitModal').modal({
             backdrop : "static"
         });
     },
-    addProviderRemitCommit : function () {
+    addPlatformRemitCommit : function () {
         var orderId = $('#order_id').val();
-        var providerId = $('#providerId').val();
+        var companyId = $('#companyId').val();
+        var orderType = $('#orderType').val();
         $('#msg').modal({
             backdrop : "static"
         });
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/updateProviderRemitStatCommit.do',
+            url: Helper.getRootPath() + '/company/updatePlatformRemitStatCommit.do',
             type: 'post',
             dataType : "json",
             data: {
                 "orderId": orderId,
-                "providerId": providerId
+                "companyId": companyId
             },
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
+                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType="+orderType;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -222,18 +222,18 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    viewProviderTransferDetail : function () {
+    viewPlatformTransferDetail : function () {
         var orderId = $(this).attr("orderId");
-        var url = Helper.getRootPath()+"/provider/providerInf/viewProviderTransferDetail.do?orderId="+orderId;
+        var url = Helper.getRootPath()+"/company/viewPlatformTransferDetail.do?orderId="+orderId;
         location.href=url;
     },
-    intoEditProviderTransfer : function () {
+    intoEditPlatformTransfer : function () {
         $("#addTransferFrom").get(0).reset();
         $("#evidenceUrlDiv").show();
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/intoEditProviderTransfer.do',
+            url: Helper.getRootPath() + '/company/intoEditPlatformTransfer.do',
             type: 'post',
             dataType : "json",
             data: {
@@ -243,14 +243,13 @@ var addTelProviderInfTransfer = {
                 if(data.status){
                     /*$("#remitAmt").val(data.order.remitAmt);*/
                     $("#inaccountAmt").val(data.order.inaccountSumAmt);
-                    $("#companyCode").val(data.order.companyId);
+                    $("#channelId").val(data.order.providerId);
                     $("#evidenceUrlImg").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
                     $("#evidenceUrlDiv").attr("evidenceImage", data.order.evidenceUrl);
                     $("#evidenceUrl").val(data.order.evidenceUrl);
                     $("#remarks").val(data.order.remarks);
-                    $("#formula").val(data.order.formula);
                     $.each(data.orderDetail, function (i, item) {
-                        $('.span3[id=' + item.bid + ']').val(item.inaccountAmt);
+                        $('.span3[id=' + item.bid + ']').val(item.transAmt);
                     });
                 }else{
                     Helper.alter(data.msg);
@@ -263,21 +262,20 @@ var addTelProviderInfTransfer = {
             }
         });
         $("#btn-submit").addClass("btn-edit-submit");
-        $(".btn-edit-submit").attr("onclick","addTelProviderInfTransfer.editProviderTransferCommit();");
+        $(".btn-edit-submit").attr("onclick","addPlatformTransfer.editPlatformTransferCommit();");
         $("#commodityInfModal_h").text("编辑入账信息");
         $('#addTransferModal').modal({
             backdrop : "static"
         });
     },
-    editProviderTransferCommit : function () {
+    editPlatformTransferCommit : function () {
+        var orderType = $("#orderType").val();
         var orderId = $("#orderId").val();
-        var providerId = $("#providerId").val();
-        /*var remitAmt = $("#remitAmt").val();*/
+        var companyId = $("#companyId").val();
         var evidenceUrl = $("#evidenceUrl").val();
-        var companyCode = $("#companyCode").val();
+        var channelId = $("#channelId").val();
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
-        var formula = $("#formula").val();
         var A00 = $("#A00").val();
         var B01 = $("#B01").val();
         var B02 = $("#B02").val();
@@ -287,20 +285,12 @@ var addTelProviderInfTransfer = {
         var B06 = $("#B06").val();
         var B07 = $("#B07").val();
         var B08 = $("#B08").val();
-        if (formula == '' || formula == null) {
-            Helper.alert("请选择计算方式");
-            return false;
-        }
-        /*if(remitAmt=='' || remitAmt == '0'){
-            Helper.alert("打款金额不能为空");
-            return false;
-        }*/
         if(evidenceUrl==''){
             Helper.alert("打款凭证不能为空");
             return false;
         }
-        if(companyCode==''){
-            Helper.alert("企业识别为空");
+        if(channelId==''){
+            Helper.alert("请选择收款分销商");
             return false;
         }
         if(inaccountAmt == '' || inaccountAmt == '0'){
@@ -311,21 +301,13 @@ var addTelProviderInfTransfer = {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
         }
-        /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
-            Helper.alert("上账金额不能大于打款金额");
-            return false;
-        }*/
         var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
         if ((sum - 0) != (inaccountAmt - 0)) {
             Helper.alert("所有专项金额总和必须等于上账金额");
             return false;
         }
-        /*if ((sum - 0) != (remitAmt - 0)) {
-            Helper.alert("所有专项金额总和必须等于打款金额");
-            return false;
-        }*/
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/editProviderTransfer.do',
+            url: Helper.getRootPath() + '/company/editPlatformTransfer.do',
             type: 'post',
             data: new FormData($("#addTransferFrom")[0]),
             processData: false,
@@ -333,10 +315,9 @@ var addTelProviderInfTransfer = {
             async: false,
             cache: false,
             dataType : "json",
-
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=1&providerId_='+providerId;
+                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType="+orderType;
                 } else {
                     Helper.alert(result.msg);
                     return false;
@@ -347,18 +328,19 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    intoDeleteProviderTransfer : function () {
+    intoDeletePlatformTransfer : function () {
         var orderId = $(this).attr("orderId");
         $("#transferOrderId").val(orderId);
         $('#deleteTransferModal').modal({
             backdrop : "static"
         });
     },
-    deleteProviderTransferCommit : function () {
+    deletePlatformTransferCommit : function () {
         var orderId = $("#transferOrderId").val();
-        var providerId = $("#providerId").val();
+        var companyId = $("#companyId").val();
+        var orderType = $("#orderType").val();
         $.ajax({
-            url: Helper.getRootPath() + '/provider/providerInf/deleteProviderTransfer.do',
+            url: Helper.getRootPath() + '/company/deletePlatformTransfer.do',
             type: 'post',
             dataType : "json",
             data: {
@@ -366,7 +348,7 @@ var addTelProviderInfTransfer = {
             },
             success: function (result) {
                 if(result.status) {
-                    location = Helper.getRootPath() + '/provider/providerInf/intoAddProviderTransfer.do?operStatus=4&providerId_='+providerId;
+                    location.href=Helper.getRootPath() + '/company/intoAddCompanyTransfer.do?operStatus=1&companyId='+companyId+"&orderType="+orderType;
                 } else {
                     Helper.alert(result.msg);
                     return false;
@@ -377,14 +359,6 @@ var addTelProviderInfTransfer = {
             }
         });
     },
-    /*getInaccountAmtSum: function () {
-        var remitAmt = $("#remitAmt").val();
-        var providerRate = $("#providerRate").val();
-        var fee = 1 + parseFloat(providerRate);
-        var inaccountAmt = (parseFloat(remitAmt)/parseFloat(fee)).toFixed(4);
-        inaccountAmt = Math.round(inaccountAmt * 100) / 100;
-        $("#inaccountAmt").val(inaccountAmt);
-    },*/
     showEvidenceUrlDiv : function () {
        var image = $(this).attr("evidenceImage");
        $("#bigImage").attr("src","data:image/jpg;base64,"+image);

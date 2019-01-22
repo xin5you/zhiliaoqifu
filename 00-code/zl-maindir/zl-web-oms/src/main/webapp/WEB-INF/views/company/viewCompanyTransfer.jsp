@@ -22,7 +22,7 @@
 								<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
 								<li>企业信息列表</li>
 								<li>打款管理</li>
-								<li><a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}">打款信息列表</a></li>
+								<li><a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}&orderType=300">打款信息列表</a></li>
 								<li>打款明细列表</li>
 			                </ul>
 			            </div>
@@ -109,8 +109,8 @@
                                      </td>
                                      <td>${entity.invoiceInfo}</td>
 									 <td>
-											 <c:if test="${order.transferCheck == '1' && order.platformReceiverCheck == '1' && order.companyReceiverCheck == '0' && company.isPlatform == '1'}">
-                                                 <sec:authorize access="hasRole('ROLE_PLATFORM_EDIT_INAMT')">
+										<c:if test="${order.transferCheck == '1' && order.platformReceiverCheck == '1' && order.companyReceiverCheck == '0' && company.isPlatform == '1'}">
+											 <sec:authorize access="hasRole('ROLE_PLATFORM_EDIT_INAMT')">
 												 <a orderListId="${entity.orderListId}" title="编辑企业收款金额" class="btn-mini btn-edit-inAmt" href="#"><i class="icon-edit"></i></a>
 											 </sec:authorize>
 										 </c:if>
@@ -127,7 +127,7 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                      <a href="${ctx }/company/listCompany.do"><button class="btn btn-primary" type="button">返 回</button></a>
+                      <a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}&orderType=300"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
 			   </div>

@@ -1,10 +1,12 @@
 package com.ebeijia.zl.web.oms.common.service;
 
 import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 public interface CommonService {

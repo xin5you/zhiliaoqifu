@@ -41,6 +41,9 @@
 		<if test="channelName != null and channelName != '' ">
 			and channel_name like "%"#{channelName}"%"
 		</if>
+		<if test="isOpen != null and isOpen != '' ">
+			and is_open == #{isOpen}
+		</if>
 		order by update_time desc
 	</select>
 
@@ -51,5 +54,5 @@
 		where data_stat='0'
 			and law_code = #{lawCode}
 	</select>
-	
+
 </mapper>
