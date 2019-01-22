@@ -17,6 +17,9 @@ import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
+import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
@@ -27,7 +30,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ebeijia.zl.basics.system.domain.User;
@@ -48,6 +53,9 @@ public class CompanyController {
 
 	@Autowired
 	private CompanyInfFacade companyInfFacade;
+
+	@Autowired
+	private RetailChnlInfFacade retailChnlInfFacade;
 
 	@Autowired
 	private CompanyService companyService;
@@ -238,25 +246,39 @@ public class CompanyController {
 
 	@RequestMapping(value = "/intoAddCompanyTransfer")
 	public ModelAndView intoAddCompanyTransfer(HttpServletRequest req, HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("company/addCompanyTransfer");
+		ModelAndView mv = null;
 		String companyId = req.getParameter("companyId");
-		CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+		String orderType = req.getParameter("orderType");
 
 		InaccountOrder order = new InaccountOrder();
-		order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
-		if (IsPlatformEnum.IsPlatformEnum_0.getCode().equals(company.getIsPlatform())) {
+		if (UserType.TYPE200.getCode().equals(orderType)) {
+			order.setOrderType(UserType.TYPE200.getCode());
 			order.setCompanyId(companyId);
+			mv = new ModelAndView("company/addPlatformTransfer");
+		} else if (UserType.TYPE300.getCode().equals(orderType)) {
+			order.setTransferCheck(TransferCheckEnum.INACCOUNT_TRUE.getCode());
+			order.setOrderType(UserType.TYPE300.getCode());
+			mv = new ModelAndView("company/addCompanyTransfer");
 		}
+
 		try {
+			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+			if (IsPlatformEnum.IsPlatformEnum_0.getCode().equals(company.getIsPlatform())) {
+				order.setCompanyId(companyId);
+			}
+			RetailChnlInf retail = new RetailChnlInf();
+			retail.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
+			List<RetailChnlInf> retailList = retailChnlInfFacade.getRetailChnlInfList(retail);
 			int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
 			PageInfo<InaccountOrder> pageList = inaccountOrderService.getInaccountOrderByOrderPage(startNum, pageSize, order);
+			mv.addObject("company", company);
+			mv.addObject("retailList", retailList);
 			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			logger.error("## 查询打款订单信息详情异常", e);
 		}
-
-		mv.addObject("company", company);
+		mv.addObject("order", order);
 		return mv;
 	}
 
@@ -282,6 +304,12 @@ public class CompanyController {
 		return resultMap;
 	}
 
+	/**
+	 * 跳转平台/企业收款明细页
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "viewCompanyTransferDetail")
 	public ModelAndView viewCompanyTransferDetail(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("company/viewCompanyTransfer");
@@ -294,7 +322,11 @@ public class CompanyController {
 		if (IsPlatformEnum.IsPlatformEnum_0.getCode().equals(company.getIsPlatform())) {
 			inaccountOrder.setCompanyId(company.getCompanyId());
 		}
-		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderId);
+
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE300.getCode());
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 		if (order != null) {
 			order.setCheckStatName(CheckStatEnum.findByBId(order.getCheckStat()).getName());
 			order.setRemitCheckName(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
@@ -322,6 +354,12 @@ public class CompanyController {
 		return mv;
 	}
 
+	/**
+	 * 企业开票提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addCompanyInvoiceCommit")
 	@ResponseBody
 	public Map<String, Object> addCompanyInvoiceCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -601,5 +639,266 @@ public class CompanyController {
 		return mv;
 	}
 
+	/**
+	 * 新增平台上账信息（转账至分销商）
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
+	@RequestMapping(value = "/addPlatformTransfer")
+	@ResponseBody
+	public Map<String, Object> addPlatformTransfer(HttpServletRequest req, HttpServletResponse response,
+												   @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		try {
+			CompanyInf companyInf = companyInfFacade.getCompanyInfById(companyId);
+			if (companyInf == null || companyInf.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，平台信息不存在或未开户");
+				return resultMap;
+			}
+			resultMap = companyService.addPlatformTransfer(req, evidenceUrlFile);
+		} catch (Exception e) {
+			logger.error(" ## 添加平台上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "添加平台上账信息失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
 
+	/**
+	 * 跳转编辑平台上账信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/intoEditPlatformTransfer")
+	@ResponseBody
+	public Map<String, Object> intoEditPlatformTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE200.getCode());
+		try {
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(order.getProviderId());
+			if (order != null) {
+				order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+				order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
+				if (!StringUtil.isNullOrEmpty(order.getEvidenceUrl())) {
+					String imgUrl = commonService.getImageStrFromPath(order.getEvidenceUrl());
+					if (!StringUtil.isNullOrEmpty(imgUrl)) {
+						order.setEvidenceUrl(imgUrl);
+					} else {
+						order.setEvidenceUrl("");
+					}
+				}
+			}
+			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+			if (orderDetail != null && orderDetail.size() >= 1) {
+				for (InaccountOrderDetail d : orderDetail) {
+					d.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getTransAmt().toString())));
+					d.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getInaccountAmt().toString())));
+				}
+			}
+			resultMap.put("order", order);
+			resultMap.put("orderDetail", orderDetail);
+		} catch (Exception e) {
+			logger.error("## 编辑---》查询平台上账信息异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询平台上账信息异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 编辑平台上账信息提交
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
+	@RequestMapping(value = "/editPlatformTransfer")
+	@ResponseBody
+	public Map<String, Object> editPlatformTransfer(HttpServletRequest req, HttpServletResponse response,
+													@RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		try {
+			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
+			if (retailChnlInf == null || retailChnlInf.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，该分销商不存在或未开户");
+				return resultMap;
+			}
+			resultMap = companyService.editPlatformTransfer(req, evidenceUrlFile);
+		} catch (Exception e) {
+			logger.error(" ## 编辑平台上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑平台上账信息失败，请稍后再试");
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 新增平台上账信息提交（调用充值接口）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/addPlatformTransferCommit")
+	@ResponseBody
+	public Map<String, Object> addPlatformTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		try {
+			resultMap = companyService.addPlatformTransferCommit(req);
+		} catch (Exception e) {
+			logger.error("## 平台上账异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "平台上账失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 更新上账审核状态
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePlatformCheckStatCommit")
+	@ResponseBody
+	public Map<String, Object> updatePlatformCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE200.getCode());
+
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+		order.setCheckStat(CheckStatEnum.CHECK_TRUE.getCode());
+		order.setUpdateUser(user.getId());
+		order.setUpdateTime(System.currentTimeMillis());
+		order.setLockVersion(order.getLockVersion() + 1);
+
+		if (!inaccountOrderService.updateById(order)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "更新上账信息审核状态失败，请稍后再试");
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 查询平台上账订单信息（根据订单ID查询）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/getPlatformByOrderId")
+	@ResponseBody
+	public Map<String, Object> getPlatformByOrderId(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE200.getCode());
+		try {
+			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+			if (order != null) {
+				resultMap.put("msg", order);
+			} else {
+				resultMap.put("status", Boolean.FALSE);
+			}
+		} catch (Exception e) {
+			logger.error("## 查询平台订单异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 更新平台上账订单打款状态（打给分销商）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePlatformRemitStatCommit")
+	@ResponseBody
+	public Map<String, Object> updatePlatformRemitStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+		try {
+			resultMap = companyService.updatePlatformRemitStatCommit(req);
+		} catch (Exception e) {
+			logger.error("## 平台{}打款至分销商账户发生异常", companyId, e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 跳转平台上账明细
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "viewPlatformTransferDetail")
+	public ModelAndView viewPlatformTransferDetail(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("company/viewPlatformTransfer");
+
+		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
+
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE200.getCode());
+		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+		if (order != null) {
+			order.setCheckStatName(CheckStatEnum.findByBId(order.getCheckStat()).getName());
+			order.setRemitCheckName(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
+			order.setInaccountCheckName(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
+			order.setTransferCheckName(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			order.setPlatformReceiverCheckName(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
+			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
+			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
+			order.setPlatformInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getPlatformInSumAmt().toString())));
+			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));
+		}
+		try {
+			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+			InaccountOrderDetail orderDetail = new InaccountOrderDetail();
+			orderDetail.setOrderId(orderId);
+			PageInfo<InaccountOrderDetail> pageList = inaccountOrderDetailService.getInaccountOrderDetailByOrderPage(startNum, pageSize, orderDetail);
+			mv.addObject("pageInfo", pageList);
+		} catch (Exception e) {
+			logger.error("## 查询企业上账订单明细信息详情异常", e);
+		}
+		mv.addObject("order", order);
+		return mv;
+	}
 }

@@ -25,14 +25,12 @@ public interface RetailChnlInfService {
 	 * @return
 	 */
 	boolean addRetailChnlRate(HttpServletRequest req, String channelId, String channelRate, String ids);
-	
+
+	/**
+	 * 分销商开户
+	 * @param req
+	 * @return
+	 */
 	int retailChnlOpenAccount(HttpServletRequest req);
 
-	Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
-
-	int addRetailChnlTransferCommit(HttpServletRequest req);
-
-	Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
-
-	Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req);
 }

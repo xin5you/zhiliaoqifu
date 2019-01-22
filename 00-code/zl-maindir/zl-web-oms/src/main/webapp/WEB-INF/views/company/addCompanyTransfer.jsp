@@ -26,7 +26,7 @@
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="pageMainForm" action="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}" class="form-inline form_validation_tip" method="post">
+					<form id="pageMainForm" action="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}&orderType=300" class="form-inline form_validation_tip" method="post">
 						<h3 class="heading">打款信息列表</h3>
 						
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >

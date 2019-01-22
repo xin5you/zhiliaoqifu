@@ -71,8 +71,8 @@ public class InaccountOrderServiceImpl extends ServiceImpl<InaccountOrderMapper,
     }
 
     @Override
-    public InaccountOrder getInaccountOrderByOrderId(String orderId) {
-        return inaccountOrderMapper.getInaccountOrderByOrderId(orderId);
+    public InaccountOrder getInaccountOrderByOrderId(InaccountOrder inaccountOrder) {
+        return inaccountOrderMapper.getInaccountOrderByOrderId(inaccountOrder);
     }
 
     @Override

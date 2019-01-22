@@ -11,7 +11,6 @@ var listCompany = {
     },
 
     initEvent:function(){
-
         $('.btn-edit').on('click', listCompany.intoEditcompany);
         $('.btn-delete').on('click', listCompany.deleteCompanyCommit);
         $('.btn-add').on('click', listCompany.intoAddcompany);
@@ -23,6 +22,7 @@ var listCompany = {
         $('.btn-accbal').on('click', listCompany.listCompanyAccBal);
         $('.btn-invoice').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-add-fee').on('click', listCompany.intoAddCompanyFee);
+        $('.btn-platform-InAccount').on('click', listCompany.intoAddPlatformTransfer);
     },
     searchReset:function(){
         location = Helper.getRootPath() + '/company/listCompany.do';
@@ -102,7 +102,7 @@ var listCompany = {
     },
     intoAddCompanyTransfer:function(){
         var companyId = $(this).attr('companyId');
-        var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId;
+        var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId+"&orderType=300";
         location.href=url;
     },
     listCompanyAccBal : function () {
@@ -113,6 +113,11 @@ var listCompany = {
     intoAddCompanyFee : function () {
         var companyId = $(this).attr('companyId');
         var url = Helper.getRootPath()+"/company/listCompanyFee.do?companyId="+companyId;
+        location.href=url;
+    },
+    intoAddPlatformTransfer : function () {
+        var companyId = $(this).attr('companyId');
+        var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId+"&orderType=200";
         location.href=url;
     }
 }
