@@ -13,6 +13,7 @@ import com.ebeijia.zl.core.withdraw.suning.config.YFBWithdrawConfig;
 import com.ebeijia.zl.core.withdraw.suning.core.BatchWithdrawData;
 import com.ebeijia.zl.core.withdraw.suning.vo.WithdrawBodyVO;
 import com.ebeijia.zl.core.withdraw.suning.vo.WithdrawDetailDataVO;
+import com.ebeijia.zl.facade.account.req.AccountFrozenReqVo;
 import com.ebeijia.zl.facade.account.req.AccountOpenReqVo;
 import com.ebeijia.zl.facade.account.req.AccountWithDrawReqVo;
 import com.ebeijia.zl.facade.account.service.AccountManageFacade;
@@ -41,7 +42,7 @@ public class WithdrawTest {
     @Autowired
     private AccountTransactionFacade accountTransactionFacade;
 
-    @Test
+/*    @Test
    public void toWithDraw() throws Exception{
 
         AccountWithDrawReqVo reqVo=new AccountWithDrawReqVo();
@@ -67,5 +68,25 @@ public class WithdrawTest {
         System.out.println("dmsRelateKey-->"+dmsRelateKey);
         System.out.println(JSONArray.toJSONString(result));
 
-   }
+   }*/
+
+    @Test
+    public void commitUnFrozen() throws Exception{
+
+        AccountFrozenReqVo reqVo=new AccountFrozenReqVo();
+        String dmsRelateKey=IdUtil.getNextId();
+        reqVo.setTransId(TransCode.CW93.getCode());
+        reqVo.setTransChnl(TransChnl.CHANNEL5.toString());
+        reqVo.setUserId("59018a31-80bf-41ce-a7b6-f043258f543d");
+        reqVo.setUserType(UserType.TYPE100.getCode());
+        reqVo.setDmsRelatedKey(dmsRelateKey);
+        reqVo.setTransAmt(new BigDecimal(1));
+        reqVo.setUploadAmt(new BigDecimal(1));
+        reqVo.setPriBId(SpecAccountTypeEnum.A01.getbId());
+        reqVo.setOrgItfPrimaryKey("b1bac3e4-e59b-44ca-81f2-16cc76f9bb28");
+        BaseResult result= accountTransactionFacade.executeUnFrozen(reqVo);
+        System.out.println("dmsRelateKey-->"+dmsRelateKey);
+        System.out.println(JSONArray.toJSONString(result));
+
+    }
 }

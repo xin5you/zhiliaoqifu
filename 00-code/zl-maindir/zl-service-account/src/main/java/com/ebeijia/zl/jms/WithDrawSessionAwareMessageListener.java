@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.core.rocketmq.enums.RocketTopicEnums;
@@ -96,16 +97,7 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
             //提现交易开关
             String switchFlag=jedisClusterUtils.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,"WITHDRAW_SWITCH_FLAG");
 
-            //请求扣款
-            boolean debflag=false;
-            try {
-                 debflag = accountWithdrawTxnService.doWithdrowForMchtA01(accountWithdrawOrder);
-            }catch (Exception ex){
-                logger.error("用户提现，知了平台账户转供应商账户,批次号->{}",accountWithdrawOrder.getBatchNo());
-                debflag=false;
-            }
-
-            if("Y1".equals(switchFlag) && debflag) {
+            if("Y".equals(switchFlag)) {
 
                 WithdrawBodyVO bodyVO = new WithdrawBodyVO();
                 bodyVO.setBatchNo(accountWithdrawOrder.getBatchNo());
@@ -142,15 +134,14 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
                     accountWithdrawOrder.setErrorCode("99999");
                 }
             }
-
             try {
                 if (!"0000".equals(accountWithdrawOrder.getErrorCode())) {
-                    accountWithdrawTxnService.doRefundAllForMchtA01ByZl(accountWithdrawOrder);
+                    //受理失败，冻结撤销
+                    accountWithdrawTxnService.doFrozenWithDrawByUser(accountWithdrawOrder,TransCode.CW93.getCode());
                 }
             } catch (Exception ex) {
                 logger.error("#退款请求异常->{}", ex);
             }
-
             accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status04.getCode());
             accountWithdrawOrderService.updateById(accountWithdrawOrder);
         }

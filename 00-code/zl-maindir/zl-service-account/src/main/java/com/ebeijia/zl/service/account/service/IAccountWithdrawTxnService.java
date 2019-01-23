@@ -2,6 +2,7 @@ package com.ebeijia.zl.service.account.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 
 /**
@@ -14,17 +15,21 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 public interface IAccountWithdrawTxnService  {
 
     /**
-     *  提现扣款  知了平台转供应商账户
+     *  解冻 请求
      * @param accountWithdrawOrder
+     * @param  transCode
      * @return
      */
-    boolean doWithdrowForMchtA01(AccountWithdrawOrder accountWithdrawOrder) throws Exception;
+    boolean doFrozenWithDrawByUser(AccountWithdrawOrder accountWithdrawOrder,String transCode) throws Exception;
 
 
     /**
-     *  提现退款  商户按批次全额退款
+     *  解冻 请求
      * @param accountWithdrawOrder
+     * @param  detail
+     * @param  transCode
      * @return
      */
-    boolean doRefundAllForMchtA01ByZl(AccountWithdrawOrder accountWithdrawOrder) throws Exception;
+    boolean doFrozenWithDrawDetailByUser(AccountWithdrawOrder accountWithdrawOrder, AccountWithdrawDetail detail, String transCode) throws Exception;
+
 }

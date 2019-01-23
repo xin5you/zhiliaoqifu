@@ -12,6 +12,7 @@ import com.ebeijia.zl.core.withdraw.suning.vo.BatchDataNotify;
 import com.ebeijia.zl.core.withdraw.suning.vo.Content;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.service.AccountWithDrawOrderFacade;
+import com.ebeijia.zl.web.api.model.withdraw.service.BizAccountWithdrawOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class WithdrawController {
 	@Autowired
 	private BatchWithdrawData batchWithdrawData;
 
+	@Autowired
+	private BizAccountWithdrawOrderService bizAccountWithdrawOrderService;
+
 	/**
 	 * 代付异步回调
 	 * 
@@ -75,9 +79,13 @@ public class WithdrawController {
 			logger.info("易付宝回调请求参数 延签失败 return ->{}",false);
 			return false;
 		}
-		/*String batchNo=content.getBatchNo();
-		AccountWithdrawOrder accountWithdrawOrder=accountWithDrawOrderFacade.getAccountWithdrawOrderById(batchNo);*/
-		return true;
+		try {
+			boolean res = bizAccountWithdrawOrderService.YFBBatchWithdrawNotify(content);
+			return res;
+		}catch (Exception ex){
+			logger.info("代付回调远程调用平台接口返回==========>[{}]", ex);
+			return false;
+		}
 	}
 	
 	@RequestMapping(value = "/suning-yfb/withdrawQuery", method = RequestMethod.POST)
