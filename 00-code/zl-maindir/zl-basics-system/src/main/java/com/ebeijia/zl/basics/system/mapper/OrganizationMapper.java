@@ -17,5 +17,5 @@ import com.ebeijia.zl.basics.system.domain.Organization;
 @Mapper
 public interface OrganizationMapper extends BaseMapper<Organization> {
 
-    List<Organization> getOrganizationList(Organization entity);
+
 }

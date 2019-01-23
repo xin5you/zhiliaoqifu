@@ -30,14 +30,14 @@
 						          <div class="control-group">
 						             <label class="control-label">部门名称</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="name" name="name" value="${organ.name }" />
+						                 <input type="text" class="span6" id="name" name="name" value="${organ.name }" maxlength="125"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
 						             <label class="control-label">部门编码</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="code" name="code" value="${organ.code }"/>
+						                 <input type="text" class="span6" id="code" name="code" value="${organ.code }" maxlength="125"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
@@ -45,8 +45,8 @@
 						         <div class="control-group">
 						             <label class="control-label">排序</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="seq" name="seq" value="${organ.seq }" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
-						                 <span class="help-block" style="color: red;">请输入整数</span>
+						                 <input type="text" class="span6" id="seq" name="seq" value="${organ.seq }" maxlength="5" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         
@@ -54,7 +54,7 @@
 						             <label class="control-label">上级类型</label>
 						             <div class="controls">
 						                  <select class="form-control span6" id="pid" name="pid">
-						                 	 <option value="0" selected="selected">请选择部门类型</option>
+						                 	 <option value="0" selected="selected">请选择所属部门</option>
 											 <c:forEach var="dl" items="${entityList}" varStatus="st">
 											 		<option value="${dl.id}" <c:if test="${organ.pid==dl.id }">selected="selected"</c:if>>${dl.name }</option>
 											 </c:forEach>

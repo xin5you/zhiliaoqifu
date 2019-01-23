@@ -20,12 +20,12 @@
 		 lock_version
 	</sql>
 
-	<select id="getOrganizationList" parameterType="Organization" resultType="Organization">
+	<!--<select id="getOrganizationList" parameterType="Organization" resultType="Organization">
 		SELECT 
 	  		<include refid="OrganizationColumns" />
 	  			from tb_web_organization
 	  			where find_in_set(id, getOrganizationChild('0'))
 	  			and data_stat = '0'
-	</select>
+	</select>-->
 	
 </mapper>

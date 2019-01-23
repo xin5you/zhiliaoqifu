@@ -2,6 +2,9 @@ package com.ebeijia.zl.basics.system.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ebeijia.zl.basics.system.domain.Resource;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,9 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
 
     @Override
     public List<Organization> getOrganizationList(Organization entity) {
-        return organizationMapper.getOrganizationList(entity);
+        QueryWrapper<Organization> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
+        queryWrapper.orderByAsc("seq");
+        return organizationMapper.selectList(queryWrapper);
     }
 }

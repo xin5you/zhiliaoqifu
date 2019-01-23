@@ -177,8 +177,9 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				list.add(o);
 			}
 		} else if (TransCode.MB80.getCode().equals(orderType)) {
-			for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
-				if (!SpecAccountTypeEnum.A01.getbId().equals(t.getbId())) {
+			//企业账户A类和B类全开，供应商和分销商账户除了托管账户其他全开
+			if (UserType.TYPE200.getCode().equals(accountType)) {
+				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
 					for (BatchOrderList orderList : personInfList) {
 						BatchOrderList o = new BatchOrderList();
 						o.setOrderListId(IdUtil.getNextId());
@@ -194,6 +195,27 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 						o.setCreateTime(System.currentTimeMillis());
 						o.setUpdateTime(System.currentTimeMillis());
 						list.add(o);
+					}
+				}
+			} else {
+				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
+					if (!SpecAccountTypeEnum.A01.getbId().equals(t.getbId())) {
+						for (BatchOrderList orderList : personInfList) {
+							BatchOrderList o = new BatchOrderList();
+							o.setOrderListId(IdUtil.getNextId());
+							o.setOrderId(order.getOrderId());
+							o.setUserName(orderList.getUserName());
+							o.setPhoneNo(orderList.getPhoneNo());
+							o.setUserCardNo(orderList.getUserCardNo());
+							o.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
+							o.setAccountType(accountType);
+							o.setBizType(t.getbId());
+							o.setCreateUser(order.getCreateUser());
+							o.setUpdateUser(order.getUpdateUser());
+							o.setCreateTime(System.currentTimeMillis());
+							o.setUpdateTime(System.currentTimeMillis());
+							list.add(o);
+						}
 					}
 				}
 			}

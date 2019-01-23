@@ -16,6 +16,12 @@ import com.github.pagehelper.PageInfo;
  */
 public interface ResourceService extends IService<Resource> {
 
+    /**
+     * 根据资源key查询资源信息
+     * @param key
+     * @param loginType
+     * @return
+     */
     Resource getResourceByKey(String key, String loginType);
 
     //根据角色Id获取该用户的权限
@@ -35,6 +41,13 @@ public interface ResourceService extends IService<Resource> {
      */
     List<Resource> getResourceList(Resource entity);
 
+    /**
+     * 查询资源信息列表（分页）
+     * @param startNum
+     * @param pageSize
+     * @param entity
+     * @return
+     */
     PageInfo<Resource> getResourcePage(int startNum, int pageSize, Resource entity);
 
     /**
@@ -42,6 +55,27 @@ public interface ResourceService extends IService<Resource> {
      * @param resource
      * @return
      */
-    List<Resource> getResourceListByResource(Resource resource);
+    /*List<Resource> getResourceListByResource(Resource resource);*/
+
+    /**
+     * 根据序号查询资源信息
+     * @param seq
+     * @return
+     */
+    Resource getResourceBySeq(Integer seq);
+
+    /**
+     * 查询pid为空的资源信息
+     * @param entity
+     * @return
+     */
+    List<Resource> getResourceListByPidIsNull(Resource entity);
+
+    /**
+     * 根据pid与资源类型查询
+     * @param entity
+     * @return
+     */
+    List<Resource> getResourceListByPidAndType(Resource entity);
 
 }

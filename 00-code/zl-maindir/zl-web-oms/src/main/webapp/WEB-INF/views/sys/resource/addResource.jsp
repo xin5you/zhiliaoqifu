@@ -28,14 +28,14 @@
 						         <div class="control-group">
 						             <label class="control-label">资源名称<span style="color:red">*</span></label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="name" name="name" />
+						                 <input type="text" class="span6" id="name" name="name" maxlength="125"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						          <div class="control-group">
 						             <label class="control-label">资源KEY<span style="color:red">*</span></label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="key" name="key"/>
+						                 <input type="text" class="span6" id="key" name="key" maxlength="32"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
@@ -53,14 +53,14 @@
 						         <div class="control-group">
 						             <label class="control-label">资源路径</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="url" name="url"/>
+						                 <input type="text" class="span6" id="url" name="url" maxlength="125"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
 						             <label class="control-label">排序<span style="color:red">*</span></label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="seq" name="seq" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+						                 <input type="text" class="span6" id="seq" name="seq" maxlength="5" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
@@ -68,7 +68,7 @@
 						         <div class="control-group">
 						             <label class="control-label">菜单图标</label>
 						             <div class="controls">
-						                 <input type="text" class="span6" id="icon" name="icon"/>
+						                 <input type="text" class="span6" id="icon" name="icon" maxlength="125"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
@@ -88,7 +88,7 @@
 						             <label class="control-label">上级资源</label>
 						             <div class="controls">
 						                  <select class="form-control span6" id="pid" name="pid">
-						                 	 <option value="0" selected="selected">请选择资源目录</option>
+						                 	 <option value="" selected="selected">请选择资源目录</option>
 											 <c:forEach var="rs" items="${resourceList}" varStatus="st">
 											 		<option value="${rs.id}" <c:if test="${rs.id==parantRes.id }">selected="selected"</c:if>>${rs.resourceName }</option>
 											 </c:forEach>

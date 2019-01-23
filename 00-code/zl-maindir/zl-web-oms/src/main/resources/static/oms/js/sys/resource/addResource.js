@@ -23,12 +23,14 @@ var addResource = {
             rules:{
             	name: { required: true},
             	key:{ required: true},
-                seq:{ required: true}
+                seq:{ required: true},
+                pid:{ required: true}
             },
             messages: {
             	name: { required: "请输入资源名称"},
             	key: { required: "请输入资源key"},
-                seq: { required: "请输入排序号"}
+                seq: { required: "请输入排序号"},
+                pid: { required: "请选择资源目录"}
             },
             invalidHandler: function(form, validator) {
                 //$.sticky("There are some errors. Please corect them and submit again.", {autoclose : 5000, position: "top-right", type: "st-error" });

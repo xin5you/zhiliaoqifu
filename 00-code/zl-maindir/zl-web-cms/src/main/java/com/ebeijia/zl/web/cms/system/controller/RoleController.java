@@ -240,7 +240,8 @@ public class RoleController {
 			List<Resource> roleResList = resourceService.getRoleResourceByRoleId(roleId); // 当前角色的权限
 			Resource resource = new Resource();
 			resource.setLoginType(LoginType.LoginType2.getCode());
-			List<Resource> allResourceList = resourceService.getResourceListByResource(resource);// 所有的资源列表
+			resource.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
+			List<Resource> allResourceList = resourceService.getResourceList(resource);// 所有的资源列表
 			for (Resource r : allResourceList) {
 				for (Resource s : roleResList) {
 					if (r.getId().equals(s.getId()))
