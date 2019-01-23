@@ -100,9 +100,9 @@
 							</c:if>
 							<c:if test="${company.isOpen=='1'}">
 								<c:if test="${company.isPlatform=='1'}">
-									<%--<sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTOADD')">--%>
-										<a companyId="${company.companyId}" title="上账" class="btn-mini btn-platform-InAccount" href="#"><i class="icon-pencil"></i></a>
-									<%--</sec:authorize>--%>
+									<sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTOADD')">
+										<a companyId="${company.companyId}" title="上账" class="btn-mini btn-platform-inAccount" href="#"><i class="icon-pencil"></i></a>
+									</sec:authorize>
 									<sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT')">
 										<a companyId="${company.companyId}" title="平台打款" class="btn-mini btn-platform-tansfer" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
