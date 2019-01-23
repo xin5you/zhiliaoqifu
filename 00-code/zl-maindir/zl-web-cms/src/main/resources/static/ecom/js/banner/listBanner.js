@@ -129,6 +129,26 @@ var listBanner = {
         listBanner.initTip(2);
 	},
 	addBanner:function(){
+	    var image_url = $("#image_url").val();
+        var spec = $("#spec").val();
+        var position = $("#position").val();
+        var sort = $("#sort").val();
+        if (image_url == null || image_url == '') {
+            Helper.alert("请选择banner图片");
+            return false;
+        }
+        if (spec == null || spec == '') {
+            Helper.alert("请选择规格");
+            return false;
+        }
+        if (position == null || position == '') {
+            Helper.alert("请选择banner位置");
+            return false;
+        }
+        if (sort == null || sort == '') {
+            Helper.alert("请输入排序号");
+            return false;
+        }
         $.ajax({
             type: 'POST',
             url: Helper.getRootPath() + '/banner/addBanner',
@@ -155,6 +175,26 @@ var listBanner = {
         });
     },
     editBanner:function(){
+        var image_url = $("#image_url").val();
+        var spec = $("#spec").val();
+        var position = $("#position").val();
+        var sort = $("#sort").val();
+        if (image_url == null || image_url == '') {
+            Helper.alert("请选择banner图片");
+            return false;
+        }
+        if (spec == null || spec == '') {
+            Helper.alert("请选择规格");
+            return false;
+        }
+        if (position == null || position == '') {
+            Helper.alert("请选择banner位置");
+            return false;
+        }
+        if (sort == null || sort == '') {
+            Helper.alert("请输入排序号");
+            return false;
+        }
         $.ajax({
             type : 'POST',
             url : Helper.getRootPath() + '/banner/editBanner',

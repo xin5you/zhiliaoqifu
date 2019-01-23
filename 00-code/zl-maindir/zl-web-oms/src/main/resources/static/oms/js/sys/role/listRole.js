@@ -52,7 +52,7 @@ var listRole = {
 	            		location.href=Helper.getRootPath() + '/sys/role/listRole.do';
 	            	
 	            	}else{
-	            		Helper.alter(result.msg);
+	            		Helper.alert(result.msg);
 	            	}
 	            },
 	            error:function(){

@@ -2,7 +2,9 @@ package com.ebeijia.zl.service.telrecharge.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlAreaInf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,6 @@ import com.ebeijia.zl.service.telrecharge.service.RetailChnlInfService;
 @Service
 public class RetailChnlInfServiceImpl extends ServiceImpl<RetailChnlInfMapper, RetailChnlInf> implements RetailChnlInfService{
 
-	@Autowired
-	private RetailChnlInfMapper retailChnlInfMapper;
-
-
 	@Override
 	public boolean save(RetailChnlInf entity) {
 		entity.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
@@ -42,11 +40,19 @@ public class RetailChnlInfServiceImpl extends ServiceImpl<RetailChnlInfMapper, R
 	}
 	
 	public List<RetailChnlInf> getList(RetailChnlInf retailChnlInf){
-		return retailChnlInfMapper.getList(retailChnlInf);
+		return baseMapper.getList(retailChnlInf);
 	}
 
 	@Override
 	public RetailChnlInf getRetailChnlInfByLawCode(String lawCode) {
-		return retailChnlInfMapper.getRetailChnlInfByLawCode(lawCode);
+		return baseMapper.getRetailChnlInfByLawCode(lawCode);
+	}
+
+	@Override
+	public RetailChnlInf getRetailChnlInfByChannelName(String channelName) throws Exception {
+		QueryWrapper<RetailChnlInf> queryWrapper = new QueryWrapper<RetailChnlInf>();
+		queryWrapper.eq("channel_name", channelName);
+		queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
+		return baseMapper.selectOne(queryWrapper);
 	}
 }

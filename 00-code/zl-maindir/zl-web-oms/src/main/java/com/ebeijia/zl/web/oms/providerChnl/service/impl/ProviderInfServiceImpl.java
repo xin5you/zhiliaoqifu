@@ -50,16 +50,6 @@ import java.util.*;
 public class ProviderInfServiceImpl implements ProviderInfService {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-//	public static void main(String[] args) {
-//		BigDecimal b1 = new BigDecimal("1000");
-//		BigDecimal b2 = new BigDecimal("1.06");
-//		//ROUND_DOWN
-//		//ROUND_DOWN
-//		BigDecimal b3 = b1.divide(b2, 0, BigDecimal.ROUND_DOWN);
-//		System.out.println(b3);
-//
-//	}
-
 	@Value("${FILE_UPLAOD_PATH}")
 	private String FILE_UPLAOD_PATH;
 

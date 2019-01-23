@@ -61,11 +61,10 @@
             p.personal_name as personalName
         from
           <include refid="tableName"/>,
-          tb_ecom_member m, tb_user_inf u, tb_person_inf p
-        where m.member_id = po.member_id
-          and u.user_id = m.user_id
-          and p.user_id = u.user_id
-          and po.data_stat = '0'
+            left join tb_ecom_member m on m.member_id = po.member_id
+            left join tb_user_inf u on u.user_id = m.user_id
+            left join tb_person_inf p on p.user_id = u.user_id
+        where po.data_stat = '0'
         <if test="orderId !=null and orderId !='' ">
             and po.order_id = #{orderId}
         </if>

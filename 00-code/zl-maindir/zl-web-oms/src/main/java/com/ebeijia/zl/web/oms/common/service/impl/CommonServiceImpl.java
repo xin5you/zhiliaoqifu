@@ -28,6 +28,7 @@ import sun.misc.BASE64Encoder;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,8 +125,8 @@ public class CommonServiceImpl implements CommonService {
                 for (AccountLogVO log : pageList.getList()) {
                     Date date = new SimpleDateFormat("yyyyMMdd").parse(log.getTxnDate());
                     String txnDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-                    Date time = new SimpleDateFormat("hhmmss").parse(log.getTxnTime());
-                    String txnTime = new SimpleDateFormat("hh:mm:ss").format(date);
+                    Date time = new SimpleDateFormat("HHmmss").parse(log.getTxnTime());
+                    String txnTime = new SimpleDateFormat("HH:mm:ss").format(time);
                     log.setTxnDate(txnDate);
                     log.setTxnTime(txnTime);
                     log.setAccType(AccountCardAttrEnum.findByValue(log.getAccType()).getDesc());

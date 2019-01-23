@@ -44,7 +44,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">统一社会信用代码<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="lawCode" name="lawCode" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="lawCode" name="lawCode" maxlength="18" onkeyup="this.value=this.value.replace(/[^0-9a-z]/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>

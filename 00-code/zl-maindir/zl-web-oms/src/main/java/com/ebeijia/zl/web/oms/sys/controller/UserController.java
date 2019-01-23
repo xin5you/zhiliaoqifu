@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -81,7 +82,11 @@ public class UserController {
 	@RequestMapping(value = "/intoAddUser")
 	public ModelAndView intoAddUser(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/user/addUser");
-		List<Organization> organizationList = organizationService.getOrganizationList(new Organization());
+		/*List<Organization> organizationList = organizationService.getOrganizationList(new Organization());*/
+		List<Organization> organizationList = userRoleResourceService.getOmsOrganization();
+		if (organizationList != null) {
+			organizationList = organizationList.stream().filter(r -> !"0".equals(r.getId())).collect(Collectors.toList());
+		}
 		Role role = new Role();
 		role.setLoginType(LoginType.LoginType1.getCode());
 		List<Role> roleList = roleService.getRoleList(role);
@@ -179,8 +184,13 @@ public class UserController {
 		ModelAndView mv = new ModelAndView("sys/user/editUser");
 		String userId=req.getParameter("userId");
 		User user=userService.getById(userId);
-		
-		List<Organization> organizationList=organizationService.getOrganizationList(new Organization());
+
+		/*List<Organization> organizationList = organizationService.getOrganizationList(new Organization());*/
+		List<Organization> organizationList = userRoleResourceService.getOmsOrganization();
+		if (organizationList != null) {
+			organizationList = organizationList.stream().filter(r -> !"0".equals(r.getId())).collect(Collectors.toList());
+		}
+
 		Role role = new Role();
 		role.setLoginType(LoginType.LoginType1.getCode());
 		List<Role> roleList=roleService.getRoleList(role);

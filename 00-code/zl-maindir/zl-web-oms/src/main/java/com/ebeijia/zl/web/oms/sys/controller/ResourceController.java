@@ -84,7 +84,9 @@ public class ResourceController {
 		resource.setLoginType(LoginType.LoginType1.getCode());
 		resource.setResourceType("0");
 		
-		List<Resource> resourceList = resourceService.getResourceList(resource);
+		/*List<Resource> resourceList = resourceService.getResourceList(resource);*/
+		List<Resource> resourceList = userRoleResourceService.getOmsResource();
+		resourceList = resourceList.stream().filter(r -> !"1".equals(r.getResourceType())).collect(Collectors.toList());
 		
 		Resource parantRes = resourceService.getById(resourceId);
 		
@@ -143,8 +145,11 @@ public class ResourceController {
 		Resource resource1 = new Resource();
 		resource1.setResourceType("0");
 		resource1.setLoginType(LoginType.LoginType1.getCode());
-		List<Resource> resourceList = resourceService.getResourceList(resource1);
-		
+		/*List<Resource> resourceList = resourceService.getResourceList(resource1);*/
+		List<Resource> resourceList = userRoleResourceService.getOmsResource();
+		resourceList = resourceList.stream().filter(r -> !"1".equals(r.getResourceType())).collect(Collectors.toList());
+
+
 		mv.addObject("resourceList", resourceList);
 		mv.addObject("resource", resource);
 		return mv;

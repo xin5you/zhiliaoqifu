@@ -211,6 +211,7 @@ public class ProviderInfController {
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			ProviderInf providerInf = providerInfFacade.getProviderInfById(providerId);
+            providerInf.setIsOpen(IsOpenAccountEnum.findByBId(providerInf.getIsOpen()).getName());
 			mv.addObject("providerInf", providerInf);
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);

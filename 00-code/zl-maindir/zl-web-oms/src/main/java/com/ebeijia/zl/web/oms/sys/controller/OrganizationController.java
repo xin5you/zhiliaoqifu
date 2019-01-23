@@ -70,7 +70,7 @@ public class OrganizationController {
 	public ModelAndView intoAddOrganization(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/organization/addOrganization");
 		Organization entity = new Organization();
-		List<Organization> entityList = organizationService.getOrganizationList(entity);
+		List<Organization> entityList = userRoleResourceService.getOmsOrganization();
 		if (entityList != null) {
 			entityList = entityList.stream().filter(r -> !"0".equals(r.getId())).collect(Collectors.toList());
 		}
@@ -118,7 +118,7 @@ public class OrganizationController {
 		Organization organ = organizationService.getById(organId);
 		
 		//查找上级菜单列表
-		List<Organization> entityList = organizationService.getOrganizationList(new Organization());
+		List<Organization> entityList = userRoleResourceService.getOmsOrganization();
 		if (entityList != null) {
 			entityList = entityList.stream().filter(r -> !"0".equals(r.getId())).collect(Collectors.toList());
 		}

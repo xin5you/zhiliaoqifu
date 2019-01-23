@@ -246,7 +246,7 @@ var listGoodsProduct = {
 			backdrop : "static"
 		});
 		if(type == 1){
-			$('#modal_h').html("新增商品Sku信息信息");
+			$('#modal_h').html("新增商品Sku信息");
             /*var goodsId = $("#goods_id").val();
             $.ajax({
                 url: Helper.getRootPath() + '/goodsManage/goodsInf/getGoodsProductListByGoodsId',
@@ -293,7 +293,7 @@ var listGoodsProduct = {
             });*/
 			return;
 		}else if(type == 2){
-			$('#modal_h').html("编辑商品Sku信息信息");
+			$('#modal_h').html("编辑商品Sku信息");
 		} else if(type == 3){
             $('#modal_h').html("商品Sku信息详情");
             $("#is_store").attr("readonly","readonly");

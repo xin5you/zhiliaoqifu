@@ -26,7 +26,7 @@
 							<form id="mainForm" class="form-horizontal form_validation_tip" method="post">
 								 <h3 class="heading">新增部门</h3>
 						         <div class="control-group">
-						             <label class="control-label">部门名称</label>
+						             <label class="control-label">部门名称<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="name" name="name" maxlength="125"/>
 						                 <span class="help-block"></span>
@@ -40,7 +40,7 @@
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">排序</label>
+						             <label class="control-label">排序<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="seq" name="seq" maxlength="5" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 						                 <span class="help-block"></span>
