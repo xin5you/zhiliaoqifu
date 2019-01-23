@@ -54,8 +54,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 //		BigDecimal b1 = new BigDecimal("1000");
 //		BigDecimal b2 = new BigDecimal("1.06");
 //		//ROUND_CEILING
-//		//ROUND_UP
-//		BigDecimal b3 = b1.divide(b2, 0, BigDecimal.ROUND_UP);
+//		//ROUND_DOWN
+//		BigDecimal b3 = b1.divide(b2, 0, BigDecimal.ROUND_DOWN);
 //		System.out.println(b3);
 //
 //	}
@@ -285,7 +285,7 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 				if (InaccountFormulaEnum.InaccountFormulaEnum_1.getCode().equals(formula)) {
 					companyFee = new BigDecimal(companyBillingTypeInf.getFee()).add(providerFee);
 					transAmt = new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())).multiply(providerFee);
-					companyInAmt = transAmt.divide(companyFee, 0, BigDecimal.ROUND_CEILING);
+					companyInAmt = transAmt.divide(companyFee, 0, BigDecimal.ROUND_DOWN);
 				} else {
 					companyFee = new BigDecimal(1).subtract(providerFee).subtract(new BigDecimal(companyBillingTypeInf.getFee()));
 					transAmt = new BigDecimal(NumberUtils.RMBYuanToCent(entry.getValue())).multiply(providerFee);
@@ -316,8 +316,8 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			}
 		}
 
-		BigDecimal remitInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
-		BigDecimal companyInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+		BigDecimal remitInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_DOWN, 0), BigDecimal::add);
+		BigDecimal companyInAmtSum = orderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_DOWN, 0), BigDecimal::add);
 		order.setRemitAmt(remitInAmtSum);
 		order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmtSum.toString())));
 		order.setPlatformInSumAmt(order.getInaccountSumAmt());
@@ -704,9 +704,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		BigDecimal companyInAmtSum = new BigDecimal(0);
 		BigDecimal remitInAmtSum = new BigDecimal(0);
 		if (addOrderDetailList != null && addOrderDetailList.size() >= 1) {
-			BigDecimal addOrderDetailCompanyInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+			BigDecimal addOrderDetailCompanyInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_DOWN, 0), BigDecimal::add);
 			companyInAmtSum = addOrderDetailCompanyInAmtSum;
-			BigDecimal addOrderDetailRemitInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+			BigDecimal addOrderDetailRemitInAmtSum = addOrderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_DOWN, 0), BigDecimal::add);
 			remitInAmtSum = addOrderDetailRemitInAmtSum;
 			if (!inaccountOrderDetailService.saveBatch(addOrderDetailList)) {
 				logger.error("## 编辑上账订单明细失败");
@@ -717,9 +717,9 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		}
 
 		if (editOrderDetailList != null && editOrderDetailList.size() >= 1) {
-			BigDecimal editOrderDetailCompanyInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+			BigDecimal editOrderDetailCompanyInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getCompanyInAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_DOWN, 0), BigDecimal::add);
 			companyInAmtSum = companyInAmtSum.add(editOrderDetailCompanyInAmtSum);
-			BigDecimal editOrderDetailRemitInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_UP, 0), BigDecimal::add);
+			BigDecimal editOrderDetailRemitInAmtSum = editOrderDetailList.stream().map(InaccountOrderDetail::getTransAmt).reduce(BigDecimal.valueOf(BigDecimal.ROUND_DOWN, 0), BigDecimal::add);
 			remitInAmtSum = remitInAmtSum.add(editOrderDetailRemitInAmtSum);
 			if (!inaccountOrderDetailService.saveOrUpdateBatch(editOrderDetailList)) {
 				logger.error("## 编辑上账订单明细失败");
@@ -740,10 +740,10 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 			}
 		}
 
-		order.setRemitAmt(remitInAmtSum.setScale(0, BigDecimal.ROUND_UP));
+		order.setRemitAmt(remitInAmtSum.setScale(0, BigDecimal.ROUND_DOWN));
 		order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBYuanToCent(inaccountAmtSum.toString())));
 		order.setPlatformInSumAmt(order.getInaccountSumAmt());
-		order.setCompanyInSumAmt(companyInAmtSum.setScale(0, BigDecimal.ROUND_UP));
+		order.setCompanyInSumAmt(companyInAmtSum.setScale(0, BigDecimal.ROUND_DOWN));
 		if (order.getCompanyInSumAmt().compareTo(order.getPlatformInSumAmt()) == 1) {
 			resultMap.put("status", Boolean.FALSE);
 			resultMap.put("msg", "企业费率不合法，请重新输入");

@@ -223,7 +223,7 @@ public class AuthService implements IAuthService {
         if (openId == null) {
             openId = IdUtil.getNextId();
         }
-        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
+        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL1002.getCode());
         TbEcomMember member = new TbEcomMember();
         //TODO 测试用
         member.setPersonId(phone);
