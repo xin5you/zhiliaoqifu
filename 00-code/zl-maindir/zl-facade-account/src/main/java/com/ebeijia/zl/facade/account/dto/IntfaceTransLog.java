@@ -97,6 +97,13 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
      */
     @TableField("shop_code")
     private String shopCode;
+
+
+    /**
+     * 商户号
+     */
+    @TableField("target_mchnt_code")
+    private String targetMchntCode;
  
     /**
      * 表示交易结果

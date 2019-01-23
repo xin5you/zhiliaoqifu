@@ -118,4 +118,17 @@ public class AccountTransferReqVo extends BaseTxnReq{
 	public void setTransList(List<AccountTxnVo> transList) {
 		this.transList = transList;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountTransferReqVo{" +
+				"transAmt=" + transAmt +
+				", uploadAmt=" + uploadAmt +
+				", tfrInUserId='" + tfrInUserId + '\'' +
+				", tfrInBId='" + tfrInBId + '\'' +
+				", tfrOutUserId='" + tfrOutUserId + '\'' +
+				", tfrOutBId='" + tfrOutBId + '\'' +
+				", transList=" + transList +
+				'}' + super.toString();
+	}
 }

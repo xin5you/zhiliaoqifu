@@ -52,7 +52,8 @@ public class AccountBizException extends BizException {
 	public static final AccountBizException ORG_ACCOUNT_LOG_NOT_EXIT = new AccountBizException(20080115, "原交易账户日志不存在");
 
 	public static final AccountBizException ACCOUNT_REFUND_NOT_ENOUGH = new AccountBizException(20080116, "退款金额大于原交易金额");
-	
+
+	public static final AccountBizException ACCOUNT_TARGET_MCHNT_ERROR = new AccountBizException(20082001, "目标供应商处理异常");
 	public static final AccountBizException ACCOUNT_CARD_ATTR_ERROR = new AccountBizException(20089999, "当前交易类型未知");
 
 

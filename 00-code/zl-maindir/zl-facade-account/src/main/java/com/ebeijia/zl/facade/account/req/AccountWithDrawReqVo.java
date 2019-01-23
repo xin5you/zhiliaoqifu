@@ -187,4 +187,23 @@ public class AccountWithDrawReqVo extends BaseTxnReq{
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountWithDrawReqVo{" +
+				"mchntCode='" + mchntCode + '\'' +
+				", shopCode='" + shopCode + '\'' +
+				", transAmt=" + transAmt +
+				", uploadAmt=" + uploadAmt +
+				", receiverName='" + receiverName + '\'' +
+				", receiverCardNo='" + receiverCardNo + '\'' +
+				", receiverType='" + receiverType + '\'' +
+				", bankName='" + bankName + '\'' +
+				", bankCode='" + bankCode + '\'' +
+				", bankProvince='" + bankProvince + '\'' +
+				", bankCity='" + bankCity + '\'' +
+				", orderName='" + orderName + '\'' +
+				", remarks='" + remarks + '\'' +
+				"} " + super.toString();
+	}
 }

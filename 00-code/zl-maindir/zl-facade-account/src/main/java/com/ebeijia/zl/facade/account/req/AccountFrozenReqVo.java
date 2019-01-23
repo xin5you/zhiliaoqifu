@@ -68,4 +68,14 @@ public class AccountFrozenReqVo extends BaseTxnReq{
 	public void setOrgItfPrimaryKey(String orgItfPrimaryKey) {
 		this.orgItfPrimaryKey = orgItfPrimaryKey;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountFrozenReqVo{" +
+				"priBId='" + priBId + '\'' +
+				", transAmt=" + transAmt +
+				", uploadAmt=" + uploadAmt +
+				", orgItfPrimaryKey='" + orgItfPrimaryKey + '\'' +
+				'}' + super.toString();
+	}
 }

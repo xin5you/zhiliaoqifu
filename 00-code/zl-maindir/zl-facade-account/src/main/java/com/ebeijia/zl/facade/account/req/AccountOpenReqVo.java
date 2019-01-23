@@ -82,4 +82,13 @@ public class AccountOpenReqVo extends BaseTxnReq {
 		this.companyId = companyId;
 	}
 
+	@Override
+	public String toString() {
+		return "AccountOpenReqVo{" +
+				"userName='" + userName + '\'' +
+				", mobilePhone='" + mobilePhone + '\'' +
+				", icardNo='" + icardNo + '\'' +
+				", companyId='" + companyId + '\'' +
+				'}' + super.toString();
+	}
 }
