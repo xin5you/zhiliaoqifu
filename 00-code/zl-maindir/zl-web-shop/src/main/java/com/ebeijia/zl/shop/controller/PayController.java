@@ -11,6 +11,7 @@ import com.ebeijia.zl.shop.dao.info.service.ITbEcomItxLogDetailService;
 import com.ebeijia.zl.shop.dao.member.domain.TbEcomPayCard;
 import com.ebeijia.zl.shop.service.pay.ICardService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
+import com.ebeijia.zl.shop.service.pay.IWxPayService;
 import com.ebeijia.zl.shop.service.valid.impl.ValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopUtils;
@@ -21,9 +22,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,6 +53,40 @@ public class PayController {
 
     @Autowired
     private ITbEcomItxLogDetailService logDetailService;
+
+    @Autowired
+    private IWxPayService wxPayService;
+
+    private Logger logger = LoggerFactory.getLogger(PayController.class);
+
+    /**
+     * 芸券付回调
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "芸券付回调", notes = "")
+    @RequestMapping(value = "/callback", method = RequestMethod.POST)
+    public String callback(HttpServletRequest request) {
+        String merid = request.getParameter("merid");
+        String msg = request.getParameter("msg");
+        String nonceonce = request.getParameter("msg");
+        String sign = request.getParameter("sign");
+        String payResult = request.getParameter("payResult");
+
+        logger.info(String.format("聚合支付回调入参:%s,\n%s,\n%s,\n%s,\n%s",merid,msg,nonceonce,sign,payResult));
+        // 回调成功
+        if ( "true".equals(payResult)) {
+            // if (status.equals("true")) {
+            // String merchantOutOrderNo = "1513698761094";//request.getParameter("merchantOutOrderNo");
+            String dmsKey = request.getParameter("merchantOutOrderNo");
+            String orderNo = request.getParameter("orderNo");
+
+            return wxPayService.callback(payResult, dmsKey, orderNo);
+        }
+        return "";
+    }
+
 
     @TokenCheck(force = true)
     @ApiOperation("绑定银行卡")
@@ -119,7 +157,7 @@ public class PayController {
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/{type}", method = RequestMethod.GET)
     public JsonResult<LogDetail> listAccountDeals(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-        PageInfo<AccountLogVO> deals = payService.listDeals(range, type,null, start, limit);
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, type, null, start, limit);
         LogDetail logDetail = dumb(deals);
         return new JsonResult<>(logDetail);
     }
@@ -128,18 +166,18 @@ public class PayController {
     @TokenCheck(force = true)
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list/common/{type}", method = RequestMethod.GET)
-    public JsonResult<LogDetail> listAccountDealsForAType(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range,@RequestParam(value = "method",required = false) String method, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-        PageInfo<AccountLogVO> deals = payService.listDeals(range, type, method ,start, limit);
+    public JsonResult<LogDetail> listAccountDealsForAType(@PathVariable("type") String type, @RequestParam(value = "range", required = false) String range, @RequestParam(value = "method", required = false) String method, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, type, method, start, limit);
         LogDetail logDetail = dumb(deals);
         return new JsonResult<>(logDetail);
     }
 
 
-    private LogDetail dumb(PageInfo<AccountLogVO> deals){
-        Map<String,TbEcomItxLogDetail> map = new HashMap<>();
+    private LogDetail dumb(PageInfo<AccountLogVO> deals) {
+        Map<String, TbEcomItxLogDetail> map = new HashMap<>();
         deals.getList().stream().forEach(deal -> {
             TbEcomItxLogDetail id = logDetailService.getById(deal.getItfPrimaryKey());
-            if (id==null){
+            if (id == null) {
                 id = new TbEcomItxLogDetail();
                 id.setAmount(0);
                 id.setTitle("交易流水");
@@ -149,7 +187,7 @@ public class PayController {
                 id.setOutId(IdUtil.getNextId());
                 id.setSourceBid(deal.getPriBId());
             }
-            map.put(id.getItxKey(),id);
+            map.put(id.getItxKey(), id);
         });
         LogDetail logDetail = new LogDetail();
         logDetail.setDeals(deals);
@@ -163,7 +201,7 @@ public class PayController {
     @ApiOperation("列出交易流水记录")
     @RequestMapping(value = "/deal/list", method = RequestMethod.GET)
     public JsonResult<PageInfo<AccountLogVO>> listAccountDealst(@RequestParam(value = "range", required = false) String range, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "limit", required = false) String limit, @RequestParam String session) {
-        PageInfo<AccountLogVO> deals = payService.listDeals(range, null,null, start, limit);
+        PageInfo<AccountLogVO> deals = payService.listDeals(range, null, null, start, limit);
         return new JsonResult<>(deals);
     }
 
@@ -176,8 +214,6 @@ public class PayController {
         PayDealInfo deal = payService.getDeal(dms);
         return new JsonResult<>(deal);
     }
-
-
 
 
     /**
