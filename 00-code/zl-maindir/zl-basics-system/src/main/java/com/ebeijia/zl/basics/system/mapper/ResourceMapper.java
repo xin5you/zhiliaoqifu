@@ -17,9 +17,19 @@ import com.ebeijia.zl.basics.system.domain.Resource;
 @Mapper
 public interface ResourceMapper extends BaseMapper<Resource> {
 
-    Resource getResourceByKey(Resource resource);
+    /**
+     * 根据资源Key查询资源信息
+     * @param resource
+     * @return
+     */
+    /*Resource getResourceByKey(Resource resource);*/
 
-    List<Resource> getResourceList(Resource entity);
+    /**
+     * 查询资源信息列表
+     * @param entity
+     * @return
+     */
+    /*List<Resource> getResourceList(Resource entity);*/
 
     //根据用户Id获取该用户的权限
     List<Resource> getRoleResourceByRoleId(String roleId);
@@ -36,6 +46,6 @@ public interface ResourceMapper extends BaseMapper<Resource> {
      * @param resource
      * @return
      */
-    List<Resource> getResourceListByResource(Resource resource);
+    /*List<Resource> getResourceListByResource(Resource resource);*/
 
 }

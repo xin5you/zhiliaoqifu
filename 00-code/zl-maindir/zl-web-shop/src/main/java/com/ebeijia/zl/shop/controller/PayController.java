@@ -54,18 +54,18 @@ public class PayController {
     @Autowired
     private ITbEcomItxLogDetailService logDetailService;
 
-    @Autowired
+//    @Autowired
     private IWxPayService wxPayService;
 
     private Logger logger = LoggerFactory.getLogger(PayController.class);
 
     /**
-     * 芸券付回调
+     * 聚合支付回调
      *
      * @param request
      * @return
      */
-    @ApiOperation(value = "芸券付回调", notes = "")
+    @ApiOperation(value = "聚合支付回调", notes = "")
     @RequestMapping(value = "/callback", method = RequestMethod.POST)
     public String callback(HttpServletRequest request) {
         String merid = request.getParameter("merid");

@@ -3,15 +3,14 @@ package com.ebeijia.zl.web.oms.sys.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ebeijia.zl.basics.system.domain.*;
+import com.ebeijia.zl.basics.system.service.*;
+import com.ebeijia.zl.common.utils.enums.LoginType;
+import com.ebeijia.zl.web.oms.common.service.RecursiveAdapter;
+import com.ebeijia.zl.web.oms.common.util.RecursiveUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ebeijia.zl.basics.system.domain.RoleResource;
-import com.ebeijia.zl.basics.system.domain.User;
-import com.ebeijia.zl.basics.system.domain.UserRole;
-import com.ebeijia.zl.basics.system.service.RoleResourceService;
-import com.ebeijia.zl.basics.system.service.UserRoleService;
-import com.ebeijia.zl.basics.system.service.UserService;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 
@@ -20,6 +19,12 @@ public class UserRoleResourceServiceImpl implements UserRoleResourceService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ResourceService resourceService;
+
+	@Autowired
+	private OrganizationService organizationService;
 	
 	@Autowired
 	private UserRoleService userRoleService;
@@ -100,6 +105,44 @@ public class UserRoleResourceServiceImpl implements UserRoleResourceService {
 			return 0;
 		}
 		return 1;
+	}
+
+	@Override
+	public List<Resource> getOmsResource() {
+		Resource resource = new Resource();
+		resource.setLoginType(LoginType.LoginType1.getCode());
+		List<Resource> list = resourceService.getResourceList(resource);
+		RecursiveUtil<Resource> recursiveUtil = new RecursiveUtil<>(new RecursiveAdapter<Resource>() {
+			@Override
+			public String getId(Resource resources) {
+				return String.valueOf(resources.getId());
+			}
+			@Override
+			public String getPid(Resource resources) {
+				return resources.getPid();
+			}
+		});
+
+		List<Resource> result = recursiveUtil.recursiveHandle(list, null);
+		return result;
+	}
+
+	@Override
+	public List<Organization> getOmsOrganization() {
+		List<Organization> organList = organizationService.getOrganizationList(new Organization());
+		RecursiveUtil<Organization> recursiveUtil = new RecursiveUtil<>(new RecursiveAdapter<Organization>() {
+			@Override
+			public String getId(Organization organ) {
+				return String.valueOf(organ.getId());
+			}
+			@Override
+			public String getPid(Organization organ) {
+				return organ.getPid();
+			}
+		});
+
+		List<Organization> result = recursiveUtil.recursiveHandle(organList, null);
+		return result;
 	}
 
 }

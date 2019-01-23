@@ -263,7 +263,7 @@ public class WxApi {
 				token = new AccessToken();
 				token.setAccessToken(jsonObject.getString("access_token"));
 				token.setExpiresIn(jsonObject.getIntValue("expires_in"));
-			} catch (JSONException e) {
+            } catch (JSONException e) {
 				token = null;// 获取token失败
 			}
 		} else if (null != jsonObject) {

@@ -23,25 +23,35 @@
 		 lock_version	
 	</sql>
 	
-	 <select id="getResourceByKey" parameterType="Resource" resultType="Resource">
+	 <!--<select id="getResourceByKey" parameterType="Resource" resultType="Resource">
 		select
 			<include refid="ResourceColumns" />
 		from tb_web_resource 
-		where resource_key = #{resourceKey}
-		and login_type = #{loginType}
-	</select>
+		where data_stat = '0'
+		  and resource_key = #{resourceKey}
+		  and login_type = #{loginType}
+	</select>-->
 	 
-	<select id="getResourceList" parameterType="Resource" resultType="Resource">
-		select 
-			<include refid="ResourceColumns" /> 
-		from tb_web_resource 
+	<!--<select id="getResourceList" parameterType="Resource" resultType="Resource">
+		select
+			<include refid="ResourceColumns" />
+		from tb_web_resource
+		where data_stat = '0'
+			and login_type = #{loginType}
+		<if test="resourceType != null and resourceType != '' ">
+			and resource_type = #{resourceType}
+		</if>
+		order by seq asc
+		&lt;!&ndash;select
+			<include refid="ResourceColumns" />
+		from tb_web_resource
 		where find_in_set(id, getResourceChild('0'))
 			and data_stat = '0'
 			and login_type = #{loginType}
 		<if test="resourceType !=null and resourceType !='' ">
 			and resource_type = #{resourceType}
-		</if>
-	</select>
+		</if>&ndash;&gt;
+	</select>-->
 	
 	<!-- 根据rId获取该用户的权限-->
 	<select id="getRoleResourceByRoleId" parameterType="String" resultType="Resource">
@@ -70,11 +80,12 @@
 		)
 	</select>
 
-	<select id="getResourceListByResource" parameterType="Resource" resultType="Resource">
+	<!--<select id="getResourceListByResource" parameterType="Resource" resultType="Resource">
 		select
 		<include refid="ResourceColumns" />
 		from tb_web_resource
-		where login_type=#{loginType}
+		where data_stat = '0'
+			and login_type=#{loginType}
 		<if test="resourceName != null and resourceName != '' ">
 			and resource_name like "%"#{resourceName}"%"
 		</if>
@@ -85,6 +96,6 @@
 			and url like "%"#{url}"%"
 		</if>
 		order by create_time desc
-	</select>
+	</select>-->
 
 </mapper>
