@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.JedisCluster;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +45,11 @@ public class WxApiCtrl {
 	
 	@Autowired
 	private WxApiClient  wxApiClient;
+
+	@Autowired
+	private JedisCluster jedisCluster;
+
+	public final  String ACCOUNT_ACCESS_TOKENKEY = "ACCOUNT_ACCESS_TOKEN_KEY_";
 
 	/**
 	 * GET请求：进行URL、Tocken 认证； 1. 将token、timestamp、nonce三个参数进行字典序排序 2.
@@ -193,10 +199,25 @@ public class WxApiCtrl {
     @ResponseBody
     public JSONObject getUserInfo(HttpServletRequest request, @RequestParam("openId")String openId) {
         MpAccount mpAccount = wxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
-        AccessToken accessToken = WxApi.getAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret());
-        String userInfoUrl = WxApi.getFansInfoUrl(accessToken.getAccessToken(),openId);
-        JSONObject jsonObj = WxApi.httpsRequest(userInfoUrl, "GET", null);
+        AccessToken accessToken=null;
+        JSONObject jsonObj = null;
+        String userInfoUrl = null;
+         accessToken = wxMemoryCacheClient.getAccessToken(mpAccount.getAccount());
 
+			 if (null!=accessToken && !StringUtil.isNullOrEmpty(accessToken.getAccessToken())){
+				 userInfoUrl = WxApi.getFansInfoUrl(accessToken.getAccessToken(),openId);
+				 logger.info("获取用户信息开始");
+				 jsonObj = WxApi.httpsRequest(userInfoUrl, "GET", null);
+				 logger.info("获取用户信息开始"+jsonObj.toJSONString());
+				 return jsonObj;
+			 }
+
+        accessToken = WxApi.getAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret());
+        jedisCluster.setex(ACCOUNT_ACCESS_TOKENKEY+mpAccount.getAccount(), 3600, net.sf.json.JSONObject.fromObject(accessToken).toString());
+        userInfoUrl = WxApi.getFansInfoUrl(accessToken.getAccessToken(),openId);
+        logger.info("获取用户信息开始");
+        jsonObj = WxApi.httpsRequest(userInfoUrl, "GET", null);
+        logger.info("获取用户信息开始"+jsonObj.toJSONString());
         return jsonObj;
     }
 

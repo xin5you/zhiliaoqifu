@@ -1,22 +1,15 @@
 package com.ebeijia.zl.core.wechat.process;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.wechat.util.CalendarUtil;
 import com.ebeijia.zl.core.wechat.util.WxConstants;
-import com.ebeijia.zl.common.utils.tools.StringUtil;
-
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisCluster;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * 缓存工具类； 目前使用 服务器内存的方式；
@@ -66,7 +59,6 @@ public class WxMemoryCacheClient {
 		if (token != null) {
 			token.setCreateTime(CalendarUtil.getTimeInSeconds());
 				jedisCluster.set(ACCOUNT_ACCESS_TOKENKEY + account, JSONObject.fromObject(token).toString());
-				
 		}
 		return token;
 	}
@@ -79,6 +71,9 @@ public class WxMemoryCacheClient {
 	 */
 	public  AccessToken getAccessToken(String account) {
 			String jsonStr = jedisCluster.get(ACCOUNT_ACCESS_TOKENKEY + account);
+			if (jsonStr==null){
+				return null;
+			}
 			return (AccessToken) JSONObject.toBean(JSONObject.fromObject(jsonStr), AccessToken.class);
 		
 	}
