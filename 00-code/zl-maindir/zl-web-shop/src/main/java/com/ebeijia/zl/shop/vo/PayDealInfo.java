@@ -12,6 +12,10 @@ public class PayDealInfo implements Serializable {
 
     String outId;
 
+    String priBid;
+
+    String dealType;
+
     String payStatus;
 
     String time;
