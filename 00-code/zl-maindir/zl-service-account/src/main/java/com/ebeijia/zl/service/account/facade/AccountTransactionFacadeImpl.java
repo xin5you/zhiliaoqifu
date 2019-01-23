@@ -221,6 +221,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req.getTransList()));
 		intfaceTransLog.setMchntCode(req.getMchntCode());
 		intfaceTransLog.setShopCode(req.getShopCode());
+		intfaceTransLog.setTargetMchntCode(req.getTargetMchtCode());  //
 		/****保存接口易流水****/
 		intfaceTransLogService.saveOrUpdate(intfaceTransLog);
 		

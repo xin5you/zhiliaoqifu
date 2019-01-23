@@ -19,6 +19,7 @@ import java.util.Set;
 * 2018年11月29日     zhuqi           v1.0.0
  */
 
+
 public class BaseTxnReq implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5539906702603802177L;
@@ -77,6 +78,11 @@ public class BaseTxnReq implements java.io.Serializable {
      * 交易数量
      */
     private int transNumber=1;
+
+	/**
+	 * 目标商户(供应商)
+	 */
+    private String targetMchtCode;
 
 
 	public String getTransId() {
@@ -176,5 +182,30 @@ public class BaseTxnReq implements java.io.Serializable {
 
 	public void setTransNumber(int transNumber) {
 		this.transNumber = transNumber;
+	}
+
+	public String getTargetMchtCode() {
+		return targetMchtCode;
+	}
+
+	public void setTargetMchtCode(String targetMchtCode) {
+		this.targetMchtCode = targetMchtCode;
+	}
+
+	@Override
+	public String toString() {
+		return "BaseTxnReq{" +
+				"transId='" + transId + '\'' +
+				", transChnl='" + transChnl + '\'' +
+				", userId='" + userId + '\'' +
+				", bIds=" + bIds +
+				", userType='" + userType + '\'' +
+				", dmsRelatedKey='" + dmsRelatedKey + '\'' +
+				", userChnlId='" + userChnlId + '\'' +
+				", userChnl='" + userChnl + '\'' +
+				", transDesc='" + transDesc + '\'' +
+				", transNumber=" + transNumber +
+				", targetMchtCode='" + targetMchtCode + '\'' +
+				'}';
 	}
 }

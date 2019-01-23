@@ -17,9 +17,13 @@ import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
 import com.ebeijia.zl.facade.account.enums.WithDrawReceiverTypeEnum;
 import com.ebeijia.zl.facade.account.enums.WithDrawStatusEnum;
 import com.ebeijia.zl.facade.account.enums.WithDrawSuccessEnum;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
+import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
+import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
+import com.ebeijia.zl.service.user.service.IUserInfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +73,13 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 	@Autowired
 	private TransLogMapper transLogMapper;
+
+	@Autowired
+	private ProviderInfFacade providerInfFacade;
+
+	@Autowired
+	private IUserInfService userInfService;
+
 
 	/**
 	 *
@@ -263,9 +274,22 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			TransLog transLog2=null;
 			if (transList != null && transList.size() > 0) {
 
+				ProviderInf providerInf=null;
+				UserInf tarMchntUserInf=null;
+				if(StringUtil.isNotEmpty(intfaceTransLog.getTargetMchntCode())) {
+					try {
+						providerInf = providerInfFacade.getProviderInfById(intfaceTransLog.getTargetMchntCode());
+						if(providerInf!=null){
+							tarMchntUserInf=userInfService.getUserInfByUserName(providerInf.getProviderId());
+						}
+					} catch (Exception e) {
+						throw AccountBizException.ACCOUNT_TARGET_MCHNT_ERROR.newInstance("查找供应商异常,供应商Id{%s}", intfaceTransLog.getTargetMchntCode()).print();
+					}
+				}
 				for (AccountTxnVo accountTxnVo : transList) {
 					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt());
 
+					//商户收款
 					transLog2=new TransLog();
 					this.newTransLog(intfaceTransLog, transLog2);
 					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
@@ -277,21 +301,38 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setTransAmt(accountTxnVo.getTxnAmt());
 					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
 					addToVoList(voList,transLog2,voList.size());
+
+					//目标商户实时冲账
+					if(providerInf !=null){
+						BigDecimal providerRate=providerInf.getProviderRate() !=null ? providerInf.getProviderRate():new BigDecimal(1);
+						BigDecimal providerTxnAmt=AmountUtil.mul(accountTxnVo.getTxnAmt(),providerRate); //结算冲账金额
+
+						transLog2=new TransLog();
+						this.newTransLog(intfaceTransLog, transLog2);
+						transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+						transLog2.setUserId(intfaceTransLog.getTfrInUserId());
+						transLog2.setPriBId(accountTxnVo.getTxnBId());
+						transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
+						transLog2.setTransId(TransCode.MB10.getCode());
+						transLog2.setUserType(UserType.TYPE200.getCode());
+						transLog2.setTransAmt(providerTxnAmt);
+						transLog2.setUploadAmt(providerTxnAmt);
+						addToVoList(voList,transLog2,voList.size());
+
+						transLog2=new TransLog();
+						this.newTransLog(intfaceTransLog, transLog2);
+						transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+						transLog2.setUserId(tarMchntUserInf.getUserId()); //目标商户
+						transLog2.setPriBId(accountTxnVo.getTxnBId());
+						transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
+						transLog2.setTransId(TransCode.MB95.getCode());
+						transLog2.setUserType(UserType.TYPE400.getCode());
+						transLog2.setTransAmt(providerTxnAmt);
+						transLog2.setUploadAmt(providerTxnAmt);
+						addToVoList(voList,transLog2,voList.size());
+					}
 				}
-			}else{
-				this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.SUB.getValue(), 0);
-
-				transLog2=new TransLog();
-				this.newTransLog(intfaceTransLog, transLog2);
-				transLog2.setTxnPrimaryKey(IdUtil.getNextId());
-				transLog2.setUserId(intfaceTransLog.getTfrInUserId());
-				transLog2.setPriBId(intfaceTransLog.getPriBId());
-				transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
-				transLog2.setTransId(TransCode.MB95.getCode());
-				transLog2.setUserType(UserType.TYPE200.getCode());
-				addToVoList(voList,transLog2,voList.size());
 			}
-
 
 		}else if (TransCode.CW80.getCode().equals(intfaceTransLog.getTransId()) || TransCode.MB80.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工开户，多个专项类型开户
