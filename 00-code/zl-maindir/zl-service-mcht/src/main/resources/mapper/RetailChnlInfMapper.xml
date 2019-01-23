@@ -42,7 +42,7 @@
 			and channel_name like "%"#{channelName}"%"
 		</if>
 		<if test="isOpen != null and isOpen != '' ">
-			and is_open == #{isOpen}
+			and is_open = #{isOpen}
 		</if>
 		order by update_time desc
 	</select>
