@@ -83,6 +83,42 @@ public class AccountTransValidUtils {
 
 
     /**
+     * 解冻提交
+     * @param req
+     * BaseResult req
+     * @return resp
+     */
+    public static boolean executeCommitFrozenValid(AccountFrozenReqVo req, BaseResult resp){
+
+        if (StringUtil.isNullOrEmpty(req.getTransId())) {
+            resp.setMsg("交易类型为空");
+            return true;
+        }
+        if (StringUtil.isNullOrEmpty(req.getTransChnl())) {
+            resp.setMsg("交易渠道为空");
+            return true;
+        }
+        if ((StringUtil.isNullOrEmpty(req.getUserChnlId()) && StringUtil.isNullOrEmpty(req.getUserType() ) || StringUtil.isNullOrEmpty(req.getUserId()))) {
+            resp.setMsg("用户信息不全");
+            return true;
+        }
+        if(StringUtil.isNullOrEmpty(req.getUserType())){
+            resp.setMsg("用户类型为空");
+            return true;
+        }
+        if(StringUtil.isNullOrEmpty(req.getTransAmt())  || StringUtil.isNullOrEmpty(req.getUploadAmt()) ){
+            resp.setMsg("交易金额为空");
+            return true;
+        }
+
+        if(StringUtil.isNullOrEmpty(req.getDmsRelatedKey()) ){
+            resp.setMsg("外部交易订单号为空");
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 转账交易验证
      * @param req
      * BaseResult req

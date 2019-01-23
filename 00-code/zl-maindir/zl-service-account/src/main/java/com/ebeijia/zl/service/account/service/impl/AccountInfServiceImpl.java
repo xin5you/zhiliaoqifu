@@ -143,14 +143,18 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 				} else if (AccountCardAttrEnum.SUB.getValue().equals(transLog.getCardAttr())) {
 					//账户减款
 					this.debit(transLog);
+				}else if (AccountCardAttrEnum.FROZEN.getValue().equals(transLog.getCardAttr())){
+					//账户冻结
+					this.Frozen(transLog);
+				} else if (AccountCardAttrEnum.COMMINFROZEN.getValue().equals(transLog.getCardAttr())){
+					//冻结资金提交
+					this.commitFrozen(transLog);
+				} else if (AccountCardAttrEnum.UNFROZEN.getValue().equals(transLog.getCardAttr())){
+					//账户资金解冻撤销
+					this.unFrozen(transLog);
 				}else{
 					throw AccountBizException.ACCOUNT_CARD_ATTR_ERROR.newInstance("账户不存在,用户编号{%s}", transLog.getCardAttr()).print();
 				}
-//				else if (AccountCardAttrEnum.FROZEN.getValue().equals(transLog.getCardAttr())){
-//					//账户冻结
-//				} else if (AccountCardAttrEnum.UNFROZEN.getValue().equals(transLog.getCardAttr())){
-//					//账户解冻
-//				}
 			}
 		}
 		return true;
@@ -175,6 +179,8 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			account.setAccountType(transLog.getUserType());
 			account.setAccBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户时余额为0
 			account.setCouponBal(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN));
+			account.setFreezeAmt(new BigDecimal(0).setScale(4,BigDecimal.ROUND_HALF_DOWN)); //开户冻结金额为0
+
 			boolean flag= this.save(account);
 			if(flag){
 				flag=accountLogService.save(account, transLog);//保存賬戶信息
@@ -266,7 +272,6 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 * 减款
 	 * @return
 	 */
-	
 	private boolean debit(TransLog transLog) {
 		log.info("==>debit transLog={}",JSONArray.toJSON(transLog));
 
@@ -303,19 +308,117 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		}
 		if(!flag){
 			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
-		}else {
-			try {
-				//托管账户提现
-				if (TransCode.CW91.getCode().equals(transLog.getTransId()) || TransCode.MB90.getCode().equals(transLog.getTransId())) {
-					mqProducerService.sendWithDrawBatchNo(transLog.getBatchNo());
-				}
-			}catch (Exception ex){
-				log.error("托管账户提现发送消息异常，{}",ex);
-			}
 		}
 		return true;
 	}
 
+
+	/**
+	 * 资金冻结
+	 *
+	 * @param transLog
+	 */
+	public boolean Frozen(TransLog transLog) {
+		log.info("==>unFrozen transLog={}",JSONArray.toJSON(transLog));
+		AccountInf account = this.getAccountInfByUserId(transLog.getUserId(), transLog.getPriBId());
+		if (account == null) {
+			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
+		}
+
+		/****** 操作余额 ***/
+		this.Frozen(account, transLog.getTransAmt(),transLog.getTransId());
+		boolean flag=accountLogService.save(account, transLog);
+		if(flag){
+			flag=this.updateById(account);//修改当前賬戶信息
+		}
+		if(!flag){
+			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
+		}else {
+				//托管账户提现
+				if (TransCode.CW91.getCode().equals(transLog.getTransId()) || TransCode.MB90.getCode().equals(transLog.getTransId())) {
+					try {
+						mqProducerService.sendWithDrawBatchNo(transLog.getBatchNo());
+					}catch (Exception ex){
+						log.error("托管账户提现发送消息异常，{}",ex);
+					}
+				}
+		}
+		return true;
+	}
+
+
+	/**
+	 * 冻结提交
+	 *
+	 * @param transLog
+	 */
+	public boolean commitFrozen(TransLog transLog) {
+		log.info("==>transLog transLog={}",JSONArray.toJSON(transLog));
+		AccountInf account = this.getAccountInfByUserId(transLog.getUserId(), transLog.getPriBId());
+		if (account == null) {
+			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
+		}
+
+
+		AccountLog orgAccountLog=accountLogService.getAccountLogByTxnPriKey(transLog.getOrgTxnPrimaryKey());
+		if(orgAccountLog==null){
+			throw AccountBizException.ORG_ACCOUNT_LOG_NOT_EXIT.newInstance("原账户交易日志{%s}不存在", transLog.getOrgTxnPrimaryKey()).print();
+		}
+		//如果原交易金額小于 冻结提交金额
+		if(AmountUtil.lessThan(orgAccountLog.getTxnAmt(),transLog.getTransAmt())){
+			throw AccountBizException.ACCOUNT_REFUND_NOT_ENOUGH.newInstance("退款失败，本次退款大于可退款金额", null).print();
+		}
+
+		/****** 操作余额 ***/
+		this.commitFrozen(account, transLog.getTransAmt());
+		boolean flag=accountLogService.save(account, transLog);
+		if(flag){
+			flag=this.updateById(account);//修改当前賬戶信息
+		}
+		if(!flag){
+			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
+		}
+		return true;
+	}
+
+
+	/**
+	 * 解冻撤销
+	 *
+	 * @param transLog
+	 */
+	public boolean unFrozen(TransLog transLog) {
+		log.info("==>unFrozen transLog={}",JSONArray.toJSON(transLog));
+		AccountInf account = this.getAccountInfByUserId(transLog.getUserId(), transLog.getPriBId());
+		if (account == null) {
+			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
+		}
+
+		AccountLog orgAccountLog=accountLogService.getAccountLogByTxnPriKey(transLog.getOrgTxnPrimaryKey());
+		if(orgAccountLog==null){
+			throw AccountBizException.ORG_ACCOUNT_LOG_NOT_EXIT.newInstance("原账户交易日志{%s}不存在", transLog.getOrgTxnPrimaryKey()).print();
+		}
+		//如果原交易金額小于 已退款金额+本次交易金额
+		if(AmountUtil.lessThan(orgAccountLog.getTxnAmt(),AmountUtil.add(orgAccountLog.getReturnAmt(),transLog.getTransAmt()))){
+			throw AccountBizException.ACCOUNT_REFUND_NOT_ENOUGH.newInstance("退款失败，本次退款大于可退款金额", null).print();
+		}
+		orgAccountLog.setReturnFlag("1");
+		orgAccountLog.setReturnAmt(AmountUtil.add(orgAccountLog.getReturnAmt(),transLog.getTransAmt()));
+		boolean f=accountLogService.updateById(orgAccountLog);
+
+		/****** 操作余额 ***/
+		this.unFrozen(account, transLog.getTransAmt());
+		boolean flag=accountLogService.save(account, transLog);
+		if(flag){
+			flag=this.updateById(account);//修改当前賬戶信息
+		}
+		if(!flag){
+			throw AccountBizException.ACCOUNT_TRANS_FAILED.newInstance("交易失敗,交易流水號{%s}", transLog.getTxnPrimaryKey()).print();
+		}
+		return true;
+	}
+
+	/******************************************************业务数据处理*************************************************************/
 	/**
 	 * 存入
 	 * @param account 账户信息
@@ -349,7 +452,59 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		}
 		account.setAccBal(AmountUtil.sub(account.getAccBal(), transAmt));
 	}
-	
+
+
+	/**
+	 * 申请冻结
+	 * @param account
+	 * @param transAmt
+	 */
+	public void Frozen(AccountInf account,BigDecimal transAmt,String transId) {
+		if (! AccountStatusEnum.ACTIVE.getValue().equals(account.getAccountStat())) {
+			throw AccountBizException.ACCOUNT_STATUS_IS_INACTIVE.newInstance("账户状态异常,用户编号{%s},账户状态{%s}", account.getAccountNo(),account.getAccountStat()).print();
+		}
+		if (!this.availableBalanceIsEnough(account,transAmt,transId)) {
+			throw AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.print();
+		}
+		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
+			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
+		}
+		account.setFreezeAmt(AmountUtil.add(account.getFreezeAmt(),transAmt)); //冻结金额
+		account.setAccBal(AmountUtil.sub(account.getAccBal(), transAmt));
+	}
+
+	/**
+	 * 冻结提交
+	 * @param account 账户信息
+	 * @param transAmt 交易金额
+	 */
+	public void commitFrozen(AccountInf account,BigDecimal transAmt) {
+		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
+			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
+		}
+		if(account.getAccBal()==null){
+			account.setAccBal(new BigDecimal(0));
+		}
+		account.setFreezeAmt(AmountUtil.sub(account.getFreezeAmt(),transAmt));
+	}
+
+
+	/**
+	 * 冻结撤销
+	 * @param account 账户信息
+	 * @param transAmt 交易金额
+	 */
+	public void unFrozen(AccountInf account,BigDecimal transAmt) {
+		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
+			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
+		}
+		if(account.getAccBal()==null){
+			account.setAccBal(new BigDecimal(0));
+		}
+		account.setFreezeAmt(AmountUtil.sub(account.getFreezeAmt(),transAmt));
+		account.setAccBal(AmountUtil.add(account.getAccBal(), transAmt));
+	}
+
 	/**
 	 * 验证可用余额是否足够
 	 * @param account

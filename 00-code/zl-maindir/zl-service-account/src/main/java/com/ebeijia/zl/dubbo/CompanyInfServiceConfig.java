@@ -34,51 +34,51 @@ public class CompanyInfServiceConfig extends DubboCustomerConfig {
 		
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfById");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("insertCompanyInf");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("updateCompanyInf");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("deleteCompanyInf");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfList");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfList");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfByLawCode");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getCompanyInfByIsplatform");
-		methodConfig.setTimeout(3000);
+		methodConfig.setTimeout(10000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		

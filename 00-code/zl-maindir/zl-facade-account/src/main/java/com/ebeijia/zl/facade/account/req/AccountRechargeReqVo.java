@@ -107,5 +107,16 @@ public class AccountRechargeReqVo extends BaseTxnReq{
 	public void setPriBId(String priBId) {
 		this.priBId = priBId;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "AccountRechargeReqVo{" +
+				"mobilePhone='" + mobilePhone + '\'' +
+				", fromCompanyId='" + fromCompanyId + '\'' +
+				", priBId='" + priBId + '\'' +
+				", transAmt=" + transAmt +
+				", uploadAmt=" + uploadAmt +
+				", transList=" + transList +
+				'}' + super.toString();
+	}
 }

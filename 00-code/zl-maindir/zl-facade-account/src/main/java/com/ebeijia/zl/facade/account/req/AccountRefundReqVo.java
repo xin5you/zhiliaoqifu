@@ -61,7 +61,14 @@ public class AccountRefundReqVo extends BaseTxnReq{
 	public void setTransList(List<AccountTxnVo> transList) {
 		this.transList = transList;
 	}
-    
 
-    
+
+	@Override
+	public String toString() {
+		return "AccountRefundReqVo{" +
+				"orgItfPrimaryKey='" + orgItfPrimaryKey + '\'' +
+				", orgDmsRelatedKey='" + orgDmsRelatedKey + '\'' +
+				", transList=" + transList +
+				'}' + super.toString();
+	}
 }

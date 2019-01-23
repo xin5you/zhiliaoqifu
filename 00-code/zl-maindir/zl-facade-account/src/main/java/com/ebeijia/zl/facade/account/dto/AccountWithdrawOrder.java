@@ -29,10 +29,32 @@ public class AccountWithdrawOrder extends Model<AccountWithdrawOrder> {
 
 
     /**
-     * 交易流水号
+     * 操作供应商
+     */
+    @TableId(value = "provider_id")
+    private String providerId;
+
+    /**
+     * 平台交易状态
+     * 10:用户已付
+     * 20:平台已转
+     * 30:已退平台
+     * 40:已退用户
+     */
+    @TableId(value = "txn_status")
+    private String txnStatus;
+
+    /**
+     * 交易日志
      */
     @TableId(value = "txn_primary_key")
     private String txnPrimaryKey;
+
+    /**
+     * 代付请求交易扣款流水号
+     */
+    @TableId(value = "itf_pay_key1")
+    private String itfPayKey1;
  
     /**
      * YFB:苏宁易付宝
