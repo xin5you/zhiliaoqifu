@@ -218,16 +218,19 @@ public class BatchRechargeController {
 		ModelAndView mv = new ModelAndView("batch/recharge/viewRecharge");
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String orderStatus = StringUtil.nullToString(req.getParameter("orderStatus"));
 		
 		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
 		order.setSumAmount(NumberUtils.RMBCentToYuan(order.getSumAmount()));
+		order.setOrderStatus(orderStatus);
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId);
+		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId, orderStatus);
 		mv.addObject("order", order);
 		mv.addObject("pageInfo", pageList);
+		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		return mv;
 	}
 
@@ -244,13 +247,15 @@ public class BatchRechargeController {
 		
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String orderStatus = StringUtil.nullToString(req.getParameter("orderStatus"));
 
 		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
-		
+		order.setOrderStatus(orderStatus);
+
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId);
+		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId, orderStatus);
 		
 		List<BatchOrderList> list = new ArrayList<>();
 		list = batchOrderListService.getBatchOrderListByOrderId(orderId);
@@ -262,6 +267,7 @@ public class BatchRechargeController {
 		mv.addObject("bizTypeName", SpecAccountTypeEnum.findByBId(list.get(0).getBizType()).getName());
 		mv.addObject("accountType", list.get(0).getAccountType());
 		mv.addObject("accountTypeName", UserType.findByCode(list.get(0).getAccountType()).getValue());
+		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		return mv;
 	}
 

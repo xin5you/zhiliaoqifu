@@ -41,7 +41,7 @@
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 					             <tr>
-								   <th>交易日志主键</th>
+								   <th>交易日志id</th>
 								   <th>交易日期</th>
 									<th>交易时间</th>
 								   <th>当前交易类型</th>

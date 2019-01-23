@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -60,9 +61,12 @@ public class BatchOrderListServiceImpl extends ServiceImpl<BatchOrderListMapper,
 	}
 
 	@Override
-	public PageInfo<BatchOrderList> getBatchOrderListPage(int startNum, int pageSize, String orderId) {
+	public PageInfo<BatchOrderList> getBatchOrderListPage(int startNum, int pageSize, String orderId, String orderStat) {
 		PageHelper.startPage(startNum, pageSize);
 		List<BatchOrderList> list = batchOrderListMapper.getBatchOrderListByOrderId(orderId);
+		if (!StringUtil.isNullOrEmpty(orderStat) && list != null && list.size() > 0) {
+			list = list.stream().filter(o -> o.getOrderStat().equals(orderStat)).collect(Collectors.toList());
+		}
 		PageInfo<BatchOrderList> page = null;
 		if (list != null) {
 			for (BatchOrderList batchOrderList : list) {

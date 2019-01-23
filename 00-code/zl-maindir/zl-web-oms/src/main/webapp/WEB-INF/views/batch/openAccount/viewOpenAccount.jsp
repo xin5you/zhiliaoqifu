@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script src="${ctx}/static/oms/js/batch/openAccount/viewOpenAccount.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -22,8 +23,8 @@
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="searchForm" action="" class="form-inline" method="post">
-						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+					<input type="hidden" id="operStatus"  value="${operStatus }"/>
+					<form id="searchForm" action="${ctx }/batch/openAccount/intoViewOpenAccount.do" class="form-inline" method="post">
 						<h3 class="heading">开户订单详情</h3>
 						
 						<div class="row-fluid" >
@@ -66,6 +67,24 @@
 	                                             <span class="fontColor">${order.disposeFail }</span>
                                              </td>
 			                       	     </tr>
+										 <tr>
+											 <td>
+												 <span class="fontBold">订单状态:</span>
+												 <input type="hidden" id="orderId" name="orderId" value="${order.orderId}"/>
+												 <select id="orderStatus" name="orderStatus">
+													 <option value="">--请选择--</option>
+													 <c:forEach var="mapStat" items="${mapOrderStat}" varStatus="sta">
+														 <option value="${mapStat.code}"  <c:if test="${mapStat.code==order.orderStatus}">selected</c:if>   >${mapStat.stat }</option>
+													 </c:forEach>
+												 </select>
+											 </td>
+											 <td></td>
+											 <td></td>
+											 <td>
+												 <button type="submit" class="btn btn-search"> 查 询 </button>
+												 <button type="reset" class="btn btn-inverse btn-reset">重 置</button>
+											 </td>
+										 </tr>
 			                       	</table>
 		                       	</div>
 						  </div>
