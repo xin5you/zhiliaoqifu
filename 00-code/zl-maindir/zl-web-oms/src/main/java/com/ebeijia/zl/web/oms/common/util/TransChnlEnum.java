@@ -18,7 +18,9 @@ public enum TransChnlEnum {
 	CHANNEL8("40007001", "话费充值"),
 	CHANNEL9("40008001", "卡券集市"),
 	CHANNEL10("40007002", "流量充值"),
-	CHANNEL11("40009001", "组合支付");
+	CHANNEL11("40009001", "组合支付"),
+	CHANNEL40011001("40011001", "商户服务"),//zl-web-mcht 商户服务发起   time 2019-01-19 zhuqi 双面账业务改造
+	CHANNEL40011002("40011002", "账户服务");
 
 	private String code;
 	private String name;
