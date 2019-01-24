@@ -65,13 +65,12 @@ public class WxMemoryCacheClient {
 
 	/**
 	 * accessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * 
 	 * @param account
 	 * @return
 	 */
 	public  AccessToken getAccessToken(String account) {
 			String jsonStr = jedisCluster.get(ACCOUNT_ACCESS_TOKENKEY + account);
-			if (jsonStr==null){
+			if (null==jsonStr){
 				return null;
 			}
 			return (AccessToken) JSONObject.toBean(JSONObject.fromObject(jsonStr), AccessToken.class);
