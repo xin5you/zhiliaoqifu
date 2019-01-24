@@ -353,7 +353,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 * @param transLog
 	 */
 	public boolean commitFrozen(TransLog transLog) {
-		log.info("==>transLog transLog={}",JSONArray.toJSON(transLog));
+		log.info("==>commitFrozen transLog={}",JSONArray.toJSON(transLog));
 		AccountInf account = this.getAccountInfByUserId(transLog.getUserId(), transLog.getPriBId());
 		if (account == null) {
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
