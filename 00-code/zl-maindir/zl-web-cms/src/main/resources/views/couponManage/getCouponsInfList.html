@@ -31,11 +31,11 @@
             <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
                 <thead>
                 <tr>
-                    <th></th>
+                    <th>序号</th>
                     <th>卡券Id</th>
                     <th>卡券名称</th>
                     <th>卡券图片</th>
-                    <th>可购数量</th>
+                    <!--<th>可购数量</th>-->
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -46,7 +46,7 @@
                     <td><span th:text="${coupon.couponName}"></span></td>
                     <td style="width:200px; height:200px;"><img  th:src="@{${coupon.iconImage}}" /></td>
                     <!--<td><a th:href="${coupon.iconImage}">[[${coupon.iconImage}]]</a></td>-->
-                    <td><span th:text="${coupon.availableNum}"></span></td>
+                    <!--<td><span th:text="${coupon.availableNum}"></span></td>-->
                     <td>
                         <a th:attr="couponCode=${coupon.couponCode}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
                         <a th:attr="couponCode=${coupon.couponCode}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>

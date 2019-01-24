@@ -102,7 +102,7 @@
         <if test="personalName !=null and personalName !='' ">
             and p.personal_name = #{personalName}
         </if>
-        order by pso.update_time desc
+        order by pso.create_time desc
     </select>
 
 </mapper>

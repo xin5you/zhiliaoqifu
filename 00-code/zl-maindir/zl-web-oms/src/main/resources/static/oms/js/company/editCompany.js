@@ -28,7 +28,7 @@ var editCompany = {
             Helper.alert("请输入统一社会信用代码");
             return false;
         } else {
-            if (lawCode.length() != 18) {
+            if (lawCode.length != 18) {
                 Helper.alert("统一社会信用代码只能为18位");
                 return false;
             }
