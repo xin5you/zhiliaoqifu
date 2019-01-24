@@ -296,6 +296,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
 					transLog2.setUserId(intfaceTransLog.getTfrInUserId());
 					transLog2.setPriBId(accountTxnVo.getTxnBId());
+					if(TransCode.CW20.getCode().equals(intfaceTransLog.getTransId())){
+						transLog2.setPriBId(SpecAccountTypeEnum.A01.getCode());
+					}
 					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 					transLog2.setTransId(TransCode.MB95.getCode());
 					transLog2.setUserType(UserType.TYPE500.getCode());
