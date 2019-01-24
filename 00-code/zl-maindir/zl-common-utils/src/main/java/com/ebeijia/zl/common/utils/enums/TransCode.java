@@ -29,7 +29,6 @@ public enum TransCode {
 	CW92("W92", "解冻提交"),
 	CW93("W93", "解冻撤销");
 
-	
 
 	private String code;
 

@@ -54,10 +54,10 @@ public class CodeEncryUtils {
       }  
       
       public static void main(String[] args) {
-    	  	String uuid="33c648f0-bfb8-41c3-9729-1cadb0b69839";
-    	    String ss = CodeEncryUtils.generate("100000.0000",uuid);
-
-		    System.out.println("是否是同一字符串："+CodeEncryUtils.verify("100000.0000",uuid,ss));
+    	  	String uuid="ac2cfdcc-dd4d-47ac-b8d3-9e9c48a111dc";
+    	    String ss = CodeEncryUtils.generate("-100.0000",uuid);
+          System.out.println(ss);
+		    System.out.println("是否是同一字符串："+CodeEncryUtils.verify("-20.0000",uuid,ss));
 	}
 	 
 }

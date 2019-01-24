@@ -133,11 +133,6 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 				//待充值的订单发起外部充值
 				if (telProviderOrderInf != null && TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode().equals((telProviderOrderInf.getRechargeState()))) {
 					//商户扣款
-					try {
-						providerOrderInfService.doMchntCustomerToProvider(providerInf, telProviderOrderInf);
-					} catch (Exception e) {
-						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-					}
 
 					//请求立方
 					PayBillReq payBillReq = new PayBillReq();

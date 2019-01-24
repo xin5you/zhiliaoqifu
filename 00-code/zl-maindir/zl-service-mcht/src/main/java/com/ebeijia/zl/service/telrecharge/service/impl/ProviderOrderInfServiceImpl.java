@@ -139,7 +139,7 @@ public class ProviderOrderInfServiceImpl extends ServiceImpl<ProviderOrderInfMap
 		req.setMchntCode(providerInf.getProviderId());
 		BaseResult result=accountTransactionFacade.executeConsume(req);
 		if(result !=null && "00".equals(result.getCode())){
-			telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode()); //已扣款
+			telProviderOrderInf.setOrderState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode()); //已扣款
 			telProviderOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
 			this.updateById(telProviderOrderInf);
 			return true;

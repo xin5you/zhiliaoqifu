@@ -66,7 +66,7 @@ public class AccountTransValidUtils {
             resp.setMsg("用户类型为空");
             return true;
         }
-        if((StringUtil.isNullOrEmpty(req.getTransAmt())  || StringUtil.isNullOrEmpty(req.getUploadAmt()) ) && (req.getTransList()==null || req.getTransList().size()<1)){
+        if(req.getTransList()==null || req.getTransList().size()<1){
             resp.setMsg("交易金额为空");
             return true;
         }

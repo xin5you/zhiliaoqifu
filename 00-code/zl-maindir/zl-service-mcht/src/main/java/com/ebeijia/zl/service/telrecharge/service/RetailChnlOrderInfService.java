@@ -72,8 +72,9 @@ public interface RetailChnlOrderInfService extends IService<RetailChnlOrderInf> 
 	 * 商户消费扣款
 	 * @param retailChnlInf
 	 * @param retailChnlOrderInf
+	 * @param providerOrderInf
 	 * @return
 	 */
-	boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf) throws Exception;
+	boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf providerOrderInf) throws Exception;
 
 }

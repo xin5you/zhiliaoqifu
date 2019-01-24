@@ -305,7 +305,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					//目标商户实时冲账
 					if(providerInf !=null){
 						BigDecimal providerRate=providerInf.getProviderRate() !=null ? providerInf.getProviderRate():new BigDecimal(1);
-						BigDecimal providerTxnAmt=AmountUtil.mul(accountTxnVo.getTxnAmt(),providerRate); //结算冲账金额
+						BigDecimal providerTxnAmt=AmountUtil.mul(accountTxnVo.getUpLoadAmt(),providerRate); //结算金额 等于上送的金额 * 折扣率
 
 						transLog2=new TransLog();
 						this.newTransLog(intfaceTransLog, transLog2);
@@ -439,6 +439,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				}else {
 					throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
 				}
+
+
+
 
 				//从收款商户退款
 				transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),intfaceTransLog.getTfrOutUserId(),AccountCardAttrEnum.ADD.getValue());

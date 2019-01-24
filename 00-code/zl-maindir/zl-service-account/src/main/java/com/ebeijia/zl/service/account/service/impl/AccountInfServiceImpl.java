@@ -425,7 +425,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 * @param transAmt 交易金额
 	 */
 	public void credit(AccountInf account,BigDecimal transAmt) {
-		
+
 		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
 			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();
 		}
@@ -433,6 +433,12 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
             account.setAccBal(new BigDecimal(0));
         }
 		account.setAccBal(AmountUtil.add(account.getAccBal(), transAmt));
+
+		if(UserType.TYPE300.getCode().equals(account.getAccountType())) {
+			if (AmountUtil.greaterThanOrEqualTo(account.getAccBal(), new BigDecimal(0))) {
+				throw AccountBizException.ACCOUNT_TARGET_MCHNT_NOT_COMP.print();
+			}
+		}
 	}
 
 	/**
