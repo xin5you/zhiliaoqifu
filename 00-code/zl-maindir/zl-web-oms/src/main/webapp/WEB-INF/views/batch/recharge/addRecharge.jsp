@@ -78,7 +78,7 @@
 						</td>
 						<td>
 							<label class="control-label" style="font-weight: bold;">充值总金额:</label>
-				      		<label style="color: red;">${sumMoney }</label>(元)
+				      		<label style="color: red;">${sumMoney }</label>元
 						</td>
 						<td>
 							<label class="control-label" style="font-weight: bold;">账户类型:</label>

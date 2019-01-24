@@ -48,8 +48,8 @@
                                                 <span class="fontColor">${order.orderName }</span>
                                             </td>
                                             <td>
-                                                <span class="fontBold">充值金额:</span>
-                                                <span class="fontColor">${order.sumAmount }</span>
+                                                <span class="fontBold">充值总金额:</span>
+                                                <span class="fontColor">${order.sumAmount }</span>元
                                             </td>
                                             <td>
                                                 <span class="fontBold">订单总量:</span>
@@ -82,7 +82,7 @@
 				               <th>姓名</th>
 				               <th>身份证号码</th>
 				               <th>手机号</th>
-				               <th>金额</th>
+				               <th>充值金额(元)</th>
 				               <th>操作</th>
 				             </tr>
 				             </thead>
