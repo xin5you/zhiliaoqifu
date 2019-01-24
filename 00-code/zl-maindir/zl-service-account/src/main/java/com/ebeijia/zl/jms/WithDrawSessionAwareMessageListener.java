@@ -125,6 +125,7 @@ public class WithDrawSessionAwareMessageListener implements MessageListenerConcu
                     bodyVO.setDetailData(list);
                     String respStr = batchWithdrawData.batchWithDraw(bodyVO);
                     JSONObject json = JSONObject.parseObject(respStr);
+                    logger.info("苏宁代付请求结果返回->{}",json.toJSONString());
                     if (json.containsKey("responseCode") && "0000".equals(json.get("responseCode"))) {// 易付宝受理成功
                         accountWithdrawOrder.setStatus(WithDrawStatusEnum.Status01.getCode());
                     }

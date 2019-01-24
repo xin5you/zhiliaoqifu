@@ -34,6 +34,7 @@ public class MQProducerService extends AbstractMQProducer{
     public void sendRechargeMobileMsg(final String channelOrderId){
         logger.info("手机充值，渠道订单channelOrderId={}",channelOrderId);
         Message message=new Message(RocketTopicEnums.mobileRechangeTopic,RocketTopicEnums.mobileRechangeTag,"mobileRechange",channelOrderId.getBytes());
+        message.setDelayTimeLevel(1);
         super.syncSend(message);
     }
 

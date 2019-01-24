@@ -153,7 +153,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
 			providerOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_0.getCode());
 			providerOrderInf.setRegTxnAmt(new BigDecimal(0));
-			providerOrderInf.setProviderId(RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId()); //话费充值供应商Id
+			providerOrderInf.setProviderId(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId())); //话费充值供应商Id
 			providerOrderInf.setDataStat("0");
 			resOper=providerOrderInfService.save(providerOrderInf); //保存供应商订单
 			if(resOper){
