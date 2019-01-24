@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "provider/providerOrderInf")
@@ -39,6 +41,12 @@ public class ProviderOrderInfController {
 		try {
 			ProviderOrderInf providerOrderInf = this.getProviderOrderInf(req);
 			PageInfo<ProviderOrderInf> pageList = providerOrderInfFacade.getProviderOrderInfPage(startNum, pageSize, providerOrderInf);
+			List<ProviderOrderInf> orderList = pageList.getList();
+			if (orderList != null && orderList.size() > 0) {
+				for (ProviderOrderInf o : orderList) {
+					o.setRegTxnAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRegTxnAmt().toString())));
+				}
+			}
 			mv.addObject("pageInfo", pageList);
 			mv.addObject("providerOrderInf", providerOrderInf);
 		} catch (Exception e) {
