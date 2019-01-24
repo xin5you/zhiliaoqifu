@@ -143,17 +143,18 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 
 		ProviderOrderInf providerOrderInf=null;
 		if(resOper){
-			ProviderInf providerInf = providerInfService.getById(providerOrderInf.getProviderId());
+
 
 			providerOrderInf=new ProviderOrderInf();
 			providerOrderInf.setRegOrderAmt(retailChnlOrderInf.getRechargeValue()); //充值面额
 			providerOrderInf.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 			providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
 			providerOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_0.getCode());
-			providerOrderInf.setRegTxnAmt(AmountUtil.mul(AmountUtil.RMBYuanToCent(providerOrderInf.getRegOrderAmt()),providerInf.getProviderRate()));
 			providerOrderInf.setProviderId(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId())); //话费充值供应商Id
 			providerOrderInf.setDataStat("0");
 
+			ProviderInf providerInf = providerInfService.getById(providerOrderInf.getProviderId());
+			providerOrderInf.setRegTxnAmt(AmountUtil.mul(AmountUtil.RMBYuanToCent(providerOrderInf.getRegOrderAmt()),providerInf.getProviderRate()));
 
 			//分销商消费扣款
 			resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf,providerOrderInf);
@@ -248,7 +249,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf) {
      	if(telProviderOrderInf !=null){
      		if(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode().equals(telProviderOrderInf.getRechargeState())
-					&& TeleConstants.ProviderRechargeState.RECHARGE_STATE_9.getCode().equals(telProviderOrderInf.getRechargeState())){
+					|| TeleConstants.ProviderRechargeState.RECHARGE_STATE_9.getCode().equals(telProviderOrderInf.getRechargeState())){
 
 				AccountRefundReqVo req=new AccountRefundReqVo();
 				req.setTransId(TransCode.CW11.getCode());
