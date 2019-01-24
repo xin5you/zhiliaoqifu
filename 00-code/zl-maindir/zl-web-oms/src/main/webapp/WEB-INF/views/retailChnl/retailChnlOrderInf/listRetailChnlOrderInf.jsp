@@ -84,7 +84,7 @@
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 				             <tr>
-				             	<th>订单号</th>
+				             	<th>渠道订单号</th>
 				                <th>分销商名称</th>
 				                <th>外部订单号</th>
 				                <th>充值手机</th>

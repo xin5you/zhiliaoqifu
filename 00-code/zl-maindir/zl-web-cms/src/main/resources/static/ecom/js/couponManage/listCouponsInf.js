@@ -164,7 +164,7 @@ var listCoupon = {
             success : function(data) {
                 $(".btn-submit").removeAttr("disabled");
                 if (data.code == '00') {
-                    Helper.confirm_one('编辑规格信息成功', function() {
+                    Helper.confirm_one('编辑卡券信息成功', function() {
                         listCoupon.searchReset();
                     });
                 } else {

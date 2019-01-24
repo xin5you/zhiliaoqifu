@@ -60,7 +60,7 @@
             p.mobile_phone_no as mobilePhoneNo,
             p.personal_name as personalName
         from
-          <include refid="tableName"/>,
+          <include refid="tableName"/>
             left join tb_ecom_member m on m.member_id = po.member_id
             left join tb_user_inf u on u.user_id = m.user_id
             left join tb_person_inf p on p.user_id = u.user_id
