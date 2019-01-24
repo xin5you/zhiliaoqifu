@@ -87,6 +87,8 @@ public class CouponManageServiceIml implements CouponManageService{
             logger.error("## 卡券值图片上传异常");
             return ResultsUtil.error(ExceptionEnum.ImageNews.ImageNews02.getCode(), ExceptionEnum.ImageNews.ImageNews02.getMsg());
         }
+        //总数不能为空,新增时默认为0
+        entity.setTotalNum(0);
         if (!couponProductService.save(entity)) {
             logger.error("## 新增卡券值信息失败");
             return ResultsUtil.error(ExceptionEnum.CouponNews.CouponNews01.getCode(), ExceptionEnum.CouponNews.CouponNews01.getMsg());
