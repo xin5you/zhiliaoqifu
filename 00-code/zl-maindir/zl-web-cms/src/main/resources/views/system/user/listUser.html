@@ -60,8 +60,9 @@
 								<td><span th:if="${user.isdefault == '0'}">是</span><span th:if="${user.isdefault != '0'}">否</span></td>
 								<td><span th:if="${user.dataStat == '0'}">正常</span><span th:if="${user.dataStat != '0'}">停用</span></td>
 				                <td>
-									<span th:if="${user.isdefault != '0' and user.dataStat != '1'}">
-										<a th:attr="userId=${user.id}" title="添加角色" class="btn-mini btn-grant-role" href="#"><i class="icon-plus"></i></a>
+
+									<a th:attr="userId=${user.id}" title="添加角色" class="btn-mini btn-grant-role" href="#"><i class="icon-plus"></i></a>
+									<span th:if="${user.isdefault == '1' and user.dataStat == '0'}">
 										<a th:attr="userId=${user.id}" title="编辑" class="btn-mini btn-edit" href="#"><i class="icon-edit"></i></a>
 										<a th:attr="userId=${user.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
 									</span>	     
