@@ -225,7 +225,7 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         LinkedList<BatchOrderList> batchOrderList = new LinkedList<>();
         batchOrderList.add(orderList);
 
-        int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE400.getCode());
+        int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE400.getCode(), null);
         if (orderResult < 0) {
             logger.error("## 新增分销商开户订单信息失败");
             return 0;

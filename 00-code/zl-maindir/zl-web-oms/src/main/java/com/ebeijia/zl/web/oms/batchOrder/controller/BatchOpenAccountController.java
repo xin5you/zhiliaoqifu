@@ -185,7 +185,7 @@ public class BatchOpenAccountController {
 			return resultMap;
 		}
 		try {
-			int i = batchOrderService.addBatchOrderAndOrderList(req, orderLists, TransCode.CW80.getCode(), UserType.TYPE100.getCode());
+			int i = batchOrderService.addBatchOrderAndOrderList(req, orderLists, TransCode.CW80.getCode(), UserType.TYPE100.getCode(), null);
 			if (i > 0) {
 				jedisClusterUtils.del(OrderConstants.openAccountSession);
 			}

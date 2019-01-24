@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.web.oms.common.util.OrderConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,6 @@ import com.ebeijia.zl.basics.system.domain.User;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
-import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
-import com.ebeijia.zl.common.utils.enums.TransChnl;
-import com.ebeijia.zl.common.utils.enums.TransCode;
-import com.ebeijia.zl.common.utils.enums.UserChnlCode;
-import com.ebeijia.zl.common.utils.enums.UserType;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
@@ -112,7 +108,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 
 	@Override
 	public int addBatchOrderAndOrderList(HttpServletRequest req, LinkedList<BatchOrderList> personInfList,
-			String orderType, String accountType) {
+			String orderType, String accountType, String isPlatform) {
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
 		
@@ -177,27 +173,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				list.add(o);
 			}
 		} else if (TransCode.MB80.getCode().equals(orderType)) {
-			//企业账户A类和B类全开，供应商和分销商账户除了托管账户其他全开
-			if (UserType.TYPE200.getCode().equals(accountType)) {
-				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
-					for (BatchOrderList orderList : personInfList) {
-						BatchOrderList o = new BatchOrderList();
-						o.setOrderListId(IdUtil.getNextId());
-						o.setOrderId(order.getOrderId());
-						o.setUserName(orderList.getUserName());
-						o.setPhoneNo(orderList.getPhoneNo());
-						o.setUserCardNo(orderList.getUserCardNo());
-						o.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
-						o.setAccountType(accountType);
-						o.setBizType(t.getbId());
-						o.setCreateUser(order.getCreateUser());
-						o.setUpdateUser(order.getUpdateUser());
-						o.setCreateTime(System.currentTimeMillis());
-						o.setUpdateTime(System.currentTimeMillis());
-						list.add(o);
-					}
-				}
-			} else {
+			//平台账户A类和B类全开，企业账户，供应商账户和分销商账户除了托管账户其他全开
+			if (!StringUtil.isNullOrEmpty(isPlatform) && IsPlatformEnum.IsPlatformEnum_1.getCode().equals(isPlatform)) {
 				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
 					if (!SpecAccountTypeEnum.A01.getbId().equals(t.getbId())) {
 						for (BatchOrderList orderList : personInfList) {
@@ -216,6 +193,25 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 							o.setUpdateTime(System.currentTimeMillis());
 							list.add(o);
 						}
+					}
+				}
+			} else {
+				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
+					for (BatchOrderList orderList : personInfList) {
+						BatchOrderList o = new BatchOrderList();
+						o.setOrderListId(IdUtil.getNextId());
+						o.setOrderId(order.getOrderId());
+						o.setUserName(orderList.getUserName());
+						o.setPhoneNo(orderList.getPhoneNo());
+						o.setUserCardNo(orderList.getUserCardNo());
+						o.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
+						o.setAccountType(accountType);
+						o.setBizType(t.getbId());
+						o.setCreateUser(order.getCreateUser());
+						o.setUpdateUser(order.getUpdateUser());
+						o.setCreateTime(System.currentTimeMillis());
+						o.setUpdateTime(System.currentTimeMillis());
+						list.add(o);
 					}
 				}
 			}
