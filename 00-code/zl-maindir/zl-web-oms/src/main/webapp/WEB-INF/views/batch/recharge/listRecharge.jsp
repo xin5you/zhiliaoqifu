@@ -74,7 +74,7 @@
                                     </c:forEach>
                                     </select>
 		                       	</div> --%>
-	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
+	                            <%--<div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
 	                                <span class="add-on">开始时间</span>
 	                                <input class="input-medium" id="startTime" name="startTime" readonly="readonly" type="text" value="${order.startTime }" />
 	                                <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
@@ -83,7 +83,7 @@
 	                                <span class="add-on">结束时间</span>
 	                                <input class="input-medium" id="endTime" name="endTime" readonly="readonly" type="text" value="${order.endTime }" />
 	                                <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
-	                            </div>
+	                            </div>--%>
 	                        </div>
                           </div>
 				         </br >       
@@ -93,7 +93,7 @@
 				               <th>订单号</th>
 				               <th>订单名称</th>
 				               <th>订单数量</th>
-				               <th>订单总金额</th>
+				               <th>订单总金额(元)</th>
 				               <th>订单状态</th>
 				               <th>创建人</th>
 				               <th>创建时间</th>

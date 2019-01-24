@@ -14,7 +14,7 @@ public interface BatchOrderListService extends IService<BatchOrderList> {
 
 	LinkedList<BatchOrderList> getRedisBatchOrderList(String bathOpen);
 	
-	PageInfo<BatchOrderList> getBatchOrderListPage(int startNum, int pageSize, String orderId);
+	PageInfo<BatchOrderList> getBatchOrderListPage(int startNum, int pageSize, String orderId, String orderStat);
 	
 	List<BatchOrderList> getBatchOrderListByOrderId(String orderId);
 	

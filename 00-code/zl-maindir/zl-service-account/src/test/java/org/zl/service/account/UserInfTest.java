@@ -33,7 +33,7 @@ public class UserInfTest {
     	req.setUserName("zhuqi");
     	req.setUserType(UserType.TYPE100.getCode());
     	req.setCompanyId("100000000000000000000000");
-    	req.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
+    	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
     	req.setUserChnlId(IdUtil.getNextId());
 
 

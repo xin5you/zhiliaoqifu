@@ -1,8 +1,10 @@
 package com.ebeijia.zl.web.oms.sys.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import com.ebeijia.zl.basics.system.domain.RoleResource;
 import com.ebeijia.zl.basics.system.service.RoleResourceService;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +43,37 @@ public class ResourceController {
 	@Autowired
 	private RoleResourceService roleResourceService;
 
+	@Autowired
+	private UserRoleResourceService userRoleResourceService;
+
+	/**
+	 * 查询资源信息列表（分页）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/listResource")
 	public ModelAndView listResource(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/resource/listResource");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		
-		List<Resource> pageList = null;
 		try {
-			Resource resource = new Resource();
-			resource.setLoginType(LoginType.LoginType1.getCode());
-			pageList = resourceService.getResourceList(resource);
+			List<Resource> resourcesList = userRoleResourceService.getOmsResource();
+			mv.addObject("pageInfo", resourcesList);
 		} catch (Exception e) {
 			logger.error("查询列表信息出错", e);
 		}
-		mv.addObject("pageInfo", pageList);
+
 		mv.addObject("operStatus", operStatus);
 		return mv;
 	}
-	
+
+	/**
+	 * 跳转新增资源信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoAddResource")
 	public ModelAndView intoAddResource(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/resource/addResource");
@@ -67,7 +84,9 @@ public class ResourceController {
 		resource.setLoginType(LoginType.LoginType1.getCode());
 		resource.setResourceType("0");
 		
-		List<Resource> resourceList = resourceService.getResourceList(resource);
+		/*List<Resource> resourceList = resourceService.getResourceList(resource);*/
+		List<Resource> resourceList = userRoleResourceService.getOmsResource();
+		resourceList = resourceList.stream().filter(r -> !"1".equals(r.getResourceType())).collect(Collectors.toList());
 		
 		Resource parantRes = resourceService.getById(resourceId);
 		
@@ -122,12 +141,15 @@ public class ResourceController {
 		String resourceId = req.getParameter("resourceId");
 		Resource resource = resourceService.getById(resourceId);
 		
-		//查找上级菜单列表
+		//查找菜单列表（资源类型是‘菜单’的）
 		Resource resource1 = new Resource();
 		resource1.setResourceType("0");
 		resource1.setLoginType(LoginType.LoginType1.getCode());
-		List<Resource> resourceList = resourceService.getResourceList(resource1);
-		
+		/*List<Resource> resourceList = resourceService.getResourceList(resource1);*/
+		List<Resource> resourceList = userRoleResourceService.getOmsResource();
+		resourceList = resourceList.stream().filter(r -> !"1".equals(r.getResourceType())).collect(Collectors.toList());
+
+
 		mv.addObject("resourceList", resourceList);
 		mv.addObject("resource", resource);
 		return mv;
@@ -213,7 +235,6 @@ public class ResourceController {
 		return resource;
 	}
 
-	
 	/**
 	 * 删除资源 commit
 	 * @param req
@@ -246,5 +267,5 @@ public class ResourceController {
 		}
 		return resultMap;
 	}
-	
+
 }

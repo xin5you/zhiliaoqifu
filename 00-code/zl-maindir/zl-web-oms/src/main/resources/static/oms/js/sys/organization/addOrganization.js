@@ -21,10 +21,12 @@ var addOrganization = {
                 $(element).closest('div').removeClass("f_error");
             },
             rules:{
-            	name: { required: true}
+            	name: { required: true},
+                pid:{ required: true}
             },
             messages: {
-            	name: { required: "请输入部门名称"}
+            	name: { required: "请输入部门名称"},
+                pid: { required: "请选择所属部门"}
             },
             invalidHandler: function(form, validator) {
                 //$.sticky("There are some errors. Please corect them and submit again.", {autoclose : 5000, position: "top-right", type: "st-error" });

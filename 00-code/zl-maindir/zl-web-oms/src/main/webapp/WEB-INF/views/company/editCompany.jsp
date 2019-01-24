@@ -41,7 +41,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">统一社会信用代码<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="lawCode" name="lawCode" value="${companyInf.lawCode }" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" <c:if test="${'1'==companyInf.isOpen }">readonly="readonly"</c:if>/>
+							<input type="text" class="span6" id="lawCode" name="lawCode" value="${companyInf.lawCode }" maxlength="18" onkeyup="this.value=this.value.replace(/[^0-9a-z]/g,'')" <c:if test="${'1'==companyInf.isOpen }">readonly="readonly"</c:if>/>
 							<span class="help-block"></span>
 						</div>
 					</div>

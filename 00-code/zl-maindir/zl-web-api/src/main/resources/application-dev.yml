@@ -64,7 +64,7 @@ spring:
 withdraw:
   yfb:
     publicKeyIndex: 0001
-    wagKeyString:
+    wagKeyString: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCbFR1mQQxAnXtzEZIp/Lo4RVzU2c/FGCc7QoRHqBQTAxRXtn+n94ldgQBauDNm+nMu5UtsS0r+hXfaeTdJrhJ7pMZUy90kjLdvmzJ5EbjoQGoJdCzmthWBNvRD+m2tAAxYbDb0mcCpvor93RIkbkcphZudCvkG8+/xAfNmJdyZQIDAQAB
     merchantNo: 70235957
     productCode: 01070000042
     goodsType: 290054

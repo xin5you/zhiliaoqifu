@@ -17,7 +17,7 @@ public interface BatchOrderService extends IService<BatchOrder> {
 	
 	PageInfo<BatchOrder> getBatchOrderPage(int startNum, int pageSize, BatchOrder order, HttpServletRequest req);
 	
-	int addBatchOrderAndOrderList(HttpServletRequest req, LinkedList<BatchOrderList> personInfList, String orderType, String accountType);
+	int addBatchOrderAndOrderList(HttpServletRequest req, LinkedList<BatchOrderList> personInfList, String orderType, String accountType, String isPlatform);
 	
 	BatchOrder getBatchOrderById(String orderId);
 	

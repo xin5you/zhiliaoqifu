@@ -51,12 +51,14 @@ var addRetailChnlInf = {
     			}
     		}
     	}
-    	var reMail = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-    	if (!reMail.test(email)) {
-    		Helper.alert("请输入正确的邮箱");
-			return false;
-    	}
-    	
+    	if (email != null && email != '') {
+            var reMail = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+            if (!reMail.test(email)) {
+                Helper.alert("请输入正确的邮箱");
+                return false;
+            }
+		}
+
     	Helper.confirm("确定提交吗？",function(){
 		    $.ajax({								  
 	            url: Helper.getRootPath() + '/retailChnl/retailChnlInf/addRetailChnlInfCommit.do',

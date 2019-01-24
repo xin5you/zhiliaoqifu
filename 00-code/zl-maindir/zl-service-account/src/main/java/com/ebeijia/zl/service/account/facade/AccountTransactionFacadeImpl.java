@@ -7,6 +7,8 @@ import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.enums.UserChnlCode;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.DateUtil;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.req.*;
@@ -219,6 +221,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req.getTransList()));
 		intfaceTransLog.setMchntCode(req.getMchntCode());
 		intfaceTransLog.setShopCode(req.getShopCode());
+		intfaceTransLog.setTargetMchntCode(req.getTargetMchtCode());  //
 		/****保存接口易流水****/
 		intfaceTransLogService.saveOrUpdate(intfaceTransLog);
 		
@@ -363,13 +366,6 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			return ResultsUtil.error(ITFRespCode.CODE1002.getCode(), "账户信息不存在{%s}"+req.getUserChnlId());
 		}
 
-		/**所有的商户收款，商户必须属于管理平台开户的账户*/
-		UserInf toMchntInf= userInfService.getUserInfByExternalId(req.getMchntCode(),UserChnlCode.USERCHNL1001.getCode());
-
-		if(toMchntInf==null){
-			return ResultsUtil.error(ITFRespCode.CODE1005.getCode(),String.format("当前商户{%s}不存在", req.getTransChnl(),req.getUserChnl()));
-		}
-
 		long sDate=DateUtil.getMonthBeginInMillis();
 		long eDate=DateUtil.getMonthEndInMillis();
 
@@ -435,7 +431,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				req.getDmsRelatedKey(),
 				fromUserInf.getUserId(),
 				req.getTransId(),
-				null,
+				SpecAccountTypeEnum.A01.getbId(),
 				req.getUserType(),
 				req.getTransChnl(),
 				req.getUserChnl(),
@@ -447,9 +443,9 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				null,
 				null,
 				null,
+				 null,
+				 null, //从托管账户提现
 				 fromUserInf.getUserId(),
-				 SpecAccountTypeEnum.A01.getbId(), //从托管账户提现
-				 toMchntInf.getUserId(),
 				 SpecAccountTypeEnum.A01.getbId(),
 				null);
 
@@ -550,6 +546,98 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLogService.updateById(intfaceTransLog,eflag);
 		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
 	}
+
+	/**
+	 * @Description: 解冻提交
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2019年1月23日 上午11:08:55
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年11月30日     zhuqi           v1.0.0
+	 */
+	public BaseResult executeUnFrozen(AccountFrozenReqVo req) throws Exception{
+
+		log.info("==>  解冻 mehtod=executeUnFrozen and AccountFrozenReqVo={}",JSONArray.toJSON(req));
+		BaseResult resp=new  BaseResult();
+		if(AccountTransValidUtils.executeCommitFrozenValid(req,resp)){
+			resp.setCode(ITFRespCode.CODE1099.getCode());
+			return resp;
+		}
+
+		/**
+		 * 订单交易检验
+		 */
+		IntfaceTransLog orgIntfaceTransLog=intfaceTransLogService.getById(req.getOrgItfPrimaryKey());
+
+		if(orgIntfaceTransLog ==null || ! "00".equals(orgIntfaceTransLog.getRespCode())){
+			return ResultsUtil.error(ITFRespCode.CODE1025.getCode(), ITFRespCode.CODE1025.getValue());
+		}
+
+		/**
+		 * 订单交易检验
+		 */
+		IntfaceTransLog intfaceTransLog=intfaceTransLogService.getItfTransLogDmsChannelTransId(req.getDmsRelatedKey(), req.getTransChnl());
+		if(intfaceTransLog!=null && "00".equals(intfaceTransLog.getRespCode())){
+			return ResultsUtil.error(ITFRespCode.CODE1094.getCode(), ITFRespCode.CODE1094.getValue());
+		}
+		/**获取用户数据*/
+		UserInf fromUserInf=null;
+
+		if(StringUtil.isNotEmpty(req.getUserId())){
+			fromUserInf=userInfService.getById(req.getUserId());
+		}else{
+			fromUserInf= userInfService.getUserInfByExternalId(req.getUserChnlId(), req.getUserChnl());
+		}
+		if(fromUserInf==null){
+			return ResultsUtil.error(ITFRespCode.CODE1002.getCode(),String.format("当前用户{%s}所属渠渠道{%s}未开户", req.getTransChnl(),req.getUserChnl()));
+		}
+
+		/****实例化接口流水****/
+		intfaceTransLog=intfaceTransLogService.newItfTransLog(
+				intfaceTransLog,
+				req.getDmsRelatedKey(),
+				fromUserInf.getUserId(),
+				req.getTransId(),
+				req.getPriBId(),
+				req.getUserType(),
+				req.getTransChnl(),
+				req.getUserChnl(),
+				req.getUserChnlId(),
+				orgIntfaceTransLog.getItfPrimaryKey());
+		intfaceTransLogService.addBizItfTransLog(
+				intfaceTransLog,
+				req.getTransAmt(),
+				req.getUploadAmt(),
+				null,
+				null,
+				null,
+				orgIntfaceTransLog.getTfrInUserId(),
+				orgIntfaceTransLog.getTfrInBId(),
+				fromUserInf.getUserId(),
+				req.getPriBId(),
+				null);
+
+
+		/****保存接口易流水****/
+		intfaceTransLogService.save(intfaceTransLog);
+
+		//执行操作
+		boolean eflag=false;
+		try {
+			eflag=transLogService.execute(intfaceTransLog);
+		} catch (AccountBizException accountBizException) {
+			log.error("解冻-executeFrozen error:{}",accountBizException);
+			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
+		}
+		//修改当前接口请求交易状态
+		intfaceTransLogService.updateById(intfaceTransLog,eflag);
+
+		return new BaseResult<>(intfaceTransLog.getRespCode(),null,intfaceTransLog.getItfPrimaryKey());
+	}
+
 
 	/**
 	 * 交易信息查询

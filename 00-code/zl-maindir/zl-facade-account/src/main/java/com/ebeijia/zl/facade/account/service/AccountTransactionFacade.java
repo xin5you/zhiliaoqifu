@@ -108,6 +108,24 @@ public interface AccountTransactionFacade {
 	BaseResult executeRefund(AccountRefundReqVo req) throws Exception;
 
 	/**
+	 *
+	 * @Description: 解冻(解冻提交，解冻撤销)
+	 *
+	 * @param:描述1描述
+	 *
+	 * @version: v1.0.0
+	 * @author: zhuqi
+	 * @date: 2018年12月6日 上午9:29:36
+	 *
+	 * Modification History:
+	 * Date         Author          Version
+	 *-------------------------------------*
+	 * 2018年12月6日     zhuqi           v1.0.0
+	 */
+	BaseResult executeUnFrozen(AccountFrozenReqVo req) throws Exception;
+
+
+	/**
 	 * 交易信息查询
 	 * @param dmsRelatedKey
 	 * @return

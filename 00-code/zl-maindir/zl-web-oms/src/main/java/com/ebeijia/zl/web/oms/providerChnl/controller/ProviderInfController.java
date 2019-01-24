@@ -211,6 +211,7 @@ public class ProviderInfController {
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		try {
 			ProviderInf providerInf = providerInfFacade.getProviderInfById(providerId);
+            providerInf.setIsOpen(IsOpenAccountEnum.findByBId(providerInf.getIsOpen()).getName());
 			mv.addObject("providerInf", providerInf);
 		} catch (Exception e) {
 			logger.error("## 查询供应商信息详情异常", e);
@@ -473,7 +474,7 @@ public class ProviderInfController {
 			order.setTransferCheckName(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
 			order.setPlatformReceiverCheckName(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
 			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
-			/*order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));*/
+			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
 			order.setPlatformInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getPlatformInSumAmt().toString())));
 			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));

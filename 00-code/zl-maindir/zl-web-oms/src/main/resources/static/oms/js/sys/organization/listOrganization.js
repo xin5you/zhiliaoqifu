@@ -42,7 +42,7 @@ var listOrganization = {
 	            		
 	            		location.href=Helper.getRootPath() + '/sys/organization/listOrganization.do?operStatus=4';
 	            	}else{
-	            		Helper.alter(result.msg);
+	            		Helper.alert(result.msg);
 	            	}
 	            },
 	            error:function(){

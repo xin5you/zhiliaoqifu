@@ -30,4 +30,12 @@ public interface RetailChnlInfFacade {
 
 	RetailChnlInf getRetailChnlInfByLawCode(String lawCode) throws Exception;
 
+	/**
+	 * 根据分销商名称查询分销商信息
+	 * @param channelName
+	 * @return
+	 * @throws Exception
+	 */
+	RetailChnlInf getRetailChnlInfByChannelName(String channelName) throws Exception;
+
 }

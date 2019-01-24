@@ -50,6 +50,7 @@ public class DiyResourceController {
 		try {
 			Resource resource = new Resource();
 			resource.setLoginType(LoginType.LoginType3.getCode());
+			resource.setDataStat(DataStatEnum.TRUE_STATUS.getCode());
 			pageList = resourceService.getResourceList(resource);
 		} catch (Exception e) {
 			logger.error("查询列表信息出错", e);

@@ -27,53 +27,56 @@ public class RetailChnlInfServiceConfig extends DubboCustomerConfig {
 		referenceBean.setVersion("1.0.0");
 		referenceBean.setCluster("failfast");
 		referenceBean.setCheck(false);
-		
+
 		List<MethodConfig> methods = new ArrayList<MethodConfig>();
 
-		
 		MethodConfig methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlInfById");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
+
 		methodConfig=new MethodConfig();
 		methodConfig.setName("saveRetailChnlInf");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
-		
+
 		methodConfig=new MethodConfig();
-		methodConfig.setName("updateCompanyInf");
+		methodConfig.setName("updateRetailChnlInf");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
+
 		methodConfig=new MethodConfig();
 		methodConfig.setName("deleteRetailChnlInfById");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
-		
+
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlInfList");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
-		
+
 		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlInfPage");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 
-		/*methodConfig=new MethodConfig();
+		methodConfig=new MethodConfig();
 		methodConfig.setName("getRetailChnlInfByLawCode");
 		methodConfig.setTimeout(3000);
 		methodConfig.setRetries(0);
-		methods.add(methodConfig); //*/
+		methods.add(methodConfig); //
+
+		methodConfig=new MethodConfig();
+		methodConfig.setName("getRetailChnlInfByChannelName");
+		methodConfig.setTimeout(3000);
+		methodConfig.setRetries(0);
+		methods.add(methodConfig); //
 		
 		return referenceBean;
 	}

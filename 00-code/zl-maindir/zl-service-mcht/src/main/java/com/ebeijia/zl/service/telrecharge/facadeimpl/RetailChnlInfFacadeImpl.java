@@ -70,6 +70,11 @@ public class RetailChnlInfFacadeImpl  implements RetailChnlInfFacade {
 		return retailChnlInfService.getRetailChnlInfByLawCode(lawCode);
 	}
 
+	@Override
+	public RetailChnlInf getRetailChnlInfByChannelName(String channelName) throws Exception {
+		return retailChnlInfService.getRetailChnlInfByChannelName(channelName);
+	}
+
 //	@Override
 //	public RetailChnlInf getRetailChnlInfByMchntCode(String mchntCode) throws Exception {
 //		return retailChnlInfService.getRetailChnlInfByMchntCode(mchntCode);

@@ -106,5 +106,16 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 		this.addList = addList;
 	}
 
-
+	@Override
+	public String toString() {
+		return "AccountConsumeReqVo{" +
+				"priBId='" + priBId + '\'' +
+				", transAmt=" + transAmt +
+				", uploadAmt=" + uploadAmt +
+				", transList=" + transList +
+				", addList=" + addList +
+				", mchntCode='" + mchntCode + '\'' +
+				", shopCode='" + shopCode + '\'' +
+				"} " + super.toString();
+	}
 }

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="${ctx}/static/datetimepicker/css/bootstrap-datetimepicker.0.0.11.min.css" />
     <script src="${ctx}/static/datetimepicker/js/bootstrap-datetimepicker.0.0.11.min.js"></script>
     <script src="${ctx}/static/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="${ctx}/static/oms/js/batch/recharge/viewRecharge.js"></script>
 </head>
 <body>
 	   <%@ include file="/WEB-INF/views/common/navbar.jsp"%>
@@ -22,8 +23,8 @@
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="searchForm" action="" class="form-inline" method="post">
-						<input type="hidden" id="operStatus"  value="${operStatus }"/>
+                    <input type="hidden" id="operStatus"  value="${operStatus }"/>
+					<form id="searchForm" action="${ctx }/batch/recharge/intoViewRecharge.do" class="form-inline" method="post">
 						<h3 class="heading">充值订单详情</h3>
 						
 						<div class="row-fluid" >
@@ -69,9 +70,25 @@
                                                  <span class="fontBold">处理失败:</span>
                                                  <span class="fontColor">${order.disposeFail }</span>
                                              </td>
-                                             <td>
-                                             </td>
                                          </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fontBold">订单状态:</span>
+                                                <input type="hidden" id="orderId" name="orderId" value="${order.orderId}"/>
+                                                <select id="orderStatus" name="orderStatus">
+                                                    <option value="">--请选择--</option>
+                                                    <c:forEach var="mapStat" items="${mapOrderStat}" varStatus="sta">
+                                                        <option value="${mapStat.code}"  <c:if test="${mapStat.code==order.orderStatus}">selected</c:if>   >${mapStat.stat }</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-search"> 查 询 </button>
+                                                <button type="reset" class="btn btn-inverse btn-reset">重 置</button>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </div>
 						  </div>
@@ -85,7 +102,7 @@
 				               <th>姓名</th>
 				               <th>身份证号码</th>
 				               <th>手机号</th>
-				               <th>充值金额</th>
+				               <th>充值金额(元)</th>
 				               <th>充值账户</th>
 				               <th>状态</th>
 				               <th>备注</th>

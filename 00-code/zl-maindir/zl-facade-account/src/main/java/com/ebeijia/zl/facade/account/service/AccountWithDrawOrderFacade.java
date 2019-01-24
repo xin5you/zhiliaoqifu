@@ -40,5 +40,5 @@ public interface AccountWithDrawOrderFacade {
 	 * @param detail
 	 * @return
 	 */
-	boolean updateAccountWithdrawOrder(AccountWithdrawOrder order,AccountWithdrawDetail detail);
+	boolean updateAccountWithdrawOrder(AccountWithdrawOrder order,AccountWithdrawDetail detail) throws Exception;
 }

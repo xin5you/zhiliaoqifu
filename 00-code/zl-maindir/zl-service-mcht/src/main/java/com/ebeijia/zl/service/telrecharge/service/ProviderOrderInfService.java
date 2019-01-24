@@ -34,12 +34,4 @@ public interface ProviderOrderInfService extends IService<ProviderOrderInf> {
 	 */
 	void updateOrderRechargeState(ProviderOrderInf telProviderOrderInf,OrderDetailInfo orderDetailInfo,String respCode);
 
-
-	/**
-	 *  调用供应商商接口，发起消费扣款
-	 * @param providerInf
-	 * @param telProviderOrderInf
-	 * @return
-	 */
-	boolean doMchntCustomerToProvider(ProviderInf providerInf, ProviderOrderInf telProviderOrderInf) throws Exception;
 }

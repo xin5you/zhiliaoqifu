@@ -65,7 +65,7 @@
 							</div>
 						  </div>
 						</div>
-						<div class="row-fluid">
+						<%--<div class="row-fluid">
 							<div class="span12">
 	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
 	                                <span class="add-on">开始时间</span>
@@ -78,7 +78,7 @@
 	                                <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
 	                            </div>
 	                        </div>
-                          </div>
+                          </div>--%>
 				         </br >       
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>

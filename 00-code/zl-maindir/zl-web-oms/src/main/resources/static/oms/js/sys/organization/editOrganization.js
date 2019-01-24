@@ -19,10 +19,12 @@ var editOrganization = {
                 $(element).closest('div').removeClass("f_error");
             },
             rules:{
-            	name: { required: true}
+                name: { required: true},
+                pid:{ required: true}
             },
             messages: {
-            	name: { required: "请输入部门名称"}
+                name: { required: "请输入部门名称"},
+                pid: { required: "请选择所属部门"}
             },
             invalidHandler: function(form, validator) {
             },

@@ -1,11 +1,13 @@
 package com.ebeijia.zl.service.account.facade;
 
+import com.ebeijia.zl.common.utils.enums.TransCode;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
+import com.ebeijia.zl.facade.account.enums.WithDrawSuccessEnum;
 import com.ebeijia.zl.facade.account.service.AccountWithDrawOrderFacade;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
-import com.ebeijia.zl.service.account.service.ITransLogService;
+import com.ebeijia.zl.service.account.service.IAccountWithdrawTxnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,6 +31,9 @@ public class AccountWithDrawOrderFacadeImpl implements AccountWithDrawOrderFacad
 
 	@Autowired
 	private IAccountWithdrawDetailService accountWithdrawDetailService;
+
+	@Autowired
+	private IAccountWithdrawTxnService accountWithdrawTxnService;
 
 	/**
      * 账户提现订单查询
@@ -54,12 +59,12 @@ public class AccountWithDrawOrderFacadeImpl implements AccountWithDrawOrderFacad
 	 * @param detail
 	 * @return
 	 */
-	public boolean updateAccountWithdrawOrder(AccountWithdrawOrder order,AccountWithdrawDetail detail){
-		//修改回调订单
-		boolean eflag=accountWithdrawOrderService.updateById(order);
-		if(eflag) {
-			eflag=accountWithdrawDetailService.updateById(detail);
+	public boolean updateAccountWithdrawOrder(AccountWithdrawOrder order,AccountWithdrawDetail detail) throws Exception{
+		String transCode=TransCode.CW93.getCode();
+		if(WithDrawSuccessEnum.True.getCode().equals(detail.getSuccess())){
+			transCode=TransCode.CW92.getCode();
 		}
+		boolean eflag=accountWithdrawTxnService.doFrozenWithDrawDetailByUser(order,detail,transCode);
 		return eflag;
 	}
 }

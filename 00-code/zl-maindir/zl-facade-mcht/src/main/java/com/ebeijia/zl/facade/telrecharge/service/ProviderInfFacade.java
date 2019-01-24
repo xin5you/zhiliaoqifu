@@ -96,5 +96,4 @@ public interface ProviderInfFacade {
 	 */
 	public ProviderInf getProviderInfByProviderName(String providerName);
 
-
 }

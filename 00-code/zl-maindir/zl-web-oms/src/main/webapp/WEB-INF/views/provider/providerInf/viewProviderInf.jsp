@@ -32,6 +32,13 @@
 						             </div>
 					     		</div>
 								<div class="control-group formSep">
+									<label class="control-label">是否开户</label>
+									<div class="controls">
+										<input type="text" class="span6" id="isOpen" name="isOpen" maxlength="32" value="${providerInf.isOpen}" readonly="readonly"/>
+										<span class="help-block"></span>
+									</div>
+								</div>
+								<div class="control-group formSep">
 									<label class="control-label">供应商代码</label>
 									<div class="controls">
 										<input type="text" class="span6" id="lawCode" name="lawCode" maxlength="32" value="${providerInf.lawCode}" readonly="readonly"/>

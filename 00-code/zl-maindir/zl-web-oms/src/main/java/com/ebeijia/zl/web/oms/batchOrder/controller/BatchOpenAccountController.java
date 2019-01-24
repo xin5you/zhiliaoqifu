@@ -185,7 +185,7 @@ public class BatchOpenAccountController {
 			return resultMap;
 		}
 		try {
-			int i = batchOrderService.addBatchOrderAndOrderList(req, orderLists, TransCode.CW80.getCode(), UserType.TYPE100.getCode());
+			int i = batchOrderService.addBatchOrderAndOrderList(req, orderLists, TransCode.CW80.getCode(), UserType.TYPE100.getCode(), null);
 			if (i > 0) {
 				jedisClusterUtils.del(OrderConstants.openAccountSession);
 			}
@@ -208,13 +208,18 @@ public class BatchOpenAccountController {
 	public ModelAndView intoViewOpenAccount(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("batch/openAccount/viewOpenAccount");
 		String orderId = req.getParameter("orderId");
+		String orderStatus = StringUtil.nullToString(req.getParameter("orderStatus"));
+
 		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
+		order.setOrderStatus(orderStatus);
+
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId);
+		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId, orderStatus);
 		mv.addObject("order", order);
 		mv.addObject("pageInfo", pageList);
+		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		return mv;
 	}
 
@@ -231,12 +236,14 @@ public class BatchOpenAccountController {
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		String orderStatus = StringUtil.nullToString(req.getParameter("orderStatus"));
 		BatchOrder order = batchOrderService.getBatchOrderByOrderId(orderId);
 		order.setOrderStat(BatchOrderStat.findStat(order.getOrderStat()));
+		order.setOrderStatus(orderStatus);
 		
 		int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
 		int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
-		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId);
+		PageInfo<BatchOrderList> pageList = batchOrderListService.getBatchOrderListPage(startNum, pageSize, orderId, orderStatus);
 		
 		List<BatchOrderList> list = new ArrayList<>();
 		list = batchOrderListService.getBatchOrderListByOrderId(orderId);
@@ -251,6 +258,7 @@ public class BatchOpenAccountController {
 		mv.addObject("billingTypeList", billingTypeList);
 		mv.addObject("accountType", UserType.TYPE100.getCode());
 		mv.addObject("accountTypeName", UserType.TYPE100.getValue());
+		mv.addObject("mapOrderStat", BatchOrderStat.values());
 		return mv;
 	}
 

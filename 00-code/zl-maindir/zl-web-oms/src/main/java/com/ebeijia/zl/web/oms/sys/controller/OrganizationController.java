@@ -3,13 +3,16 @@ package com.ebeijia.zl.web.oms.sys.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ebeijia.zl.basics.system.domain.Resource;
 import com.ebeijia.zl.basics.system.service.UserService;
 import com.ebeijia.zl.common.utils.enums.LoginType;
+import com.ebeijia.zl.web.oms.sys.service.UserRoleResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,20 +40,28 @@ public class OrganizationController {
 
 	@Autowired
 	private UserService userService;
-	
+
+	@Autowired
+	private UserRoleResourceService userRoleResourceService;
+
+	public static void main(String[] args) {
+		String str = null;
+		System.out.println(str+"");
+	}
+
 	@RequestMapping(value = "/listOrganization")
 	public ModelAndView listorganization(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/organization/listOrganization");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		
-		List<Organization> pageList = null;
 		try {
-			pageList = organizationService.getOrganizationList(new Organization());
+			List<Organization> pageList = userRoleResourceService.getOmsOrganization();
+			mv.addObject("pageInfo", pageList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("查询列表信息出错", e);
 		}
-		mv.addObject("pageInfo", pageList);
+
 		mv.addObject("operStatus", operStatus);
 		return mv;
 	}
@@ -59,7 +70,10 @@ public class OrganizationController {
 	public ModelAndView intoAddOrganization(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/organization/addOrganization");
 		Organization entity = new Organization();
-		List<Organization> entityList = organizationService.getOrganizationList(entity);
+		List<Organization> entityList = userRoleResourceService.getOmsOrganization();
+		if (entityList != null) {
+			entityList = entityList.stream().filter(r -> !"0".equals(r.getId())).collect(Collectors.toList());
+		}
 		mv.addObject("entityList", entityList);
 		return mv;
 	}
@@ -104,9 +118,10 @@ public class OrganizationController {
 		Organization organ = organizationService.getById(organId);
 		
 		//查找上级菜单列表
-		Organization organ1 = new Organization();
-		List<Organization> entityList = organizationService.getOrganizationList(organ1);
-		
+		List<Organization> entityList = userRoleResourceService.getOmsOrganization();
+		if (entityList != null) {
+			entityList = entityList.stream().filter(r -> !"0".equals(r.getId())).collect(Collectors.toList());
+		}
 		mv.addObject("entityList", entityList);
 		mv.addObject("organ", organ);
 		return mv;

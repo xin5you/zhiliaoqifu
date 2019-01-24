@@ -12,6 +12,8 @@ import com.ebeijia.zl.common.utils.tools.*;
 import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
+import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
+import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
@@ -34,10 +36,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisCluster;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -153,13 +152,13 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
 			providerOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_0.getCode());
 			providerOrderInf.setRegTxnAmt(new BigDecimal(0));
-			providerOrderInf.setProviderId(RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId()); //话费充值供应商Id
+			providerOrderInf.setProviderId(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId())); //话费充值供应商Id
 			providerOrderInf.setDataStat("0");
-			resOper=providerOrderInfService.save(providerOrderInf); //保存供应商订单
-			if(resOper){
+
+
 				//分销商消费扣款
-				resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf);
-			}
+				resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf,providerOrderInf);
+
 		}
 		if(!resOper){
 			//操作不同步，则回退事物
@@ -248,6 +247,42 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	}
 
 	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf) {
+     	if(telProviderOrderInf !=null){
+     		if(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode().equals(telProviderOrderInf.getRechargeState())
+					&& TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode().equals(telProviderOrderInf.getRechargeState())){
+
+				AccountRefundReqVo req=new AccountRefundReqVo();
+				req.setTransId(TransCode.CW11.getCode());
+				req.setTransChnl(TransChnl.CHANNEL40011001.toString());
+				req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+				req.setUserChnlId(retailChnlInf.getChannelId());
+				req.setUserType(UserType.TYPE200.getCode());
+				req.setOrgItfPrimaryKey(retailChnlOrderInf.getItfPrimaryKey()); //交易流水
+
+				AccountTxnVo vo=new AccountTxnVo();
+				vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+				vo.setTxnAmt(retailChnlOrderInf.getTxnAmt());
+				vo.setUpLoadAmt(retailChnlOrderInf.getTxnAmt());
+				List list=new ArrayList();
+				list.add(vo);
+				req.setTransList(list);
+				req.setDmsRelatedKey(telProviderOrderInf.getRegOrderId());
+				try {
+					BaseResult result = accountTransactionFacade.executeRefund(req);
+
+					if(result !=null && "00".equals(result.getCode())){
+						telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款款
+						telProviderOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
+						providerOrderInfService.updateById(telProviderOrderInf);
+
+						retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已扣款
+						this.updateById(retailChnlOrderInf);
+					}
+				}catch (Exception ex){
+					logger.error("##话费充值失败，回调订单退款接口失败-->{}",ex);
+				}
+			}
+		}
 		if ("0".equals(retailChnlOrderInf.getNotifyFlag())) {
 			try {
 				//异步通知供应商
@@ -296,9 +331,10 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	 * 商户消费扣款
 	 * @param retailChnlInf
 	 * @param retailChnlOrderInf
+	 * @param providerOrderInf 供应商订单
 	 * @return
 	 */
-	public boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf) throws Exception{
+	public boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf providerOrderInf) throws Exception{
 
 		AccountConsumeReqVo req=new AccountConsumeReqVo();
 		req.setTransId(TransCode.MB10.getCode());
@@ -306,19 +342,30 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 		req.setUserChnlId(retailChnlInf.getChannelId());
 		req.setUserType(UserType.TYPE400.getCode());
-		req.setTransAmt(retailChnlOrderInf.getTxnAmt());
-		req.setUploadAmt(retailChnlOrderInf.getTxnAmt());
 		req.setDmsRelatedKey(retailChnlOrderInf.getChannelOrderId());
 		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+
+		AccountTxnVo vo=new AccountTxnVo();
+		vo.setTxnAmt(retailChnlOrderInf.getTxnAmt()); //订单的交易金额是 订单金额 （元转分）* 折扣率
+		vo.setUpLoadAmt(AmountUtil.RMBYuanToCent(retailChnlOrderInf.getPayAmt()));  //
+		vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+		List transList=new ArrayList();
+		transList.add(vo);
+		req.setTransList(transList);
+
 		req.setTransDesc("分销商消费");
 		req.setTransNumber(1);
 		req.setMchntCode(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code));
+		req.setTargetMchtCode(providerOrderInf.getProviderId());
 		BaseResult result=accountTransactionFacade.executeConsume(req);
 		if(result !=null && "00".equals(result.getCode())){
 			retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode()); //已扣款
 			retailChnlOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
 			this.updateById(retailChnlOrderInf);
-			return true;
+
+			providerOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_1.getCode()); //已扣款
+			return providerOrderInfService.save(providerOrderInf); //保存供应商订单
+
 		}else{
 			logger.info("#分销商消费扣款失败：{}",JSONArray.toJSONString(result));
 			throw new RuntimeException();

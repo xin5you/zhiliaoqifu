@@ -156,5 +156,8 @@ public class BatchOrder extends Model<BatchOrder> {
 
     @TableField(exist = false)
     private String updateUserName;                    //修改人名称
+
+    @TableField(exist = false)
+    private String orderStatus;                     //订单状态（用于订单明细页面的查询）
 	
 }

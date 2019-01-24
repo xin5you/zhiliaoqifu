@@ -58,4 +58,13 @@ public class AccountTxnVo implements java.io.Serializable {
 	public void setUpLoadAmt(BigDecimal upLoadAmt) {
 		this.upLoadAmt = upLoadAmt;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountTxnVo{" +
+				"txnBId='" + txnBId + '\'' +
+				", txnAmt=" + txnAmt +
+				", upLoadAmt=" + upLoadAmt +
+				'}';
+	}
 }

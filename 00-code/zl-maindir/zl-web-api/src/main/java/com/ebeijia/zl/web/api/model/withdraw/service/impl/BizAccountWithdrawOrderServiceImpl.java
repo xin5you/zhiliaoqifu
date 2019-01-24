@@ -49,7 +49,7 @@ public class BizAccountWithdrawOrderServiceImpl implements BizAccountWithdrawOrd
         accountWithdrawOrder.setStatus(content.getStatus());
 
         TransferOrders transferOrders=content.getTransferOrders().get(0);
-        AccountWithdrawDetail accountWithdrawDetail=accountWithDrawOrderFacade.getAccountWithdrawDetailById("");
+        AccountWithdrawDetail accountWithdrawDetail=accountWithDrawOrderFacade.getAccountWithdrawDetailById(transferOrders.getSerialNo());
 
         if(transferOrders.getId() !=null) {
             accountWithdrawDetail.setDmsPayNo(String.valueOf(transferOrders.getId()));
@@ -60,7 +60,6 @@ public class BizAccountWithdrawOrderServiceImpl implements BizAccountWithdrawOrd
         }
         accountWithdrawDetail.setSuccess(transferOrders.getSuccess().toString());
 
-        accountWithDrawOrderFacade.updateAccountWithdrawOrder(accountWithdrawOrder,accountWithdrawDetail);
-        return true;
+        return accountWithDrawOrderFacade.updateAccountWithdrawOrder(accountWithdrawOrder,accountWithdrawDetail);
     }
 }
