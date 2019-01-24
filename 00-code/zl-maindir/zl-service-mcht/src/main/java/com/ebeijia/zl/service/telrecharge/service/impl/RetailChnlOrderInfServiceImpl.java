@@ -15,18 +15,12 @@ import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
-import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlOrderInf;
-import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlProductInf;
+import com.ebeijia.zl.facade.telrecharge.domain.*;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.service.telrecharge.enums.TelRechargeConstants;
 import com.ebeijia.zl.service.telrecharge.mapper.RetailChnlOrderInfMapper;
-import com.ebeijia.zl.service.telrecharge.service.ProviderOrderInfService;
-import com.ebeijia.zl.service.telrecharge.service.RetailChnlInfService;
-import com.ebeijia.zl.service.telrecharge.service.RetailChnlOrderInfService;
-import com.ebeijia.zl.service.telrecharge.service.RetailChnlProductInfService;
+import com.ebeijia.zl.service.telrecharge.service.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -61,6 +55,9 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	
 	@Autowired
 	private ProviderOrderInfService providerOrderInfService;
+
+	@Autowired
+	private ProviderInfService providerInfService;
 
 	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
@@ -146,18 +143,20 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 
 		ProviderOrderInf providerOrderInf=null;
 		if(resOper){
+			ProviderInf providerInf = providerInfService.getById(providerOrderInf.getProviderId());
+
 			providerOrderInf=new ProviderOrderInf();
 			providerOrderInf.setRegOrderAmt(retailChnlOrderInf.getRechargeValue()); //充值面额
 			providerOrderInf.setChannelOrderId(retailChnlOrderInf.getChannelOrderId());
 			providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_8.getCode()); //待充值
 			providerOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_0.getCode());
-			providerOrderInf.setRegTxnAmt(new BigDecimal(0));
+			providerOrderInf.setRegTxnAmt(AmountUtil.mul(AmountUtil.RMBYuanToCent(providerOrderInf.getRegOrderAmt()),providerInf.getProviderRate()));
 			providerOrderInf.setProviderId(jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_privoder_code+SpecAccountTypeEnum.B06.getbId())); //话费充值供应商Id
 			providerOrderInf.setDataStat("0");
 
 
-				//分销商消费扣款
-				resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf,providerOrderInf);
+			//分销商消费扣款
+			resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf,providerOrderInf);
 
 		}
 		if(!resOper){
@@ -248,15 +247,15 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 
 	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf) {
      	if(telProviderOrderInf !=null){
-     		if(TeleConstants.ProviderRechargeState.RECHARGE_STATE_1.getCode().equals(telProviderOrderInf.getRechargeState())
-					&& TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode().equals(telProviderOrderInf.getRechargeState())){
+     		if(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode().equals(telProviderOrderInf.getRechargeState())
+					&& TeleConstants.ProviderRechargeState.RECHARGE_STATE_9.getCode().equals(telProviderOrderInf.getRechargeState())){
 
 				AccountRefundReqVo req=new AccountRefundReqVo();
 				req.setTransId(TransCode.CW11.getCode());
 				req.setTransChnl(TransChnl.CHANNEL40011001.toString());
 				req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 				req.setUserChnlId(retailChnlInf.getChannelId());
-				req.setUserType(UserType.TYPE200.getCode());
+				req.setUserType(UserType.TYPE400.getCode());
 				req.setOrgItfPrimaryKey(retailChnlOrderInf.getItfPrimaryKey()); //交易流水
 
 				AccountTxnVo vo=new AccountTxnVo();
@@ -266,6 +265,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				List list=new ArrayList();
 				list.add(vo);
 				req.setTransList(list);
+
 				req.setDmsRelatedKey(telProviderOrderInf.getRegOrderId());
 				try {
 					BaseResult result = accountTransactionFacade.executeRefund(req);

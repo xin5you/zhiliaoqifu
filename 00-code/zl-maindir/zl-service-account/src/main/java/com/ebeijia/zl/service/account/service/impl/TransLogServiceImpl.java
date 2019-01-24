@@ -22,8 +22,7 @@ import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.facade.user.vo.PersonInf;
 import com.ebeijia.zl.facade.user.vo.UserInf;
-import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
-import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
+import com.ebeijia.zl.service.account.service.*;
 import com.ebeijia.zl.service.user.service.IUserInfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +42,6 @@ import com.ebeijia.zl.facade.account.dto.TransLog;
 import com.ebeijia.zl.facade.account.exceptions.AccountBizException;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.service.account.mapper.TransLogMapper;
-import com.ebeijia.zl.service.account.service.IAccountInfService;
-import com.ebeijia.zl.service.account.service.ITransLogService;
 import redis.clients.jedis.JedisCluster;
 
 /**
@@ -81,7 +78,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	@Autowired
 	private IUserInfService userInfService;
 
-
+	@Autowired
+	private IIntfaceTransLogService intfaceTransLogService;
 	/**
 	 *
 	 * @Description: 创建账户交易流水
@@ -462,13 +460,12 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				}
 
 
-
-
 				//从收款商户退款
 				transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),intfaceTransLog.getTfrOutUserId(),AccountCardAttrEnum.ADD.getValue());
 				if (transLogs !=null && transLogs.size()>0) {
 
 					for (AccountTxnVo accountTxnVo : transList) {
+
 						boolean priBidVal=false;
 						for (TransLog orgTransLog: transLogs) {
 							if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
@@ -483,7 +480,64 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				}else {
 					throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
 				}
+
+				//step3:
+			ProviderInf providerInf=null;
+			UserInf tarMchntUserInf=null;
+			IntfaceTransLog orgIntfaceTransLog=intfaceTransLogService.getById(intfaceTransLog.getOrgItfPrimaryKey());
+			if(StringUtil.isNotEmpty(orgIntfaceTransLog.getTargetMchntCode())){
+				try {
+					providerInf = providerInfFacade.getProviderInfById(orgIntfaceTransLog.getTargetMchntCode());
+					if(providerInf!=null){
+						tarMchntUserInf=userInfService.getUserInfByUserName(providerInf.getProviderId());
+					}
+				} catch (Exception e) {
+					throw AccountBizException.ACCOUNT_TARGET_MCHNT_ERROR.newInstance("查找供应商异常,供应商Id{%s}", orgIntfaceTransLog.getTargetMchntCode()).print();
+				}
+
+				//如果有目标商户（供应商）即时冲账
+				transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),intfaceTransLog.getTfrOutUserId(),AccountCardAttrEnum.SUB.getValue());
+
+				if (transLogs !=null && transLogs.size()>0) {
+					for (AccountTxnVo accountTxnVo : transList) {
+						boolean priBidVal=false;
+						BigDecimal providerRate=providerInf.getProviderRate() !=null ? providerInf.getProviderRate():new BigDecimal(1);
+						BigDecimal providerTxnAmt=AmountUtil.mul(accountTxnVo.getUpLoadAmt(),providerRate); //结算金额 等于上送的金额 * 折扣率
+						for (TransLog orgTransLog: transLogs) {
+							if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
+								priBidVal=true;
+								this.addToVoListOrgTransLog(voList, intfaceTransLog, orgTransLog,AccountCardAttrEnum.ADD.getValue(), providerTxnAmt, providerTxnAmt);
+							}
+						}
+						if(!priBidVal){
+							throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易类型{%s}不存在",intfaceTransLog.getOrgItfPrimaryKey(),accountTxnVo.getTxnBId()).print();
+						}
+					}
+				}else {
+					throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
+				}
+
+				transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),tarMchntUserInf.getUserId(),AccountCardAttrEnum.ADD.getValue());
+				if (transLogs !=null && transLogs.size()>0) {
+					for (AccountTxnVo accountTxnVo : transList) {
+						boolean priBidVal=false;
+						BigDecimal providerRate=providerInf.getProviderRate() !=null ? providerInf.getProviderRate():new BigDecimal(1);
+						BigDecimal providerTxnAmt=AmountUtil.mul(accountTxnVo.getUpLoadAmt(),providerRate); //结算金额 等于上送的金额 * 折扣率
+						for (TransLog orgTransLog: transLogs) {
+							if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
+								priBidVal=true;
+								this.addToVoListOrgTransLog(voList, intfaceTransLog, orgTransLog,AccountCardAttrEnum.SUB.getValue(), providerTxnAmt, providerTxnAmt);
+							}
+						}
+						if(!priBidVal){
+							throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易类型{%s}不存在",intfaceTransLog.getOrgItfPrimaryKey(),accountTxnVo.getTxnBId()).print();
+						}
+					}
+				}else {
+					throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
+				}
 			}
+		}
 		return voList;
 	}
 
