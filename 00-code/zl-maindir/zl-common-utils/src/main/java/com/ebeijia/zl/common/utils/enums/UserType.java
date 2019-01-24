@@ -14,7 +14,8 @@ public enum UserType {
 	TYPE100("100", "企业员工账户"), 
 	TYPE200("200", "企业账户"),
 	TYPE300("300", "供应商账户"),
-	TYPE400("400", "分销商账户");
+	TYPE400("400", "分销商账户"),
+	TYPE500("500", "平台账户");
 	
 	private String code;
 

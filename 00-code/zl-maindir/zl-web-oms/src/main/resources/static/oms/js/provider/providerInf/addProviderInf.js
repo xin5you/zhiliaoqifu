@@ -27,7 +27,7 @@ var addTelProviderInf = {
             	appUrl: { required: true},
             	appSecret: { required: true},
             	accessToken: { required: true},
-            	/*providerRate: { required: true},*/
+            	providerRate: { required: true},
             	operSolr: { required: true}
             },
             messages: {
@@ -37,7 +37,7 @@ var addTelProviderInf = {
             	appUrl: { required: "请输入app_url"},
             	appSecret: { required: "请输入app_Secret"},
             	accessToken: { required: "请输入access_token"},
-            	/*providerRate: { required: "请输入供应商折扣"},*/
+            	providerRate: { required: "请输入供应商折扣"},
             	operSolr: { required: "请输入操作顺序"}
             },
             invalidHandler: function(form, validator) {
@@ -123,7 +123,7 @@ var addTelProviderInf = {
     	var appSecret=$("#appSecret").val().trim();
     	var accessToken = $('#accessToken').val().trim();
     	var defaultRoute=$("#defaultRoute").val().trim();
-    	/*var providerRate=$("#providerRate").val().trim();*/
+    	var providerRate=$("#providerRate").val().trim();
     	var operSolr=$("#operSolr").val().trim();
     	var remarks=$("#remarks").val();
 		$.ajax({
@@ -137,7 +137,7 @@ var addTelProviderInf = {
             		"appSecret":appSecret,
             		"accessToken":accessToken,
             		"defaultRoute":defaultRoute,
-            		/*"providerRate":providerRate,*/
+            		"providerRate":providerRate,
             		"operSolr":operSolr,
             		"remarks":remarks
             },

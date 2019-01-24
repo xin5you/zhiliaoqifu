@@ -176,6 +176,25 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			//平台账户A类和B类全开，企业账户，供应商账户和分销商账户除了托管账户其他全开
 			if (!StringUtil.isNullOrEmpty(isPlatform) && IsPlatformEnum.IsPlatformEnum_1.getCode().equals(isPlatform)) {
 				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
+					for (BatchOrderList orderList : personInfList) {
+						BatchOrderList o = new BatchOrderList();
+						o.setOrderListId(IdUtil.getNextId());
+						o.setOrderId(order.getOrderId());
+						o.setUserName(orderList.getUserName());
+						o.setPhoneNo(orderList.getPhoneNo());
+						o.setUserCardNo(orderList.getUserCardNo());
+						o.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
+						o.setAccountType(accountType);
+						o.setBizType(t.getbId());
+						o.setCreateUser(order.getCreateUser());
+						o.setUpdateUser(order.getUpdateUser());
+						o.setCreateTime(System.currentTimeMillis());
+						o.setUpdateTime(System.currentTimeMillis());
+						list.add(o);
+					}
+				}
+			} else {
+				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
 					if (!SpecAccountTypeEnum.A01.getbId().equals(t.getbId())) {
 						for (BatchOrderList orderList : personInfList) {
 							BatchOrderList o = new BatchOrderList();
@@ -193,25 +212,6 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 							o.setUpdateTime(System.currentTimeMillis());
 							list.add(o);
 						}
-					}
-				}
-			} else {
-				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
-					for (BatchOrderList orderList : personInfList) {
-						BatchOrderList o = new BatchOrderList();
-						o.setOrderListId(IdUtil.getNextId());
-						o.setOrderId(order.getOrderId());
-						o.setUserName(orderList.getUserName());
-						o.setPhoneNo(orderList.getPhoneNo());
-						o.setUserCardNo(orderList.getUserCardNo());
-						o.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
-						o.setAccountType(accountType);
-						o.setBizType(t.getbId());
-						o.setCreateUser(order.getCreateUser());
-						o.setUpdateUser(order.getUpdateUser());
-						o.setCreateTime(System.currentTimeMillis());
-						o.setUpdateTime(System.currentTimeMillis());
-						list.add(o);
 					}
 				}
 			}
