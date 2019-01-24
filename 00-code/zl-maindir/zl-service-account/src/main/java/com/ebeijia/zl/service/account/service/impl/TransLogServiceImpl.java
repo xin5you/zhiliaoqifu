@@ -11,6 +11,7 @@ import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.AmountUtil;
 import com.ebeijia.zl.common.utils.tools.SnowFlake;
+import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
@@ -297,7 +298,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setPriBId(accountTxnVo.getTxnBId());
 					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 					transLog2.setTransId(TransCode.MB95.getCode());
-					transLog2.setUserType(UserType.TYPE200.getCode());
+					transLog2.setUserType(UserType.TYPE500.getCode());
 					transLog2.setTransAmt(accountTxnVo.getTxnAmt());
 					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
 					addToVoList(voList,transLog2,voList.size());
@@ -314,7 +315,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 						transLog2.setPriBId(accountTxnVo.getTxnBId());
 						transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
 						transLog2.setTransId(TransCode.MB10.getCode());
-						transLog2.setUserType(UserType.TYPE200.getCode());
+						transLog2.setUserType(UserType.TYPE500.getCode());
 						transLog2.setTransAmt(providerTxnAmt);
 						transLog2.setUploadAmt(providerTxnAmt);
 						addToVoList(voList,transLog2,voList.size());
@@ -326,7 +327,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 						transLog2.setPriBId(accountTxnVo.getTxnBId());
 						transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 						transLog2.setTransId(TransCode.MB95.getCode());
-						transLog2.setUserType(UserType.TYPE400.getCode());
+						transLog2.setUserType(UserType.TYPE300.getCode());
 						transLog2.setTransAmt(providerTxnAmt);
 						transLog2.setUploadAmt(providerTxnAmt);
 						addToVoList(voList,transLog2,voList.size());
@@ -352,6 +353,10 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			//卡券转卖 充值到托管账户
 			BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
 			List<AccountTxnVo> addList = intfaceTransLog.getTransList();
+			TransLog transLog2=null;
+
+			String zlUserId=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
+			UserInf tarMchntUserInf=userInfService.getUserInfByUserName(zlUserId);
 			if (addList != null && addList.size() > 0) {
 				for (AccountTxnVo accountTxnVo : addList) {
 					BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
@@ -360,6 +365,19 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					}
 					BigDecimal transAmt = AmountUtil.mul(accountTxnVo.getTxnAmt(), AmountUtil.sub(new BigDecimal(1), loseFee)); //扣除折损率后，到账金额
 					this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), transAmt,accountTxnVo.getUpLoadAmt());
+
+					transLog2=new TransLog();
+					this.newTransLog(intfaceTransLog, transLog2);
+					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+					transLog2.setUserId(null); //平台用户
+					transLog2.setPriBId(accountTxnVo.getTxnBId());
+					transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
+					transLog2.setTransId(TransCode.MB96.getCode());
+					transLog2.setUserType(UserType.TYPE500.getCode());
+					transLog2.setTransAmt(transAmt);
+					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
+					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
+					addToVoList(voList,transLog2,voList.size());
 				}
 			}
 		}else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
