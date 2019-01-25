@@ -3,9 +3,9 @@ server:
   contextPath: /ecom-cms
 spring:
   datasource:
-    url: jdbc:mysql://10.0.0.104:3306/zldb_test
+    url: jdbc:mysql://10.0.0.104:3306/zldb
     username: root
-    password: zldb1314
+    password: zldb1314!#!$
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   thymeleaf:
