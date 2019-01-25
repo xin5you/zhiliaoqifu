@@ -43,12 +43,6 @@ spring:
        minEvictableIdleTimeMillis: 60000
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
-  mq:
-    brokerURL: failover:(tcp://10.0.0.101:9876)?randomize=false
-    #username: admin
-    #password: admin
-    pool:
-      max-connections: 50
   dubbo:
     application:
       name: zl-web-oms

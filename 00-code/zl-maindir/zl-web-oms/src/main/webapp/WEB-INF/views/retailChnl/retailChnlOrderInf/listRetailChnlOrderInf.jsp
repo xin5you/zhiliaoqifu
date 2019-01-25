@@ -16,7 +16,7 @@
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>手机充值</li>
-			                    <li><a href="${ctx }/retailChnl/retailChnlOrderInf/listRetailChnlOrderInf.do">分销商订单</a></li>
+			                    <li><a href="${ctx }/retailChnl/retailChnlOrder/listRetailChnlOrderInf.do">分销商订单</a></li>
 			                     <li>分销商订单列表</li>
 			                </ul>
 			            </div>

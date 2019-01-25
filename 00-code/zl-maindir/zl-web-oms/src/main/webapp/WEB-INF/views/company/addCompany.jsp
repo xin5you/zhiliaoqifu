@@ -37,7 +37,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">企业名称<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="name" name="name" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="name" name="name" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -52,7 +52,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">地址<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="address" name="address" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="address" name="address" maxlength="123" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -60,7 +60,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">联系人<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="contacts" name="contacts" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="contacts" name="contacts" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -68,7 +68,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">联系电话<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="phoneNo" name="phoneNo" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text" class="span6" id="phoneNo" name="phoneNo" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -100,7 +100,7 @@
 					<div class="control-group">
 						<label class="control-label">备注</label>
 						<div class="controls">
-							<textarea  rows="6" class="span6" id="remarks" name="remarks" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></textarea>
+							<textarea  rows="6" class="span6" id="remarks" name="remarks" maxlength="123" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></textarea>
 							<span class="help-block"></span>
 						</div>
 					</div>

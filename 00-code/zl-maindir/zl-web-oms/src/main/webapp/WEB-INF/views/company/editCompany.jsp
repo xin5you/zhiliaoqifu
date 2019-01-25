@@ -33,7 +33,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">企业名称<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="name" name="name" value="${companyInf.name }" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="name" name="name" value="${companyInf.name }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -49,7 +49,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">地址<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="address" name="address" value="${companyInf.address }" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="address" name="address" value="${companyInf.address }" maxlength="123" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -57,7 +57,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">联系人<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="contacts" name="contacts" value="${companyInf.contacts }" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+							<input type="text" class="span6" id="contacts" name="contacts" value="${companyInf.contacts }" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -65,7 +65,7 @@
 					<div class="control-group formSep">
 						<label class="control-label">联系电话<span style="color:red">*</span></label>
 						<div class="controls">
-							<input type="text" class="span6" id="phoneNo" name="phoneNo" value="${companyInf.phoneNo }" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+							<input type="text" class="span6" id="phoneNo" name="phoneNo" value="${companyInf.phoneNo }" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -97,7 +97,7 @@
 					<div class="control-group">
 						<label class="control-label">备注</label>
 						<div class="controls">
-							<textarea  rows="6" class="span6" id="remarks" name="remarks" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')">${companyInf.remarks }</textarea>
+							<textarea  rows="6" class="span6" id="remarks" name="remarks" maxlength="123" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')">${companyInf.remarks }</textarea>
 							<span class="help-block"></span>
 						</div>
 					</div>
