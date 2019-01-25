@@ -1,5 +1,5 @@
 server:
-  port: 10701
+  port: 17001
   contextPath: /web-api
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
