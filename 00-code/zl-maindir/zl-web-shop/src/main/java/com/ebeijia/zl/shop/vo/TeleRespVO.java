@@ -31,6 +31,14 @@ public class TeleRespVO extends TeleBaseDomain {
 
     private String outerTid; // 外部分销商订单号
 
+    private String sign;
+
+    private String tid;
+
+    private String timestamp;
+
+    private String userId;
+
     private String subErrorCode;
     private String subErrorMsg;
 

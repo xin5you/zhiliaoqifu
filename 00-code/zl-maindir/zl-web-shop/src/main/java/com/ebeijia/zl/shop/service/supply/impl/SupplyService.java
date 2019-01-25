@@ -2,13 +2,13 @@ package com.ebeijia.zl.shop.service.supply.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
-import com.ebeijia.zl.common.utils.constants.Constants;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
 import com.ebeijia.zl.common.utils.exceptions.BizException;
 import com.ebeijia.zl.common.utils.tools.MD5SignUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtils;
 import com.ebeijia.zl.core.redis.utils.JedisUtilsWithNamespace;
+import com.ebeijia.zl.shop.constants.DealType;
 import com.ebeijia.zl.shop.constants.PhoneValidMethod;
 import com.ebeijia.zl.shop.constants.ResultState;
 import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
@@ -18,6 +18,7 @@ import com.ebeijia.zl.shop.dao.order.domain.TbEcomPayOrderDetails;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderDetailsService;
 import com.ebeijia.zl.shop.dao.order.service.ITbEcomPayOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
+import com.ebeijia.zl.shop.service.pay.IWxPayService;
 import com.ebeijia.zl.shop.service.supply.ISupplyService;
 import com.ebeijia.zl.shop.service.valid.IValidCodeService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
@@ -25,7 +26,7 @@ import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.ebeijia.zl.shop.vo.TeleReqVO;
-import com.ebeijia.zl.shop.vo.TeleRespVO;
+import com.ebeijia.zl.shop.vo.WxPayReqDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,9 @@ public class SupplyService implements ISupplyService {
     private ITbEcomPayOrderService payOrderDao;
 
     @Autowired
+    private IWxPayService wxPayService;
+
+    @Autowired
     private ITbEcomPayOrderDetailsService payOrderDetailsDao;
 
     private static Logger logger = LoggerFactory.getLogger(SupplyService.class);
@@ -70,13 +74,11 @@ public class SupplyService implements ISupplyService {
     @Value("${phone.api.charge:http://192.168.2.110:10701/web-api/api/recharge/mobile/payment}")
     private String phoneChargeUrl;
 
-    @Value("${phone.api.chargeCallback:http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack}")
+    @Value("${phone.api.charge.Callback:http://192.168.2.110:12201/web-shop/supply/phone/charge/callback}")
     private String phoneChargeCallbackUrl;
 
-
     @Override
-    public Integer phoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo, String session) {
-        String dmsKey = IdUtil.getNextId();
+    public String phoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo, String session) {
         if (amount <= 0) {
             throw new BizException(ResultState.NOT_ACCEPTABLE, "充值金额有误");
         }
@@ -89,6 +91,12 @@ public class SupplyService implements ISupplyService {
         if (!valid) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
         }
+        return phoneCharge(memberInfo.getMemberId(), phone, amount, payInfo);
+    }
+
+    @Override
+    public String phoneCharge(String memberId, String phone, Integer amount, PayInfo payInfo) {
+        String dmsKey = IdUtil.getNextId();
         //TODO 这里amount是分，需要注意
         checkPayment(payInfo, amount);
 
@@ -103,7 +111,7 @@ public class SupplyService implements ISupplyService {
 
         //TODO DMS
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
-        log.setMemberId(memberInfo.getMemberId());
+        log.setMemberId(memberId);
         log.setTitle(title);
         log.setPrice(amount.longValue());
         log.setDescinfo(descinfo);
@@ -114,7 +122,7 @@ public class SupplyService implements ISupplyService {
         logger.info("手机直充记录日志详情：", log);
 
         //记录LOG ID
-        BaseResult baseResult = payService.payPhone(payInfo, memberInfo.getOpenId(), dmsKey, "手机充值");
+        BaseResult baseResult = payService.payPhone(payInfo, memberId, dmsKey, "手机充值");
 
         if (!baseResult.getCode().equals("00")) {
             throw new BizException(ResultState.ERROR, "网络不稳定，请稍后再试");
@@ -203,24 +211,31 @@ public class SupplyService implements ISupplyService {
     }
 
     @Override
-    public Integer phoneChargeCallback(TeleRespVO respVO) {
-        logger.info("收到回调信息[{}]",respVO);
-        if (respVO.getRechargeState().equals(Constants.RechargeState.RechargeState09)) {
-            //根据VO获取对应流水
-            TbEcomItxLogDetail query = new TbEcomItxLogDetail();
-            query.setOutId(respVO.getChannelOrderId());
-
-            TbEcomItxLogDetail log = logDetailDao.getOne(new QueryWrapper<>(query));
-            if (log==null){
+    public Integer phoneChargeCallback(LinkedHashMap<String, String> respVO) {
+        logger.info("收到回调信息[{}]", respVO);
+        if ("1".equals(respVO.get("payState")) && "3".equals(respVO.get("rechargeState"))) {
+            String orderDmsKey = respVO.get("outerTid");
+            TbEcomPayOrder payOrder = new TbEcomPayOrder();
+            payOrder.setDmsRelatedKey(orderDmsKey);
+            List<TbEcomPayOrder> list = payOrderDao.list(new QueryWrapper<>(payOrder));
+            if (list == null || list.size() == 0) {
                 logger.error("充值回调接口处理异常，没有找到对应流水信息");
                 return ResultState.ERROR;
             }
+            //根据VO获取对应流水
+
+            TbEcomItxLogDetail log = logDetailDao.getById(list.get(0).getOutTransNo());
+            if (log == null) {
+                logger.error("充值回调接口处理异常，没有找到对应流水信息");
+                return ResultState.ERROR;
+            }
+            TbEcomItxLogDetail query = new TbEcomItxLogDetail();
             String itxKey = log.getItxKey();
             query.setOutId(itxKey);
 
             //检测是否已经处理
             TbEcomItxLogDetail cantExist = logDetailDao.getOne(new QueryWrapper<>(query));
-            if (cantExist!=null){
+            if (cantExist != null) {
                 return ResultState.ERROR;
             }
 
@@ -238,21 +253,73 @@ public class SupplyService implements ISupplyService {
             PayInfo payInfo = restorePayInfo(payOrderDetails);
             try {
                 payService.phoneChargeReturn(payInfo, log, dms);
-            }catch (Exception ex){
-                logger.error("手机回调处理出错[{}]",ex);
+            } catch (Exception ex) {
+                logger.error("手机回调处理出错[{}]", ex);
                 return ResultState.ERROR;
             }
         }
         return ResultState.OK;
     }
 
+    @Override
+    public String outerPayPhoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo, String session) {
+        //外部系统需要不同的key生成逻辑
+        String dmsKey = ShopUtils.generateShortUuid();
+        if (amount <= 0) {
+            throw new BizException(ResultState.NOT_ACCEPTABLE, "充值金额有误");
+        }
+        MemberInfo memberInfo = shopUtils.getSession();
+        if (memberInfo == null) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
+        }
+        boolean valid = validCodeService.checkValidCode(PhoneValidMethod.PAY, memberInfo.getMobilePhoneNo(), validCode);
+        if (!valid) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
+        }
+        //TODO 这里amount是分，需要注意
+        checkPayment(payInfo, amount);
+        if (payInfo.getCostA() == null || payInfo.getCostA() <= 0L) {
+            throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
+        }
+        //构造payOrder对象
+        String payOrderId = IdUtil.getNextId();
+        TbEcomPayOrder pay = payService.initPayOrderObject();
+        pay.setMemberId(memberInfo.getMemberId());
+        pay.setDmsRelatedKey(dmsKey);
+        pay.setPayOrderId(payOrderId);
+        pay.setResv1(DealType.PHONECHARGE);
+        pay.setResv2(phone);
+        pay.setResv3(String.valueOf(amount));
+        payOrderDao.save(pay);
+
+        //构造payOrderDetail对象
+        String bId = SpecAccountTypeEnum.B06.getbId();
+        TbEcomPayOrderDetails payOrderDetails = payService.initPayOrderDetailObject();
+        payOrderDetails.setPayOrderId(payOrderId);
+        payOrderDetails.setDebitAccountCode(bId);
+        payOrderDetails.setDebitAccountType(bId.substring(0, 1));
+        payOrderDetails.setDebitPrice(payInfo.getCostA());
+        payOrderDetails.setDmsRelatedKey(dmsKey);
+        payOrderDetails.setPayStatus("0");
+        payOrderDetailsDao.save(payOrderDetails);
+
+
+        WxPayReqDTO dto = new WxPayReqDTO();
+        dto.setOut_trade_no(dmsKey);
+        dto.setOrder_time(shopUtils.getNowTime());
+        dto.setTotal_fee(payInfo.getCostA().intValue());
+//        payInfo, String mchtSett
+        String postUrl = wxPayService.applyPay(dto);
+        return postUrl;
+    }
+
     private PayInfo restorePayInfo(List<TbEcomPayOrderDetails> payOrderDetails) {
         PayInfo result = new PayInfo();
-        for (TbEcomPayOrderDetails p : payOrderDetails){
-            if ("A".equals(p.getDebitAccountType())){
+        for (TbEcomPayOrderDetails p : payOrderDetails) {
+            if ("A".equals(p.getDebitAccountType())) {
                 result.setTypeA(p.getDebitAccountCode());
                 result.setCostA(p.getDebitPrice());
-            }else if ("B".equals(p.getDebitAccountType())){
+            } else if ("B".equals(p.getDebitAccountType())) {
                 result.setTypeB(p.getDebitAccountCode());
                 result.setCostB(p.getDebitPrice());
             }

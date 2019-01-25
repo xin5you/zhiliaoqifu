@@ -18,6 +18,7 @@ import com.ebeijia.zl.shop.service.order.IOrderService;
 import com.ebeijia.zl.shop.service.pay.IPayService;
 import com.ebeijia.zl.shop.utils.AdviceMessenger;
 import com.ebeijia.zl.shop.utils.ShopTransactional;
+import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.vo.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -200,27 +201,9 @@ public class OrderService implements IOrderService {
         if (memberInfo == null) {
             throw new BizException(NOT_ACCEPTABLE, "参数异常");
         }
-        //生成DMS
-        String dmsRelatedKey = IdUtil.getNextId();
-        //验证输入信息有效性，订单查询
-        Long payAmount = getPayAmount(payInfo);
-        TbEcomPlatfOrder order = platfOrderDao.getById(payInfo.getOrderId());
-        order.setDmsRelatedKey(dmsRelatedKey);
-        if (order == null) {
-            throw new BizException(NOT_FOUND, "订单不存在");
-        }
-        if (!memberInfo.getMemberId().equals(order.getMemberId())) {
-            throw new BizException(NOT_ACCEPTABLE, "验证失败");
-        }
-        if (!order.getPayStatus().equals("0") || ("1").equals(order.getDataStat())) {
-            throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
-        }
-        //乐观锁
-        order.setPayTime(System.currentTimeMillis());
-        order.setPayStatus("1");
-        order.setUpdateUser("System");
-        order.setUpdateTime(System.currentTimeMillis());
-        order = orderUpdateLocker(order);
+        TbEcomPlatfOrder order = checkOrder(payInfo, memberInfo);
+        Long payAmount = order.getPayAmt();
+        String dmsRelatedKey = order.getDmsRelatedKey();
         //类型、总金额验证
         TbEcomPlatfShopOrder shopOrder = new TbEcomPlatfShopOrder();
         shopOrder.setOrderId(order.getOrderId());
@@ -266,7 +249,7 @@ public class OrderService implements IOrderService {
                     ecomName = "[" + goods.getEcomName() + "]";
                     if (goods.getIsDisabled().equals("1") ||
                             goods.getMarketEnable().equals("0")) {
-                       throw new BizException(ResultState.STAT_ERROR,"该订单商品已下架");
+                        throw new BizException(ResultState.STAT_ERROR, "该订单商品已下架");
                     }
                 }
                 itemList.add(item);
@@ -313,7 +296,7 @@ public class OrderService implements IOrderService {
             }
 
             //处理订单支付过程，调用了payService
-            BaseResult baseResult = payService.payOrder(payInfo, memberInfo.getOpenId(), dmsRelatedKey, descBuilder.toString(),mchntCode);
+            BaseResult baseResult = payService.payOrder(payInfo, memberInfo.getMemberId(), dmsRelatedKey, descBuilder.toString(), mchntCode);
             if (!baseResult.getCode().equals("00")) {
                 logger.info(String.format("支付失败，订单%s，参数%s", order.getOrderId(), payInfo));
                 throw new BizException(ResultState.NOT_ACCEPTABLE, "参数异常");
@@ -346,6 +329,37 @@ public class OrderService implements IOrderService {
         for (TbEcomOrderProductItem i : itemList) {
             productService.productStoreChange(i.getProductId(), 0 - i.getProductNum());
         }
+        return order;
+    }
+
+    private TbEcomPlatfOrder checkOrder(PayInfo payInfo, MemberInfo memberInfo) {
+        //生成DMS
+        String dmsRelatedKey;
+        if ("A02".equals(payInfo.getTypeA())) {
+            dmsRelatedKey = ShopUtils.generateShortUuid();
+        }else {
+            dmsRelatedKey = IdUtil.getNextId();
+        }
+        //验证输入信息有效性，订单查询
+        Long payAmount = getPayAmount(payInfo);
+        TbEcomPlatfOrder order = platfOrderDao.getById(payInfo.getOrderId());
+        order.setPayAmt(payAmount);
+        order.setDmsRelatedKey(dmsRelatedKey);
+        if (order == null) {
+            throw new BizException(NOT_FOUND, "订单不存在");
+        }
+        if (!memberInfo.getMemberId().equals(order.getMemberId())) {
+            throw new BizException(NOT_ACCEPTABLE, "验证失败");
+        }
+        if (!order.getPayStatus().equals("0") || ("1").equals(order.getDataStat())) {
+            throw new BizException(NOT_ACCEPTABLE, "支付状态有误");
+        }
+        //乐观锁
+        order.setPayTime(System.currentTimeMillis());
+        order.setPayStatus("1");
+        order.setUpdateUser("System");
+        order.setUpdateTime(System.currentTimeMillis());
+        order = orderUpdateLocker(order);
         return order;
     }
 
@@ -439,6 +453,20 @@ public class OrderService implements IOrderService {
         order.setDataStat("1");
         orderUpdateLocker(order);
         return 200;
+    }
+
+    @Override
+    public TbEcomPlatfOrder applyOuterOrder(PayInfo payInfo) {
+        logger.info(String.format("支付订单开始，参数%s", payInfo));
+        MemberInfo memberInfo = (MemberInfo) session.getAttribute("user");
+        if (memberInfo == null) {
+            throw new BizException(NOT_ACCEPTABLE, "参数异常");
+        }
+        TbEcomPlatfOrder order = checkOrder(payInfo, memberInfo);
+        Long payAmount = order.getPayAmt();
+        String dmsRelatedKey = order.getDmsRelatedKey();
+
+        return null;
     }
 
     private TbEcomPlatfOrder orderUpdateLocker(TbEcomPlatfOrder order) {

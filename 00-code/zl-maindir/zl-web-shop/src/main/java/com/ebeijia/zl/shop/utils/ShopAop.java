@@ -46,6 +46,7 @@ public class ShopAop {
         //TODO 优化性能，避免执行不必要的逻辑
 //        doLog(pj);
         String token = getToken();
+        boolean forceLogin = isForceLogin(pj);
         if (!token.contains(":")) {
             throw new AdviceMessenger(ResultState.UNAUTHORIZED, "请登录");
         }
@@ -53,13 +54,16 @@ public class ShopAop {
         if (token != null) {
             String s = jedis.hget("TOKEN" + memberId, token);
             //TODO fake login user
-            if (StringUtils.isEmpty(s)) {
+            if (StringUtils.isEmpty(s) && forceLogin) {
+                logger.error("-----\n");
+                logger.error(String.format("Token异常:%s,%s,%s", token, memberId, pj.getSignature().toLongString()));
+                logger.error("-----\n");
                 throw new BizException(ResultState.UNAUTHORIZED, "请重新登录");
             }
             //获得身份信息
             MemberInfo memberInfo = shopUtils.readValue(s, MemberInfo.class);
             session.setAttribute("user", memberInfo);
-        } else if (isForceLogin(pj)) {
+        } else if (forceLogin) {
             session.setAttribute("user", null);
             throw new AdviceMessenger(ResultState.UNAUTHORIZED, "请登录后再试");
         }

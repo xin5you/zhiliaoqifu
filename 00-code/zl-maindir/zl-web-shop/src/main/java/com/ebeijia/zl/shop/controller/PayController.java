@@ -38,7 +38,9 @@ import java.util.Map;
 @RequestMapping(value = "/pay")
 @RestController
 public class PayController {
+
     private static final BigDecimal oneHundred = BigDecimal.valueOf(100);
+
     @Autowired
     private IPayService payService;
 
@@ -54,7 +56,7 @@ public class PayController {
     @Autowired
     private ITbEcomItxLogDetailService logDetailService;
 
-//    @Autowired
+    @Autowired
     private IWxPayService wxPayService;
 
     private Logger logger = LoggerFactory.getLogger(PayController.class);
@@ -81,7 +83,6 @@ public class PayController {
             // String merchantOutOrderNo = "1513698761094";//request.getParameter("merchantOutOrderNo");
             String dmsKey = request.getParameter("merchantOutOrderNo");
             String orderNo = request.getParameter("orderNo");
-
             return wxPayService.callback(payResult, dmsKey, orderNo);
         }
         return "";
@@ -142,7 +143,7 @@ public class PayController {
     @RequestMapping(value = "/balance/list/", method = RequestMethod.GET)
     public JsonResult<List<AccountVO>> listAccountDetail(@RequestParam("session") String session) {
         MemberInfo memberInfo = shopUtils.getSession();
-        List<AccountVO> accountVOS = payService.listAccountDetail(memberInfo.getOpenId(), session);
+        List<AccountVO> accountVOS = payService.listAccountDetail(memberInfo.getMemberId(), session);
         //处理流水金额问题
         accountVOS.stream().forEach(vo -> {
             vo.setAccBal(vo.getAccBal().multiply(oneHundred));
