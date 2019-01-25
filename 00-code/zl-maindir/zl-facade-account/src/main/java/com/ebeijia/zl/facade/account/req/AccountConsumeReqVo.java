@@ -45,7 +45,7 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 	/**
 	 * 消费补充列表（第三方充值到专项）
 	 */
-	private List<AccountTxnVo> addList; //快捷支付填写
+	private List<AccountQuickPayVo> addList; //快捷支付填写
 
 	private String mchntCode; //商户
 
@@ -98,11 +98,11 @@ public class AccountConsumeReqVo extends BaseTxnReq{
 		this.transList = transList;
 	}
 
-	public List<AccountTxnVo> getAddList() {
+	public List<AccountQuickPayVo> getAddList() {
 		return addList;
 	}
 
-	public void setAddList(List<AccountTxnVo> addList) {
+	public void setAddList(List<AccountQuickPayVo> addList) {
 		this.addList = addList;
 	}
 

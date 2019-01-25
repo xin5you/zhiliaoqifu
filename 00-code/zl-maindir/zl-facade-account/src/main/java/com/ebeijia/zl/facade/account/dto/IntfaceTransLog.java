@@ -8,6 +8,7 @@ import java.util.Set;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
+import com.ebeijia.zl.facade.account.req.AccountQuickPayVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -273,7 +274,7 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
     private List<AccountTxnVo> transList;
 
     @TableField(exist=false)
-    private List<AccountTxnVo> addList;
+    private List<AccountQuickPayVo> addList;
 
     @TableField(exist=false)
     private AccountWithdrawDetail withdrawDetail; //提现操作

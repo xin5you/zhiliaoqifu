@@ -350,24 +350,19 @@ public class AccountTransTest {
 		req.setTransDesc("商品购物");
 
 		//充值的加款
-		List addlist=new ArrayList();
-		AccountTxnVo vo=new AccountTxnVo();
-		vo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
-		vo.setTxnAmt(new BigDecimal(2000));
-		vo.setUpLoadAmt(new BigDecimal(2000));
-		addlist.add(vo);
+		List<AccountQuickPayVo> addlist=new ArrayList<AccountQuickPayVo>();
+		AccountQuickPayVo quickPayVo =new AccountQuickPayVo();
+		quickPayVo.setTfrInBId(SpecAccountTypeEnum.B01.getbId());
+		quickPayVo.setTfrInAmt(new BigDecimal(2000));
 
-		vo=new AccountTxnVo();
-		vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
-		vo.setTxnAmt(new BigDecimal(-2000));
-		vo.setUpLoadAmt(new BigDecimal(-2000));
-		addlist.add(vo);
+		quickPayVo.setTfrOutBId(SpecAccountTypeEnum.A01.getbId());
+		quickPayVo.setTfrOutAmt(new BigDecimal(2000));
+		addlist.add(quickPayVo);
 		req.setAddList(addlist);
-
 
 		//交易扣款
 		List translist=new ArrayList();
-		vo=new AccountTxnVo();
+		AccountTxnVo vo=new AccountTxnVo();
 		vo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
 		vo.setTxnAmt(new BigDecimal(2000));
 		vo.setUpLoadAmt(new BigDecimal(2000));
