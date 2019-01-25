@@ -32,7 +32,7 @@
 								<span class="add-on">所属供应商</span>
 								<select id="ecomCode" name="ecomCode" class="input-medium">
 									<option value=""><span th:text="请选择" /></option>
-									<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.lawCode}"><span th:text="${e.providerName}" /></option>
+									<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.providerId}"><span th:text="${e.providerName}" /></option>
 								</select>
 							</div>
 							<div class="input-prepend">
@@ -200,7 +200,7 @@
 								<label class="control-label"><span class="f_req">* </span>所属供应商：</label>
 								<div class="controls">
 									<select name="ecom_code" id="ecom_code" class="span3">
-										<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.lawCode}">
+										<option th:each="e,eStat : ${ecomCodeList}" th:value="${e.providerId}">
 											<span th:text="${e.providerName}"></span>
 										</option>
 									</select>
