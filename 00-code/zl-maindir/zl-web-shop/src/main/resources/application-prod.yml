@@ -1,5 +1,5 @@
 server:
-  port: 12201
+  port: 12301
   contextPath: /web-shop
 #  session:
 #    cookie:
@@ -8,20 +8,20 @@ server:
 #      domain: .i-zhiliao.com
 spring:
   datasource:
-     url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
-     username: root
-     password: root
-     driver-class-name: com.mysql.jdbc.Driver
-     type: com.alibaba.druid.pool.DruidDataSource
-     minActive: 1
-     maxActive: 20
-     initialSize: 1
-     timeBetweenEvictionRunsMillis: 3000
-     minEvictableIdleTimeMillis: 300000
-     validationQuery: SELECT 1 FROM DUAL
-     testWhileIdle: true
-     testOnBorrow: false
-     testOnReturn: false
+    url: jdbc:mysql://10.0.0.104:3306/zldb?allowMultiQueries=true
+    username: root
+    password: zldb1314!#!$
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    minActive: 1
+    maxActive: 20
+    initialSize: 1
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
   thymeleaf: 
     prefix: classpath:/views/
     #content-type: text/html
@@ -53,19 +53,28 @@ spring:
        minEvictableIdleTimeMillis: 60000
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
-  mq:
-    brokerURL: failover:(tcp://10.0.0.103:51511,tcp://10.0.0.106:51512,tcp://10.0.0.101:51513)?randomize=false
-    username: admin
-    password: admin
-    pool:
-      max-connections: 50
   dubbo:
     application:
+      id: zl-web-shop
       name: zl-web-shop
+    protocol:
+      name: dubbo
+      host:
+      port: 20880
+      accepts: 1000
     consumer:
       check: false
     registry:
-      address: zookeeper://127.0.0.1:2181
+      address: zookeeper://10.0.0.103:12811?backup=10.0.0.106:12812,10.0.0.101:12813
+  rocketmq:
+    groupName: zlqf_shop_group
+    namesrvAddr: 10.0.0.101:9876
+    sendMsgTimeout: 3000
+    retryTimesWhenSendFailed: 2
+    maxMessageSize: 4096
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    consumeMessageBatchMaxSize: 1
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.ebeijia.zl.*.dao.**.domain
@@ -78,113 +87,6 @@ logging:
 sms:
   debug: false
 
-  
-#知了企服加解密key（商城主页和订单）
-HKB_AES_KEY: fzrc3a10zrm0soxm
-
-#海易通加解密key（商城主页和订单）
-HYT_AES_KEY: litj49jk4op589o4
-#商城入口链接（海镱通）
-#HYT: http://www.yomale.com/mall/infomation?parameterHYT=6f4a4275636274496a6a56565532686c466c2b732b4831316c6170336d494533487a4f3639624f706b596b3761566b4d783931424f536f3876306363727a694b
-
-#电商商城入口链接
-ECOM_HOME: http://frt.i-zhiliao.com/ecom-front/homePage/listEshopHomePage?
-#电商我的订单入口链接：
-ECOM_ORDER: http://frt.i-zhiliao.com/ecom-front/order/listOrderInf?
-
-#家乐宝加解密key（商城主页和订单）
-JLB_AES_KEY: g7d6myi2xeebmcew
-#商城入口链接（家乐宝）
-JLB: https://www.jialebao.cc
-
-#嘉福加解密key（商城主页和订单）
-JF_KEY: 0bc89eb947fdfbadcaa16700a2e534a3
-#商城入口链接（嘉福京东）
-JF: https://open.jia-fu.cn/h5/launcher
-#嘉福京东对接参数
-ident: hkb
-e_eid: hkb_001
-jingdong_service: h5.scene.ds.master
-meituan_service: h5.scene.dianping
-dianping_service: h5.scene.dianping
-order_service: h5.scene.my.order
-
-#网易严选相关配置-----start
-# http configuration
-http: 
-  timeout: 60000
-  defaultCharset: utf-8
-  connection: 
-    maxTotal: 200
-    defaultMaxPerRoute: 50
-yx: 
-  openApi: 
-    payedOrder: 
-      method: yanxuan.order.paid.create
-    getOrder:
-      method: yanxuan.order.paid.get
-    confirmOrder: 
-      method: yanxuan.order.received.confirm
-    cancelOrder: 
-      method: yanxuan.order.paid.cancel
-    getIds: 
-      method: yanxuan.item.id.batch.get
-    getItems: 
-      method: yanxuan.item.batch.get
-    getInventory: 
-      method: yanxuan.inventory.count.get
-    getCallBackMethods: 
-      method: yanxuan.callback.method.list
-    registerCallbackMethod: 
-      method: yanxuan.callback.method.register
-    getExpress: 
-      method: yanxuan.order.express.get
-    orderRefundApply:
-      method: yanxuan.order.refund.apply
-    orderRefundCancel:
-      method: yanxuan.order.refund.cancel
-    orderRefundOfferExpress: 
-      method: yanxuan.order.refund.offer.express
-    getOrderRefundDetail: 
-      method: yanxuan.order.refund.detail.get
-    getCategory: 
-      method: yanxuan.item.category.get
-    getSkuIdBatch: 
-      method: yanxuan.item.category.skuId.batch.get
-    getItemSku: 
-      method: yanxuan.item.sku.get
-    mockapi:
-      path: 
-        prefix: /mock/api/v1
-      callbackAuditCancelOrder: 
-        method: /callbackAuditCancelOrder
-      callbackCancelOrder: 
-        method: /callbackCancelOrder
-      callbackDeliveryOrder: 
-        method: /callbackDeliveryOrder
-      callbackTransfer: 
-        method: /callbackTransfer
-      callbackRefundAddress: 
-        method: /callbackRefundAddress
-      callbackRefundReject: 
-        method: /callbackRefundReject
-      callbackRefundExpressConfirm: 
-        method: /callbackRefundExpressConfirm
-      callbackRefundSystemCancel: 
-        method: /callbackRefundSystemCancel
-      callbackRefundResultDirectly:
-        method: /callbackRefundResultDirectly
-      callbackRefundResultWithExpress: 
-        method: /callbackRefundResultWithExpress
-#网易严选相关配置-----end
-CASH_URL: http://cas.i-zhiliao.com/ecom-cash/trans/order/unifiedOrder
-REDIRECT_URL: http://frt.i-zhiliao.com/ecom-front/goods/orderPay/redirectResult
-NOTIFY_URL: http://frt.i-zhiliao.com/ecom-front/goods/orderPay/backResult
-ECOM_SING_KEY: 5XsRyenq22OV2uOwgyHROjYKpECBlfUPk4fkMnt3ujb
-HKB_H5_URL: http://wx.i-zhiliao.com
-BM_NOTIFY_URL: http://frt.i-zhiliao.com/ecom-front/ecom/recharge/mobileRechargeBack
-OPEN_BM_NOTIFY_URL: http://frt.i-zhiliao.com/ecom-front/hkb/recharge/mobileRechargeBack
-
 #分页插件
 pagehelper:
   reasonable: false
@@ -194,9 +96,9 @@ pagehelper:
 #相关URL
 weixin:
   api:
-    code: http://192.168.2.110:10501/web-user/w/getOpenId
+    code: http://10.0.0.106:15001/web-user/w/getOpenId
+    userinfo: http://10.0.0.106:15001/web-user/w/getOpenId
 phone:
   api:
-    charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
-    chargeCallback: http://192.168.2.110:12201/web-shop/supply/phone/charge/callback233
-    userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId
+    charge: http://10.0.0.103:17001/web-api/api/recharge/mobile/payment
+    chargeCallback: http://10.0.0.103:17001/web-shop/supply/phone/charge/callback233
