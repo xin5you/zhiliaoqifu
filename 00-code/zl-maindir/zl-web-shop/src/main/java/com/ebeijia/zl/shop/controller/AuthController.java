@@ -33,7 +33,6 @@ public class AuthController {
     }
 
     //使用code登录
-    @TokenCheck
     @ApiOperation("微信登录")
     @RequestMapping(value = "/wxlogin",method = RequestMethod.POST)
     public JsonResult<Token> wxLogin(@RequestParam("code") String code) {

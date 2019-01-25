@@ -168,15 +168,14 @@ public class CouponService implements ICouponService {
             vo.setTransId(TransCode.CW90.getCode());
             vo.setTransChnl(TransChnl.CHANNEL9.toString());
 
-            vo.setUserChnl(UserChnlCode.USERCHNL2001.getCode());
-            vo.setUserChnlId(memberInfo.getOpenId());
+            vo.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
+            vo.setUserChnlId(memberInfo.getMemberId());
             vo.setUserType(UserType.TYPE100.getCode());
             vo.setDmsRelatedKey(dmsKey);
             vo.setPriBId(bId);
             vo.setUploadAmt(sumDecimal);
             vo.setTransAmt(sumDecimal);
             vo.setTransNumber(1);
-
             baseResult = accountTransactionFacade.executeRecharge(vo);
             itxKey = (String) baseResult.getObject();
         } catch (Exception e) {
@@ -248,7 +247,7 @@ public class CouponService implements ICouponService {
         accountTxnVo.setTxnAmt(BigDecimal.valueOf(sum));
         accountTxnVo.setTxnBId(query.getBId());
 
-        BaseResult baseResult = payService.payCoupon(accountTxnVo, memberInfo.getOpenId(), dmsKey, String.format("购买卡券%s", query.getCouponName()));
+        BaseResult baseResult = payService.payCoupon(accountTxnVo, memberInfo.getMemberId(), dmsKey, String.format("购买卡券%s", query.getCouponName()));
         itxKey = (String) baseResult.getObject();
         if (baseResult.getCode().equals("00")) {
             TbCouponHolder h = new TbCouponHolder();

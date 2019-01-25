@@ -44,6 +44,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class AuthService implements IAuthService {
@@ -83,32 +84,43 @@ public class AuthService implements IAuthService {
     @ShopTransactional
     public Token phoneLogin(String phone, String pwd, String code) {
         String openId = null;
-        if (!StringUtils.isEmpty(code)) {
-            openId = getOpenId(code);
-        }
         boolean validCode = validCodeService.checkValidCode(PhoneValidMethod.LOGIN, phone, pwd);
         if (!validCode) {
             //TODO 验证码校验
             throw new AdviceMessenger(403, "验证码有误");
+        }
+        if (!StringUtils.isEmpty(code)) {
+            openId = getOpenId(code);
+            if (openId != null) {
+                logger.info("成功获取到了openId：[{}]", openId);
+                TbEcomMember member = new TbEcomMember();
+                member.setOpenId(phone);
+                List<TbEcomMember> list = memberDao.list(new QueryWrapper<>(member));
+                for (TbEcomMember m : list){
+                    m.setOpenId("logout");
+                }
+                if (list!=null&&list.size()>0) {
+                    memberDao.updateBatchById(list);
+                }
+            }
         }
         TbEcomMember member = new TbEcomMember();
         member.setPersonId(phone);
         member = memberDao.getOne(new QueryWrapper<>(member));
         String memberId = null;
         String name;
-        if (openId != null) {
-            logger.info("成功获取到了openId：[{}]", openId);
-            name = getUserName(openId);
-        } else {
-            name = "用户";
-        }
         if (member == null) {
+            name = getUserName(openId);
             //TODO 获取openId
             memberId = IdUtil.getNextId();
             logger.info(String.format("用户注册开始：[%s,%s,%s]", phone, openId, memberId));
             //注册流程
             remoteRegister(phone, name, memberId);
             member = localRegister(phone, memberId, openId);
+        }
+        if (openId!=null && "logout".equals(member.getOpenId())) {
+            member.setOpenId(openId);
+            memberDao.updateById(member);
         }
         return buildMemberInfo(member);
     }
@@ -118,7 +130,7 @@ public class AuthService implements IAuthService {
         String memberId = member.getMemberId();
         String phone = member.getPersonId();
 
-        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL2001.getCode());
+        UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL1002.getCode());
         if (userInf == null) {
             throw new BizException(ResultState.NOT_FOUND, "找不到用户信息,请联系客服咨询");
         }
@@ -158,14 +170,19 @@ public class AuthService implements IAuthService {
     }
 
     private String getUserName(String openId) {
-        RestTemplate template1 = new RestTemplate();
-        template1.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
-
-        MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
-        paramsMap.add("openId", openId);
-        ResponseEntity<LinkedHashMap> entity = template1.postForEntity(wxUserInfoApi, paramsMap, LinkedHashMap.class);
-        if (entity.getStatusCode() != HttpStatus.OK) {
-            return null;
+        if (openId != null) {
+            RestTemplate template1 = new RestTemplate();
+            template1.getMessageConverters().add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+            MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+            paramsMap.add("openId", openId);
+            try {
+                ResponseEntity<LinkedHashMap> entity = template1.postForEntity(wxUserInfoApi, paramsMap, LinkedHashMap.class);
+                if (entity.getStatusCode() != HttpStatus.OK) {
+                    return null;
+                }
+            } catch (Exception e) {
+                logger.error("获取微信用户信息下失败[{}]", e);
+            }
         }
         return "用户";
     }
@@ -182,8 +199,6 @@ public class AuthService implements IAuthService {
         if (member == null) {
             throw new BizException(ResultState.UNAUTHORIZED, "您还未登录");
         }
-        member.setOpenId(openId);
-        memberDao.updateById(member);
         return buildMemberInfo(member);
     }
 
@@ -200,7 +215,7 @@ public class AuthService implements IAuthService {
         if (one == null) {
             return 404;
         }
-        one.setOpenId(IdUtil.getNextId());
+        one.setOpenId("logout");
         memberDao.updateById(one);
         return 200;
     }
@@ -221,7 +236,7 @@ public class AuthService implements IAuthService {
 
     private TbEcomMember localRegister(String phone, String newMember, String openId) {
         if (openId == null) {
-            openId = IdUtil.getNextId();
+            openId = "logout";
         }
         UserInf userInf = userInfFacade.getUserInfByPhoneNo(phone, UserChnlCode.USERCHNL1002.getCode());
         TbEcomMember member = new TbEcomMember();

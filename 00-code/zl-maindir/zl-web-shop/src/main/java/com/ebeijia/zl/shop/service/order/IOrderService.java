@@ -24,4 +24,6 @@ public interface IOrderService {
     PageInfo<OrderDetailInfo> listOrderDetail(String orderStat, Integer start, Integer limit);
 
     Integer disableOrder(String orderId);
+
+    TbEcomPlatfOrder applyOuterOrder(PayInfo payInfo);
 }

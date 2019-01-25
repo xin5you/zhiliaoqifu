@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class CardInfo {
 
-
-
     private String cardType;
 
     private String bank;
@@ -20,7 +18,6 @@ public class CardInfo {
     private boolean validated;
 
     private String ok;
-
 
     public CardInfo(){}
 }

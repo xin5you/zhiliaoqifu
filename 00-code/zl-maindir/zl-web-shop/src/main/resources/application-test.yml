@@ -2,11 +2,11 @@
 server:
   port: 12201
   contextPath: /web-shop
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain:
+#  session:
+#    cookie:
+#      name: JSESSIONID
+#      path: /web-shop
+#      domain:
 spring:
   datasource:
     url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
@@ -73,8 +73,8 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.ebeijia.zl.*.dao.**.domain
 #  config-location: classpath:conf/mybatis-config.xml
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   #typeAliasesPackage: com.cn.thinx.ecom_cms.test.domain
 logging:
   config: classpath:conf/logback-ecom.xml
@@ -198,5 +198,5 @@ weixin:
 phone:
   api:
     charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
-    chargeCallback: http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack
+    chargeCallback: http://192.168.2.110:12201/web-shop/supply/phone/charge/callback233
     userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId

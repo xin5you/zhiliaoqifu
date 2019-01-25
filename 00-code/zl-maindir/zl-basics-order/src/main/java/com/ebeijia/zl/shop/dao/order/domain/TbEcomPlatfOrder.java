@@ -142,6 +142,9 @@ public class TbEcomPlatfOrder extends Model<TbEcomPlatfOrder> {
     @TableField(exist = false)
     private String personalName;
 
+    @TableField(exist = false)
+    private String payUrl;
+
     @Override
     protected Serializable pkVal() { 
         return this.orderId;

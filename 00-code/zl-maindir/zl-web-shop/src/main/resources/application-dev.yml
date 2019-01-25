@@ -2,11 +2,11 @@
 server:
   port: 8989
   contextPath: /
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain:
+#  session:
+#    cookie:
+#      name: JSESSIONID
+#      path: /
+#      domain:
   address: 192.168.2.218
 spring:
   datasource:
@@ -199,5 +199,5 @@ weixin:
 phone:
   api:
     charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
-    chargeCallback: http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack
+    chargeCallback: http://192.168.2.110:12201/web-shop/supply/phone/charge/callback
     userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId

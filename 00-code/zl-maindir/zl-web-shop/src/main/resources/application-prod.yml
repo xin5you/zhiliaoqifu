@@ -1,29 +1,27 @@
 server:
   port: 12201
-  contextPath: /ecom-front
-  session:
-    cookie:
-      name: JSESSIONID
-      path: /
-      domain: .i-zhiliao.com
+  contextPath: /web-shop
+#  session:
+#    cookie:
+#      name: JSESSIONID
+#      path: /
+#      domain: .i-zhiliao.com
 spring:
   datasource:
-    jndi-name: JDBC
-    #ID: mySpringBoot
-    url: jdbc:oracle:thin:@10.0.0.104:1521:zldb
-    username: isecmdb
-    password: isecmdb
-    driver-class-name: oracle.jdbc.OracleDriver
-    type: com.alibaba.druid.pool.DruidDataSource
-    minActive: 1
-    maxActive: 20
-    initialSize: 1
-    timeBetweenEvictionRunsMillis: 3000
-    minEvictableIdleTimeMillis: 300000
-    validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
+     url: jdbc:mysql://192.168.2.110:3306/zldb_test?allowMultiQueries=true
+     username: root
+     password: root
+     driver-class-name: com.mysql.jdbc.Driver
+     type: com.alibaba.druid.pool.DruidDataSource
+     minActive: 1
+     maxActive: 20
+     initialSize: 1
+     timeBetweenEvictionRunsMillis: 3000
+     minEvictableIdleTimeMillis: 300000
+     validationQuery: SELECT 1 FROM DUAL
+     testWhileIdle: true
+     testOnBorrow: false
+     testOnReturn: false
   thymeleaf: 
     prefix: classpath:/views/
     #content-type: text/html
@@ -32,8 +30,6 @@ spring:
     #encoding: UTF-8
     # set to false for hot refresh
     #cache: true
-  session:
-    store-type: redis
   redis: 
     timeout: 3000
     cluster:
@@ -72,10 +68,16 @@ spring:
       address: zookeeper://127.0.0.1:2181
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
-  type-aliases-package: com.ebeijia.zl.shop.dao.*.domain
-  #typeAliasesPackage: com.cn.thinx.ecom.front.test.domain
+  type-aliases-package: com.ebeijia.zl.*.dao.**.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   config: classpath:conf/logback-ecom.xml
+
+#锁定短信验证码
+sms:
+  debug: false
+
   
 #知了企服加解密key（商城主页和订单）
 HKB_AES_KEY: fzrc3a10zrm0soxm
@@ -182,3 +184,19 @@ ECOM_SING_KEY: 5XsRyenq22OV2uOwgyHROjYKpECBlfUPk4fkMnt3ujb
 HKB_H5_URL: http://wx.i-zhiliao.com
 BM_NOTIFY_URL: http://frt.i-zhiliao.com/ecom-front/ecom/recharge/mobileRechargeBack
 OPEN_BM_NOTIFY_URL: http://frt.i-zhiliao.com/ecom-front/hkb/recharge/mobileRechargeBack
+
+#分页插件
+pagehelper:
+  reasonable: false
+  supportMethodsArguments: true
+  params: count=countSql
+
+#相关URL
+weixin:
+  api:
+    code: http://192.168.2.110:10501/web-user/w/getOpenId
+phone:
+  api:
+    charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
+    chargeCallback: http://192.168.2.110:12201/web-shop/supply/phone/charge/callback233
+    userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId
