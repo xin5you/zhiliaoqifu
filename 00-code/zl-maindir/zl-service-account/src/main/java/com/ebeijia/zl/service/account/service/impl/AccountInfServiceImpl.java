@@ -201,7 +201,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			throw AccountBizException.ACCOUNT_NOT_EXIT.newInstance("账户不存在,用户编号{%s}", transLog.getUserId()).print();
 		}
 		//账户退款操作
-		if(TransCode.CW11.getCode().equals(transLog.getTransId()) || TransCode.CW71.getCode().equals(transLog.getTransId())){
+		if(TransCode.CW11.getCode().equals(transLog.getTransId()) || TransCode.CW74.getCode().equals(transLog.getTransId())){
 			AccountLog orgAccountLog=accountLogService.getAccountLogByTxnPriKey(transLog.getOrgTxnPrimaryKey());
 			if(orgAccountLog==null){
 				throw AccountBizException.ORG_ACCOUNT_LOG_NOT_EXIT.newInstance("原账户交易日志{%s}不存在", transLog.getOrgTxnPrimaryKey()).print();
