@@ -1,18 +1,18 @@
 server:
   port: 10201
   contextPath: /web-account
-
+  session:
+    store-type: redis
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
 logging:
   config: classpath:conf/logback-account.xml
-
 spring:
   datasource:
-    url: jdbc:mysql://192.168.2.110:3306/zldb_test
+    url: jdbc:mysql://10.0.0.104:3306/zldb?allowMultiQueries=true
     username: root
-    password: root
+    password: zldb1314!#!$
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     minActive: 1
@@ -29,11 +29,56 @@ spring:
       name: zl-service-account
     protocol:
       name: dubbo
+      host:
       port: 20880
       accepts: 1000
     provider:
       id: provider_zl-service-account
       timeout: 2000
       delay: -1
+    consumer:
+      check: false
     registry:
-      address: zookeeper://192.168.2.110:12801?backup=192.168.2.110:12802,192.168.2.110:12803
+      address: zookeeper://10.0.0.101:12811?backup=10.0.0.103:12812,10.0.0.106:12813
+  rocketmq:
+    groupName: zlqf_account_group
+    namesrvAddr: 10.0.0.101:9876
+    sendMsgTimeout: 3000
+    retryTimesWhenSendFailed: 2
+    maxMessageSize: 4096
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    consumeMessageBatchMaxSize: 1
+  redis:
+    timeout: 3000
+    cluster:
+       nodes: 10.0.0.106:7111,10.0.0.103:7112,10.0.0.101:7113,10.0.0.101:7114,10.0.0.106:7115,10.0.0.103:7116
+       connection-timeout: 1000
+       soTimeout: 3000
+       max-attempts: 5
+       password:
+       max-redirects: 2
+    pool:
+       max-total: 1024
+       max-active: 8
+       max-idle: 8
+       max-wait: -1
+       min-idle: 0
+       block-when-exhausted: true
+       max-wait-millis: 3000
+       test-on-borrow: false
+       test-on-return: false
+       test-while-idle: true
+       minEvictableIdleTimeMillis: 60000
+       timeBetweenEvictionRunsMillis: 60000
+       numTestsPerEvictionRun: 1
+withdraw:
+  yfb:
+    publicKeyIndex: 0001
+    wagKeyString: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCbFR1mQQxAnXtzEZIp/Lo4RVzU2c/FGCc7QoRHqBQTAxRXtn+n94ldgQBauDNm+nMu5UtsS0r+hXfaeTdJrhJ7pMZUy90kjLdvmzJ5EbjoQGoJdCzmthWBNvRD+m2tAAxYbDb0mcCpvor93RIkbkcphZudCvkG8+/xAfNmJdyZQIDAQAB
+    merchantNo: 70235957
+    productCode: 01070000042
+    goodsType: 290054
+    privateKeyUrl: /data/app/app_itf/itfapp/config/private.key
+    bathWithdrawUrl: https://wag.yifubao.com/epps-wag/withdraw.htm
+    yfbNotifyUrl: http://api.i-zhiliao.com/web-api/api/withdraw/suning-yfb/notify

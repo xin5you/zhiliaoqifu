@@ -8,9 +8,9 @@ logging:
   config: classpath:conf/logback-web-api.xml
 spring:
   datasource:
-    url: jdbc:mysql://192.168.2.110:3306/zldb_test
+    url: jdbc:mysql://10.0.0.104:3306/zldb?allowMultiQueries=true
     username: root
-    password: root
+    password: zldb1314!#!$
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     minActive: 1
@@ -22,23 +22,17 @@ spring:
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
-  mq:
-    brokerURL: failover:(tcp://192.168.2.110:51511,tcp://192.168.2.110:51512,tcp://192.168.2.110:51513)?randomize=false
-    username: admin
-    password: admin
-    pool:
-      max-connections: 50
   dubbo:
     application:
       name: zl-web-api
     consumer:
       check: false
     registry:
-      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
+      address: zookeeper://10.0.0.101:12811?backup=10.0.0.103:12812,10.0.0.106:12813
   redis:
     timeout: 3000
     cluster:
-       nodes: 192.168.2.110:7111,192.168.2.110:7112,192.168.2.110:7113,192.168.2.110:7114,192.168.2.110:7115,192.168.2.110:7116
+       nodes: 10.0.0.106:7111,10.0.0.103:7112,10.0.0.101:7113,10.0.0.101:7114,10.0.0.106:7115,10.0.0.103:7116
        connection-timeout: 1000
        soTimeout: 3000
        max-attempts: 5
@@ -58,3 +52,22 @@ spring:
        minEvictableIdleTimeMillis: 60000
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
+  rocketmq:
+    groupName: zlqf_webapi_group
+    namesrvAddr: 10.0.0.101:9876
+    sendMsgTimeout: 3000
+    retryTimesWhenSendFailed: 2
+    maxMessageSize: 4096
+    consumeThreadMin: 20
+    consumeThreadMax: 64
+    consumeMessageBatchMaxSize: 1
+withdraw:
+  yfb:
+    publicKeyIndex: 0001
+    wagKeyString: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCbFR1mQQxAnXtzEZIp/Lo4RVzU2c/FGCc7QoRHqBQTAxRXtn+n94ldgQBauDNm+nMu5UtsS0r+hXfaeTdJrhJ7pMZUy90kjLdvmzJ5EbjoQGoJdCzmthWBNvRD+m2tAAxYbDb0mcCpvor93RIkbkcphZudCvkG8+/xAfNmJdyZQIDAQAB
+    merchantNo: 70235957
+    productCode: 01070000042
+    goodsType: 290054
+    privateKeyUrl: /data/app/app_api/apiapp/config/private.key
+    bathWithdrawUrl: https://wag.yifubao.com/epps-wag/withdraw.htm
+    yfbNotifyUrl: http://api.i-zhiliao.com/web-api/api/withdraw/suning-yfb/notify
