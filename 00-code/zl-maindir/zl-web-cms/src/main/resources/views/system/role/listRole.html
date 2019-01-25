@@ -39,8 +39,10 @@
 							<td><span th:text="${role.description}"></span></td>
 							<td>
 								<a th:attr="roleId=${role.id}" title="授权" class="btn-mini btn-grant-resource" href="#"><i class="icon-plus"></i></a>&nbsp;
-								<a th:attr="roleId=${role.id}" title="编辑" class="btn-mini btn-edit-role" href="#"><i class="icon-edit"></i></a>
-								<a th:attr="roleId=${role.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+								<span th:if="${role.isdefault == '1' and role.dataStat == '0'}">
+									<a th:attr="roleId=${role.id}" title="编辑" class="btn-mini btn-edit-role" href="#"><i class="icon-edit"></i></a>
+									<a th:attr="roleId=${role.id}" title="删除" class="btn-mini btn-delete" href="#"><i class="icon-remove"></i></a>
+								</span>
 							</td>
 						</tr>
 					</tbody>

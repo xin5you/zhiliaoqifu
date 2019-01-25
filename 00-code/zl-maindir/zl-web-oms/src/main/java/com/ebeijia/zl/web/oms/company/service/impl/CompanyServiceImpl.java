@@ -104,7 +104,7 @@ public class CompanyServiceImpl implements CompanyService{
 		LinkedList<BatchOrderList> batchOrderList = new LinkedList<>();
 		batchOrderList.add(orderList);
 		
-		int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE200.getCode());
+		int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE200.getCode(), companyInf.getIsPlatform());
 		if (orderResult < 0) {
 			logger.error("## 新增企业开户订单信息失败");
 			return 0;

@@ -27,6 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "couponManage")
@@ -60,9 +62,17 @@ public class CouponManageController {
             logger.error("## 查询卡券信息异常[{}]", e);
         }
 
+        SpecAccountTypeEnum[] values = SpecAccountTypeEnum.values();
+        List<Object> list = new ArrayList<>();
+        for (int i =0;i<values.length;i++){
+            if("A"!=values[i].getCode()){
+                list.add(values[i]);
+            }
+        }
+
         mv.addObject("pageInfo", pageInfo);
         mv.addObject("couponProduct", couponProduct);
-        mv.addObject("specAccountTypeList", SpecAccountTypeEnum.values());
+        mv.addObject("specAccountTypeList", list);
 
 
 
@@ -115,8 +125,8 @@ public class CouponManageController {
         String bId = req.getParameter("b_id");
         String couponDesc = req.getParameter("couponDesc");
         String iconImage = req.getParameter("iconImage");
-        String availableNum = req.getParameter("availableNum");
-        String totalNum = req.getParameter("totalNum");
+       /* String availableNum = req.getParameter("availableNum");
+        String totalNum = req.getParameter("totalNum");*/
         String remarks = req.getParameter("remarks");
 
         TbCouponProduct couponProduct = null;
@@ -138,8 +148,8 @@ public class CouponManageController {
         couponProduct.setCouponType("1");
         couponProduct.setCouponDesc(couponDesc);
         couponProduct.setIconImage(iconImage);
-        couponProduct.setTotalNum(Integer.parseInt(totalNum));
-        couponProduct.setAvailableNum(Integer.parseInt(availableNum));
+      /*  couponProduct.setTotalNum(Integer.parseInt(totalNum));
+        couponProduct.setAvailableNum(Integer.parseInt(availableNum));*/
         couponProduct.setRemarks(remarks);
         couponProduct.setUpdateUser(user.getId());
         couponProduct.setUpdateTime(System.currentTimeMillis());

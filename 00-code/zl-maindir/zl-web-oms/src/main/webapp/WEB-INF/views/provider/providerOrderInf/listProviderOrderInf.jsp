@@ -63,7 +63,8 @@
 							<tr>
 								<th>订单号</th>
 				                <th>渠道订单号</th>
-				               	<th>订单金额</th>
+				               	<th>支付面额(元)</th>
+								<th>支付金额(元)</th>
 				               	<th>支付状态</th>
 				                <th>充值状态</th>
 				                <th>成本价</th>
@@ -80,6 +81,7 @@
 				                 	<td>${entity.regOrderId}</td>
 				                 	<td>${entity.channelOrderId}</td>
 									<td>${entity.regOrderAmt}</td>
+									<td>${entity.regTxnAmt}</td>
 				                    <td>${entity.payState}</td>
 				                    <td>${entity.rechargeState}</td>
 				                    <td>${entity.transCost}</td>
