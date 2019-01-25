@@ -69,4 +69,4 @@ spring:
     consumer:
         check: false
     registry:
-      address: zookeeper://10.0.0.101:12811?backup=10.0.0.103:12812,10.0.0.106:12813
+      address: zookeeper://10.0.0.103:12811?backup=10.0.0.106:12812,10.0.0.101:12813
