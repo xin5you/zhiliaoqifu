@@ -770,7 +770,7 @@ public class GoodsManageController {
 
 	/**
 	 * 编辑商品相册信息
-	 * @param thumbnailFile
+	 * @param originalFile
 	 * @param req
 	 * @return
 	 */
