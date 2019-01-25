@@ -43,13 +43,19 @@ spring:
        minEvictableIdleTimeMillis: 60000
        timeBetweenEvictionRunsMillis: 60000
        numTestsPerEvictionRun: 1
+  mq:
+    brokerURL: failover:(tcp://10.0.0.101:9876)?randomize=false
+    #username: admin
+    #password: admin
+    pool:
+      max-connections: 50
   dubbo:
     application:
       name: zl-web-oms
     consumer:
       check: false
     registry:
-      address: zookeeper://192.168.2.110:2181?backup=192.168.2.110:2182,192.168.2.110:2183
+      address: zookeeper://10.0.0.101:12811?backup=10.0.0.103:12812,10.0.0.106:12813
 mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
   config-location: classpath:conf/mybatis-config.xml
