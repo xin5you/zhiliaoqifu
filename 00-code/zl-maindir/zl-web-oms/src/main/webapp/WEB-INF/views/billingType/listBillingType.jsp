@@ -56,7 +56,7 @@
 						<td>${b.code}类</td>
 						<td>${b.loseFee}</td>
 						<td>${b.buyFee}</td>
-						<td>${b.remarks}</td>
+						<td style="width: 30%;">${b.remarks}</td>
 						<td style="width: 30%;">
 							<sec:authorize access="hasRole('ROLE_BILLING_TYPE_INTOEDIT')">
 								<a bId="${b.BId}" title="编辑" href="#" class="btn-mini btn-edit"><i class="icon-edit"></i></a>

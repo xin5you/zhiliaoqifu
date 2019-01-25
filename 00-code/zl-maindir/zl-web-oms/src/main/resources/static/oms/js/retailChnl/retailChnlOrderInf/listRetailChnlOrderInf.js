@@ -5,8 +5,6 @@ $(document).ready(function() {
 var listTelChannelOrderInf = {
 	init : function() {
 		listTelChannelOrderInf.initEvent();
-		var operStatus=$("#operStatus").val();
-		Helper.operTip(operStatus);
 	},
 
 	initEvent:function(){
