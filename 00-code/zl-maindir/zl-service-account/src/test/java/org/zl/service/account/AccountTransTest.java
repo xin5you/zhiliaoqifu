@@ -304,6 +304,7 @@ public class AccountTransTest {
 	}*/
 
 
+/*
 		@Test
 	public void executeRefundToUser() throws Exception{
 
@@ -318,15 +319,61 @@ public class AccountTransTest {
 		vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
 		vo.setTxnAmt(new BigDecimal(100));
 		vo.setUpLoadAmt(new BigDecimal(100));
-			req.setDmsRelatedKey(IdUtil.getNextId());
+
 
 		List list=new ArrayList();
 		list.add(vo);
 		req.setTransList(list);
-
+			req.setDmsRelatedKey(IdUtil.getNextId());
 		req.setTransDesc("手机13761961111充值失败退款");
 		BaseResult result=accountTransactionFacade.executeRefund(req);
 		System.out.println("退款:"+JSONArray.toJSONString(result));
 	}
+*/
 
+
+	/**
+	 * 消费 A类+类
+	 * @throws Exception
+	 */
+	@Test
+	public void executeConsumeToUser() throws Exception{
+
+		AccountConsumeReqVo req=new AccountConsumeReqVo();
+		req.setTransId(TransCode.CW71.getCode());
+		req.setTransChnl(TransChnl.CHANNEL6.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
+		req.setUserChnlId("c645d21c-4f21-4222-9373-d1a5a749f69d");
+		req.setUserType(UserType.TYPE100.getCode());
+		req.setDmsRelatedKey(IdUtil.getNextId());
+		req.setMchntCode("ba88a6d0-0f07-42d7-805c-735aa3c177bd");
+		req.setTransDesc("商品购物");
+
+		//充值的加款
+		List addlist=new ArrayList();
+		AccountTxnVo vo=new AccountTxnVo();
+		vo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
+		vo.setTxnAmt(new BigDecimal(2000));
+		vo.setUpLoadAmt(new BigDecimal(2000));
+		addlist.add(vo);
+
+		vo=new AccountTxnVo();
+		vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
+		vo.setTxnAmt(new BigDecimal(-2000));
+		vo.setUpLoadAmt(new BigDecimal(-2000));
+		addlist.add(vo);
+		req.setAddList(addlist);
+
+
+		//交易扣款
+		List translist=new ArrayList();
+		vo=new AccountTxnVo();
+		vo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
+		vo.setTxnAmt(new BigDecimal(2000));
+		vo.setUpLoadAmt(new BigDecimal(2000));
+		translist.add(vo);
+		req.setTransList(translist);
+		BaseResult result=accountTransactionFacade.executeConsume(req);
+		System.out.println("消费 A类+B类:"+JSONArray.toJSONString(result));
+	}
 }

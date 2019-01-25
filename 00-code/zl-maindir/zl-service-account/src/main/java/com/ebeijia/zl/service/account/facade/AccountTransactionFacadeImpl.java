@@ -223,7 +223,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLog.setShopCode(req.getShopCode());
 		intfaceTransLog.setTargetMchntCode(req.getTargetMchtCode());  //
 		/****保存接口易流水****/
-		intfaceTransLogService.saveOrUpdate(intfaceTransLog);
+		intfaceTransLogService.save(intfaceTransLog);
 		
 		//执行操作
 		boolean eflag=false; 

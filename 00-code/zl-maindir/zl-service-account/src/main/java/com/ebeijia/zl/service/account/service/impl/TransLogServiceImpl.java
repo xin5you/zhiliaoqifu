@@ -268,6 +268,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					}
 				}
 			}
+
 			//消费扣款
 			List<AccountTxnVo> transList = intfaceTransLog.getTransList();
 			TransLog transLog2=null;
@@ -294,9 +295,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
 					transLog2.setUserId(intfaceTransLog.getTfrInUserId());
 					transLog2.setPriBId(accountTxnVo.getTxnBId());
-					if(TransCode.CW20.getCode().equals(intfaceTransLog.getTransId())){
-						transLog2.setPriBId(SpecAccountTypeEnum.A01.getCode());
-					}
+
 					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
 					transLog2.setTransId(TransCode.MB95.getCode());
 					transLog2.setUserType(UserType.TYPE500.getCode());
@@ -357,7 +356,6 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			TransLog transLog2=null;
 
 			String zlUserId=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
-			UserInf tarMchntUserInf=userInfService.getUserInfByUserName(zlUserId);
 			if (addList != null && addList.size() > 0) {
 				for (AccountTxnVo accountTxnVo : addList) {
 					BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
@@ -370,13 +368,13 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2=new TransLog();
 					this.newTransLog(intfaceTransLog, transLog2);
 					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
-					transLog2.setUserId(null); //平台用户
-					transLog2.setPriBId(accountTxnVo.getTxnBId());
-					transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
-					transLog2.setTransId(TransCode.MB96.getCode());
-					transLog2.setUserType(UserType.TYPE500.getCode());
-					transLog2.setTransAmt(transAmt);
+					transLog2.setUserId(zlUserId); //平台用户
 					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
+					transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
+					transLog2.setTransId(TransCode.MB40.getCode());
+					transLog2.setUserType(UserType.TYPE500.getCode());
+					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
+					transLog2.setTransAmt(transAmt);
 					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
 					addToVoList(voList,transLog2,voList.size());
 				}
