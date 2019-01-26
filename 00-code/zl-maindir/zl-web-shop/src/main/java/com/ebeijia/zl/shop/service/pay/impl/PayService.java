@@ -190,7 +190,7 @@ public class PayService implements IPayService {
         String result = "";
         List<AccountTxnVo> txnList = buildTxnVo(payInfo);
 
-        BaseResult baseResult = executeConsume(txnList, memberId, dmsRelatedKey, desc, mchntCode);
+        BaseResult baseResult = executeConsume(txnList, memberId, payInfo.getTypeA(), dmsRelatedKey, desc, mchntCode);
         Object object = baseResult.getObject();
         if (object instanceof String) {
             result = (String) object;
@@ -297,10 +297,33 @@ public class PayService implements IPayService {
         //请求支付
         String result = "";
         List<AccountTxnVo> accountTxnVos = buildTxnVo(vo);
-
+        List<AccountTxnVo> addList = new LinkedList<>();
         AccountConsumeReqVo req = new AccountConsumeReqVo();
+
+
+        //TODO 简单处理了充值问题
+        for (AccountTxnVo v : accountTxnVos) {
+            if (v.getTxnAmt().compareTo(BigDecimal.ZERO) < 0) {
+                v.setTxnAmt(v.getTxnAmt().negate());
+                addList.add(v);
+            }
+        }
+        accountTxnVos.removeAll(addList);
+        List<AccountQuickPayVo> quickList = null;
+        if (addList.size() > 0) {
+            quickList = new LinkedList<>();
+            for (AccountTxnVo v : addList) {
+                AccountQuickPayVo accountQuickPayVo = new AccountQuickPayVo();
+                accountQuickPayVo.setTfrOutBId(vo.getTypeA());
+                accountQuickPayVo.setTfrOutAmt(v.getTxnAmt());
+                accountQuickPayVo.setTfrInAmt(v.getTxnAmt());
+                accountQuickPayVo.setTfrInBId(v.getTxnBId());
+                quickList.add(accountQuickPayVo);
+            }
+        }
+        req.setAddList(quickList);
         //交易与渠道
-        req.setTransId(CW10.getCode());
+        req.setTransId(CW71.getCode());
         req.setTransChnl(TransChnl.CHANNEL8.toString());
         //消费端用户识别
         req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
@@ -704,10 +727,33 @@ public class PayService implements IPayService {
      * @return
      * @throws Exception
      */
-    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
+    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String bId, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
+        List<AccountTxnVo> addList = new LinkedList<>();
+
+        //TODO 简单处理了充值问题
+        for (AccountTxnVo vo : consumeList) {
+            if (vo.getTxnAmt().compareTo(BigDecimal.ZERO) < 0) {
+                vo.setTxnAmt(vo.getTxnAmt().negate());
+                addList.add(vo);
+            }
+        }
+        consumeList.removeAll(addList);
+        List<AccountQuickPayVo> quickList = null;
+        if (addList.size() > 0) {
+            quickList = new LinkedList<>();
+            for (AccountTxnVo vo : addList) {
+                AccountQuickPayVo accountQuickPayVo = new AccountQuickPayVo();
+                accountQuickPayVo.setTfrOutBId(bId);
+                accountQuickPayVo.setTfrOutAmt(vo.getTxnAmt());
+                accountQuickPayVo.setTfrInAmt(vo.getTxnAmt());
+                accountQuickPayVo.setTfrInBId(vo.getTxnBId());
+                quickList.add(accountQuickPayVo);
+            }
+        }
+        req.setAddList(quickList);
         //交易与渠道
-        req.setTransId(CW10.getCode());
+        req.setTransId(CW71.getCode());
         req.setTransChnl(TransChnl.CHANNEL6.toString());
         //消费端用户识别
         req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
@@ -753,16 +799,15 @@ public class PayService implements IPayService {
             //TODO 所有A类消费，先充值到B类
             AccountTxnVo rechargeTxnVo = new AccountTxnVo();
             rechargeTxnVo.setTxnBId(typeB.getbId());
-            rechargeTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostA()).negate());
+            rechargeTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostA()));
             rechargeTxnVo.setTxnAmt(BigDecimal.valueOf(payInfo.getCostA()).negate());
-            result.add(accountTxnVo);
-            result.add(accountTxnVo);
-
+            result.add(rechargeTxnVo);
         }
-        if (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0) {
+        if (result.size() == 2 || (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0)) {
             AccountTxnVo accountTxnVo = new AccountTxnVo();
             accountTxnVo.setTxnBId(typeB.getbId());
-            BigDecimal costB = BigDecimal.valueOf(payInfo.getCostB());
+            Long cost = payInfo.getCostB() == null ? 0L : payInfo.getCostB();
+            BigDecimal costB = BigDecimal.valueOf(cost);
             //TODO 如果存在A类充值，统一到B类扣款
             if (costA != null) {
                 costB = costB.add(costA);
@@ -771,7 +816,7 @@ public class PayService implements IPayService {
             accountTxnVo.setTxnAmt(costB);
             result.add(accountTxnVo);
         }
+        logger.info("\nTxn对象构建完成：[{}]\n", result);
         return result;
     }
-
 }

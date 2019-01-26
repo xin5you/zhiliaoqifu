@@ -157,7 +157,7 @@ public class CouponService implements ICouponService {
             vo.setFromCompanyId("Coupon Trans");
 
             AccountTxnVo txnVo = new AccountTxnVo();
-            txnVo.setTxnBId(bId);
+            txnVo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
             txnVo.setTxnAmt(sumDecimal);
             txnVo.setUpLoadAmt(sumDecimal);
             logger.info(String.format("提交卡券转让请求，金额%s，总计卡券数量%s，用户ID%s，卡券类型%s", txnAmt, amount, memberInfo.getMemberId(), couponCode));
@@ -172,7 +172,8 @@ public class CouponService implements ICouponService {
             vo.setUserChnlId(memberInfo.getMemberId());
             vo.setUserType(UserType.TYPE100.getCode());
             vo.setDmsRelatedKey(dmsKey);
-            vo.setPriBId(bId);
+            //TODO 由两处决定转让账户
+            vo.setPriBId(SpecAccountTypeEnum.A01.getbId());
             vo.setUploadAmt(sumDecimal);
             vo.setTransAmt(sumDecimal);
             vo.setTransNumber(1);

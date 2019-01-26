@@ -95,7 +95,7 @@ ECOM_ORDER: http://127.0.0.1:8989/ecom-front/order/listOrderInf
 HYT_AES_KEY: litj49jk4op589o4
 #商城入口链接（海镱通）
 HYT: http://www.yomale.com/mall/infomation?parameterHYT=6f4a4275636274496a6a56565532686c466c2b732b4831316c6170336d494533487a4f3639624f706b596b3761566b4d783931424f536f3876306363727a694b
-  
+
 #家乐宝加解密key（商城主页和订单）
 JLB_AES_KEY: 18dffhD3Mxwiobpo
 #商城入口链接（家乐宝）
@@ -115,74 +115,74 @@ JF: http://test.jia-fu.cn/open/h5/launcher
 
 #网易严选相关配置-----start
 # http configuration
-http: 
+http:
   timeout: 60000
   defaultCharset: utf-8
-  connection: 
+  connection:
     maxTotal: 200
     defaultMaxPerRoute: 50
-yx: 
-  openApi: 
-    payedOrder: 
+yx:
+  openApi:
+    payedOrder:
       method: yanxuan.order.paid.create
     getOrder:
       method: yanxuan.order.paid.get
-    confirmOrder: 
+    confirmOrder:
       method: yanxuan.order.received.confirm
-    cancelOrder: 
+    cancelOrder:
       method: yanxuan.order.paid.cancel
-    getIds: 
+    getIds:
       method: yanxuan.item.id.batch.get
-    getItems: 
+    getItems:
       method: yanxuan.item.batch.get
-    getInventory: 
+    getInventory:
       method: yanxuan.inventory.count.get
-    getCallBackMethods: 
+    getCallBackMethods:
       method: yanxuan.callback.method.list
-    registerCallbackMethod: 
+    registerCallbackMethod:
       method: yanxuan.callback.method.register
-    getExpress: 
+    getExpress:
       method: yanxuan.order.express.get
     orderRefundApply:
       method: yanxuan.order.refund.apply
     orderRefundCancel:
       method: yanxuan.order.refund.cancel
-    orderRefundOfferExpress: 
+    orderRefundOfferExpress:
       method: yanxuan.order.refund.offer.express
-    getOrderRefundDetail: 
+    getOrderRefundDetail:
       method: yanxuan.order.refund.detail.get
-    getCategory: 
+    getCategory:
       method: yanxuan.item.category.get
-    getSkuIdBatch: 
+    getSkuIdBatch:
       method: yanxuan.item.category.skuId.batch.get
-    getItemSku: 
+    getItemSku:
       method: yanxuan.item.sku.get
     mockapi:
-      path: 
+      path:
         prefix: /mock/api/v1
-      callbackAuditCancelOrder: 
+      callbackAuditCancelOrder:
         method: /callbackAuditCancelOrder
-      callbackCancelOrder: 
+      callbackCancelOrder:
         method: /callbackCancelOrder
-      callbackDeliveryOrder: 
+      callbackDeliveryOrder:
         method: /callbackDeliveryOrder
-      callbackTransfer: 
+      callbackTransfer:
         method: /callbackTransfer
-      callbackRefundAddress: 
+      callbackRefundAddress:
         method: /callbackRefundAddress
-      callbackRefundReject: 
+      callbackRefundReject:
         method: /callbackRefundReject
-      callbackRefundExpressConfirm: 
+      callbackRefundExpressConfirm:
         method: /callbackRefundExpressConfirm
-      callbackRefundSystemCancel: 
+      callbackRefundSystemCancel:
         method: /callbackRefundSystemCancel
       callbackRefundResultDirectly:
         method: /callbackRefundResultDirectly
-      callbackRefundResultWithExpress: 
+      callbackRefundResultWithExpress:
         method: /callbackRefundResultWithExpress
 #网易严选相关配置-----end
 CASH_URL: http://cas.tao-lue.com/ecom-cash/trans/order/unifiedOrder
-REDIRECT_URL: 
+REDIRECT_URL:
 NOTIFY_URL: http://192.168.2.110:8989/ecom-front/goods/orderPay/backResult
 ECOM_SING_KEY: YPEgSbuyRcoDV49yHzx4wS4ZeKHFVQA84Hv4IunjH10
 HKB_H5_URL: http://hkb.tao-lue.com
@@ -195,8 +195,8 @@ pagehelper:
 weixin:
   api:
     code: http://192.168.2.110:10501/web-user/w/getOpenId
+    userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId
 phone:
   api:
     charge: http://192.168.2.110:10701/web-api/api/recharge/mobile/payment
     chargeCallback: http://192.168.2.110:12201/web-shop/supply/phone/charge/callback233
-    userinfo: http://user.happy8888.com.cn/web-user/w/getOpenId
