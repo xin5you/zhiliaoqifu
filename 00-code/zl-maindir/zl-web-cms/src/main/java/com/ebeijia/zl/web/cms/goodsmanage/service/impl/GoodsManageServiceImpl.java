@@ -335,7 +335,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		try {
 			if (goodsInfList != null && goodsInfList.size() >= 1) {
 				for (TbEcomGoods goods : goodsInfList) {
-					ProviderInf provider = providerInfFacade.getProviderInfByLawCode(goods.getEcomCode());
+					ProviderInf provider = providerInfFacade.getProviderInfById(goods.getEcomCode());
 					goods.setEcomCode(provider.getProviderName());
 					goods.setGoodsType(GoodsTypeEnum.findByBId(goods.getGoodsType()).getName());
 					goods.setMarketEnableName(MarketEnableEnum.findByBId(goods.getMarketEnable()).getName());
@@ -721,7 +721,7 @@ public class GoodsManageServiceImpl implements GoodsManageService {
 		try {
 			if (goodsProductList != null && goodsProductList.size() >= 1) {
 				for (TbEcomGoodsProduct g : goodsProductList) {
-					ProviderInf provider = providerInfFacade.getProviderInfByLawCode(g.getEcomCode());
+					ProviderInf provider = providerInfFacade.getProviderInfById(g.getEcomCode());
 					g.setEcomCode(provider.getProviderName());
 					if (!StringUtil.isNullOrEmpty(g.getProductEnable())) {
 						g.setProductEnableName(MarketEnableEnum.findByBId(Integer.toString(g.getProductEnable())).getName());
