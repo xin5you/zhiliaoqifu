@@ -522,8 +522,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			return true;
 		} else {
 			//商户账户允许为负
-			if(! UserType.TYPE100.getCode().equals(account.getAccountType())
-					&& TransCode.MB40.getCode().equals(transId)) {
+			if(! UserType.TYPE100.getCode().equals(account.getAccountType())){
 				return true;
 			}
 			return false;
@@ -588,7 +587,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 		 List<AccountVO> list=new ArrayList<>();
 		 if(UserType.TYPE100.getCode().equals(req.getUserType())){
 			 list=accountInfMapper.getAccountVOToUserList(req.getUserChnlId(),req.getUserChnl(),req.getUserType());
-		 }else if(UserType.TYPE200.getCode().equals(req.getUserType())){
+		 }else if(UserType.TYPE200.getCode().equals(req.getUserType()) || UserType.TYPE500.getCode().equals(req.getUserType())){
 			 list=accountInfMapper.getAccountVOToCompanyList(req.getUserChnlId(),req.getUserType());
 		 }else if(UserType.TYPE300.getCode().equals(req.getUserType())){
 			 list=accountInfMapper.getAccountVOToProviderList(req.getUserChnlId(),req.getUserType());
