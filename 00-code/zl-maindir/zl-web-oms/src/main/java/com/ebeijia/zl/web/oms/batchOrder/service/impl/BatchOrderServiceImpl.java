@@ -173,7 +173,7 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				list.add(o);
 			}
 		} else if (TransCode.MB80.getCode().equals(orderType)) {
-			//平台账户A类和B类全开，企业账户，供应商账户和分销商账户除了托管账户其他全开
+			//平台账户和分销商账户A类和B类全开；企业账户和供应商账户除了托管账户其他全开
 			if (!StringUtil.isNullOrEmpty(isPlatform) && IsPlatformEnum.IsPlatformEnum_1.getCode().equals(isPlatform)) {
 				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
 					for (BatchOrderList orderList : personInfList) {
@@ -194,8 +194,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 					}
 				}
 			} else {
-				for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
-					if (!SpecAccountTypeEnum.A01.getbId().equals(t.getbId())) {
+				if (UserType.TYPE400.getCode().equals(accountType)) {
+					for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
 						for (BatchOrderList orderList : personInfList) {
 							BatchOrderList o = new BatchOrderList();
 							o.setOrderListId(IdUtil.getNextId());
@@ -211,6 +211,27 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 							o.setCreateTime(System.currentTimeMillis());
 							o.setUpdateTime(System.currentTimeMillis());
 							list.add(o);
+						}
+					}
+				} else {
+					for (SpecAccountTypeEnum t : SpecAccountTypeEnum.values()) {
+						if (!SpecAccountTypeEnum.A01.getbId().equals(t.getbId())) {
+							for (BatchOrderList orderList : personInfList) {
+								BatchOrderList o = new BatchOrderList();
+								o.setOrderListId(IdUtil.getNextId());
+								o.setOrderId(order.getOrderId());
+								o.setUserName(orderList.getUserName());
+								o.setPhoneNo(orderList.getPhoneNo());
+								o.setUserCardNo(orderList.getUserCardNo());
+								o.setOrderStat(BatchOrderStat.BatchOrderStat_30.getCode());
+								o.setAccountType(accountType);
+								o.setBizType(t.getbId());
+								o.setCreateUser(order.getCreateUser());
+								o.setUpdateUser(order.getUpdateUser());
+								o.setCreateTime(System.currentTimeMillis());
+								o.setUpdateTime(System.currentTimeMillis());
+								list.add(o);
+							}
 						}
 					}
 				}

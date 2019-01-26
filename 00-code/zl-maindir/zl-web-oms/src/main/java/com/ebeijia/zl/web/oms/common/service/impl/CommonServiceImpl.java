@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.common.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.ebeijia.zl.FtpProps;
 import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.enums.*;
@@ -9,6 +10,8 @@ import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
+import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
+import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
 import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.common.util.FTPUtil;
@@ -44,6 +47,9 @@ public class CommonServiceImpl implements CommonService {
     @Autowired
     private AccountQueryFacade accountQueryFacade;
 
+    @Autowired
+    private CompanyInfFacade companyInfFacade;
+
     @Value("${IMG_PATH}")
     private String IMG_PATH;
 
@@ -62,9 +68,25 @@ public class CommonServiceImpl implements CommonService {
             reqVo.setUserChnlId(providerId);
             reqVo.setUserType(UserType.TYPE300.getCode());
         } else if (!StringUtil.isNullOrEmpty(companyId)) {
+            CompanyInf company = null;
+            try {
+                company = companyInfFacade.getCompanyInfById(companyId);
+            } catch (Exception e) {
+                logger.error("## 根据companyId---{}查询企业信息异常", companyId);
+            }
+            if (company == null) {
+                logger.error("## 根据companyId---{}查询企业信息为空", companyId);
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "网络异常，请稍后再试");
+                return resultMap;
+            }
+            if (IsPlatformEnum.IsPlatformEnum_1.getCode().equals(company.getIsPlatform())) {
+                reqVo.setUserType(UserType.TYPE500.getCode());
+            } else {
+                reqVo.setUserType(UserType.TYPE200.getCode());
+            }
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(companyId);
-            reqVo.setUserType(UserType.TYPE200.getCode());
         } else if (!StringUtil.isNullOrEmpty(channelId)) {
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(channelId);
@@ -74,6 +96,7 @@ public class CommonServiceImpl implements CommonService {
             resultMap.put("msg", "查询账户不正确");
             return resultMap;
         }
+        logger.info("账户余额查询请求参数---{}", JSONArray.toJSONString(reqVo));
         try {
             PageInfo<AccountVO> pageList = accountQueryFacade.getAccountInfPage(startNum, pageSize, reqVo);
             /*if (pageList != null) {
@@ -106,9 +129,25 @@ public class CommonServiceImpl implements CommonService {
             reqVo.setUserChnlId(providerId);
             reqVo.setUserType(UserType.TYPE300.getCode());
         } else if (!StringUtil.isNullOrEmpty(companyId)) {
+            CompanyInf company = null;
+            try {
+                company = companyInfFacade.getCompanyInfById(companyId);
+            } catch (Exception e) {
+                logger.error("## 根据companyId---{}查询企业信息异常", companyId);
+            }
+            if (company == null) {
+                logger.error("## 根据companyId---{}查询企业信息为空", companyId);
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "网络异常，请稍后再试");
+                return resultMap;
+            }
+            if (IsPlatformEnum.IsPlatformEnum_1.getCode().equals(company.getIsPlatform())) {
+                reqVo.setUserType(UserType.TYPE500.getCode());
+            } else {
+                reqVo.setUserType(UserType.TYPE200.getCode());
+            }
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(companyId);
-            reqVo.setUserType(UserType.TYPE200.getCode());
         } else if (!StringUtil.isNullOrEmpty(channelId)) {
             reqVo.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
             reqVo.setUserChnlId(channelId);
@@ -119,6 +158,7 @@ public class CommonServiceImpl implements CommonService {
             return resultMap;
         }
         reqVo.setBId(bId);
+        logger.info("账户余额账单明细查询请求参数---{}", JSONArray.toJSONString(reqVo));
         try {
             PageInfo<AccountLogVO> pageList = accountQueryFacade.getAccountLogPage(startNum, pageSize, reqVo);
             if (pageList != null) {
