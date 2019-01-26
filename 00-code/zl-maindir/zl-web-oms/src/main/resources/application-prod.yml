@@ -15,7 +15,7 @@ spring:
         maxFileSize: 300MB
         maxRequestSize: 300MB
   datasource:
-    url: jdbc:mysql://10.0.0.104:3306/zldb?allowMultiQueries=true
+    url: jdbc:mysql://10.0.0.104:3306/zldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: zldb1314!#!$
     driver-class-name: com.mysql.jdbc.Driver

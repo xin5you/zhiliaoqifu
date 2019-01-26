@@ -137,6 +137,7 @@ public class ProviderInfController {
 		resultMap.addAttribute("status", Boolean.TRUE);
 		try {
 			ProviderInf providerInf = this.getProviderInf(req);
+			logger.info("新增供应商前端参数---{}", JSONArray.toJSONString(providerInf));
 			resultMap = providerInfService.addProvider(providerInf);
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
