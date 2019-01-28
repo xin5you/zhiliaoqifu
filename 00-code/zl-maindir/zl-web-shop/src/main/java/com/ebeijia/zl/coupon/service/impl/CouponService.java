@@ -173,7 +173,7 @@ public class CouponService implements ICouponService {
             vo.setUserType(UserType.TYPE100.getCode());
             vo.setDmsRelatedKey(dmsKey);
             //TODO 由两处决定转让账户
-            vo.setPriBId(SpecAccountTypeEnum.A01.getbId());
+            vo.setPriBId(bId);
             vo.setUploadAmt(sumDecimal);
             vo.setTransAmt(sumDecimal);
             vo.setTransNumber(1);

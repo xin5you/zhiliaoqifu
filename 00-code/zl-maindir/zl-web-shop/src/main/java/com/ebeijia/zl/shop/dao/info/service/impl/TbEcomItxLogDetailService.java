@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class TbEcomItxLogDetailService extends ServiceImpl<TbEcomItxLogDetailMapper, TbEcomItxLogDetail> implements ITbEcomItxLogDetailService{
 
     @Override
-    public String getPhoneChargeProvider(){
-        return baseMapper.getPhoneChargeProvider();
+    public String getPhoneChargeProvider(String id){
+        return baseMapper.getPhoneChargeProvider(id);
     }
 }

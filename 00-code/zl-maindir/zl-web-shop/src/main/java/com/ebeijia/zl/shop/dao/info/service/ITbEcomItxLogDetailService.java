@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbEcomItxLogDetailService extends IService<TbEcomItxLogDetail> {
 
-    String getPhoneChargeProvider();
+    String getPhoneChargeProvider(String id);
 }
