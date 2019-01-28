@@ -1,8 +1,9 @@
 package com.ebeijia.zl.shop.dao.info.mapper;
 
-import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ebeijia.zl.shop.dao.info.domain.TbEcomItxLogDetail;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -14,6 +15,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface TbEcomItxLogDetailMapper extends BaseMapper<TbEcomItxLogDetail> {
 
-    @Select("SELECT provider_name FROM tb_provider_inf WHERE  provider_id='916438f8-3acc-4242-a648-90902455555'")
-    String getPhoneChargeProvider();
+    @Select("SELECT provider_name FROM tb_provider_inf WHERE provider_id=#{id}")
+    String getPhoneChargeProvider(@Param("id") String id);
 }

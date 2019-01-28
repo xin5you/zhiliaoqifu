@@ -66,6 +66,9 @@ public class SupplyService implements ISupplyService {
     @Autowired
     private IWxPayService wxPayService;
 
+    @Value("${PHONE_CHARGE_PROVIDER:916438f8-3acc-4242-a648-90902455555}")
+    private String phoneChargeProviderId;
+
     @Autowired
     private ITbEcomPayOrderDetailsService payOrderDetailsDao;
 
@@ -204,7 +207,7 @@ public class SupplyService implements ISupplyService {
     public String getPhoneChargeProvider() {
         String provider = jedis.get("PHONE_CHARGE_PROVIDER");
         if (StringUtils.isEmpty(provider)) {
-            provider = logDetailDao.getPhoneChargeProvider();
+            provider = logDetailDao.getPhoneChargeProvider(phoneChargeProviderId);
             jedis.set("PHONE_CHARGE_PROVIDER", provider, 300);
         }
         return provider;

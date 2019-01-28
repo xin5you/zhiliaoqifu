@@ -258,9 +258,10 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		}else if( TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.CW10.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.CW20.getCode().equals(intfaceTransLog.getTransId())
-				|| TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())){
+				|| TransCode.MB10.getCode().equals(intfaceTransLog.getTransId())
+				|| TransCode.MB71.getCode().equals(intfaceTransLog.getTransId())){
 
-			if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
+			if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId()) || TransCode.MB71.getCode().equals(intfaceTransLog.getTransId())){
 				//快捷消费，先充值
 				List<AccountQuickPayVo> addList = intfaceTransLog.getAddList();
 				if (addList != null && addList.size() > 0) {
@@ -296,7 +297,6 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 						transId=TransCode.CW10.getCode();
 					}
 					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),transId);
-
 
 					//商户收款
 					transLog2=new TransLog();
@@ -363,8 +363,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			List<AccountTxnVo> addList = intfaceTransLog.getTransList();
 			TransLog transLog2=null;
 
-			String zlUserId=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
-			UserInf mchntUserInf=userInfService.getUserInfByUserName(zlUserId);
+			String zlChannelCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
+			UserInf mchntUserInf=userInfService.getUserInfByUserName(zlChannelCode);
 			if (addList != null && addList.size() > 0) {
 				for (AccountTxnVo accountTxnVo : addList) {
 					BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
@@ -381,7 +381,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
 					transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
 					transLog2.setTransId(TransCode.MB40.getCode());
-					transLog2.setUserType(UserType.TYPE500.getCode());
+					transLog2.setUserType(UserType.TYPE400.getCode());
 					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
 					transLog2.setTransAmt(transAmt);
 					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
@@ -438,12 +438,13 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					}
 					addToVoList(voList,transLog,voList.size());
 			}
-
 		}else {
 			throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
 		}
 
-		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())){
+		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId())
+				|| TransCode.CW74.getCode().equals(intfaceTransLog.getTransId())
+				|| TransCode.MB74.getCode().equals(intfaceTransLog.getTransId())){
 
 				List<AccountTxnVo> transList = intfaceTransLog.getTransList();
 
@@ -470,9 +471,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				//从收款商户退款
 				transLogs=getTransLogListByItfPrikey(intfaceTransLog.getOrgItfPrimaryKey(),intfaceTransLog.getTfrOutUserId(),AccountCardAttrEnum.ADD.getValue());
 				if (transLogs !=null && transLogs.size()>0) {
-
 					for (AccountTxnVo accountTxnVo : transList) {
-
 						boolean priBidVal=false;
 						for (TransLog orgTransLog: transLogs) {
 							if (accountTxnVo.getTxnBId().equals(orgTransLog.getPriBId())) {
@@ -628,6 +627,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		transLog.setPriBId(orgTransLog.getPriBId());
 		transLog.setTransAmt(transAmt);
 		transLog.setUploadAmt(upLoadAmt);
+		transLog.setUserType(orgTransLog.getUserType());
 		addToVoList(voList,transLog,voList.size());
 	}
 

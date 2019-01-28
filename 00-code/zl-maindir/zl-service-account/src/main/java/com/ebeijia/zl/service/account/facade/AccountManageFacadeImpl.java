@@ -18,6 +18,9 @@ import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,7 @@ import java.util.List;
 
 @Configuration
 @com.alibaba.dubbo.config.annotation.Service()
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountManageFacadeImpl implements AccountManageFacade {
 	
 	private final  Logger log = LoggerFactory.getLogger(AccountManageFacadeImpl.class);

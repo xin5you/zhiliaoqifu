@@ -190,7 +190,7 @@ public class PayService implements IPayService {
         String result = "";
         List<AccountTxnVo> txnList = buildTxnVo(payInfo);
 
-        BaseResult baseResult = executeConsume(txnList, memberId, payInfo.getTypeA(), dmsRelatedKey, desc, mchntCode);
+        BaseResult baseResult = executeConsume(txnList, payInfo.getTypeA(),memberId, dmsRelatedKey, desc, mchntCode);
         Object object = baseResult.getObject();
         if (object instanceof String) {
             result = (String) object;

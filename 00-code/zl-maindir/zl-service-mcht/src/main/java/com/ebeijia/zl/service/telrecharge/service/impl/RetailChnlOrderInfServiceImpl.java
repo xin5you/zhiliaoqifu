@@ -313,8 +313,9 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				respVo.setSign(psotToken);
 
 				//修改通知后 分销商的处理状态
-				logger.info("##发起分销商回调[{}],返回参数:[{}]", retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
+				logger.info("##发起分销商回调[{}],回调请求参数:[{}]", retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
 				String result = HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
+				logger.info("##发起分销商返回结果:{}",result);
 				if (result != null && "SUCCESS ".equals(result.toUpperCase())) {
 					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
 				} else {

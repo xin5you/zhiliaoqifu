@@ -20,6 +20,9 @@ import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.service.account.service.IAccountInfService;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -37,6 +40,7 @@ import com.github.pagehelper.PageInfo;
 */
 @Configuration
 @com.alibaba.dubbo.config.annotation.Service()
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	
 	private final  Logger log = LoggerFactory.getLogger(AccountQueryFacadeImpl.class);

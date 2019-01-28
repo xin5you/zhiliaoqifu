@@ -34,6 +34,9 @@ import com.ebeijia.zl.service.account.service.IIntfaceTransLogService;
 import com.ebeijia.zl.service.account.service.ITransLogService;
 import com.ebeijia.zl.service.user.service.IPersonInfService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.JedisCluster;
 
 
@@ -52,6 +55,7 @@ import redis.clients.jedis.JedisCluster;
  */
 @Configuration
 @com.alibaba.dubbo.config.annotation.Service()
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	
 	

@@ -10,6 +10,9 @@ import com.ebeijia.zl.service.account.service.IAccountWithdrawOrderService;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawTxnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * @Description: 提现订单servcie
@@ -24,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @com.alibaba.dubbo.config.annotation.Service()
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountWithDrawOrderFacadeImpl implements AccountWithDrawOrderFacade {
 
 	@Autowired
