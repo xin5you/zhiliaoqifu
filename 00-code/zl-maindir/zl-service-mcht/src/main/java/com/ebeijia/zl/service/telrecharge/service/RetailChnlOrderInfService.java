@@ -73,8 +73,10 @@ public interface RetailChnlOrderInfService extends IService<RetailChnlOrderInf> 
 	 * @param retailChnlInf
 	 * @param retailChnlOrderInf
 	 * @param providerOrderInf
+	 * @param transId
+	 * @param priBid
 	 * @return
 	 */
-	boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf providerOrderInf) throws Exception;
+	boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf providerOrderInf,String transId,String priBid) throws Exception;
 
 }

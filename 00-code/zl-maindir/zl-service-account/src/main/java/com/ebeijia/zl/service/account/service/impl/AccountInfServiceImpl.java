@@ -98,7 +98,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			if(userInf==null){
 				return null;
 			}
-			return  this.getAccountInfByUserId(userId, bId);
+			return  this.getAccountInfByUserId(userInf.getUserId(), bId);
 		}
 	}
 	
@@ -614,7 +614,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 * @param bId
 	 * @return
 	 */
-	public BigDecimal getAccountInfAccBalByUser(String userType, String userChnlId, String userChnl, String bId){
-			return null;
+	public BigDecimal getAccountInfAccBalByUser(String userType, String userId,String userChnlId, String userChnl, String bId){
+		AccountInf accountInf=this.getAccountInfByUserType(userType,userId,bId,userChnlId);
+		if(accountInf !=null){
+			return accountInf.getAccBal();
+		}
+		return new BigDecimal(0);
 	}
 }

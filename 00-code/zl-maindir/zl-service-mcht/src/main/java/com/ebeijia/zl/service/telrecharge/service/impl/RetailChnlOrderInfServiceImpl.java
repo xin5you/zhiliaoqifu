@@ -14,6 +14,7 @@ import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
+import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.*;
 import com.ebeijia.zl.facade.telrecharge.resp.TeleRespVO;
@@ -61,6 +62,9 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 
 	@Autowired
 	private AccountTransactionFacade accountTransactionFacade;
+
+	@Autowired
+	private AccountQueryFacade accountQueryFacade;
 
 	@Autowired
 	private JedisCluster jedisCluster;
@@ -156,8 +160,27 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			ProviderInf providerInf = providerInfService.getById(providerOrderInf.getProviderId());
 			providerOrderInf.setRegTxnAmt(AmountUtil.mul(AmountUtil.RMBYuanToCent(providerOrderInf.getRegOrderAmt()),providerInf.getProviderRate()));
 
-			//分销商消费扣款
-			resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf,providerOrderInf);
+			//黄牛账户只能是托管账户快捷消费
+			String priBid=SpecAccountTypeEnum.A01.getbId();
+			String tranCode=TransCode.MB71.getCode();
+			String retailMchntCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
+			if(retailChnlOrderInf.getChannelId().equals(retailMchntCode)){
+				priBid=SpecAccountTypeEnum.B06.getCode();
+				tranCode=TransCode.MB10.getCode();
+			}
+
+		    BigDecimal accTal=	accountQueryFacade.getAccountInfAccBalByUser(UserType.TYPE400.getCode(),
+													null,
+					retailChnlOrderInf.getChannelId(),
+					UserChnlCode.USERCHNL1001.getCode(),
+					priBid);
+			//分销商余额判断
+			if(!retailChnlOrderInf.getChannelId().equals(retailMchntCode)) {
+				if (AmountUtil.lessThan(accTal, providerOrderInf.getRegTxnAmt())) {
+					return ResultsUtil.error("111111", "余额不足");
+				}
+			}
+			resOper=doRetailCustomerToMchnt(retailChnlInf,retailChnlOrderInf,providerOrderInf,tranCode,priBid);
 
 		}
 		if(!resOper){
@@ -334,23 +357,28 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	 * @param retailChnlInf
 	 * @param retailChnlOrderInf
 	 * @param providerOrderInf 供应商订单
+	 * @param transId
+	 * @param priBId
 	 * @return
 	 */
-	public boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf providerOrderInf) throws Exception{
+	public boolean doRetailCustomerToMchnt(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf providerOrderInf,
+					String transId,String priBId) throws Exception{
+
+
 
 		AccountConsumeReqVo req=new AccountConsumeReqVo();
-		req.setTransId(TransCode.MB10.getCode());
+		req.setTransId(transId);
 		req.setTransChnl(TransChnl.CHANNEL40011001.toString());
 		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 		req.setUserChnlId(retailChnlInf.getChannelId());
 		req.setUserType(UserType.TYPE400.getCode());
 		req.setDmsRelatedKey(retailChnlOrderInf.getChannelOrderId());
-		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+		req.setPriBId(priBId);
 
 		AccountTxnVo vo=new AccountTxnVo();
 		vo.setTxnAmt(retailChnlOrderInf.getTxnAmt()); //订单的交易金额是 订单金额 （元转分）* 折扣率
 		vo.setUpLoadAmt(AmountUtil.RMBYuanToCent(retailChnlOrderInf.getPayAmt()));  //
-		vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+		vo.setTxnBId(priBId);
 		List transList=new ArrayList();
 		transList.add(vo);
 		req.setTransList(transList);
