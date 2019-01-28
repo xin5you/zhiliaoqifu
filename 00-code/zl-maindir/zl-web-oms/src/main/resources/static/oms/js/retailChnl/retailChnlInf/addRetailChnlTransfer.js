@@ -20,6 +20,8 @@ var addRetailChnlInfTransfer = {
         $('.btn-edit-submit').on('click', addRetailChnlInfTransfer.editRetailChnlTransferCommit);
         $('.btn-delete').on('click', addRetailChnlInfTransfer.intoDeleteRetailChnlTransfer);
         $('.btn-delete-submit').on('click', addRetailChnlInfTransfer.deleteRetailChnlTransferCommit);
+        $(".evidenceUrlDiv").on('click', addRetailChnlInfTransfer.showEvidenceUrlDiv);
+        $("#evidenceUrlDiv").on('click', addRetailChnlInfTransfer.showEvidenceUrlDiv);
     },
     intoAddRetailChnlTransfer : function() {
         var orderId = $(this).attr("orderId");
@@ -30,6 +32,7 @@ var addRetailChnlInfTransfer = {
         $('#addTransferModal').modal({
             backdrop : "static"
         });
+        $("#evidenceUrlDiv").hide();
     },
     fileUpload : function () {
         var imgUrl = $("#evidenceUrlFile").val();
@@ -37,11 +40,12 @@ var addRetailChnlInfTransfer = {
     },
     addRetailChnlTransfer:function(){
         var channelId = $("#channelId").val();
-       /* var remitAmt = $("#remitAmt").val();
-        var evidenceUrl = $("#evidenceUrl").val();*/
+       /* var remitAmt = $("#remitAmt").val();*/
+        var evidenceUrl = $("#evidenceUrl").val();
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
-        var A00 = $("#A00").val();
+        var A01 = $("#A01").val();
+        /*var A00 = $("#A00").val();
         var B01 = $("#B01").val();
         var B02 = $("#B02").val();
         var B03 = $("#B03").val();
@@ -49,7 +53,7 @@ var addRetailChnlInfTransfer = {
         var B05 = $("#B05").val();
         var B06 = $("#B06").val();
         var B07 = $("#B07").val();
-        var B08 = $("#B08").val();
+        var B08 = $("#B08").val();*/
         /*if(remitAmt=='' || remitAmt == '0'){
             Helper.alert("打款金额不能为空");
             return false;
@@ -62,17 +66,21 @@ var addRetailChnlInfTransfer = {
             Helper.alert("上账金额不能为空");
             return false;
         }
-        if (A00 == '' && B01 == '' && B02 == '' && B03 == '' && B04 == '' && B05 == '' && B06 == '' && B07 == '' && B08 == '') {
+        /*if (A00 == '' && B01 == '' && B02 == '' && B03 == '' && B04 == '' && B05 == '' && B06 == '' && B07 == '' && B08 == '') {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
-        }
+        }*/
         /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
             Helper.alert("上账金额不能大于打款金额");
             return false;
         }*/
-        var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
+        /*var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
         if ((sum - 0) != (inaccountAmt - 0)) {
             Helper.alert("所有专项金额总和必须等于上账金额");
+            return false;
+        }*/
+        if ((A01 - 0) != (inaccountAmt - 0)) {
+            Helper.alert("专项金额必须等于上账金额");
             return false;
         }
         $.ajax({
@@ -116,7 +124,7 @@ var addRetailChnlInfTransfer = {
                     location.href=Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
                 }else{
                     $('#msg').modal('hide');
-                    Helper.alter(data.msg);
+                    Helper.alert(data.msg);
                     return false;
                 }
             },
@@ -153,7 +161,7 @@ var addRetailChnlInfTransfer = {
                     location.href=Helper.getRootPath() + '/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId='+channelId;
                 }else{
                     $('#msg').modal('hide');
-                    Helper.alter(data.msg);
+                    Helper.alert(data.msg);
                     return false;
                 }
             },
@@ -170,6 +178,8 @@ var addRetailChnlInfTransfer = {
         location.href=url;
     },
     intoEditRetailChnlTransfer : function () {
+        $("#addTransferFrom").get(0).reset();
+        $("#evidenceUrlDiv").show();
         var orderId = $(this).attr("orderId");
         $("#orderId").val(orderId);
         $.ajax({
@@ -182,14 +192,16 @@ var addRetailChnlInfTransfer = {
             success: function (data) {
                 if(data.status){
                     /*$("#remitAmt").val(data.order.remitAmt);*/
-                    $("#inaccountAmt").val(data.order.inaccountAmt);
-                    /*$("#evidenceUrl").val(data.order.evidenceUrl);*/
+                    $("#inaccountAmt").val(data.order.inaccountSumAmt);
+                    $("#evidenceUrlImg").attr("src", "data:image/jpg;base64,"+data.order.evidenceUrl);
+                    $("#evidenceUrlDiv").attr("evidenceImage", data.order.evidenceUrl);
+                    $("#evidenceUrl").val(data.order.evidenceUrl);
                     $("#remarks").val(data.order.remarks);
                     $.each(data.orderDetail, function (i, item) {
-                        $('.span3[id=' + item.bid + ']').attr('value',item.transAmt);
+                        $('.span3[id=' + item.bid + ']').attr('value',item.inaccountAmt);
                     });
                 }else{
-                    Helper.alter(data.msg);
+                    Helper.alert(data.msg);
                     return false;
                 }
             },
@@ -208,11 +220,12 @@ var addRetailChnlInfTransfer = {
     editRetailChnlTransferCommit : function () {
         var orderId = $("#orderId").val();
         var channelId = $("#channelId").val();
-        /*var remitAmt = $("#remitAmt").val();
-        var evidenceUrl = $("#evidenceUrl").val();*/
+        /*var remitAmt = $("#remitAmt").val();*/
+        var evidenceUrl = $("#evidenceUrl").val();
         var inaccountAmt = $("#inaccountAmt").val();
         var remarks = $("#remarks").val();
-        var A00 = $("#A00").val();
+        var A01 = $("#A01").val();
+        /*var A00 = $("#A00").val();
         var B01 = $("#B01").val();
         var B02 = $("#B02").val();
         var B03 = $("#B03").val();
@@ -220,7 +233,7 @@ var addRetailChnlInfTransfer = {
         var B05 = $("#B05").val();
         var B06 = $("#B06").val();
         var B07 = $("#B07").val();
-        var B08 = $("#B08").val();
+        var B08 = $("#B08").val();*/
         /*if(remitAmt=='' || remitAmt == '0'){
             Helper.alert("打款金额不能为空");
             return false;
@@ -233,17 +246,21 @@ var addRetailChnlInfTransfer = {
             Helper.alert("上账金额不能为空");
             return false;
         }
-        if (A00 == '' && B01 == '' && B02 == '' && B03 == '' && B04 == '' && B05 == '' && B06 == '' && B07 == '' && B08 == '') {
+        /*if (A00 == '' && B01 == '' && B02 == '' && B03 == '' && B04 == '' && B05 == '' && B06 == '' && B07 == '' && B08 == '') {
             Helper.alert("必须有一个专项账户金额不能为空");
             return false;
-        }
+        }*/
         /*if ((inaccountAmt - 0) - (remitAmt - 0) > 0) {
             Helper.alert("上账金额不能大于打款金额");
             return false;
         }*/
-        var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
+        /*var sum = (A00 - 0) + (B01 - 0) + (B02 - 0) + (B03 - 0) + (B04 - 0) + (B05 - 0) + (B06 - 0) + (B07 - 0) + (B08 - 0);
         if ((sum - 0) != (inaccountAmt - 0)) {
             Helper.alert("所有专项金额总和必须等于上账金额");
+            return false;
+        }*/
+        if ((A01 - 0) != (inaccountAmt - 0)) {
+            Helper.alert("专项金额必须等于上账金额");
             return false;
         }
         $.ajax({
@@ -278,7 +295,7 @@ var addRetailChnlInfTransfer = {
     },
     deleteRetailChnlTransferCommit : function () {
         var orderId = $("#transferOrderId").val();
-        var providerId = $("#providerId").val();
+        var channelId = $("#channelId").val();
         $.ajax({
             url: Helper.getRootPath() + '/retailChnl/retailChnlInf/deleteRetailChnlTransfer.do',
             type: 'post',
@@ -297,6 +314,13 @@ var addRetailChnlInfTransfer = {
             error:function(){
                 Helper.alert("系统故障，请稍后再试");
             }
+        });
+    },
+    showEvidenceUrlDiv : function () {
+        var image = $(this).attr("evidenceImage");
+        $("#bigImage").attr("src","data:image/jpg;base64,"+image);
+        $('#imageModal').modal({
+            backdrop : "static"
         });
     }
 };

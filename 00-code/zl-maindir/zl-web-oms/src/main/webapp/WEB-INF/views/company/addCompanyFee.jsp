@@ -15,7 +15,7 @@
 				<ul>
 					<li><a href="#"><i class="icon-home"></i></a></li>
 					<li>企业管理</li>
-					<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
+					<li><a href="${ctx }/company/listCompany.do?isPlatform=0">企业信息管理</a></li>
 					<li>企业信息列表</li>
 					<li>企业专项费率管理</li>
 				</ul>

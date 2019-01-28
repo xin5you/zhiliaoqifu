@@ -54,10 +54,20 @@
                              	<a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>企业管理 <b class="caret"></b></a>
                                  <ul class="dropdown-menu">
                                  	<sec:authorize access="hasRole('ROLE_COMPANY_INFO')">
-                                         <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
+                                         <li><a href="${ctx }/company/listCompany.do?isPlatform=0">企业信息管理</a></li>
                                      </sec:authorize>
                                  </ul>
                              </li>
+                             </sec:authorize>
+                             <sec:authorize access="hasRole('ROLE_PLATFORM_MANAGE')">
+                                 <li class="dropdown">
+                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>平台管理 <b class="caret"></b></a>
+                                     <ul class="dropdown-menu">
+                                         <sec:authorize access="hasRole('ROLE_PLATFORM_INFO')">
+                                             <li><a href="${ctx }/company/listCompany.do?isPlatform=1">平台信息管理</a></li>
+                                         </sec:authorize>
+                                     </ul>
+                                 </li>
                              </sec:authorize>
                              
                              <%--<sec:authorize access="hasRole('ROLE_DIY_MANAGER')">

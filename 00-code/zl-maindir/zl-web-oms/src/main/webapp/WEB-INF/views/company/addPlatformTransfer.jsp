@@ -18,9 +18,9 @@
             <div id="jCrumbs" class="breadCrumb module">
                 <ul>
                     <li><a href="#"><i class="icon-home"></i></a></li>
-                    <li>企业管理</li>
-                    <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-                    <li>企业信息列表</li>
+                    <li>平台管理</li>
+                    <li><a href="${ctx }/company/listCompany.do?isPlatform=1">平台信息管理</a></li>
+                    <li>平台信息列表</li>
                     <li>上账管理</li>
                     <li>上账信息列表</li>
                 </ul>
@@ -31,7 +31,9 @@
             <input type="hidden" id="orderType" name="orderType"  value="${order.orderType }"/>
             <div>
                 <sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_ORDER_INTOADD')">
+
                     <button class="btn btn-primary btn-addTransfer" type="button"> 添 加 </button>
+
                 </sec:authorize>
             </div>
             <br/>
@@ -117,7 +119,7 @@
             <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
 
             <br/>
-            <a href="${ctx }/company/listCompany.do"><button class="btn btn-primary" type="button">返 回</button></a>
+            <a href="${ctx }/company/listCompany.do?isPlatform=1"><button class="btn btn-primary" type="button">返 回</button></a>
         </form>
     </div>
 </div>

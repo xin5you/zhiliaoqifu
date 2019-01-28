@@ -18,9 +18,22 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 								<li><a href="#"><i class="icon-home"></i></a></li>
-								<li>企业管理</li>
-								<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-								<li>企业信息列表</li>
+								<li>
+									<c:if test="${company.isPlatform=='0'}">企业管理</c:if>
+									<c:if test="${company.isPlatform=='1'}">平台管理</c:if>
+								</li>
+								<li>
+									<c:if test="${company.isPlatform=='0'}">
+										<a href="${ctx }/company/listCompany.do?isPlatform=${company.isPlatform}">企业信息管理</a>
+									</c:if>
+									<c:if test="${company.isPlatform=='1'}">
+										<a href="${ctx }/company/listCompany.do?isPlatform=${company.isPlatform}">平台信息管理</a>
+									</c:if>
+								</li>
+								<li>
+									<c:if test="${company.isPlatform=='0'}">企业信息列表</c:if>
+									<c:if test="${company.isPlatform=='1'}">平台信息列表</c:if>
+								</li>
 								<li>打款管理</li>
 								<li><a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}&orderType=300">打款信息列表</a></li>
 								<li>打款明细列表</li>
@@ -31,6 +44,7 @@
 						<h3 class="heading">打款明细列表</h3>
 						<input type="hidden" id="companyId" name="companyId" value="${company.companyId}"/>
 						<input type="hidden" id="orderId" name="orderId" value="${order.orderId}"/>
+						<input type="hidden" id="isPlatform" name="isPlatform" value="${company.isPlatform}"/>
 						<div class="control-group formSep">
 							<table cellpadding="5px" style="width: 100%">
 								<tr>

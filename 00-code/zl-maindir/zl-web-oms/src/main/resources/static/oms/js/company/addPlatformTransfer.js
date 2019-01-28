@@ -224,7 +224,7 @@ var addPlatformTransfer = {
     },
     viewPlatformTransferDetail : function () {
         var orderId = $(this).attr("orderId");
-        var url = Helper.getRootPath()+"/company/viewPlatformTransferDetail.do?orderId="+orderId;
+        var url = Helper.getRootPath()+"/company/viewPlatformTransferDetail.do?orderId="+orderId+"&isPlatForm=1";
         location.href=url;
     },
     intoEditPlatformTransfer : function () {

@@ -80,7 +80,7 @@ var addCompany = {
             traditional:true,
             success: function (data) {
                 if(data.status) {
-                    location = Helper.getRootPath() + '/company/listCompany.do';
+                    location = Helper.getRootPath() + '/company/listCompany.do?isPlatform='+isPlatform;
                 }else {
                     Helper.alert(data.msg);
                     return false;

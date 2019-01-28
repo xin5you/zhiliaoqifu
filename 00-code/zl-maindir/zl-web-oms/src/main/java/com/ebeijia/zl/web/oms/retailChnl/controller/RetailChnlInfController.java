@@ -438,7 +438,7 @@ public class RetailChnlInfController {
 		String channelId = StringUtil.nullToString(request.getParameter("channelId"));
 		InaccountOrder order = new InaccountOrder();
 		order.setProviderId(channelId);
-		order.setOrderType(UserType.TYPE200.getCode());
+		order.setOrderType(UserType.TYPE400.getCode());
 		try {
 			int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
 			int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
@@ -448,8 +448,126 @@ public class RetailChnlInfController {
 			logger.error("## 查询分销商上账信息详情异常", e);
 		}
 		mv.addObject("channelId", channelId);
-		mv.addObject("orderType", UserType.TYPE200.getCode());
+		mv.addObject("orderType", order.getOrderType());
 		return mv;
+	}
+
+	/**
+	 * 分销商上账记录添加
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
+	@RequestMapping(value = "/addRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
+													 @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		try {
+			RetailChnlInf retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
+			if (retailChnl == null || retailChnl.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "添加上账信息失败，该分销商信息不存在或未开户");
+				return resultMap;
+			}
+			resultMap = retailChnlInfService.addRetailChnlTransfer(req, evidenceUrlFile);
+		} catch (Exception e) {
+			logger.error(" ## 添加分销商上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "添加分销商上账信息失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 分销商上账记录提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/addRetailChnlTransferCommit")
+	@ResponseBody
+	public Map<String, Object> addRetailChnlTransferCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		try {
+			if (retailChnlInfService.addRetailChnlTransferCommit(req) < 1) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "分销商上账失败，请稍后再试");
+			}
+		} catch (Exception e) {
+			logger.error("## 分销商上账异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "分销商上账失败，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 更新分销商上账审核状态
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/updateRetailChnlCheckStatCommit")
+	@ResponseBody
+	public Map<String, Object> updateRetailChnlCheckStatCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute(Constants.SESSION_USER);
+
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+
+		InaccountOrder orderInf = new InaccountOrder();
+		orderInf.setOrderId(orderId);
+		orderInf.setOrderType(UserType.TYPE400.getCode());
+		InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+		order.setCheckStat(CheckStatEnum.CHECK_TRUE.getCode());
+		order.setUpdateUser(user.getId());
+		order.setUpdateTime(System.currentTimeMillis());
+		order.setLockVersion(order.getLockVersion() + 1);
+
+		if (!inaccountOrderService.updateById(order)) {
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "更新上账信息审核状态失败，请稍后再试");
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 根据orderId查询上账订单记录
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/getRetailChnlByOrderId")
+	@ResponseBody
+	public Map<String, Object> getRetailChnlByOrderId(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		try {
+			InaccountOrder orderInf = new InaccountOrder();
+			orderInf.setOrderId(orderId);
+			orderInf.setOrderType(UserType.TYPE400.getCode());
+			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+			if (order != null) {
+				resultMap.put("msg", order);
+			}
+		} catch (Exception e) {
+			logger.error("## 查询分销商订单异常");
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "网络异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
 	}
 
 	/**
@@ -465,18 +583,19 @@ public class RetailChnlInfController {
 		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
 		InaccountOrder orderInf = new InaccountOrder();
 		orderInf.setOrderId(orderId);
-		orderInf.setOrderType(UserType.TYPE200.getCode());
+		orderInf.setOrderType(UserType.TYPE400.getCode());
 
 		InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 		if (order != null) {
 			order.setCheckStat(CheckStatEnum.findByBId(order.getCheckStat()).getName());
 			order.setRemitCheck(RemitCheckEnum.findByBId(order.getRemitCheck()).getName());
 			order.setInaccountCheck(InaccountCheckEnum.findByBId(order.getInaccountCheck()).getName());
-			order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());
+			/*order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());*/
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
-			order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());
-			order.setCompanyReceiverCheck(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));
+			/*order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());*/
+			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
 		}
 
 		try {
@@ -491,6 +610,96 @@ public class RetailChnlInfController {
 		}
 		mv.addObject("order", order);
 		return mv;
+	}
+
+	/**
+	 * 跳转分销商上账页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/intoEditRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> intoEditRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
+		try {
+			InaccountOrder orderInf = new InaccountOrder();
+			orderInf.setOrderId(orderId);
+			orderInf.setOrderType(UserType.TYPE400.getCode());
+			InaccountOrder order  = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
+            if (order != null) {
+                order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
+                if (!StringUtil.isNullOrEmpty(order.getEvidenceUrl())) {
+                    String imgUrl = commonService.getImageStrFromPath(order.getEvidenceUrl());
+                    if (!StringUtil.isNullOrEmpty(imgUrl)) {
+                        order.setEvidenceUrl(imgUrl);
+                    } else {
+                        order.setEvidenceUrl("");
+                    }
+                }
+            }
+
+			List<InaccountOrderDetail> orderDetail = inaccountOrderDetailService.getInaccountOrderDetailByOrderId(orderId);
+			if (orderDetail != null && orderDetail.size() >= 1) {
+				for (InaccountOrderDetail d : orderDetail) {
+					d.setTransAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getTransAmt().toString())));
+					d.setInaccountAmt(new BigDecimal(NumberUtils.RMBCentToYuan(d.getInaccountAmt().toString())));
+				}
+			}
+			resultMap.put("order", order);
+			resultMap.put("orderDetail", orderDetail);
+		} catch (Exception e) {
+			logger.error("## 编辑--->查询分销商上账信息异常", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "查询分销商上账信息异常，请稍后再试");
+			return resultMap;
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 编辑分销商上账记录
+	 * @param req
+	 * @param response
+	 * @param evidenceUrlFile
+	 * @return
+	 */
+	@RequestMapping(value = "/editRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response,
+													  @RequestParam(value = "evidenceUrlFile", required = false)MultipartFile evidenceUrlFile) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+		String channelId = StringUtil.nullToString(req.getParameter("channelId"));
+		try {
+			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(channelId);
+			if (retailChnlInf == null || retailChnlInf.getIsOpen().equals(IsOpenAccountEnum.ISOPEN_FALSE.getCode())) {
+				resultMap.put("status", Boolean.FALSE);
+				resultMap.put("msg", "编辑上账信息失败，该分销商信息不存在或未开户");
+				return resultMap;
+			}
+			resultMap = retailChnlInfService.editRetailChnlTransfer(req, evidenceUrlFile);
+		} catch (Exception e) {
+			logger.error(" ## 编辑分销商上账信息出错 ", e);
+			resultMap.put("status", Boolean.FALSE);
+			resultMap.put("msg", "编辑分销商上账信息失败，请稍后再试");
+		}
+		return resultMap;
+	}
+
+	/**
+	 * 删除分销商上账记录
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteRetailChnlTransfer")
+	@ResponseBody
+	public Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = retailChnlInfService.deleteRetailChnlTransfer(req);
+		return resultMap;
 	}
 
 	/**
