@@ -346,7 +346,8 @@ public class AccountTransTest {
 		req.setUserChnlId("c645d21c-4f21-4222-9373-d1a5a749f69d");
 		req.setUserType(UserType.TYPE100.getCode());
 		req.setDmsRelatedKey(IdUtil.getNextId());
-		req.setMchntCode("ba88a6d0-0f07-42d7-805c-735aa3c177bd");
+		req.setMchntCode("abe7cf7b-1238-49fb-9113-61d6f6bc6cf8");
+		req.setTargetMchtCode("b5f14d5e-c99d-4aa0-aca5-acac3ce45349");
 		req.setTransDesc("商品购物");
 
 		//充值的加款
@@ -366,6 +367,7 @@ public class AccountTransTest {
 		vo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
 		vo.setTxnAmt(new BigDecimal(2000));
 		vo.setUpLoadAmt(new BigDecimal(2000));
+
 		translist.add(vo);
 		req.setTransList(translist);
 		BaseResult result=accountTransactionFacade.executeConsume(req);
