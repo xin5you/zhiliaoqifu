@@ -364,6 +364,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			TransLog transLog2=null;
 
 			String zlUserId=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
+			UserInf mchntUserInf=userInfService.getUserInfByUserName(zlUserId);
 			if (addList != null && addList.size() > 0) {
 				for (AccountTxnVo accountTxnVo : addList) {
 					BillingType billingType = getBillingTypeForCache(accountTxnVo.getTxnBId());
@@ -376,7 +377,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2=new TransLog();
 					this.newTransLog(intfaceTransLog, transLog2);
 					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
-					transLog2.setUserId(zlUserId); //平台用户
+					transLog2.setUserId(mchntUserInf.getUserId()); //平台用户
 					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
 					transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
 					transLog2.setTransId(TransCode.MB40.getCode());
