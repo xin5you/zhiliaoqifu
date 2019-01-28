@@ -43,7 +43,7 @@ public class TeleReqVO extends TeleBaseDomain {
             t.setRechargePhone("13501755206");
             t.setRechargeAmount("1");
             t.setOuterTid(IdUtil.getNextId());
-            t.setCallback("http://api.happy8888.com.cn/web-api/api/recharge/notify/bmHKbCallBack");
+            t.setCallback("http://api.i-zhiliao.com/web-api/api/recharge/notify/bmHKbCallBack");
             System.out.println(MD5SignUtils.genSign(t, "key", "a5a41d8e-66a7-4ebe-bac2-7c280d888888", new String[] { "sign", "serialVersionUID" }, null));
     }
 }
