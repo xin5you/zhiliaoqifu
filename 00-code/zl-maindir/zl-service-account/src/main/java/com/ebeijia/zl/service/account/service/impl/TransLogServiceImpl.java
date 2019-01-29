@@ -268,7 +268,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					for (AccountQuickPayVo accountQuickPayVo : addList) {
 						this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), accountQuickPayVo.getTfrInAmt(),accountQuickPayVo.getTfrInAmt(),TransCode.CW50.getCode());
 						if(accountQuickPayVo.getTfrOutAmt() !=null  && AmountUtil.bigger(accountQuickPayVo.getTfrOutAmt(),new BigDecimal(0))) {
-							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),null);
+							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),null);
 						} }
 				}
 			}
