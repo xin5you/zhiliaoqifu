@@ -363,7 +363,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			List<AccountTxnVo> addList = intfaceTransLog.getTransList();
 			TransLog transLog2=null;
 
-			String zlChannelCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
+			String zlChannelCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
 			UserInf mchntUserInf=userInfService.getUserInfByUserName(zlChannelCode);
 			if (addList != null && addList.size() > 0) {
 				for (AccountTxnVo accountTxnVo : addList) {
