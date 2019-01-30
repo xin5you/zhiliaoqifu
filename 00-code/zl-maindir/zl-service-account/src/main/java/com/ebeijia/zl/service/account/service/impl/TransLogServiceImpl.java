@@ -268,7 +268,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					for (AccountQuickPayVo accountQuickPayVo : addList) {
 						this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), accountQuickPayVo.getTfrInAmt(),accountQuickPayVo.getTfrInAmt(),TransCode.CW50.getCode());
 						if(accountQuickPayVo.getTfrOutAmt() !=null  && AmountUtil.bigger(accountQuickPayVo.getTfrOutAmt(),new BigDecimal(0))) {
-							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),null);
+							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),null);
 						} }
 				}
 			}
@@ -363,7 +363,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			List<AccountTxnVo> addList = intfaceTransLog.getTransList();
 			TransLog transLog2=null;
 
-			String zlChannelCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
+			String zlChannelCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_mchnt_code);
 			UserInf mchntUserInf=userInfService.getUserInfByUserName(zlChannelCode);
 			if (addList != null && addList.size() > 0) {
 				for (AccountTxnVo accountTxnVo : addList) {

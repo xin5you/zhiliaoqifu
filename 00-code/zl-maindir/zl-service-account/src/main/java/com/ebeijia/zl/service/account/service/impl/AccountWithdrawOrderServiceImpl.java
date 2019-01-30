@@ -1,5 +1,6 @@
 package com.ebeijia.zl.service.account.service.impl;
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
@@ -15,6 +16,7 @@ import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderOrderInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.utils.TeleConstants;
 import com.ebeijia.zl.service.account.mapper.AccountWithdrawOrderMapper;
 import com.ebeijia.zl.service.account.service.IAccountWithdrawDetailService;
@@ -65,4 +67,12 @@ public class AccountWithdrawOrderServiceImpl extends ServiceImpl<AccountWithdraw
         entity.setLockVersion(0);
         return super.save(entity);
     }
+
+    @Override
+    public List<AccountWithdrawOrder> getWithdrawOrderList(AccountWithdrawOrder withdrawOrder) {
+        QueryWrapper<AccountWithdrawOrder> queryWrapper = new QueryWrapper<AccountWithdrawOrder>();
+        queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
+        return baseMapper.selectList(queryWrapper);
+    }
+
 }

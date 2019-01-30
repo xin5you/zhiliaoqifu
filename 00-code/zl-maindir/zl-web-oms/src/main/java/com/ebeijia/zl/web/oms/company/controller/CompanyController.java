@@ -81,7 +81,7 @@ public class CompanyController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/listCompany")
-	public ModelAndView listCompany(HttpServletRequest req, HttpServletResponse response) throws IOException {
+	public ModelAndView listCompany(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("company/listCompany");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		String name = StringUtil.nullToString(req.getParameter("name"));

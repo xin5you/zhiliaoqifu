@@ -100,11 +100,19 @@
                                      <sec:authorize access="hasRole('ROLE_BATCH_RECHARGE')">
                                      	<li><a href="${ctx }/batch/recharge/listRecharge.do">企业员工批量充值</a></li>
                                      </sec:authorize>
-                                     <!-- <sec:authorize access="hasRole('ROLE_SPE_BATCH_RECHARGE')"> -->
-                                     	
-                                     <!-- </sec:authorize> -->
                                  </ul>
                              </li>
+                             </sec:authorize>
+
+                             <sec:authorize access="hasRole('ROLE_WITHDRAW_MANAGE')">
+                                 <li class="dropdown">
+                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bookmark icon-white"></i>提现管理 <b class="caret"></b></a>
+                                     <ul class="dropdown-menu">
+                                         <sec:authorize access="hasRole('ROLE_WITHDRAW_ORDER_INF')">
+                                             <li><a href="${ctx }/withdraw/listWithdrawOrder.do">提现订单管理</a></li>
+                                         </sec:authorize>
+                                     </ul>
+                                 </li>
                              </sec:authorize>
                              
                              <sec:authorize access="hasRole('ROLE_SYS_MANAGER')">

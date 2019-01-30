@@ -40,7 +40,7 @@
 					<th>审核状态</th>
 					<th>打款金额(元)</th>
 					<th>上账金额(元)</th>
-					<%--<th>收款分销商</th>--%>
+					<th>上账分销商</th>
 					<th>上账状态</th>
 					<%--<th>平台收款状态</th>--%>
                     <%--<th>分销商收款状态</th>--%>
@@ -59,7 +59,7 @@
 						</td>
 						<td>${entity.remitAmt}</td>
 						<td>${entity.inaccountSumAmt}</td>
-						<%--<td>${entity.companyName}</td>--%>
+						<td>${entity.companyName}</td>
 						<td>
 							<c:if test="${entity.inaccountCheck == '0'}">未上账</c:if>
 							<c:if test="${entity.inaccountCheck == '1'}">已上账</c:if>
