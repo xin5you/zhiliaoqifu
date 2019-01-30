@@ -23,19 +23,39 @@
 			<div id="jCrumbs" class="breadCrumb module">
 				<ul>
 					<li><a href="#"><i class="icon-home"></i></a></li>
-					<li>企业管理</li>
-					<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-					<li>新增企业信息</li>
+					<li>
+						<c:if test="${isPlatform=='0'}">企业管理</c:if>
+						<c:if test="${isPlatform=='1'}">平台管理</c:if>
+					</li>
+					<li>
+						<c:if test="${isPlatform=='0'}">
+							<a href="${ctx }/company/listCompany.do?isPlatform=0">企业信息管理</a>
+						</c:if>
+						<c:if test="${isPlatform=='1'}">
+							<a href="${ctx }/company/listCompany.do?isPlatform=1">平台信息管理</a>
+						</c:if>
+					</li>
+					<li>
+						<c:if test="${isPlatform=='0'}">新增企业信息</c:if>
+						<c:if test="${isPlatform=='1'}">新增平台信息</c:if>
+					</li>
 				</ul>
 			</div>
 		</nav>
 		<div class="row-fluid">
 			<div class="span12">
 				<form id="mainForm1" class="form-horizontal" method="post">
-					<h3 class="heading">新增企业信息</h3>
-
+					<h3 class="heading">
+						<c:if test="${isPlatform=='0'}">新增企业信息</c:if>
+						<c:if test="${isPlatform=='1'}">新增平台信息</c:if>
+					</h3>
+					<input type="hidden" id="isPlatform" name="isPlatform" value="${isPlatform}"/>
 					<div class="control-group formSep">
-						<label class="control-label">企业名称<span style="color:red">*</span></label>
+						<label class="control-label">
+							<c:if test="${isPlatform=='0'}">企业名称</c:if>
+							<c:if test="${isPlatform=='1'}">平台名称</c:if>
+							<span style="color:red">*</span>
+						</label>
 						<div class="controls">
 							<input type="text" class="span6" id="name" name="name" maxlength="64" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							<span class="help-block"></span>
@@ -73,7 +93,7 @@
 						</div>
 					</div>
 
-					<div class="control-group formSep">
+					<%--<div class="control-group formSep">
 						<label class="control-label">平台标识<span style="color:red">*</span></label>
 						<div class="controls">
 							<select id="isPlatform" name="isPlatform" class="chzn_a span6">
@@ -83,7 +103,7 @@
 							</select>
 							<span class="help-block"></span>
 						</div>
-					</div>
+					</div>--%>
 
 					<%--<div class="control-group formSep">
 						<label class="control-label">交易开关<span style="color:red">*</span></label>

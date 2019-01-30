@@ -25,9 +25,11 @@ import java.util.List;
 @SpringBootTest(classes = AccountApp.class)//这里的Application是springboot的启动类名
 public class AccountQueryTest {
 
-	@Autowired
-	private IAccountInfService accountInfService;
+/*	@Autowired
+	private IAccountInfService accountInfService;*/
 
+	@Autowired
+	private AccountQueryFacade accountQueryFacade;
 
 	/**
 	 * 查询供应商账户信息
@@ -61,7 +63,7 @@ public class AccountQueryTest {
 	 * 查询分销商账户信息
 	 * @throws Exception
 	 */
-	@Test
+/*	@Test
 	public void getAccountInfListTo400() throws Exception{
 		AccountQueryReqVo req = new AccountQueryReqVo();
 		req.setUserType(UserType.TYPE200.getCode());
@@ -69,7 +71,21 @@ public class AccountQueryTest {
 		req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
 		List<AccountVO> list=accountInfService.getAccountInfList(req);
 		System.out.println(JSONArray.toJSONString(list));
-	}
+	}*/
 
+	/**
+	 * 查找用户余额
+	 * @throws Exception
+	 */
+	@Test
+	public void getAccountAclByUser() throws Exception{
+		String userType=UserType.TYPE400.getCode();
+		String userId=null;
+		String userChnlId="a5a41d8e-66a7-4ebe-bac2-7c280d666666";
+		String userChnl=UserChnlCode.USERCHNL1001.getCode();
+		String bId=SpecAccountTypeEnum.B06.getCode();
+		BigDecimal accBal=accountQueryFacade.getAccountInfAccBalByUser(userType,userId,userChnlId,userChnl,bId);
+		System.out.println(JSONArray.toJSONString(accBal));
+	}
 
 }

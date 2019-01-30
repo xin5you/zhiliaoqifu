@@ -82,4 +82,12 @@ public class AccountWithdrawDetailServiceImpl extends ServiceImpl<AccountWithdra
     void test(){
 
     }
+
+    @Override
+    public List<AccountWithdrawDetail> getWithdrawDetailList(AccountWithdrawDetail withdrawDetail) {
+        QueryWrapper<AccountWithdrawDetail> queryWrapper = new QueryWrapper<AccountWithdrawDetail>();
+        queryWrapper.eq("batch_no",withdrawDetail.getBatchNo());
+        queryWrapper.eq("data_stat",DataStatEnum.TRUE_STATUS.getCode());
+        return baseMapper.selectList(queryWrapper);
+    }
 }

@@ -21,7 +21,7 @@ public interface InaccountOrderService extends IService<InaccountOrder> {
 
     public PageInfo<InaccountOrder> getInaccountOrderByOrderPage(int startNum, int pageSize, InaccountOrder inaccountOrder);
 
-    InaccountOrder getInaccountOrderByOrderId(InaccountOrder inaccountOrderv);
+    InaccountOrder getInaccountOrderByOrderId(InaccountOrder inaccountOrder);
 
     InaccountOrder getInaccountOrderByOrderIdAndCompanyId(InaccountOrder inaccountOrder);
 

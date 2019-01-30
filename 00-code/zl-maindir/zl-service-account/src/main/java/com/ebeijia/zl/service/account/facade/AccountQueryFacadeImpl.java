@@ -109,8 +109,7 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	 * @return
 	 */
 	@Override
-	public BigDecimal getAccountInfAccBal(String userType, String userChnlId, String userChnl, String bId){
-
-		return null;
+	public BigDecimal getAccountInfAccBalByUser(String userType, String userId,String userChnlId, String userChnl, String bId){
+		return accountInfService.getAccountInfAccBalByUser(userType,userId,userChnlId,userChnl,bId);
 	}
 }

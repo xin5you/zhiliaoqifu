@@ -14,19 +14,40 @@
 			<div id="jCrumbs" class="breadCrumb module">
 				<ul>
 					<li><a href="#"><i class="icon-home"></i></a></li>
-					<li>企业管理</li>
-					<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-					<li>企业信息列表</li>
+					<li>
+						<c:if test="${companyInf.isPlatform=='0'}">企业管理</c:if>
+						<c:if test="${companyInf.isPlatform=='1'}">平台管理</c:if>
+					</li>
+					<li>
+						<c:if test="${companyInf.isPlatform=='0'}">
+							<a href="${ctx }/company/listCompany.do?platForm=0">企业信息管理</a>
+						</c:if>
+						<c:if test="${companyInf.isPlatform=='1'}">
+							<a href="${ctx }/company/listCompany.do?platForm=1">平台信息管理</a>
+						</c:if>
+					</li>
+					<li>
+						<c:if test="${companyInf.isPlatform=='0'}">企业信息列表</c:if>
+						<c:if test="${companyInf.isPlatform=='1'}">平台信息列表</c:if>
+					</li>
 				</ul>
 			</div>
 		</nav>
 		<form id="searchForm" action="${ctx }/company/listCompany.do" class="form-inline" method="post">
 			<input type="hidden" id="operStatus"  value="${operStatus }"/>
-			<h3 class="heading">企业信息列表</h3>
+			<input type="hidden" id="isPlatform" name="isPlatform" value="${companyInf.isPlatform }"/>
+			<h3 class="heading">
+				<c:if test="${companyInf.isPlatform=='0'}">企业信息列表</c:if>
+				<c:if test="${companyInf.isPlatform=='1'}">平台信息列表</c:if>
+			</h3>
 			<div class="row-fluid" id="h_search">
 				<div class="span10">
 					<div class="input-prepend">
-						<span class="add-on">企业名称</span><input id="name" name="name" type="text" class="input-medium" value="${companyInf.name }" />
+						<span class="add-on">
+							<c:if test="${companyInf.isPlatform=='0'}">企业名称</c:if>
+							<c:if test="${companyInf.isPlatform=='1'}">平台名称</c:if>
+						</span>
+						<input id="name" name="name" type="text" class="input-medium" value="${companyInf.name }" />
 					</div>
 					<%--<div class="input-prepend">
 						<span class="add-on">交易开关状态</span>
@@ -44,7 +65,10 @@
 					<button type="submit" class="btn btn-search">查 询</button>
 					<button type="reset" class="btn btn-inverse btn-reset">重 置</button>
 					<sec:authorize access="hasRole('ROLE_COMPANY_INTOADD')">
-						<button type="button" class="btn btn-primary btn-add">新增企业</button>
+						<button type="button" class="btn btn-primary btn-add">
+							<c:if test="${companyInf.isPlatform=='0'}">新增企业</c:if>
+							<c:if test="${companyInf.isPlatform=='1'}">新增平台</c:if>
+						</button>
 					</sec:authorize>
 				</div>
 			</div>
@@ -53,12 +77,15 @@
 			<table class="table table-striped table-bordered dTableR table-hover" id="dt_gal">
 				<thead>
 				<tr>
-					<th>企业名称</th>
+					<th>
+						<c:if test="${companyInf.isPlatform=='0'}">企业名称</c:if>
+						<c:if test="${companyInf.isPlatform=='1'}">平台名称</c:if>
+					</th>
 					<th>统一社会信用代码</th>
 					<th>地址</th>
 					<th>联系人</th>
 					<th>联系电话</th>
-					<th>平台标识</th>
+					<%--<th>平台标识</th>--%>
 					<%--<th>交易开关状态</th>--%>
 					<th>开户状态</th>
 					<th>备注</th>
@@ -73,10 +100,10 @@
 						<td>${company.address}</td>
 						<td>${company.contacts}</td>
 						<td>${company.phoneNo}</td>
-						<td>
+						<%--<td>
 							<c:if test="${company.isPlatform=='1'}">是</c:if>
 							<c:if test="${company.isPlatform=='0'}">否</c:if>
-						</td>
+						</td>--%>
 						<%--<td>
 							<c:if test="${company.transFlag=='1'}">关</c:if>
 							<c:if test="${company.transFlag=='0'}">开</c:if>
@@ -100,9 +127,9 @@
 							</c:if>
 							<c:if test="${company.isOpen=='1'}">
 								<c:if test="${company.isPlatform=='1'}">
-									<sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTOADD')">
+									<%--<sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTOADD')">
 										<a companyId="${company.companyId}" title="上账" class="btn-mini btn-platform-inAccount" href="#"><i class="icon-pencil"></i></a>
-									</sec:authorize>
+									</sec:authorize>--%>
 									<sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT')">
 										<a companyId="${company.companyId}" title="平台打款" class="btn-mini btn-platform-tansfer" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
@@ -142,7 +169,10 @@
 		</div>
 		<div class="modal-body">
 			<input type="hidden" id="companyId" name="companyId"/>
-			<span>你确定对该企业开户吗？</span>
+			<span>
+				<c:if test="${companyInf.isPlatform=='0'}">你确定对该企业开户吗？</c:if>
+				<c:if test="${companyInf.isPlatform=='1'}">你确定对该平台开户吗？</c:if>
+			</span>
 		</div>
 	</form>
 	<div class="modal-footer" style="text-align: center;">

@@ -18,17 +18,31 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
-			                    <li>企业管理</li>
-                                <li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-                                <li>企业信息列表</li>
+                                <li>
+                                    <c:if test="${isPlatform=='0'}">企业管理</c:if>
+                                    <c:if test="${isPlatform=='1'}">平台管理</c:if>
+                                </li>
+                                <li>
+                                    <c:if test="${isPlatform=='0'}">
+                                        <a href="${ctx }/company/listCompany.do?isPlatform=0">企业信息管理</a>
+                                    </c:if>
+                                    <c:if test="${isPlatform=='1'}">
+                                        <a href="${ctx }/company/listCompany.do?isPlatform=1">平台信息管理</a>
+                                    </c:if>
+                                </li>
+                                <li>
+                                    <c:if test="${isPlatform=='0'}">企业信息列表</c:if>
+                                    <c:if test="${isPlatform=='1'}">平台信息列表</c:if>
+                                </li>
                                 <li>打款管理</li>
                                 <li>打款信息列表</li>
 			                </ul>
 			            </div>
 			        </nav>
-					<form id="pageMainForm" action="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}&orderType=300" class="form-inline form_validation_tip" method="post">
+					<form id="pageMainForm" action="${ctx }/company/intoAddCompanyTransfer.do?companyId=${company.companyId}" class="form-inline form_validation_tip" method="post">
 						<h3 class="heading">打款信息列表</h3>
-						
+                        <input id="orderType" type="hidden" name="orderType" value="300"/>
+						<input id="isPlatform" type="hidden" name="isPlatform" value="${isPlatform}"/>
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>
 				             <tr>
@@ -109,7 +123,7 @@
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
                       
                       <br/>
-                      <a href="${ctx }/company/listCompany.do"><button class="btn btn-primary" type="button">返 回</button></a>
+                      <a href="${ctx }/company/listCompany.do?isPlatform=${isPlatform}"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 				      </div>
 			   </div>

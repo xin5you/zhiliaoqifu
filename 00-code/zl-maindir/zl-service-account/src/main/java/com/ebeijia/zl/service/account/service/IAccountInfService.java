@@ -100,5 +100,5 @@ public interface IAccountInfService extends IService<AccountInf> {
 	 * @param bId
 	 * @return
 	 */
-	BigDecimal getAccountInfAccBalByUser(String userType, String userChnlId, String userChnl, String bId);
+	BigDecimal getAccountInfAccBalByUser(String userType, String userId,String userChnlId, String userChnl, String bId);
 }

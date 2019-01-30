@@ -33,4 +33,34 @@ public interface RetailChnlInfService {
 	 */
 	int retailChnlOpenAccount(HttpServletRequest req);
 
+	/**
+	 * 添加分销商上账记录
+	 * @param req
+	 * @param evidenceUrlFile
+	 * @return
+	 */
+	Map<String, Object> addRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+
+	/**
+	 * 分销商上账提交
+	 * @param req
+	 * @return
+	 */
+	int addRetailChnlTransferCommit(HttpServletRequest req);
+
+	/**
+	 * 编辑分销商上账记录
+	 * @param req
+	 * @param evidenceUrlFile
+	 * @return
+	 */
+	Map<String, Object> editRetailChnlTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
+
+	/**
+	 * 删除分销商上账记录
+	 * @param req
+	 * @return
+	 */
+	Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req);
+
 }

@@ -13,6 +13,9 @@ import com.ebeijia.zl.facade.user.vo.UserInf;
 import com.ebeijia.zl.service.user.service.IChannelUserInfService;
 import com.ebeijia.zl.service.user.service.IPersonInfService;
 import com.ebeijia.zl.service.user.service.IUserInfService;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
 * 
@@ -29,6 +32,7 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
  */
 @Configuration
 @com.alibaba.dubbo.config.annotation.Service()
+@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class UserInfFacadeImpl implements UserInfFacade {
 	
 	

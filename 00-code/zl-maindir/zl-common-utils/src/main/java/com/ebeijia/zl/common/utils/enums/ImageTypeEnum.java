@@ -16,7 +16,8 @@ public enum ImageTypeEnum {
 	ImageTypeEnum_07("07", "goodsDetail", "商品详情信息"),
 	ImageTypeEnum_08("08", "CouponProduce", "卡券图片信息"),
 	ImageTypeEnum_09("09", "banner", "banner图片信息"),
-	ImageTypeEnum_10("10", "platformRemitEvidence", "平台上账凭证");
+	ImageTypeEnum_10("10", "platformRemitEvidence", "平台上账凭证"),
+	ImageTypeEnum_11("10", "retailRemitEvidence", "分销商上账凭证");
 
 	private String code;
 	private String value;

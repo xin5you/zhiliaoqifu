@@ -37,7 +37,7 @@
     <select id="getInaccountOrderByOrder" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
           <include refid="InaccountOrderColumns"/>,
-            <if test="orderType == '200'">
+            <if test="orderType == '200' or orderType == '400'">
                 r.channel_name as companyName
             </if>
             <if test="orderType == '300'">
@@ -45,7 +45,7 @@
             </if>
         from
           <include refid="tableName"/>
-            <if test="orderType == '200'">
+          <if test="orderType == '200' or orderType == '400'">
                 left join tb_retail_chnl_inf r on r.channel_id = o.provider_id
             </if>
             <if test="orderType == '300'">
@@ -73,7 +73,7 @@
     <select id="getInaccountOrderByOrderId" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
           <include refid="InaccountOrderColumns"/>,
-            <if test="orderType == '200'">
+            <if test="orderType == '200' or orderType == '400'">
                 r.channel_name as companyName
             </if>
             <if test="orderType == '300'">
@@ -81,7 +81,7 @@
             </if>
         from
           <include refid="tableName"/>
-            <if test="orderType == '200'">
+            <if test="orderType == '200' or orderType == '400'">
                 left join tb_retail_chnl_inf r on r.channel_id = o.provider_id
             </if>
             <if test="orderType == '300'">
@@ -95,7 +95,7 @@
     <select id="getInaccountOrderByOrderIdAndCompanyId" parameterType="InaccountOrder" resultType="InaccountOrder">
         select
             <include refid="InaccountOrderColumns"/>,
-            <if test="orderType == '200'">
+            <if test="orderType == '200' or orderType == '400'">
                 r.channel_name as companyName
             </if>
             <if test="orderType == '300'">
@@ -103,7 +103,7 @@
             </if>
         from
           <include refid="tableName"/>
-            <if test="orderType == '200'">
+          <if test="orderType == '200' or orderType == '400'">
                 left join tb_retail_chnl_inf r on r.channel_id = o.provider_id
             </if>
             <if test="orderType == '300'">
@@ -111,7 +111,7 @@
             </if>
         where o.data_stat = '0'
         and o.order_id = #{orderId}
-        <if test="orderType == '200'">
+        <if test="orderType == '200' or orderType == '400'">
             and o.provider_id = #{providerId}
         </if>
         <if test="orderType == '300'">

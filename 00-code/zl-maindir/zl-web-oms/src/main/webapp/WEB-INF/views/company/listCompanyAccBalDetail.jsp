@@ -14,18 +14,44 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 								<li><a href="#"><i class="icon-home"></i></a></li>
-								<li>企业管理</li>
-								<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-								<li>企业信息列表</li>
-								<li><a href="${ctx }/company/listCompanyAccBal.do?companyId=${companyId}">企业账户余额列表</a></li>
-								<li>企业账户余额明细列表</li>
+								<li>
+									<c:if test="${isPlatform=='0'}">企业管理</c:if>
+									<c:if test="${isPlatform=='1'}">平台管理</c:if>
+								</li>
+								<li>
+									<c:if test="${isPlatform=='0'}">
+										<a href="${ctx }/company/listCompany.do?isPlatform=0">企业信息管理</a>
+									</c:if>
+									<c:if test="${isPlatform=='1'}">
+										<a href="${ctx }/company/listCompany.do?isPlatform=1">平台信息管理</a>
+									</c:if>
+								</li>
+								<li>
+									<c:if test="${isPlatform=='0'}">企业信息列表</c:if>
+									<c:if test="${isPlatform=='1'}">平台信息列表</c:if>
+								</li>
+								<li>
+									<c:if test="${isPlatform=='0'}">
+										<a href="${ctx }/company/listCompanyAccBal.do?companyId=${companyId}&isPlatform=${isPlatform}">企业账户余额列表</a>
+									</c:if>
+									<c:if test="${isPlatform=='1'}">
+										<a href="${ctx }/company/listCompanyAccBal.do?companyId=${companyId}&isPlatform=${isPlatform}">平台账户余额列表</a>
+									</c:if>
+								</li>
+								<li>
+									<c:if test="${isPlatform=='0'}">企业账户余额列表</c:if>
+									<c:if test="${isPlatform=='1'}">平台账户余额列表</c:if>
+								</li>
 			                </ul>
 			            </div>
 			        </nav>
 					<form id="searchForm" action="${ctx }/company/listCompanyAccBalDetail.do" class="form-inline" method="post">
-						<h3 class="heading">企业账户余额明细列表</h3>
+						<h3 class="heading">
+							<c:if test="${isPlatform=='0'}">企业账户余额明细列表</c:if>
+							<c:if test="${isPlatform=='1'}">平台账户余额明细列表</c:if>
+						</h3>
 						<input type="hidden" id="companyId" name="companyId" value="${companyId}"/>
-
+						<input type="hidden" id="isPlatform" name="isPlatform" value="${isPlatform}"/>
 					<%--<div class="row-fluid" id="h_search">
 							 <div class="span10">
 		                       	<div class="input-prepend">
@@ -81,7 +107,7 @@
 				             </tbody>
 				         </table>
 				         <%@ include file="/WEB-INF/views/common/pagination.jsp"%>
-						<a href="${ctx }/company/listCompanyAccBal.do?companyId=${companyId}"><button class="btn btn-primary" type="button">返 回</button></a>
+						<a href="${ctx }/company/listCompanyAccBal.do?companyId=${companyId}&isPlatform=${isPlatform}"><button class="btn btn-primary" type="button">返 回</button></a>
 				      </form>
 			   </div>
 	    </div>

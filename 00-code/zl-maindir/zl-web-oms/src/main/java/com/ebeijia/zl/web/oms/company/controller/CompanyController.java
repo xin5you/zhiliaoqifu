@@ -81,16 +81,18 @@ public class CompanyController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/listCompany")
-	public ModelAndView listCompany(HttpServletRequest req, HttpServletResponse response) throws IOException {
+	public ModelAndView listCompany(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("company/listCompany");
 		String operStatus = StringUtil.nullToString(req.getParameter("operStatus"));
 		String name = StringUtil.nullToString(req.getParameter("name"));
 		String transFlag = StringUtil.nullToString(req.getParameter("transFlag"));
 		String contacts = StringUtil.nullToString(req.getParameter("contacts"));
+		String isPlatform = StringUtil.nullToString(req.getParameter("isPlatform"));
 		CompanyInf companyInf = new CompanyInf();//通过封装类将前台查询条件用对象接收
 		companyInf.setName(name);
 		/*companyInf.setTransFlag(transFlag);*/
 		companyInf.setContacts(contacts);
+		companyInf.setIsPlatform(isPlatform);
 
 		PageInfo<CompanyInf> pageList = null;
 		try {
@@ -110,7 +112,8 @@ public class CompanyController {
 	@RequestMapping(value = "/intoAddCompany")
 	public ModelAndView intoAddCompany(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("company/addCompany");
-
+		String isPlatform = StringUtil.nullToString(req.getParameter("isPlatform"));
+		mv.addObject("isPlatform", isPlatform);
 		return mv;
 	}
 
@@ -136,8 +139,10 @@ public class CompanyController {
 	public ModelAndView intoEditCompany(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("company/editCompany");
 		String companyId = req.getParameter("companyId");
+		String isPlatform = StringUtil.nullToString(req.getParameter("isPlatform"));
 		CompanyInf companyInf = companyInfFacade.getCompanyInfById(companyId);
 		mv.addObject("companyInf", companyInf);
+		mv.addObject("isPlatform", isPlatform);
 		return mv;
 	}
 
@@ -260,9 +265,12 @@ public class CompanyController {
 			order.setOrderType(UserType.TYPE300.getCode());
 			mv = new ModelAndView("company/addCompanyTransfer");
 		}
-
+		CompanyInf company = null;
 		try {
-			CompanyInf company = companyInfFacade.getCompanyInfById(companyId);
+			company = companyInfFacade.getCompanyInfById(companyId);
+			if (company == null) {
+				logger.error("## 根据compnayId---{}查询企业信息为空", companyId);
+			}
 			if (IsPlatformEnum.IsPlatformEnum_0.getCode().equals(company.getIsPlatform())) {
 				order.setCompanyId(companyId);
 			}
@@ -279,6 +287,7 @@ public class CompanyController {
 			logger.error("## 查询打款订单信息详情异常", e);
 		}
 		mv.addObject("order", order);
+		mv.addObject("isPlatform", company.getIsPlatform());
 		return mv;
 	}
 
@@ -403,7 +412,7 @@ public class CompanyController {
 	public ModelAndView listCompanyAccBal(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("company/listCompanyAccBal");
 		String companyId = StringUtil.nullToString(request.getParameter("companyId"));
-
+		String isPlatform = StringUtil.nullToString(request.getParameter("isPlatform"));
 		try {
 			Map<String, Object> resultMap = commonService.getAccountInfPage(request);
             if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
@@ -415,6 +424,7 @@ public class CompanyController {
 			logger.error("## 企业账户列表查询异常", e);
 		}
 		mv.addObject("companyId", companyId);
+		mv.addObject("isPlatform", isPlatform);
 		return mv;
 	}
 
@@ -428,6 +438,8 @@ public class CompanyController {
 		ModelAndView mv = new ModelAndView("company/addCompanyFee");
 		String companyId = StringUtil.nullToString(request.getParameter("companyId"));
 		String bName = StringUtil.nullToString(request.getParameter("bName"));
+		String isPlatform = StringUtil.nullToString(request.getParameter("isPlatform"));
+
 		CompanyBillingTypeInf cbt = new CompanyBillingTypeInf();
 		cbt.setCompanyId(companyId);
 		cbt.setBName(bName);
@@ -443,6 +455,7 @@ public class CompanyController {
 			logger.error("## 企业专项费率信息列表查询异常", e);
 		}
 		mv.addObject("companyId", companyId);
+		mv.addObject("isPlatform", isPlatform);
 		mv.addObject("pageInfo", pageList);
 		mv.addObject("billingTypeList", billingTypeList);
 		mv.addObject("companyBillingTypeInf", cbt);
@@ -625,6 +638,7 @@ public class CompanyController {
 	public ModelAndView listCompanyAccBalDetaillistCompanyAccBal(HttpServletRequest req, HttpServletResponse response) throws IOException {
 		ModelAndView mv = new ModelAndView("company/listCompanyAccBalDetail");
 		String companyId = req.getParameter("companyId");
+		String isPlatform = req.getParameter("isPlatform");
 		try {
             Map<String, Object> resultMap = commonService.getAccountLogInfPage(req);
             if (String.valueOf(resultMap.get("status").toString()).equals("true")) {
@@ -636,6 +650,7 @@ public class CompanyController {
 			logger.error("## 查询企业列表信息出错", e);
 		}
         mv.addObject("companyId", companyId);
+		mv.addObject("isPlatform", isPlatform);
 		return mv;
 	}
 
@@ -685,7 +700,7 @@ public class CompanyController {
 		String orderId = StringUtil.nullToString(req.getParameter("orderId"));
 		InaccountOrder orderInf = new InaccountOrder();
 		orderInf.setOrderId(orderId);
-		orderInf.setOrderType(UserType.TYPE200.getCode());
+		orderInf.setOrderType(UserType.TYPE400.getCode());
 		try {
 			InaccountOrder order = inaccountOrderService.getInaccountOrderByOrderId(orderInf);
 			RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(order.getProviderId());
@@ -871,6 +886,7 @@ public class CompanyController {
 		ModelAndView mv = new ModelAndView("company/viewPlatformTransfer");
 
 		String orderId = StringUtil.nullToString(request.getParameter("orderId"));
+		String isPlatForm = StringUtil.nullToString(request.getParameter("isPlatForm"));
 
 		InaccountOrder orderInf = new InaccountOrder();
 		orderInf.setOrderId(orderId);
@@ -899,6 +915,7 @@ public class CompanyController {
 			logger.error("## 查询企业上账订单明细信息详情异常", e);
 		}
 		mv.addObject("order", order);
+		mv.addObject("isPlatForm", isPlatForm);
 		return mv;
 	}
 }

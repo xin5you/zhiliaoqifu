@@ -40,29 +40,32 @@
 										<label class="control-label" style="font-weight: bold;">上账状态：</label>
 										<label style="color: red;">${order.inaccountCheck }</label>
 									</td>
-									<td>
+									<%--<td>
 										<label class="control-label" style="font-weight: bold;">平台收款状态：</label>
 										<label style="color: red;">${order.platformReceiverCheck }</label>
-									</td>
+									</td>--%>
 									<td>
-										<label class="control-label" style="font-weight: bold;">分销商收款状态：</label>
-										<label style="color: red;">${order.companyReceiverCheck }</label>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label class="control-label" style="font-weight: bold;">收款分销商：</label>
+										<label class="control-label" style="font-weight: bold;">上账分销商：</label>
 										<label style="color: red;">${order.companyName }</label>
 									</td>
+									<%--<td>
+										<label class="control-label" style="font-weight: bold;">分销商收款状态：</label>
+										<label style="color: red;">${order.companyReceiverCheckName }</label>
+									</td>--%>
 									<td>
 										<label class="control-label" style="font-weight: bold;">打款总金额(元)：</label>
 										<label style="color: red;">${order.remitAmt }</label>
 									</td>
+								</tr>
+								<tr>
 									<td>
 										<label class="control-label" style="font-weight: bold;">上账总金额(元)：</label>
 										<label style="color: red;">${order.inaccountSumAmt }</label>
 									</td>
-
+									<%--<td>
+										<label class="control-label" style="font-weight: bold;">分销商收款总金额(元)：</label>
+										<label style="color: red;">${order.companyInSumAmt }</label>
+									</td>--%>
 								</tr>
 							</table>
 						</div>
@@ -75,8 +78,8 @@
                                  <th>账户名称</th>
 								 <th>交易金额(元)</th>
 				               	<th>上账金额(元)</th>
-                                 <th>平台收款金额(元)</th>
-                                 <th>分销商收款金额(元)</th>
+                                 <%--<th>平台收款金额(元)</th>--%>
+                                 <%--<th>分销商收款金额(元)</th>--%>
                                  <%--<th>开票状态</th>
                                  <th>开票信息</th>--%>
 				             </tr>
@@ -89,8 +92,8 @@
 									<td>${entity.BName}</td>
 									 <td>${entity.transAmt}</td>
 									<td>${entity.inaccountAmt}</td>
-                                     <td>${entity.platformInAmt}</td>
-                                     <td>${entity.companyInAmt}</td>
+                                     <%--<td>${entity.platformInAmt}</td>--%>
+                                     <%--<td>${entity.companyInAmt}</td>--%>
                                      <%--<td>
                                          <c:if test="${entity.isInvoice == '0'}">未开票</c:if>
                                          <c:if test="${entity.isInvoice == '1'}">已开票</c:if>

@@ -25,19 +25,23 @@ var listCompany = {
         $('.btn-platform-inAccount').on('click', listCompany.intoAddPlatformTransfer);
     },
     searchReset:function(){
-        location = Helper.getRootPath() + '/company/listCompany.do';
+        var isPlatform = $("#isPlatform").val();
+        location = Helper.getRootPath() + "/company/listCompany.do?isPlatform="+isPlatform;
     },
     intoAddcompany:function(){
-        var url = Helper.getRootPath()+"/company/intoAddCompany.do";
+        var isPlatform = $("#isPlatform").val();
+        var url = Helper.getRootPath()+"/company/intoAddCompany.do?isPlatform="+isPlatform;
         location.href=url;
     },
     intoEditcompany:function(){
         var companyId = $(this).attr('companyId');
-        var url = Helper.getRootPath()+"/company/intoEditCompany.do?companyId="+companyId;
+        var isPlatform = $("#isPlatform").val();
+        var url = Helper.getRootPath()+"/company/intoEditCompany.do?companyId="+companyId+"&isPlatform="+isPlatform;
         location.href=url;
     },
     deleteCompanyCommit:function(){
         var companyId = $(this).attr('companyId');
+        var isPlatform = $("#isPlatform").val();
         Helper.confirm("您是否删除该企业？",function(){
             $.ajax({
                 url: Helper.getRootPath() + '/company/deleteCompany.do',
@@ -48,7 +52,7 @@ var listCompany = {
                 },
                 success: function (data) {
                     if(data.status){
-                        location.href=Helper.getRootPath() + '/company/listCompany.do?operStatus=4';
+                        location.href=Helper.getRootPath() + "/company/listCompany.do?operStatus=4&isPlatform="+isPlatform;
                     }else{
                         Helper.alter(data.msg);
                         return false;
@@ -70,7 +74,7 @@ var listCompany = {
     },
     companyOpenAccount : function() {
         var companyId = $('#companyId').val();
-
+        var isPlatform = $("#isPlatform").val();
         $('#msg').modal({
             backdrop : "static"
         });
@@ -86,7 +90,7 @@ var listCompany = {
             traditional:true,
             success: function (data) {
                 if(data.status){
-                    location.href=Helper.getRootPath() + '/company/listCompany.do?operStatus=1';
+                    location.href=Helper.getRootPath() + "/company/listCompany.do?operStatus=1&isPlatform="+isPlatform;
                 }else{
                     $('#msg').modal('hide');
                     Helper.alter(data.msg);
@@ -102,17 +106,19 @@ var listCompany = {
     },
     intoAddCompanyTransfer:function(){
         var companyId = $(this).attr('companyId');
+        var isPlatform = $("#isPlatform").val();
         var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId+"&orderType=300";
         location.href=url;
     },
     listCompanyAccBal : function () {
+        var isPlatform = $("#isPlatform").val();
         var companyId = $(this).attr('companyId');
-        var url = Helper.getRootPath()+"/company/listCompanyAccBal.do?companyId="+companyId;
+        var url = Helper.getRootPath()+"/company/listCompanyAccBal.do?companyId="+companyId+"&isPlatform="+isPlatform;
         location.href=url;
     },
     intoAddCompanyFee : function () {
         var companyId = $(this).attr('companyId');
-        var url = Helper.getRootPath()+"/company/listCompanyFee.do?companyId="+companyId;
+        var url = Helper.getRootPath()+"/company/listCompanyFee.do?companyId="+companyId+"&isPlatform="+isPlatform;
         location.href=url;
     },
     intoAddPlatformTransfer : function () {

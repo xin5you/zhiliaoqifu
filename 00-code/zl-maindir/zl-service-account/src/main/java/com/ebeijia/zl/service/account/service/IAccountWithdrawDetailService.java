@@ -46,4 +46,11 @@ public interface IAccountWithdrawDetailService extends IService<AccountWithdrawD
      * @return
      */
     BigDecimal getWithdrawAmtByCardAndTime(String cardNo, long sDate,long eDate);
+
+    /**
+     * 查询提现订单明细信息列表
+     * @param withdrawDetail
+     * @return
+     */
+    List<AccountWithdrawDetail> getWithdrawDetailList(AccountWithdrawDetail withdrawDetail);
 }

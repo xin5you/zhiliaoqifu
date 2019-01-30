@@ -88,5 +88,5 @@ public interface AccountQueryFacade {
 	 * 查询账户余额
 	 * @return
 	 */
-	BigDecimal getAccountInfAccBal(String userType,String userChnlId,String userChnl,String bId);
+	BigDecimal getAccountInfAccBalByUser(String userType, String userId,String userChnlId, String userChnl, String bId);
 }

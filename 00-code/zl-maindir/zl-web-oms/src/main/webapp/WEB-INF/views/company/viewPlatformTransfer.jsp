@@ -18,9 +18,9 @@
 			            <div id="jCrumbs" class="breadCrumb module">
 			                <ul>
 								<li><a href="#"><i class="icon-home"></i></a></li>
-								<li>企业管理</li>
-								<li><a href="${ctx }/company/listCompany.do">企业信息管理</a></li>
-								<li>企业信息列表</li>
+								<li>平台管理</li>
+								<li><a href="${ctx }/company/listCompany.do?isPlatform=${isPlatForm}">平台信息管理</a></li>
+								<li>平台信息列表</li>
 								<li>上账管理</li>
 								<li><a href="${ctx }/company/intoAddCompanyTransfer.do?companyId=${order.companyId}&orderType=200">上账信息列表</a></li>
 								<li>上账明细列表</li>
