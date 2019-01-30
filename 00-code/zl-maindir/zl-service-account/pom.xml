@@ -87,13 +87,16 @@
 		  <artifactId>zl-core-rocketmq</artifactId>
 		  <version>${ebj.zl.version}</version>
 	  </dependency>
-
+	  <dependency>
+		  <groupId>com.ebeijia</groupId>
+		  <artifactId>zl-fescar-core</artifactId>
+		  <version>${ebj.zl.version}</version>
+	  </dependency>
 	  <dependency>
 		  <groupId>com.ebeijia</groupId>
 		  <artifactId>zl-facade-mcht</artifactId>
 		  <version>${ebj.zl.version}</version>
 	  </dependency>
-	    
   </dependencies>
   
   	<repositories>

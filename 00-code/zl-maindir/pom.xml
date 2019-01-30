@@ -98,6 +98,7 @@
         <module>zl-web-diy</module>
         <module>zl-web-cms</module>
         <module>zl-web-user</module>
+        <module>zl-fescar-core</module>
 
     </modules>
 
