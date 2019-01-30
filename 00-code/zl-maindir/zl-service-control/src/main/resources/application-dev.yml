@@ -22,7 +22,7 @@ spring:
     timeBetweenEvictionRunsMillis: 60000
     numTestsPerEvictionRun: 1
   rocketmq:
-    groupName: zlqf_wxc_group
+    groupName: wxc_group
     namesrvAddr: 192.168.2.110:9876
     sendMsgTimeout: 3000
     retryTimesWhenSendFailed: 2
@@ -55,3 +55,10 @@ spring:
        numTestsPerEvictionRun: 1      
   session:
      store-type: redis
+  dubbo:
+    application:
+      name: zl-service-control
+    consumer:
+      check: false
+    registry:
+      address: zookeeper://127.0.0.1:2181

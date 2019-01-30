@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import com.ebeijia.zl.service.control.quartz.SpecAccountTypeBizJob;
+import com.ebeijia.zl.web.api.quartz.TelePhoneRechargeBizJob;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.spi.JobFactory;
@@ -183,6 +184,35 @@ public class QuartzConfigure {
         tigger.setJobDetail(specAccountTypeDetail);
         tigger.setStartDelay(2000);   //延迟启动
         tigger.setCronExpression(billingTypeExpression);  //从application.yml文件读取
+        return tigger;
+    }
+
+    /**
+     * 配置JobDetailFactory
+     * JobDetailFactoryBean与CronTriggerFactoryBean相互依赖,注意bean的名称
+     *
+     * @return
+     */
+    @Bean
+    public JobDetailFactoryBean telePhoneRechargeBiz() {
+        JobDetailFactoryBean jobDetail = new JobDetailFactoryBean();
+        jobDetail.setDurability(true);
+        jobDetail.setRequestsRecovery(true);
+        jobDetail.setJobClass(TelePhoneRechargeBizJob.class);
+        return jobDetail;
+    }
+
+    /**
+     * 配置具体执行规则
+     * @param specAccountTypeDetail
+     * @return
+     */
+    @Bean
+    public CronTriggerFactoryBean telePhoneRechargeBizTrigger(JobDetail telePhoneRechargeBiz) {
+        CronTriggerFactoryBean tigger = new CronTriggerFactoryBean();
+        tigger.setJobDetail(telePhoneRechargeBiz);
+        tigger.setStartDelay(2000);   //延迟启动
+        tigger.setCronExpression(teleRechargeExpression);  //从application.yml文件读取
         return tigger;
     }
 }
