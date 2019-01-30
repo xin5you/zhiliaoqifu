@@ -8,6 +8,8 @@ import com.ebeijia.zl.shop.utils.ShopUtils;
 import com.ebeijia.zl.shop.utils.TokenCheck;
 import com.ebeijia.zl.shop.vo.JsonResult;
 import com.ebeijia.zl.shop.vo.PayInfo;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/supply")
@@ -53,15 +54,16 @@ public class SupplyController {
     @RequestMapping(value = "/phone/charge/callback", method = RequestMethod.POST)
     public String phoneChargeCallback(HttpServletRequest request) {
         BaseResult respVO = null;
+        JsonNode object = null;
         try {
             String requestJsonString = RequestJsonUtil.getRequestJsonString(request);
             logger.info("bmHKbCallBack getRequestJsonString-->{}", requestJsonString);
-            respVO = shopUtils.readValue(requestJsonString, BaseResult.class);
+            JsonNode jsonNode = new ObjectMapper().readTree(requestJsonString);
+            object = jsonNode.get("object");
         } catch (IOException e) {
             logger.error("回调入参[{}]", e);
         }
-        LinkedHashMap<String,String> map = (LinkedHashMap) respVO.getObject();
-        Integer i = supplyService.phoneChargeCallback(map);
+        Integer i = supplyService.phoneChargeCallback(object);
         if (ResultState.OK == i) {
             return "SUCCESS";
         }

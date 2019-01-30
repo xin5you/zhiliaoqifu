@@ -103,4 +103,5 @@ phone:
     charge: http://10.0.0.103:17001/web-api/api/recharge/mobile/payment
     charge.Callback: http://10.0.0.102:12301/web-shop/supply/phone/charge/callback
 
+
 PHONE_CHARGE_PROVIDER: 60b9ef00-b476-4292-8740-4ead68fb6666

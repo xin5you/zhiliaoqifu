@@ -188,18 +188,34 @@ public class PayService implements IPayService {
 
         //请求支付
         String result = "";
-        List<AccountTxnVo> txnList = buildTxnVo(payInfo);
+        //TODO 这里的txnList仅用于保存支付信息，未来建议直接处理payInfo
+        List<AccountTxnVo> rawList = getRawTxnVO(payInfo);
 
-        BaseResult baseResult = executeConsume(txnList, payInfo.getTypeA(),memberId, dmsRelatedKey, desc, mchntCode);
+        BaseResult baseResult = executeConsume(payInfo, memberId, dmsRelatedKey, desc, mchntCode);
+
         Object object = baseResult.getObject();
         if (object instanceof String) {
             result = (String) object;
         } else {
-            logger.error("支付失败,参数%s,%s,%s,%s", payInfo, memberId, dmsRelatedKey, desc);
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "账户余额不足");
+            logger.error(String.format("用户端支付失败,参数%s,%s,%s,%s", payInfo, memberId, dmsRelatedKey, desc));
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "用户账户余额不足");
         }
         //判断result
-        logger.info(String.format("支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
+        logger.info(String.format("用户端支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
+
+        //TODO 关联两次请求
+        String nextId = IdUtil.getNextId();
+        baseResult = executeRetailConsume(payInfo,nextId , desc, mchntCode);
+        object = baseResult.getObject();
+        if (object instanceof String) {
+            result = (String) object;
+        } else {
+            logger.error(String.format("分销端支付失败,参数%s,%s,%s,%s", payInfo, memberId, nextId, desc));
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "分销端账户余额不足");
+        }
+        //判断result
+        logger.info(String.format("分销端支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
+
 
         //构造payOrder对象
         String payOrderId = IdUtil.getNextId();
@@ -212,7 +228,7 @@ public class PayService implements IPayService {
         payOrderDao.save(pay);
 
         //构造payOrderDetail对象
-        for (AccountTxnVo v : txnList) {
+        for (AccountTxnVo v : rawList) {
             TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
             payOrderDetails.setPayOrderId(payOrderId);
             payOrderDetails.setDebitAccountCode(v.getTxnBId());
@@ -257,7 +273,7 @@ public class PayService implements IPayService {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         //交易与渠道
         req.setTransId(CW20.getCode());
-        req.setTransChnl(TransChnl.CHANNEL9.toString());
+        req.setTransChnl(TransChnl.CHANNEL8.toString());
         //消费端用户识别
         req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
         req.setUserChnlId(memberId);
@@ -296,32 +312,12 @@ public class PayService implements IPayService {
     public BaseResult payPhone(PayInfo vo, String memberId, String dmsRelatedKey, String desc) {
         //请求支付
         String result = "";
-        List<AccountTxnVo> accountTxnVos = buildTxnVo(vo);
-        List<AccountTxnVo> addList = new LinkedList<>();
         AccountConsumeReqVo req = new AccountConsumeReqVo();
+        List<AccountTxnVo> rawTxnVos = getRawTxnVO(vo);
 
 
         //TODO 简单处理了充值问题
-        for (AccountTxnVo v : accountTxnVos) {
-            if (v.getTxnAmt().compareTo(BigDecimal.ZERO) < 0) {
-                v.setTxnAmt(v.getTxnAmt().negate());
-                addList.add(v);
-            }
-        }
-        accountTxnVos.removeAll(addList);
-        List<AccountQuickPayVo> quickList = null;
-        if (addList.size() > 0) {
-            quickList = new LinkedList<>();
-            for (AccountTxnVo v : addList) {
-                AccountQuickPayVo accountQuickPayVo = new AccountQuickPayVo();
-                accountQuickPayVo.setTfrOutBId(vo.getTypeA());
-                accountQuickPayVo.setTfrOutAmt(v.getTxnAmt());
-                accountQuickPayVo.setTfrInAmt(v.getTxnAmt());
-                accountQuickPayVo.setTfrInBId(v.getTxnBId());
-                quickList.add(accountQuickPayVo);
-            }
-        }
-        req.setAddList(quickList);
+
         //交易与渠道
         req.setTransId(CW71.getCode());
         req.setTransChnl(TransChnl.CHANNEL8.toString());
@@ -329,12 +325,12 @@ public class PayService implements IPayService {
         req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
         req.setUserChnlId(memberId);
         req.setUserType(UserType.TYPE100.getCode());
-        req.setTransList(accountTxnVos);
         req.setDmsRelatedKey(dmsRelatedKey);
         if (desc == null) {
             desc = "商城消费";
         }
         req.setTransDesc(desc);
+        req = processPayInfo(vo, req);
 //        req.setMchntCode(shopUtils.getBaseDict("ZLQF_MCHNT_CODE"));
 
         //TODO 完善供应商id查询
@@ -344,7 +340,7 @@ public class PayService implements IPayService {
             baseResult = accountTransactionFacade.executeConsume(req);
         } catch (Exception e) {
             logger.error("支付失败", e);
-            logger.error("支付失败,参数%s,%s,%s,%s,%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), memberId, dmsRelatedKey, desc);
+            logger.error(String.format("支付失败,参数%s,%s,%s,%s,%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), memberId, dmsRelatedKey, desc));
             throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
         //判断result
@@ -367,7 +363,7 @@ public class PayService implements IPayService {
         payOrderDao.save(pay);
 
         //构造payOrderDetail对象
-        for (AccountTxnVo v : accountTxnVos) {
+        for (AccountTxnVo v : rawTxnVos) {
             TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
             payOrderDetails.setPayOrderId(payOrderId);
             payOrderDetails.setDebitAccountCode(v.getTxnBId());
@@ -545,7 +541,7 @@ public class PayService implements IPayService {
         vo.setTransId(TransCode.CW11.getCode());
         vo.setUserType(UserType.TYPE100.getCode());
         vo.setTransDesc(String.format("手机%s充值失败退款", log.getDescinfo()));
-        vo.setTransList(buildTxnVo(payInfo));
+        vo.setTransList(getRawTxnVO(payInfo));
         logger.info("手机充值退款开始：[{}]", vo);
         //TODO
         try {
@@ -718,48 +714,61 @@ public class PayService implements IPayService {
     }
 
     /**
-     * 商城消费
-     *
-     * @param consumeList
      * @param memberId
      * @param dmsRelatedKey
      * @param desc
+     * @param mchntCode
      * @return
-     * @throws Exception
      */
-    private BaseResult executeConsume(List<AccountTxnVo> consumeList, String bId, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
+    private BaseResult executeConsume(PayInfo payInfo, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
-        List<AccountTxnVo> addList = new LinkedList<>();
-
-        //TODO 简单处理了充值问题
-        for (AccountTxnVo vo : consumeList) {
-            if (vo.getTxnAmt().compareTo(BigDecimal.ZERO) < 0) {
-                vo.setTxnAmt(vo.getTxnAmt().negate());
-                addList.add(vo);
-            }
-        }
-        consumeList.removeAll(addList);
-        List<AccountQuickPayVo> quickList = null;
-        if (addList.size() > 0) {
-            quickList = new LinkedList<>();
-            for (AccountTxnVo vo : addList) {
-                AccountQuickPayVo accountQuickPayVo = new AccountQuickPayVo();
-                accountQuickPayVo.setTfrOutBId(bId);
-                accountQuickPayVo.setTfrOutAmt(vo.getTxnAmt());
-                accountQuickPayVo.setTfrInAmt(vo.getTxnAmt());
-                accountQuickPayVo.setTfrInBId(vo.getTxnBId());
-                quickList.add(accountQuickPayVo);
-            }
-        }
-        req.setAddList(quickList);
+        req = processPayInfo(payInfo,req);
         //交易与渠道
-        req.setTransId(CW71.getCode());
+        if (req.getAddList() != null) {
+            req.setTransId(CW71.getCode());
+        } else {
+            req.setTransId(CW10.getCode());
+        }
         req.setTransChnl(TransChnl.CHANNEL6.toString());
         //消费端用户识别
         req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
         req.setUserChnlId(memberId);
         req.setUserType(UserType.TYPE100.getCode());
-        req.setTransList(consumeList);
+        req.setDmsRelatedKey(dmsRelatedKey);
+        if (desc == null) {
+            desc = "商城消费";
+        }
+        req.setTransDesc(desc);
+        req.setMchntCode(shopUtils.getBaseDict("ZLQF_RETAIL_MCHNT_CODE"));
+        BaseResult result = null;
+        try {
+            result = accountTransactionFacade.executeConsume(req);
+        } catch (Exception e) {
+            logger.error("远端连接异常", e);
+            throw new BizException(500, "服务器连接中断，请稍后再试");
+        }
+        return result;
+    }
+
+
+    /**
+     * @param dmsRelatedKey
+     * @param desc
+     * @param mchntCode
+     * @return
+     */
+    private BaseResult executeRetailConsume(PayInfo payInfo, String dmsRelatedKey, String desc, String mchntCode) {
+        AccountConsumeReqVo req = new AccountConsumeReqVo();
+        List<AccountTxnVo> addList = new LinkedList<>();
+        req = processPayInfo(payInfo,req);
+        req.setAddList(null);
+        //交易与渠道
+        req.setTransId(TransCode.MB10.getCode());
+        req.setTransChnl(TransChnl.CHANNEL6.toString());
+        //消费端用户识别
+        req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
+        req.setUserChnlId(shopUtils.getBaseDict("ZLQF_RETAIL_MCHNT_CODE"));
+        req.setUserType(UserType.TYPE400.getCode());
         req.setDmsRelatedKey(dmsRelatedKey);
         if (desc == null) {
             desc = "商城消费";
@@ -781,29 +790,27 @@ public class PayService implements IPayService {
      * 简化的支付信息拆解
      *
      * @param payInfo
+     * @param req
      * @return
      */
-    private List<AccountTxnVo> buildTxnVo(PayInfo payInfo) {
+    private AccountConsumeReqVo processPayInfo(PayInfo payInfo, AccountConsumeReqVo req) {
         ArrayList<AccountTxnVo> result = new ArrayList<>();
         SpecAccountTypeEnum typeA = SpecAccountTypeEnum.findByBId(payInfo.getTypeA());
         SpecAccountTypeEnum typeB = SpecAccountTypeEnum.findByBId(payInfo.getTypeB());
         BigDecimal costA = null;
+        List<AccountQuickPayVo> quickList = new LinkedList<>();
         if (typeA != null && payInfo.getCostA() != null && payInfo.getCostA() != 0) {
-            AccountTxnVo accountTxnVo = new AccountTxnVo();
-            accountTxnVo.setTxnBId(typeA.getbId());
             costA = BigDecimal.valueOf(payInfo.getCostA());
-            accountTxnVo.setUpLoadAmt(costA);
-            accountTxnVo.setTxnAmt(costA);
-            result.add(accountTxnVo);
-
-            //TODO 所有A类消费，先充值到B类
-            AccountTxnVo rechargeTxnVo = new AccountTxnVo();
-            rechargeTxnVo.setTxnBId(typeB.getbId());
-            rechargeTxnVo.setUpLoadAmt(BigDecimal.valueOf(payInfo.getCostA()));
-            rechargeTxnVo.setTxnAmt(BigDecimal.valueOf(payInfo.getCostA()).negate());
-            result.add(rechargeTxnVo);
+            AccountQuickPayVo accountQuickPayVo = new AccountQuickPayVo();
+            accountQuickPayVo.setTfrOutBId(payInfo.getTypeA());
+            accountQuickPayVo.setTfrOutAmt(costA);
+            accountQuickPayVo.setTfrInAmt(costA);
+            accountQuickPayVo.setTfrInBId(payInfo.getTypeB());
+            quickList.add(accountQuickPayVo);
         }
-        if (result.size() == 2 || (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0)) {
+        req.setAddList(quickList);
+
+        if (quickList.size() == 1 || (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0)) {
             AccountTxnVo accountTxnVo = new AccountTxnVo();
             accountTxnVo.setTxnBId(typeB.getbId());
             Long cost = payInfo.getCostB() == null ? 0L : payInfo.getCostB();
@@ -816,7 +823,39 @@ public class PayService implements IPayService {
             accountTxnVo.setTxnAmt(costB);
             result.add(accountTxnVo);
         }
+        req.setTransList(result);
+        logger.info("\nTxn对象构建完成：[{}]\n", req);
+        return req;
+    }
+
+
+    private ArrayList<AccountTxnVo> getRawTxnVO(PayInfo payInfo) {
+        ArrayList<AccountTxnVo> result = new ArrayList<>();
+        SpecAccountTypeEnum typeA = SpecAccountTypeEnum.findByBId(payInfo.getTypeA());
+        SpecAccountTypeEnum typeB = SpecAccountTypeEnum.findByBId(payInfo.getTypeB());
+        BigDecimal costA = null;
+        if (typeA != null && payInfo.getCostA() != null && payInfo.getCostA() != 0) {
+            AccountTxnVo accountTxnVo = new AccountTxnVo();
+            accountTxnVo.setTxnBId(typeA.getbId());
+            Long cost = payInfo.getCostA() == null ? 0L : payInfo.getCostA();
+            costA = BigDecimal.valueOf(cost);
+            accountTxnVo.setUpLoadAmt(costA);
+            accountTxnVo.setTxnAmt(costA);
+            result.add(accountTxnVo);
+        }
+
+        if (result.size() == 2 || (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0)) {
+            AccountTxnVo accountTxnVo = new AccountTxnVo();
+            accountTxnVo.setTxnBId(typeB.getbId());
+            Long cost = payInfo.getCostB() == null ? 0L : payInfo.getCostB();
+            BigDecimal costB = BigDecimal.valueOf(cost);
+            //TODO 如果存在A类充值，统一到B类扣款
+            accountTxnVo.setUpLoadAmt(costB);
+            accountTxnVo.setTxnAmt(costB);
+            result.add(accountTxnVo);
+        }
         logger.info("\nTxn对象构建完成：[{}]\n", result);
         return result;
     }
+
 }

@@ -157,7 +157,7 @@ public class CouponService implements ICouponService {
             vo.setFromCompanyId("Coupon Trans");
 
             AccountTxnVo txnVo = new AccountTxnVo();
-            txnVo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
+            txnVo.setTxnBId(bId);
             txnVo.setTxnAmt(sumDecimal);
             txnVo.setUpLoadAmt(sumDecimal);
             logger.info(String.format("提交卡券转让请求，金额%s，总计卡券数量%s，用户ID%s，卡券类型%s", txnAmt, amount, memberInfo.getMemberId(), couponCode));
