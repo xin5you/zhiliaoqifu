@@ -5,7 +5,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import com.ebeijia.zl.service.control.quartz.SpecAccountTypeBizJob;
-import com.ebeijia.zl.web.api.quartz.TelePhoneRechargeBizJob;
+import com.ebeijia.zl.service.control.quartz.TelePhoneRechargeBizJob;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.spi.JobFactory;
