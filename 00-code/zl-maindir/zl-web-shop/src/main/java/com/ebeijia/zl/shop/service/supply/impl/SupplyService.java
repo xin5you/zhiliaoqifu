@@ -27,6 +27,7 @@ import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.ebeijia.zl.shop.vo.TeleReqVO;
 import com.ebeijia.zl.shop.vo.WxPayReqDTO;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,8 @@ public class SupplyService implements ISupplyService {
     @Autowired
     private IWxPayService wxPayService;
 
-    @Value("${PHONE_CHARGE_PROVIDER:916438f8-3acc-4242-a648-90902455555}")
-    private String phoneChargeProviderId;
+    @Value("${PHONE_CHARGE_RETAIL_KEY:a5a41d8e-66a7-4ebe-bac2-7c280d888888}")
+    private String phoneChargeRetailId;
 
     @Autowired
     private ITbEcomPayOrderDetailsService payOrderDetailsDao;
@@ -124,7 +125,7 @@ public class SupplyService implements ISupplyService {
         log.setSourceBid(SpecAccountTypeEnum.B06.getbId());
         logger.info("手机直充记录日志详情：", log);
 
-        //记录LOG ID
+        //调用支付接口
         BaseResult baseResult = payService.payPhone(payInfo, memberId, dmsKey, "手机充值");
 
         if (!baseResult.getCode().equals("00")) {
@@ -135,7 +136,7 @@ public class SupplyService implements ISupplyService {
 
         MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
         TeleReqVO vo = new TeleReqVO();
-        vo.setChannelId("a5a41d8e-66a7-4ebe-bac2-7c280d666666");
+        vo.setChannelId(shopUtils.getBaseDict("ZLQF_RETAIL_MCHNT_CODE"));
         paramsMap.add("channelId", vo.getChannelId());
         vo.setMethod("hkb.api.mobile.charge");
         paramsMap.add("method", vo.getMethod());
@@ -207,17 +208,17 @@ public class SupplyService implements ISupplyService {
     public String getPhoneChargeProvider() {
         String provider = jedis.get("PHONE_CHARGE_PROVIDER");
         if (StringUtils.isEmpty(provider)) {
-            provider = logDetailDao.getPhoneChargeProvider(phoneChargeProviderId);
+            provider = logDetailDao.getPhoneChargeProvider(shopUtils.getBaseDict("PROVIDER_INF_BID_B06"));
             jedis.set("PHONE_CHARGE_PROVIDER", provider, 300);
         }
         return provider;
     }
 
     @Override
-    public Integer phoneChargeCallback(LinkedHashMap<String, String> respVO) {
-        logger.info("收到回调信息[{}]", respVO);
-        if ("1".equals(respVO.get("payState")) && "3".equals(respVO.get("rechargeState"))) {
-            String orderDmsKey = respVO.get("outerTid");
+    public Integer phoneChargeCallback(JsonNode respVO) {
+        if ("1".equals(respVO.get("payState").asText()) && "3".equals(respVO.get("rechargeState").asText())) {
+            String orderDmsKey = respVO.get("outerTid").asText();
+            logger.info("收到回调信息[{}]", orderDmsKey);
             TbEcomPayOrder payOrder = new TbEcomPayOrder();
             payOrder.setDmsRelatedKey(orderDmsKey);
             List<TbEcomPayOrder> list = payOrderDao.list(new QueryWrapper<>(payOrder));

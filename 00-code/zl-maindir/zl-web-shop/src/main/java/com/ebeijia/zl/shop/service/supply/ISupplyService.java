@@ -1,8 +1,7 @@
 package com.ebeijia.zl.shop.service.supply;
 
 import com.ebeijia.zl.shop.vo.PayInfo;
-
-import java.util.LinkedHashMap;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public interface ISupplyService {
 
@@ -12,7 +11,7 @@ public interface ISupplyService {
 
     String getPhoneChargeProvider();
 
-    Integer phoneChargeCallback(LinkedHashMap<String, String> respVO);
+    Integer phoneChargeCallback(JsonNode respVO);
 
     String outerPayPhoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo, String session);
 }
