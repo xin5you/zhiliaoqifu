@@ -190,7 +190,15 @@ public class PayService implements IPayService {
         String result = "";
         //TODO 这里的txnList仅用于保存支付信息，未来建议直接处理payInfo
         List<AccountTxnVo> rawList = getRawTxnVO(payInfo);
+        Long sum = 0L;
+        sum += payInfo.getCostA() == null ? 0L : payInfo.getCostA();
+        sum += payInfo.getCostB() == null ? 0L : payInfo.getCostB();
 
+        BigDecimal accountInfAccBalByUser = accountQueryFacade.getAccountInfAccBalByUser(UserType.TYPE300.getCode(), null, mchntCode, UserChnlCode.USERCHNL1001.getCode(), SpecAccountTypeEnum.findByBId(payInfo.getTypeB()).getbId());
+        if (accountInfAccBalByUser.longValue() < sum) {
+            logger.error(String.format("分销端支付失败,参数%s,%s,%s", payInfo, memberId, desc));
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "分销端账户余额不足");
+        }
         BaseResult baseResult = executeConsume(payInfo, memberId, dmsRelatedKey, desc, mchntCode);
 
         Object object = baseResult.getObject();
@@ -202,20 +210,6 @@ public class PayService implements IPayService {
         }
         //判断result
         logger.info(String.format("用户端支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
-
-        //TODO 关联两次请求
-        String nextId = IdUtil.getNextId();
-        baseResult = executeRetailConsume(payInfo,nextId , desc, mchntCode);
-        object = baseResult.getObject();
-        if (object instanceof String) {
-            result = (String) object;
-        } else {
-            logger.error(String.format("分销端支付失败,参数%s,%s,%s,%s", payInfo, memberId, nextId, desc));
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "分销端账户余额不足");
-        }
-        //判断result
-        logger.info(String.format("分销端支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
-
 
         //构造payOrder对象
         String payOrderId = IdUtil.getNextId();
@@ -239,6 +233,19 @@ public class PayService implements IPayService {
             payOrderDetails.setPayStatus("2");
             payOrderDetailsDao.save(payOrderDetails);
         }
+
+        //TODO 关联两次请求
+        String nextId = IdUtil.getNextId();
+        BaseResult retailBaseResult = executeRetailConsume(payInfo, nextId, desc, mchntCode);
+        object = retailBaseResult.getObject();
+        if (object instanceof String) {
+            result = (String) object;
+        } else {
+            logger.error(String.format("分销端支付失败,参数%s,%s,%s,%s", payInfo, memberId, nextId, desc));
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "分销端账户余额不足");
+        }
+        //判断result
+        logger.info(String.format("分销端支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
         return baseResult;
     }
 
@@ -722,7 +729,7 @@ public class PayService implements IPayService {
      */
     private BaseResult executeConsume(PayInfo payInfo, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
-        req = processPayInfo(payInfo,req);
+        req = processPayInfo(payInfo, req);
         //交易与渠道
         if (req.getAddList() != null) {
             req.setTransId(CW71.getCode());
@@ -760,7 +767,7 @@ public class PayService implements IPayService {
     private BaseResult executeRetailConsume(PayInfo payInfo, String dmsRelatedKey, String desc, String mchntCode) {
         AccountConsumeReqVo req = new AccountConsumeReqVo();
         List<AccountTxnVo> addList = new LinkedList<>();
-        req = processPayInfo(payInfo,req);
+        req = processPayInfo(payInfo, req);
         req.setAddList(null);
         //交易与渠道
         req.setTransId(TransCode.MB10.getCode());
@@ -849,12 +856,10 @@ public class PayService implements IPayService {
             accountTxnVo.setTxnBId(typeB.getbId());
             Long cost = payInfo.getCostB() == null ? 0L : payInfo.getCostB();
             BigDecimal costB = BigDecimal.valueOf(cost);
-            //TODO 如果存在A类充值，统一到B类扣款
             accountTxnVo.setUpLoadAmt(costB);
             accountTxnVo.setTxnAmt(costB);
             result.add(accountTxnVo);
         }
-        logger.info("\nTxn对象构建完成：[{}]\n", result);
         return result;
     }
 
