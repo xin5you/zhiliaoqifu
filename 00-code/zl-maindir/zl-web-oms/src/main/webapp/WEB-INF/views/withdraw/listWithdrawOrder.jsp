@@ -66,12 +66,12 @@
 							<fmt:formatDate value="${createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 						</td>
 						<td>
-							<%--<sec:authorize access="hasRole('ROLE_PROVIDER_OPENACCOUNT')">--%>
+							<%--<sec:authorize access="hasRole('ROLE_WITHDRAW_VIEW')">
 								<a batchNo="${entity.batchNo}" title="详情" class="btn-mini btn-view" href="#"><i class="icon-search"></i></a>
-							<%--</sec:authorize>--%>
-							<%--<sec:authorize access="hasRole('ROLE_PROVIDER_OPENACCOUNT')">--%>
+							</sec:authorize>--%>
+							<sec:authorize access="hasRole('ROLE_WITHDRAW_DETAIL_LIST')">
 								<a batchNo="${entity.batchNo}" title="订单明细" class="btn-mini btn-detail" href="#"><i class="icon-search"></i></a>
-							<%--</sec:authorize>--%>
+							</sec:authorize>
 						</td>
 					</tr>
 				</c:forEach>

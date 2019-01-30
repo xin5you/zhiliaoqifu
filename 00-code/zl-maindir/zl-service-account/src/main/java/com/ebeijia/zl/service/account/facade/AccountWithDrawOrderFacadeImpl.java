@@ -1,6 +1,8 @@
 package com.ebeijia.zl.service.account.facade;
 
 import com.ebeijia.zl.common.utils.enums.TransCode;
+import com.ebeijia.zl.common.utils.enums.WithdrawReceiverTypeEnum;
+import com.ebeijia.zl.common.utils.enums.WithdrawStatusEnum;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawDetail;
 import com.ebeijia.zl.facade.account.dto.AccountWithdrawOrder;
@@ -110,6 +112,8 @@ public class AccountWithDrawOrderFacadeImpl implements AccountWithDrawOrderFacad
 			for (AccountWithdrawDetail o : list) {
 				o.setTransAmount(new BigDecimal(NumberUtils.RMBCentToYuan(o.getTransAmount().toString())));
 				o.setUploadAmount(new BigDecimal(NumberUtils.RMBCentToYuan(o.getUploadAmount().toString())));
+				o.setSuccess(WithdrawStatusEnum.findByBId(o.getSuccess()).getName());
+				o.setReceiverType(WithdrawReceiverTypeEnum.findByBId(o.getReceiverType()).getName());
 			}
 		}
 		PageInfo<AccountWithdrawDetail> page = new PageInfo<AccountWithdrawDetail>(list);
