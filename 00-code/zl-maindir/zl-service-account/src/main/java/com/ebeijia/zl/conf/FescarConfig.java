@@ -21,6 +21,6 @@ public class FescarConfig {
      */
     @Bean
     public GlobalTransactionScanner globalTransactionScanner(){
-        return new GlobalTransactionScanner("account-gts-fescar-dubbo", "itf_tx_group");
+        return new GlobalTransactionScanner("zl-service-account", "zl_tx_group");
     }
 }
