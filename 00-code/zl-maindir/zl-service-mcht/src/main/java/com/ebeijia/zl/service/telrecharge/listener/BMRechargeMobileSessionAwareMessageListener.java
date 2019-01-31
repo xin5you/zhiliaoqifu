@@ -75,6 +75,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 	 */
 	@Override
 	public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+		logger.info("start consume message...");
 		if(CollectionUtils.isEmpty(msgs)){
 			//接受到的消息为空，不处理，直接返回成功
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
