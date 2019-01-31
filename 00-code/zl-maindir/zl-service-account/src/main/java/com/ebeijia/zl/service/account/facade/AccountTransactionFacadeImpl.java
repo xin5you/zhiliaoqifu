@@ -534,13 +534,13 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 				null);
 		//企业信息
 		intfaceTransLog.setTransDesc(req.getTransDesc());
-		intfaceTransLog.setAdditionalInfo(req.getTransList() !=null ?JSONArray.toJSONString(req.getTransList()):"");
+		intfaceTransLog.setAdditionalInfo(req.getRefundList() !=null ?JSONArray.toJSONString(req.getRefundList()):"");
 		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
 
 		//执行操作
 		boolean eflag=false;
 		try {
-			intfaceTransLog.setTransList(req.getTransList());//多专项账户类型
+			intfaceTransLog.setRefundList(req.getRefundList());//多专项账户类型
 			eflag=transLogService.execute(intfaceTransLog);
 		} catch (AccountBizException accountBizException) {
 			log.error("退款操作-executeRefund error:{}",accountBizException);

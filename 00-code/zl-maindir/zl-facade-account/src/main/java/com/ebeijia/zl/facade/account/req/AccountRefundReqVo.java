@@ -36,7 +36,7 @@ public class AccountRefundReqVo extends BaseTxnReq{
 	/**
 	 * 专项账户交易列表
 	 */
-	private List<AccountTxnVo> transList;
+	private List<AccountRefundVo> refundList;
 	
     public String getOrgItfPrimaryKey() {
 		return orgItfPrimaryKey;
@@ -54,21 +54,21 @@ public class AccountRefundReqVo extends BaseTxnReq{
 		this.orgDmsRelatedKey = orgDmsRelatedKey;
 	}
 
-	public List<AccountTxnVo> getTransList() {
-		return transList;
+
+	public List<AccountRefundVo> getRefundList() {
+		return refundList;
 	}
 
-	public void setTransList(List<AccountTxnVo> transList) {
-		this.transList = transList;
+	public void setRefundList(List<AccountRefundVo> refundList) {
+		this.refundList = refundList;
 	}
-
 
 	@Override
 	public String toString() {
 		return "AccountRefundReqVo{" +
 				"orgItfPrimaryKey='" + orgItfPrimaryKey + '\'' +
 				", orgDmsRelatedKey='" + orgDmsRelatedKey + '\'' +
-				", transList=" + transList +
+				", refundList=" + refundList +
 				'}' + super.toString();
 	}
 }

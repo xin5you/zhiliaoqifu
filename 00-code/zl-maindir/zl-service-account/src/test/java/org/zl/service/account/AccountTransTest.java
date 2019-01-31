@@ -187,7 +187,7 @@ public class AccountTransTest {
  }*/
 
 
-   @Test
+ /*  @Test
    public void executeConsumeToRetail() throws Exception{
 
 	   AccountConsumeReqVo req=new AccountConsumeReqVo();
@@ -212,7 +212,7 @@ public class AccountTransTest {
     	req.setTransDesc("分销商消费");
 	   BaseResult result=accountTransactionFacade.executeConsume(req);
 	   System.out.println("分销商消费:"+JSONArray.toJSONString(result));
-   }
+   }*/
 
 	/**
 	 * 用户提现操作
@@ -379,4 +379,34 @@ public class AccountTransTest {
 		BaseResult result=accountTransactionFacade.executeConsume(req);
 		System.out.println("消费 A类+B类:"+JSONArray.toJSONString(result));
 	}*/
+
+
+
+		@Test
+	public void executeRefundToUser() throws Exception{
+
+		AccountRefundReqVo req=new AccountRefundReqVo();
+		req.setTransId(TransCode.CW11.getCode());
+		req.setTransChnl(TransChnl.CHANNEL8.toString());
+		req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
+		req.setUserChnlId("02bf6ae1-ea47-4987-bf5f-2353d3cf4321");
+		req.setUserType(UserType.TYPE100.getCode());
+		req.setOrgItfPrimaryKey("30f74e5f-fa8e-4294-814c-0c98e4bacb92");
+		req.setOrgDmsRelatedKey("35509b6f-f5fa-477c-9510-199f59adcc99");
+
+		AccountRefundVo vo=new AccountRefundVo();
+		vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
+		vo.setTxnAmt(new BigDecimal(100));
+		vo.setUpLoadAmt(new BigDecimal(100));
+		vo.setPriConsumeBId(SpecAccountTypeEnum.B01.getbId());
+		List list=new ArrayList();
+		list.add(vo);
+
+		req.setRefundList(list);
+		req.setDmsRelatedKey(IdUtil.getNextId());
+		req.setTransDesc("手机13501755206充值失败退款");
+		BaseResult result=accountTransactionFacade.executeRefund(req);
+		System.out.println("退款:"+JSONArray.toJSONString(result));
+	}
+
 }

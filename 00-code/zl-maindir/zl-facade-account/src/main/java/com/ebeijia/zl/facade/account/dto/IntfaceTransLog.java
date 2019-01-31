@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import com.ebeijia.zl.facade.account.req.AccountQuickPayVo;
+import com.ebeijia.zl.facade.account.req.AccountRefundVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -275,6 +276,10 @@ public class IntfaceTransLog extends Model<IntfaceTransLog> {
 
     @TableField(exist=false)
     private List<AccountQuickPayVo> addList;
+
+
+    @TableField(exist=false)
+    private List<AccountRefundVo> refundList;
 
     @TableField(exist=false)
     private AccountWithdrawDetail withdrawDetail; //提现操作
