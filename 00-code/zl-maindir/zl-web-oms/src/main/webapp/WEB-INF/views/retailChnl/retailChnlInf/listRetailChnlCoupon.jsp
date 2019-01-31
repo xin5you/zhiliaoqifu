@@ -75,7 +75,7 @@
 						<td><input type="checkbox" name="couponId" value="${entity.couponId}" class="checkbox couponId"/></td>
 						<td>${entity.couponName}</td>
 						<td>${entity.BId}</td>
-						<td>${entity.price}</td>
+						<td>${entity.price / 100}</td>
 						<td>${entity.transStat}</td>
 						<td>
 							<jsp:useBean id="createTime" class="java.util.Date"/>
