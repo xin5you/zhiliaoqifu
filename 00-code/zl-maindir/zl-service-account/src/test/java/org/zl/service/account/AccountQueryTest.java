@@ -79,11 +79,11 @@ public class AccountQueryTest {
 	 */
 	@Test
 	public void getAccountAclByUser() throws Exception{
-		String userType=UserType.TYPE400.getCode();
+		String userType=UserType.TYPE300.getCode();
 		String userId=null;
-		String userChnlId="a5a41d8e-66a7-4ebe-bac2-7c280d666666";
+		String userChnlId="8f3391cb-5150-4b21-9173-8a98639cfec5";
 		String userChnl=UserChnlCode.USERCHNL1001.getCode();
-		String bId=SpecAccountTypeEnum.B06.getCode();
+		String bId=SpecAccountTypeEnum.B08.getbId();
 		BigDecimal accBal=accountQueryFacade.getAccountInfAccBalByUser(userType,userId,userChnlId,userChnl,bId);
 		System.out.println(JSONArray.toJSONString(accBal));
 	}

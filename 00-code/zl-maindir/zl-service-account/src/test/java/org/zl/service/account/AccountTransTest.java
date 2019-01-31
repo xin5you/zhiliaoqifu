@@ -187,25 +187,32 @@ public class AccountTransTest {
  }*/
 
 
- /*  @Test
+   @Test
    public void executeConsumeToRetail() throws Exception{
 
 	   AccountConsumeReqVo req=new AccountConsumeReqVo();
     	req.setTransId(TransCode.MB10.getCode());
-    	req.setTransChnl(TransChnl.CHANNEL0.toString());
+    	req.setTransChnl(TransChnl.CHANNEL6.toString());
     	req.setUserChnl(UserChnlCode.USERCHNL1001.getCode());
     	req.setUserChnlId("a5a41d8e-66a7-4ebe-bac2-7c280d666666");
     	req.setUserType(UserType.TYPE400.getCode());
-    	req.setTransAmt(new BigDecimal(1000));
-    	req.setUploadAmt(new BigDecimal(1000));
+
+	   AccountTxnVo vo=new AccountTxnVo();
+	   vo.setTxnBId(SpecAccountTypeEnum.B05.getbId());
+	   vo.setTxnAmt(new BigDecimal(2450));
+	   vo.setUpLoadAmt(new BigDecimal(2450));
+	   List list=new ArrayList();
+	   list.add(vo);
+	   req.setTransList(list);
+
     	req.setDmsRelatedKey(IdUtil.getNextId());
-    	req.setPriBId(SpecAccountTypeEnum.B06.getbId());
+    	req.setPriBId(SpecAccountTypeEnum.B05.getbId());
 	    req.setMchntCode("ba88a6d0-0f07-42d7-805c-735aa3c177bd");
+	   req.setTargetMchtCode("8f3391cb-5150-4b21-9173-8a98639cfec5");
     	req.setTransDesc("分销商消费");
 	   BaseResult result=accountTransactionFacade.executeConsume(req);
 	   System.out.println("分销商消费:"+JSONArray.toJSONString(result));
    }
-*/
 
 	/**
 	 * 用户提现操作
@@ -336,24 +343,23 @@ public class AccountTransTest {
 	 * 消费 A类+类
 	 * @throws Exception
 	 */
-	@Test
-	public void executeConsumeToUser() throws Exception{
+/*	@Test*/
+/*	public void executeConsumeToUser() throws Exception{
 
 		AccountConsumeReqVo req=new AccountConsumeReqVo();
 		req.setTransId(TransCode.CW71.getCode());
 		req.setTransChnl(TransChnl.CHANNEL6.toString());
 		req.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
-		req.setUserChnlId("c645d21c-4f21-4222-9373-d1a5a749f69d");
+		req.setUserChnlId("02bf6ae1-ea47-4987-bf5f-2353d3cf4321");
 		req.setUserType(UserType.TYPE100.getCode());
 		req.setDmsRelatedKey(IdUtil.getNextId());
-		req.setMchntCode("abe7cf7b-1238-49fb-9113-61d6f6bc6cf8");
-		req.setTargetMchtCode("b5f14d5e-c99d-4aa0-aca5-acac3ce45349");
+		req.setMchntCode("ba88a6d0-0f07-42d7-805c-735aa3c177bd");
 		req.setTransDesc("商品购物");
 
 		//充值的加款
 		List<AccountQuickPayVo> addlist=new ArrayList<AccountQuickPayVo>();
 		AccountQuickPayVo quickPayVo =new AccountQuickPayVo();
-		quickPayVo.setTfrInBId(SpecAccountTypeEnum.B01.getbId());
+		quickPayVo.setTfrInBId(SpecAccountTypeEnum.B05.getbId());
 		quickPayVo.setTfrInAmt(new BigDecimal(2000));
 
 		quickPayVo.setTfrOutBId(SpecAccountTypeEnum.A01.getbId());
@@ -364,7 +370,7 @@ public class AccountTransTest {
 		//交易扣款
 		List translist=new ArrayList();
 		AccountTxnVo vo=new AccountTxnVo();
-		vo.setTxnBId(SpecAccountTypeEnum.B01.getbId());
+		vo.setTxnBId(SpecAccountTypeEnum.B05.getbId());
 		vo.setTxnAmt(new BigDecimal(2000));
 		vo.setUpLoadAmt(new BigDecimal(2000));
 
@@ -372,5 +378,5 @@ public class AccountTransTest {
 		req.setTransList(translist);
 		BaseResult result=accountTransactionFacade.executeConsume(req);
 		System.out.println("消费 A类+B类:"+JSONArray.toJSONString(result));
-	}
+	}*/
 }
