@@ -26,14 +26,14 @@
 							<form id="mainForm" class="form-horizontal form_validation_tip" method="post">
 								 <h3 class="heading">新增用户</h3>
 						         <div class="control-group">
-						             <label class="control-label">登录名</label>
+						             <label class="control-label">登录名<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="loginname" name="loginname" maxlength="20"/>
 						                 <span class="help-block"></span>
 						             </div>
 						         </div>
 						         <div class="control-group">
-						             <label class="control-label">姓名</label>
+						             <label class="control-label">姓名<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="name" name="name" maxlength="20"/>
 						                 <span class="help-block"></span>
@@ -41,7 +41,7 @@
 						         </div>
 						
 						         <div class="control-group">
-						             <label class="control-label">密码</label>
+						             <label class="control-label">密码<span style="color:red">*</span></label>
 						             <div class="controls">
 						                 <input type="text" class="span6" id="password" name="password" minlength="6" maxlength="15"/>
 						                 <span class="help-block"></span>
@@ -68,7 +68,7 @@
 						         </div>
 						         
 						         <div class="control-group">
-						             <label class="control-label">角色</label> 
+						             <label class="control-label">角色<span style="color:red">*</span></label>
 						             <div class="controls">
 						                  <select multiple class="form-control span6" id="roleIds" name="roleIds">
 											 <c:forEach var="role" items="${roleList}" varStatus="st">
