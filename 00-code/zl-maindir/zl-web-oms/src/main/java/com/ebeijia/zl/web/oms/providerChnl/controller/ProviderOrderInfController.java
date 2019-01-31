@@ -44,7 +44,9 @@ public class ProviderOrderInfController {
 			List<ProviderOrderInf> orderList = pageList.getList();
 			if (orderList != null && orderList.size() > 0) {
 				for (ProviderOrderInf o : orderList) {
-					o.setRegTxnAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRegTxnAmt().toString())));
+					if (!StringUtil.isNullOrEmpty(o.getRegTxnAmt())) {
+						o.setRegTxnAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRegTxnAmt().toString())));
+					}
 				}
 			}
 			mv.addObject("pageInfo", pageList);

@@ -48,7 +48,8 @@
 		p.revoke_message,
 		p.bill_id,
 		p.operate_time,
-		p.oper_num
+		p.oper_num,
+		p.reg_txn_amt
 	</sql>
 
 
