@@ -216,7 +216,9 @@ public class SupplyService implements ISupplyService {
 
     @Override
     public Integer phoneChargeCallback(JsonNode respVO) {
-        if ("1".equals(respVO.get("payState").asText()) && "3".equals(respVO.get("rechargeState").asText())) {
+        String rechargeState = respVO.get("rechargeState").asText();
+        boolean isFail = "3".equals(rechargeState) || "9".equals(rechargeState);
+        if ("2".equals(respVO.get("payState").asText()) && isFail) {
             String orderDmsKey = respVO.get("outerTid").asText();
             logger.info("收到回调信息[{}]", orderDmsKey);
             TbEcomPayOrder payOrder = new TbEcomPayOrder();
