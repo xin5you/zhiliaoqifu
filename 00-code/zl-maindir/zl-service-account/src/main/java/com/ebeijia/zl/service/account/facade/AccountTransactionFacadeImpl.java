@@ -129,7 +129,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		intfaceTransLog.setMchntCode(req.getFromCompanyId());
 		intfaceTransLog.setTransDesc(req.getTransDesc());
 		intfaceTransLog.setAdditionalInfo(req.getTransList() !=null ?JSONArray.toJSONString(req.getTransList()):"");
-		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
+		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 		//执行操作
 		boolean eflag=false;
 		try {
@@ -322,7 +322,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	intfaceTransLog.setMchntCode(fromUserInf.getCompanyId());
 	//保存转账类型信息
 	intfaceTransLog.setAdditionalInfo(JSONObject.toJSONString(req));
-	intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
+	intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 	
 	//执行操作
 	boolean eflag=false; 
@@ -535,7 +535,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 		//企业信息
 		intfaceTransLog.setTransDesc(req.getTransDesc());
 		intfaceTransLog.setAdditionalInfo(req.getRefundList() !=null ?JSONArray.toJSONString(req.getRefundList()):"");
-		intfaceTransLogService.saveOrUpdate(intfaceTransLog);  //保存接口处交易日志
+		intfaceTransLogService.save(intfaceTransLog);  //保存接口处交易日志
 
 		//执行操作
 		boolean eflag=false;
