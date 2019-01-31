@@ -50,7 +50,7 @@
 								<td><span th:text="${specStat.count}"></span></td>
 								<td><span th:text="${spec.specValueId}"></span></td>
 								<td><span th:text="${spec.specName}"></span></td>
-								<td><span th:text="${spec.specValueName}"></span></td>
+								<td style="width: 30%;"><span th:text="${spec.specValueName}"></span></td>
 								<td><span th:text="${spec.specValue}"></span></td>
 								<!--<td>
 									<span  th:if="${spec.specImage} != null">
@@ -95,7 +95,7 @@
 						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>规格值名称：</label>
 							<div class="controls">
-								<input type="text" class="span3" name="spec_value_name" id="spec_value_name" maxlength="100"/>
+								<input type="text" class="span3" name="spec_value_name" id="spec_value_name" maxlength="20"/>
 								<span class="help-block"></span>
 							</div>
 						</div>

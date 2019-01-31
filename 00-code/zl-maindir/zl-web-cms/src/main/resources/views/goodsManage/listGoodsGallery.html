@@ -56,7 +56,8 @@
 								<td><span th:text="${gallery.thumbnail}"></span></td>
 								<td>
 									<span  th:if="${gallery.original} != null">
-										<a th:href="${gallery.original}">[[${gallery.original}]]</a>
+										<img th:if="${gallery.original} != null" th:src="${gallery.original}" style="height: 200px; width: 200px;"/>
+										<!--<a th:href="${gallery.original}">[[${gallery.original}]]</a>-->
 									</span>
 								</td>
 								<td><span th:text="${gallery.small}"></span></td>
