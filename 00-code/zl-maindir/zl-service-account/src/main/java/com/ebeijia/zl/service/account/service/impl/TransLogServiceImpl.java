@@ -266,12 +266,12 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				List<AccountQuickPayVo> addList = intfaceTransLog.getAddList();
 				if (addList != null && addList.size() > 0) {
 					for (AccountQuickPayVo accountQuickPayVo : addList) {
-						this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), accountQuickPayVo.getTfrInAmt(),accountQuickPayVo.getTfrInAmt(),TransCode.CW71.getCode());
+						this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), accountQuickPayVo.getTfrInAmt(),accountQuickPayVo.getTfrInAmt(),TransCode.CW50.getCode());
 						if(accountQuickPayVo.getTfrOutAmt() !=null  && AmountUtil.bigger(accountQuickPayVo.getTfrOutAmt(),new BigDecimal(0))) {
-							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),null);
-						} }
-				}
-			}
+							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),TransCode.CW71.getCode());
+				}						} }
+
+	}
 
 			//消费扣款
 			List<AccountTxnVo> transList = intfaceTransLog.getTransList();

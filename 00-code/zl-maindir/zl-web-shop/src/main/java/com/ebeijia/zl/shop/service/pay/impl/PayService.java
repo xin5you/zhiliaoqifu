@@ -1,5 +1,6 @@
 package com.ebeijia.zl.shop.service.pay.impl;
 
+import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
@@ -184,6 +185,7 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    @GlobalTransactional(timeoutMills = 300000,name = "order")
     public BaseResult payOrder(PayInfo payInfo, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
 
         //请求支付
@@ -316,6 +318,7 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    @GlobalTransactional(timeoutMills = 300000,name = "phone")
     public BaseResult payPhone(PayInfo vo, String memberId, String dmsRelatedKey, String desc) {
         //请求支付
         String result = "";

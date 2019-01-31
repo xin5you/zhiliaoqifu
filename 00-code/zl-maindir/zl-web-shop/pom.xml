@@ -25,13 +25,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        
-        		<!-- 确保内嵌的servlet容器不能干扰war包将部署的servlet容器 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
+
+        <!-- 确保内嵌的servlet容器不能干扰war包将部署的servlet容器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-core-rocketmq</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
 
         <!-- ZK服务依赖 -->
@@ -136,34 +136,39 @@
         <dependency>
             <groupId>com.ebeijia</groupId>
             <artifactId>zl-facade-account</artifactId>
-            <version>1.0.0.RELEASE</version>
+            <version>${ebj.zl.version}</version>
         </dependency>
         <!-- ZK Facade -->
 
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-fescar-core</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
 
     </dependencies>
 
 
     <build>
-    	<finalName>web-shop</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-		</plugins>
+        <finalName>web-shop</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
