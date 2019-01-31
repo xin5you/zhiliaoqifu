@@ -64,7 +64,13 @@ public class TransLog extends Model<TransLog> {
      */
     @TableField("trans_number")
     private int transNumber=1;
- 
+
+    /**
+     * 交易来源
+     */
+    @TableField("source_txn_primary_key")
+    private String sourceTxnPrimaryKey;
+
     /**
      * 交易类型代码
      */

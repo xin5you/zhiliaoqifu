@@ -219,11 +219,11 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			if(transList !=null && transList.size()>0){
 				//商户 多账户类型充值
 				for (AccountTxnVo accountTxnVo : transList) {
-					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),null);
+					this.addToVoList(IdUtil.getNextId(),null,voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),null);
 				}
 			}else {
 				//商户充值
-				this.addToVoList(voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);
+				this.addToVoList(IdUtil.getNextId(),null,voList, intfaceTransLog, null, null, AccountCardAttrEnum.ADD.getValue(), 0);
 			}
 
 		}else if (TransCode.MB40.getCode().equals(intfaceTransLog.getTransId())) {
@@ -231,26 +231,30 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 			if (transList != null && transList.size() > 0) {
 				//商户 多账户类型之间转账
 				for (AccountTxnVo accountTxnVo : transList) {
+					String txnPrimaryKey=IdUtil.getNextId();
 					//商户转账
-					this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),null);
-					this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),null);
+					this.addToVoList(txnPrimaryKey,null,voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),null);
+					this.addToVoList(IdUtil.getNextId(),txnPrimaryKey,voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), accountTxnVo.getTxnBId(), AccountCardAttrEnum.ADD.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),null);
 				}
 			} else {
 				//商户转账
-				this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
-				this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
+				String txnPrimaryKey=IdUtil.getNextId();
+				this.addToVoList(txnPrimaryKey,null,voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
+				this.addToVoList(IdUtil.getNextId(),txnPrimaryKey,voList, intfaceTransLog, intfaceTransLog.getTfrInUserId(), intfaceTransLog.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), 1);
 			}
 		}
 		else if (TransCode.CW50.getCode().equals(intfaceTransLog.getTransId())){
-			this.addToVoList(voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
+			this.addToVoList(IdUtil.getNextId(),null,voList, intfaceTransLog,null,null, AccountCardAttrEnum.ADD.getValue(), 0);
 
 		}else if (TransCode.MB50.getCode().equals(intfaceTransLog.getTransId())){
 			//企业员工充值 从企业的通卡账户，转入到员工的专项账户里面
-			this.addToVoList(voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
+			String txnPrimaryKey=IdUtil.getNextId();
+			this.addToVoList(txnPrimaryKey,null,voList, intfaceTransLog, intfaceTransLog.getTfrOutUserId(), intfaceTransLog.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), 0);
 
 			TransLog transLog2=new TransLog();
 			this.newTransLog(intfaceTransLog, transLog2);
 			transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+			transLog2.setSourceTxnPrimaryKey(txnPrimaryKey);
 			transLog2.setUserId(intfaceTransLog.getTfrInUserId());
 			transLog2.setPriBId(intfaceTransLog.getTfrInBId());
 			transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
@@ -267,11 +271,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 				//快捷消费，先充值
 				List<AccountQuickPayVo> addList = intfaceTransLog.getAddList();
 				if (addList != null && addList.size() > 0) {
+                    String txnPrimaryKey=null;
 					for (AccountQuickPayVo accountQuickPayVo : addList) {
-						this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), accountQuickPayVo.getTfrInAmt(),accountQuickPayVo.getTfrInAmt(),TransCode.CW50.getCode());
-						if(accountQuickPayVo.getTfrOutAmt() !=null  && AmountUtil.bigger(accountQuickPayVo.getTfrOutAmt(),new BigDecimal(0))) {
-							this.addToVoList(voList, intfaceTransLog, null, accountQuickPayVo.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),TransCode.CW71.getCode());
-				}						} }
+                        if(accountQuickPayVo.getTfrOutAmt() !=null  && AmountUtil.bigger(accountQuickPayVo.getTfrOutAmt(),new BigDecimal(0))) {
+                            txnPrimaryKey=IdUtil.getNextId();
+                            this.addToVoList(txnPrimaryKey,null,voList, intfaceTransLog, null, accountQuickPayVo.getTfrOutBId(), AccountCardAttrEnum.SUB.getValue(), accountQuickPayVo.getTfrOutAmt(), accountQuickPayVo.getTfrOutAmt(),TransCode.CW71.getCode());
+                        }
+						this.addToVoList(IdUtil.getNextId(),txnPrimaryKey,voList, intfaceTransLog, null, accountQuickPayVo.getTfrInBId(), AccountCardAttrEnum.ADD.getValue(), accountQuickPayVo.getTfrInAmt(),accountQuickPayVo.getTfrInAmt(),TransCode.CW50.getCode());
+				    }
+				}
 
 	}
 
@@ -295,15 +303,17 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 				for (AccountTxnVo accountTxnVo : transList) {
 					String transId=null;
+					String txnPrimaryKey=IdUtil.getNextId();
 					if (TransCode.CW71.getCode().equals(intfaceTransLog.getTransId())) {
 						transId=TransCode.CW10.getCode();
 					}
-					this.addToVoList(voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),transId);
+					this.addToVoList(txnPrimaryKey,null,voList, intfaceTransLog, null, accountTxnVo.getTxnBId(), AccountCardAttrEnum.SUB.getValue(), accountTxnVo.getTxnAmt(),accountTxnVo.getUpLoadAmt(),transId);
 
 					//商户收款
 					transLog2=new TransLog();
 					this.newTransLog(intfaceTransLog, transLog2);
 					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+                    transLog2.setSourceTxnPrimaryKey(txnPrimaryKey);
 					transLog2.setUserId(intfaceTransLog.getTfrInUserId());
 					transLog2.setPriBId(accountTxnVo.getTxnBId());
 					transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
@@ -319,8 +329,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 						BigDecimal providerTxnAmt=AmountUtil.mul(accountTxnVo.getUpLoadAmt(),providerRate); //结算金额 等于上送的金额 * 折扣率
 
 						transLog2=new TransLog();
+                        txnPrimaryKey=IdUtil.getNextId();
 						this.newTransLog(intfaceTransLog, transLog2);
-						transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+						transLog2.setTxnPrimaryKey(txnPrimaryKey);
 						transLog2.setUserId(intfaceTransLog.getTfrInUserId());
 						transLog2.setPriBId(accountTxnVo.getTxnBId());
 						transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
@@ -333,6 +344,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 						transLog2=new TransLog();
 						this.newTransLog(intfaceTransLog, transLog2);
 						transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+						transLog2.setSourceTxnPrimaryKey(txnPrimaryKey); //加的数据来源于减少的数据
 						transLog2.setUserId(tarMchntUserInf.getUserId()); //目标商户
 						transLog2.setPriBId(accountTxnVo.getTxnBId());
 						transLog2.setCardAttr(AccountCardAttrEnum.ADD.getValue());
@@ -374,11 +386,10 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 						loseFee = billingType.getLoseFee(); //指的是账户转卖代金券的折损率，
 					}
 					BigDecimal transAmt = AmountUtil.mul(accountTxnVo.getTxnAmt(), AmountUtil.sub(new BigDecimal(1), loseFee)); //扣除折损率后，到账金额
-					this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), transAmt,accountTxnVo.getUpLoadAmt(),null);
-
+					String txnPrimaryKey=IdUtil.getNextId();
 					transLog2=new TransLog();
 					this.newTransLog(intfaceTransLog, transLog2);
-					transLog2.setTxnPrimaryKey(IdUtil.getNextId());
+					transLog2.setTxnPrimaryKey(txnPrimaryKey);
 					transLog2.setUserId(mchntUserInf.getUserId()); //平台用户
 					transLog2.setPriBId(SpecAccountTypeEnum.A01.getbId());
 					transLog2.setCardAttr(AccountCardAttrEnum.SUB.getValue());
@@ -388,6 +399,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 					transLog2.setTransAmt(transAmt);
 					transLog2.setUploadAmt(accountTxnVo.getUpLoadAmt());
 					addToVoList(voList,transLog2,voList.size());
+
+					this.addToVoList(IdUtil.getNextId(),txnPrimaryKey,voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), transAmt,accountTxnVo.getUpLoadAmt(),null);
+
 				}
 			}
 		}else if (TransCode.MB90.getCode().equals(intfaceTransLog.getTransId()) || TransCode.CW91.getCode().equals(intfaceTransLog.getTransId())){
@@ -445,7 +459,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		}
 		}else if (TransCode.CW99.getCode().equals(intfaceTransLog.getTransId())){
 			//快捷充值
-			this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), 0);
+			this.addToVoList(IdUtil.getNextId(),null,voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), 0);
 
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.CW74.getCode().equals(intfaceTransLog.getTransId())
@@ -569,9 +583,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	 * @param cardAttr  操作类型
 	 * @param order 操作顺序
 	 */
-	private void addToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,int order){
+	private void addToVoList(String txnPrimaryKey,String sourceTxnPrimaryKey,List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,int order){
 		TransLog transLog=new TransLog();
-		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		transLog.setTxnPrimaryKey(txnPrimaryKey);
 		this.newTransLog(intfaceTransLog, transLog);
 		if(StringUtil.isNotEmpty(userId)){
 			transLog.setUserId(userId);
@@ -582,10 +596,15 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		if(StringUtil.isNotEmpty(cardAttr)){
 			transLog.setCardAttr(cardAttr);
 		}
+		if(StringUtil.isNotEmpty(sourceTxnPrimaryKey)){
+			transLog.setSourceTxnPrimaryKey(sourceTxnPrimaryKey);
+		}
 		addToVoList(voList,transLog,order);
 	}
 
 	/**
+     * @param txnPrimaryKey
+     * @param sourceTxnPrimaryKey
 	 * @param voList  交易日志列表
 	 * @param intfaceTransLog  交易流水记录表
 	 * @param userId  用户ID
@@ -595,9 +614,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 	 * @param upLoadAmt  交易金额
 	 * @param transId 交易Id
 	 */
-	private void addToVoList(List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,BigDecimal transAmt,BigDecimal upLoadAmt,String transId){
+	private void addToVoList(String txnPrimaryKey,String sourceTxnPrimaryKey,List<TransLog> voList,IntfaceTransLog intfaceTransLog,String userId,String bId,String cardAttr ,BigDecimal transAmt,BigDecimal upLoadAmt,String transId){
 		TransLog transLog=new TransLog();
-		transLog.setTxnPrimaryKey(IdUtil.getNextId());
+		transLog.setTxnPrimaryKey(txnPrimaryKey);
 		this.newTransLog(intfaceTransLog, transLog);
 		if(StringUtil.isNotEmpty(userId)){
 			transLog.setUserId(userId);
@@ -618,6 +637,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		if(StringUtil.isNotEmpty(transId)){
 			transLog.setTransId(transId);
 		}
+        if(StringUtil.isNotEmpty(sourceTxnPrimaryKey)){
+            transLog.setSourceTxnPrimaryKey(sourceTxnPrimaryKey);
+        }
 		addToVoList(voList,transLog,voList.size());
 	}
 

@@ -271,6 +271,10 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 	}
 
 	public void doTelRechargeBackNotify(RetailChnlInf retailChnlInf,RetailChnlOrderInf retailChnlOrderInf,ProviderOrderInf telProviderOrderInf) {
+
+     	logger.info("#话费充值回调，供应商订单数据：{}",JSONArray.toJSONString(telProviderOrderInf));
+		logger.info("#话费充值回调，分销商订单数据：{}",JSONArray.toJSONString(retailChnlOrderInf));
+
      	if(telProviderOrderInf !=null){
      		if(TeleConstants.ProviderRechargeState.RECHARGE_STATE_3.getCode().equals(telProviderOrderInf.getRechargeState())
 					|| TeleConstants.ProviderRechargeState.RECHARGE_STATE_9.getCode().equals(telProviderOrderInf.getRechargeState())){
@@ -296,11 +300,10 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				List list=new ArrayList();
 				list.add(vo);
 				req.setRefundList(list);
-
 				req.setDmsRelatedKey(telProviderOrderInf.getRegOrderId());
 				try {
 					BaseResult result = accountTransactionFacade.executeRefund(req);
-
+					logger.info("#话费充值退款请求返回数据：{}",JSONArray.toJSONString(result));
 					if(result !=null && "00".equals(result.getCode())){
 						telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款
 						telProviderOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
