@@ -398,7 +398,7 @@ public class AccountTransTest {
 		vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
 		vo.setTxnAmt(new BigDecimal(100));
 		vo.setUpLoadAmt(new BigDecimal(100));
-		vo.setPriConsumeBId(SpecAccountTypeEnum.B01.getbId());
+		vo.setPriConsumeBId(SpecAccountTypeEnum.B06.getbId());
 		List list=new ArrayList();
 		list.add(vo);
 
