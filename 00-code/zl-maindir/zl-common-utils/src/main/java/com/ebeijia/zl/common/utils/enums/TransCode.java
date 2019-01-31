@@ -30,7 +30,8 @@ public enum TransCode {
 	CW90("W90", "权益转让"),
 	CW91("W91", "提款申请"), //提现
 	CW92("W92", "解冻提交"),
-	CW93("W93", "解冻撤销");
+	CW93("W93", "解冻撤销"),
+	CW99("W99", "快捷充值");
 
 
 	private String code;

@@ -241,7 +241,7 @@ public class AccountTransValidUtils {
             resp.setMsg("用户类型为空");
             return true;
         }
-        if(req.getTransList()==null || req.getTransList().size()<1){
+        if(req.getRefundList()==null || req.getRefundList().size()<1){
             resp.setMsg("交易金额为空");
             return true;
         }

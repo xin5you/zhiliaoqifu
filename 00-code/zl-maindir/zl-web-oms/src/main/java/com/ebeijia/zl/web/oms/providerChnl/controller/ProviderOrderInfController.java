@@ -44,7 +44,10 @@ public class ProviderOrderInfController {
 			List<ProviderOrderInf> orderList = pageList.getList();
 			if (orderList != null && orderList.size() > 0) {
 				for (ProviderOrderInf o : orderList) {
-					o.setRegTxnAmt(new BigDecimal(NumberUtils.RMBCentToYuan(o.getRegTxnAmt().toString())));
+					if (!StringUtil.isNullOrEmpty(o.getRegTxnAmt())) {
+						BigDecimal regTxnAmt = o.getRegTxnAmt().divide(new BigDecimal(100)).setScale(3, BigDecimal.ROUND_DOWN);
+						o.setRegTxnAmt(regTxnAmt);
+					}
 				}
 			}
 			mv.addObject("pageInfo", pageList);
@@ -71,4 +74,5 @@ public class ProviderOrderInfController {
 		providerOrderInf.setRechargeState(StringUtil.nullToString(req.getParameter("rechargeState")));
 		return providerOrderInf;
 	}
+
 }

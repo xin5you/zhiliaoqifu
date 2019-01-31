@@ -13,6 +13,7 @@ import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
+import com.ebeijia.zl.facade.account.req.AccountRefundVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
@@ -282,13 +283,19 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				req.setUserType(UserType.TYPE400.getCode());
 				req.setOrgItfPrimaryKey(retailChnlOrderInf.getItfPrimaryKey()); //交易流水
 
-				AccountTxnVo vo=new AccountTxnVo();
-				vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+				AccountRefundVo vo=new AccountRefundVo();
+				String retailMchntCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
+				if(retailChnlOrderInf.getChannelId().equals(retailMchntCode)){
+					vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
+				}else{
+					vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+				}
 				vo.setTxnAmt(retailChnlOrderInf.getTxnAmt());
 				vo.setUpLoadAmt(retailChnlOrderInf.getTxnAmt());
+				vo.setPriConsumeBId(SpecAccountTypeEnum.B06.getbId());
 				List list=new ArrayList();
 				list.add(vo);
-				req.setTransList(list);
+				req.setRefundList(list);
 
 				req.setDmsRelatedKey(telProviderOrderInf.getRegOrderId());
 				try {
