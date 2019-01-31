@@ -115,7 +115,8 @@
 		o.item_num,
 		o.pay_amt,
 		o.order_stat,
-		o.notify_stat
+		o.notify_stat,
+		o.recharge_value
 		FROM
 		tb_retail_chnl_order_inf o
 		LEFT JOIN tb_retail_chnl_inf c ON o.channel_id = c.channel_id
