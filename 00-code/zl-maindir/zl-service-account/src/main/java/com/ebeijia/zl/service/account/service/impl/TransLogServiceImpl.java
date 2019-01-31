@@ -210,7 +210,8 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		 CW90("W90", "权益转让"),
 		 CW91("W91", "用户提款"),
 		 CW92("W92", "解冻扣款"),
-		 CW93("W93", "解冻撤销");
+		 CW93("W93", "解冻撤销")，
+		 CW99("W99", "快捷充值);
 		 */
 
 		if (TransCode.MB20.getCode().equals(intfaceTransLog.getTransId())){
@@ -442,6 +443,9 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 		}else {
 			throw AccountBizException.ACCOUNT_REFUND_FAILED.newInstance("冻结退款操作异常,原交易流水Id{%s}的专项交易不存在",intfaceTransLog.getOrgItfPrimaryKey()).print();
 		}
+		}else if (TransCode.CW99.getCode().equals(intfaceTransLog.getTransId())){
+			//快捷充值
+			this.addToVoList(voList, intfaceTransLog,null,SpecAccountTypeEnum.A01.getbId(), AccountCardAttrEnum.ADD.getValue(), 0);
 
 		}else if (TransCode.CW11.getCode().equals(intfaceTransLog.getTransId())
 				|| TransCode.CW74.getCode().equals(intfaceTransLog.getTransId())
@@ -470,7 +474,7 @@ public class TransLogServiceImpl extends ServiceImpl<TransLogMapper, TransLog> i
 
 				//A类账户消费，商户退款只能是从消费的专项类型退款 即购买 B06的商品，使用A01消费，商户退款也只能是从B06类型退
 				for(AccountRefundVo accountTxnVo : refundList){
-					if ("A".equals(SpecAccountTypeEnum.findByBId(accountTxnVo.getTxnBId()))){
+					if ("A".equals(SpecAccountTypeEnum.findByBId(accountTxnVo.getTxnBId()).getType())){
 						if(StringUtil.isNotEmpty(accountTxnVo.getPriConsumeBId())) {
 							accountTxnVo.setTxnBId(accountTxnVo.getPriConsumeBId());
 						}
