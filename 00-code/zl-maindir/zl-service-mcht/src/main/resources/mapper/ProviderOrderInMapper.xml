@@ -114,7 +114,7 @@
 			and m.recharge_state = #{rechargeState}
 		</if>
 		and date_format(from_unixtime(substr(m.update_time,1,10)),'%Y-%m-%d %H:%i:%S')
-			BETWEEN DATE_ADD(NOW(), INTERVAL -2 MINUTE) and DATE_ADD(NOW(), INTERVAL -11 MINUTE)
+			BETWEEN DATE_ADD(NOW(), INTERVAL -1 MINUTE) and DATE_ADD(NOW(), INTERVAL -11 MINUTE)
 		order by m.update_time desc
 	</select>
 </mapper>

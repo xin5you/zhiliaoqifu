@@ -73,6 +73,7 @@ public class TelePhoneRechargeBizJob implements Job{
 		providerOrderInf.setRechargeState(TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode());
 
 		List<ProviderOrderInf> list = providerOrderInfFacade.getListByTimer(providerOrderInf);
+		logger.info("定时任务查询充值中订单笔数：[{}]", list.size());
 
 		if(list != null && list.size() > 0){
 			for(ProviderOrderInf  t : list){
@@ -84,15 +85,17 @@ public class TelePhoneRechargeBizJob implements Job{
 					logger.info("手机充值--->话费充值状态查询接口，请求参数outerTid--->{},accessToken--->{}", t.getRegOrderId(), accessToken);
 
 					BmOrderCustomGetResponse customOrderResp = bmOpenApiService.handleGetCustomOrder(t.getRegOrderId(), accessToken);
-					logger.info("话费充值状态查询返回数据-->{}", JSONArray.toJSONString(customOrderResp));
+					logger.info("话费充值调用立方查询接口返回数据-->{}", JSONArray.toJSONString(customOrderResp));
 					//System.out.println("话费充值状态查询返回数据-->"+JSONArray.toJSONString(customOrderResp));
 					if(customOrderResp != null){
 						if (!StringUtil.isNullOrEmpty(customOrderResp.getOrderDetailInfo().getRechargeState())) {
-							t.setRechargeState(customOrderResp.getOrderDetailInfo().getRechargeState());
-							RetailChnlOrderInf retailChnlOrderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfById(t.getChannelOrderId());
-							RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(retailChnlOrderInf.getChannelId());
-							//回调通知分銷商
-							retailChnlOrderInfFacade.doTelRechargeBackNotify(retailChnlInf, retailChnlOrderInf, t);
+							if (!TeleConstants.ProviderRechargeState.RECHARGE_STATE_0.getCode().equals(customOrderResp.getOrderDetailInfo().getRechargeState())) {
+								t.setRechargeState(customOrderResp.getOrderDetailInfo().getRechargeState());
+								RetailChnlOrderInf retailChnlOrderInf = retailChnlOrderInfFacade.getRetailChnlOrderInfById(t.getChannelOrderId());
+								RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(retailChnlOrderInf.getChannelId());
+								//回调通知分銷商
+								retailChnlOrderInfFacade.doTelRechargeBackNotify(retailChnlInf, retailChnlOrderInf, t);
+							}
 						}
 					} else {
 						logger.error("## 调用话费充值查询接口，返回参数为空，reg_order_id--->{}", t.getRegOrderId());
