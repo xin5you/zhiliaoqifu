@@ -225,9 +225,9 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 
 			//非 员工通用福利账户 并且 非现金账户
 			BillingType billingType=null;
-			if(SpecAccountTypeEnum.A00.getCode().equals(account.getBId())){
+			if(SpecAccountTypeEnum.A00.getbId().equals(account.getBId())){
 				//通用账户充值，暂无特定需求
-			}else if(SpecAccountTypeEnum.A01.getCode().equals(account.getBId())) {
+			}else if(SpecAccountTypeEnum.A01.getbId().equals(account.getBId())) {
 /*				BigDecimal loseFee=new BigDecimal(0.04); //默认折损率
 				billingType=getBillingTypeForCache(account.getBId());
 

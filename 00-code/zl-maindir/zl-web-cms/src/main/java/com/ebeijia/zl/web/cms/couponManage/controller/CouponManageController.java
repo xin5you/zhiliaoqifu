@@ -65,7 +65,7 @@ public class CouponManageController {
         SpecAccountTypeEnum[] values = SpecAccountTypeEnum.values();
         List<Object> list = new ArrayList<>();
         for (int i =0;i<values.length;i++){
-            if("A"!=values[i].getCode()){
+            if("A"!=values[i].getType()){
                 list.add(values[i]);
             }
         }

@@ -475,7 +475,7 @@ public class GoodsManageController {
 			providerInfList = providerInfFacade.getProviderInfList(providerInf);
 			goodsDetailList = ecomGoodsDetailService.getGoodsDetailList(new TbEcomGoodsDetail());
 			List<BillingType> bList = billingTypeInfService.getBillingTypeInfList(new BillingType());
-			List<BillingType> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getCode().equals(t.getCode())).collect(Collectors.toList());
+			List<BillingType> billingTypeList = bList.stream().filter(t -> !SpecAccountTypeEnum.A01.getType().equals(t.getCode())).collect(Collectors.toList());
 			mv.addObject("billingTypeList", billingTypeList);
 		} catch (Exception e) {
 			logger.error("## 查询商品Spu信息异常{}", e);

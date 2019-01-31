@@ -165,7 +165,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			String tranCode=TransCode.MB71.getCode();
 			String retailMchntCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
 			if(retailChnlOrderInf.getChannelId().equals(retailMchntCode)){
-				priBid=SpecAccountTypeEnum.B06.getCode();
+				priBid=SpecAccountTypeEnum.B06.getbId();
 				tranCode=TransCode.MB10.getCode();
 			}
 
@@ -295,11 +295,11 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 					BaseResult result = accountTransactionFacade.executeRefund(req);
 
 					if(result !=null && "00".equals(result.getCode())){
-						telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款款
+						telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款
 						telProviderOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
 						providerOrderInfService.updateById(telProviderOrderInf);
 
-						retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已扣款
+						retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款
 						this.updateById(retailChnlOrderInf);
 					}
 				}catch (Exception ex){

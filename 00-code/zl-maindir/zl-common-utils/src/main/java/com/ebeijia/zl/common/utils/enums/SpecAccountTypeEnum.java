@@ -22,7 +22,7 @@ public enum SpecAccountTypeEnum{
 	
 	private String name;
 	
-	private String code;
+	private String type;
 	
 
 	public String getbId() {
@@ -33,14 +33,18 @@ public enum SpecAccountTypeEnum{
 		return name;
 	}
 
-	public String getCode() {
-		return code;
+	public String getType() {
+		return type;
 	}
 
-	SpecAccountTypeEnum(String bId, String name,String code) {
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	SpecAccountTypeEnum(String bId, String name, String type) {
 		this.bId = bId;
 		this.name = name;
-		this.code = code;
+		this.type = type;
 	}
 	
 	public static SpecAccountTypeEnum findByBId(String bId) {
