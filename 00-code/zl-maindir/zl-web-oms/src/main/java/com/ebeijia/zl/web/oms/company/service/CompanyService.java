@@ -80,4 +80,5 @@ public interface CompanyService {
 	 * @return
 	 */
 	Map<String, Object> updatePlatformRemitStatCommit(HttpServletRequest req);
+
 }

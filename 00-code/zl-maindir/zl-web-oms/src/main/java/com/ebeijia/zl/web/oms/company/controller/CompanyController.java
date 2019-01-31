@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import com.ebeijia.zl.basics.billingtype.service.BillingTypeService;
 import com.ebeijia.zl.common.core.domain.BillingType;
 import com.ebeijia.zl.common.utils.enums.*;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
+import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyBillingTypeInf;
 import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
@@ -918,4 +920,22 @@ public class CompanyController {
 		mv.addObject("isPlatForm", isPlatForm);
 		return mv;
 	}
+
+	/**
+	 * 平台卡券列表（分页）
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "listPlatformCoupon")
+	public ModelAndView listPlatformCoupon(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("company/listPlatformCoupon");
+		Map<String, Object> resultMap = commonService.listCouponHolder(request);
+		mv.addObject("pageInfo", resultMap.get("pageList"));
+		mv.addObject("coupon", resultMap.get("coupon"));
+		mv.addObject("billingTypeList", resultMap.get("billingTypeList"));
+		mv.addObject("transStatList", resultMap.get("transStatList"));
+		return mv;
+	}
+
 }

@@ -16,7 +16,7 @@
 			                    <li><a href="#"><i class="icon-home"></i></a></li>
 			                    <li>分销商管理</li>
 			                    <li><a href="${ctx }/retailChnl/retailChnlInf/listRetailChnlInf.do">分销商信息管理</a></li>
-			                     <li>分销商信息列表</li>
+			                    <li>分销商信息列表</li>
 			                </ul>
 			            </div>
 			        </nav>
@@ -96,6 +96,9 @@
 										</sec:authorize>--%>
 										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOADD')">
 											<a channelId="${entity.channelId}" title="上账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
+										</sec:authorize>
+										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_BUY_COUPON')">
+											<a channelId="${entity.channelId}" title="购买卡券" class="btn-mini btn-retailChnl-coupon" href="#"><i class="icon-pencil"></i></a>
 										</sec:authorize>
 									</c:if>
 				                    </td>

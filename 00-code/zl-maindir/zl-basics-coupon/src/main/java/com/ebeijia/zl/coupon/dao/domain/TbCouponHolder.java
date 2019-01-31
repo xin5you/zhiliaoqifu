@@ -62,7 +62,9 @@ public class TbCouponHolder extends Model<TbCouponHolder> {
     @ApiModelProperty(value = "代金券标价")
     private Long tagAmount;
 
-
+    @TableField("recycle_chnl_id")
+    @ApiModelProperty(value = "回收渠道ID")
+    private String recycleChnlId;
 
     @TableField("price")
     @ApiModelProperty(value = "代金券实际价格")

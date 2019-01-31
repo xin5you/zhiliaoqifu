@@ -10,6 +10,8 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.*;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
+import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
@@ -101,6 +103,9 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
     @Autowired
     @Qualifier("jedisClusterUtils")
     private JedisClusterUtils jedisClusterUtils;
+
+    @Autowired
+    private ITbCouponHolderService couponHolderService;
 
     @Override
     public ModelMap doCallBackNotifyChannel(String channelOrderId) {
@@ -666,6 +671,46 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             resultMap.put("status", Boolean.FALSE);
             resultMap.put("msg", "删除失败，请稍后再试");
             return resultMap;
+        }
+
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> buyCouponCommit(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+
+        String channelId = req.getParameter("channelId");
+        String[] couponIds = req.getParameterValues("couponIds[]");
+
+        if (couponIds == null || couponIds.length < 1) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "至少选择一条记录");
+            return resultMap;
+        }
+
+        List<TbCouponHolder> couponHolderList = new ArrayList<>();
+        for(int i = 0; i < couponIds.length; i++){
+            TbCouponHolder couponHolder = couponHolderService.getById(couponIds[i]);
+            if (couponHolder == null) {
+                logger.error("## 当前购买的卡券不存在，couponId--->{}", couponIds[i]);
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "购买卡券失败，请稍后再试");
+                return resultMap;
+            }
+            couponHolder.setTransStat(CouponTransStatEnum.CouponTransStatEnum_2.getCode());
+            couponHolder.setRecycleChnlId(channelId);
+            couponHolder.setUpdateTime(System.currentTimeMillis());
+            couponHolder.setLockVersion(couponHolder.getLockVersion() + 1);
+            couponHolderList.add(couponHolder);
+        }
+        if (couponHolderList != null && couponHolderList.size() >= 1) {
+            if (!couponHolderService.updateBatchById(couponHolderList)) {
+                resultMap.put("status", Boolean.FALSE);
+                resultMap.put("msg", "购买卡券失败，请稍后再试");
+                return resultMap;
+            }
         }
 
         return resultMap;

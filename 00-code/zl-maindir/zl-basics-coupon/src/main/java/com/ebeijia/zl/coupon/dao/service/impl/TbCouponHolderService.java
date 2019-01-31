@@ -1,10 +1,18 @@
 package com.ebeijia.zl.coupon.dao.service.impl;
 
+import ch.qos.logback.core.util.StringCollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ebeijia.zl.common.utils.enums.CouponTransStatEnum;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.enums.SpecAccountTypeEnum;
+import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
 import com.ebeijia.zl.coupon.dao.mapper.TbCouponHolderMapper;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -81,6 +89,35 @@ public class TbCouponHolderService extends ServiceImpl<TbCouponHolderMapper, TbC
             }
         }
         return list;
+    }
+
+    @Override
+    public List<TbCouponHolder> listCouponHolderByCouponHolder(TbCouponHolder couponHolder) {
+        QueryWrapper<TbCouponHolder> queryWrapper = new QueryWrapper<TbCouponHolder>();
+        if (!StringUtil.isNullOrEmpty(couponHolder.getCouponName())) {
+            queryWrapper.like("coupon_name", couponHolder.getCouponName());
+        }
+        if (!StringUtil.isNullOrEmpty(couponHolder.getBId())) {
+            queryWrapper.like("b_id", couponHolder.getBId());
+        }
+        if (!StringUtil.isNullOrEmpty(couponHolder.getTransStat())) {
+            queryWrapper.eq("trans_stat", couponHolder.getTransStat());
+        }
+        queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
+        queryWrapper.orderByAsc("create_time");
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public PageInfo<TbCouponHolder> getTbCouponHolderPage(int startNum, int pageSize, TbCouponHolder entity) throws Exception {
+        PageHelper.startPage(startNum, pageSize);
+        List<TbCouponHolder> list = listCouponHolderByCouponHolder(entity);
+        for (TbCouponHolder h : list) {
+            h.setTransStat(CouponTransStatEnum.findByBId(h.getTransStat()).getName());
+            h.setBId(SpecAccountTypeEnum.findByBId(h.getBId()).getName());
+        }
+        PageInfo<TbCouponHolder> page = new PageInfo<TbCouponHolder>(list);
+        return page;
     }
 
 }

@@ -6,12 +6,16 @@ import com.ebeijia.zl.common.utils.constants.ExceptionEnum;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
+import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
 import com.ebeijia.zl.facade.account.req.AccountQueryReqVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.vo.AccountLogVO;
 import com.ebeijia.zl.facade.account.vo.AccountVO;
 import com.ebeijia.zl.facade.telrecharge.domain.CompanyInf;
+import com.ebeijia.zl.facade.telrecharge.domain.RetailChnlInf;
 import com.ebeijia.zl.facade.telrecharge.service.CompanyInfFacade;
+import com.ebeijia.zl.facade.telrecharge.service.RetailChnlInfFacade;
 import com.ebeijia.zl.web.oms.common.model.FTPImageVo;
 import com.ebeijia.zl.web.oms.common.service.CommonService;
 import com.ebeijia.zl.web.oms.common.util.FTPUtil;
@@ -45,10 +49,16 @@ public class CommonServiceImpl implements CommonService {
     private FtpProps ftpProps;
 
     @Autowired
+    private ITbCouponHolderService couponHolderService;
+
+    @Autowired
     private AccountQueryFacade accountQueryFacade;
 
     @Autowired
     private CompanyInfFacade companyInfFacade;
+
+    @Autowired
+    private RetailChnlInfFacade retailChnlInfFacade;
 
     @Value("${IMG_PATH}")
     private String IMG_PATH;
@@ -296,6 +306,50 @@ public class CommonServiceImpl implements CommonService {
         boolean flag = ftpUtil.isFileExsits(ftpClient, newPath.toString());
         ftpUtil.ftpCloseConnect(ftpClient);
         resultMap.put("status", flag);
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> listCouponHolder(HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+
+        int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
+        int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
+
+        String couponName = StringUtil.nullToString(request.getParameter("couponName"));
+        String bId = StringUtil.nullToString(request.getParameter("bId"));
+        String transStat = StringUtil.nullToString(request.getParameter("transStat"));
+
+        TbCouponHolder couponHolder = new TbCouponHolder();
+        if (!StringUtil.isNullOrEmpty(couponName)) {
+            couponHolder.setCouponName(couponName);
+        }
+        if (!StringUtil.isNullOrEmpty(bId)) {
+            couponHolder.setBId(bId);
+        }
+        if (!StringUtil.isNullOrEmpty(transStat)) {
+            couponHolder.setTransStat(transStat);
+        }
+        try {
+            PageInfo<TbCouponHolder> pageList = couponHolderService.getTbCouponHolderPage(startNum, pageSize, couponHolder);
+            if (pageList != null && pageList.getList().size() > 0) {
+                for (TbCouponHolder h : pageList.getList()) {
+                    if (!StringUtil.isNullOrEmpty(h.getRecycleChnlId())) {
+                        RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(h.getRecycleChnlId());
+                        if (retailChnlInf !=  null) {
+                            h.setRecycleChnlId(retailChnlInf.getChannelName());
+                        }
+                    }
+                }
+            }
+            resultMap.put("pageList", pageList);
+        } catch (Exception e) {
+            logger.error("## 查询卡券订单记录列表异常", e);
+        }
+        resultMap.put("coupon", couponHolder);
+        resultMap.put("billingTypeList", SpecAccountTypeEnum.values());
+        resultMap.put("transStatList", CouponTransStatEnum.values());
         return resultMap;
     }
 

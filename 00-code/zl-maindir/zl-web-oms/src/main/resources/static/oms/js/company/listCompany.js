@@ -23,6 +23,7 @@ var listCompany = {
         $('.btn-invoice').on('click', listCompany.intoAddCompanyTransfer);
         $('.btn-add-fee').on('click', listCompany.intoAddCompanyFee);
         $('.btn-platform-inAccount').on('click', listCompany.intoAddPlatformTransfer);
+        $('.btn-platform-coupon').on('click', listCompany.intoPlatformCoupon);
     },
     searchReset:function(){
         var isPlatform = $("#isPlatform").val();
@@ -125,5 +126,9 @@ var listCompany = {
         var companyId = $(this).attr('companyId');
         var url = Helper.getRootPath()+"/company/intoAddCompanyTransfer.do?companyId="+companyId+"&orderType=200";
         location.href=url;
+    },
+    intoPlatformCoupon : function () {
+        var url = Helper.getRootPath()+"/company/listPlatformCoupon.do";
+        location.href = url;
     }
 }

@@ -12,6 +12,8 @@ import com.ebeijia.zl.common.utils.IdUtil;
 import com.ebeijia.zl.common.utils.domain.BaseResult;
 import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
+import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTransferReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
@@ -27,6 +29,7 @@ import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrder;
 import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -892,11 +895,4 @@ public class CompanyServiceImpl implements CompanyService{
 		return resultMap;
 	}
 
-	/*public static void main(String[] args) {
-		BigDecimal a = new BigDecimal("2.00");
-		BigDecimal b = new BigDecimal(1);
-		if(a.compareTo(b) == 1){
-			System.out.print("aaa");
-		}
-	}*/
 }

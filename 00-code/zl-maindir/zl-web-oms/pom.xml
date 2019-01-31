@@ -162,6 +162,14 @@
 			<artifactId>zl-facade-account</artifactId>
 			<version>${ebj.zl.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.ebeijia</groupId>
+            <artifactId>zl-basics-coupon</artifactId>
+            <version>${ebj.zl.version}</version>
+        </dependency>
+
+
+
 	</dependencies>
 
 	<build>

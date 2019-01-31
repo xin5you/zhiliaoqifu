@@ -22,6 +22,7 @@ var listTelChannelInf = {
         $('.btn-openAccount-submit').on('click', listTelChannelInf.telChannelOpenAccount);
         $('.btn-accbal').on('click', listTelChannelInf.listTelChannelAccBal);
         $('.btn-transfer').on('click', listTelChannelInf.intoAddTelChannelTransfer);
+        $('.btn-retailChnl-coupon').on('click', listTelChannelInf.intoRetailChnlCoupon);
     },
     searchData: function(){
         document.forms['searchForm'].submit();
@@ -127,6 +128,11 @@ var listTelChannelInf = {
     intoAddTelChannelTransfer : function () {
         var channelId = $(this).attr('channelId');
         var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/intoAddRetailChnlTransfer.do?operStatus=1&channelId=" + channelId;
+        location.href = url;
+    },
+    intoRetailChnlCoupon : function () {
+        var channelId = $(this).attr('channelId');
+        var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/listRetailChnlCoupon.do?transStat=1&channelId="+channelId;
         location.href = url;
     }
 }

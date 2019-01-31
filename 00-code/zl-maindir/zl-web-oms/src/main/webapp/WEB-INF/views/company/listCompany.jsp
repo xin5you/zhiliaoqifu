@@ -20,10 +20,10 @@
 					</li>
 					<li>
 						<c:if test="${companyInf.isPlatform=='0'}">
-							<a href="${ctx }/company/listCompany.do?platForm=0">企业信息管理</a>
+							<a href="${ctx }/company/listCompany.do?isPlatform=0">企业信息管理</a>
 						</c:if>
 						<c:if test="${companyInf.isPlatform=='1'}">
-							<a href="${ctx }/company/listCompany.do?platForm=1">平台信息管理</a>
+							<a href="${ctx }/company/listCompany.do?isPlatform=1">平台信息管理</a>
 						</c:if>
 					</li>
 					<li>
@@ -126,6 +126,9 @@
 								</sec:authorize>
 							</c:if>
 							<c:if test="${company.isOpen=='1'}">
+								<sec:authorize access="hasRole('ROLE_COMPANY_ACCBAL_INTO')">
+									<a companyId="${company.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
+								</sec:authorize>
 								<c:if test="${company.isPlatform=='1'}">
 									<%--<sec:authorize access="hasRole('ROLE_PLATFORM_TRANSFER_INTOADD')">
 										<a companyId="${company.companyId}" title="上账" class="btn-mini btn-platform-inAccount" href="#"><i class="icon-pencil"></i></a>
@@ -133,15 +136,15 @@
 									<sec:authorize access="hasRole('ROLE_PLATFORM_IN_REMIT')">
 										<a companyId="${company.companyId}" title="平台打款" class="btn-mini btn-platform-tansfer" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
+									<sec:authorize access="hasRole('ROLE_PLATFORM_COUPON')">
+										<a companyId="${company.companyId}" title="平台卡券" class="btn-mini btn-platform-coupon" href="#"><i class="icon-pencil"></i></a>
+									</sec:authorize>
 								</c:if>
 								<%--<c:if test="${company.isPlatform=='0'}">
 									<sec:authorize access="hasRole('ROLE_COMPANY_IN_REMIT')">
 										<a companyId="${company.companyId}" title="企业收款" class="btn-mini btn-company-tansfer" href="#"><i class="icon-pencil"></i></a>
 									</sec:authorize>
 								</c:if>--%>
-								<sec:authorize access="hasRole('ROLE_COMPANY_ACCBAL_INTO')">
-									<a companyId="${company.companyId}" title="账户余额" class="btn-mini btn-accbal" href="#"><i class="icon-search"></i></a>
-								</sec:authorize>
 								<c:if test="${company.isPlatform=='0'}">
 									<sec:authorize access="hasRole('ROLE_COMPANY_INVOICE_INTO')">
 										<a companyId="${company.companyId}" title="开票" class="btn-mini btn-invoice" href="#"><i class="icon-pencil"></i></a>

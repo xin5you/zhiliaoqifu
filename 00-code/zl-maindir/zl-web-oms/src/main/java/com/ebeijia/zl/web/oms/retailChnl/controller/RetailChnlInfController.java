@@ -747,6 +747,38 @@ public class RetailChnlInfController {
 	}
 
 	/**
+	 * 分销商购买卡券列表（分页）
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "listRetailChnlCoupon")
+	public ModelAndView listRetailChnlCoupon(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlCoupon");
+		String channelId = request.getParameter("channelId");
+		Map<String, Object> resultMap = commonService.listCouponHolder(request);
+		mv.addObject("pageInfo", resultMap.get("pageList"));
+		mv.addObject("coupon", resultMap.get("coupon"));
+		mv.addObject("billingTypeList", resultMap.get("billingTypeList"));
+		mv.addObject("transStatList", resultMap.get("transStatList"));
+		mv.addObject("channelId", channelId);
+		return mv;
+	}
+
+	/**
+	 * 分销商购买卡券
+	 * @param req
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/buyCouponCommit")
+	@ResponseBody
+	public Map<String, Object> buyCouponCommit(HttpServletRequest req, HttpServletResponse response) {
+		Map<String, Object> resultMap = retailChnlInfService.buyCouponCommit(req);
+		return resultMap;
+	}
+
+	/**
 	 * 分销商实体类封装
 	 * @param req
 	 * @return
