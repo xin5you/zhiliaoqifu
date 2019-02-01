@@ -436,7 +436,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 
 		if(UserType.TYPE300.getCode().equals(account.getAccountType())) {
 			if (AmountUtil.greaterThanOrEqualTo(account.getAccBal(), new BigDecimal(0))) {
-				throw AccountBizException.ACCOUNT_TARGET_MCHNT_NOT_COMP.print();
+				throw AccountBizException.ACCOUNT_TARGET_MCHNT_NOT_COMP.newInstance("供应商账户{%s}授信权益不足",account.getAccountNo()).print();
 			}
 		}
 	}
@@ -448,10 +448,10 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	 */
 	public void debit(AccountInf account,BigDecimal transAmt,String transId) {
 		if (! AccountStatusEnum.ACTIVE.getValue().equals(account.getAccountStat())) {
-			throw AccountBizException.ACCOUNT_STATUS_IS_INACTIVE.newInstance("账户状态异常,用户编号{%s},账户状态{%s}", account.getAccountNo(),account.getAccountStat()).print();
+			throw AccountBizException.ACCOUNT_STATUS_IS_INACTIVE.newInstance("账户状态异常,账户编号{%s},账户状态{%s}", account.getAccountNo(),account.getAccountStat()).print();
 		}
 		if (!this.availableBalanceIsEnough(account,transAmt,transId)) {
-			throw AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.print();
+			throw AccountBizException.ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.newInstance("当前账户{%s}操作类型{%s}余额{%s}不足,",account.getAccountNo(),transId,account.getAccBal()).print();
 		}
 		if (!CodeEncryUtils.verify(account.getAccBal().toString(), account.getAccountNo(), account.getAccBalCode())) {
 			throw AccountBizException.ACCOUNT_AMOUNT_ERROR.print();

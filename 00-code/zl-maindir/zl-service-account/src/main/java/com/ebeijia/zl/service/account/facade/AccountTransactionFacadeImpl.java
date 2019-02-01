@@ -37,6 +37,7 @@ import com.ebeijia.zl.service.user.service.IUserInfService;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import redis.clients.jedis.JedisCluster;
 
 
@@ -137,6 +138,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			eflag=transLogService.execute(intfaceTransLog);
 		} catch (AccountBizException accountBizException) {
 			log.error("账户充值-executeRecharge error:{}",accountBizException);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 		}
 		//修改当前接口请求交易状态
@@ -237,6 +239,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 	    	 eflag=transLogService.execute(intfaceTransLog); 
 	      } catch (AccountBizException accountBizException) {
 			 log.error("账户消費-executeConsume error:{}",accountBizException);
+			 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			 return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 	      } 
 		//修改当前接口请求交易状态
@@ -331,6 +334,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
     	 eflag=transLogService.execute(intfaceTransLog); 
       } catch (AccountBizException accountBizException) {
 		 log.error("账户转账-executeTransfer error:{}",accountBizException);
+		 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		 return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
       }
 	//修改当前接口请求交易状态
@@ -478,6 +482,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 
 		} catch (AccountBizException accountBizException) {
 			log.error("提现操作-executeWithDraw error:{}",accountBizException);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 		}
 		//修改当前接口请求交易状态
@@ -544,6 +549,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			eflag=transLogService.execute(intfaceTransLog);
 		} catch (AccountBizException accountBizException) {
 			log.error("退款操作-executeRefund error:{}",accountBizException);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 		}
 		//修改当前接口请求交易状态
@@ -634,6 +640,7 @@ public class AccountTransactionFacadeImpl implements AccountTransactionFacade {
 			eflag=transLogService.execute(intfaceTransLog);
 		} catch (AccountBizException accountBizException) {
 			log.error("解冻-executeFrozen error:{}",accountBizException);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return ResultsUtil.error(String.valueOf(accountBizException.getCode()), accountBizException.getMsg());
 		}
 		//修改当前接口请求交易状态

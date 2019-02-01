@@ -290,9 +290,9 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				AccountRefundVo vo=new AccountRefundVo();
 				String retailMchntCode=jedisCluster.hget(RedisConstants.REDIS_HASH_TABLE_TB_BASE_DICT_KV,RedisDictKey.zlqf_retail_mchnt_code);
 				if(retailChnlOrderInf.getChannelId().equals(retailMchntCode)){
-					vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
-				}else{
 					vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
+				}else{
+					vo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
 				}
 				vo.setTxnAmt(retailChnlOrderInf.getTxnAmt());
 				vo.setUpLoadAmt(retailChnlOrderInf.getTxnAmt());

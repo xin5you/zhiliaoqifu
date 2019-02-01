@@ -71,4 +71,14 @@ public class AccountQuickPayVo implements java.io.Serializable {
 	public void setTfrOutAmt(BigDecimal tfrOutAmt) {
 		this.tfrOutAmt = tfrOutAmt;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountQuickPayVo{" +
+				"tfrInBId='" + tfrInBId + '\'' +
+				", tfrInAmt=" + tfrInAmt +
+				", tfrOutBId='" + tfrOutBId + '\'' +
+				", tfrOutAmt=" + tfrOutAmt +
+				'}';
+	}
 }
