@@ -95,11 +95,11 @@ public class SupplyService implements ISupplyService {
         if (!valid) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
         }
-        return phoneCharge(memberInfo.getMemberId(), phone, amount, payInfo);
+        return phoneCharge(memberInfo.getMemberId(), phone, Long.valueOf(amount), payInfo);
     }
 
     @Override
-    public String phoneCharge(String memberId, String phone, Integer amount, PayInfo payInfo) {
+    public String phoneCharge(String memberId, String phone, Long amount, PayInfo payInfo) {
         String dmsKey = IdUtil.getNextId();
         //TODO 这里amount是分，需要注意
         checkPayment(payInfo, amount);
@@ -188,7 +188,7 @@ public class SupplyService implements ISupplyService {
         throw new AdviceMessenger(ResultState.OK, "支付成功，等待到账！\n预计1-10分钟到账");
     }
 
-    private void checkPayment(PayInfo payInfo, Integer amount) {
+    private void checkPayment(PayInfo payInfo, Long amount) {
         Long sum = 0L;
         if (payInfo.getCostA() != null && payInfo.getTypeA() != null) {
             sum += payInfo.getCostA();
@@ -257,6 +257,8 @@ public class SupplyService implements ISupplyService {
             List<TbEcomPayOrderDetails> payOrderDetails = payOrderDetailsDao.list(new QueryWrapper<>(payDetailQuery));
 
             PayInfo payInfo = restorePayInfo(payOrderDetails);
+            //TODO 充值时强制设置成通讯类型
+            payInfo.setTypeB(SpecAccountTypeEnum.B06.getbId());
             try {
                 payService.phoneChargeReturn(payInfo, log, dms);
             } catch (Exception ex) {
@@ -283,7 +285,7 @@ public class SupplyService implements ISupplyService {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "验证码有误");
         }
         //TODO 这里amount是分，需要注意
-        checkPayment(payInfo, amount);
+        checkPayment(payInfo, Long.valueOf(amount));
         if (payInfo.getCostA() == null || payInfo.getCostA() <= 0L) {
             throw new AdviceMessenger(ResultState.NOT_ACCEPTABLE, "参数异常");
         }

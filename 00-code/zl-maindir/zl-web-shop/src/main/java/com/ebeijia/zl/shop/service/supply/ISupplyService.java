@@ -7,7 +7,7 @@ public interface ISupplyService {
 
     String phoneCharge(String phone, Integer amount, String validCode, PayInfo payInfo, String session);
 
-    String phoneCharge(String memberId, String phone, Integer amount, PayInfo payInfo);
+    String phoneCharge(String memberId, String phone, Long amount, PayInfo payInfo);
 
     String getPhoneChargeProvider();
 

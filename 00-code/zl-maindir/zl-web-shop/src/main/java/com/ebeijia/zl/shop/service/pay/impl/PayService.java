@@ -185,21 +185,21 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    @GlobalTransactional(timeoutMills = 300000,name = "order")
+    @GlobalTransactional(timeoutMills = 300000, name = "order")
     public BaseResult payOrder(PayInfo payInfo, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
 
         //请求支付
         String result = "";
         //TODO 这里的txnList仅用于保存支付信息，未来建议直接处理payInfo
-        List<AccountTxnVo> rawList = getRawTxnVO(payInfo);
+        ArrayList<AccountRefundVo> rawList = getRefundVO(payInfo);
         Long sum = 0L;
         sum += payInfo.getCostA() == null ? 0L : payInfo.getCostA();
         sum += payInfo.getCostB() == null ? 0L : payInfo.getCostB();
 
         BigDecimal accountInfAccBalByUser = accountQueryFacade.getAccountInfAccBalByUser(UserType.TYPE300.getCode(), null, mchntCode, UserChnlCode.USERCHNL1001.getCode(), SpecAccountTypeEnum.findByBId(payInfo.getTypeB()).getbId());
-        if (accountInfAccBalByUser.longValue() < sum) {
+        if (accountInfAccBalByUser.longValue() + sum > 0) {
             logger.error(String.format("分销端支付失败,参数%s,%s,%s", payInfo, memberId, desc));
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "分销端账户余额不足");
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "商品不足");
         }
         BaseResult baseResult = executeConsume(payInfo, memberId, dmsRelatedKey, desc, mchntCode);
 
@@ -224,7 +224,7 @@ public class PayService implements IPayService {
         payOrderDao.save(pay);
 
         //构造payOrderDetail对象
-        for (AccountTxnVo v : rawList) {
+        for (AccountRefundVo v : rawList) {
             TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
             payOrderDetails.setPayOrderId(payOrderId);
             payOrderDetails.setDebitAccountCode(v.getTxnBId());
@@ -244,7 +244,7 @@ public class PayService implements IPayService {
             result = (String) object;
         } else {
             logger.error(String.format("分销端支付失败,参数%s,%s,%s,%s", payInfo, memberId, nextId, desc));
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "分销端账户余额不足");
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "商品不足");
         }
         //判断result
         logger.info(String.format("分销端支付成功,参数%s,%s,%s,%s,结果%s", payInfo, memberId, dmsRelatedKey, desc, result));
@@ -318,12 +318,12 @@ public class PayService implements IPayService {
 
     @Override
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
-    @GlobalTransactional(timeoutMills = 300000,name = "phone")
+    @GlobalTransactional(timeoutMills = 300000, name = "phone")
     public BaseResult payPhone(PayInfo vo, String memberId, String dmsRelatedKey, String desc) {
         //请求支付
         String result = "";
         AccountConsumeReqVo req = new AccountConsumeReqVo();
-        List<AccountTxnVo> rawTxnVos = getRawTxnVO(vo);
+        ArrayList<AccountRefundVo> rawTxnVos = getRefundVO(vo);
 
 
         //TODO 简单处理了充值问题
@@ -373,7 +373,7 @@ public class PayService implements IPayService {
         payOrderDao.save(pay);
 
         //构造payOrderDetail对象
-        for (AccountTxnVo v : rawTxnVos) {
+        for (AccountRefundVo v : rawTxnVos) {
             TbEcomPayOrderDetails payOrderDetails = initPayOrderDetailObject();
             payOrderDetails.setPayOrderId(payOrderId);
             payOrderDetails.setDebitAccountCode(v.getTxnBId());
@@ -419,8 +419,24 @@ public class PayService implements IPayService {
             req.setBId(null);
             PageInfo<AccountLogVO> result = accountQueryFacade.getAccountLogPage(0, 2000, req);
             List<AccountLogVO> list = result.getList();
-            if (list == null) {
+            if (list != null) {
                 list.removeIf(accountLogVO -> accountLogVO.getPriBId().charAt(0) == 'A');
+                list.forEach(accountLogVO -> {
+                    if (TransCode.CW50.getCode().equals(accountLogVO.getTransId()) && null==accountLogVO.getMchntName()) {
+                        accountLogVO.setTransId("W501");
+                        TbEcomPayOrder query = new TbEcomPayOrder();
+                        query.setOutTransNo(accountLogVO.getItfPrimaryKey());
+                        TbEcomPayOrder one = payOrderDao.getOne(new QueryWrapper<>(query));
+                        if (one!=null) {
+                            TbEcomPayOrderDetails detailQuery = new TbEcomPayOrderDetails();
+                            detailQuery.setPayOrderId(one.getPayOrderId());
+                            List<TbEcomPayOrderDetails> detailsList = payOrderDetailsDao.list(new QueryWrapper<>(detailQuery));
+                            if (detailsList!=null && detailsList.size()>0) {
+                                accountLogVO.setMchntName(detailsList.get(0).getDebitAccountCode());
+                            }
+                        }
+                    }
+                });
             }
             //扩大查询范围
             return result;
@@ -548,10 +564,10 @@ public class PayService implements IPayService {
         vo.setTransChnl(TransChnl.CHANNEL8.getValue());
         vo.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
         vo.setUserChnlId(log.getMemberId());
-        vo.setTransId(TransCode.CW11.getCode());
+        vo.setTransId(TransCode.CW74.getCode());
         vo.setUserType(UserType.TYPE100.getCode());
         vo.setTransDesc(String.format("手机%s充值失败退款", log.getDescinfo()));
-        vo.setTransList(getRawTxnVO(payInfo));
+        vo.setRefundList(getRefundVO(payInfo));
         logger.info("手机充值退款开始：[{}]", vo);
         //TODO
         try {
@@ -626,7 +642,7 @@ public class PayService implements IPayService {
                 processItem(order);
                 break;
             case DealType.PHONECHARGE:
-                processPhoneCharge(order);
+                processPhoneCharge(order, list);
                 break;
             default:
         }
@@ -649,7 +665,8 @@ public class PayService implements IPayService {
             vo.setFromCompanyId("Outer Trans");
 
             AccountTxnVo txnVo = new AccountTxnVo();
-            txnVo.setTxnBId(details.getDebitAccountCode());
+            //details.getDebitAccountCode()
+            txnVo.setTxnBId(SpecAccountTypeEnum.A01.getbId());
             txnVo.setTxnAmt(txnAmt);
             txnVo.setUpLoadAmt(txnAmt);
             logger.info(String.format("第三方支付调用账户充值，金额%s，用户ID%s", txnVo.getTxnAmt(), member.getMemberId()));
@@ -657,14 +674,15 @@ public class PayService implements IPayService {
             transList.add(txnVo);
 
             vo.setTransList(transList);
-            vo.setTransId(TransCode.CW50.getCode());
+            vo.setTransId(TransCode.CW99.getCode());
             vo.setTransChnl(TransChnl.CHANNEL9.toString());
 
             vo.setUserChnl(UserChnlCode.USERCHNL1002.getCode());
             vo.setUserChnlId(member.getMemberId());
             vo.setUserType(UserType.TYPE100.getCode());
             vo.setDmsRelatedKey(dmsKey);
-            vo.setPriBId(details.getDebitAccountCode());
+            //details.getDebitAccountCode()
+//            vo.setPriBId();
             vo.setUploadAmt(txnAmt);
             vo.setTransAmt(txnAmt);
             vo.setTransNumber(1);
@@ -696,19 +714,22 @@ public class PayService implements IPayService {
         logger.info("记录日志详情：", log);
     }
 
-    private void processPhoneCharge(TbEcomPayOrder one) {
-        Integer amount = Integer.valueOf(one.getResv3());
+    private void processPhoneCharge(TbEcomPayOrder one, List<TbEcomPayOrderDetails> details) {
+        Long amount = details.get(0).getDebitPrice();
+        Long buyCount = Long.valueOf(one.getResv3());
         PayInfo payInfo = new PayInfo();
+        payInfo.setTypeA(SpecAccountTypeEnum.A01.getbId());
         payInfo.setTypeB(SpecAccountTypeEnum.B06.getbId());
-        payInfo.setCostB(amount.longValue());
-        supplyService.phoneCharge(one.getMemberId(), one.getResv2(), amount, payInfo);
+        payInfo.setCostA(amount);
+        payInfo.setCostB(buyCount - amount);
+        supplyService.phoneCharge(one.getMemberId(), one.getResv2(), buyCount, payInfo);
     }
 
     private void processItem(TbEcomPayOrder one) {
-        Integer amount = Integer.valueOf(one.getResv3());
+        Long amount = Long.valueOf(one.getResv3());
         PayInfo payInfo = new PayInfo();
         payInfo.setTypeB(SpecAccountTypeEnum.B06.getbId());
-        payInfo.setCostB(amount.longValue());
+        payInfo.setCostB(amount);
         supplyService.phoneCharge(one.getMemberId(), one.getResv2(), amount, payInfo);
 
     }
@@ -839,29 +860,31 @@ public class PayService implements IPayService {
     }
 
 
-    private ArrayList<AccountTxnVo> getRawTxnVO(PayInfo payInfo) {
-        ArrayList<AccountTxnVo> result = new ArrayList<>();
+    private ArrayList<AccountRefundVo> getRefundVO(PayInfo payInfo) {
+        ArrayList<AccountRefundVo> result = new ArrayList<>();
         SpecAccountTypeEnum typeA = SpecAccountTypeEnum.findByBId(payInfo.getTypeA());
         SpecAccountTypeEnum typeB = SpecAccountTypeEnum.findByBId(payInfo.getTypeB());
         BigDecimal costA = null;
         if (typeA != null && payInfo.getCostA() != null && payInfo.getCostA() != 0) {
-            AccountTxnVo accountTxnVo = new AccountTxnVo();
-            accountTxnVo.setTxnBId(typeA.getbId());
+            AccountRefundVo refundVo = new AccountRefundVo();
+            refundVo.setTxnBId(typeA.getbId());
             Long cost = payInfo.getCostA() == null ? 0L : payInfo.getCostA();
             costA = BigDecimal.valueOf(cost);
-            accountTxnVo.setUpLoadAmt(costA);
-            accountTxnVo.setTxnAmt(costA);
-            result.add(accountTxnVo);
+            refundVo.setUpLoadAmt(costA);
+            refundVo.setTxnAmt(costA);
+            refundVo.setPriConsumeBId(typeB.getbId());
+            result.add(refundVo);
         }
 
         if (result.size() == 2 || (typeB != null && payInfo.getCostB() != null && payInfo.getCostB() != 0)) {
-            AccountTxnVo accountTxnVo = new AccountTxnVo();
-            accountTxnVo.setTxnBId(typeB.getbId());
+            AccountRefundVo refundVo = new AccountRefundVo();
+            refundVo.setTxnBId(typeB.getbId());
             Long cost = payInfo.getCostB() == null ? 0L : payInfo.getCostB();
             BigDecimal costB = BigDecimal.valueOf(cost);
-            accountTxnVo.setUpLoadAmt(costB);
-            accountTxnVo.setTxnAmt(costB);
-            result.add(accountTxnVo);
+            refundVo.setUpLoadAmt(costB);
+            refundVo.setTxnAmt(costB);
+            refundVo.setPriConsumeBId(typeB.getbId());
+            result.add(refundVo);
         }
         return result;
     }
