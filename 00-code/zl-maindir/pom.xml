@@ -85,6 +85,7 @@
         <module>zl-core-rocketmq</module>
         <module>zl-core-wechat</module>
         <module>zl-core-dubbo</module>
+        <module>zl-fescar-core</module>
 
         <module>zl-facade-mcht</module>
         <module>zl-facade-account</module>
@@ -98,7 +99,7 @@
         <module>zl-web-diy</module>
         <module>zl-web-cms</module>
         <module>zl-web-user</module>
-        <module>zl-fescar-core</module>
+
 
     </modules>
 
