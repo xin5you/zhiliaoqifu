@@ -160,7 +160,7 @@ public class BMRechargeMobileSessionAwareMessageListener implements MessageListe
 						}
 						//修改供应商订单信息
 						providerOrderInfService.updateOrderRechargeState(telProviderOrderInf, orderDetailInfo, response.getErrorCode());
-						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+
 					} catch (Exception e) {
 						logger.error("##请求话费充值异常-->{}", e);
 					}
