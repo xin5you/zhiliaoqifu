@@ -40,6 +40,7 @@ import com.ebeijia.zl.shop.vo.MemberInfo;
 import com.ebeijia.zl.shop.vo.PayDealInfo;
 import com.ebeijia.zl.shop.vo.PayInfo;
 import com.ebeijia.zl.shop.vo.RequestWxQueryDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,7 +185,7 @@ public class PayService implements IPayService {
     }
 
     @Override
-    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    @ShopTransactional
     @GlobalTransactional(timeoutMills = 300000, name = "order")
     public BaseResult payOrder(PayInfo payInfo, String memberId, String dmsRelatedKey, String desc, String mchntCode) {
 
@@ -317,7 +318,7 @@ public class PayService implements IPayService {
 
 
     @Override
-    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
+    @ShopTransactional
     @GlobalTransactional(timeoutMills = 300000, name = "phone")
     public BaseResult payPhone(PayInfo vo, String memberId, String dmsRelatedKey, String desc) {
         //请求支付
@@ -354,11 +355,16 @@ public class PayService implements IPayService {
             throw new BizException(ResultState.ERROR, "连接异常，请稍后再试");
         }
         //判断result
-        if (baseResult.getCode().equals(ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.getCode())) {
+        if (baseResult.getCode().equals(String.valueOf(ACCOUNT_AVAILABLEBALANCE_IS_NOT_ENOUGH.getCode()))) {
             logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), memberId, dmsRelatedKey, desc, result));
             throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，余额不足");
         } else if (!baseResult.getCode().equals("00")) {
-            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, baseResult.getMsg());
+            logger.info(String.format("支付失败,参数%s,%s,%s,%s,%s,结果%s", vo.getCostA() + vo.getTypeA(), vo.getCostB() + vo.getTypeB(), memberId, dmsRelatedKey, desc, result));
+            try {
+                logger.error("手机充值失败[{}]",new ObjectMapper().writeValueAsString(baseResult));
+            } catch (Exception e) {
+            }
+            throw new BizException(ResultState.BALANCE_NOT_ENOUGH, "支付失败，余额不足");
 
         }
         result = (String) baseResult.getObject();

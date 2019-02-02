@@ -18,7 +18,6 @@ import java.util.List;
 public interface IPayService {
     int transferToCard(Long dealInfo, String validCode, Double session);
 
-    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     BaseResult payOrder(PayInfo payInfo, String openId, String dmsRelatedKey, String desc, String mchntCode);
 
     TbEcomPayOrderDetails initPayOrderDetailObject();
@@ -28,7 +27,6 @@ public interface IPayService {
     @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     BaseResult payCoupon(AccountTxnVo vo, String openId, String dmsRelatedKey, String desc);
 
-    @ShopTransactional(propagation = Propagation.REQUIRES_NEW)
     BaseResult payPhone(PayInfo vo, String openId, String dmsRelatedKey, String desc);
 
     PageInfo<AccountLogVO> listDeals(String range, String type, String method, String start, String limit);
