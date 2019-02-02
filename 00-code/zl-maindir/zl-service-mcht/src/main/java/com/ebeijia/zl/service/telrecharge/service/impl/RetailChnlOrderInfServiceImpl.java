@@ -308,9 +308,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 						telProviderOrderInf.setPayState(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款
 						telProviderOrderInf.setItfPrimaryKey(String.valueOf(result.getObject()));
 						providerOrderInfService.updateById(telProviderOrderInf);
-
 						retailChnlOrderInf.setOrderStat(TeleConstants.ChannelOrderPayStat.ORDER_PAY_2.getCode()); //已退款
-						this.updateById(retailChnlOrderInf);
 					}
 				}catch (Exception ex){
 					logger.error("##话费充值失败，回调订单退款接口失败-->{}",ex);
@@ -349,7 +347,7 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 				logger.info("##发起分销商回调[{}],回调请求参数:[{}]", retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
 				String result = HttpClientUtil.sendPostReturnStr(retailChnlOrderInf.getNotifyUrl(), JSONObject.toJSONString(ResultsUtil.success(respVo)));
 				logger.info("##发起分销商返回结果:{}",result);
-				if (result != null && "SUCCESS ".equals(result.toUpperCase())) {
+				if (result != null && "SUCCESS".equals(result.toUpperCase())) {
 					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_3.getCode());
 				} else {
 					retailChnlOrderInf.setNotifyStat(TeleConstants.ChannelOrderNotifyStat.ORDER_NOTIFY_2.getCode());
@@ -358,8 +356,9 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 			} catch (Exception e) {
 				logger.error("##话费充值失败，回调分销商异常-->{}", e);
 			}
-			this.updateById(retailChnlOrderInf);
 		}
+		this.updateById(retailChnlOrderInf);
+		providerOrderInfService.updateById(telProviderOrderInf);
 	}
 
 	/**
