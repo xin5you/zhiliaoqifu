@@ -112,7 +112,7 @@ public class BatchWithdrawData {
      */
     public JSONObject bulidBatchContentJosn(WithdrawBodyVO body) {
         JSONObject contentObject = new JSONObject();
-        contentObject.put("batchNo", SnowFlake.getInstance().nextId());
+        contentObject.put("batchNo", body.getBatchNo());
         contentObject.put("merchantNo", yfbWithdrawConfig.getMerchantNo());// 70057241;70056575
         contentObject.put("productCode",productCode );
         contentObject.put("totalNum", body.getTotalNum());

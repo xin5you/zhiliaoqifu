@@ -115,6 +115,7 @@ public class AccountWithdrawTxnServiceImpl  implements IAccountWithdrawTxnServic
             reqVo.setPriBId(transLog.getPriBId());
             reqVo.setOrgItfPrimaryKey(intfaceTransLog.getItfPrimaryKey());
             BaseResult result = accountTransactionFacade.executeUnFrozen(reqVo);
+            logger.info("#平台请求解冻扣款返回数据:",JSONArray.toJSONString(result));
             if(result !=null && "00".equals(result.getCode())){
                 accountWithdrawOrder.setTxnStatus("40");
                 accountWithdrawOrderService.updateById(accountWithdrawOrder);
