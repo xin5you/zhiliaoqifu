@@ -14,6 +14,8 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.tools.NumberUtils;
 import com.ebeijia.zl.common.utils.tools.ResultsUtil;
 import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.facade.telrecharge.domain.ProviderInf;
+import com.ebeijia.zl.facade.telrecharge.service.ProviderInfFacade;
 import com.ebeijia.zl.shop.dao.order.domain.*;
 import com.ebeijia.zl.shop.dao.order.service.*;
 import com.ebeijia.zl.web.cms.platforder.service.PlatfOrderInfService;
@@ -48,6 +50,9 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 	@Autowired
 	private ITbEcomOrderExpressPlatfService ecomOrderExpressPlatfService;
 
+	@Autowired
+	private ProviderInfFacade providerInfFacade;
+
 	@Override
 	public PageInfo<TbEcomPlatfOrder> getPlatfOrderListPage(int startNum, int pageSize, TbEcomPlatfOrder entity) {
 		PageHelper.startPage(startNum, pageSize);
@@ -67,7 +72,15 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 		List<TbEcomPlatfShopOrder> platfShopOrderList = platfShopOrderService.getPlatfShopOrderListByPlatfOrder(entity);
 		if (platfShopOrderList != null && platfShopOrderList.size() > 0) {
 			for (TbEcomPlatfShopOrder platfShopOrder : platfShopOrderList) {
-				//platfShopOrder.setEcomCode(GoodsEcomCodeTypeEnum.findByCode(platfShopOrder.getEcomCode()).getValue());
+				ProviderInf providerInf = null;
+				try {
+					providerInf = providerInfFacade.getProviderInfById(platfShopOrder.getEcomCode());
+				} catch (Exception e) {
+					logger.error("根据ecom_code查询供应商信息异常", platfShopOrder.getEcomCode());
+				}
+				if (!StringUtil.isNullOrEmpty(providerInf)) {
+					platfShopOrder.setEcomCode(providerInf.getProviderName());
+				}
 				platfShopOrder.setSubOrderStatusName(SubOrderStatusEnum.findByCode(platfShopOrder.getSubOrderStatus()).getValue());
 			}
 		}
@@ -83,6 +96,15 @@ public class PlatfOrderInfServiceImpl implements PlatfOrderInfService {
 		platfShopOrderList = platfShopOrderService.getPlatfShopOrderList(entity);
 		if (platfShopOrderList != null && platfShopOrderList.size() > 0) {
 			for (TbEcomPlatfShopOrder platfShopOrder : platfShopOrderList) {
+				ProviderInf providerInf = null;
+				try {
+					providerInf = providerInfFacade.getProviderInfById(platfShopOrder.getEcomCode());
+				} catch (Exception e) {
+					logger.error("根据ecom_code查询供应商信息异常", platfShopOrder.getEcomCode());
+				}
+				if (!StringUtil.isNullOrEmpty(providerInf)) {
+					platfShopOrder.setProviderName(providerInf.getProviderName());
+				}
 				platfShopOrder.setSubOrderStatusName(SubOrderStatusEnum.findByCode(platfShopOrder.getSubOrderStatus()).getValue());
 				platfShopOrder.setPayStatus(PlatfOrderPayStatEnum.findByCode(platfShopOrder.getPayStatus()).getValue());
 			}

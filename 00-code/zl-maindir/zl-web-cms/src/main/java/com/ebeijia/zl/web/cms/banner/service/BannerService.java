@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface BannerService {
 
@@ -42,4 +43,12 @@ public interface BannerService {
 	 * @return
 	 */
 	BaseResult<Object> deleteBanner(HttpServletRequest req);
+
+	/**
+	 * 根据banner位置获取banner规格list
+	 * @param req
+	 * @return
+	 */
+	Map<String, Object> getBannerSpecList(HttpServletRequest req);
+
 }

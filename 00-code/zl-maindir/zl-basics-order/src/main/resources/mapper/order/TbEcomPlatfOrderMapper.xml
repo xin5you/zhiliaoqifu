@@ -61,9 +61,8 @@
             p.personal_name as personalName
         from
           <include refid="tableName"/>
-            left join tb_ecom_member m on m.member_id = po.member_id
-            left join tb_user_inf u on u.user_id = m.user_id
-            left join tb_person_inf p on p.user_id = u.user_id
+          left join tb_ecom_member m on m.member_id = po.member_id
+          left join tb_person_inf p on p.mobile_phone_no = m.person_id
         where po.data_stat = '0'
         <if test="orderId !=null and orderId !='' ">
             and po.order_id = #{orderId}
