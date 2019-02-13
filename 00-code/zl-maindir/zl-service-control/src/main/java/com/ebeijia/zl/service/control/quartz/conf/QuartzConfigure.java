@@ -204,7 +204,7 @@ public class QuartzConfigure {
 
     /**
      * 配置具体执行规则
-     * @param specAccountTypeDetail
+     * @param telePhoneRechargeBiz
      * @return
      */
     @Bean

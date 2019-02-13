@@ -119,6 +119,7 @@ var listCompany = {
     },
     intoAddCompanyFee : function () {
         var companyId = $(this).attr('companyId');
+        var isPlatform = $("#isPlatform").val();
         var url = Helper.getRootPath()+"/company/listCompanyFee.do?companyId="+companyId+"&isPlatform="+isPlatform;
         location.href=url;
     },

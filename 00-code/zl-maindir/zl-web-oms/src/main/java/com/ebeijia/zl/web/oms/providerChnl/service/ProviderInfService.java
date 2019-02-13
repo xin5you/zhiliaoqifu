@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface ProviderInfService {
 
-	int providerOpenAccount(HttpServletRequest req);
+	Map<String, Object> providerOpenAccount(HttpServletRequest req);
 
 	Map<String, Object> addProviderTransfer(HttpServletRequest req, MultipartFile evidenceUrlFile);
 

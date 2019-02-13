@@ -260,11 +260,7 @@ public class ProviderInfController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
-			int i = providerInfService.providerOpenAccount(req);
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "开户失败，请重新操作");
-			}
+			resultMap = providerInfService.providerOpenAccount(req);
 		} catch (Exception e) {
 			logger.error(" ## 供应商开户出错 ", e);
 			resultMap.put("status", Boolean.FALSE);

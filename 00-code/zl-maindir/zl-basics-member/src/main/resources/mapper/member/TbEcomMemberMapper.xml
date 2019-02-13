@@ -35,6 +35,6 @@
         <if test="mobilePhoneNo != null and mobilePhoneNo != '' ">
           and p.mobile_phone_no = #{mobilePhoneNo}
         </if>
-        order by m.update_time desc
+        order by m.create_time desc
     </select>
 </mapper>

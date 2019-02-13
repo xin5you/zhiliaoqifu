@@ -2,6 +2,7 @@ package com.ebeijia.zl.web.oms.batchOrder.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,8 +25,8 @@ public interface BatchOrderService extends IService<BatchOrder> {
 	int deleteOpenAccountOrRechargeCommit(String orderId, User user);
 	
 	int updateBatchOrderAndOrderListByOrderStat(String orderId, String orderStat, User user);
-	
-	int batchOpenAccountITF(String orderId, User user, String orderStat);
+
+	Map<String, Object> batchOpenAccountITF(String orderId, User user, String orderStat);
 	
 	int batchRechargeITF(String orderId, User user, String orderStat);
 	

@@ -24,6 +24,12 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 
+	/**
+	 * 查询会员信息（含分页）
+	 * @param req
+	 * @param memberInf
+	 * @return
+	 */
 	@RequestMapping(value = "/getMemberInfList")
 	public ModelAndView getMemberInfList(HttpServletRequest req, TbEcomMember memberInf) {
 		ModelAndView mv = new ModelAndView("member/listMember");

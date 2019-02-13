@@ -86,7 +86,7 @@
 							     		</div>
 							     		
 							     		<div class="control-group">
-							             <label class="control-label">邮箱<span style="color:red">*</span></label>
+							             <label class="control-label">邮箱</label>
 							             <div class="controls">
 							                 <input type="text" class="span6" id="email" name="email" value="${retailChnlInf.email }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
 							                 <span class="help-block"></span>

@@ -14,7 +14,7 @@ public interface CompanyService {
 	 * @param req
 	 * @return
 	 */
-	public int openAccountCompany(HttpServletRequest req);
+	Map<String, Object> openAccountCompany(HttpServletRequest req);
 
 	/**
 	 * 平台转账至企业

@@ -88,18 +88,23 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 	private JedisClusterUtils jedisClusterUtils;
 	
 	@Override
-	public int providerOpenAccount(HttpServletRequest req) {
+	public Map<String, Object> providerOpenAccount(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.FALSE);
+
 		String providerId = StringUtil.nullToString(req.getParameter("providerId"));
 		ProviderInf providerInf = null;
 		try {
 			providerInf = providerInfFacade.getProviderInfById(providerId);
 			if (StringUtil.isNullOrEmpty(providerInf)) {
 				logger.error("## 查询供应商信息失败，providerId--->{}", providerId);
-				return 0;
+				resultMap.put("msg", "供应商信息不存在");
+				return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error("## 查询供应商{}信息失败", providerId);
-			return 0;
+			resultMap.put("msg", "查询供应商信息异常");
+			return resultMap;
 		}
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute(Constants.SESSION_USER);
@@ -114,14 +119,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE300.getCode(), null);
 		if (orderResult < 0) {
 			logger.error("## 新增供应商开户订单信息失败");
-			return 0;
+			resultMap.put("msg", "新增供应商开户订单信息异常");
+			return resultMap;
 		}
 		
 		String orderId = jedisClusterUtils.get(OrderConstants.providerOrderIdSession);
-		int i = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
-		if (i < 1) {
+		resultMap = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
+		if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
 			logger.error("## 调用开户接口失败");
-			return 0;
+			resultMap.put("msg", "供应商开户失败");
+			return resultMap;
 		}
 		jedisClusterUtils.del(OrderConstants.providerOrderIdSession);
 		
@@ -129,13 +136,16 @@ public class ProviderInfServiceImpl implements ProviderInfService {
 		try {
 			if (!providerInfFacade.updateProviderInf(providerInf)) {
 				logger.error("## 更新供应商{}开户成功状态失败", providerId);
-				return 0;
+				resultMap.put("msg", "更新供应商开户状态失败");
+				return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error("## 更新供应商{}开户状态失败", providerId);
-			return 0;
+			resultMap.put("msg", "更新供应商开户状态异常");
+			return resultMap;
 		}
-		return 1;
+		resultMap.put("status", Boolean.TRUE);
+		return resultMap;
 	}
 
 	@Override
