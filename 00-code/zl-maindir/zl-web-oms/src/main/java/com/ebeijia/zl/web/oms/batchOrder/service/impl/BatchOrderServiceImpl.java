@@ -605,7 +605,10 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 	}
 
 	@Override
-	public int batchTransferAccountITF(String orderId, User user, String orderStat) {
+	public Map<String, Object> batchTransferAccountITF(String orderId, User user, String orderStat) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.FALSE);
+
 		BatchOrder order = batchOrderMapper.getBatchOrderById(orderId);
 		
 		BatchOrderList orderList = new BatchOrderList();
@@ -614,7 +617,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		List<BatchOrderList> batchOrderList = batchOrderListMapper.getBatchOrderListByOrderStat(orderList);
 		if (batchOrderList == null) {
 			logger.error("## 批量充值名单为空");
-			return 0;
+			resultMap.put("msg", "批量充值失败，充值名单为空");
+			return resultMap;
 		}
 
 		int orderListResult = 0;
@@ -653,7 +657,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				}
 			} catch (Exception e) {
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
-				return 0;
+				resultMap.put("msg", "批量充值失败，请联系技术人员");
+				return resultMap;
 			}
 			if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 				batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
@@ -677,9 +682,11 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		int orderRsult = batchOrderMapper.updateBatchOrder(order);
 		if (orderListResult < 0 || orderRsult < 0) {
 			logger.error("## 更新批量转账订单状态失败，batchOrder--->{}", JSONArray.toJSONString(order));
-			return 0;
+			resultMap.put("msg", "批量充值成功，订单状态更新失败");
+			return resultMap;
 		}
-		return 1;
+		resultMap.put("status", Boolean.TRUE);
+		return resultMap;
 	}
 
 }

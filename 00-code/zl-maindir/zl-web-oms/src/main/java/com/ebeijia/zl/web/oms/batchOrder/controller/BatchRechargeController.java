@@ -328,11 +328,7 @@ public class BatchRechargeController {
 					return resultMap;
 				}
 			}
-			int i = batchOrderService.batchTransferAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "提交批量充值订单失败");
-			}
+			resultMap = batchOrderService.batchTransferAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			logger.error("## 提交批量充值订单，订单号：[{}]，出错", orderId, e);

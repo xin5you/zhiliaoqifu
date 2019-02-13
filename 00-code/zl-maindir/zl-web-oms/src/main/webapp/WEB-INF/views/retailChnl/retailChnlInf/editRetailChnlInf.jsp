@@ -31,7 +31,7 @@
 							     		<div class="control-group">
 							             <label class="control-label">分销商名称<span style="color:red">*</span></label>
 							             <div class="controls">
-							                 <input type="text" class="span6" id="channelName" name="channelName" value="${retailChnlInf.channelName }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+											 <input type="text" class="span6" id="channelName" name="channelName" value="${retailChnlInf.channelName }" maxlength="32" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')" <c:if test="${'1'==retailChnlInf.isOpen }">readonly="readonly"</c:if>/>
 							                 <span class="help-block"></span>
 							             </div>
 							     		</div>

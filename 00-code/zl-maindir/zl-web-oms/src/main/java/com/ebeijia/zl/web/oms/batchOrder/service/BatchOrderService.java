@@ -29,8 +29,15 @@ public interface BatchOrderService extends IService<BatchOrder> {
 	Map<String, Object> batchOpenAccountITF(String orderId, User user, String orderStat);
 	
 	int batchRechargeITF(String orderId, User user, String orderStat);
-	
-	int batchTransferAccountITF(String orderId, User user, String orderStat);
+
+	/**
+	 * 企业用户充值（由企业账户转账至用户账户）
+	 * @param orderId
+	 * @param user
+	 * @param orderStat
+	 * @return
+	 */
+	Map<String, Object> batchTransferAccountITF(String orderId, User user, String orderStat);
 	
 	int addBatchOrder(BatchOrder order);
 	
