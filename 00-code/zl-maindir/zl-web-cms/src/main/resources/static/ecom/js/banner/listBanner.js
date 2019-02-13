@@ -345,6 +345,10 @@ var listBanner = {
     },
     getBannerSpecList : function () {
         var position = $('#position').val();
+        if (position == null || position == '') {
+            $("#spec").empty();
+            return;
+        }
         $.ajax({
             url : Helper.getRootPath() + '/banner/getBannerSpecList',
             type : 'post',
