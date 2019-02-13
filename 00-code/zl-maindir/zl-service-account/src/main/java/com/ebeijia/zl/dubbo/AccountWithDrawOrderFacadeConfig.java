@@ -18,7 +18,7 @@ public class AccountWithDrawOrderFacadeConfig extends DubboProviderConfig {
 
 	
 	@Bean
-	public ServiceBean<AccountWithDrawOrderFacade> accountManageFacade(AccountWithDrawOrderFacade accountWithDrawOrderFacade) {
+	public ServiceBean<AccountWithDrawOrderFacade> accountWithDrawOrderFacade(AccountWithDrawOrderFacade accountWithDrawOrderFacade) {
 		
 		ServiceBean<AccountWithDrawOrderFacade> serviceBean = new ServiceBean<AccountWithDrawOrderFacade>();
 		serviceBean.setInterface(AccountWithDrawOrderFacade.class.getName());

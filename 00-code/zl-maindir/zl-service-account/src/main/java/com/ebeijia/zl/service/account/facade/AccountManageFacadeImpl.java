@@ -41,7 +41,6 @@ import java.util.List;
 */
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service()
 @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountManageFacadeImpl implements AccountManageFacade {
 	
