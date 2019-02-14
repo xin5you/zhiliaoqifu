@@ -72,7 +72,8 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 	private MQProducerService mqProducerService;
 	
 	/***
-	 * 
+	 *
+	 *
 	* @Description: 查找賬戶信息
 	*
 	* @param:userType 用戶类型
