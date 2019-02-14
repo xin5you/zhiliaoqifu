@@ -345,8 +345,9 @@ var listBanner = {
     },
     getBannerSpecList : function () {
         var position = $('#position').val();
-        if (position == null || position == '') {
+        if (!position) {
             $("#spec").empty();
+            $("#spec").append("<option value=''>---请选择---</option>");
             return;
         }
         $.ajax({
@@ -359,7 +360,7 @@ var listBanner = {
             success : function (data) {
                 if(data.status) {
                     $("#spec").empty();
-                    $("#spec").append("<option>---请选择---</option>");
+                    $("#spec").append("<option value=''>---请选择---</option>");
                     $.each(data.msg, function(i,item){
                         $("#spec").append("<option value="+item.code+">"+item.name+"</option>");
                     });
