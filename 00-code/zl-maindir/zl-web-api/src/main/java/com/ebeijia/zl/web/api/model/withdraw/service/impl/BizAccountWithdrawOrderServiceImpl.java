@@ -34,7 +34,13 @@ public class BizAccountWithdrawOrderServiceImpl implements BizAccountWithdrawOrd
             logger.info("易付宝回调请求当前批次号不存在->{}",batchNo);
             return false;
         }
-        if(WithDrawStatusEnum.Status05.getCode().equals(accountWithdrawOrder.getStatus())){
+
+        if(WithDrawStatusEnum.Status04.equals(accountWithdrawOrder.getStatus())){
+            logger.info("重复发送，当前批次号->{}已失败",batchNo);
+            return false;
+        }
+
+        if(WithDrawStatusEnum.Status05.getCode().equals(accountWithdrawOrder.getStatus()) || WithDrawStatusEnum.Status07.getCode().equals(accountWithdrawOrder.getStatus())){
             logger.info("重复发送，当前批次号->{}已成功",batchNo);
             return false;
         }

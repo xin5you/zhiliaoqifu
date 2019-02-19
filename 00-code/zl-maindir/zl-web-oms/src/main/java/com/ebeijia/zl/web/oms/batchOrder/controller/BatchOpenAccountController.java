@@ -320,11 +320,8 @@ public class BatchOpenAccountController {
 					return resultMap;
 				}
 			}
-			int i = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "提交批量开户订单失败");
-			}
+			resultMap = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
+
 		} catch (Exception e) {
 			resultMap.put("status", Boolean.FALSE);
 			logger.error("## 提交批量开户订单信息出错,orderId--->{}", orderId, e);

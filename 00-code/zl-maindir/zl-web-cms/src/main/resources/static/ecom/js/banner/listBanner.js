@@ -14,6 +14,7 @@ var listBanner = {
 		$('.btn-delete').on('click', listBanner.deleteBanner);
 		$('.btn-close').on('click',listBanner.searchReset);
         $('#imageUrlFile').on('change', listBanner.imageUpload);
+        $('#position').on('change', listBanner.getBannerSpecList);
         /*$('.btn-updateDisable').on('click',listBanner.intoUpdateDisable);
         $('.btn-updateDisableCommit').on('click',listBanner.updateDisableCommit);*/
 	},
@@ -334,6 +335,37 @@ var listBanner = {
                     });
                 } else {
                     Helper.alert(data.msg);
+                    return false;
+                }
+            },
+            error : function() {
+                Helper.alert("网络异常，请稍后再试");
+            }
+        });
+    },
+    getBannerSpecList : function () {
+        var position = $('#position').val();
+        if (!position) {
+            $("#spec").empty();
+            $("#spec").append("<option value=''>---请选择---</option>");
+            return;
+        }
+        $.ajax({
+            url : Helper.getRootPath() + '/banner/getBannerSpecList',
+            type : 'post',
+            dataType : "json",
+            data : {
+                "position": position
+            },
+            success : function (data) {
+                if(data.status) {
+                    $("#spec").empty();
+                    $("#spec").append("<option value=''>---请选择---</option>");
+                    $.each(data.msg, function(i,item){
+                        $("#spec").append("<option value="+item.code+">"+item.name+"</option>");
+                    });
+                } else {
+                    Helper.alert("获取banner规格信息失败");
                     return false;
                 }
             },

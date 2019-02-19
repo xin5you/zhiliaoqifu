@@ -18,10 +18,10 @@ import com.ebeijia.zl.facade.account.service.AccountManageFacade;
 @Configuration
 public class AccountManageFacadeConfig extends DubboProviderConfig {
 
-	
+
 	@Bean
 	public ServiceBean<AccountManageFacade> accountManageFacade(AccountManageFacade accountManageFacade) {
-		
+
 		ServiceBean<AccountManageFacade> serviceBean=new ServiceBean<AccountManageFacade>();
 		serviceBean.setInterface(AccountManageFacade.class.getName());
 		serviceBean.setVersion("1.0.0");
@@ -29,7 +29,7 @@ public class AccountManageFacadeConfig extends DubboProviderConfig {
 		serviceBean.setCluster("failfast");
 		serviceBean.setTimeout(10000);
 		serviceBean.setRetries(0);
-		
+
 		List<MethodConfig> methods=new ArrayList<MethodConfig>();
 		/*** dubbo method registerUserInf config*/
 		MethodConfig methodConfig=new MethodConfig();
@@ -41,13 +41,13 @@ public class AccountManageFacadeConfig extends DubboProviderConfig {
 
 
 		/*** dubbo method registerUserInf config*/
-		 methodConfig=new MethodConfig();
+		methodConfig=new MethodConfig();
 		methodConfig.setName("createAccountList");
 		methodConfig.setTimeout(60000);
 		methodConfig.setRetries(0);
 		methods.add(methodConfig); //
 		serviceBean.setMethods(methods);
-		
+
 		return serviceBean;
 	}
 }

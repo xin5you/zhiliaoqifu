@@ -37,7 +37,7 @@
           inner join tb_ecom_order_product_item item on item.s_order_id = pso.s_order_id
           left join tb_ecom_goods_product pro on pro.product_id = item.product_id
           left join tb_ecom_goods g on g.spu_code = pro.spu_code
-          left join tb_provider_inf p on pso.ecom_code = p.law_code
+          left join tb_provider_inf p on pso.ecom_code = p.provider_id
         where pso.data_stat = '0'
         <if test="sOrderId != null and sOrderId != '' ">
             and pso.s_order_id = #{sOrderId}
@@ -73,7 +73,7 @@
         from tb_ecom_platf_shop_order pso
             left join tb_ecom_platf_order po on pso.order_id = po.order_id
             left join tb_ecom_member m on po.member_id = m.member_id
-            left join tb_person_inf p on  m.person_id = p.personal_id
+            left join tb_person_inf p on p.mobile_phone_no = m.person_id
         where 1=1
         <if test="sOrderId !=null and sOrderId !='' ">
             and pso.s_order_id = #{sOrderId}

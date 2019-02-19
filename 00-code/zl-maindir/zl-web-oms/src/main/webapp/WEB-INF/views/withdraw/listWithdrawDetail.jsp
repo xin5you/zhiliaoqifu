@@ -15,7 +15,7 @@
 				<ul>
 					<li><a href="#"><i class="icon-home"></i></a></li>
 					<li>提现管理</li>
-					<li><a href="${ctx }/withdraw/listWithdrawDetail.do">提现订单管理</a></li>
+					<li><a href="${ctx }/withdraw/listWithdrawOrder.do">提现订单管理</a></li>
 					<li>提现订单明细列表</li>
 				</ul>
 			</div>

@@ -26,7 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("bannerService")
 public class BannerServiceImpl implements BannerService {
@@ -164,6 +167,38 @@ public class BannerServiceImpl implements BannerService {
 			return ResultsUtil.error(ExceptionEnum.BannerNews.BannerNews03.getCode(), ExceptionEnum.BannerNews.BannerNews03.getMsg());
 		}
 		return ResultsUtil.success();
+	}
+
+	@Override
+	public Map<String, Object> getBannerSpecList(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.TRUE);
+
+		try {
+			String position = req.getParameter("position");
+
+			List<Map<String, String>> bannerSpecEnumList = new ArrayList<>();
+
+			if (BannerPositionEnum.BannerPositionEnum2.getCode().equals(position)) {
+				Map<String, String> bannerSpecEnumMap = new HashMap<>();
+				bannerSpecEnumMap.put("code", BannerSpecEnum.BannerSpecEnum0.getCode());
+				bannerSpecEnumMap.put("name", BannerSpecEnum.BannerSpecEnum0.getName());
+				bannerSpecEnumList.add(bannerSpecEnumMap);
+			} else {
+				for (BannerSpecEnum b : BannerSpecEnum.values()) {
+					Map<String, String> bannerSpecEnumMap = new HashMap<>();
+					bannerSpecEnumMap.put("code", b.getCode());
+					bannerSpecEnumMap.put("name", b.getName());
+					bannerSpecEnumList.add(bannerSpecEnumMap);
+				}
+			}
+			resultMap.put("msg", bannerSpecEnumList);
+		} catch (Exception e) {
+			logger.error("## 获取banner规格枚举信息异常");
+			resultMap.put("status", Boolean.FALSE);
+		}
+
+		return resultMap;
 	}
 
 }

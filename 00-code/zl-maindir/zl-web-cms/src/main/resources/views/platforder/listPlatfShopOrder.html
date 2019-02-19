@@ -37,7 +37,7 @@
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
-								<button type="button" class="btn btn-primary btn-upload">导出表格</button>
+								<!--<button type="button" class="btn btn-primary btn-upload">导出表格</button>-->
 							</div>
 						</div>
 					</div>
@@ -83,10 +83,10 @@
 								<th>会员昵称</th>
 								<th>会员手机号</th>
 								<th>供应商名称</th>
-				                <th>订单金额(元)</th>
+				                <!--<th>支付金额(元)</th>-->
 				                <th>配送费用(元)</th>
-				                <th>渠道订单金额(元)</th>
-				                <th>渠道订单邮费(元)</th>
+				                <th>订单金额(元)</th>
+				                <th>订单邮费(元)</th>
 				                <th>订单状态</th>
 				                <th>下单时间</th>
 				                <th>支付状态</th>
@@ -103,10 +103,10 @@
 								<td><span th:text="${platfShopOrder.personalName}"></span></td>
 								<td><span th:text="${platfShopOrder.mobilePhoneNo}"></span></td>
 								<td><span th:text="${platfShopOrder.providerName}"></span></td>
-				                <td><span th:if="${not #strings.isEmpty(platfShopOrder.payAmt)}" th:text="${platfShopOrder.payAmt / 100}"></span></td>
-								<td><span th:if="${not #strings.isEmpty(platfShopOrder.shippingFreightPrice)}" th:text="${platfShopOrder.shippingFreightPrice / 100}"></span></td>
-								<td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPrice)}" th:text="${platfShopOrder.chnlOrderPrice / 100}"></span></td>
-								<td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPostage)}" th:text="${platfShopOrder.chnlOrderPostage / 100}"></span></td>
+				                <!--<td><span th:if="${not #strings.isEmpty(platfShopOrder.payAmt)}" th:text="${#numbers.formatDecimal(platfShopOrder.payAmt/100.0,1,2)}"></span></td>-->
+								<td><span th:if="${not #strings.isEmpty(platfShopOrder.shippingFreightPrice)}" th:text="${#numbers.formatDecimal(platfShopOrder.shippingFreightPrice/100.0,1,2)}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPrice)}" th:text="${#numbers.formatDecimal(platfShopOrder.chnlOrderPrice/100.0,1,2)}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPostage)}" th:text="${#numbers.formatDecimal(platfShopOrder.chnlOrderPostage/100.0,1,2)}"></span></td>
 								<td><span th:text="${platfShopOrder.subOrderStatusName}"></span></td>
 								<td><span th:text="${#dates.format(platfShopOrder.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 								<td><span th:text="${platfShopOrder.payStatus}"></span></td>

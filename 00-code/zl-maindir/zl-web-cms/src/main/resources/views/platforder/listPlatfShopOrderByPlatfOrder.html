@@ -67,8 +67,8 @@
 								<td><span th:text="${platfShopOrder.orderId}"></span></td>
 								<td><span th:text="${platfShopOrder.providerName}"></span></td>
 								<td><span th:text="${platfShopOrder.dmsRelatedKey}"></span></td>
-				                <td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPrice)}" th:text="${platfShopOrder.chnlOrderPrice  / 100}"></span></td>
-								<td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPostage)}" th:text="${platfShopOrder.chnlOrderPostage  / 100}"></span></td>
+				                <td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPrice)}" th:text="${#numbers.formatDecimal(platfShopOrder.chnlOrderPrice/100.0,1,2)}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfShopOrder.chnlOrderPostage)}" th:text="${#numbers.formatDecimal(platfShopOrder.chnlOrderPostage/100.0,1,2)}"></span></td>
 								<td><span th:text="${platfShopOrder.subOrderStatusName}"></span></td>
 								<td><span th:text="${#dates.format(platfShopOrder.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 <!-- 				                <td> -->

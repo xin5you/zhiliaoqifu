@@ -41,7 +41,6 @@ import java.util.List;
 */
 
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service()
 @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountManageFacadeImpl implements AccountManageFacade {
 	
@@ -138,11 +137,13 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 		intfaceTrans = intfaceTransLogService.newItfTransLog(intfaceTrans, dmsRelatedKey, dmsRelatedKey, TransCode.MB50.getCode(), null, userType, transChnl,
 				null,null, null);
 		intfaceTrans.setTransDesc("批量开户");
+        intfaceTransLogService.save(intfaceTrans);
 
 		/**
 		 * 注册用户信息
 		 */
 		List<IntfaceTransLog> intfaceTransLogs = new ArrayList<IntfaceTransLog>();
+
 		for (AccountOpenReqVo req : list) {
 			String userId = userInfService.registerUserInf(req.getUserType(),
 					req.getUserName(),

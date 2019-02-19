@@ -31,7 +31,7 @@ public interface RetailChnlInfService {
 	 * @param req
 	 * @return
 	 */
-	int retailChnlOpenAccount(HttpServletRequest req);
+	Map<String, Object> retailChnlOpenAccount(HttpServletRequest req);
 
 	/**
 	 * 添加分销商上账记录

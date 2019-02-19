@@ -39,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 * 2018年11月30日     zhuqi           v1.0.0
 */
 @Configuration
-@com.alibaba.dubbo.config.annotation.Service()
 @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 public class AccountQueryFacadeImpl implements AccountQueryFacade {
 	

@@ -82,18 +82,23 @@ public class CompanyServiceImpl implements CompanyService{
 	private AccountQueryFacade accountQueryFacade;
 
 	@Override
-	public int openAccountCompany(HttpServletRequest req) {
-		String companyId = StringUtil.nullToString(req.getParameter("companyId"));
+	public Map<String, Object> openAccountCompany(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.FALSE);
+
+	    String companyId = StringUtil.nullToString(req.getParameter("companyId"));
 		CompanyInf companyInf = null;
 		try {
 			companyInf = companyInfFacade.getCompanyInfById(companyId);
 			if (StringUtil.isNullOrEmpty(companyInf)) {
 				logger.error("## 查询企业信息失败，companyId--->{}", companyId);
-				return 0;
+                resultMap.put("msg", "企业信息不存在");
+                return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error("## 查询企业{}信息失败", companyId);
-			return 0;
+            resultMap.put("msg", "查询企业信息异常");
+            return resultMap;
 		}
 		
 		HttpSession session = req.getSession();
@@ -110,19 +115,22 @@ public class CompanyServiceImpl implements CompanyService{
 		int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE200.getCode(), companyInf.getIsPlatform());
 		if (orderResult < 0) {
 			logger.error("## 新增企业开户订单信息失败");
-			return 0;
+            resultMap.put("msg", "新增企业开户订单信息失败");
+            return resultMap;
 		}
 		
 		String orderId = jedisClusterUtils.get(OrderConstants.companyOrderIdSession);
 		try {
-			int i = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
-			if (i < 1) {
-				logger.error("## 调用开户接口失败");
-				return 0;
-			}
+			resultMap = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
+            if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
+                logger.error("## 调用开户接口失败");
+                resultMap.put("msg", "企业开户失败");
+                return resultMap;
+            }
 		} catch (Exception e) {
 			logger.error("## 调用企业开户接口失败");
-			return 0;
+            resultMap.put("msg", "企业开户异常");
+            return resultMap;
 		}
 				
 		jedisClusterUtils.del(OrderConstants.companyOrderIdSession);
@@ -131,12 +139,14 @@ public class CompanyServiceImpl implements CompanyService{
 			companyInf.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 			if (!companyInfFacade.updateCompanyInf(companyInf)) {
 				logger.error("## 更新企业{}开户成功状态失败", companyId);
-				return 0;
+                resultMap.put("msg", "更新企业开户状态异常");
+                return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error("## 更新企业{}开户状态失败", companyId);
 		}
-		return 1;
+        resultMap.put("status", Boolean.TRUE);
+        return resultMap;
 	}
 
 	@Override

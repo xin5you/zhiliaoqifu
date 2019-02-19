@@ -412,11 +412,7 @@ public class RetailChnlInfController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
-			int i = retailChnlInfService.retailChnlOpenAccount(req);
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("msg", "开户失败，请重新操作");
-			}
+			resultMap = retailChnlInfService.retailChnlOpenAccount(req);
 		} catch (Exception e) {
 			logger.error(" ## 分销商开户出错 ", e);
 			resultMap.put("status", Boolean.FALSE);
@@ -593,9 +589,9 @@ public class RetailChnlInfController {
 			/*order.setTransferCheck(TransferCheckEnum.findByBId(order.getTransferCheck()).getName());*/
 			order.setRemitAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getRemitAmt().toString())));
 			order.setInaccountSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getInaccountSumAmt().toString())));
-			order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));
+			/*order.setCompanyInSumAmt(new BigDecimal(NumberUtils.RMBCentToYuan(order.getCompanyInSumAmt().toString())));*/
 			/*order.setPlatformReceiverCheck(ReceiverEnum.findByBId(order.getPlatformReceiverCheck()).getName());*/
-			order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());
+			/*order.setCompanyReceiverCheckName(ReceiverEnum.findByBId(order.getCompanyReceiverCheck()).getName());*/
 		}
 
 		try {

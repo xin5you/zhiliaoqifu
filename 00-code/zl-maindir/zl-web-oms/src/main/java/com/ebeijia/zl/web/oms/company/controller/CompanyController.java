@@ -231,17 +231,19 @@ public class CompanyController {
 		return companyInf;
 	}
 
+	/**
+	 * 企业开户
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
 	@RequestMapping(value = "/openAccountCompany")
 	@ResponseBody
 	public Map<String, Object> openAccountCompany(HttpServletRequest req, HttpServletResponse resp) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("status", Boolean.TRUE);
 		try {
-			int i = companyService.openAccountCompany(req);
-			if (i < 1) {
-				resultMap.put("status", Boolean.FALSE);
-				resultMap.put("status", "企业开户失败，请稍后再试");
-			}
+			resultMap = companyService.openAccountCompany(req);
 		} catch (Exception e) {
 			logger.error("## 企业开户异常", e);
 			resultMap.put("status", Boolean.FALSE);
@@ -251,6 +253,12 @@ public class CompanyController {
 		return resultMap;
 	}
 
+	/**
+	 * 跳转企业/平台 上账/打款 页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoAddCompanyTransfer")
 	public ModelAndView intoAddCompanyTransfer(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = null;
@@ -293,6 +301,12 @@ public class CompanyController {
 		return mv;
 	}
 
+	/**
+	 * 平台打款订单信息提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addCompanyTransferCommit")
 	@ResponseBody
 	public Map<String, Object> addCompanyTransferCommit(HttpServletRequest req, HttpServletResponse response) {

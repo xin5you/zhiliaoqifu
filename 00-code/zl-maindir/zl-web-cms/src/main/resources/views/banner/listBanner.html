@@ -128,26 +128,28 @@
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label"><span class="f_req">* </span>规格：</label>
-							<div class="controls">
-								<select name="spec" id="spec" class="span3">
-									<option th:each="b,bStat : ${bannerSpecList}" th:value="${b.code}">
-										<span th:text="${b.name}"></span>
-									</option>
-								</select>
-								<!--<input type="text" class="span3" name="spec" id="spec" maxlength="18"/>-->
-								<span class="help-block"></span>
-							</div>
-						</div>
-						<div class="control-group">
 							<label class="control-label"><span class="f_req">* </span>banner位置：</label>
 							<div class="controls">
 								<select name="position" id="position" class="span3">
+									<option value="">---请选择---</option>
 									<option th:each="b,bStat : ${bannerPositionList}" th:value="${b.code}">
 										<span th:text="${b.name}"></span>
 									</option>
 								</select>
 								<!--<input type="text" class="span3" name="position" id="position" maxlength="10"/>-->
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"><span class="f_req">* </span>规格：</label>
+							<div class="controls">
+								<select name="spec" id="spec" class="span3">
+									<option value="">---请选择---</option>
+									<!--<option th:each="b,bStat : ${bannerSpecList}" th:value="${b.code}">
+                                        <span th:text="${b.name}"></span>
+                                    </option>-->
+								</select>
+								<!--<input type="text" class="span3" name="spec" id="spec" maxlength="18"/>-->
 								<span class="help-block"></span>
 							</div>
 						</div>

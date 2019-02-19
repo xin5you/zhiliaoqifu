@@ -205,18 +205,23 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
     }
 
     @Override
-    public int retailChnlOpenAccount(HttpServletRequest req) {
+    public Map<String, Object> retailChnlOpenAccount(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.FALSE);
+
         String channelId = StringUtil.nullToString(req.getParameter("channelId"));
         RetailChnlInf retailChnl = null;
         try {
             retailChnl = retailChnlInfFacade.getRetailChnlInfById(channelId);
             if (StringUtil.isNullOrEmpty(retailChnl)) {
                 logger.error("## 查询分销商信息失败，channelId--->{}", channelId);
-                return 0;
+                resultMap.put("msg", "分销商信息不存在");
+                return resultMap;
             }
         } catch (Exception e) {
             logger.error("## 查询分销商{}信息失败", channelId);
-            return 0;
+            resultMap.put("msg", "查询分销商信息异常");
+            return resultMap;
         }
 
         HttpSession session = req.getSession();
@@ -233,14 +238,16 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
         int orderResult = batchOrderService.addBatchOrderAndOrderList(req, batchOrderList, TransCode.MB80.getCode(), UserType.TYPE400.getCode(), null);
         if (orderResult < 0) {
             logger.error("## 新增分销商开户订单信息失败");
-            return 0;
+            resultMap.put("msg", "新增分销商开户订单信息异常");
+            return resultMap;
         }
 
         String orderId = jedisClusterUtils.get(OrderConstants.retailChnlOrderIdSession);
-        int i = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
-        if (i < 1) {
+        resultMap = batchOrderService.batchOpenAccountITF(orderId, user, BatchOrderStat.BatchOrderStat_30.getCode());
+        if (!String.valueOf(resultMap.get("status").toString()).equals("true")) {
             logger.error("## 调用开户接口失败");
-            return 0;
+            resultMap.put("msg", "分销商开户失败");
+            return resultMap;
         }
         jedisClusterUtils.del(OrderConstants.retailChnlOrderIdSession);
 
@@ -248,12 +255,16 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             retailChnl.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
             if (!retailChnlInfFacade.updateRetailChnlInf(retailChnl)) {
                 logger.error("## 更新分销商{}开户成功状态失败", channelId);
-                return 0;
+                resultMap.put("msg", "更新分销商开户状态失败");
+                return resultMap;
             }
         } catch (Exception e) {
             logger.error("## 更新分销商{}开户状态失败", channelId);
+            resultMap.put("msg", "更新分销商开户状态异常");
+            return resultMap;
         }
-        return 1;
+        resultMap.put("status", Boolean.TRUE);
+        return resultMap;
     }
 
     @Override

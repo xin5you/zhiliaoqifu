@@ -37,7 +37,7 @@
 							<div class="pull-right">
 								<button type="submit" class="btn btn-search">查 询</button>
 								<button type="button" class="btn btn-inverse btn-reset">重 置</button>
-								<button type="button" class="btn btn-primary btn-upload">导出表格</button>
+								<!--<button type="button" class="btn btn-primary btn-upload">导出表格</button>-->
 							</div>
 						</div>
 					</div>
@@ -89,10 +89,10 @@
 								<td><span th:text="${platfOrder.memberId}"></span></td>
 								<td><span th:text="${platfOrder.mobilePhoneNo}"></span></td>
 								<td><span th:text="${platfOrder.personalName}"></span></td>
-				                <td><span th:if="${not #strings.isEmpty(platfOrder.orderPrice)}" th:text="${platfOrder.orderPrice / 100}"></span></td>
-				                <td><span th:if="${not #strings.isEmpty(platfOrder.orderFreightAmt)}" th:text="${platfOrder.orderFreightAmt / 100}"></span></td>
+				                <td><span th:if="${not #strings.isEmpty(platfOrder.orderPrice)}" th:text="${#numbers.formatDecimal(platfOrder.orderPrice/100.0,1,2)}"></span></td>
+				                <td><span th:if="${not #strings.isEmpty(platfOrder.orderFreightAmt)}" th:text="${#numbers.formatDecimal(platfOrder.orderFreightAmt/100.0,1,2)}"></span></td>
 								<!--<td><span th:text="${platfOrder.payType}"></span></td>-->
-								<td><span th:if="${not #strings.isEmpty(platfOrder.payAmt)}" th:text="${platfOrder.payAmt / 100}"></span></td>
+								<td><span th:if="${not #strings.isEmpty(platfOrder.payAmt)}" th:text="${#numbers.formatDecimal(platfOrder.payAmt/100.0,1,2)}"></span></td>
 								<td><span th:text="${platfOrder.payStatus}"></span></td>
 								<td><span th:text="${#dates.format(platfOrder.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
 								<td><span th:if="${not #strings.isEmpty(platfOrder.payTime)}" th:text="${#dates.format(platfOrder.payTime, 'yyyy-MM-dd HH:mm:ss')}"></span></td>

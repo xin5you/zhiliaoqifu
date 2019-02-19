@@ -113,7 +113,7 @@ public class AccountLogServiceImpl extends ServiceImpl<AccountLogMapper, Account
 			if(s.getAccTotalBal() !=null) {
 				s.setAccTotalBal(AmountUtil.RMBCentToYuan(s.getAccTotalBal()));
 			}
-
+			s.setBName(SpecAccountTypeEnum.findByBId(s.getPriBId()).getName());
 			//公司名称
 			if (TransCode.CW50.getCode().equals(s.getTransId())
 					&& UserType.TYPE100.getCode().equals(s.getUserType())

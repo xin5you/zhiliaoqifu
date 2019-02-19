@@ -32,6 +32,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("banner")
@@ -60,7 +62,7 @@ public class BannerController {
 			PageInfo<TbEcomBanner> pageInfo = bannerService.getBannerListPage(startNum, pageSize, banner);
 			mv.addObject("pageInfo", pageInfo);
 			mv.addObject("bannerPositionList", BannerPositionEnum.values());
-			mv.addObject("bannerSpecList", BannerSpecEnum.values());
+			//mv.addObject("bannerSpecList", BannerSpecEnum.values());
 		} catch (Exception e) {
 			logger.error("## 会员信息查询出错", e);
 		}
@@ -138,6 +140,23 @@ public class BannerController {
 			return ResultsUtil.error(ExceptionEnum.BannerNews.BannerNews03.getCode(), ExceptionEnum.BannerNews.BannerNews03.getMsg());
 		}
 		return result;
+	}
+
+	/**
+	 * 根据banner位置获取banner规格list
+	 * @param req
+	 * @return
+	 */
+	@PostMapping(value = "/getBannerSpecList")
+	public Map<String, Object> getBannerSpecList(HttpServletRequest req) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			resultMap = bannerService.getBannerSpecList(req);
+		} catch (Exception e) {
+			logger.error("## 编辑banner信息异常");
+			resultMap.put("status", Boolean.FALSE);
+		}
+		return resultMap;
 	}
 
 	/**

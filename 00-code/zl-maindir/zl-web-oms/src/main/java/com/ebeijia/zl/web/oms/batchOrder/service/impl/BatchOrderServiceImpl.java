@@ -1,12 +1,7 @@
 package com.ebeijia.zl.web.oms.batchOrder.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -334,15 +329,20 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 	}
 
 	@Override
-	public int batchOpenAccountITF(String orderId, User user, String orderStat) {
+	public Map<String, Object> batchOpenAccountITF(String orderId, User user, String orderStat) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.FALSE);
+
 		if (StringUtil.isNullOrEmpty(orderId)) {
 			logger.error("## 批量开户订单号为空");
-			return 0;
+			resultMap.put("msg", "开户订单号为空");
+			return resultMap;
 		}
 		BatchOrder order = batchOrderMapper.getBatchOrderById(orderId);
 		if (order == null) {
 			logger.error("## 查询批量开户名单订单{}记录为空", orderId);
-			return 0;
+			resultMap.put("msg", "开户订单信息不存在");
+			return resultMap;
 		}
 
 		BatchOrderList orderList = new BatchOrderList();
@@ -353,11 +353,13 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			batchOrderList = batchOrderListMapper.getBatchOrderListByOrderStat(orderList);
 			if (batchOrderList == null || batchOrderList.size() < 1) {
 				logger.error("## 批量开户名单为空");
-				return 0;
+				resultMap.put("msg", "开户订单明细信息不存在");
+				return resultMap;
 			}
 		} catch (Exception e) {
 			logger.error("## 查询开户订单信息异常");
-			return 0;
+			resultMap.put("msg", "查询开户订单信息异常");
+			return resultMap;
 		}
 		List<AccountOpenReqVo> reqVoList = new ArrayList<>();
 		Set<String> bIds = new TreeSet<>();
@@ -407,7 +409,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				}
 			} catch (Exception e) {
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", order.getOrderId(), TransChnl.CHANNEL0.toString(), e);
-				return 0;
+				resultMap.put("msg", "调用开户查询接口异常");
+				return resultMap;
 			}
 
 			for (BatchOrderList batchOrder : batchOrderList) {
@@ -425,8 +428,9 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 					order.setOrderStat(BatchOrderStat.BatchOrderStat_99.getCode());
 				}
 				if (batchOrderMapper.updateBatchOrder(order) < 1) {
-					logger.error("## 更新开户后的订单信息失败，orderId--->{}", orderId);
-					return 0;
+					logger.error("## 开户成功，更新订单信息失败，orderId--->{}", orderId);
+					resultMap.put("msg", "更新订单信息失败");
+					return resultMap;
 				}
 			} else {
 				logger.error("更新开户订单明细{}状态{}失败", JSONArray.toJSONString(batchOrderList), result.getCode());
@@ -448,8 +452,9 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 						logger.info("远程调用查询接口返回参数{}", JSONArray.toJSONString(result));
 					}
 				} catch (Exception e) {
-					logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
-					return 0;
+					logger.error("## 远程调用查询接口异常,入参--->dmsRelatedKey{},transChnl{}", req.getDmsRelatedKey(), req.getTransChnl(), e);
+					resultMap.put("msg", "调用开户查询接口异常");
+					return resultMap;
 				}
 
 				List<BatchOrderList> batchOrderLists = batchOrderListMapper.getBatchOrderListByOrderId(orderId);
@@ -463,7 +468,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				}
 				if (batchOrderListMapper.updateBatchOrderListByList(batchOrderLists) < 1) {
 					logger.error("更新开户订单明细{}状态{}失败", JSONArray.toJSONString(batchOrderLists), result.getCode());
-					return 0;
+					resultMap.put("msg", "更新订单明细信息失败");
+					return resultMap;
 				}
 			}
 			if (!StringUtil.isNullOrEmpty(result) && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
@@ -473,10 +479,12 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 			}
 			if (batchOrderMapper.updateBatchOrder(order) < 1) {
 				logger.error("## 更新开户后的订单信息失败，orderId--->{}", orderId);
-				return 0;
+				resultMap.put("msg", "更新订单信息失败");
+				return resultMap;
 			}
 		}
-		return 1;
+		resultMap.put("status", Boolean.TRUE);
+		return resultMap;
 	}
 
 	@Override
@@ -597,7 +605,10 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 	}
 
 	@Override
-	public int batchTransferAccountITF(String orderId, User user, String orderStat) {
+	public Map<String, Object> batchTransferAccountITF(String orderId, User user, String orderStat) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("status", Boolean.FALSE);
+
 		BatchOrder order = batchOrderMapper.getBatchOrderById(orderId);
 		
 		BatchOrderList orderList = new BatchOrderList();
@@ -606,7 +617,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		List<BatchOrderList> batchOrderList = batchOrderListMapper.getBatchOrderListByOrderStat(orderList);
 		if (batchOrderList == null) {
 			logger.error("## 批量充值名单为空");
-			return 0;
+			resultMap.put("msg", "批量充值失败，充值名单为空");
+			return resultMap;
 		}
 
 		int orderListResult = 0;
@@ -645,7 +657,8 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				}
 			} catch (Exception e) {
 				logger.error("## 远程调用查询接口出错,入参--->dmsRelatedKey{},transChnl{}", reqVo.getDmsRelatedKey(), reqVo.getTransChnl(), e);
-				return 0;
+				resultMap.put("msg", "批量充值失败，请联系技术人员");
+				return resultMap;
 			}
 			if (result != null && result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
 				batchOrder.setOrderStat(BatchOrderStat.BatchOrderStat_00.getCode());
@@ -669,9 +682,11 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		int orderRsult = batchOrderMapper.updateBatchOrder(order);
 		if (orderListResult < 0 || orderRsult < 0) {
 			logger.error("## 更新批量转账订单状态失败，batchOrder--->{}", JSONArray.toJSONString(order));
-			return 0;
+			resultMap.put("msg", "批量充值成功，订单状态更新失败");
+			return resultMap;
 		}
-		return 1;
+		resultMap.put("status", Boolean.TRUE);
+		return resultMap;
 	}
 
 }
