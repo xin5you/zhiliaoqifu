@@ -344,8 +344,8 @@ public class PayService implements IPayService {
         req = processPayInfo(vo, req);
 //        req.setMchntCode(shopUtils.getBaseDict("ZLQF_MCHNT_CODE"));
 
-        //TODO 完善供应商id查询
-        req.setMchntCode("a5a41d8e-66a7-4ebe-bac2-7c280d666666");
+        //收款方id查询
+        req.setMchntCode(shopUtils.getBaseDict("ZLQF_RETAIL_MCHNT_CODE"));
         BaseResult baseResult = null;
         try {
             baseResult = accountTransactionFacade.executeConsume(req);
@@ -453,7 +453,7 @@ public class PayService implements IPayService {
                 case "0":
                     req.setAccType(method);
                 case "1":
-                    req.setTransIds(new String[]{MB20.getCode(), MB50.getCode(), CW50.getCode(), CW11.getCode(), CW74.getCode()});
+                    req.setTransIds(new String[]{MB20.getCode(), MB50.getCode(), CW50.getCode(), CW11.getCode(), CW74.getCode(), CW90.getCode(), CW99.getCode()});
                     break;
                 case "2":
                     req.setTransIds(new String[]{CW10.getCode(), CW20.getCode(), CW71.getCode(), MB10.getCode()});
