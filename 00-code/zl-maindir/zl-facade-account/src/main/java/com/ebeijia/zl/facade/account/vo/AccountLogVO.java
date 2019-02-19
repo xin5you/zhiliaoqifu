@@ -60,6 +60,11 @@ public class AccountLogVO implements Serializable {
     private String priBId;
 
     /**
+     * 专项账户名称
+     */
+    private String bName;
+
+    /**
      * 商户主键
      */
     private String mchntCode;

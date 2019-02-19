@@ -603,6 +603,7 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			if(s.getCouponBal() !=null) {
 				s.setCouponBal(AmountUtil.RMBCentToYuan(s.getCouponBal()));
 			}
+			s.setBName(SpecAccountTypeEnum.findByBId(s.getBId()).getName());
 		});
 		 return list;
 	}
