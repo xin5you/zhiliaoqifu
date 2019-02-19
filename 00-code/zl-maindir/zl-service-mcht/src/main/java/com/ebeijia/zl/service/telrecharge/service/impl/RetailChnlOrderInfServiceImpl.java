@@ -11,10 +11,7 @@ import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.*;
 import com.ebeijia.zl.core.redis.constants.RedisDictKey;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
-import com.ebeijia.zl.facade.account.req.AccountConsumeReqVo;
-import com.ebeijia.zl.facade.account.req.AccountRefundReqVo;
-import com.ebeijia.zl.facade.account.req.AccountRefundVo;
-import com.ebeijia.zl.facade.account.req.AccountTxnVo;
+import com.ebeijia.zl.facade.account.req.*;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
 import com.ebeijia.zl.facade.account.service.AccountTransactionFacade;
 import com.ebeijia.zl.facade.telrecharge.domain.*;
@@ -382,15 +379,27 @@ public class RetailChnlOrderInfServiceImpl extends ServiceImpl<RetailChnlOrderIn
 		req.setUserChnlId(retailChnlInf.getChannelId());
 		req.setUserType(UserType.TYPE400.getCode());
 		req.setDmsRelatedKey(retailChnlOrderInf.getChannelOrderId());
-		req.setPriBId(priBId);
+		req.setPriBId(SpecAccountTypeEnum.B06.getbId());
 
 		AccountTxnVo vo=new AccountTxnVo();
 		vo.setTxnAmt(retailChnlOrderInf.getTxnAmt()); //订单的交易金额是 订单金额 （元转分）* 折扣率
 		vo.setUpLoadAmt(AmountUtil.RMBYuanToCent(retailChnlOrderInf.getPayAmt()));  //
-		vo.setTxnBId(priBId);
+		vo.setTxnBId(SpecAccountTypeEnum.B06.getbId());
 		List transList=new ArrayList();
 		transList.add(vo);
 		req.setTransList(transList);
+
+		if(TransCode.MB71.getCode().equals(req.getTransId())){
+			List<AccountQuickPayVo> addList=new ArrayList<AccountQuickPayVo>();
+			AccountQuickPayVo quickPayVo=new AccountQuickPayVo();
+			quickPayVo.setTfrInBId(SpecAccountTypeEnum.B06.getbId());
+			quickPayVo.setTfrInAmt(AmountUtil.RMBYuanToCent(retailChnlOrderInf.getPayAmt()));
+			quickPayVo.setTfrOutBId(SpecAccountTypeEnum.A01.getbId());
+			quickPayVo.setTfrOutAmt(AmountUtil.RMBYuanToCent(retailChnlOrderInf.getPayAmt()));
+			addList.add(quickPayVo);
+			req.setAddList(addList);
+		}
+
 
 		req.setTransDesc("分销商消费");
 		req.setTransNumber(1);

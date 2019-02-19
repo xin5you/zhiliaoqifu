@@ -30,6 +30,9 @@ public class AccountVO implements Serializable {
      * 类型id
      */
     private String bId;
+
+
+    private String bName;
     
     
     /**

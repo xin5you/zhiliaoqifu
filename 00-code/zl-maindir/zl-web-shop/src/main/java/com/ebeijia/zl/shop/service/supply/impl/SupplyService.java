@@ -102,7 +102,9 @@ public class SupplyService implements ISupplyService {
     public String phoneCharge(String memberId, String phone, Long amount, PayInfo payInfo) {
         String dmsKey = IdUtil.getNextId();
         //TODO 这里amount是分，需要注意
-        checkPayment(payInfo, amount);
+        //2019-2-15 金额折扣995折
+        Long price = amount / 1000 * 995 ;
+        checkPayment(payInfo, price);
 
         //TODO INF
         String image = "手机充值";
@@ -117,7 +119,7 @@ public class SupplyService implements ISupplyService {
         TbEcomItxLogDetail log = new TbEcomItxLogDetail();
         log.setMemberId(memberId);
         log.setTitle(title);
-        log.setPrice(amount.longValue());
+        log.setPrice(price.longValue());
         log.setDescinfo(descinfo);
         log.setOutId(outId);
         log.setImg(image);
