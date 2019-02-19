@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ebeijia.zl.common.core.domain.BillingType;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
 import com.ebeijia.zl.core.redis.utils.RedisConstants;
 import com.ebeijia.zl.core.rocketmq.service.MQProducerService;
 import com.ebeijia.zl.facade.account.dto.AccountLog;
@@ -603,7 +604,11 @@ public class AccountInfServiceImpl extends ServiceImpl<AccountInfMapper, Account
 			if(s.getCouponBal() !=null) {
 				s.setCouponBal(AmountUtil.RMBCentToYuan(s.getCouponBal()));
 			}
-			s.setBName(SpecAccountTypeEnum.findByBId(s.getBId()).getName());
+			if (StringUtil.isNotEmpty(s.getBId())) {
+				SpecAccountTypeEnum specAccountTypeEnum = SpecAccountTypeEnum.findByBId(s.getBId());
+				if (specAccountTypeEnum != null)
+					s.setBName(specAccountTypeEnum.getName());
+			}
 		});
 		 return list;
 	}
