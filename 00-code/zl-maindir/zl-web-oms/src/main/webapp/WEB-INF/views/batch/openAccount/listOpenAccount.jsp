@@ -67,18 +67,18 @@
 						</div>
 						<%--<div class="row-fluid">
 							<div class="span12">
-	                            <div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
-	                                <span class="add-on">开始时间</span>
-	                                <input class="input-medium" id="startTime" name="startTime" readonly="readonly" type="text" value="${order.startTime }" />
-	                                <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
-	                            </div> 
-	                            <div id="datetimepicker2" class="input-prepend input-append date date-time-picker">
-	                                <span class="add-on">结束时间</span>
-	                                <input class="input-medium" id="endTime" name="endTime" readonly="readonly" type="text" value="${order.endTime }" />
-	                                <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
-	                            </div>
-	                        </div>
-                          </div>--%>
+								<div id="datetimepicker1" class="input-prepend input-append date date-time-picker">
+									<span class="add-on">开始时间</span>
+									<input class="input-medium" id="startTime" name="startTime" readonly="readonly" type="text" value="${order.startTime }" />
+									<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+								</div>
+								<div id="datetimepicker2" class="input-prepend input-append date date-time-picker">
+									<span class="add-on">结束时间</span>
+									<input class="input-medium" id="endTime" name="endTime" readonly="readonly" type="text" value="${order.endTime }" />
+									<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+								</div>
+							</div>
+						</div>--%>
 				         </br >       
 				         <table class="table table-striped table-bordered dTableR table-hover" id="dt_gal" >
 				             <thead>

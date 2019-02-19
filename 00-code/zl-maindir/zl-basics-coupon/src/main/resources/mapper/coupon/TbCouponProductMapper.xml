@@ -21,14 +21,17 @@
     </sql>
 
     <select id="getCouponList" parameterType="TbCouponProduct" resultType="TbCouponProduct">
-        select
+      select
         <include refid="CouponColumns" />
-        from
+      from
         <include refid="tableName" />
-        where data_stat = '0'
+      where data_stat = '0'
       <if test="couponName != null and couponName != ''">
-            and coupon_name like "%"#{couponName}"%"
-        </if>
-        order by create_time desc
+        and coupon_name like "%"#{couponName}"%"
+      </if>
+      <if test="bId != null and bId != ''">
+        and b_id = #{bId}
+      </if>
+      order by tag_amount asc, create_time desc
     </select>
 </mapper>

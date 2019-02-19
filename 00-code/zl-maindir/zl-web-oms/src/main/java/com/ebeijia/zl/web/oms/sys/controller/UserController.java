@@ -50,7 +50,13 @@ public class UserController {
 	
 	@Autowired
 	private UserRoleResourceService userRoleResourceService;
-	
+
+	/**
+	 * 查询user信息列表（含分页）
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/listUser")
 	public ModelAndView listUser(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/user/listUser");
@@ -78,7 +84,13 @@ public class UserController {
 		mv.addObject("operStatus", operStatus);
 		return mv;
 	}
-	
+
+	/**
+	 * 跳转新增user信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoAddUser")
 	public ModelAndView intoAddUser(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("sys/user/addUser");
@@ -174,6 +186,7 @@ public class UserController {
 	}
 	
 	/**
+	 * 跳转编辑user信息页面
 	 * @param req
 	 * @param response
 	 * @return
@@ -193,9 +206,9 @@ public class UserController {
 
 		Role role = new Role();
 		role.setLoginType(LoginType.LoginType1.getCode());
-		List<Role> roleList=roleService.getRoleList(role);
+		List<Role> roleList = roleService.getRoleList(role);
 		
-		List<Role> userRoleList=roleService.getUserRoleByUserId(user.getId().toString());
+		List<Role> userRoleList = roleService.getUserRoleByUserId(user.getId().toString());
 		mv.addObject("userRoleList", userRoleList);
 		
 		mv.addObject("organizationList", organizationList);

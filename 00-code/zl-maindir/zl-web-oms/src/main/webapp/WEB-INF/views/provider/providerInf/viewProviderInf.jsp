@@ -90,13 +90,13 @@
 	                                      <span class="help-block"></span>
 	                                  </div>
                                  </div> --%>
-                                <div class="control-group formSep">
+                                <%--<div class="control-group formSep">
                                     <label class="control-label">操作顺序</label>
                                     <div class="controls">
                                           <input type="text" class="span6" id="operSolr" name="operSolr" value="${providerInf.operSolr}" onkeyup="this.value=this.value.replace(/\D/g,'')" readonly="readonly"/>
                                           <span class="help-block"></span>
                                     </div>
-                                </div>
+                                </div>--%>
                                 
                                 <div class="control-group">
                                      <label class="control-label">备注</label>

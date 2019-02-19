@@ -37,6 +37,8 @@ public interface ITbCouponHolderService extends IService<TbCouponHolder> {
      * @return
      * @throws Exception
      */
+/*
     PageInfo<TbCouponHolder> getTbCouponHolderPage(int startNum, int pageSize, TbCouponHolder entity) throws Exception;
+*/
 
 }

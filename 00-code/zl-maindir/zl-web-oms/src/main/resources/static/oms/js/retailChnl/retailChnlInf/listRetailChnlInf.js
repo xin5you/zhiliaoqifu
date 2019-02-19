@@ -132,7 +132,7 @@ var listTelChannelInf = {
     },
     intoRetailChnlCoupon : function () {
         var channelId = $(this).attr('channelId');
-        var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/listRetailChnlCoupon.do?transStat=1&channelId="+channelId;
+        var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/listRetailChnlCoupon.do?channelId="+channelId;
         location.href = url;
     }
 }

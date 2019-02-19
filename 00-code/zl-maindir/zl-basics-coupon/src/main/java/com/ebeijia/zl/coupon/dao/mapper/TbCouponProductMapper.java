@@ -20,6 +20,6 @@ public interface TbCouponProductMapper extends BaseMapper<TbCouponProduct> {
      *
      * @param couponProduct
      * @return
-     */
-    List<TbCouponProduct> getCouponList(TbCouponProduct couponProduct);
+     *//*
+    List<TbCouponProduct> getCouponList(TbCouponProduct couponProduct);*/
 }

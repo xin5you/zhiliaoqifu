@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebeijia.zl.coupon.dao.mapper.TbChnlCouponOrderMapper">
+
+    <sql id="chnlCouponOrderColumns">
+        c.id
+        c.chnl_id,
+        c.coupon_bid,
+        c.coupon_amt,
+        c.total_amt,
+        c.total_num,
+        c.chnl_bid,
+        c.trans_stat,
+        c.data_stat,
+        c.remarks,
+        c.create_user,
+        c.update_user,
+        c.create_time,
+        c.upadte_time,
+        c.lock_version
+    </sql>
+
+    <sql id="tableName">
+        tb_chnl_coupon_order c
+    </sql>
+
+</mapper>

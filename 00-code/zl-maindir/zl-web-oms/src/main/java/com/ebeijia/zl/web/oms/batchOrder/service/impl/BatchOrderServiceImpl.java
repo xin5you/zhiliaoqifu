@@ -77,10 +77,12 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 		/*String startTime = StringUtil.nullToString(req.getParameter("startTime"));
 		String endTime = StringUtil.nullToString(req.getParameter("endTime"));
 		if (!StringUtil.isNullOrEmpty(startTime)) {
+			startTime = startTime + "00:00:00";
 			long startTimeLong = DateUtil.DateTimeToLongTime(startTime);
 			order.setStartTime(String.valueOf(startTimeLong));//开始时间
 		}
 		if (!StringUtil.isNullOrEmpty(endTime)) {
+			endTime = endTime + "00:00:00";
 			long endTimeLong = DateUtil.DateTimeToLongTime(endTime);
 			order.setEndTime(String.valueOf(endTimeLong));//结束时间
 		}*/
@@ -94,7 +96,6 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				} else {
 					batchOrder.setSumAmount(NumberUtils.RMBCentToYuan(0));
 				}
-				
 			});
 			page = new PageInfo<BatchOrder>(list);
 		}
@@ -483,6 +484,9 @@ public class BatchOrderServiceImpl extends ServiceImpl<BatchOrderMapper, BatchOr
 				return resultMap;
 			}
 		}
+		/*if (!result.getCode().equals(Constants.SUCCESS_CODE.toString())) {
+			resultMap.put("msg", "开户失败明细请查看订单详情");
+		}*/
 		resultMap.put("status", Boolean.TRUE);
 		return resultMap;
 	}

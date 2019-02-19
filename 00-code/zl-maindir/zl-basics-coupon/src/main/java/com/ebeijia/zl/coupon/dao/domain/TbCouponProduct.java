@@ -156,6 +156,19 @@ public class TbCouponProduct extends Model<TbCouponProduct> {
     @ApiModelProperty(value = "乐观锁版本")
     private Integer lockVersion;
 
+    /**
+     * 总金额
+     */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "总金额")
+    private BigDecimal totalAmount;
+
+    /**
+     * 专项名称
+     */
+    @TableField(exist = false)
+    @ApiModelProperty(value = "专项名称")
+    private String bName;
 
     @Override
     protected Serializable pkVal() {

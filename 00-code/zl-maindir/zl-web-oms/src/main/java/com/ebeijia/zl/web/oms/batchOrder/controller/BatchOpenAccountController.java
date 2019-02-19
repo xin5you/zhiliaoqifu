@@ -1,5 +1,6 @@
 package com.ebeijia.zl.web.oms.batchOrder.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -105,8 +106,8 @@ public class BatchOpenAccountController {
 		company.setIsOpen(IsOpenAccountEnum.ISOPEN_TRUE.getCode());
 		List<CompanyInf> companyList = companyInfFacade.getCompanyInfList(company);
 		companyList = companyList.stream().filter(c -> c.getIsPlatform().equals(IsPlatformEnum.IsPlatformEnum_0.getCode())).collect(Collectors.toList());
-		
-		/*SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		/*SimpleDateFormat sdfLong = new SimpleDateFormat("yyyy-MM-dd");
 		if (!StringUtil.isNullOrEmpty(order.getStartTime())) {
 			String startTime = sdfLong.format(new Date(order.getStartTime()));
 			order.setStartTime(startTime);//开始时间

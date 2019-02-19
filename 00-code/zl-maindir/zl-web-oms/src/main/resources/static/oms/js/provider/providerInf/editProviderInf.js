@@ -27,8 +27,8 @@ var editTelProviderInf = {
             	appUrl: { required: true},
             	appSecret: { required: true},
             	accessToken: { required: true},
-            	providerRate: { required: true},
-            	operSolr: { required: true}
+            	providerRate: { required: true}
+            	/*operSolr: { required: true}*/
             },
             messages: {
             	/*bId: { required: "请选择账户类型"},*/
@@ -37,8 +37,8 @@ var editTelProviderInf = {
             	appUrl: { required: "请输入app_url"},
             	appSecret: { required: "请输入app_Secret"},
             	accessToken: { required: "请输入access_token"},
-            	providerRate: { required: "请输入供应商折扣"},
-            	operSolr: { required: "请输入操作顺序"}
+            	providerRate: { required: "请输入供应商折扣"}
+            	/*operSolr: { required: "请输入操作顺序"}*/
             },
             invalidHandler: function(form, validator) {
                 //$.sticky("There are some errors. Please corect them and submit again.", {autoclose : 5000, position: "top-right", type: "st-error" });
@@ -125,7 +125,7 @@ var editTelProviderInf = {
     	var accessToken = $('#accessToken').val().trim();
     	var defaultRoute=$("#defaultRoute").val().trim();
     	var providerRate=$("#providerRate").val().trim();
-    	var operSolr=$("#operSolr").val().trim();
+    	/*var operSolr=$("#operSolr").val().trim();*/
     	var remarks=$("#remarks").val();
 		$.ajax({
             type: 'POST',
@@ -140,7 +140,7 @@ var editTelProviderInf = {
             		"accessToken":accessToken,
             		"defaultRoute":defaultRoute,
             		"providerRate":providerRate,
-            		"operSolr":operSolr,
+            		/*"operSolr":operSolr,*/
             		"remarks":remarks
             },
             cache:false,

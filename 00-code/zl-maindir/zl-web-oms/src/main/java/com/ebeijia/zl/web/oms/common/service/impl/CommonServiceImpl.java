@@ -310,50 +310,6 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public Map<String, Object> listCouponHolder(HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("status", Boolean.TRUE);
-
-        int startNum = NumberUtils.parseInt(request.getParameter("pageNum"), 1);
-        int pageSize = NumberUtils.parseInt(request.getParameter("pageSize"), 10);
-
-        String couponName = StringUtil.nullToString(request.getParameter("couponName"));
-        String bId = StringUtil.nullToString(request.getParameter("bId"));
-        String transStat = StringUtil.nullToString(request.getParameter("transStat"));
-
-        TbCouponHolder couponHolder = new TbCouponHolder();
-        if (!StringUtil.isNullOrEmpty(couponName)) {
-            couponHolder.setCouponName(couponName);
-        }
-        if (!StringUtil.isNullOrEmpty(bId)) {
-            couponHolder.setBId(bId);
-        }
-        if (!StringUtil.isNullOrEmpty(transStat)) {
-            couponHolder.setTransStat(transStat);
-        }
-        try {
-            PageInfo<TbCouponHolder> pageList = couponHolderService.getTbCouponHolderPage(startNum, pageSize, couponHolder);
-            if (pageList != null && pageList.getList().size() > 0) {
-                for (TbCouponHolder h : pageList.getList()) {
-                    if (!StringUtil.isNullOrEmpty(h.getRecycleChnlId())) {
-                        RetailChnlInf retailChnlInf = retailChnlInfFacade.getRetailChnlInfById(h.getRecycleChnlId());
-                        if (retailChnlInf !=  null) {
-                            h.setRecycleChnlId(retailChnlInf.getChannelName());
-                        }
-                    }
-                }
-            }
-            resultMap.put("pageList", pageList);
-        } catch (Exception e) {
-            logger.error("## 查询卡券订单记录列表异常", e);
-        }
-        resultMap.put("coupon", couponHolder);
-        resultMap.put("billingTypeList", SpecAccountTypeEnum.values());
-        resultMap.put("transStatList", CouponTransStatEnum.values());
-        return resultMap;
-    }
-
-    @Override
     public Map<String, Object> uploadImage(MultipartFile file, HttpServletRequest request, String imgType, String orderId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("status", Boolean.TRUE);

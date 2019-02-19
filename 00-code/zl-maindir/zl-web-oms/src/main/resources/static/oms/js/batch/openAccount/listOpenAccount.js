@@ -5,25 +5,25 @@ $(document).ready(function() {
 var listOpenAccount = {
 	init : function() {
 		listOpenAccount.initEvent();
-		var operStatus=$("#operStatus").val();
+		var operStatus = $("#operStatus").val();
 		Helper.operTip(operStatus);
 	},
 
 	initEvent:function(){
-		$('.date-time-picker').datetimepicker({
-	        format: 'yyyy-MM-dd hh:mm:ss',
-	        language: 'zh-CN',
-	        pickDate: true,
-	        pickTime: true,
-	        hourStep: 1,
-	        minuteStep: 5,
-	        secondStep: 10,
-	        endDate: new Date(new Date()),
-	        initialDate: new Date(new Date()),
-	        inputMask: true
-	      }).on('changeDate', function(ev) {
-	    	  //alert(ev.date.valueOf());
-	    });
+        $('.date-time-picker').datetimepicker({
+            format: 'yyyy-MM-dd',
+            language: 'zh-CN',
+            pickDate: true,
+            pickTime: false,
+            hourStep: 1,
+            minuteStep: 5,
+            secondStep: 10,
+            endDate: new Date(new Date() - 43200000),
+            initialDate: new Date(new Date() - 86400000),
+            inputMask: true
+        }).on('changeDate', function(ev) {
+            //alert(ev.date.valueOf());
+        });
 		$('#datetimepicker1').show();
 		$('#datetimepicker2').show();
 		$('.btn-search').on('click', listOpenAccount.searchData);
@@ -35,31 +35,31 @@ var listOpenAccount = {
 		$('.btn-submit').on('click', listOpenAccount.addOrderCommit);
 		$('.btn-again-submit').on('click', listOpenAccount.addOrderAgainCommit);
 	},
-	searchData:function(){
-		var sd = $('#startTime').val();
-		var ed = $('#endTime').val();
-		if(sd !='' && ed !='' && sd.localeCompare(ed)>0){
-			Helper.alert('交易开始时间不能大于结束时间');
-			return false;
-		}
-		document.forms['searchForm'].submit();
-	},
+    searchData:function(){
+        var sd = $('#startTime').val();
+        var ed = $('#endTime').val();
+        if(sd != '' && ed != '' && sd.localeCompare(ed) > 0){
+            Helper.alert('交易开始时间不能大于结束时间');
+            return false;
+        }
+        document.forms['searchForm'].submit();
+    },
 	searchReset:function(){
 		location = Helper.getRootPath() + '/batch/openAccount/listOpenAccount.do';
 	},
 	intoAddOpenAccount:function(){
 		var url = Helper.getRootPath()+"/batch/openAccount/intoAddOpenAccount.do";
-		location.href=url;
+		location.href = url;
 	},
 	intoEditOpenAccount:function(){
 		var orderId = $(this).attr('orderId');
 		var url = Helper.getRootPath()+"/batch/openAccount/intoEditOpenAccount.do?orderId="+orderId;
-		location.href=url;
+		location.href = url;
 	},
 	intoViewOpenAccount:function(){
 		var orderId = $(this).attr('orderId');
 		var url = Helper.getRootPath()+"/batch/openAccount/intoViewOpenAccount.do?orderId="+orderId;
-		location.href=url;
+		location.href = url;
 	},
 	deleteOpenAccountCommit:function(){
 		var orderId = $(this).attr('orderId');

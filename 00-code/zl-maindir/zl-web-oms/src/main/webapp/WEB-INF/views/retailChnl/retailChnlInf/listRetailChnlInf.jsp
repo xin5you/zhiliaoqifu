@@ -97,9 +97,9 @@
 										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_TRANSFER_INTOADD')">
 											<a channelId="${entity.channelId}" title="上账" class="btn-mini btn-transfer" href="#"><i class="icon-pencil"></i></a>
 										</sec:authorize>
-										<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_BUY_COUPON')">
+										<%--<sec:authorize access="hasRole('ROLE_RETAIL_CHNL_BUY_COUPON')">
 											<a channelId="${entity.channelId}" title="购买卡券" class="btn-mini btn-retailChnl-coupon" href="#"><i class="icon-pencil"></i></a>
-										</sec:authorize>
+										</sec:authorize>--%>
 									</c:if>
 				                    </td>
 				                 </tr>

@@ -74,10 +74,4 @@ public interface CommonService {
 	 */
 	Map<String, Object> isFileExsits(FTPImageVo imgVo, String fileName);
 
-	/**
-	 * 查询代金券订单记录列表（含分页）
-	 * @param request
-	 * @return
-	 */
-	Map<String, Object> listCouponHolder(HttpServletRequest request);
 }

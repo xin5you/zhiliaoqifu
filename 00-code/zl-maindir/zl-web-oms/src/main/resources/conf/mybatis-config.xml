@@ -5,7 +5,7 @@
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
 		<setting name="logImpl" value="SLF4J" />
-		<!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
+		<setting name="logImpl" value="STDOUT_LOGGING" />
 	</settings>
 	<typeAliases>
 		<typeAlias alias="Integer" type="java.lang.Integer" />
@@ -25,6 +25,7 @@
 		<package name="com.ebeijia.zl.shop.dao.member.domain"/>
 		<package name="com.ebeijia.zl.common.core.domain"/>
 		<package name="com.ebeijia.zl.basics.system.domain"/>
+		<package name="com.ebeijia.zl.coupon.dao.domain"/>
 
 	</typeAliases>
 

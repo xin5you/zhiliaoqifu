@@ -10,8 +10,12 @@ import com.ebeijia.zl.common.utils.enums.*;
 import com.ebeijia.zl.common.utils.http.HttpClientUtil;
 import com.ebeijia.zl.common.utils.tools.*;
 import com.ebeijia.zl.core.redis.utils.JedisClusterUtils;
+import com.ebeijia.zl.coupon.dao.domain.TbChnlCouponOrder;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponProduct;
+import com.ebeijia.zl.coupon.dao.service.ITbChnlCouponOrderService;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponHolderService;
+import com.ebeijia.zl.coupon.dao.service.ITbCouponProductService;
 import com.ebeijia.zl.facade.account.req.AccountRechargeReqVo;
 import com.ebeijia.zl.facade.account.req.AccountTxnVo;
 import com.ebeijia.zl.facade.account.service.AccountQueryFacade;
@@ -38,6 +42,7 @@ import com.ebeijia.zl.web.oms.inaccount.model.InaccountOrderDetail;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderDetailService;
 import com.ebeijia.zl.web.oms.inaccount.service.InaccountOrderService;
 import com.ebeijia.zl.web.oms.retailChnl.service.RetailChnlInfService;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +110,13 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
     private JedisClusterUtils jedisClusterUtils;
 
     @Autowired
+    private ITbCouponProductService couponProductService;
+
+    @Autowired
     private ITbCouponHolderService couponHolderService;
+
+    @Autowired
+    private ITbChnlCouponOrderService couponOrderService;
 
     @Override
     public ModelMap doCallBackNotifyChannel(String channelOrderId) {
@@ -684,6 +695,100 @@ public class RetailChnlInfServiceImpl implements RetailChnlInfService {
             return resultMap;
         }
 
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> listRetailChnlCoupon(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+
+        int startNum = NumberUtils.parseInt(req.getParameter("pageNum"), 1);
+        int pageSize = NumberUtils.parseInt(req.getParameter("pageSize"), 10);
+
+        String channelId = req.getParameter("channelId");
+        String orderId = req.getParameter("orderId");
+        String bId = req.getParameter("bId");
+
+        //查询分销商回收代金券的专项总值
+        List<TbCouponProduct> couponProductList = new ArrayList<>();
+        TbChnlCouponOrder order = new TbChnlCouponOrder();
+        for (SpecAccountTypeEnum s : SpecAccountTypeEnum.values()) {
+            order.setChnlId(channelId);
+            order.setCouponBid(bId);
+            List<TbChnlCouponOrder> orderList = couponOrderService.getChnlCouponOrderList(order);
+            TbCouponProduct product = new TbCouponProduct();
+            product.setBName(s.getName());
+            if (orderList != null && orderList.size() >= 1) {
+                BigDecimal couponAmt = orderList.stream().map(TbChnlCouponOrder::getCouponAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
+                product.setTagAmount(new Long(couponAmt.toString()));
+            } else {
+                product.setTagAmount(new Long(0));
+            }
+            couponProductList.add(product);
+        }
+        Long totalAmount = couponProductList.stream().mapToLong(TbCouponProduct::getTagAmount).sum();
+
+        //查询分销商回收的代金券订单列表
+        order.setId(orderId);
+        PageInfo<TbChnlCouponOrder> couponOrderPageList = null;
+        try {
+            couponOrderPageList = couponOrderService.getTbChnlCouponOrderPage(startNum, pageSize, order);
+        } catch (Exception e) {
+            logger.error("## 查询分销商回收代金券订单异常");
+        }
+
+        resultMap.put("couponProductList", couponProductList);
+        resultMap.put("totalAmount", totalAmount);
+        resultMap.put("couponOrderPageList", couponOrderPageList);
+        resultMap.put("couponOrder", order);
+        resultMap.put("channelId", channelId);
+        resultMap.put("billingTypeList", SpecAccountTypeEnum.values());
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> toBuyCoupon(HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("status", Boolean.TRUE);
+
+        String couponType = req.getParameter("couponType");
+
+        if (StringUtil.isNullOrEmpty(couponType)) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "系统异常，请稍后再试");
+            return resultMap;
+        }
+
+        TbCouponProduct product = new TbCouponProduct();
+        product.setBId(couponType);
+        List<TbCouponProduct> couponProductList = couponProductService.getCouponList(product);
+        if (couponProductList == null || couponProductList.size() < 1) {
+            resultMap.put("status", Boolean.FALSE);
+            resultMap.put("msg", "系统异常，请稍后再试");
+            return resultMap;
+        }
+        for (TbCouponProduct p : couponProductList) {
+            TbCouponHolder couponHolder = new TbCouponHolder();
+            couponHolder.setCouponCode(p.getCouponCode());
+            couponHolder.setTransStat(CouponTransStatEnum.CouponTransStatEnum_1.getCode());
+            List<TbCouponHolder> couponHolderList = couponHolderService.listCouponHolderByCouponHolder(couponHolder);
+            if (couponHolderList == null || couponHolderList.size() < 1) {
+                p.setTotalNum(0);
+            } else {
+                p.setTotalNum(couponHolderList.size());
+            }
+            BigDecimal totalAmount = new BigDecimal(p.getTotalNum()).multiply(new BigDecimal(p.getPrice()));
+            p.setTotalAmount(totalAmount);
+        }
+
+        int totalNum = couponProductList.stream().mapToInt(TbCouponProduct::getTotalNum).sum();
+        BigDecimal totalAmount = couponProductList.stream().map(TbCouponProduct::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        resultMap.put("couponProductList", couponProductList);
+        resultMap.put("totalNum", totalNum);
+        resultMap.put("totalAmount", totalAmount);
+        resultMap.put("couponType", couponType);
         return resultMap;
     }
 

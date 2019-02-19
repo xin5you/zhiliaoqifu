@@ -108,7 +108,7 @@ public class TbCouponHolderService extends ServiceImpl<TbCouponHolderMapper, TbC
         return baseMapper.selectList(queryWrapper);
     }
 
-    @Override
+    /*@Override
     public PageInfo<TbCouponHolder> getTbCouponHolderPage(int startNum, int pageSize, TbCouponHolder entity) throws Exception {
         PageHelper.startPage(startNum, pageSize);
         List<TbCouponHolder> list = listCouponHolderByCouponHolder(entity);
@@ -118,6 +118,6 @@ public class TbCouponHolderService extends ServiceImpl<TbCouponHolderMapper, TbC
         }
         PageInfo<TbCouponHolder> page = new PageInfo<TbCouponHolder>(list);
         return page;
-    }
+    }*/
 
 }

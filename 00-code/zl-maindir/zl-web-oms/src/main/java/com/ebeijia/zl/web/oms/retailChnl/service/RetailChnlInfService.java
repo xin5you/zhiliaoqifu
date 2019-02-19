@@ -64,6 +64,20 @@ public interface RetailChnlInfService {
 	Map<String, Object> deleteRetailChnlTransfer(HttpServletRequest req);
 
 	/**
+	 * 回收卡券页面参数
+	 * @param req
+	 * @return
+	 */
+	Map<String, Object> listRetailChnlCoupon(HttpServletRequest req);
+
+	/**
+	 * 查询可回收代金券信息
+	 * @param req
+	 * @return
+	 */
+	Map<String, Object> toBuyCoupon(HttpServletRequest req);
+
+	/**
 	 * 分销商购买卡券
 	 * @param req
 	 * @return

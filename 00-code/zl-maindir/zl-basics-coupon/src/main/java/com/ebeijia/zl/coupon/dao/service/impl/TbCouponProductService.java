@@ -1,5 +1,9 @@
 package com.ebeijia.zl.coupon.dao.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ebeijia.zl.common.utils.enums.DataStatEnum;
+import com.ebeijia.zl.common.utils.tools.StringUtil;
+import com.ebeijia.zl.coupon.dao.domain.TbCouponHolder;
 import com.ebeijia.zl.coupon.dao.domain.TbCouponProduct;
 import com.ebeijia.zl.coupon.dao.mapper.TbCouponProductMapper;
 import com.ebeijia.zl.coupon.dao.service.ITbCouponProductService;
@@ -20,11 +24,18 @@ import java.util.List;
 @Service
 public class TbCouponProductService extends ServiceImpl<TbCouponProductMapper, TbCouponProduct> implements ITbCouponProductService{
 
-    @Autowired
-    private TbCouponProductMapper couponProductMapper;
-
     @Override
     public List<TbCouponProduct> getCouponList(TbCouponProduct couponProduct) {
-        return couponProductMapper.getCouponList(couponProduct);
+        QueryWrapper<TbCouponProduct> queryWrapper = new QueryWrapper<TbCouponProduct>();
+        if (!StringUtil.isNullOrEmpty(couponProduct.getCouponName())) {
+            queryWrapper.like("coupon_name", couponProduct.getCouponName());
+        }
+        if (!StringUtil.isNullOrEmpty(couponProduct.getBId())) {
+            queryWrapper.like("b_id", couponProduct.getBId());
+        }
+        queryWrapper.eq("data_stat", DataStatEnum.TRUE_STATUS.getCode());
+        queryWrapper.orderByAsc("tag_amount");
+        queryWrapper.orderByDesc("create_time");
+        return baseMapper.selectList(queryWrapper);
     }
 }

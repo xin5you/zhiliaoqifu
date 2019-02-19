@@ -97,6 +97,12 @@ public class RetailChnlInfController {
 		return mv;
 	}
 
+	/**
+	 * 跳转添加分销商信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/intoAddRetailChnlInf")
 	public ModelAndView intoAddRetailChnlInf(HttpServletRequest req, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/addRetailChnlInf");
@@ -104,6 +110,12 @@ public class RetailChnlInfController {
 		return mv;
 	}
 
+	/**
+	 * 添加分销商信息提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/addRetailChnlInfCommit")
 	@ResponseBody
 	public Map<String, Object> addRetailChnlInfCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -136,6 +148,13 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 跳转编辑分销商信息页面
+	 * @param req
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/intoEditRetailChnlInf")
 	public ModelAndView intoEditTelChannelInf(HttpServletRequest req, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/editRetailChnlInf");
@@ -152,6 +171,12 @@ public class RetailChnlInfController {
 		return mv;
 	}
 
+	/**
+	 * 编辑分销商信息提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/editRetailChnlInfCommit")
 	@ResponseBody
 	public Map<String, Object> editTelChannelInfCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -186,6 +211,12 @@ public class RetailChnlInfController {
 		return resultMap;
 	}
 
+	/**
+	 * 跳转分销商信息详情页面
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
 	@RequestMapping(value = "/intoViewRetailChnlInf")
 	public ModelAndView intoViewTelChannelInf(HttpServletRequest req, HttpServletResponse resp) {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/viewRetailChnlInf");
@@ -201,6 +232,12 @@ public class RetailChnlInfController {
 		return mv;
 	}
 
+	/**
+	 * 删除分销商信息提交
+	 * @param req
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "/deleteRetailChnlInfCommit")
 	@ResponseBody
 	public Map<String, Object> deleteRetailChnlInfCommit(HttpServletRequest req, HttpServletResponse response) {
@@ -751,14 +788,30 @@ public class RetailChnlInfController {
 	@RequestMapping(value = "listRetailChnlCoupon")
 	public ModelAndView listRetailChnlCoupon(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("retailChnl/retailChnlInf/listRetailChnlCoupon");
-		String channelId = request.getParameter("channelId");
-		Map<String, Object> resultMap = commonService.listCouponHolder(request);
-		mv.addObject("pageInfo", resultMap.get("pageList"));
-		mv.addObject("coupon", resultMap.get("coupon"));
+		Map<String, Object> resultMap = retailChnlInfService.listRetailChnlCoupon(request);
+		mv.addObject("couponProductList", resultMap.get("couponProductList"));
+		mv.addObject("totalAmount", resultMap.get("totalAmount"));
+		mv.addObject("couponOrderPageInfo", resultMap.get("couponOrderPageList"));
+		mv.addObject("couponOrder", resultMap.get("couponOrder"));
+        mv.addObject("channelId", resultMap.get("channelId"));
 		mv.addObject("billingTypeList", resultMap.get("billingTypeList"));
-		mv.addObject("transStatList", resultMap.get("transStatList"));
-		mv.addObject("channelId", channelId);
 		return mv;
+	}
+
+	/**
+	 * 查询可回收的代金券信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "toBuyCoupon")
+	public Map<String, Object> toBuyCoupon(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> resultMap = retailChnlInfService.toBuyCoupon(request);
+		resultMap.put("couponProductList", resultMap.get("couponProductList"));
+		resultMap.put("totalNum", resultMap.get("totalNum"));
+		resultMap.put("totalAmount", resultMap.get("totalAmount"));
+		resultMap.put("bId", resultMap.get("bId"));
+		return resultMap;
 	}
 
 	/**

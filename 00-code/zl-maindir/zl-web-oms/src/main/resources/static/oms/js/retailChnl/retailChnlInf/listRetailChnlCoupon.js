@@ -10,8 +10,7 @@ var listRetailChnlCoupon = {
 
     initEvent:function(){
         $('.btn-reset').on('click', listRetailChnlCoupon.searchReset);
-        $('#selectAll').on('click', listRetailChnlCoupon.selectAll);
-       /* $('.couponId').on('click', listRetailChnlCoupon.selectFirst);*/
+        $('.btn-buy').on('click', listRetailChnlCoupon.intoBuyCoupon);
         $('.btn-back').on('click', listRetailChnlCoupon.backRetailChnlInf);
         $('.btn-submit').on('click', listRetailChnlCoupon.buyCouponCommit);
     },
@@ -20,12 +19,58 @@ var listRetailChnlCoupon = {
         var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/listRetailChnlCoupon.do?transStat=1&channelId="+channelId;
         location.href = url;
     },
-    selectAll : function () {
-        if ($("#selectAll").attr("checked")) {
-            $(":checkbox").attr("checked", true);
-        } else {
-            $(":checkbox").attr("checked", false);
+    intoBuyCoupon : function () {
+        $("#buyCouponFrom").get(0).reset();
+        var couponType = $("#couponType").val();
+        if (couponType != null && couponType != '') {
+            $.ajax({
+                url: Helper.getRootPath() + '/retailChnl/retailChnlInf/toBuyCoupon',
+                type: 'post',
+                dataType : "json",
+                data: {
+                    couponType: couponType
+                },
+                success: function (result) {
+                    if(result.status){
+                        var html = "";
+                        var couponProductList = result.couponProductList;
+                        var totalNum = result.totalNum;
+                        var totalAmount = result.totalAmount;
+                        var couponType = result.couponType;
+                        for(var i = 0; i < couponProductList.length; i++){
+                            html += "<tr>" +
+                                "<td>" +
+                                "<img th:src=\"${couponProductList[i].iconImage}\" style=\"height: 50px; width: 50px;\"/>" +
+                                "</td>" +
+                                "<td>￥couponProductList[i].tagAmount</td>" +
+                                "<td>" +
+                                "<input type=\"text\" value=\"couponProductList[i].totalNum\" class=\"span2\"/>" +
+                                "库存剩余couponProductList[i].totalNum张" +
+                                "</td>" +
+                                "<td>￥couponProductList[i].totalAmount(￥couponProductList[i].price*couponProductList[i].totalNum张)</td>" +
+                                "</tr>";
+                        }
+                        html += "<tr>" +
+                            "<th>合计</th>" +
+                            "<th colspan=\"2\">totalNum张</th>" +
+                            "<th>￥totalAmount</th>" +
+                            "</tr>";
+                        $("#couponTbody").html(html);
+                        $("#couponType").val(couponType);
+                    }else{
+                        Helper.alert(result.msg);
+                        return false;
+                    }
+                },
+                error:function(){
+                    Helper.alert("网络异常，请稍后再试");
+                    return false;
+                }
+            });
         }
+        $('#buyCouponModal').modal({
+            backdrop : "static"
+        });
     },
     backRetailChnlInf : function () {
         var url = Helper.getRootPath()+"/retailChnl/retailChnlInf/listRetailChnlInf.do";
